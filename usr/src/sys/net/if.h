@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -88,7 +88,23 @@ name|if_output
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* output routine */
+comment|/* output routine (enqueue) */
+name|int
+function_decl|(
+modifier|*
+name|if_start
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initiate output routine */
+name|int
+function_decl|(
+modifier|*
+name|if_done
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* output complete routine */
 name|int
 function_decl|(
 modifier|*
@@ -258,6 +274,28 @@ begin_comment
 comment|/* receive all multicast packets */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFF_OACTIVE
+value|0x400
+end_define
+
+begin_comment
+comment|/* transmission in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_SIMPLEX
+value|0x800
+end_define
+
+begin_comment
+comment|/* can't hear own transmissions */
+end_comment
+
 begin_comment
 comment|/* flags set internally only: */
 end_comment
@@ -266,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|IFF_CANTCHANGE
-value|(IFF_BROADCAST | IFF_POINTOPOINT | IFF_RUNNING)
+value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE)
 end_define
 
 begin_comment
@@ -315,34 +353,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_tail = (m); \ 	(ifq)->ifq_head = (m); \ 	(ifq)->ifq_len++; \ }
-end_define
-
-begin_comment
-comment|/*  * Packets destined for level-1 protocol input routines  * have a pointer to the receiving interface prepended to the data.  * IF_DEQUEUEIF extracts and returns this pointer when dequeueing the packet.  * IF_ADJ should be used otherwise to adjust for its presence.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_ADJ
-parameter_list|(
-name|m
-parameter_list|)
-value|{ \ 	(m)->m_off += sizeof(struct ifnet *); \ 	(m)->m_len -= sizeof(struct ifnet *); \ 	if ((m)->m_len == 0) { \ 		struct mbuf *n; \ 		MFREE((m), n); \ 		(m) = n; \ 	} \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_DEQUEUEIF
-parameter_list|(
-name|ifq
-parameter_list|,
-name|m
-parameter_list|,
-name|ifp
-parameter_list|)
-value|{ \ 	(m) = (ifq)->ifq_head; \ 	if (m) { \ 		if (((ifq)->ifq_head = (m)->m_act) == 0) \ 			(ifq)->ifq_tail = 0; \ 		(m)->m_act = 0; \ 		(ifq)->ifq_len--; \ 		(ifp) = *(mtod((m), struct ifnet **)); \ 		IF_ADJ(m); \ 	} \ }
 end_define
 
 begin_define
