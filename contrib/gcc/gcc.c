@@ -10068,6 +10068,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* FREEBSD_NATIVE */
+end_comment
+
 begin_escape
 end_escape
 
@@ -11683,6 +11687,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* FREEBSD_NATIVE */
 comment|/* Options specified as if they appeared on the command line.  */
 name|temp
 operator|=
@@ -14050,7 +14055,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FREEBSD_NATIVE */
+comment|/* not FREEBSD_NATIVE */
 comment|/* More prefixes are enabled in main, after we read the specs file      and determine whether this is cross-compilation or not.  */
 comment|/* Then create the space for the vectors and scan again.  */
 name|switches
@@ -14192,6 +14197,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* FREEBSD_NATIVE */
 for|for
 control|(
 name|i
@@ -20873,7 +20879,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-comment|/* FREEBSD_NATIVE */
+comment|/* not FREEBSD_NATIVE */
 return|return
 operator|(
 name|stat
@@ -21777,6 +21783,7 @@ name|just_machine_suffix
 operator|=
 literal|""
 expr_stmt|;
+comment|/* I don't support specs, gives determinism */
 else|#
 directive|else
 comment|/* FREEBSD_NATIVE */
