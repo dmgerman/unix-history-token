@@ -14624,11 +14624,6 @@ operator|=
 name|cx_ioctl
 block|,
 operator|.
-name|d_poll
-operator|=
-name|ttypoll
-block|,
-operator|.
 name|d_name
 operator|=
 literal|"cx"

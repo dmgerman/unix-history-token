@@ -2707,11 +2707,6 @@ operator|=
 name|rpclose
 block|,
 operator|.
-name|d_read
-operator|=
-name|ttyread
-block|,
-operator|.
 name|d_write
 operator|=
 name|rpwrite
@@ -2720,11 +2715,6 @@ operator|.
 name|d_ioctl
 operator|=
 name|rpioctl
-block|,
-operator|.
-name|d_poll
-operator|=
-name|ttypoll
 block|,
 operator|.
 name|d_name

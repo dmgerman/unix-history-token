@@ -564,11 +564,6 @@ operator|=
 name|siclose
 block|,
 operator|.
-name|d_read
-operator|=
-name|ttyread
-block|,
-operator|.
 name|d_write
 operator|=
 name|siwrite
@@ -579,11 +574,6 @@ operator|=
 name|siioctl
 block|,
 operator|.
-name|d_poll
-operator|=
-name|ttypoll
-block|,
-operator|.
 name|d_name
 operator|=
 literal|"si"
@@ -592,11 +582,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
-block|,
-operator|.
-name|d_kqfilter
-operator|=
-name|ttykqfilter
 block|, }
 decl_stmt|;
 end_decl_stmt

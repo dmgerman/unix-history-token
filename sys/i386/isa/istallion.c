@@ -3041,11 +3041,6 @@ operator|=
 name|stliioctl
 block|,
 operator|.
-name|d_poll
-operator|=
-name|ttypoll
-block|,
-operator|.
 name|d_name
 operator|=
 name|stli_drvname
@@ -3054,11 +3049,6 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
-block|,
-operator|.
-name|d_kqfilter
-operator|=
-name|ttykqfilter
 block|, }
 decl_stmt|;
 end_decl_stmt

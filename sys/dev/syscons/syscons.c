@@ -1513,19 +1513,9 @@ operator|=
 name|scread
 block|,
 operator|.
-name|d_write
-operator|=
-name|ttywrite
-block|,
-operator|.
 name|d_ioctl
 operator|=
 name|scioctl
-block|,
-operator|.
-name|d_poll
-operator|=
-name|ttypoll
 block|,
 operator|.
 name|d_mmap
@@ -1546,12 +1536,7 @@ operator|.
 name|d_flags
 operator|=
 name|D_TTY
-block|,
-operator|.
-name|d_kqfilter
-operator|=
-name|ttykqfilter
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
