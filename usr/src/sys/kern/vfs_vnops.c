@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.9	81/04/28	*/
+comment|/*	vfs_vnops.c	4.10	81/05/12	*/
 end_comment
 
 begin_include
@@ -211,6 +211,25 @@ name|fp
 operator|->
 name|f_flag
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|BBNNET
+if|if
+condition|(
+name|flag
+operator|&
+name|FNET
+condition|)
+block|{
+name|netclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|flag

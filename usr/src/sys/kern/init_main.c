@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.15	81/04/28	*/
+comment|/*	init_main.c	4.16	81/05/12	*/
 end_comment
 
 begin_include
@@ -576,6 +576,16 @@ expr_stmt|;
 comment|/* 		 * Return goes to loc. 0 of user init 		 * code just copied out. 		 */
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|BBNNET
+comment|/* 	 * Initialize bbn network. 	 */
+name|netinit
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|BBNNET
 name|proc
 index|[
 literal|0
