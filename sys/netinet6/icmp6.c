@@ -4437,7 +4437,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* should be impossbile */
+comment|/* should be impossible */
 name|nd6log
 argument_list|(
 operator|(
@@ -4531,7 +4531,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-comment|/* should be impossbile */
+comment|/* should be impossible */
 name|nd6log
 argument_list|(
 operator|(
