@@ -747,9 +747,16 @@ name|CTLTYPE_INT
 case|:
 name|intval
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|strtol
 argument_list|(
 name|newval
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|newval
