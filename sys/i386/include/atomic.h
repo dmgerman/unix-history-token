@@ -396,11 +396,11 @@ parameter_list|,
 name|SOP
 parameter_list|)
 define|\
-value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "+a" (res),
+value|static __inline u_##TYPE				\ atomic_load_acq_##TYPE(volatile u_##TYPE *p)		\ {							\ 	u_##TYPE res;					\ 							\ 	__asm __volatile(MPLOCKED LOP			\ 	: "=a" (res),
 comment|/* 0 (result) */
 value|\ 	  "+m" (*p)
 comment|/* 1 */
-value|\ 	: : "memory");				 	\ 							\ 	return (res);					\ }							\ 							\
+value|\ 	: : "cc", "memory");			 	\ 							\ 	return (res);					\ }							\ 							\
 comment|/*							\  * The XCHG instruction asserts LOCK automagically.	\  */
 value|\ static __inline void					\ atomic_store_rel_##TYPE(volatile u_##TYPE *p, u_##TYPE v)\ {							\ 	__asm __volatile(SOP				\ 	: "+m" (*p),
 comment|/* 0 */
