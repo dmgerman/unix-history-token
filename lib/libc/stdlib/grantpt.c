@@ -137,28 +137,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|PTM_MAJOR
-value|6
-end_define
-
-begin_comment
-comment|/* pseudo tty master major */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTS_MAJOR
-value|5
-end_define
-
-begin_comment
-comment|/* pseudo tty slave major */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PTM_PREFIX
 value|"pty"
 end_define
@@ -225,7 +203,7 @@ name|ISPTM
 parameter_list|(
 name|x
 parameter_list|)
-value|(S_ISCHR((x).st_mode)&& 			\ 			 major((x).st_rdev) == PTM_MAJOR&&		\ 			 minor((x).st_rdev)>= 0&&			\ 			 minor((x).st_rdev)< PT_MAX)
+value|(S_ISCHR((x).st_mode)&& 			\ 			 minor((x).st_rdev)>= 0&&			\ 			 minor((x).st_rdev)< PT_MAX)
 end_define
 
 begin_comment
