@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_pager.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1103,7 +1103,14 @@ name|vm_offset_t
 name|offset
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|vn_pager_t
 name|vnp
 init|=
@@ -1141,11 +1148,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Offset beyond end of file, do not have the page 	 * Lock the vnode first to make sure we have the most recent 	 * version of the size. 	 */
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1162,6 +1175,10 @@ argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1238,6 +1255,10 @@ argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1620,7 +1641,14 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|vm_pager_t
 name|pager
 decl_stmt|,
@@ -1688,9 +1716,15 @@ operator|==
 name|mp
 condition|)
 block|{
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1704,6 +1738,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -1728,7 +1766,14 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -1828,6 +1873,10 @@ expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|pager_cache
@@ -1837,9 +1886,15 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2005,11 +2060,17 @@ name|VM_PAGER_AGAIN
 operator|)
 return|;
 comment|/* 	 * After all of the potentially blocking operations have been 	 * performed, we can do the size checks: 	 *	read beyond EOF (returns error) 	 *	short read 	 */
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -2026,6 +2087,10 @@ argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|vm_pager_unmap_pages
@@ -2227,6 +2292,10 @@ argument_list|(
 name|vnp
 operator|->
 name|vnp_vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 ifdef|#
