@@ -57,18 +57,6 @@ directive|include
 file|"sysinstall.h"
 end_include
 
-begin_decl_stmt
-name|Boolean
-name|ColorDisplay
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|Boolean
-name|OnVTY
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|set_termcap

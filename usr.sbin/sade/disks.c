@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.2 1995/05/05 23:47:40 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -15,6 +15,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
+
 begin_comment
 comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
 end_comment
@@ -24,13 +30,6 @@ define|#
 directive|define
 name|MAX_CHUNKS
 value|50
-end_define
-
-begin_define
-define|#
-directive|define
-name|FS_SWAP
-value|1
 end_define
 
 begin_comment
@@ -62,39 +61,6 @@ name|FS_MIN_SIZE
 value|2048
 end_define
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|PART_NONE
-block|,
-name|PART_SLICE
-block|,
-name|PART_SWAP
-block|,
-name|PART_FILESYSTEM
-block|}
-name|part_type
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|part_info
-block|{
-name|Boolean
-name|newfs
-decl_stmt|;
-name|char
-name|mountpoint
-index|[
-name|FILENAME_MAX
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_struct
 specifier|static
 struct|struct
@@ -109,12 +75,11 @@ name|chunk
 modifier|*
 name|c
 decl_stmt|;
-name|struct
-name|part_info
+name|PartInfo
 modifier|*
 name|p
 decl_stmt|;
-name|part_type
+name|PartType
 name|type
 decl_stmt|;
 block|}
@@ -639,8 +604,7 @@ name|char
 modifier|*
 name|val
 decl_stmt|;
-name|struct
-name|part_info
+name|PartInfo
 modifier|*
 name|part
 decl_stmt|;
@@ -725,16 +689,14 @@ expr_stmt|;
 name|part
 operator|=
 operator|(
-expr|struct
-name|part_info
+name|PartInfo
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|part_info
+name|PartInfo
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -783,7 +745,7 @@ end_function
 
 begin_function
 specifier|static
-name|part_type
+name|PartType
 name|get_partition_type
 parameter_list|(
 name|struct
@@ -806,13 +768,13 @@ name|fs_types
 index|[]
 init|=
 block|{
-literal|"Swap"
-block|,
-literal|"A swap partition."
-block|,
 literal|"FS"
 block|,
 literal|"A file system"
+block|,
+literal|"Swap"
+block|,
+literal|"A swap partition."
 block|,     }
 decl_stmt|;
 if|if
@@ -1213,8 +1175,7 @@ name|mountpoint
 operator|=
 operator|(
 operator|(
-expr|struct
-name|part_info
+name|PartInfo
 operator|*
 operator|)
 name|fbsd_chunk_info
@@ -1233,8 +1194,7 @@ name|newfs
 operator|=
 operator|(
 operator|(
-expr|struct
-name|part_info
+name|PartInfo
 operator|*
 operator|)
 name|fbsd_chunk_info
@@ -1684,7 +1644,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|part_type
+name|PartType
 name|type
 decl_stmt|;
 if|if
@@ -1736,6 +1696,10 @@ operator|.
 name|c
 operator|->
 name|offset
+operator|+
+name|sz
+operator|-
+name|size
 argument_list|,
 name|size
 argument_list|,
@@ -1766,6 +1730,45 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+break|break;
+case|case
+literal|'D'
+case|:
+if|if
+condition|(
+name|fbsd_chunk_info
+index|[
+name|current_chunk
+index|]
+operator|.
+name|type
+operator|==
+name|PART_SLICE
+condition|)
+block|{
+name|msg
+operator|=
+literal|"Use the Master Partition Editor to delete one of these"
+expr_stmt|;
+break|break;
+block|}
+name|Delete_Chunk
+argument_list|(
+name|fbsd_chunk_info
+index|[
+name|current_chunk
+index|]
+operator|.
+name|d
+argument_list|,
+name|fbsd_chunk_info
+index|[
+name|current_chunk
+index|]
+operator|.
+name|c
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|27
@@ -1819,7 +1822,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Last Chance!  Are you sure you want to write your changes to disk?"
+literal|"Last Chance!  Are you sure you want to write out\nall your changes to disk?"
 argument_list|)
 condition|)
 block|{
@@ -1869,7 +1872,7 @@ operator|&&
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Would you like to install a boot manager?\n\nThis will allow you to easily select between other operating systems\non the first disk, as well as boot from a driver other than the first."
+literal|"Would you like to install a boot manager?\n\nThis will allow you to easily select between other operating systems\non the first disk, or boot from a disk other than the first."
 argument_list|)
 condition|)
 name|Set_Boot_Mgr
@@ -1920,58 +1923,6 @@ return|return
 literal|1
 return|;
 block|}
-end_function
-
-begin_function
-name|void
-name|make_filesystems
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-modifier|*
-name|disks
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|cpio_extract
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-modifier|*
-name|disks
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|extract_dists
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-modifier|*
-name|disks
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
-name|do_final_setup
-parameter_list|(
-name|struct
-name|disk
-modifier|*
-modifier|*
-name|disks
-parameter_list|)
-block|{ }
 end_function
 
 end_unit
