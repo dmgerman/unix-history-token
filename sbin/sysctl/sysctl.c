@@ -2555,6 +2555,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|val
+index|[
+name|len
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|fmt
 operator|=
 name|buf
