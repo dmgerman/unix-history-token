@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.19 1999/06/05 13:30:13 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cia.c,v 1.20 1999/07/01 20:25:39 peter Exp $  */
 end_comment
 
 begin_comment
@@ -2000,6 +2000,10 @@ parameter_list|)
 value|if((b)) {	\         do {						\ 		alpha_mb();				\ 		REGVAL(CIA_CSR_CFG) = (old_cfg);	\ 		alpha_mb();				\ 		splx((s));				\         } while(0);					\ }
 end_define
 
+begin_comment
+comment|/*  * From NetBSD:  * Some (apparently-common) revisions of EB164 and AlphaStation  * firmware do the Wrong thing with PCI master and target aborts,  * which are caused by accesing the configuration space of devices  * that don't exist (for example).  *  * To work around this, we clear the CIA error register's PCI  * master and target abort bits before touching PCI configuration  * space and check it afterwards.  If it indicates a master or target  * abort, the device wasn't there so we return ~0  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2018,7 +2022,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|type val = ~0;							\ 	int ipl = 0;							\ 	u_int32_t old_cfg = 0;						\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(CIA_PCI_CONF), off); \ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	return val;
+value|type val = ~0;							\ 	int ipl = 0;							\ 	u_int32_t old_cfg = 0, errbits;					\ 	vm_offset_t off = CIA_SWIZ_CFGOFF(b, s, f, r);			\ 	vm_offset_t kv = SPARSE_##width##_ADDRESS(KV(CIA_PCI_CONF), off); \ 	REGVAL(CIA_CSR_CIA_ERR) = CIA_ERR_RCVD_MAS_ABT|CIA_ERR_RCVD_TAR_ABT;\ 	alpha_mb();							\ 	CIA_TYPE1_SETUP(b,ipl,old_cfg);					\ 	if (!badaddr((caddr_t)kv, sizeof(type))) {			\ 		val = SPARSE_##width##_EXTRACT(off, SPARSE_READ(kv));	\ 	}								\         CIA_TYPE1_TEARDOWN(b,ipl,old_cfg);				\ 	errbits = REGVAL(CIA_CSR_CIA_ERR);				\ 	if (errbits& (CIA_ERR_RCVD_MAS_ABT|CIA_ERR_RCVD_TAR_ABT))	\ 		val = ~0;						\ 	if (errbits) {							\ 		REGVAL(CIA_CSR_CIA_ERR) = errbits;			\ 		alpha_mb();						\ 		alpha_pal_draina();					\ 	}								\         return val;
 end_define
 
 begin_define
