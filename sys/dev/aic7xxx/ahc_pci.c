@@ -2786,8 +2786,6 @@ argument_list|)
 expr_stmt|;
 name|dscommand0
 operator||=
-name|DPARCKEN
-operator||
 name|MPARCKEN
 expr_stmt|;
 if|if
