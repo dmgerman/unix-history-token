@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: display.c,v 1.2 1997/07/10 06:48:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,6 +1112,11 @@ name|need
 decl_stmt|,
 name|nread
 decl_stmt|;
+name|int
+name|valid_save
+init|=
+literal|0
+decl_stmt|;
 name|u_char
 modifier|*
 name|tmpp
@@ -1154,6 +1159,10 @@ expr_stmt|;
 name|address
 operator|+=
 name|blocksize
+expr_stmt|;
+name|valid_save
+operator|=
+literal|1
 expr_stmt|;
 block|}
 for|for
@@ -1210,7 +1219,8 @@ name|vflag
 operator|!=
 name|ALL
 operator|&&
-operator|!
+name|valid_save
+operator|&&
 name|bcmp
 argument_list|(
 name|curp
@@ -1219,6 +1229,8 @@ name|savp
 argument_list|,
 name|nread
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1369,6 +1381,10 @@ name|vflag
 operator|==
 name|FIRST
 operator|||
+name|valid_save
+operator|==
+literal|0
+operator|||
 name|bcmp
 argument_list|(
 name|curp
@@ -1377,6 +1393,8 @@ name|savp
 argument_list|,
 name|blocksize
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
