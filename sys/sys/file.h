@@ -686,7 +686,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|nfiles
+name|openfiles
 decl_stmt|;
 end_decl_stmt
 
@@ -703,7 +703,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sx to protect filelist and nfiles */
+comment|/* sx to protect filelist and openfiles */
 end_comment
 
 begin_function_decl

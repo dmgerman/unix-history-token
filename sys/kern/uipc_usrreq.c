@@ -7288,7 +7288,7 @@ name|again
 label|:
 name|nfiles_snap
 operator|=
-name|nfiles
+name|openfiles
 operator|+
 name|nfiles_slack
 expr_stmt|;
@@ -7321,7 +7321,7 @@ if|if
 condition|(
 name|nfiles_snap
 operator|<
-name|nfiles
+name|openfiles
 condition|)
 block|{
 name|sx_sunlock
