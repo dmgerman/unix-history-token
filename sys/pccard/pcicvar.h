@@ -86,10 +86,14 @@ enum|enum
 name|pcic_irq_type
 block|{
 name|isa_parallel
+init|=
+literal|1
+block|,
+name|isa_serial
 block|,
 name|pci_parallel
 block|,
-name|isa_serial
+name|pci_serial
 block|}
 enum|;
 end_enum
