@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.13 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2765,6 +2765,47 @@ operator|->
 name|m_flags
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* do some rationality checking */
+if|if
+condition|(
+name|m
+operator|->
+name|m_argv
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"M%s: A= argument required"
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|m
+operator|->
+name|m_mailer
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"M%s: P= argument required"
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
