@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.5 84/01/12"
+literal|"@(#)error.c	3.6 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,7 +152,7 @@ if|if
 condition|(
 name|cx
 operator|.
-name|x_noerrwin
+name|x_noerr
 condition|)
 return|return;
 if|if
@@ -220,18 +220,33 @@ argument_list|)
 expr_stmt|;
 name|cx
 operator|.
-name|x_noerrwin
+name|x_noerr
 operator|=
 literal|1
 expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
 name|more
 argument_list|(
 name|w
+argument_list|,
+literal|0
 argument_list|)
+operator|==
+literal|2
+condition|)
+block|{
+name|cx
+operator|.
+name|x_noerr
+operator|=
+literal|1
 expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -301,6 +316,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|cx
+operator|.
+name|x_noerr
+condition|)
 name|waitnl
 argument_list|(
 name|cx

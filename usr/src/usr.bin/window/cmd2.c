@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.19 84/01/12"
+literal|"@(#)cmd2.c	3.20 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +176,8 @@ name|escapec
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|help_print
 argument_list|(
 name|w
@@ -184,7 +186,12 @@ literal|"Short commands"
 argument_list|,
 name|help_shortcmd
 argument_list|)
-expr_stmt|;
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
 name|help_print
 argument_list|(
 name|w
@@ -227,6 +234,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
 name|char
 modifier|*
 modifier|*
@@ -236,28 +244,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|p
-decl_stmt|;
-name|char
-name|firsttime
-init|=
-literal|1
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|list
-init|;
-operator|*
-name|p
-condition|;
-control|)
-block|{
 operator|(
 name|void
 operator|)
@@ -265,48 +251,36 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%s:%s\n\n"
+literal|"%s:\n\n"
 argument_list|,
 name|name
-argument_list|,
-name|firsttime
-condition|?
-literal|""
-else|:
-literal|" (continued)"
 argument_list|)
-expr_stmt|;
-name|firsttime
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
 operator|*
-name|p
-operator|&&
+name|list
+condition|)
+switch|switch
+condition|(
+name|more
+argument_list|(
 name|w
-operator|->
-name|ww_cur
-operator|.
-name|r
-operator|<
-name|w
-operator|->
-name|ww_w
-operator|.
-name|b
-operator|-
-literal|2
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 block|{
+case|case
+literal|0
+case|:
 operator|(
 name|void
 operator|)
 name|wwputs
 argument_list|(
 operator|*
-name|p
+name|list
 operator|++
 argument_list|,
 name|w
@@ -322,24 +296,46 @@ argument_list|,
 name|w
 argument_list|)
 expr_stmt|;
-block|}
-name|waitnl
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
 operator|(
 name|void
 operator|)
-name|wwputs
+name|wwprintf
 argument_list|(
-literal|"\033E"
-argument_list|,
 name|w
+argument_list|,
+literal|"%s: (continue)\n\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
-comment|/* clear and home cursor */
+break|break;
+case|case
+literal|2
+case|:
+return|return
+operator|-
+literal|1
+return|;
 block|}
+return|return
+name|more
+argument_list|(
+name|w
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|2
+condition|?
+operator|-
+literal|1
+else|:
+literal|0
+return|;
 block|}
 end_block
 
@@ -1288,10 +1284,42 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_macro
 name|waitnl
 argument_list|(
+argument|w
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
 name|w
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|waitnl1
+argument_list|(
+name|w
+argument_list|,
+literal|"[Type any key to continue]"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_expr_stmt
+name|waitnl1
+argument_list|(
+name|w
+argument_list|,
+name|prompt
 argument_list|)
 specifier|register
 expr|struct
@@ -1300,6 +1328,13 @@ operator|*
 name|w
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|prompt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1317,7 +1352,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"\033Y%c%c[Type any key to continue] "
+literal|"\033Y%c%c\033p%s\033q "
 argument_list|,
 name|w
 operator|->
@@ -1330,6 +1365,8 @@ operator|+
 literal|' '
 argument_list|,
 literal|' '
+argument_list|,
+name|prompt
 argument_list|)
 expr_stmt|;
 comment|/* print on last line */
@@ -1340,7 +1377,7 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|bgetc
+name|bpeekc
 argument_list|()
 operator|<
 literal|0
@@ -1348,6 +1385,10 @@ condition|)
 name|bread
 argument_list|()
 expr_stmt|;
+return|return
+name|bgetc
+argument_list|()
+return|;
 block|}
 end_block
 
@@ -1355,6 +1396,8 @@ begin_expr_stmt
 name|more
 argument_list|(
 name|w
+argument_list|,
+name|flag
 argument_list|)
 specifier|register
 expr|struct
@@ -1364,28 +1407,46 @@ name|w
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|char
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+name|int
+name|c
+decl_stmt|;
 if|if
 condition|(
+operator|!
+name|flag
+operator|&&
 name|w
 operator|->
 name|ww_cur
 operator|.
 name|r
-operator|>
+operator|<
 name|w
 operator|->
 name|ww_w
 operator|.
 name|b
 operator|-
-literal|3
+literal|2
 condition|)
-block|{
-name|waitnl
+return|return
+literal|0
+return|;
+name|c
+operator|=
+name|waitnl1
 argument_list|(
 name|w
+argument_list|,
+literal|"[Type escape to abort, any other key to continue]"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1398,7 +1459,18 @@ argument_list|,
 name|w
 argument_list|)
 expr_stmt|;
-block|}
+return|return
+name|c
+operator|==
+name|CTRL
+argument_list|(
+index|[
+argument_list|)
+condition|?
+literal|2
+else|:
+literal|1
+expr|;
 block|}
 end_block
 

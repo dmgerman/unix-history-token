@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd6.c	3.5 84/01/12"
+literal|"@(#)cmd6.c	3.6 84/01/13"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,11 +248,20 @@ operator|->
 name|s_forw
 control|)
 block|{
+if|if
+condition|(
 name|more
 argument_list|(
 name|w
+argument_list|,
+literal|0
 argument_list|)
-expr_stmt|;
+operator|==
+literal|2
+condition|)
+goto|goto
+name|out
+goto|;
 operator|(
 name|void
 operator|)
@@ -277,6 +286,8 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|closeiwin
 argument_list|(
 name|w
