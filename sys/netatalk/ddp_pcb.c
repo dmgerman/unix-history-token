@@ -262,9 +262,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=
@@ -454,7 +456,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|at_ifaddr
+name|at_ifaddr_list
 operator|==
 name|NULL
 condition|)
@@ -471,7 +473,7 @@ name|sat_addr
 operator|=
 name|AA_SAT
 argument_list|(
-name|at_ifaddr
+name|at_ifaddr_list
 argument_list|)
 operator|->
 name|sat_addr
@@ -866,9 +868,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=
@@ -1109,9 +1113,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=

@@ -156,7 +156,7 @@ specifier|extern
 name|struct
 name|at_ifaddr
 modifier|*
-name|at_ifaddr
+name|at_ifaddr_list
 decl_stmt|;
 end_decl_stmt
 

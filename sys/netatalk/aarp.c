@@ -470,9 +470,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=

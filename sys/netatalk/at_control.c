@@ -91,7 +91,7 @@ begin_decl_stmt
 name|struct
 name|at_ifaddr
 modifier|*
-name|at_ifaddr
+name|at_ifaddr_list
 decl_stmt|;
 end_decl_stmt
 
@@ -355,9 +355,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=
@@ -620,7 +622,7 @@ condition|(
 operator|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 operator|)
 operator|!=
 name|NULL
@@ -629,7 +631,7 @@ block|{
 comment|/* 		 * Don't let the loopback be first, since the first 		 * address is the machine's default address for 		 * binding. 		 * If it is, stick ourself in front, otherwise 		 * go to the back of the list. 		 */
 if|if
 condition|(
-name|at_ifaddr
+name|at_ifaddr_list
 operator|->
 name|aa_ifp
 operator|->
@@ -646,9 +648,9 @@ name|aa
 operator|->
 name|aa_next
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 expr_stmt|;
-name|at_ifaddr
+name|at_ifaddr_list
 operator|=
 name|aa
 expr_stmt|;
@@ -679,7 +681,7 @@ block|}
 block|}
 else|else
 block|{
-name|at_ifaddr
+name|at_ifaddr_list
 operator|=
 name|aa0
 expr_stmt|;
@@ -1135,11 +1137,11 @@ operator|==
 operator|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 operator|)
 condition|)
 block|{
-name|at_ifaddr
+name|at_ifaddr_list
 operator|=
 name|aa
 operator|->
@@ -2797,9 +2799,11 @@ for|for
 control|(
 name|aa
 operator|=
-name|at_ifaddr
+name|at_ifaddr_list
 init|;
 name|aa
+operator|!=
+name|NULL
 condition|;
 name|aa
 operator|=
@@ -3383,7 +3387,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void aa_clean(void) {     struct at_ifaddr	*aa;     struct ifaddr	*ifa;     struct ifnet	*ifp;      while (aa = at_ifaddr) { 	ifp = aa->aa_ifp; 	at_scrub(ifp, aa); 	at_ifaddr = aa->aa_next; 	if ((ifa = ifp->if_addrlist) == (struct ifaddr *)aa) { 	    ifp->if_addrlist = ifa->ifa_next; 	} else { 	    while (ifa->ifa_next&& 		    (ifa->ifa_next != (struct ifaddr *)aa)) { 		ifa = ifa->ifa_next; 	    } 	    if (ifa->ifa_next) { 		ifa->ifa_next = ((struct ifaddr *)aa)->ifa_next; 	    } else { 		panic("at_entry"); 	    } 	}     } }
+unit|static void aa_clean(void) {     struct at_ifaddr	*aa;     struct ifaddr	*ifa;     struct ifnet	*ifp;      while ((aa = at_ifaddr_list) != NULL) { 	ifp = aa->aa_ifp; 	at_scrub(ifp, aa); 	at_ifaddr_list = aa->aa_next; 	if ((ifa = ifp->if_addrlist) == (struct ifaddr *)aa) { 	    ifp->if_addrlist = ifa->ifa_next; 	} else { 	    while (ifa->ifa_next&& 		    (ifa->ifa_next != (struct ifaddr *)aa)) { 		ifa = ifa->ifa_next; 	    } 	    if (ifa->ifa_next) { 		ifa->ifa_next = ((struct ifaddr *)aa)->ifa_next; 	    } else { 		panic("at_entry"); 	    } 	}     } }
 endif|#
 directive|endif
 end_endif
