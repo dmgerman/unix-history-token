@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_lfs.c	8.3 (Berkeley) %G%"
+literal|"@(#)mount_lfs.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
@@ -252,6 +258,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -345,7 +353,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_LFS
+literal|"lfs"
 argument_list|,
 name|fs_name
 argument_list|,

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_portal.c	8.5 (Berkeley) %G%"
+literal|"@(#)mount_portal.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -349,6 +349,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -581,7 +583,7 @@ name|rc
 operator|=
 name|mount
 argument_list|(
-name|MOUNT_PORTAL
+literal|"portal"
 argument_list|,
 name|mountpt
 argument_list|,

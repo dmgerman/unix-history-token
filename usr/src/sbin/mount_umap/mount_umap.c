@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_umap.c	8.4 (Berkeley) %G%"
+literal|"@(#)mount_umap.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -298,6 +298,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -932,7 +934,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_UMAP
+literal|"umap"
 argument_list|,
 name|argv
 index|[
