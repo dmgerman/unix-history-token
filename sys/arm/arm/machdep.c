@@ -289,6 +289,14 @@ name|vector_page
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|long
+name|realmem
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|sendsig
@@ -1012,6 +1020,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|realmem
+operator|=
+name|physmem
+expr_stmt|;
 block|}
 end_function
 
