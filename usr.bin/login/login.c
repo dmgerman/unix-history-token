@@ -1290,6 +1290,25 @@ block|{
 ifdef|#
 directive|ifdef
 name|KERBEROS
+ifdef|#
+directive|ifdef
+name|SKEY
+comment|/* 			 * Do not allow user to type in kerberos password 			 * over the net (actually, this is ok for encrypted 			 * links, but we have no way of determining if the 			 * link is encrypted. 			 */
+if|if
+condition|(
+operator|!
+name|permit_password
+condition|)
+block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
+comment|/* failed */
+block|}
+else|else
+endif|#
+directive|endif
 name|rval
 operator|=
 name|klogin
