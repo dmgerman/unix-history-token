@@ -4607,6 +4607,12 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|xsc
@@ -4639,6 +4645,13 @@ operator|.
 name|nmb_checkforhangsecs
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 end_function
 
