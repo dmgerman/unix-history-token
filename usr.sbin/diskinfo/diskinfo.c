@@ -639,6 +639,9 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|blockno
 operator|*
 name|sectorsize
@@ -953,8 +956,6 @@ name|sectorcount
 operator|-
 literal|1
 operator|-
-literal|125
-operator|*
 literal|16384
 expr_stmt|;
 name|T0
@@ -997,7 +998,7 @@ name|sectorsize
 argument_list|)
 expr_stmt|;
 name|b1
-operator|+=
+operator|-=
 literal|16384
 expr_stmt|;
 block|}
@@ -1164,7 +1165,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|1000
+literal|400
 condition|;
 name|i
 operator|++
@@ -1186,7 +1187,7 @@ expr_stmt|;
 block|}
 name|TN
 argument_list|(
-literal|1000
+literal|400
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1211,7 +1212,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|1000
+literal|400
 condition|;
 name|i
 operator|++
@@ -1233,7 +1234,7 @@ expr_stmt|;
 block|}
 name|TN
 argument_list|(
-literal|1000
+literal|400
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1256,7 +1257,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|20480
+literal|2048
 condition|;
 name|i
 operator|++
@@ -1277,7 +1278,7 @@ expr_stmt|;
 block|}
 name|TN
 argument_list|(
-literal|20480
+literal|2048
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1289,7 +1290,7 @@ name|b0
 operator|=
 name|sectorcount
 operator|-
-literal|20480
+literal|2048
 operator|-
 literal|1
 expr_stmt|;
@@ -1304,7 +1305,7 @@ literal|0
 init|;
 name|i
 operator|<
-literal|20480
+literal|2048
 condition|;
 name|i
 operator|++
@@ -1325,7 +1326,7 @@ expr_stmt|;
 block|}
 name|TN
 argument_list|(
-literal|20480
+literal|2048
 argument_list|)
 expr_stmt|;
 name|printf
