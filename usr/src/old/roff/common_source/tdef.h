@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tdef.h	4.5	83/08/11	*/
+comment|/*	tdef.h	4.6	85/05/05	*/
 end_comment
 
 begin_define
@@ -973,7 +973,7 @@ begin_define
 define|#
 directive|define
 name|OBUFSZ
-value|512
+value|8192
 end_define
 
 begin_comment
@@ -984,7 +984,7 @@ begin_define
 define|#
 directive|define
 name|IBUFSZ
-value|512
+value|8192
 end_define
 
 begin_comment
