@@ -6447,7 +6447,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_int *a_cookies; 		int a_ncookies; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -7395,11 +7395,11 @@ name|dirent
 modifier|*
 name|dp
 decl_stmt|;
-name|u_int
+name|u_long
 modifier|*
 name|cookies
 decl_stmt|;
-name|u_int
+name|u_long
 modifier|*
 name|cookiep
 decl_stmt|;
@@ -7458,18 +7458,16 @@ name|uio_iov
 operator|->
 name|iov_base
 expr_stmt|;
-name|MALLOC
-argument_list|(
 name|cookies
-argument_list|,
-name|u_int
-operator|*
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 name|ncookies
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int
+operator|*
+name|cookies
 argument_list|)
 argument_list|,
 name|M_TEMP
@@ -7521,7 +7519,7 @@ name|cookiep
 operator|++
 operator|=
 operator|(
-name|u_int
+name|u_long
 operator|)
 name|off
 expr_stmt|;

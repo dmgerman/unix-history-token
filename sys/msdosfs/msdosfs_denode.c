@@ -250,7 +250,14 @@ end_decl_stmt
 begin_function
 name|int
 name|msdosfs_init
-parameter_list|()
+parameter_list|(
+name|vfsp
+parameter_list|)
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
 block|{
 name|dehashtbl
 operator|=

@@ -382,7 +382,10 @@ name|msdosfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
+name|vfsp
 operator|)
 argument_list|)
 decl_stmt|;
