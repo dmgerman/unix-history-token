@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.23 (Berkeley) %G%"
+literal|"@(#)mount.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -797,6 +797,38 @@ name|mntbuf
 operator|->
 name|f_type
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|mntbuf
+operator|->
+name|f_mntfromname
+argument_list|,
+literal|"root_device"
+argument_list|)
+condition|)
+block|{
+name|fs
+operator|=
+name|getfsfile
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|mntbuf
+operator|->
+name|f_mntfromname
+argument_list|,
+name|fs
+operator|->
+name|fs_spec
+argument_list|)
+expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|mountfs
