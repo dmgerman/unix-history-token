@@ -261,7 +261,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: %s [-Fd] [-P pidfile] [-a name] [-e exec | -l label]"
-literal|" [-p provider] interface\n"
+literal|" [-n ngdebug] [-p provider] interface\n"
 argument_list|,
 name|prog
 argument_list|)

@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"alnDL"
+value|"aDLln"
 end_define
 
 begin_function

@@ -120,7 +120,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: revnetgroup -u|-h [-f netgroup file]\n"
+literal|"usage: revnetgroup -u | -h [-f netgroup_file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
