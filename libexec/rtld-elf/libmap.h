@@ -37,5 +37,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_32BIT
+end_ifdef
+
+begin_function_decl
+name|char
+modifier|*
+name|lm_findn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

@@ -127,6 +127,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MYNAME
+value|"ld-elf.so.1"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_MYNAME
+value|"ld-elf32.so.1"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -134,7 +164,7 @@ name|assert
 parameter_list|(
 name|cond
 parameter_list|)
-value|((cond) ? (void) 0 :		\     (msg("ld-elf.so.1: assert failed: " __FILE__ ":"	\       __XSTRING(__LINE__) "\n"), abort()))
+value|((cond) ? (void) 0 :		\     (msg(_MYNAME ": assert failed: " __FILE__ ":"	\       __XSTRING(__LINE__) "\n"), abort()))
 end_define
 
 begin_define
@@ -152,7 +182,7 @@ define|#
 directive|define
 name|trace
 parameter_list|()
-value|msg("ld-elf.so.1: " __XSTRING(__LINE__) "\n")
+value|msg(_MYNAME ": " __XSTRING(__LINE__) "\n")
 end_define
 
 begin_endif
