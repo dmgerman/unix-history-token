@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.12 1995/04/29 21:30:26 joerg Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.13 1995/05/30 08:13:43 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -873,6 +873,13 @@ define|#
 directive|define
 name|DAT_1
 value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|QIC_3080
+value|0x29
 end_define
 
 begin_endif
