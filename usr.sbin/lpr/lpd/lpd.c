@@ -239,7 +239,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|pflag
+name|sflag
 decl_stmt|;
 end_decl_stmt
 
@@ -591,7 +591,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdlpwW46"
+literal|"cdlpswW46"
 argument_list|)
 operator|)
 operator|!=
@@ -629,7 +629,14 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|pflag
+comment|/* letter initially used for -s */
+comment|/* 			 * This will probably be removed with 5.0-release. 			 */
+comment|/* FALLTHROUGH */
+case|case
+literal|'s'
+case|:
+comment|/* secure (no inet) */
+name|sflag
 operator|++
 expr_stmt|;
 break|break;
@@ -713,10 +720,6 @@ literal|'r'
 case|:
 comment|/* allow 'of' for remote ptrs */
 comment|/* ...[not needed in freebsd] */
-case|case
-literal|'s'
-case|:
-comment|/* secure (no inet), same as -p */
 comment|/* FALLTHROUGH */
 default|default:
 name|errs
@@ -981,13 +984,19 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"lpd startup: logging=%d%s"
+literal|"lpd startup: logging=%d%s%s"
 argument_list|,
 name|lflag
 argument_list|,
 name|socket_debug
 condition|?
 literal|" dbg"
+else|:
+literal|""
+argument_list|,
+name|sflag
+condition|?
+literal|" net-secure"
 else|:
 literal|""
 argument_list|)
@@ -1373,7 +1382,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pflag
+name|sflag
 operator|==
 literal|0
 condition|)
@@ -1736,7 +1745,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pflag
+name|sflag
 operator|==
 literal|0
 operator|&&
@@ -4199,7 +4208,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-cdlpW46] [port#]\n"
+literal|"usage: lpd [-cdlsW46] [port#]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -4208,7 +4217,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-cdlpW] [port#]\n"
+literal|"usage: lpd [-cdlsW] [port#]\n"
 argument_list|)
 expr_stmt|;
 endif|#
