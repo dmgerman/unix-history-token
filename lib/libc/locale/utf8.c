@@ -541,7 +541,7 @@ expr|\0'
 condition|?
 literal|0
 else|:
-name|i
+name|len
 operator|)
 return|;
 block|}
