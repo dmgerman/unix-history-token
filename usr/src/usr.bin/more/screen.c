@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)screen.c	5.8 (Berkeley) %G%"
+literal|"@(#)screen.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,16 @@ end_comment
 
 begin_comment
 comment|/* The user's erase and line-kill chars */
+end_comment
+
+begin_decl_stmt
+name|int
+name|retain_below
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Terminal retains text below the screen */
 end_comment
 
 begin_decl_stmt
@@ -945,6 +955,13 @@ operator|=
 name|tgetflag
 argument_list|(
 literal|"xn"
+argument_list|)
+expr_stmt|;
+name|retain_below
+operator|=
+name|tgetflag
+argument_list|(
+literal|"db"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Assumes termcap variable "sg" is the printing width of 	 * the standout sequence, the end standout sequence, 	 * the underline sequence, the end underline sequence, 	 * the boldface sequence, and the end boldface sequence. 	 */

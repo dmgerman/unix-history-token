@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)prim.c	5.8 (Berkeley) %G%"
+literal|"@(#)prim.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,6 +137,13 @@ specifier|extern
 name|char
 modifier|*
 name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|retain_below
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +622,18 @@ operator|!
 name|do_repaint
 condition|)
 block|{
+if|if
+condition|(
+name|retain_below
+condition|)
+block|{
+name|lower_left
+argument_list|()
+expr_stmt|;
+name|clear_eol
+argument_list|()
+expr_stmt|;
+block|}
 name|home
 argument_list|()
 expr_stmt|;
