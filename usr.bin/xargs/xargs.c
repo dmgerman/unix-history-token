@@ -232,7 +232,7 @@ name|Jflag
 decl_stmt|,
 name|jfound
 decl_stmt|,
-name|lflag
+name|Lflag
 decl_stmt|;
 name|int
 name|nargs
@@ -325,7 +325,7 @@ name|Jflag
 operator|=
 name|jfound
 operator|=
-name|lflag
+name|Lflag
 operator|=
 name|nflag
 operator|=
@@ -434,7 +434,7 @@ name|Iflag
 operator|=
 literal|1
 expr_stmt|;
-name|lflag
+name|Lflag
 operator|=
 literal|1
 expr_stmt|;
@@ -462,7 +462,7 @@ break|break;
 case|case
 literal|'L'
 case|:
-name|lflag
+name|Lflag
 operator|=
 name|atoi
 argument_list|(
@@ -603,7 +603,7 @@ if|if
 condition|(
 name|Iflag
 operator|||
-name|lflag
+name|Lflag
 condition|)
 name|xflag
 operator|=
@@ -1090,7 +1090,7 @@ operator|==
 name|EOF
 operator|||
 operator|(
-name|lflag
+name|Lflag
 operator|<=
 name|count
 operator|&&
