@@ -1313,18 +1313,6 @@ return|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_mbr_dumpconf
-expr_stmt|;
-name|gp
-operator|->
-name|ioctl
-operator|=
-name|g_mbr_ioctl
-expr_stmt|;
 do|do
 block|{
 comment|/* XXX: phk think about this! */
@@ -1538,6 +1526,16 @@ operator|.
 name|taste
 operator|=
 name|g_mbr_taste
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_mbr_dumpconf
+block|,
+operator|.
+name|ioctl
+operator|=
+name|g_mbr_ioctl
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1932,12 +1930,6 @@ operator|)
 return|;
 name|g_topology_unlock
 argument_list|()
-expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_mbrext_dumpconf
 expr_stmt|;
 name|off
 operator|=
@@ -2397,6 +2389,11 @@ operator|.
 name|taste
 operator|=
 name|g_mbrext_taste
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_mbrext_dumpconf
 block|, }
 decl_stmt|;
 end_decl_stmt

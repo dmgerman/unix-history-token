@@ -2063,19 +2063,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 	 * Fill in the optional details, in our case we have a dumpconf 	 * routine which the "slice" code should call at the right time 	 */
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_bsd_dumpconf
-expr_stmt|;
-name|gp
-operator|->
-name|ioctl
-operator|=
-name|g_bsd_ioctl
-expr_stmt|;
 comment|/* Get the geom_slicer softc from the geom. */
 name|gsp
 operator|=
@@ -2852,6 +2839,16 @@ operator|.
 name|ctlreq
 operator|=
 name|g_bsd_config
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_bsd_dumpconf
+block|,
+operator|.
+name|ioctl
+operator|=
+name|g_bsd_ioctl
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -233,6 +233,11 @@ operator|.
 name|taste
 operator|=
 name|g_dev_taste
+block|,
+operator|.
+name|orphan
+operator|=
+name|g_dev_orphan
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -445,12 +450,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-expr_stmt|;
-name|gp
-operator|->
-name|orphan
-operator|=
-name|g_dev_orphan
 expr_stmt|;
 name|cp
 operator|=

@@ -536,12 +536,6 @@ return|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_gpt_dumpconf
-expr_stmt|;
 do|do
 block|{
 name|mbr
@@ -1022,6 +1016,11 @@ operator|.
 name|taste
 operator|=
 name|g_gpt_taste
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_gpt_dumpconf
 block|, }
 decl_stmt|;
 end_decl_stmt

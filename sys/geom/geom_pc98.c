@@ -1286,18 +1286,6 @@ return|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_pc98_dumpconf
-expr_stmt|;
-name|gp
-operator|->
-name|ioctl
-operator|=
-name|g_pc98_ioctl
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -1533,6 +1521,16 @@ operator|.
 name|taste
 operator|=
 name|g_pc98_taste
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_pc98_dumpconf
+block|,
+operator|.
+name|ioctl
+operator|=
+name|g_pc98_ioctl
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -710,12 +710,6 @@ return|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_apple_dumpconf
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -1172,6 +1166,11 @@ operator|.
 name|taste
 operator|=
 name|g_apple_taste
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_apple_dumpconf
 block|, }
 decl_stmt|;
 end_decl_stmt

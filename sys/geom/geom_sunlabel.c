@@ -1203,12 +1203,6 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
-name|gp
-operator|->
-name|dumpconf
-operator|=
-name|g_sunlabel_dumpconf
-expr_stmt|;
 do|do
 block|{
 if|if
@@ -1383,6 +1377,11 @@ operator|.
 name|ctlreq
 operator|=
 name|g_sunlabel_config
+block|,
+operator|.
+name|dumpconf
+operator|=
+name|g_sunlabel_dumpconf
 block|, }
 decl_stmt|;
 end_decl_stmt
