@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machpats.c	1.2	(Berkeley)	%G%"
+literal|"@(#)machpats.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ literal|"	movl	(sp)+,r3\n\ 	jbr	2f\n\ 1:\n\ 	subl2	r0,(sp)\n\ 	movc5	$0,(r3),$0,
 block|}
 block|,
 block|{
-literal|"3,_bzero\n"
+literal|"2,_bzero\n"
 block|,
 literal|"	movl	(sp)+,r3\n\ 	movl	(sp)+,r5\n\ 	movc5	$0,(r3),$0,r5,(r3)\n"
 block|}
