@@ -108,6 +108,22 @@ comment|/* MI/MD interface boundary */
 end_comment
 
 begin_function
+specifier|static
+name|int
+name|ski_autoload
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|ski_main
 parameter_list|(
