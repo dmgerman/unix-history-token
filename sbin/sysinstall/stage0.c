@@ -80,7 +80,7 @@ literal|"Proceed with full installation."
 block|,
 literal|"7. Fixit"
 block|,
-literal|"Repair existing installation (`fixit' mode)."
+literal|"Repair existing installation (fixit mode)."
 block|,
 literal|"8. Quit"
 block|,

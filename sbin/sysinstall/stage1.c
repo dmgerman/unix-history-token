@@ -729,7 +729,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|(F)disk, (W)rite the bootcode"
+literal|"|(F)disk, (W)rite bootcode"
 argument_list|)
 expr_stmt|;
 name|mvprintw
