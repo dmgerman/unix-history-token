@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.17 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2257,7 +2257,7 @@ name|ifc_req
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|RTM_ADD
+name|AF_LINK
 define|#
 directive|define
 name|max
