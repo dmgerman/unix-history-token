@@ -428,13 +428,19 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tok
 argument_list|,
 name|lbp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tok
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* possible trunc */
 name|getline
 argument_list|()
 expr_stmt|;

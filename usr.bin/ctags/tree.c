@@ -241,9 +241,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|nbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|nbuf
+argument_list|)
 argument_list|,
 literal|"M%s"
 argument_list|,

@@ -352,12 +352,9 @@ name|ch
 decl_stmt|;
 comment|/* getopts char */
 name|char
+modifier|*
 name|cmd
-index|[
-literal|100
-index|]
 decl_stmt|;
-comment|/* too ugly to explain */
 name|aflag
 operator|=
 name|uflag
@@ -598,8 +595,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|cmd
 argument_list|,
 literal|"mv %s OTAGS; fgrep -v '\t%s\t' OTAGS>%s; rm OTAGS"
@@ -614,10 +612,32 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of space"
+argument_list|)
+expr_stmt|;
 name|system
 argument_list|(
 name|cmd
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 operator|++
@@ -672,8 +692,9 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|cmd
 argument_list|,
 literal|"sort -o %s %s"
@@ -683,10 +704,32 @@ argument_list|,
 name|outfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cmd
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of space"
+argument_list|)
+expr_stmt|;
 name|system
 argument_list|(
 name|cmd
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}

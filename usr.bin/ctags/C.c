@@ -626,6 +626,24 @@ name|c
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|sp
+operator|==
+name|tok
+operator|+
+sizeof|sizeof
+name|tok
+operator|-
+literal|1
+condition|)
+comment|/* Too long -- truncate it */
+operator|*
+name|sp
+operator|=
+name|EOS
+expr_stmt|;
+else|else
 operator|*
 name|sp
 operator|++
@@ -960,6 +978,24 @@ name|c
 argument_list|)
 condition|)
 break|break;
+if|if
+condition|(
+name|sp
+operator|==
+name|tok
+operator|+
+sizeof|sizeof
+name|tok
+operator|-
+literal|1
+condition|)
+comment|/* Too long -- truncate it */
+operator|*
+name|sp
+operator|=
+name|EOS
+expr_stmt|;
+else|else
 operator|*
 name|sp
 operator|++
@@ -1024,6 +1060,24 @@ condition|;
 control|)
 block|{
 comment|/* get next token */
+if|if
+condition|(
+name|sp
+operator|==
+name|tok
+operator|+
+sizeof|sizeof
+name|tok
+operator|-
+literal|1
+condition|)
+comment|/* Too long -- truncate it */
+operator|*
+name|sp
+operator|=
+name|EOS
+expr_stmt|;
+else|else
 operator|*
 name|sp
 operator|++
@@ -1191,6 +1245,24 @@ condition|;
 control|)
 block|{
 comment|/* get next token */
+if|if
+condition|(
+name|sp
+operator|==
+name|tok
+operator|+
+sizeof|sizeof
+name|tok
+operator|-
+literal|1
+condition|)
+comment|/* Too long -- truncate it */
+operator|*
+name|sp
+operator|=
+name|EOS
+expr_stmt|;
+else|else
 operator|*
 name|sp
 operator|++
