@@ -8348,9 +8348,6 @@ name|i_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FIFO
 if|if
 condition|(
 name|vp
@@ -8364,9 +8361,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* FIFO */
 name|lockmgr_printinfo
 argument_list|(
 operator|&
