@@ -432,7 +432,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%s (%.*s)"
+literal|"%s(%.*s)"
 argument_list|,
 name|ap
 argument_list|,
