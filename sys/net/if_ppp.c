@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.14 1995/06/11 19:31:41 rgrimes Exp $ */
+comment|/* $Id: if_ppp.c,v 1.15 1995/07/08 16:34:55 joerg Exp $ */
 end_comment
 
 begin_comment
@@ -1809,7 +1809,7 @@ name|TTIPRI
 operator||
 name|PCATCH
 argument_list|,
-name|ttyin
+literal|"pppin"
 argument_list|,
 literal|0
 argument_list|)
