@@ -3800,7 +3800,7 @@ name|td
 operator|->
 name|td_flags
 operator|&
-name|TD_IDLETD
+name|TDF_IDLETD
 condition|)
 return|return;
 name|CTR4
