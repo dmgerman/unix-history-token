@@ -10737,7 +10737,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* else do nothing and skip this entry */
-continue|continue;
+return|return;
 block|}
 comment|/* A single IP can be stored in an optimized format */
 if|if
