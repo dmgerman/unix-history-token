@@ -995,6 +995,20 @@ begin_comment
 comment|/* width of gateway column */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WID_IF
+parameter_list|(
+name|af
+parameter_list|)
+value|6
+end_define
+
+begin_comment
+comment|/* width of netif column */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -1020,6 +1034,16 @@ name|af
 parameter_list|)
 define|\
 value|((af) == AF_INET6 ? (lflag ? 31 : (nflag ? 29 : 18)) : 18)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WID_IF
+parameter_list|(
+name|af
+parameter_list|)
+value|((af) == AF_INET6 ? 8 : 6)
 end_define
 
 begin_endif
@@ -1064,6 +1088,62 @@ name|AF_INET
 operator|||
 name|lflag
 condition|)
+if|if
+condition|(
+name|lflag
+condition|)
+name|printf
+argument_list|(
+literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s %5.5s %*.*s %6s\n"
+argument_list|,
+name|WID_DST
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|WID_DST
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+literal|"Destination"
+argument_list|,
+name|WID_GW
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|WID_GW
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+literal|"Gateway"
+argument_list|,
+literal|"Flags"
+argument_list|,
+literal|"Refs"
+argument_list|,
+literal|"Use"
+argument_list|,
+literal|"Mtu"
+argument_list|,
+name|WID_IF
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+name|WID_IF
+argument_list|(
+name|af
+argument_list|)
+argument_list|,
+literal|"Netif"
+argument_list|,
+literal|"Expire"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s  %8.8s %6s\n"
