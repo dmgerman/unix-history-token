@@ -139,16 +139,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<term.h>
-end_include
-
-begin_comment
-comment|/* for tparm */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -1885,9 +1875,11 @@ condition|)
 block|{
 name|ansiseq
 operator|=
-name|tparm
+name|tgoto
 argument_list|(
 name|ansi_fgcol
+argument_list|,
+literal|0
 argument_list|,
 name|colors
 index|[
@@ -1901,7 +1893,13 @@ expr_stmt|;
 if|if
 condition|(
 name|ansiseq
+operator|&&
+operator|*
+name|ansiseq
+operator|!=
+literal|'O'
 condition|)
+comment|/* "OOPS" */
 name|tputs
 argument_list|(
 name|ansiseq
@@ -1928,9 +1926,11 @@ condition|)
 block|{
 name|ansiseq
 operator|=
-name|tparm
+name|tgoto
 argument_list|(
 name|ansi_bgcol
+argument_list|,
+literal|0
 argument_list|,
 name|colors
 index|[
@@ -1944,7 +1944,13 @@ expr_stmt|;
 if|if
 condition|(
 name|ansiseq
+operator|&&
+operator|*
+name|ansiseq
+operator|!=
+literal|'O'
 condition|)
+comment|/* "OOPS" */
 name|tputs
 argument_list|(
 name|ansiseq
