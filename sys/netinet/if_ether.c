@@ -1733,7 +1733,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Resolve an IP address into an ethernet address.  If success,  * desten is filled in.  If there is no entry in arptab,  * set one up and broadcast a request for the IP address.  * Hold onto this mbuf and resend it once the address  * is finally resolved.  A return value of 1 indicates  * that desten has been filled in and the packet should be sent  * normally; a 0 return indicates that the packet has been  * taken over here, either now or for later transmission.  *  * NEW COMMENT  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    dst is the next hop,  *    rt0 is the route to the final destination (possibly useless)  *    m is the mbuf  *    desten is where we want the address.  *  * On success, desten is filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  */
+comment|/*  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    dst is the next hop,  *    rt0 is the route to the final destination (possibly useless)  *    m is the mbuf  *    desten is where we want the address.  *  * On success, desten is filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  */
 end_comment
 
 begin_function
