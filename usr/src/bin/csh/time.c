@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)time.c	4.5 (Berkeley) %G%"
+literal|"@(#)time.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,20 +30,6 @@ begin_comment
 comment|/*  * C Shell - routines handling process timing and niceing  */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|tms
-name|times0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|tms
-name|timesdol
-decl_stmt|;
-end_decl_stmt
-
 begin_macro
 name|settimes
 argument_list|()
@@ -55,6 +41,9 @@ name|struct
 name|rusage
 name|ruch
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
@@ -68,6 +57,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|getrusage
 argument_list|(
 name|RUSAGE_SELF
@@ -76,6 +68,9 @@ operator|&
 name|ru0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|getrusage
 argument_list|(
 name|RUSAGE_CHILDREN
@@ -117,6 +112,9 @@ name|ru1
 decl_stmt|,
 name|ruch
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|getrusage
 argument_list|(
 name|RUSAGE_SELF
@@ -125,6 +123,9 @@ operator|&
 name|ru1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|getrusage
 argument_list|(
 name|RUSAGE_CHILDREN
@@ -142,6 +143,9 @@ operator|&
 name|ruch
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|gettimeofday
 argument_list|(
 operator|&
@@ -648,9 +652,14 @@ literal|'E'
 case|:
 name|psecs
 argument_list|(
+call|(
+name|long
+call|)
+argument_list|(
 name|ms
 operator|/
 literal|100
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* csh.h 4.11 84/08/31 */
+comment|/* @(#)csh.h	4.12 (Berkeley) %G% */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"sh.local.h"
-end_include
 
 begin_include
 include|#
@@ -21,10 +15,6 @@ directive|include
 file|<sys/resource.h>
 end_include
 
-begin_comment
-comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -37,15 +27,11 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|isdir
-parameter_list|(
-name|d
-parameter_list|)
-value|((d.st_mode& S_IFMT) == S_IFDIR)
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/signal.h>
+end_include
 
 begin_include
 include|#
@@ -62,14 +48,22 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"sh.local.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/times.h>
-end_include
+begin_comment
+comment|/*  * C shell  *  * Bill Joy, UC Berkeley  * October, 1978; May 1980  *  * Jim Kulp, IIASA, Laxenburg Austria  * April, 1980  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isdir
+parameter_list|(
+name|d
+parameter_list|)
+value|((d.st_mode& S_IFMT) == S_IFDIR)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -102,16 +96,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Warned of stopped jobs... allow exit */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|didcch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Have closed unused fd's for child */
 end_comment
 
 begin_decl_stmt
@@ -253,6 +237,37 @@ end_decl_stmt
 begin_comment
 comment|/* Time the next waited for command */
 end_comment
+
+begin_decl_stmt
+name|bool
+name|havhash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* path hashing is available */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FILEC
+end_ifdef
+
+begin_decl_stmt
+name|bool
+name|filec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* doing filename expansion */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Global i/o info  */
@@ -419,17 +434,6 @@ begin_comment
 comment|/* Initial line discipline or -1 */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|tms
-name|shtimes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* shell and child times for process timing */
-end_comment
-
 begin_comment
 comment|/*  * These are declared here because they want to be  * initialized in sh.init.c (to allow them to be made readonly)  */
 end_comment
@@ -460,12 +464,12 @@ index|[]
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|INF
-value|1000
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|nbfunc
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -483,6 +487,13 @@ name|srchn
 index|[]
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nsrchn
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * To be able to redirect i/o for builtins easily, the shell moves the i/o  * descriptors it uses away from 0,1,2.  * Ideally these should be in units which are closed across exec's  * (this saves work) but for version 6, this is not usually possible.  * The desired initial values for these descriptors are defined in  * sh.local.h.  */
@@ -543,7 +554,7 @@ define|#
 directive|define
 name|setexit
 parameter_list|()
-value|setjmp(reslab)
+value|((void) setjmp(reslab))
 end_define
 
 begin_define
@@ -551,7 +562,7 @@ define|#
 directive|define
 name|reset
 parameter_list|()
-value|longjmp(reslab)
+value|longjmp(reslab, 0)
 end_define
 
 begin_comment
@@ -735,13 +746,6 @@ ifdef|#
 directive|ifdef
 name|TELL
 end_ifdef
-
-begin_function_decl
-name|off_t
-name|tell
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|bool
@@ -1317,7 +1321,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Variable structure  *  * Lists of aliases and variables are sorted alphabetically by name  */
+comment|/*  * Variable structure  *  * Aliases and variables are stored in AVL balanced binary trees.  */
 end_comment
 
 begin_struct
@@ -1332,20 +1336,78 @@ decl_stmt|;
 comment|/* Array of words which is the value */
 name|char
 modifier|*
-name|name
+name|v_name
 decl_stmt|;
 comment|/* Name of variable/alias */
 name|struct
 name|varent
 modifier|*
-name|link
+name|v_link
+index|[
+literal|3
+index|]
 decl_stmt|;
+comment|/* The links, see below */
+name|int
+name|v_bal
+decl_stmt|;
+comment|/* Balance factor */
 block|}
 name|shvhed
 struct|,
 name|aliases
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|v_left
+value|v_link[0]
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_right
+value|v_link[1]
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_parent
+value|v_link[2]
+end_define
+
+begin_function_decl
+name|struct
+name|varent
+modifier|*
+name|adrof1
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|adrof
+parameter_list|(
+name|v
+parameter_list|)
+value|adrof1(v,&shvhed)
+end_define
+
+begin_define
+define|#
+directive|define
+name|value
+parameter_list|(
+name|v
+parameter_list|)
+value|value1(v,&shvhed)
+end_define
 
 begin_comment
 comment|/*  * The following are for interfacing redo substitution in  * aliases to the lexical routines.  */
@@ -1581,6 +1643,37 @@ begin_comment
 comment|/* auto-substitute character */
 end_comment
 
+begin_comment
+comment|/*  * In lines for frequently called functions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFREE
+parameter_list|(
+name|cp
+parameter_list|)
+value|{ \ 	extern char end[]; \ 	char stack; \ 	if ((cp)>= end&& (cp)<&stack) \ 		free(cp); \ }
+end_define
+
+begin_decl_stmt
+name|char
+modifier|*
+name|alloctmp
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|xalloc
+parameter_list|(
+name|i
+parameter_list|)
+value|((alloctmp = malloc(i)) ? alloctmp : (char *)nomem(i))
+end_define
+
 begin_function_decl
 name|char
 modifier|*
@@ -1588,19 +1681,6 @@ name|Dfix1
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|struct
-name|varent
-modifier|*
-name|adrof
-argument_list|()
-decl_stmt|,
-modifier|*
-name|adrof1
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|char
@@ -1642,6 +1722,14 @@ begin_function_decl
 name|char
 modifier|*
 name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1819,7 +1907,24 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
+modifier|*
+name|glob
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
 name|globone
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|index
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1834,10 +1939,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|char
-modifier|*
-modifier|*
-name|glob
+name|off_t
+name|lseek
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -1875,6 +1978,14 @@ begin_function_decl
 name|char
 modifier|*
 name|putn
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2016,30 +2127,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|tglob
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|trim
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|char
 modifier|*
-name|value
-argument_list|()
-decl_stmt|,
-modifier|*
 name|value1
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -2090,7 +2183,7 @@ name|setname
 parameter_list|(
 name|a
 parameter_list|)
-value|bname = (a);
+value|(bname = (a))
 end_define
 
 begin_ifdef

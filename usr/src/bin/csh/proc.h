@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* proc.h 4.4 %G% */
+comment|/* @(#)proc.h	4.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -68,14 +68,6 @@ name|struct
 name|rusage
 name|p_rusage
 decl_stmt|;
-name|long
-name|p_utime
-decl_stmt|;
-comment|/* XXX */
-name|long
-name|p_stime
-decl_stmt|;
-comment|/* XXX */
 name|char
 modifier|*
 name|p_command
@@ -431,16 +423,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* current maximum job index */
-end_comment
-
-begin_decl_stmt
-name|bool
-name|timesdone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* shtimes buffer full ? */
 end_comment
 
 begin_function_decl

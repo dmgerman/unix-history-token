@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c 4.3 %G%"
+literal|"@(#)init.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -537,9 +548,6 @@ literal|0
 block|,
 name|INF
 block|,
-ifdef|#
-directive|ifdef
-name|debug
 literal|"alloc"
 block|,
 name|showall
@@ -548,8 +556,6 @@ literal|0
 block|,
 literal|1
 block|,
-endif|#
-directive|endif
 literal|"bg"
 block|,
 name|dobg
@@ -1030,17 +1036,22 @@ block|,
 literal|1
 block|,
 name|INF
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|, }
 struct|;
 end_struct
+
+begin_decl_stmt
+name|int
+name|nbfunc
+init|=
+sizeof|sizeof
+name|bfunc
+operator|/
+sizeof|sizeof
+expr|*
+name|bfunc
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1258,13 +1269,22 @@ block|,
 literal|"while"
 block|,
 name|ZWHILE
-block|,
-literal|0
-block|,
-literal|0
 block|, }
 struct|;
 end_struct
+
+begin_decl_stmt
+name|int
+name|nsrchn
+init|=
+sizeof|sizeof
+name|srchn
+operator|/
+sizeof|sizeof
+expr|*
+name|srchn
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -1347,9 +1367,9 @@ literal|"TERM"
 block|,
 literal|"Terminated"
 block|,
-literal|0
+literal|"URG"
 block|,
-literal|"Signal 16"
+literal|"Urgent I/O condition"
 block|,
 literal|"STOP"
 block|,
@@ -1375,9 +1395,9 @@ literal|"TTOU"
 block|,
 literal|"Stopped (tty output)"
 block|,
-literal|"TINT"
+literal|"IO"
 block|,
-literal|"Tty input interrupt"
+literal|"I/O possible"
 block|,
 literal|"XCPU"
 block|,
@@ -1387,13 +1407,13 @@ literal|"XFSZ"
 block|,
 literal|"Filesize limit exceeded"
 block|,
-literal|0
+literal|"VTALRM"
 block|,
-literal|"Signal 26"
+literal|"Virtual timer expired"
 block|,
-literal|0
+literal|"PROF"
 block|,
-literal|"Signal 27"
+literal|"Profiling timer expired"
 block|,
 literal|0
 block|,

@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)err.c 4.1 %G%"
+literal|"@(#)err.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -68,6 +79,10 @@ end_decl_stmt
 
 begin_comment
 comment|/*  * Print error string s with optional argument arg.  * This routine always resets or exits.  The flag haderr  * is set so the routine who catches the unwind can propogate  * it if they want.  *  * Note that any open files at the point of error will eventually  * be closed in the routine process in sh.c which is the only  * place error unwinds are ever caught.  */
+end_comment
+
+begin_comment
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
@@ -222,12 +237,19 @@ name|tpgrp
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|FSHTTY
 argument_list|,
 name|TIOCSPGRP
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tpgrp
 argument_list|)
@@ -272,6 +294,9 @@ name|oerrno
 init|=
 name|errno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|dcopy
 argument_list|(
 name|SHDIAG

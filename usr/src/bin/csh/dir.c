@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dir.c 4.2 %G%"
+literal|"@(#)dir.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -141,6 +152,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|2
@@ -786,6 +800,9 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|buf
@@ -794,6 +811,9 @@ operator|*
 name|cdp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -801,6 +821,9 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|buf
@@ -930,6 +953,10 @@ name|dp
 init|=
 name|calloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|strlen
 argument_list|(
 name|cp
@@ -943,10 +970,14 @@ name|di_name
 argument_list|)
 operator|+
 literal|2
+argument_list|)
 argument_list|,
 literal|1
 argument_list|)
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|dp
@@ -956,6 +987,9 @@ operator|->
 name|di_name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|dp
@@ -963,6 +997,9 @@ argument_list|,
 literal|"/"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcat
 argument_list|(
 name|dp
@@ -1696,6 +1733,9 @@ operator|!=
 operator|++
 name|sp
 condition|)
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|sp
@@ -1777,6 +1817,9 @@ condition|(
 name|slash
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|sp
@@ -1837,6 +1880,9 @@ condition|(
 name|slash
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 operator|++

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)alloc.c 4.3 (Berkeley from Caltech) %G%"
+literal|"@(#)alloc.c 4.4 (Berkeley from Caltech) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,12 +181,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|debug
-end_ifdef
-
 begin_comment
 comment|/*  * nmalloc[i] is the difference between the number of mallocs and frees  * for a given block size.  */
 end_comment
@@ -200,11 +194,6 @@ name|NBUCKETS
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -401,17 +390,12 @@ name|ov_index
 operator|=
 name|bucket
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|debug
 name|nmalloc
 index|[
 name|bucket
 index|]
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|RCHECK
@@ -541,6 +525,9 @@ name|op
 operator|&
 literal|0x3ff
 condition|)
+operator|(
+name|void
+operator|)
 name|sbrk
 argument_list|(
 literal|1024
@@ -881,17 +868,12 @@ index|]
 operator|=
 name|op
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|debug
 name|nmalloc
 index|[
 name|size
 index|]
 operator|--
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -1249,12 +1231,6 @@ return|;
 block|}
 end_block
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|debug
-end_ifdef
-
 begin_comment
 comment|/*  * mstats - print out statistics about malloc  *   * Prints two lines of numbers, one showing the length of the free list  * for each size category, the second showing the number of mallocs -  * frees for each size category.  */
 end_comment
@@ -1306,7 +1282,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"Memory allocation statistics %s\nfree:\t"
+literal|"Memory allocation statistics %s\nfree:"
 argument_list|,
 name|s
 index|[
@@ -1391,7 +1367,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"\nused:\t"
+literal|"\nused:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1452,7 +1428,7 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1466,11 +1442,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c 4.4 %G%"
+literal|"@(#)dol.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -15,12 +26,18 @@ directive|include
 file|"sh.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"sh.char.h"
+end_include
+
 begin_comment
 comment|/*  * C shell  */
 end_comment
 
 begin_comment
-comment|/*  * These routines perform variable substitution and quoting via ' and ".  * To this point these constructs have been preserved in the divided  * input words.  Here we expand variables and turn quoting via ' and " into  * QUOTE bits on characters (which prevent further interpretation).  * If the `:q' modifier was applied during history expansion, then  * some QUOTEing may have occurred already, so we dont "scan(,&trim)" here.  */
+comment|/*  * These routines perform variable substitution and quoting via ' and ".  * To this point these constructs have been preserved in the divided  * input words.  Here we expand variables and turn quoting via ' and " into  * QUOTE bits on characters (which prevent further interpretation).  * If the `:q' modifier was applied during history expansion, then  * some QUOTEing may have occurred already, so we dont "trim()" here.  */
 end_comment
 
 begin_decl_stmt
@@ -67,14 +84,16 @@ parameter_list|)
 value|Dpeekc = c
 end_define
 
-begin_decl_stmt
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
 name|QUOTES
-init|=
-literal|"\\'`\""
-decl_stmt|;
-end_decl_stmt
+value|(_Q|_Q1|_ESC)
+end_define
+
+begin_comment
+comment|/* \ ' " ` */
+end_comment
 
 begin_comment
 comment|/*  * The following variables give the information about the current  * $ expansion, recording the current word position, the remaining  * words within this expansion, the count of remaining words, and the  * information about any : modifier which is being applied.  */
@@ -133,17 +152,6 @@ begin_comment
 comment|/* :gx -> 10000, else 1 */
 end_comment
 
-begin_function_decl
-name|int
-name|Dtest
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Test for \ " ` or ' */
-end_comment
-
 begin_comment
 comment|/*  * Fix up the $ expansions and quotations in the  * argument list to command t.  */
 end_comment
@@ -163,31 +171,58 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|pp
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|noexec
 condition|)
 return|return;
-name|gflag
+comment|/* Note that t_dcom isn't trimmed thus !...:q's aren't lost */
+for|for
+control|(
+name|pp
 operator|=
-literal|0
-operator|,
-name|rscan
-argument_list|(
 name|t
 operator|->
 name|t_dcom
-argument_list|,
-name|Dtest
-argument_list|)
-expr_stmt|;
+init|;
+name|p
+operator|=
+operator|*
+name|pp
+operator|++
+condition|;
+control|)
+while|while
+condition|(
+operator|*
+name|p
+condition|)
 if|if
 condition|(
-name|gflag
-operator|==
-literal|0
+name|cmap
+argument_list|(
+operator|*
+name|p
+operator|++
+argument_list|,
+name|_DOL
+operator||
+name|QUOTES
+argument_list|)
 condition|)
-return|return;
+block|{
+comment|/* $, \, ', ", ` */
 name|Dfix2
 argument_list|(
 name|t
@@ -195,23 +230,26 @@ operator|->
 name|t_dcom
 argument_list|)
 expr_stmt|;
+comment|/* found one */
 name|blkfree
 argument_list|(
 name|t
 operator|->
 name|t_dcom
 argument_list|)
-operator|,
+expr_stmt|;
 name|t
 operator|->
 name|t_dcom
 operator|=
 name|gargv
-operator|,
+expr_stmt|;
 name|gargv
 operator|=
 literal|0
 expr_stmt|;
+return|return;
+block|}
 block|}
 end_block
 
@@ -774,14 +812,21 @@ name|deof
 goto|;
 if|if
 condition|(
-name|any
+name|cmap
 argument_list|(
 name|c
 argument_list|,
-literal|" '`\"\t\n"
+name|_SP
+operator||
+name|_NL
+operator||
+name|_Q
+operator||
+name|_Q1
 argument_list|)
 condition|)
 block|{
+comment|/* sp \t\n'"` */
 name|unDgetC
 argument_list|(
 name|c
@@ -789,7 +834,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|cmap
 argument_list|(
 name|c
 argument_list|,
@@ -923,7 +968,7 @@ name|quotspec
 label|:
 if|if
 condition|(
-name|any
+name|cmap
 argument_list|(
 name|c
 argument_list|,
@@ -1326,6 +1371,9 @@ goto|;
 case|case
 literal|'*'
 case|:
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|name
@@ -1811,7 +1859,7 @@ name|setname
 argument_list|(
 name|vp
 operator|->
-name|name
+name|v_name
 argument_list|)
 expr_stmt|;
 name|error
@@ -2344,36 +2392,6 @@ block|}
 end_block
 
 begin_expr_stmt
-name|Dtest
-argument_list|(
-name|c
-argument_list|)
-specifier|register
-name|int
-name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-comment|/* Note that c isn't trimmed thus !...:q's aren't lost */
-if|if
-condition|(
-name|any
-argument_list|(
-name|c
-argument_list|,
-literal|"$\\'`\""
-argument_list|)
-condition|)
-name|gflag
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
 name|Dtestq
 argument_list|(
 name|c
@@ -2388,11 +2406,11 @@ begin_block
 block|{
 if|if
 condition|(
-name|any
+name|cmap
 argument_list|(
 name|c
 argument_list|,
-literal|"\\'`\""
+name|QUOTES
 argument_list|)
 condition|)
 name|gflag
@@ -2491,6 +2509,9 @@ argument_list|(
 name|shtemp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|0
@@ -2513,6 +2534,9 @@ name|oerrno
 init|=
 name|errno
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|shtemp
@@ -2528,6 +2552,9 @@ name|shtemp
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|shtemp
@@ -2552,11 +2579,9 @@ name|gflag
 operator|=
 literal|0
 expr_stmt|;
-name|scan
+name|trim
 argument_list|(
 name|Dv
-argument_list|,
-name|trim
 argument_list|)
 expr_stmt|;
 name|rscan
@@ -2684,6 +2709,9 @@ name|term
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|0
@@ -2695,11 +2723,17 @@ operator|-
 name|ocnt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 literal|0
 argument_list|,
-literal|0l
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -2753,6 +2787,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|0
@@ -2988,6 +3025,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|0
@@ -3021,6 +3061,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|0
