@@ -142,7 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *	kmem_alloc_pageable:  *  *	Allocate pageable memory to the kernel's address map.  *	"map" must be kernel_map or a submap of kernel_map.  *  * MPSAFE  */
+comment|/*  *	kmem_alloc_pageable:  *  *	Allocate pageable memory to the kernel's address map.  *	"map" must be kernel_map or a submap of kernel_map.  */
 end_comment
 
 begin_function
@@ -226,7 +226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_alloc_nofault:  *  *	Same as kmem_alloc_pageable, except that it create a nofault entry.  *  * MPSAFE  */
+comment|/*  *	kmem_alloc_nofault:  *  *	Same as kmem_alloc_pageable, except that it create a nofault entry.  */
 end_comment
 
 begin_function
@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	kmem_free:  *  *	Release a region of kernel virtual memory allocated  *	with kmem_alloc, and return the physical pages  *	associated with that region.  *  *	This routine may not block on kernel maps.  *  * MPSAFE  */
+comment|/*  *	kmem_free:  *  *	Release a region of kernel virtual memory allocated  *	with kmem_alloc, and return the physical pages  *	associated with that region.  *  *	This routine may not block on kernel maps.  */
 end_comment
 
 begin_function
@@ -1283,8 +1283,6 @@ block|{
 name|vm_offset_t
 name|addr
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|size
 operator|=
 name|round_page
@@ -1423,8 +1421,6 @@ name|vm_size_t
 name|size
 decl_stmt|;
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
