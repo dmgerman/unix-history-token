@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.13 (Berkeley) %G%"
+literal|"@(#)dm.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,13 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -281,10 +288,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|char
 name|pbuf
 index|[
@@ -1101,7 +1104,7 @@ name|utmp
 operator|=
 name|open
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -1112,9 +1115,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"dm: /etc/utmp"
+name|stderr
+argument_list|,
+literal|"dm: %s: %s\n"
+argument_list|,
+name|_PATH_UTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
