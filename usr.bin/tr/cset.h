@@ -67,9 +67,6 @@ decl_stmt|;
 name|bool
 name|csc_invert
 decl_stmt|;
-name|bool
-name|csc_value
-decl_stmt|;
 name|struct
 name|csclass
 modifier|*
