@@ -112,6 +112,23 @@ value|((p)->p_md.md_tf->tf_out[6] = (ap) - 64)
 end_define
 
 begin_comment
+comment|/*  * See syscall() for an explanation of the following.  Note that the  * locore bootstrap code follows the syscall stack protocol.  The  * framep argument is unused.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cpu_set_init_frame
+parameter_list|(
+name|p
+parameter_list|,
+name|fp
+parameter_list|)
+define|\
+value|(p)->p_md.md_tf = (struct trapframe *) \ 	    ((caddr_t)(p)->p_addr + UPAGES * NBPG - sizeof(struct trapframe))
+end_define
+
+begin_comment
 comment|/*  * Arguments to hardclock, softclock and gatherstats encapsulate the  * previous machine state in an opaque clockframe.  The ipl is here  * as well for strayintr (see locore.s:interrupt and intr.c:strayintr).  * Note that CLKF_INTR is valid only if CLKF_USERMODE is false.  */
 end_comment
 
