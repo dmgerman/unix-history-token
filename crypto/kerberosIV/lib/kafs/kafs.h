@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995, 1996, 1997 Kungliga Tekniska Högskolan  * (Ro
 end_comment
 
 begin_comment
-comment|/* $Id: kafs.h,v 1.19 1997/05/14 17:41:02 joda Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ktypes.h>
+file|<sys/types.h>
 end_include
 
 begin_include

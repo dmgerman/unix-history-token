@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: kdc.h,v 1.8 1997/04/01 03:59:05 assar Exp $  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos Key Distribution Center.   */
+comment|/*  * $Id$  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos Key Distribution Center.   */
 end_comment
 
 begin_ifndef
@@ -28,14 +28,14 @@ end_ifndef
 begin_if
 if|#
 directive|if
-literal|0
+literal|1
 end_if
 
 begin_define
 define|#
 directive|define
 name|MKEYFILE
-value|"/var/kerberos/master-key"
+value|"/etc/kerberosIV/master-key"
 end_define
 
 begin_else

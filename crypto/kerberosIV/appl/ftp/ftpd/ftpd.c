@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftpd.c,v 1.88 1997/06/01 03:13:48 assar Exp $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -537,11 +537,22 @@ directive|include
 file|"roken.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OTP
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<otp.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1395,6 +1406,9 @@ operator|==
 literal|0
 condition|)
 empty_stmt|;
+ifdef|#
+directive|ifdef
+name|OTP
 elseif|else
 if|if
 condition|(
@@ -1413,6 +1427,8 @@ name|AUTH_PLAIN
 operator||
 name|AUTH_OTP
 expr_stmt|;
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2720,11 +2736,22 @@ begin_comment
 comment|/* current USER name */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OTP
+end_ifdef
+
 begin_decl_stmt
 name|OtpContext
 name|otp_ctx
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists and is acceptable;  * sets askpasswd if a PASS command is expected.  If logged in previously,  * need to reset state.  If name is "ftp" or "anonymous", the name is not in  * _PATH_FTPUSERS, and ftp account exists, set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  Otherwise, check user  * requesting login privileges.  Disallow anyone who does not have a standard  * shell as returned by getusershell().  Disallow anyone mentioned in the file  * _PATH_FTPUSERS to allow people such as root and uucp to be avoided.  */
@@ -3095,6 +3122,9 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OTP
 else|else
 block|{
 name|char
@@ -3200,6 +3230,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 comment|/* 	 * Delay before reading passwd after first failed 	 * attempt to slow down passwd-guessing programs. 	 */
 if|if
 condition|(
@@ -4161,6 +4193,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* failure below */
+ifdef|#
+directive|ifdef
+name|OTP
 elseif|else
 if|if
 condition|(
@@ -4174,12 +4209,12 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|rval
 operator|=
 literal|0
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -4265,6 +4300,9 @@ name|passwd
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|OTP
 else|else
 block|{
 name|char
@@ -4291,6 +4329,8 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|passwd

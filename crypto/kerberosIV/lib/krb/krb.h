@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: krb.h,v 1.76 1997/05/26 17:47:31 bg Exp $  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos library.   */
+comment|/*  * $Id$  *  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.   *  * For copying and distribution information, please see the file  *<mit-copyright.h>.   *  * Include file for the Kerberos library.   */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ktypes.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -202,6 +202,10 @@ begin_comment
 comment|/* /etc/kerberosIV is only for backwards compatibility, don't use it! */
 end_comment
 
+begin_comment
+comment|/* FreeBSD wants to maintain backwards compatibility */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -212,7 +216,7 @@ begin_define
 define|#
 directive|define
 name|KRB_CONF
-value|"/etc/krb.conf"
+value|"/etc/kerberosIV/krb.conf"
 end_define
 
 begin_endif
@@ -230,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|KRB_RLM_TRANS
-value|"/etc/krb.realms"
+value|"/etc/kerberosIV/krb.realms"
 end_define
 
 begin_endif
@@ -248,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|KRB_CNF_FILES
-value|{ KRB_CONF,   "/etc/kerberosIV/krb.conf", 0}
+value|{ KRB_CONF,   "/etc/krb.conf", 0}
 end_define
 
 begin_endif
@@ -266,7 +270,7 @@ begin_define
 define|#
 directive|define
 name|KRB_RLM_FILES
-value|{ KRB_RLM_TRANS, "/etc/kerberosIV/krb.realms", 0}
+value|{ KRB_RLM_TRANS, "/etc/krb.realms", 0}
 end_define
 
 begin_endif
@@ -284,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|KRB_EQUIV
-value|"/etc/krb.equiv"
+value|"/etc/kerberosIV/krb.equiv"
 end_define
 
 begin_endif
@@ -601,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|KEYFILE
-value|"/etc/srvtab"
+value|"/etc/kerberosIV/srvtab"
 end_define
 
 begin_endif
