@@ -943,14 +943,6 @@ operator|->
 name|reads
 operator|++
 expr_stmt|;
-name|vol
-operator|->
-name|bytes_read
-operator|+=
-name|bp
-operator|->
-name|b_bcount
-expr_stmt|;
 name|plexno
 operator|=
 name|vol
@@ -1125,14 +1117,6 @@ name|vol
 operator|->
 name|writes
 operator|++
-expr_stmt|;
-name|vol
-operator|->
-name|bytes_written
-operator|+=
-name|bp
-operator|->
-name|b_bcount
 expr_stmt|;
 name|status
 operator|=
@@ -1576,7 +1560,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * We have a potential race condition here: between firing off each      * request, we need to check that we're not overloading the system,      * and possibly sleep.  But the bottom half releases the request      * when the active count goes to 0, so we need to set the total      * active count in advance.      */
+comment|/*      * With the division of labour below (first count the requests, then      * issue them), it's possible that we don't need this splbio()      * protection.  But I'll try that some other time.      */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|rqg
@@ -1768,7 +1757,6 @@ literal|0
 condition|)
 block|{
 comment|/* this subdisk is good, */
-comment|/* Check that we're not overloading things */
 name|drive
 operator|=
 operator|&
@@ -1780,47 +1768,6 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* look at drive */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-comment|/* lock out the interrupt routines */
-while|while
-condition|(
-operator|(
-name|drive
-operator|->
-name|active
-operator|>=
-name|DRIVE_MAXACTIVE
-operator|)
-comment|/* it has too much to do already, */
-operator|||
-operator|(
-name|vinum_conf
-operator|.
-name|active
-operator|>=
-name|VINUM_MAXACTIVE
-operator|)
-condition|)
-comment|/* or too many requests globally */
-name|tsleep
-argument_list|(
-operator|&
-name|launch_requests
-argument_list|,
-name|PRIBIO
-operator||
-name|PCATCH
-argument_list|,
-literal|"vinbuf"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* wait for it to subside */
 name|drive
 operator|->
 name|active
@@ -1866,11 +1813,6 @@ operator|=
 name|vinum_conf
 operator|.
 name|active
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -1977,15 +1919,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|rqe
-operator|->
-name|b
-operator|.
-name|b_flags
-operator||=
-name|B_ORDERED
-expr_stmt|;
-comment|/* stick to the request order */
 comment|/* fire off the request */
 name|BUF_STRATEGY
 argument_list|(
@@ -2000,6 +1933,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3567,6 +3505,7 @@ name|bp
 expr_stmt|;
 comment|/* pointer to user buffer header */
 comment|/* Initialize the buf struct */
+comment|/* copy these flags from user bp */
 name|bp
 operator|->
 name|b_flags
@@ -3576,6 +3515,8 @@ operator|->
 name|b_flags
 operator|&
 operator|(
+name|B_ORDERED
+operator||
 name|B_NOCACHE
 operator||
 name|B_READ
@@ -3583,7 +3524,6 @@ operator||
 name|B_ASYNC
 operator|)
 expr_stmt|;
-comment|/* copy these flags from user bp */
 name|bp
 operator|->
 name|b_flags
