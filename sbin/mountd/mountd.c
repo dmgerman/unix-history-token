@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.4 1994/12/02 02:58:56 wollman Exp $"
+literal|"$Id: mountd.c,v 1.5 1995/03/26 23:36:38 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1456,7 +1456,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n"
+literal|"dn"
 argument_list|)
 operator|)
 operator|!=
@@ -1467,6 +1467,18 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|debug
+operator|=
+name|debug
+condition|?
+literal|0
+else|:
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
