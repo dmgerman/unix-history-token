@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.15 1995/01/20 08:35:18 sos Exp $  */
+comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.16 1995/01/26 10:13:38 ache Exp $  */
 end_comment
 
 begin_ifndef
@@ -824,6 +824,13 @@ name|NUM_FKEYS
 value|65
 end_define
 
+begin_define
+define|#
+directive|define
+name|NUM_SCRNS
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|fkeytab
@@ -1190,34 +1197,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|L_SCR
-value|0x1a
-end_define
-
-begin_comment
-comment|/* switch to last screen 	*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|F_FN
 value|0x1b
 end_define
 
 begin_comment
 comment|/* first function key 		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|L_FN
-value|0x7a
-end_define
-
-begin_comment
-comment|/* last function key 		*/
 end_comment
 
 begin_define
@@ -1321,12 +1306,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|L_FN
+value|F(NUM_FKEYS)
+end_define
+
+begin_comment
+comment|/* last function key            */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|S
 parameter_list|(
 name|x
 parameter_list|)
 value|((x)+F_SCR-1)
 end_define
+
+begin_define
+define|#
+directive|define
+name|L_SCR
+value|S(NUM_SCRNS)
+end_define
+
+begin_comment
+comment|/* switch to last screen        */
+end_comment
 
 begin_define
 define|#
