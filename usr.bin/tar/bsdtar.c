@@ -1006,6 +1006,9 @@ operator|=
 literal|'H'
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|HAVE_GETOPT_LONG
 case|case
 name|OPTION_HELP
 case|:
@@ -1013,6 +1016,8 @@ name|long_help
 argument_list|()
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'j'
 case|:
