@@ -914,6 +914,12 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_ksegrp
@@ -931,6 +937,12 @@ expr_stmt|;
 name|TD_SET_IWAIT
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 name|ithd
