@@ -2244,6 +2244,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|dev
+condition|)
+block|{
+comment|/* 					 * This is an optional device 					 * indentifier string. Skipt it 					 * for now. 					 */
+continue|continue;
+block|}
+comment|/* else mandately card identifier string */
+if|if
+condition|(
 name|large_len
 operator|>
 sizeof|sizeof
@@ -2296,17 +2305,6 @@ expr_stmt|;
 name|desc
 operator|=
 name|buf
-expr_stmt|;
-if|if
-condition|(
-name|dev
-condition|)
-name|device_set_desc_copy
-argument_list|(
-name|dev
-argument_list|,
-name|desc
-argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -2440,6 +2438,17 @@ argument_list|(
 name|dev
 argument_list|,
 name|desc
+argument_list|)
+expr_stmt|;
+else|else
+name|device_set_desc_copy
+argument_list|(
+name|dev
+argument_list|,
+name|pnp_eisaformat
+argument_list|(
+name|logical_id
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|isa_set_vendorid
