@@ -13,14 +13,6 @@ directive|include
 file|"ex.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NEX
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -552,7 +544,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|ex_attach
+name|ex_isa_attach
 name|__P
 argument_list|(
 operator|(
@@ -662,7 +654,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_intr_t
-name|exintr
+name|ex_intr
 decl_stmt|;
 end_decl_stmt
 
@@ -737,7 +729,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|ex_attach
+name|ex_isa_attach
 argument_list|)
 block|,
 block|{
@@ -1651,8 +1643,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|ex_attach
+name|ex_isa_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -1811,7 +1804,7 @@ name|irq
 argument_list|,
 name|INTR_TYPE_NET
 argument_list|,
-name|exintr
+name|ex_intr
 argument_list|,
 operator|(
 name|void
@@ -1963,9 +1956,18 @@ literal|"ex"
 expr_stmt|;
 name|ifp
 operator|->
-name|if_init
+name|if_mtu
 operator|=
-name|ex_init
+name|ETHERMTU
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator|=
+name|IFF_SIMPLEX
+operator||
+name|IFF_BROADCAST
+comment|/* XXX not done yet. | IFF_MULTICAST */
 expr_stmt|;
 name|ifp
 operator|->
@@ -1993,18 +1995,17 @@ name|ex_watchdog
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
+name|if_init
 operator|=
-name|ETHERMTU
+name|ex_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_flags
+name|if_snd
+operator|.
+name|ifq_maxlen
 operator|=
-name|IFF_SIMPLEX
-operator||
-name|IFF_BROADCAST
-comment|/* XXX not done yet. | IFF_MULTICAST */
+name|IFQ_MAXLEN
 expr_stmt|;
 comment|/* 	 * Attach the interface. 	 */
 name|if_attach
@@ -2017,25 +2018,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ex_card_type
+name|device_printf
 argument_list|(
 name|sc
 operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|)
-operator|==
-name|CARD_TYPE_EX_10_PLUS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ex%d: Intel EtherExpress Pro/10+, address %6D, connector "
+name|dev
 argument_list|,
-name|unit
+literal|"Ethernet address %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -2046,66 +2035,6 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"ex%d: Intel EtherExpress Pro/10, address %6D, connector "
-argument_list|,
-name|unit
-argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_enaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-block|}
-switch|switch
-condition|(
-name|sc
-operator|->
-name|connector
-condition|)
-block|{
-case|case
-name|Conn_TPE
-case|:
-name|printf
-argument_list|(
-literal|"TPE\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|Conn_BNC
-case|:
-name|printf
-argument_list|(
-literal|"BNC\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|Conn_AUI
-case|:
-name|printf
-argument_list|(
-literal|"AUI\n"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|printf
-argument_list|(
-literal|"???\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
 name|bpfattach
 argument_list|(
@@ -2125,22 +2054,10 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"ex_attach%d: finish\n"
+literal|"ex_isa_attach%d: finish\n"
 argument|, unit);
 argument_list|)
 empty_stmt|;
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
-name|ifqmaxlen
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2196,6 +2113,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ex_init
 parameter_list|(
@@ -2734,6 +2652,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ex_start
 parameter_list|(
@@ -3652,7 +3571,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|exintr
+name|ex_intr
 parameter_list|(
 name|void
 modifier|*
@@ -3700,7 +3619,7 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"exintr%d: start\n"
+literal|"ex_intr%d: start\n"
 argument|, unit);
 argument_list|)
 empty_stmt|;
@@ -3832,7 +3751,7 @@ argument_list|(
 argument|Start_End
 argument_list|,
 argument|printf(
-literal|"exintr%d: finish\n"
+literal|"ex_intr%d: finish\n"
 argument|, unit);
 argument_list|)
 empty_stmt|;
@@ -4628,6 +4547,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ex_ioctl
 parameter_list|(
@@ -5237,15 +5157,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NEX> 0 */
-end_comment
 
 end_unit
 
