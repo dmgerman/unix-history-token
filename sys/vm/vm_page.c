@@ -2183,8 +2183,6 @@ name|page_req
 decl_stmt|,
 name|s
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INVARIANTS
@@ -2208,6 +2206,23 @@ argument_list|,
 operator|(
 literal|"vm_page_alloc: NULL object."
 operator|)
+argument_list|)
+expr_stmt|;
+name|mtx_assert
+argument_list|(
+name|object
+operator|==
+name|kmem_object
+condition|?
+operator|&
+name|object
+operator|->
+name|mtx
+else|:
+operator|&
+name|Giant
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 name|KASSERT
