@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/pam_modules.h>
 end_include
 
