@@ -5772,10 +5772,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * If it is the first entry on the list, it is actually  * in the header and we must copy the following entry up  * to the header.  Otherwise we must search the list for  * the entry.  In either case we free the now unused entry.  */
-end_comment
-
 begin_function
 specifier|static
 name|int
