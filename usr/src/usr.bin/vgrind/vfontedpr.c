@@ -2915,11 +2915,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'*'
+case|:
+name|ps
+argument_list|(
+literal|"\\fI*\\fP"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'/'
 case|:
 name|ps
 argument_list|(
-literal|"\\*/"
+literal|"\\fI\\h'\\w' 'u-\\w'/'u'/\\fP"
 argument_list|)
 expr_stmt|;
 break|break;
