@@ -87,6 +87,12 @@ directive|include
 file|"libc_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_comment
 comment|/*  * Write the given string to stdout, appending a newline.  */
 end_comment
@@ -192,6 +198,14 @@ expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+name|ORIENT
+argument_list|(
+name|stdout
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|retval
