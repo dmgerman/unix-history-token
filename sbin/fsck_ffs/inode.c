@@ -1674,6 +1674,7 @@ comment|/*  * Special purpose version of ginode used to optimize first pass  * o
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ino_t
 name|nextino
 decl_stmt|,
@@ -1684,6 +1685,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|readcnt
 decl_stmt|,
@@ -1700,6 +1702,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dinode
 modifier|*
