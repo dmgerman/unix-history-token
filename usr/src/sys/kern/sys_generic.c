@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -66,12 +66,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|"malloc.h"
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_comment
 comment|/*  * Read system call.  */
@@ -833,10 +829,8 @@ specifier|register
 name|u_int
 name|size
 decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
+name|caddr_t
+name|memp
 init|=
 literal|0
 decl_stmt|;
@@ -1029,21 +1023,23 @@ name|buf
 argument_list|)
 condition|)
 block|{
-name|bp
+name|memp
 operator|=
-name|geteblk
+operator|(
+name|caddr_t
+operator|)
+name|malloc
 argument_list|(
 name|IOCPARM_MAX
+argument_list|,
+name|M_IOCTLOPS
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|data
 operator|=
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
+name|memp
 expr_stmt|;
 block|}
 if|if
@@ -1082,7 +1078,20 @@ name|u
 operator|.
 name|u_error
 condition|)
+block|{
+if|if
+condition|(
+name|memp
+condition|)
+name|free
+argument_list|(
+name|memp
+argument_list|,
+name|M_IOCTLOPS
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 block|}
 else|else
 operator|*
@@ -1299,11 +1308,13 @@ break|break;
 block|}
 if|if
 condition|(
-name|bp
+name|memp
 condition|)
-name|brelse
+name|free
 argument_list|(
-name|bp
+name|memp
+argument_list|,
+name|M_IOCTLOPS
 argument_list|)
 expr_stmt|;
 block|}
