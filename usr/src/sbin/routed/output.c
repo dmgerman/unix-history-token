@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	4.1 %G%"
+literal|"@(#)output.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"router.h"
+file|"defs.h"
 end_include
 
 begin_comment
@@ -60,6 +60,10 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+specifier|register
+name|int
+name|flags
 decl_stmt|;
 specifier|extern
 name|struct
@@ -120,6 +124,18 @@ name|ifp
 operator|->
 name|int_addr
 expr_stmt|;
+name|flags
+operator|=
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_INTERFACE
+condition|?
+name|SOF_DONTROUTE
+else|:
+literal|0
+expr_stmt|;
 call|(
 modifier|*
 name|f
@@ -127,11 +143,7 @@ call|)
 argument_list|(
 name|dst
 argument_list|,
-name|ifp
-operator|->
-name|int_flags
-operator|&
-name|IFF_INTERFACE
+name|flags
 argument_list|,
 name|ifp
 argument_list|)
@@ -153,7 +165,7 @@ name|sendmsg
 argument_list|(
 argument|dst
 argument_list|,
-argument|dontroute
+argument|flags
 argument_list|,
 argument|ifp
 argument_list|)
@@ -169,7 +181,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|dontroute
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -195,11 +207,9 @@ operator|.
 name|af_output
 operator|)
 operator|(
-name|dontroute
-condition|?
-name|snoroute
-else|:
 name|s
+operator|,
+name|flags
 operator|,
 name|dst
 operator|,
@@ -235,7 +245,7 @@ name|supply
 argument_list|(
 argument|dst
 argument_list|,
-argument|dontroute
+argument|flags
 argument_list|,
 argument|ifp
 argument_list|)
@@ -246,6 +256,12 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -310,15 +326,6 @@ index|]
 operator|.
 name|af_output
 function_decl|;
-name|int
-name|sto
-init|=
-name|dontroute
-condition|?
-name|snoroute
-else|:
-name|s
-decl_stmt|;
 name|msg
 operator|->
 name|rip_cmd
@@ -396,7 +403,9 @@ modifier|*
 name|output
 call|)
 argument_list|(
-name|sto
+name|s
+argument_list|,
+name|flags
 argument_list|,
 name|dst
 argument_list|,
@@ -487,7 +496,9 @@ modifier|*
 name|output
 call|)
 argument_list|(
-name|sto
+name|s
+argument_list|,
+name|flags
 argument_list|,
 name|dst
 argument_list|,

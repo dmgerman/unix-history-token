@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	4.1 %G%"
+literal|"@(#)trace.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"router.h"
+file|"defs.h"
 end_include
 
 begin_define
