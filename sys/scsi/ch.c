@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.22 1995/11/20 12:42:27 phk Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.23 1995/11/29 10:48:56 julian Exp $  */
 end_comment
 
 begin_include
@@ -2708,9 +2708,9 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 

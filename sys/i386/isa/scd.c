@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.10 1995/11/28 09:41:36 julian Exp $ */
+comment|/* $Id: scd.c,v 1.11 1995/11/29 10:47:50 julian Exp $ */
 end_comment
 
 begin_comment
@@ -8328,9 +8328,9 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 

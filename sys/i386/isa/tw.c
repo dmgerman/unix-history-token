@@ -4741,9 +4741,9 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 name|SYSINIT
 argument_list|(

@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.6 1995/11/28 09:40:39 julian Exp $  */
+comment|/*  * $Id: asc.c,v 1.7 1995/11/29 10:47:24 julian Exp $  */
 end_comment
 
 begin_include
@@ -4439,9 +4439,9 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 end_function
 
