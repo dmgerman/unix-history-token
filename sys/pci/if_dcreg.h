@@ -2663,6 +2663,44 @@ parameter_list|)
 value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_tx_list + i) - (uintptr_t)sc->dc_ldata)
 end_define
 
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
+begin_define
+define|#
+directive|define
+name|DC_SP_MAC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 16)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DC_SP_MAC
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|dc_list_data
