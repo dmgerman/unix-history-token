@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.4	%G%	*/
+comment|/*	kern_clock.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -1196,9 +1196,6 @@ name|u
 operator|.
 name|u_procp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ERNIE
 if|if
 condition|(
 name|pp
@@ -1247,8 +1244,6 @@ name|pp
 operator|->
 name|p_usrpri
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|#
