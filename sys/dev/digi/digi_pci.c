@@ -78,19 +78,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<digi/digireg.h>
+file|<dev/digi/digireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<digi/digi.h>
+file|<dev/digi/digi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<digi/digi_pci.h>
+file|<dev/digi/digi_pci.h>
 end_include
 
 begin_function
