@@ -849,6 +849,10 @@ decl_stmt|,
 modifier|*
 name|q
 decl_stmt|;
+name|char
+modifier|*
+name|savglob
+decl_stmt|;
 name|glob_t
 name|pglob
 decl_stmt|;
@@ -947,6 +951,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|savglob
+operator|=
+name|p
+operator|->
+name|log
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -985,6 +995,12 @@ argument_list|(
 operator|&
 name|pglob
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|log
+operator|=
+name|savglob
 expr_stmt|;
 block|}
 block|}
