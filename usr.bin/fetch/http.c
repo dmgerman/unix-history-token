@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.20 1998/09/20 00:01:26 jkh Exp $  */
+comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: http.c,v 1.21 1998/10/26 02:39:21 fenner Exp $  */
 end_comment
 
 begin_include
@@ -2207,6 +2207,9 @@ literal|"Range: bytes=18446744073709551616-\r\n"
 argument_list|)
 index|]
 decl_stmt|;
+name|int
+name|tried_head
+decl_stmt|;
 name|setup_http_auth
 argument_list|()
 expr_stmt|;
@@ -2242,6 +2245,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|retrying
+operator|=
+literal|0
+expr_stmt|;
+name|tried_head
 operator|=
 literal|0
 expr_stmt|;
@@ -2535,6 +2542,32 @@ define|\
 value|do { \ 		    Iov[N].iov_base = (void *)Str; \ 		     Iov[N].iov_len = strlen(Iov[n].iov_base); \ 		     N++; \         } while(0)
 name|retry
 label|:
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_reportsize
+operator|&&
+operator|!
+name|tried_head
+condition|)
+block|{
+name|addstr
+argument_list|(
+name|iov
+argument_list|,
+name|n
+argument_list|,
+literal|"HEAD "
+argument_list|)
+expr_stmt|;
+name|tried_head
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|addstr
 argument_list|(
 name|iov
@@ -2544,6 +2577,11 @@ argument_list|,
 literal|"GET "
 argument_list|)
 expr_stmt|;
+name|tried_head
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|addstr
 argument_list|(
 name|iov
@@ -3646,6 +3684,35 @@ literal|407
 expr_stmt|;
 break|break;
 case|case
+literal|501
+case|:
+comment|/* Not Implemented */
+comment|/* If we tried HEAD, retry with GET */
+if|if
+condition|(
+name|tried_head
+condition|)
+block|{
+name|n
+operator|=
+literal|0
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+else|else
+block|{
+name|errstr
+operator|=
+name|safe_strdup
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
 literal|503
 case|:
 comment|/* Service Unavailable */
@@ -4501,6 +4568,69 @@ name|fs_status
 operator|=
 literal|"retrieving file from HTTP/1.x server"
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_reportsize
+condition|)
+block|{
+if|if
+condition|(
+name|total_length
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"%s: size not known\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_outputfile
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Unknown\n"
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%qd\n"
+argument_list|,
+operator|(
+name|quad_t
+operator|)
+name|total_length
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|remote
+argument_list|)
+expr_stmt|;
+name|unsetup_sigalrm
+argument_list|()
+expr_stmt|;
+return|return
+name|status
+return|;
+block|}
 comment|/* 	 * OK, if we got here, then we have finished parsing the header 	 * and have read the `\r\n' line which denotes the end of same. 	 * We may or may not have a good idea of the length of the file 	 * or its modtime.  At this point we will have to deal with 	 * any special byte-range, content-negotiation, redirection, 	 * or authentication, and probably jump back up to the top, 	 * once we implement those features.  So, all we have left to 	 * do is open up the output file and copy data from input to 	 * output until EOF. 	 */
 if|if
 condition|(

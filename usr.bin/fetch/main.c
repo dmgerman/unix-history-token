@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.47 1998/09/20 00:01:26 jkh Exp $ */
+comment|/* $Id: main.c,v 1.48 1998/11/08 23:18:48 des Exp $ */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: fetch [-DHILMNPRTVablmnpqrtv] [-o outputfile] [-S bytes]"
+literal|"usage: fetch [-DHILMNPRTVablmnpqrstv] [-o outputfile] [-S bytes]"
 argument_list|,
 literal|"             [-f file -h host [-c dir] | URL]"
 argument_list|)
@@ -217,6 +217,12 @@ literal|1
 expr_stmt|;
 name|fs
 operator|.
+name|fs_reportsize
+operator|=
+literal|0
+expr_stmt|;
+name|fs
+operator|.
 name|fs_expectedsize
 operator|=
 operator|-
@@ -241,7 +247,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:D:f:h:HIlLmMnNo:pPqRrS:tT:vV:"
+literal|"abc:D:f:h:HIlLmMnNo:pPqRrS:stT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -410,6 +416,16 @@ case|:
 name|fs
 operator|.
 name|fs_use_connect
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|fs
+operator|.
+name|fs_reportsize
 operator|=
 literal|1
 expr_stmt|;
