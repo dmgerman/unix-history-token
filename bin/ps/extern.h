@@ -570,6 +570,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|upr
+parameter_list|(
+name|KINFO
+modifier|*
+parameter_list|,
+name|VARENT
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vsize
 parameter_list|(
 name|KINFO
