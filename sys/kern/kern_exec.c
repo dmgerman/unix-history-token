@@ -1810,12 +1810,22 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* Make sure file descriptors 0..2 are in use.  */
+comment|/* 		 * Make sure file descriptors 0..2 are in use. 		 * 		 * fdcheckstd() may call falloc() which may block to 		 * allocate memory, so temporarily drop the process lock. 		 */
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|fdcheckstd
 argument_list|(
 name|td
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 if|if
