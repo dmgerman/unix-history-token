@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.14 (Berkeley) %G%"
+literal|"@(#)cico.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<termio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_endif
@@ -107,6 +113,40 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -288,6 +328,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|InitialRole
+init|=
+name|SLAVE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|StartTime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|onesys
 init|=
 literal|0
@@ -345,6 +399,14 @@ specifier|extern
 name|char
 name|Myfullname
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|Bytes_Sent
+decl_stmt|,
+name|Bytes_Received
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,7 +1283,7 @@ name|isatty
 argument_list|(
 name|Ifn
 argument_list|)
-operator|<
+operator|==
 literal|0
 condition|)
 block|{
@@ -1378,6 +1440,12 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
+name|IsTcpIp
+condition|?
+name|MAXMSGTIME
+operator|*
+literal|4
+else|:
 name|MAXMSGTIME
 argument_list|)
 expr_stmt|;
@@ -1581,15 +1649,17 @@ name|Rmtname
 argument_list|)
 condition|)
 block|{
-comment|/* If we don't know them, we won't talk to them... */
 ifdef|#
 directive|ifdef
 name|NOSTRANGERS
-name|logent
+comment|/* If we don't know them, we won't talk to them... */
+name|assert
 argument_list|(
+literal|"Unknown host:"
+argument_list|,
 name|Rmtname
 argument_list|,
-literal|"UNKNOWN HOST"
+literal|0
 argument_list|)
 expr_stmt|;
 name|omsg
@@ -2367,6 +2437,13 @@ operator|!
 name|onesys
 condition|)
 block|{
+name|do_connect_accounting
+argument_list|()
+expr_stmt|;
+name|StartTime
+operator|=
+literal|0
+expr_stmt|;
 name|ret
 operator|=
 name|gnsys
@@ -2394,6 +2471,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|ret
@@ -2447,6 +2525,16 @@ argument_list|,
 name|Rmtname
 argument_list|)
 expr_stmt|;
+name|StartTime
+operator|=
+literal|0
+expr_stmt|;
+name|Bytes_Sent
+operator|=
+name|Bytes_Received
+operator|=
+literal|0L
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -2468,6 +2556,11 @@ operator|==
 name|MASTER
 condition|)
 block|{
+specifier|extern
+name|char
+name|LineType
+index|[]
+decl_stmt|;
 comment|/* check for /etc/nologin */
 if|if
 condition|(
@@ -2571,15 +2664,6 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
-argument_list|(
-name|msg
-argument_list|,
-literal|"call to %s "
-argument_list|,
-name|Rmtname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mlock
@@ -2590,11 +2674,13 @@ operator|!=
 name|SUCCESS
 condition|)
 block|{
-name|logent
+name|DEBUG
 argument_list|(
-name|msg
+literal|1
 argument_list|,
-literal|"LOCKED"
+literal|"LOCKED: call to %s\n"
+argument_list|,
+name|Rmtname
 argument_list|)
 expr_stmt|;
 name|US_SST
@@ -2613,6 +2699,17 @@ operator|=
 name|conn
 argument_list|(
 name|Rmtname
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|msg
+argument_list|,
+literal|"call to %s via %s"
+argument_list|,
+name|Rmtname
+argument_list|,
+name|LineType
 argument_list|)
 expr_stmt|;
 if|if
@@ -2701,6 +2798,10 @@ name|ub_ok
 argument_list|)
 expr_stmt|;
 block|}
+name|InitialRole
+operator|=
+name|MASTER
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCPIP
@@ -2755,9 +2856,15 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
-literal|2
-operator|*
+name|IsTcpIp
+condition|?
 name|MAXMSGTIME
+operator|*
+literal|4
+else|:
+name|MAXMSGTIME
+operator|*
+literal|2
 argument_list|)
 expr_stmt|;
 for|for
@@ -2779,12 +2886,21 @@ if|if
 condition|(
 name|ret
 operator|!=
-literal|0
+name|SUCCESS
 condition|)
 block|{
 name|alarm
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|4
+argument_list|,
+literal|"\nimsg failed: errno %d\n"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 name|logent
@@ -2811,6 +2927,12 @@ break|break;
 block|}
 name|alarm
 argument_list|(
+name|IsTcpIp
+condition|?
+name|MAXMSGTIME
+operator|*
+literal|4
+else|:
 name|MAXMSGTIME
 argument_list|)
 expr_stmt|;
@@ -3139,6 +3261,12 @@ argument_list|)
 expr_stmt|;
 name|alarm
 argument_list|(
+name|IsTcpIp
+condition|?
+name|MAXMSGTIME
+operator|*
+literal|4
+else|:
 name|MAXMSGTIME
 argument_list|)
 expr_stmt|;
@@ -3208,28 +3336,46 @@ goto|;
 block|}
 else|else
 block|{
+name|char
+name|smsg
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|,
+name|gmsg
+index|[
+literal|10
+index|]
+decl_stmt|,
+name|pmsg
+index|[
+literal|20
+index|]
+decl_stmt|,
+name|bpsmsg
+index|[
+literal|20
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+name|UsingProtocol
+decl_stmt|;
+specifier|extern
+name|int
+name|linebaudrate
+decl_stmt|;
 if|if
 condition|(
 name|ttyn
 operator|!=
 name|NULL
 condition|)
-block|{
-name|char
-name|startupmsg
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|linebaudrate
-decl_stmt|;
 name|sprintf
 argument_list|(
-name|startupmsg
+name|bpsmsg
 argument_list|,
-literal|"startup %s %d baud"
+literal|" %s %d bps"
 argument_list|,
 operator|&
 name|ttyn
@@ -3240,18 +3386,76 @@ argument_list|,
 name|linebaudrate
 argument_list|)
 expr_stmt|;
-name|logent
+else|else
+name|bpsmsg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|UsingProtocol
+operator|!=
+literal|'g'
+condition|)
+name|sprintf
 argument_list|(
-name|startupmsg
+name|pmsg
 argument_list|,
-literal|"OK"
+literal|" %c protocol"
+argument_list|,
+name|UsingProtocol
 argument_list|)
 expr_stmt|;
-block|}
 else|else
+name|pmsg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|MaxGrade
+operator|!=
+literal|'\177'
+condition|)
+name|sprintf
+argument_list|(
+name|gmsg
+argument_list|,
+literal|" grade %c"
+argument_list|,
+name|MaxGrade
+argument_list|)
+expr_stmt|;
+else|else
+name|gmsg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|smsg
+argument_list|,
+literal|"startup%s%s%s"
+argument_list|,
+name|bpsmsg
+argument_list|,
+name|pmsg
+argument_list|,
+name|gmsg
+argument_list|)
+expr_stmt|;
 name|logent
 argument_list|(
-literal|"startup"
+name|smsg
 argument_list|,
 literal|"OK"
 argument_list|)
@@ -3260,6 +3464,12 @@ name|US_SST
 argument_list|(
 name|us_s_gress
 argument_list|)
+expr_stmt|;
+name|StartTime
+operator|=
+name|Now
+operator|.
+name|time
 expr_stmt|;
 name|systat
 argument_list|(
@@ -3309,6 +3519,17 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|smsg
+argument_list|,
+literal|"conversation complete %ld sent %ld received"
+argument_list|,
+name|Bytes_Sent
+argument_list|,
+name|Bytes_Received
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -3318,7 +3539,7 @@ condition|)
 block|{
 name|logent
 argument_list|(
-literal|"conversation complete"
+name|smsg
 argument_list|,
 literal|"OK"
 argument_list|)
@@ -3338,7 +3559,7 @@ else|else
 block|{
 name|logent
 argument_list|(
-literal|"conversation complete"
+name|smsg
 argument_list|,
 name|_FAILED
 argument_list|)
@@ -3360,6 +3581,12 @@ expr_stmt|;
 block|}
 name|alarm
 argument_list|(
+name|IsTcpIp
+condition|?
+name|MAXMSGTIME
+operator|*
+literal|4
+else|:
 name|MAXMSGTIME
 argument_list|)
 expr_stmt|;
@@ -3770,6 +3997,9 @@ argument_list|(
 name|DBG_CLEAN
 argument_list|)
 expr_stmt|;
+name|do_connect_accounting
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|code
@@ -3778,353 +4008,202 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  *	on interrupt - remove locks and exit  */
-end_comment
-
-begin_expr_stmt
-name|onintr
-argument_list|(
-name|inter
-argument_list|)
-specifier|register
-name|int
-name|inter
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-name|char
-name|str
-index|[
-literal|30
-index|]
-decl_stmt|;
-name|signal
-argument_list|(
-name|inter
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|str
-argument_list|,
-literal|"SIGNAL %d"
-argument_list|,
-name|inter
-argument_list|)
-expr_stmt|;
-name|logent
-argument_list|(
-name|str
-argument_list|,
-literal|"CAUGHT"
-argument_list|)
-expr_stmt|;
-name|US_SST
-argument_list|(
-name|us_s_intr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|Rmtname
-operator|&&
-name|strncmp
-argument_list|(
-name|Rmtname
-argument_list|,
-name|Myname
-argument_list|,
-name|MAXBASENAME
-argument_list|)
-condition|)
-name|systat
-argument_list|(
-name|Rmtname
-argument_list|,
-name|SS_FAIL
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|inter
-operator|==
-name|SIGPIPE
-operator|&&
-operator|!
-name|onesys
-condition|)
-name|longjmp
-argument_list|(
-name|Pipebuf
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|(
-name|inter
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Catch a special signal  * (SIGFPE, ugh), and toggle debugging between 0 and 30.  * Handy for looking in on long running uucicos.  */
-end_comment
-
 begin_macro
-name|dbg_signal
+name|do_connect_accounting
 argument_list|()
 end_macro
 
 begin_block
 block|{
-name|Debug
-operator|=
-operator|(
-name|Debug
-operator|==
-literal|0
-operator|)
-condition|?
-literal|30
-else|:
-literal|0
-expr_stmt|;
-name|setdebug
-argument_list|(
-name|DBG_PERM
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Debug
-operator|>
-literal|0
-condition|)
-name|logent
-argument_list|(
-literal|"Signal Enabled"
-argument_list|,
-literal|"DEBUG"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Check debugging requests, and open RMTDEBUG audit file if necessary. If an  * audit file is needed, the parm argument indicates how to create the file:  *  *	DBG_TEMP  - Open a temporary file, with filename = RMTDEBUG/pid.  *	DBG_PERM  - Open a permanent audit file, filename = RMTDEBUG/Rmtname.  *		    If a temp file already exists, it is mv'ed to be permanent.  *	DBG_CLEAN - Cleanup; unlink temp files.  *  * Restrictions - this code can only cope with one open debug file at a time.  * Each call creates a new file; if an old one of the same name exists it will  * be overwritten.  */
-end_comment
-
-begin_macro
-name|setdebug
-argument_list|(
-argument|parm
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|parm
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|char
-name|buf
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|;
-comment|/* Buffer for building filenames     */
-specifier|static
-name|char
+specifier|register
+name|FILE
 modifier|*
-name|temp
-init|=
-name|NULL
+name|fp
 decl_stmt|;
-comment|/* Ptr to temporary file name	     */
-specifier|static
-name|int
-name|auditopen
-init|=
-literal|0
-decl_stmt|;
-comment|/* Set to 1 when we open a file	     */
 name|struct
-name|stat
-name|stbuf
+name|tm
+modifier|*
+name|localtime
+parameter_list|()
+function_decl|;
+specifier|register
+name|struct
+name|tm
+modifier|*
+name|tm
 decl_stmt|;
-comment|/* File status buffer		     */
-comment|/* 	 * If movement or cleanup of a temp file is indicated, we do it no 	 * matter what. 	 */
+name|int
+name|flags
+decl_stmt|;
 if|if
 condition|(
-name|temp
-operator|!=
-name|CNULL
-operator|&&
-name|parm
+name|StartTime
 operator|==
-name|DBG_PERM
+literal|0
 condition|)
-block|{
-name|sprintf
+return|return;
+ifdef|#
+directive|ifdef
+name|DO_CONNECT_ACCOUNTING
+name|fp
+operator|=
+name|fopen
 argument_list|(
-name|buf
+literal|"/usr/spool/uucp/CONNECT"
 argument_list|,
-literal|"%s/%s"
+literal|"a"
+argument_list|)
+expr_stmt|;
+name|ASSERT
+argument_list|(
+name|fp
+operator|!=
+name|NULL
 argument_list|,
-name|RMTDEBUG
+literal|"Can't open CONNECT file"
 argument_list|,
 name|Rmtname
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|link
-argument_list|(
-name|temp
-argument_list|,
-name|buf
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|Debug
-operator|=
-literal|0
-expr_stmt|;
-name|assert
-argument_list|(
-literal|"RMTDEBUG LINK FAIL"
-argument_list|,
-name|temp
 argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|cleanup
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|parm
+name|tm
 operator|=
-name|DBG_CLEAN
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|parm
-operator|==
-name|DBG_CLEAN
-condition|)
-block|{
-if|if
-condition|(
-name|temp
-operator|!=
-name|CNULL
-condition|)
-block|{
-name|unlink
+name|localtime
 argument_list|(
-name|temp
+operator|&
+name|StartTime
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|temp
-argument_list|)
-expr_stmt|;
-name|temp
+ifdef|#
+directive|ifdef
+name|F_SETFL
+name|flags
 operator|=
-name|CNULL
-expr_stmt|;
-block|}
-return|return;
-block|}
-if|if
-condition|(
-name|Debug
-operator|==
-literal|0
-condition|)
-return|return;
-comment|/* Gotta be in debug to come here.   */
-comment|/* 	 * If we haven't opened a file already, we can just return if it's 	 * alright to use the stderr we came in with. We can if: 	 * 	 *	Role == MASTER, and Stderr is a regular file, a TTY or a pipe. 	 * 	 * Caution: Detecting when stderr is a pipe is tricky, because the 4.2 	 * man page for fstat(2) disagrees with reality, and System V leaves it 	 * undefined, which means different implementations act differently. 	 */
-if|if
-condition|(
-operator|!
-name|auditopen
-operator|&&
-name|Role
-operator|==
-name|MASTER
-condition|)
-block|{
-if|if
-condition|(
-name|isatty
+name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
-name|stderr
-argument_list|)
-argument_list|)
-condition|)
-return|return;
-elseif|else
-if|if
-condition|(
-name|fstat
-argument_list|(
-name|fileno
-argument_list|(
-name|stderr
+name|fp
 argument_list|)
 argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|==
+name|F_GETFL
+argument_list|,
 literal|0
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
+name|fcntl
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|flags
+operator||
+name|O_APPEND
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USG
+name|fprintf
+argument_list|(
+argument|fp
+argument_list|,
+literal|"%s %d %d%.2d%.2d %.2d%.2d %d %ld %s %ld %ld\n"
+argument_list|,
+else|#
+directive|else
+comment|/* V7 */
+argument|fprintf(fp,
+literal|"%s %d %d%02d%02d %02d%02d %d %ld %s %ld %ld\n"
+argument|,
+endif|#
+directive|endif
+comment|/* V7 */
+argument|Rmtname, InitialRole, tm->tm_year, tm->tm_mon +
+literal|1
+argument|, 		tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_wday, 		(Now.time - StartTime +
+literal|59
+argument|) /
+literal|60
+argument|,  		ttyn == NULL ?
+literal|"ttyp0"
+argument|:&ttyn[
+literal|5
+argument|], 			Bytes_Sent, Bytes_Received); 	fclose(fp);
+endif|#
+directive|endif
+comment|/* DO_CONNECT_ACCOUNTING */
+argument|}
+comment|/*  *	on interrupt - remove locks and exit  */
+argument|onintr(inter) register int inter; { 	char str[BUFSIZ]; 	signal(inter, SIG_IGN); 	sprintf(str,
+literal|"SIGNAL %d"
+argument|, inter); 	logent(str,
+literal|"CAUGHT"
+argument|); 	US_SST(us_s_intr); 	if (*Rmtname&& strncmp(Rmtname, Myname, MAXBASENAME)) 		systat(Rmtname, SS_FAIL, str); 	sprintf(str,
+literal|"conversation complete %ld sent %ld received"
+argument|, 		Bytes_Sent, Bytes_Received); 	logent(str, _FAILED); 	if (inter == SIGPIPE&& !onesys) 		longjmp(Pipebuf,
+literal|1
+argument|); 	cleanup(inter); }
+comment|/*  * Catch a special signal  * (SIGFPE, ugh), and toggle debugging between 0 and 30.  * Handy for looking in on long running uucicos.  */
+argument|dbg_signal() { 	Debug = (Debug ==
+literal|0
+argument|) ?
+literal|30
+argument|:
+literal|0
+argument|; 	setdebug(DBG_PERM); 	if (Debug>
+literal|0
+argument|) 		logent(
+literal|"Signal Enabled"
+argument|,
+literal|"DEBUG"
+argument|); }
+comment|/*  * Check debugging requests, and open RMTDEBUG audit file if necessary. If an  * audit file is needed, the parm argument indicates how to create the file:  *  *	DBG_TEMP  - Open a temporary file, with filename = RMTDEBUG/pid.  *	DBG_PERM  - Open a permanent audit file, filename = RMTDEBUG/Rmtname.  *		    If a temp file already exists, it is mv'ed to be permanent.  *	DBG_CLEAN - Cleanup; unlink temp files.  *  * Restrictions - this code can only cope with one open debug file at a time.  * Each call creates a new file; if an old one of the same name exists it will  * be overwritten.  */
+argument|setdebug(parm) int parm; { 	char buf[BUFSIZ];
+comment|/* Buffer for building filenames     */
+argument|static char *temp = NULL;
+comment|/* Ptr to temporary file name	     */
+argument|static int auditopen =
+literal|0
+argument|;
+comment|/* Set to 1 when we open a file	     */
+argument|struct stat stbuf;
+comment|/* File status buffer		     */
+comment|/* 	 * If movement or cleanup of a temp file is indicated, we do it no 	 * matter what. 	 */
+argument|if (temp != CNULL&& parm == DBG_PERM) { 		sprintf(buf,
+literal|"%s/%s"
+argument|, RMTDEBUG, Rmtname); 		unlink(buf); 		if (link(temp, buf) !=
+literal|0
+argument|) { 			Debug =
+literal|0
+argument|; 			assert(
+literal|"RMTDEBUG LINK FAIL"
+argument|, temp, errno); 			cleanup(
+literal|1
+argument|); 		} 		parm = DBG_CLEAN; 	} 	if (parm == DBG_CLEAN) { 		if (temp != CNULL) { 			unlink(temp); 			free(temp); 			temp = CNULL; 		} 		return; 	}  	if (Debug ==
+literal|0
+argument|) 		return;
+comment|/* Gotta be in debug to come here.   */
+comment|/* 	 * If we haven't opened a file already, we can just return if it's 	 * alright to use the stderr we came in with. We can if: 	 * 	 *	Role == MASTER, and Stderr is a regular file, a TTY or a pipe. 	 * 	 * Caution: Detecting when stderr is a pipe is tricky, because the 4.2 	 * man page for fstat(2) disagrees with reality, and System V leaves it 	 * undefined, which means different implementations act differently. 	 */
+argument|if (!auditopen&& Role == MASTER) { 		if (isatty(fileno(stderr))) 			return; 		else if (fstat(fileno(stderr),&stbuf) ==
+literal|0
+argument|) {
 ifdef|#
 directive|ifdef
 name|USG
 comment|/* Is Regular File or Fifo   */
-if|if
-condition|(
-operator|(
-name|stbuf
-operator|.
-name|st_mode
-operator|&
+argument|if ((stbuf.st_mode&
 literal|0060000
-operator|)
-operator|==
+argument|) ==
 literal|0
-condition|)
-return|return;
+argument|) 				return;
 else|#
 directive|else
 else|!USG
@@ -4132,360 +4211,76 @@ ifdef|#
 directive|ifdef
 name|BSD4_2
 comment|/* Is Regular File */
-if|if
-condition|(
-operator|(
-name|stbuf
-operator|.
-name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFREG
-operator|||
-name|stbuf
-operator|.
-name|st_mode
-operator|==
+argument|if ((stbuf.st_mode& S_IFMT) == S_IFREG || 			    stbuf.st_mode ==
 literal|0
-condition|)
+argument|)
 comment|/* Is a pipe */
-return|return;
+argument|return;
 else|#
 directive|else
 else|!BSD4_2
 comment|/* Is Regular File or Pipe  */
-if|if
-condition|(
-operator|(
-name|stbuf
-operator|.
-name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFREG
-condition|)
-return|return;
+argument|if ((stbuf.st_mode& S_IFMT) == S_IFREG) 				return;
 endif|#
 directive|endif
 endif|BSD4_2
 endif|#
 directive|endif
 endif|USG
-block|}
-block|}
+argument|} 	}
 comment|/* 	 * We need RMTDEBUG directory to do auditing. If the file doesn't exist, 	 * then we forget about debugging; if it exists but has improper owner- 	 * ship or modes, we gripe about it in ERRLOG.  	 */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|RMTDEBUG
-argument_list|,
-operator|&
-name|stbuf
-argument_list|)
-operator|!=
-name|SUCCESS
-condition|)
-block|{
-name|Debug
-operator|=
+argument|if (stat(RMTDEBUG,&stbuf) != SUCCESS) { 		Debug =
 literal|0
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|geteuid
-argument_list|()
-operator|!=
-name|stbuf
-operator|.
-name|st_uid
-operator|)
-operator|||
+argument|; 		return; 	} 	if ((geteuid() != stbuf.st_uid) ||
 comment|/* We must own it    */
-operator|(
-operator|(
-name|stbuf
-operator|.
-name|st_mode
-operator|&
+argument|((stbuf.st_mode&
 literal|0170700
-operator|)
-operator|!=
+argument|) !=
 literal|040700
-operator|)
-condition|)
-block|{
+argument|)) {
 comment|/* Directory, rwx    */
-name|Debug
-operator|=
+argument|Debug =
 literal|0
-expr_stmt|;
-name|assert
-argument_list|(
+argument|; 		assert(
 literal|"INVALID RMTDEBUG DIRECTORY:"
-argument_list|,
-name|RMTDEBUG
-argument_list|,
-name|stbuf
-operator|.
-name|st_mode
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|parm
-operator|==
-name|DBG_TEMP
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
+argument|, RMTDEBUG, stbuf.st_mode); 		return; 	}  	if (parm == DBG_TEMP) { 		sprintf(buf,
 literal|"%s/%d"
-argument_list|,
-name|RMTDEBUG
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|temp
-operator|=
-name|malloc
-argument_list|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
+argument|, RMTDEBUG, getpid()); 		temp = malloc(strlen (buf) +
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|temp
-operator|==
-name|CNULL
-condition|)
-block|{
-name|Debug
-operator|=
+argument|); 		if (temp == CNULL) { 			Debug =
 literal|0
-expr_stmt|;
-name|assert
-argument_list|(
+argument|; 			assert(
 literal|"RMTDEBUG MALLOC ERROR:"
-argument_list|,
-name|temp
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|(
+argument|, temp, errno); 			cleanup(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|strcpy
-argument_list|(
-name|temp
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
+argument|); 		} 		strcpy(temp, buf); 	} else 		sprintf(buf,
 literal|"%s/%s"
-argument_list|,
-name|RMTDEBUG
-argument_list|,
-name|Rmtname
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|freopen
-argument_list|(
-name|buf
-argument_list|,
+argument|, RMTDEBUG, Rmtname);  	unlink(buf); 	if (freopen(buf,
 literal|"w"
-argument_list|,
-name|stderr
-argument_list|)
-operator|!=
-name|stderr
-condition|)
-block|{
-name|Debug
-operator|=
+argument|, stderr) != stderr) { 		Debug =
 literal|0
-expr_stmt|;
-name|assert
-argument_list|(
+argument|; 		assert(
 literal|"FAILED RMTDEBUG FILE OPEN:"
-argument_list|,
-name|buf
-argument_list|,
-name|errno
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|(
+argument|, buf, errno); 		cleanup(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|setbuf
-argument_list|(
-name|stderr
-argument_list|,
-name|CNULL
-argument_list|)
-expr_stmt|;
-name|auditopen
-operator|=
+argument|); 	} 	setbuf(stderr, CNULL); 	auditopen =
 literal|1
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
+argument|; }
 comment|/*  *	catch SIGALRM routine  */
-end_comment
-
-begin_macro
-name|timeout
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|HaveSentHup
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|HaveSentHup
-condition|)
-block|{
-name|logent
-argument_list|(
-name|Rmtname
-argument_list|,
+argument|timeout() { 	extern int HaveSentHup; 	if (!HaveSentHup) { 		logent(Rmtname,
 literal|"TIMEOUT"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|Rmtname
-operator|&&
-name|strncmp
-argument_list|(
-name|Rmtname
-argument_list|,
-name|Myname
-argument_list|,
-name|MAXBASENAME
-argument_list|)
-condition|)
-block|{
-name|US_SST
-argument_list|(
-name|us_s_tmot
-argument_list|)
-expr_stmt|;
-name|systat
-argument_list|(
-name|Rmtname
-argument_list|,
-name|SS_FAIL
-argument_list|,
+argument|); 		if (*Rmtname&& strncmp(Rmtname, Myname, MAXBASENAME)) { 			US_SST(us_s_tmot); 			systat(Rmtname, SS_FAIL,
 literal|"TIMEOUT"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|longjmp
-argument_list|(
-name|Sjbuf
-argument_list|,
+argument|); 		} 	} 	longjmp(Sjbuf,
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|pskip
-parameter_list|(
-name|p
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-block|{
-while|while
-condition|(
-operator|*
-name|p
-operator|&&
-operator|*
-name|p
-operator|!=
+argument|); }  static char * pskip(p) register char *p; { 	while(*p&& *p !=
 literal|' '
-condition|)
-operator|++
-name|p
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|&&
-operator|*
-name|p
-operator|==
+argument|) 		++p; 	while(*p&& *p ==
 literal|' '
-condition|)
-operator|*
-name|p
-operator|++
-operator|=
+argument|) 		*p++ =
 literal|0
-expr_stmt|;
-return|return
-name|p
-return|;
-block|}
-end_function
+argument|; 	return p; }
+end_block
 
 end_unit
 
