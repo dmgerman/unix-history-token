@@ -41,11 +41,11 @@ directive|if
 literal|0
 end_if
 
-begin_endif
+begin_else
 unit|static char sccsid[] = "@(#)mille.c	8.1 (Berkeley) 5/31/93";
-endif|#
-directive|endif
-end_endif
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -57,6 +57,11 @@ init|=
 literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
