@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.7 81/10/28 */
+comment|/* tcp.h 1.8 81/10/29 */
 end_comment
 
 begin_comment
@@ -170,6 +170,12 @@ modifier|*
 name|t_rcv_unack
 decl_stmt|;
 comment|/* unacked message queue */
+name|short
+name|seqcnt
+decl_stmt|;
+name|short
+name|xxx
+decl_stmt|;
 name|seq_t
 name|iss
 decl_stmt|;
