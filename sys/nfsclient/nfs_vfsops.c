@@ -3029,11 +3029,11 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PRELITE2
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMPAT_PRELITE2
+end_ifndef
 
 begin_comment
 comment|/*  * Old arguments to mount NFS  */
@@ -3123,6 +3123,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !NO_COMPAT_PRELITE2 */
+end_comment
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  * It seems a bit dumb to copyinstr() the host and path here and then  * bcopy() them in mountnfs(), but I wanted to detect errors before  * doing the sockargs() call because sockargs() allocates an mbuf and  * an error after that means that I have to release the mbuf.  */
@@ -3244,9 +3248,9 @@ operator|!=
 name|NFS_ARGSVERSION
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|COMPAT_PRELITE2
+ifndef|#
+directive|ifndef
+name|NO_COMPAT_PRELITE2
 comment|/* 		 * If the argument version is unknown, then assume the 		 * caller is a pre-lite2 4.4BSD client and convert its 		 * arguments. 		 */
 name|struct
 name|onfs_args
@@ -3424,7 +3428,7 @@ name|hostname
 expr_stmt|;
 else|#
 directive|else
-comment|/* COMPAT_PRELITE2 */
+comment|/* NO_COMPAT_PRELITE2 */
 return|return
 operator|(
 name|EPROGMISMATCH
@@ -3432,7 +3436,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* COMPAT_PRELITE2 */
+comment|/* !NO_COMPAT_PRELITE2 */
 block|}
 name|error
 operator|=
