@@ -63,7 +63,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.61 %G%"
+literal|"@(#)sccs.c	1.62 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5367,10 +5367,45 @@ modifier|*
 name|getlogin
 parameter_list|()
 function_decl|;
-return|return
-operator|(
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"USER"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+name|p
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|p
+operator|=
 name|getlogin
 argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|p
 operator|)
 return|;
 endif|#
