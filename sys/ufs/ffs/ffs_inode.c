@@ -735,6 +735,13 @@ name|oip
 operator|->
 name|i_ump
 expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"ffs_truncate"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|length
@@ -1442,6 +1449,13 @@ operator||
 name|IO_NORMAL
 else|:
 name|IO_NORMAL
+argument_list|)
+expr_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"ffs_truncate1"
 argument_list|)
 expr_stmt|;
 name|vinvalbuf
