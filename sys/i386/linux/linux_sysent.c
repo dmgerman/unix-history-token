@@ -3129,16 +3129,21 @@ block|}
 block|,
 comment|/* 218 = linux_mincore */
 block|{
-literal|0
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|madvise_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_madvise
+name|madvise
 block|}
 block|,
-comment|/* 219 = linux_madvise */
+comment|/* 219 = madvise */
 block|{
 name|AS
 argument_list|(
