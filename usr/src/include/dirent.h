@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -222,7 +222,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|rewindir
+name|rewinddir
 parameter_list|(
 name|DIR
 modifier|*
