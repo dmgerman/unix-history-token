@@ -478,6 +478,8 @@ operator|=
 name|IFF_UP
 operator||
 name|IFF_POINTOPOINT
+operator||
+name|IFF_MULTICAST
 expr_stmt|;
 endif|#
 directive|endif

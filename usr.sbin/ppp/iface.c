@@ -3602,18 +3602,6 @@ name|flag
 operator|&
 name|flags
 operator|)
-operator|||
-operator|(
-operator|!
-name|if_flags
-index|[
-name|f
-index|]
-operator|.
-name|flag
-operator|&&
-name|flags
-operator|)
 condition|)
 block|{
 name|prompt_Printf
@@ -3653,6 +3641,12 @@ operator|.
 name|flag
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (flags)     prompt_Printf(arg->prompt, "%s0x%x", flags == iface->flags ? "" : ",",                   flags);
+endif|#
+directive|endif
 name|prompt_Printf
 argument_list|(
 name|arg
