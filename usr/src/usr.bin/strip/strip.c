@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	8.2 (Berkeley) %G%"
+literal|"@(#)strip.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,8 +301,12 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|eval
+operator|=
+literal|0
+init|;
 operator|(
 name|fn
 operator|=
@@ -312,7 +316,8 @@ operator|++
 operator|)
 operator|!=
 name|NULL
-condition|)
+condition|;
+control|)
 block|{
 if|if
 condition|(
