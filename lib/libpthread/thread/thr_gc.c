@@ -193,6 +193,15 @@ comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 
 name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
+comment|/* No stack of thread structure to free yet: */
+name|p_stack
+operator|=
+name|NULL
+expr_stmt|;
+name|pthread_cln
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 		 * Lock the garbage collector mutex which ensures that 		 * this thread sees another thread exit: 		 */
 if|if
 condition|(
@@ -208,15 +217,6 @@ name|PANIC
 argument_list|(
 literal|"Cannot lock gc mutex"
 argument_list|)
-expr_stmt|;
-comment|/* No stack of thread structure to free yet: */
-name|p_stack
-operator|=
-name|NULL
-expr_stmt|;
-name|pthread_cln
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* 		 * Enter a loop to search for the first dead thread that 		 * has memory to free. 		 */
 for|for
@@ -557,6 +557,7 @@ name|pthread_cln
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|pthread_cln
@@ -581,6 +582,7 @@ argument_list|(
 name|pthread_cln
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
