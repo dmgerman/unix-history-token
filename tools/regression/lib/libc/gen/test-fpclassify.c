@@ -49,7 +49,7 @@ operator|(
 name|float
 operator|)
 operator|-
-literal|0
+literal|0.0
 argument_list|)
 operator|==
 name|FP_ZERO
@@ -288,7 +288,7 @@ name|long
 name|double
 operator|)
 operator|-
-literal|0
+literal|0.0
 argument_list|)
 operator|==
 name|FP_ZERO
