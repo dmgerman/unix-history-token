@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * Heavily modified by Søren Schmidt (sos@login.dkuug.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	0.2e 930924  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  */
+comment|/*  * Heavily modified by Søren Schmidt (sos@login.dkuug.dk) to provide:  *  * 	virtual consoles, SYSV ioctl's, ANSI emulation   *  *	@(#)syscons.c	1.0 930928  * Derived from:  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  */
 end_comment
 
 begin_define
@@ -3172,6 +3172,23 @@ operator|->
 name|max_posy
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+name|CONS_GETVERS
+case|:
+comment|/* get version number */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+literal|0x100
+expr_stmt|;
+comment|/* version 1.0 */
 return|return
 literal|0
 return|;
