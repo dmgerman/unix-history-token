@@ -511,6 +511,12 @@ begin_comment
 comment|/* Just guessing */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Support for faking the "miniport" version.  */
 end_comment
@@ -606,6 +612,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
