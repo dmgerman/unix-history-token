@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/amd.h>
+file|<dev/amd/amd.h>
 end_include
 
 begin_define
