@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)autoconf.c	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)autoconf.c	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -82,6 +82,7 @@ comment|/* number of iostat dk numbers assigned so far */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|cold
 decl_stmt|;
@@ -332,6 +333,8 @@ end_comment
 begin_decl_stmt
 name|u_long
 name|bootdev
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
