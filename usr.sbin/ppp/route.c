@@ -982,8 +982,14 @@ name|prompt
 argument_list|,
 literal|"%-*.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|max
 argument_list|,
+operator|(
+name|int
+operator|)
 name|max
 argument_list|,
 name|name
