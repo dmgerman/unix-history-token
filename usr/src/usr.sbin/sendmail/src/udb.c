@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.14 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.15 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.14 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.15 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2069,16 +2069,6 @@ operator|=
 name|h
 operator|->
 name|h_addrtype
-expr_stmt|;
-name|up
-operator|->
-name|udb_addr
-operator|.
-name|sin_len
-operator|=
-name|h
-operator|->
-name|h_length
 expr_stmt|;
 name|bcopy
 argument_list|(
