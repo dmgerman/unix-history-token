@@ -2116,18 +2116,6 @@ argument_list|,
 literal|"write"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Wrote key %d at %jd\n"
-argument_list|,
-name|key
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|offset
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|sbuf
@@ -2136,7 +2124,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("s0 = %jd\n", (intmax_t)gl->sector0); 	printf("sN = %jd\n", (intmax_t)gl->sectorN); 	printf("l[0] = %jd\n", (intmax_t)gl->lsector[0]); 	printf("l[1] = %jd\n", (intmax_t)gl->lsector[1]); 	printf("l[2] = %jd\n", (intmax_t)gl->lsector[2]); 	printf("l[3] = %jd\n", (intmax_t)gl->lsector[3]); 	printf("k = %jd\n", (intmax_t)gl->keyoffset); 	printf("ss = %jd\n", (intmax_t)gl->sectorsize);
+block|printf("Wrote key %d at %jd\n", key, (intmax_t)offset); 	printf("s0 = %jd\n", (intmax_t)gl->sector0); 	printf("sN = %jd\n", (intmax_t)gl->sectorN); 	printf("l[0] = %jd\n", (intmax_t)gl->lsector[0]); 	printf("l[1] = %jd\n", (intmax_t)gl->lsector[1]); 	printf("l[2] = %jd\n", (intmax_t)gl->lsector[2]); 	printf("l[3] = %jd\n", (intmax_t)gl->lsector[3]); 	printf("k = %jd\n", (intmax_t)gl->keyoffset); 	printf("ss = %jd\n", (intmax_t)gl->sectorsize);
 endif|#
 directive|endif
 block|}
@@ -2272,7 +2260,7 @@ name|b
 parameter_list|)
 block|{
 specifier|const
-name|off_t
+name|uint64_t
 modifier|*
 name|oa
 decl_stmt|,
