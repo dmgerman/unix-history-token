@@ -338,7 +338,7 @@ name|int
 name|diff
 parameter_list|,
 name|int
-name|max
+name|maxval
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -360,7 +360,7 @@ name|u_int
 name|to
 parameter_list|,
 name|rlim_t
-name|max
+name|maxval
 parameter_list|)
 function_decl|;
 end_function_decl
