@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.18 1994/10/26 13:46:34 jkh Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.19 1994/10/26 20:22:10 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -823,11 +823,18 @@ return|return;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|NAMEBUF_LEN
+value|100
+end_define
+
 begin_decl_stmt
 name|char
 name|namebuf
 index|[
-literal|100
+name|NAMEBUF_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1020,6 +1027,54 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* This is incredibly gross, but nonetheless compact */
+comment|/* which is a good thing for a boot block to be */
+for|for
+control|(
+name|i
+operator|=
+name|NAMEBUF_LEN
+operator|-
+literal|1
+init|;
+name|i
+condition|;
+name|i
+operator|--
+control|)
+name|name
+index|[
+name|i
+index|]
+operator|=
+name|name
+index|[
+name|i
+operator|-
+literal|1
+index|]
+expr_stmt|;
+name|name
+index|[
+literal|0
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
 block|}
 block|}
 else|else
