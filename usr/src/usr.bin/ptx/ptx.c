@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ptx.c	4.1 (Berkeley) %G%"
+literal|"@(#)ptx.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1243,9 +1243,24 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_if
+if|if
+condition|(
+operator|*
+name|sortfile
+condition|)
+name|unlink
+argument_list|(
+name|sortfile
+argument_list|)
+expr_stmt|;
+end_if
+
 begin_expr_stmt
-name|onintr
-argument_list|()
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
