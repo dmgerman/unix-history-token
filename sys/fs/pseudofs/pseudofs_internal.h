@@ -28,6 +28,26 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * Vnode data  */
+end_comment
+
+begin_struct
+struct|struct
+name|pfs_vdata
+block|{
+name|struct
+name|pfs_node
+modifier|*
+name|pvd_pn
+decl_stmt|;
+name|pid_t
+name|pvd_pid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Vnode cache  */
 end_comment
 
@@ -65,6 +85,9 @@ parameter_list|,
 name|struct
 name|pfs_node
 modifier|*
+parameter_list|,
+name|pid_t
+name|pid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -150,36 +173,6 @@ parameter_list|,
 name|struct
 name|pfs_node
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * Shadow manager  */
-end_comment
-
-begin_function_decl
-name|void
-name|pfs_create_shadow
-parameter_list|(
-name|struct
-name|pfs_info
-modifier|*
-parameter_list|,
-name|struct
-name|pfs_node
-modifier|*
-parameter_list|,
-name|pid_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pfs_reap_shadows
-parameter_list|(
-name|pid_t
 parameter_list|)
 function_decl|;
 end_function_decl

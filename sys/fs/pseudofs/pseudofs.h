@@ -53,22 +53,11 @@ name|pfstype_file
 block|,
 name|pfstype_symlink
 block|,
-name|pfstype_procdep
+name|pfstype_procdir
 block|}
 name|pfs_type_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PFS_DYNAMIC
-value|1
-end_define
 
 begin_comment
 comment|/*  * Data structures  */
@@ -92,6 +81,25 @@ name|pfs_bitmap
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|PFS_FILL_ARGS
+define|\
+value|struct proc *curp, struct proc *p, struct pfs_node *pn, struct sbuf *sb
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_FILL_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_FILL_ARGS);
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -100,17 +108,7 @@ modifier|*
 name|pfs_fill_t
 function_decl|)
 parameter_list|(
-name|struct
-name|pfs_node
-modifier|*
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-parameter_list|,
-name|struct
-name|sbuf
-modifier|*
+name|PFS_FILL_ARGS
 parameter_list|)
 function_decl|;
 end_typedef
@@ -160,7 +158,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * pfs_node: describes a  node (file or directory) within a pseudofs  */
+comment|/*  * pfs_node: describes a node (file or directory) within a pseudofs  */
 end_comment
 
 begin_struct
@@ -223,27 +221,9 @@ name|pfs_node
 modifier|*
 name|pn_parent
 decl_stmt|;
-union|union
-block|{
 name|u_int32_t
-name|_pn_fileno
-decl_stmt|;
-name|struct
-name|pfs_node
-modifier|*
-name|_pn_shadow
-decl_stmt|;
-block|}
-name|u2
-union|;
-define|#
-directive|define
 name|pn_fileno
-value|u2._pn_fileno
-define|#
-directive|define
-name|pn_shadow
-value|u2._pn_shadow
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -359,6 +339,23 @@ name|func
 parameter_list|)
 define|\
 value|PFS_NODE(name, pfstype_symlink, flags, uid, gid, mode, func)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_PROCDIR
+parameter_list|(
+name|uid
+parameter_list|,
+name|gid
+parameter_list|,
+name|mode
+parameter_list|,
+name|nodes
+parameter_list|)
+define|\
+value|PFS_NODE("", pfstype_procdir, 0, uid, gid, mode, nodes)
 end_define
 
 begin_define

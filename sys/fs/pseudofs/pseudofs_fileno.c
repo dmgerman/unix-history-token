@@ -81,7 +81,7 @@ name|MALLOC_DEFINE
 argument_list|(
 name|M_PFSFILENO
 argument_list|,
-literal|"pseudofs_fileno"
+literal|"pfs_fileno"
 argument_list|,
 literal|"pseudofs fileno bitmap"
 argument_list|)
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|PFS_SLOT_BITS
-value|(sizeof(unsigned int) * CHAR_BIT)
+value|(int)(sizeof(unsigned int) * CHAR_BIT)
 end_define
 
 begin_define
@@ -359,19 +359,13 @@ name|M_PFSFILENO
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|used
-operator|>
-literal|2
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: %d file numbers still in use\n"
-argument_list|,
-name|used
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* we currently don't reclaim filenos */
+block|if (used> 2) 		printf("WARNING: %d file numbers still in use\n", used);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -793,6 +787,13 @@ operator|->
 name|pi_mutex
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"pfs_free_fileno(): reclaimed %d\n"
+argument_list|,
+name|fileno
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -856,6 +857,9 @@ name|pfstype_file
 case|:
 case|case
 name|pfstype_symlink
+case|:
+case|case
+name|pfstype_procdir
 case|:
 name|pn
 operator|->
@@ -962,24 +966,11 @@ name|pn_fileno
 expr_stmt|;
 break|break;
 case|case
-name|pfstype_procdep
-case|:
-name|KASSERT
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"pfs_fileno_alloc() called for pfstype_procdep node"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|pfstype_none
 case|:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"pfs_fileno_alloc() called for pfstype_none node"
@@ -988,70 +979,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"pfs_fileno_alloc(): %s: "
-argument_list|,
-name|pi
-operator|->
-name|pi_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pn
-operator|->
-name|pn_parent
-condition|)
-block|{
-if|if
-condition|(
-name|pn
-operator|->
-name|pn_parent
-operator|->
-name|pn_parent
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s/"
-argument_list|,
-name|pn
-operator|->
-name|pn_parent
-operator|->
-name|pn_parent
-operator|->
-name|pn_name
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"%s/"
-argument_list|,
-name|pn
-operator|->
-name|pn_parent
-operator|->
-name|pn_name
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"%s -> %d\n"
-argument_list|,
-name|pn
-operator|->
-name|pn_name
-argument_list|,
-name|pn
-operator|->
-name|pn_fileno
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("pfs_fileno_alloc(): %s: ", pi->pi_name); 	if (pn->pn_parent) { 		if (pn->pn_parent->pn_parent) { 			printf("%s/", pn->pn_parent->pn_parent->pn_name); 		} 		printf("%s/", pn->pn_parent->pn_name); 	} 	printf("%s -> %d\n", pn->pn_name, pn->pn_fileno);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1093,6 +1026,9 @@ case|:
 case|case
 name|pfstype_symlink
 case|:
+case|case
+name|pfstype_procdir
+case|:
 name|pfs_free_fileno
 argument_list|(
 name|pi
@@ -1112,24 +1048,11 @@ case|:
 comment|/* ignore these, as they don't "own" their file number */
 break|break;
 case|case
-name|pfstype_procdep
-case|:
-name|KASSERT
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"pfs_fileno_free() called for pfstype_procdep node"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|pfstype_none
 case|:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"pfs_fileno_free() called for pfstype_none node"
