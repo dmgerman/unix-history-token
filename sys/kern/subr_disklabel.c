@@ -665,6 +665,19 @@ name|msg
 operator|=
 literal|"I/O error"
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
+name|b_resid
+operator|!=
+literal|0
+condition|)
+name|msg
+operator|=
+literal|"disk too small for a label"
+expr_stmt|;
 else|else
 for|for
 control|(
@@ -1190,6 +1203,23 @@ condition|)
 goto|goto
 name|done
 goto|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_resid
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 for|for
 control|(
 name|dlp
