@@ -1450,7 +1450,7 @@ argument_list|,
 name|schedule
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_krb
 argument_list|(
 operator|&
 name|cred

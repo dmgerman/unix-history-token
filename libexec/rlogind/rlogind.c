@@ -3549,7 +3549,7 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
-name|des_set_key
+name|des_set_key_krb
 argument_list|(
 operator|&
 name|kdata
