@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	5.3 %G%"
+literal|"@(#)ex_io.c	5.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1651,6 +1651,15 @@ operator|&
 literal|0222
 operator|)
 operator|==
+literal|0
+operator|||
+name|access
+argument_list|(
+name|file
+argument_list|,
+literal|2
+argument_list|)
+operator|<
 literal|0
 condition|)
 name|value
