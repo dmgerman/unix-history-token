@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.27 1995/08/16 01:39:08 paulus Exp $"
+literal|"$Id: main.c,v 1.5 1995/10/31 21:21:26 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -962,6 +962,11 @@ decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|;
+name|int
+name|connect_attempts
+init|=
+literal|0
+decl_stmt|;
 name|p
 operator|=
 name|ttyname
@@ -1729,11 +1734,32 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|connect_attempts
+operator|>=
+name|max_con_attempts
+condition|)
 name|die
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 name|syslog
 argument_list|(
@@ -1749,6 +1775,11 @@ argument_list|)
 expr_stmt|;
 comment|/* give it time to set up its terminal */
 block|}
+name|connect_attempts
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we made it through ok */
 comment|/* set line speed, flow control, etc.; clear CLOCAL if modem option */
 name|set_up_tty
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.8 1995/11/04 10:44:22 peter Exp $"
+literal|"$Id: options.c,v 1.9 1996/03/01 19:29:42 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,6 +389,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Script to establish physical link */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_con_attempts
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Maximum number of connect attempts */
 end_comment
 
 begin_decl_stmt
@@ -971,6 +983,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setdisconnector
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|setmaxcon
 name|__P
 argument_list|(
 operator|(
@@ -1898,6 +1925,15 @@ name|setconnector
 block|}
 block|,
 comment|/* A program to set up a connection */
+block|{
+literal|"connect-max-attempts"
+block|,
+literal|1
+block|,
+name|setmaxcon
+block|}
+block|,
+comment|/* maximum # connection attempts */
 block|{
 literal|"disconnect"
 block|,
@@ -7906,6 +7942,32 @@ literal|1
 expr_stmt|;
 return|return
 literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setmaxcon
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+return|return
+name|int_option
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+operator|&
+name|max_con_attempts
+argument_list|)
 return|;
 block|}
 end_function
