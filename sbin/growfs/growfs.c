@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -385,6 +391,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* last valid inode */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|unlabeled
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* unlabeled partition, e.g. vinum volume etc. */
 end_comment
 
 begin_comment
@@ -752,6 +769,19 @@ name|int
 parameter_list|,
 name|unsigned
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|get_dev_size
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8753,6 +8783,102 @@ block|}
 end_function
 
 begin_comment
+comment|/* ****************************************************** get_dev_size ***** */
+end_comment
+
+begin_comment
+comment|/*  * Get the size of the partition if we can't figure it out from the disklabel,  * e.g. from vinum volumes.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|get_dev_size
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|int
+modifier|*
+name|size
+parameter_list|)
+block|{
+name|int
+name|sectorsize
+decl_stmt|;
+name|off_t
+name|mediasize
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|DIOCGSECTORSIZE
+argument_list|,
+operator|&
+name|sectorsize
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"DIOCGSECTORSIZE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|DIOCGMEDIASIZE
+argument_list|,
+operator|&
+name|mediasize
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"DIOCGMEDIASIZE"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sectorsize
+operator|<=
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"bogus sectorsize: %d"
+argument_list|,
+name|sectorsize
+argument_list|)
+expr_stmt|;
+operator|*
+name|size
+operator|=
+name|mediasize
+operator|/
+name|sectorsize
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* ************************************************************** main ***** */
 end_comment
 
@@ -8830,6 +8956,9 @@ decl_stmt|,
 name|fsi
 decl_stmt|,
 name|fso
+decl_stmt|;
+name|u_int32_t
+name|p_size
 decl_stmt|;
 name|char
 name|reply
@@ -9204,24 +9333,10 @@ expr_stmt|;
 if|if
 condition|(
 name|lp
-operator|->
-name|d_type
-operator|==
-name|DTYPE_VINUM
+operator|!=
+name|NULL
 condition|)
 block|{
-name|pp
-operator|=
-operator|&
-name|lp
-operator|->
-name|d_partitions
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|isdigit
@@ -9280,11 +9395,27 @@ literal|"unknown device"
 argument_list|)
 expr_stmt|;
 block|}
+name|p_size
+operator|=
+name|pp
+operator|->
+name|p_size
+expr_stmt|;
+block|}
+else|else
+block|{
+name|get_dev_size
+argument_list|(
+name|fsi
+argument_list|,
+operator|&
+name|p_size
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Check if that partition is suitable for growing a file system. 	 */
 if|if
 condition|(
-name|pp
-operator|->
 name|p_size
 operator|<
 literal|1
@@ -9295,23 +9426,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"partition is unavailable"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pp
-operator|->
-name|p_fstype
-operator|!=
-name|FS_BSDFFS
-condition|)
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"partition not 4.2BSD"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9484,8 +9598,6 @@ argument_list|(
 operator|&
 name|osblock
 argument_list|,
-name|pp
-operator|->
 name|p_size
 argument_list|)
 expr_stmt|;
@@ -9500,8 +9612,6 @@ if|if
 condition|(
 name|size
 operator|>
-name|pp
-operator|->
 name|p_size
 condition|)
 block|{
@@ -9511,8 +9621,6 @@ literal|1
 argument_list|,
 literal|"There is not enough space (%d< %d)"
 argument_list|,
-name|pp
-operator|->
 name|p_size
 argument_list|,
 name|size
@@ -9693,8 +9801,6 @@ argument_list|(
 operator|(
 name|ufs2_daddr_t
 operator|)
-name|pp
-operator|->
 name|p_size
 operator|-
 literal|1
@@ -9937,6 +10043,12 @@ name|Nflag
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Update the disk label. 	 */
+if|if
+condition|(
+operator|!
+name|unlabeled
+condition|)
+block|{
 name|pp
 operator|->
 name|p_fsize
@@ -9975,6 +10087,7 @@ argument_list|(
 literal|"label rewritten\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fsi
@@ -10198,7 +10311,6 @@ condition|(
 operator|!
 name|lab
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -10206,9 +10318,9 @@ argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
+operator|!
 name|ioctl
 argument_list|(
 name|fd
@@ -10221,23 +10333,20 @@ operator|*
 operator|)
 name|lab
 argument_list|)
-operator|<
-literal|0
 condition|)
-block|{
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"DIOCGDINFO failed"
-argument_list|)
+return|return
+operator|(
+name|lab
+operator|)
+return|;
+name|unlabeled
+operator|++
 expr_stmt|;
-block|}
 name|DBG_LEAVE
 expr_stmt|;
 return|return
 operator|(
-name|lab
+name|NULL
 operator|)
 return|;
 block|}
