@@ -311,7 +311,7 @@ name|PCI_INTERFACE
 parameter_list|(
 name|d
 parameter_list|)
-value|(((d)>>8)&PCI_INTERFACE_MASK)
+value|(((d)>> 8)& 0xff)
 end_define
 
 begin_define
@@ -321,7 +321,7 @@ name|PCI_SUBCLASS
 parameter_list|(
 name|d
 parameter_list|)
-value|((d)&PCI_SUBCLASS_MASK)
+value|((d)& PCI_SUBCLASS_MASK)
 end_define
 
 begin_define
@@ -331,7 +331,7 @@ name|PCI_CLASS
 parameter_list|(
 name|d
 parameter_list|)
-value|((d)&PCI_CLASS_MASK)
+value|((d)& PCI_CLASS_MASK)
 end_define
 
 begin_define
@@ -341,7 +341,7 @@ name|PCI_VENDOR
 parameter_list|(
 name|d
 parameter_list|)
-value|((d)&0xffff)
+value|((d)& 0xffff)
 end_define
 
 begin_define
@@ -351,7 +351,7 @@ name|PCI_DEVICE
 parameter_list|(
 name|d
 parameter_list|)
-value|(((d)>>8)&0xffff)
+value|(((d)>> 8)& 0xffff)
 end_define
 
 begin_define
@@ -560,26 +560,32 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|PCI_CLASS
 argument_list|(
 name|class
 argument_list|)
 operator|==
 name|PCI_CLASS_SERIALBUS
+operator|)
 operator|&&
+operator|(
 name|PCI_SUBCLASS
 argument_list|(
 name|class
 argument_list|)
 operator|==
 name|PCI_SUBCLASS_SERIALBUS_USB
+operator|)
 operator|&&
+operator|(
 name|PCI_INTERFACE
 argument_list|(
 name|class
 argument_list|)
 operator|==
 name|PCI_INTERFACE_OHCI
+operator|)
 condition|)
 return|return
 operator|(
