@@ -2023,7 +2023,7 @@ argument_list|(
 name|entry
 argument_list|)
 argument_list|,
-name|mode
+name|writable_mode
 argument_list|,
 name|flags
 argument_list|)
