@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lpr.c,v 1.25 1998/09/11 18:49:33 wollman Exp $"
+literal|"$Id: lpr.c,v 1.26 1999/01/06 08:25:56 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -898,7 +898,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1072,7 +1072,7 @@ argument_list|,
 operator|&
 name|p
 argument_list|,
-literal|0
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
