@@ -355,6 +355,138 @@ end_comment
 begin_define
 define|#
 directive|define
+name|METEORSBRIG
+value|_IOW('x', 14, unsigned char)
+end_define
+
+begin_comment
+comment|/* set brightness */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGBRIG
+value|_IOR('x', 14, unsigned char)
+end_define
+
+begin_comment
+comment|/* get brightness */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSCSAT
+value|_IOW('x', 15, unsigned char)
+end_define
+
+begin_comment
+comment|/* set chroma sat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGCSAT
+value|_IOR('x', 15, unsigned char)
+end_define
+
+begin_comment
+comment|/* get uv saturation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSCONT
+value|_IOW('x', 16, unsigned char)
+end_define
+
+begin_comment
+comment|/* set contrast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGCONT
+value|_IOR('x', 16, unsigned char)
+end_define
+
+begin_comment
+comment|/* get contrast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSBT254
+value|_IOW('x', 17, unsigned short)
+end_define
+
+begin_comment
+comment|/* set Bt254 reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGBT254
+value|_IOR('x', 17, unsigned short)
+end_define
+
+begin_comment
+comment|/* get Bt254 reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSHWS
+value|_IOW('x', 18, unsigned char)
+end_define
+
+begin_comment
+comment|/* set hor start reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGHWS
+value|_IOR('x', 18, unsigned char)
+end_define
+
+begin_comment
+comment|/* get hor start reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORSVWS
+value|_IOW('x', 19, unsigned char)
+end_define
+
+begin_comment
+comment|/* set vert start reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEORGVWS
+value|_IOR('x', 19, unsigned char)
+end_define
+
+begin_comment
+comment|/* get vert start reg */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|METEOR_STATUS_ID_MASK
 value|0xf000
 end_define
@@ -638,9 +770,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|METEOR_INPUT_DEV_SVIDEO
-value|METEOR_GEO_DEV3
+name|METEOR_INPUT_DEV_RGB
+value|0x0a000
 end_define
+
+begin_comment
+comment|/* for rgb version of meteor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|METEOR_INPUT_DEV_SVIDEO
+value|0x06000
+end_define
+
+begin_comment
+comment|/* S-video input port */
+end_comment
 
 begin_comment
 comment|/* valid video output formats:  */
