@@ -427,7 +427,7 @@ name|GAMAGIC
 condition|)
 name|panic
 argument_list|(
-literal|"free: guard1 fail @ %p from %s:%p"
+literal|"free: guard1 fail @ %p from %s:%d"
 argument_list|,
 name|ptr
 argument_list|,
