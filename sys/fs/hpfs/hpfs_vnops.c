@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -2869,9 +2875,9 @@ name|h_no
 operator|)
 argument_list|)
 expr_stmt|;
-name|hpfs_hphashrem
+name|vfs_hash_remove
 argument_list|(
-name|hp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* Purge old data structures associated with the inode. */

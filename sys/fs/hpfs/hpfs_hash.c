@@ -109,11 +109,9 @@ define|#
 directive|define
 name|HPNOHASH
 parameter_list|(
-name|dev
-parameter_list|,
 name|lsn
 parameter_list|)
-value|(&hpfs_hphashtbl[(minor(dev) + (lsn))& hpfs_hphash])
+value|(&hpfs_hphashtbl[(lsn)& hpfs_hphash])
 end_define
 
 begin_decl_stmt
@@ -245,7 +243,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|hp
 argument_list|,
-argument|HPNOHASH(dev, ino)
+argument|HPNOHASH(ino)
 argument_list|,
 argument|h_hash
 argument_list|)
@@ -285,7 +283,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	struct cdev *dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	mtx_lock(&hpfs_hphash_mtx); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			lockmgr(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	mtx_unlock(&hpfs_hphash_mtx); 	return (hp); }
+unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	struct cdev *dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	mtx_lock(&hpfs_hphash_mtx); 	LIST_FOREACH(hp, HPNOHASH(ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			lockmgr(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	mtx_unlock(&hpfs_hphash_mtx); 	return (hp); }
 endif|#
 directive|endif
 end_endif
@@ -357,7 +355,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|hp
 argument_list|,
-argument|HPNOHASH(dev, ino)
+argument|HPNOHASH(ino)
 argument_list|,
 argument|h_hash
 argument_list|)
@@ -486,10 +484,6 @@ name|hpp
 operator|=
 name|HPNOHASH
 argument_list|(
-name|hp
-operator|->
-name|h_dev
-argument_list|,
 name|hp
 operator|->
 name|h_no
