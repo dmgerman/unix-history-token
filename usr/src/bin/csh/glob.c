@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.37 (Berkeley) %G%"
+literal|"@(#)glob.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1770,14 +1770,10 @@ name|el
 operator|=
 name|vl
 expr_stmt|;
-name|vl
-operator|=
-name|nv
-expr_stmt|;
 name|expbrace
 argument_list|(
 operator|&
-name|vl
+name|nv
 argument_list|,
 operator|&
 name|el
