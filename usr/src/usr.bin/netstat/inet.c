@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	4.11 83/03/12"
+literal|"@(#)inet.c	4.12 83/05/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -740,31 +740,52 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksums\n"
+literal|"%s:\n\t%d bad header checksum%s\n"
 argument_list|,
 name|name
 argument_list|,
 name|tcpstat
 operator|.
 name|tcps_badsum
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|tcps_badsum
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad header offset fields\n"
+literal|"\t%d bad header offset field%s\n"
 argument_list|,
 name|tcpstat
 operator|.
 name|tcps_badoff
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|tcps_badoff
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d incomplete headers\n"
+literal|"\t%d incomplete header%s\n"
 argument_list|,
 name|tcpstat
 operator|.
 name|tcps_hdrops
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|tcps_hdrops
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -772,20 +793,34 @@ directive|ifdef
 name|notdef
 name|printf
 argument_list|(
-literal|"\t%d bad segments\n"
+literal|"\t%d bad segment%s\n"
 argument_list|,
 name|tcpstat
 operator|.
 name|tcps_badsegs
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|badsegs
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d unacknowledged packets\n"
+literal|"\t%d unacknowledged packet%s\n"
 argument_list|,
 name|tcpstat
 operator|.
 name|tcps_unack
+argument_list|,
+name|plural
+argument_list|(
+name|tcpstat
+operator|.
+name|tcps_unack
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -869,31 +904,52 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksums\n"
+literal|"%s:\n\t%d bad header checksum%s\n"
 argument_list|,
 name|name
 argument_list|,
 name|udpstat
 operator|.
 name|udps_badsum
+argument_list|,
+name|plural
+argument_list|(
+name|udpstat
+operator|.
+name|udps_badsum
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d incomplete headers\n"
+literal|"\t%d incomplete header%s\n"
 argument_list|,
 name|udpstat
 operator|.
 name|udps_hdrops
+argument_list|,
+name|plural
+argument_list|(
+name|udpstat
+operator|.
+name|udps_hdrops
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad data length fields\n"
+literal|"\t%d bad data length field%s\n"
 argument_list|,
 name|udpstat
 operator|.
 name|udps_badlen
+argument_list|,
+name|plural
+argument_list|(
+name|udpstat
+operator|.
+name|udps_badlen
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -975,18 +1031,25 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d bad header checksums\n"
+literal|"%s:\n\t%d bad header checksum%s\n"
 argument_list|,
 name|name
 argument_list|,
 name|ipstat
 operator|.
 name|ips_badsum
+argument_list|,
+name|plural
+argument_list|(
+name|ipstat
+operator|.
+name|ips_badsum
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d packet size smaller than minimum\n"
+literal|"\t%d with size smaller than minimum\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -995,7 +1058,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d data size< data length\n"
+literal|"\t%d with data size< data length\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1004,7 +1067,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d header length< data size\n"
+literal|"\t%d with header length< data size\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1013,7 +1076,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d data length< header length\n"
+literal|"\t%d with data length< header length\n"
 argument_list|,
 name|ipstat
 operator|.
@@ -1150,31 +1213,52 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s:\n\t%d calls to icmp_error\n"
+literal|"%s:\n\t%d call%s to icmp_error\n"
 argument_list|,
 name|name
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_error
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_error
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d errors not generated 'cuz old message too short\n"
+literal|"\t%d error%s not generated 'cuz old message too short\n"
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_oldshort
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_oldshort
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d errors not generated 'cuz old message was icmp\n"
+literal|"\t%d error%s not generated 'cuz old message was icmp\n"
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_oldicmp
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_oldicmp
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1243,16 +1327,23 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t%d messages< minimum length\n"
+literal|"\t%d message%s< minimum length\n"
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_tooshort
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_tooshort
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d bad checksums\n"
+literal|"\t%d bad checksum%s\n"
 argument_list|,
 name|icmpstat
 operator|.
@@ -1261,20 +1352,34 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d messages with bad length\n"
+literal|"\t%d message%s with bad length\n"
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_badlen
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_badlen
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%d message responses generated\n"
+literal|"\t%d message response%s generated\n"
 argument_list|,
 name|icmpstat
 operator|.
 name|icps_reflect
+argument_list|,
+name|plural
+argument_list|(
+name|icmpstat
+operator|.
+name|icps_reflect
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
