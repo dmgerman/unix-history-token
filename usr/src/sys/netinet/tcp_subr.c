@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1231,6 +1231,55 @@ begin_block
 block|{  }
 end_block
 
+begin_comment
+comment|/*  * Notify a tcp user of an asynchronous error;  * just wake up so that he can collect error status.  */
+end_comment
+
+begin_expr_stmt
+name|tcp_notify
+argument_list|(
+name|inp
+argument_list|)
+specifier|register
+expr|struct
+name|inpcb
+operator|*
+name|inp
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|inp
+operator|->
+name|inp_socket
+operator|->
+name|so_timeo
+argument_list|)
+expr_stmt|;
+name|sorwakeup
+argument_list|(
+name|inp
+operator|->
+name|inp_socket
+argument_list|)
+expr_stmt|;
+name|sowwakeup
+argument_list|(
+name|inp
+operator|->
+name|inp_socket
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_macro
 name|tcp_ctlinput
 argument_list|(
@@ -1403,14 +1452,7 @@ index|[
 name|cmd
 index|]
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-literal|0
+name|tcp_notify
 argument_list|)
 expr_stmt|;
 block|}
