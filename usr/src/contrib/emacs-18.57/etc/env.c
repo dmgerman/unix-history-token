@@ -40,6 +40,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|int
@@ -514,6 +520,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|BSD4_4
 specifier|extern
 name|int
 name|errno
@@ -526,6 +535,8 @@ modifier|*
 name|sys_errlist
 index|[]
 decl_stmt|;
+endif|#
+directive|endif
 name|environ
 operator|=
 name|nenv

@@ -956,7 +956,10 @@ name|ftruncate
 argument_list|(
 name|indesc
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#

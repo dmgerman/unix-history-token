@@ -179,6 +179,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BSD4_4
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -201,6 +207,11 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|main
