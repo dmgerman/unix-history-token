@@ -5540,8 +5540,8 @@ expr_stmt|;
 name|flags
 operator|=
 operator|(
-name|ifr
-operator|->
+name|my_ifr
+operator|.
 name|ifr_flags
 operator|&
 literal|0xffff
