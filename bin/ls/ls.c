@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ls.c,v 1.24 1999/05/08 10:20:30 kris Exp $"
+literal|"$Id: ls.c,v 1.25 1999/08/02 14:55:58 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -141,12 +153,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ls.h"
 end_include
 
@@ -155,6 +161,20 @@ include|#
 directive|include
 file|"extern.h"
 end_include
+
+begin_comment
+comment|/*  * Upward approximation of the maximum number of characters needed to  * represent a value of integral type t as a string, excluding the  * NUL terminator, with provision for a sign.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRBUF_SIZEOF
+parameter_list|(
+name|t
+parameter_list|)
+value|(CHAR_BIT * sizeof(t) / 3 + 1)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -391,6 +411,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_notabs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't use tab-separated multi-col output */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_numericonly
 decl_stmt|;
 end_decl_stmt
@@ -477,16 +507,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_notabs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't use tab-separated multi-col output */
 end_comment
 
 begin_decl_stmt
@@ -1612,22 +1632,38 @@ modifier|*
 name|flags
 decl_stmt|;
 name|char
-name|nuser
-index|[
-literal|12
-index|]
-decl_stmt|,
-name|ngroup
-index|[
-literal|12
-index|]
-decl_stmt|,
 name|buf
 index|[
-literal|21
+name|STRBUF_SIZEOF
+argument_list|(
+name|u_quad_t
+argument_list|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* 32 bits == 10 digits */
+name|char
+name|ngroup
+index|[
+name|STRBUF_SIZEOF
+argument_list|(
+name|uid_t
+argument_list|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|char
+name|nuser
+index|[
+name|STRBUF_SIZEOF
+argument_list|(
+name|gid_t
+argument_list|)
+operator|+
+literal|1
+index|]
+decl_stmt|;
 comment|/* 	 * If list is NULL there are two possibilities: that the parent 	 * directory p has no children, or that fts_children() returned an 	 * error.  We ignore the error case since it will be replicated 	 * on the next call to fts_read() on the post-order visit to the 	 * directory p, and will be signaled in traverse(). 	 */
 if|if
 condition|(
