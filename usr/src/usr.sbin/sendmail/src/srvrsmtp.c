@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.60 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.61 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.60 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.61 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2608,7 +2608,7 @@ name|syntax
 label|:
 name|message
 argument_list|(
-literal|"501 Syntax error"
+literal|"501 Syntax error in parameters"
 argument_list|)
 expr_stmt|;
 name|Errors
@@ -2643,6 +2643,16 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+goto|goto
+name|syntax
+goto|;
 comment|/* see if the input word matches desired word */
 if|if
 condition|(
