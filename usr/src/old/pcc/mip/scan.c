@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.6 (Berkeley) %G%"
+literal|"@(#)scan.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,7 +2810,16 @@ argument|, lxchar ); 					} 				yylval.intval = ASG RS; 				break;
 endif|#
 directive|endif
 endif|old_assignment_ops
-argument|default: 				goto onechar;  				}  			return( ASOP );  		default: 			cerror(
+argument|default: 				goto onechar;  				}
+ifdef|#
+directive|ifdef
+name|old_assignment_ops
+comment|/* defeat 'unreachable code' warning */
+argument|return( ASOP );
+endif|#
+directive|endif
+endif|old_assignment_ops
+argument|default: 			cerror(
 literal|"yylex error, character %03o (octal)"
 argument|, lxchar );  			}
 comment|/* ordinarily, repeat here... */
