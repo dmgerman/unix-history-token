@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.62 1999/05/31 23:57:39 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
+comment|/*  *		PPP IP Protocol Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ip.c,v 1.63 1999/06/02 15:59:00 brian Exp $  *  *	TODO:  *		o Return ICMP message for filterd packet  *		  and optionaly record it into log.  */
 end_comment
 
 begin_include
@@ -774,10 +774,31 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IPPROTO_UDP
-case|:
-case|case
 name|IPPROTO_IGMP
+case|:
+name|cproto
+operator|=
+name|P_IGMP
+expr_stmt|;
+name|estab
+operator|=
+name|syn
+operator|=
+name|finrst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|sport
+operator|=
+name|ntohs
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IPPROTO_UDP
 case|:
 case|case
 name|IPPROTO_IPIP

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.28 1999/05/08 11:06:33 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
+comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.29 1999/05/31 23:57:36 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
 end_comment
 
 begin_include
@@ -1303,6 +1303,61 @@ end_function
 
 begin_function
 specifier|static
+name|int
+name|ParseIgmp
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+specifier|const
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+name|struct
+name|filterent
+modifier|*
+name|tgt
+parameter_list|)
+block|{
+comment|/* Filter currently is a catch-all. Requests are either permitted or      dropped. */
+if|if
+condition|(
+name|argc
+operator|!=
+literal|0
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"ParseIgmp: Too many parameters\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+else|else
+name|tgt
+operator|->
+name|opt
+operator|.
+name|srcop
+operator|=
+name|OP_NONE
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|unsigned
 name|addrtype
 parameter_list|(
@@ -2022,6 +2077,22 @@ case|:
 name|val
 operator|=
 name|ParseIcmp
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+operator|&
+name|filterdata
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|P_IGMP
+case|:
+name|val
+operator|=
+name|ParseIgmp
 argument_list|(
 name|argc
 argument_list|,
@@ -3076,6 +3147,8 @@ block|,
 literal|"udp"
 block|,
 literal|"icmp"
+block|,
+literal|"igmp"
 block|}
 decl_stmt|;
 end_decl_stmt
