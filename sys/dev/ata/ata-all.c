@@ -3560,7 +3560,7 @@ argument_list|)
 decl_stmt|;
 name|device_t
 modifier|*
-name|list
+name|children
 decl_stmt|;
 name|int
 name|count
@@ -3576,7 +3576,7 @@ name|dev
 argument_list|)
 argument_list|,
 operator|&
-name|list
+name|children
 argument_list|,
 operator|&
 name|count
@@ -3598,7 +3598,7 @@ control|)
 block|{
 if|if
 condition|(
-name|list
+name|children
 index|[
 name|i
 index|]
@@ -3612,6 +3612,13 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|children
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 name|scp
 operator|->
 name|chiptype
