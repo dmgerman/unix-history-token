@@ -6879,6 +6879,24 @@ operator|(
 literal|"ESS Technology Maestro 2E Audio controller"
 operator|)
 return|;
+comment|/* Lucent -- Vendor 0x11c1 */
+case|case
+literal|0x044011c1
+case|:
+return|return
+operator|(
+literal|"LUCENT K56Flex DSVD LTMODEM (winmodem, unsupported)"
+operator|)
+return|;
+comment|/* CCUBE -- Vendor 0x123f */
+case|case
+literal|0x8888123f
+case|:
+return|return
+operator|(
+literal|"Cinemaster C 3.0 DVD Decoder"
+operator|)
+return|;
 comment|/* Toshiba -- vendor 0x1179 */
 case|case
 literal|0x07011179
