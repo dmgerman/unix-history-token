@@ -723,7 +723,7 @@ name|mem
 operator|->
 name|kind
 operator|==
-name|PCCARD_MEM_ATTR
+name|PCCARD_A_MEM_ATTR
 operator|)
 condition|?
 name|EXCA_CARDMEM_ADDRX_MSB_REGACTIVE_ATTR
@@ -752,7 +752,7 @@ name|mem
 operator|->
 name|kind
 operator|==
-name|PCCARD_MEM_ATTR
+name|PCCARD_A_MEM_ATTR
 condition|)
 name|printf
 argument_list|(
@@ -3483,7 +3483,7 @@ name|exca_io_map
 argument_list|(
 name|exca
 argument_list|,
-literal|0
+name|PCCARD_WIDTH_AUTO
 argument_list|,
 name|res
 argument_list|)
@@ -3498,7 +3498,7 @@ name|exca_mem_map
 argument_list|(
 name|exca
 argument_list|,
-literal|0
+name|PCCARD_A_MEM_COM
 argument_list|,
 name|res
 argument_list|)
