@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	2.1 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	2.2 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -521,9 +521,18 @@ comment|/*  * Routines which need types  * other than "integer" to be  * assumed
 end_comment
 
 begin_function_decl
-name|int
+name|struct
+name|tnode
 modifier|*
 name|tree
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|skipbl
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -559,11 +568,23 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  *	type cast nils to keep lint happy.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_NIL
+value|((struct tnode *) NIL)
+end_define
+
+begin_comment
 comment|/*  * Funny structures to use  * pointers in wild and wooly ways  */
 end_comment
 
 begin_struct
 struct|struct
+name|cstruct
 block|{
 name|char
 name|pchar
@@ -796,6 +817,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_typedef
