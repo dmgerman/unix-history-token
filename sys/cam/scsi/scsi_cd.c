@@ -401,6 +401,17 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|pioneer
+index|[]
+init|=
+literal|"PIONEER"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * These quirk entries aren't strictly necessary.  Basically, what they do  * is tell cdregister() up front that a device is a changer.  Otherwise, it  * will figure that fact out once it sees a LUN on the device that is  * greater than 0.  If it is known up front that a device is a changer, all  * I/O to the device will go through the changer scheduling routines, as  * opposed to the "normal" CD code.  */
 end_comment
@@ -436,9 +447,26 @@ name|T_CDROM
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
-literal|"PIONEER"
+name|pioneer
 block|,
 literal|"CD-ROM DRM-604X"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/* quirks */
+name|CD_Q_CHANGER
+block|}
+block|,
+block|{
+block|{
+name|T_CDROM
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+name|pioneer
+block|,
+literal|"CD-ROM DRM-6324X"
 block|,
 literal|"*"
 block|}
