@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.9 1997/05/12 02:42:19 ache Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.24.2.10 1997/05/14 01:21:27 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -554,6 +554,17 @@ condition|)
 name|mes
 operator|=
 literal|"Working in dedicated dial mode."
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+name|mes
+operator|=
+literal|"Working in background mode."
 expr_stmt|;
 elseif|else
 if|if
@@ -3239,9 +3250,20 @@ block|{
 name|LcpClose
 argument_list|()
 expr_stmt|;
-name|lostCarrier
+name|reconnectCount
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+condition|)
+name|Cleanup
+argument_list|(
+name|EX_NORMAL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

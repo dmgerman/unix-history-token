@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.16 1997/05/04 02:39:04 ache Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.7.2.4 1997/05/09 17:36:27 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -924,6 +924,75 @@ argument_list|(
 literal|"setuid failed\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|&
+name|MODE_BACKGROUND
+operator|&&
+name|BGFiledes
+index|[
+literal|1
+index|]
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|char
+name|c
+init|=
+name|EX_NORMAL
+decl_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|BGFiledes
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Parent notified of success.\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|LogPrintf
+argument_list|(
+name|LOG_PHASE_BIT
+argument_list|,
+literal|"Failed to notify parent of success.\n"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|BGFiledes
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|BGFiledes
+index|[
+literal|1
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 name|peer_addr
 operator|=
 name|IpcpInfo
