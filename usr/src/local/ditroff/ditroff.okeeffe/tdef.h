@@ -1025,7 +1025,7 @@ begin_define
 define|#
 directive|define
 name|LNSIZE
-value|680
+value|1024
 end_define
 
 begin_comment
