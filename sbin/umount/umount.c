@@ -192,14 +192,6 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|struct
-name|mtablist
-modifier|*
-name|mtabhead
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|fflag
 decl_stmt|,
@@ -2116,31 +2108,29 @@ comment|/* 		 * Remove the unmounted entry from /var/db/mounttab. 		 */
 if|if
 condition|(
 name|read_mtab
-argument_list|(
-name|mtab
-argument_list|)
+argument_list|()
 condition|)
 block|{
-name|mtab
-operator|=
-name|mtabhead
-expr_stmt|;
 name|clean_mtab
 argument_list|(
 name|hostp
 argument_list|,
 name|nfsdirname
+argument_list|,
+name|vflag
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|write_mtab
-argument_list|()
+argument_list|(
+name|vflag
+argument_list|)
 condition|)
 name|warnx
 argument_list|(
-literal|"cannot remove entry %s:%s"
+literal|"cannot remove mounttab entry %s:%s"
 argument_list|,
 name|hostp
 argument_list|,
