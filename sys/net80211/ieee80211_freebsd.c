@@ -1451,6 +1451,9 @@ modifier|*
 name|modname
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|notyet
 name|struct
 name|thread
 modifier|*
@@ -1508,6 +1511,19 @@ name|Giant
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"%s: load the %s module by hand for now.\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|modname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
