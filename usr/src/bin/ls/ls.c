@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.4 (Berkeley) %G%"
+literal|"@(#)ls.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -493,8 +493,8 @@ name|sg_flags
 operator|&
 name|XTABS
 operator|)
-operator|==
-literal|0
+operator|!=
+name|XTABS
 condition|)
 name|usetabs
 operator|=
