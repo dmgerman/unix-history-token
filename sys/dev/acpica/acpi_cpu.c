@@ -193,22 +193,6 @@ end_define
 
 begin_struct
 struct|struct
-name|acpi_cx_stats
-block|{
-name|int
-name|long_slp
-decl_stmt|;
-comment|/* Count of sleeps>= trans_lat. */
-name|int
-name|short_slp
-decl_stmt|;
-comment|/* Count of sleeps< trans_lat. */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|acpi_cpu_softc
 block|{
 name|device_t
@@ -246,6 +230,10 @@ name|int
 name|cpu_cx_count
 decl_stmt|;
 comment|/* Number of valid Cx states. */
+name|int
+name|cpu_prev_sleep
+decl_stmt|;
+comment|/* Last idle sleep duration. */
 block|}
 struct|;
 end_struct
@@ -473,7 +461,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|cpu_rid
 decl_stmt|;
 end_decl_stmt
@@ -484,7 +472,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
+name|int
 name|cpu_quirks
 decl_stmt|;
 end_decl_stmt
@@ -510,18 +498,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|uint32_t
-name|cpu_cx_next
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* State to use for next sleep. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|uint32_t
+name|int
 name|cpu_non_c3
 decl_stmt|;
 end_decl_stmt
@@ -532,8 +509,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|acpi_cx_stats
+name|u_int
 name|cpu_cx_stats
 index|[
 name|MAX_CX_STATES
@@ -541,15 +517,8 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cpu_idle_busy
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* Count of CPUs in acpi_cpu_idle. */
+comment|/* Cx usage history. */
 end_comment
 
 begin_comment
@@ -827,7 +796,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|acpi_cpu_history_sysctl
+name|acpi_cpu_usage_sysctl
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -1868,7 +1837,7 @@ name|cpu_cx_count
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Wait for all processors to exit acpi_cpu_idle(). */
+comment|/* Signal and wait for all processors to exit acpi_cpu_idle(). */
 name|smp_rendezvous
 argument_list|(
 name|NULL
@@ -1878,17 +1847,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|while (cpu_idle_busy> 0)
-endif|#
-directive|endif
-name|DELAY
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 name|return_VALUE
@@ -2643,6 +2601,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+comment|/* Use initial sleep value of 1 sec. to start with lowest idle state. */
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|=
+literal|1000000
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3584,7 +3549,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"cx_history"
+literal|"cx_usage"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
@@ -3594,11 +3559,11 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|acpi_cpu_history_sysctl
+name|acpi_cpu_usage_sysctl
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"count of full sleeps for Cx state / short sleeps"
+literal|"percent usage for each Cx state"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3629,10 +3594,6 @@ block|}
 endif|#
 directive|endif
 comment|/* Take over idling from cpu_idle_default(). */
-name|cpu_cx_next
-operator|=
-name|cpu_cx_lowest
-expr_stmt|;
 name|cpu_idle_hook
 operator|=
 name|acpi_cpu_idle
@@ -3820,7 +3781,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Idle the CPU in the lowest state possible.  * This function is called with interrupts disabled.  */
+comment|/*  * Idle the CPU in the lowest state possible.  This function is called with  * interrupts disabled.  Note that once it re-enables interrupts, a task  * switch can occur so do not access shared data (i.e. the softc) after  * interrupts are re-enabled.  */
 end_comment
 
 begin_function
@@ -3847,9 +3808,9 @@ decl_stmt|;
 name|int
 name|bm_active
 decl_stmt|,
-name|i
+name|cx_next_idx
 decl_stmt|,
-name|asleep
+name|i
 decl_stmt|;
 comment|/* If disabled, return immediately. */
 if|if
@@ -3887,16 +3848,55 @@ argument_list|()
 expr_stmt|;
 return|return;
 block|}
-comment|/* Record that a CPU is in the idle function. */
-name|atomic_add_int
-argument_list|(
-operator|&
-name|cpu_idle_busy
-argument_list|,
-literal|1
-argument_list|)
+comment|/*      * If we slept 100 us or more, use the lowest Cx state.  Otherwise,      * find the lowest state that has a latency less than or equal to      * the length of our last sleep.      */
+name|cx_next_idx
+operator|=
+name|cpu_cx_lowest
 expr_stmt|;
-comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is enabled.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|<
+literal|100
+condition|)
+for|for
+control|(
+name|i
+operator|=
+name|cpu_cx_lowest
+init|;
+name|i
+operator|>=
+literal|0
+condition|;
+name|i
+operator|--
+control|)
+if|if
+condition|(
+name|sc
+operator|->
+name|cpu_cx_states
+index|[
+name|i
+index|]
+operator|.
+name|trans_lat
+operator|<=
+name|sc
+operator|->
+name|cpu_prev_sleep
+condition|)
+block|{
+name|cx_next_idx
+operator|=
+name|i
+expr_stmt|;
+break|break;
+block|}
+comment|/*      * Check for bus master activity.  If there was activity, clear      * the bit and use the lowest non-C3 state.  Note that the USB      * driver polling for new devices keeps this bit set all the      * time if USB is loaded.      */
 name|AcpiGetRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
@@ -3923,17 +3923,17 @@ argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
-name|cpu_cx_next
+name|cx_next_idx
 operator|=
 name|min
 argument_list|(
-name|cpu_cx_next
+name|cx_next_idx
 argument_list|,
 name|cpu_non_c3
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Perform the actual sleep based on the Cx-specific semantics. */
+comment|/* Select the next state and update statistics. */
 name|cx_next
 operator|=
 operator|&
@@ -3941,104 +3941,61 @@ name|sc
 operator|->
 name|cpu_cx_states
 index|[
-name|cpu_cx_next
+name|cx_next_idx
 index|]
 expr_stmt|;
-switch|switch
+name|cpu_cx_stats
+index|[
+name|cx_next_idx
+index|]
+operator|++
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cx_next
+operator|->
+name|type
+operator|!=
+name|ACPI_STATE_C0
+argument_list|,
+operator|(
+literal|"acpi_cpu_idle: C0 sleep"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Execute HLT (or equivalent) and wait for an interrupt.  We can't      * calculate the time spent in C1 since the place we wake up is an      * ISR.  Assume we slept one quantum and return.      */
+if|if
 condition|(
 name|cx_next
 operator|->
 name|type
+operator|==
+name|ACPI_STATE_C1
 condition|)
 block|{
-case|case
-name|ACPI_STATE_C0
-case|:
-name|panic
-argument_list|(
-literal|"acpi_cpu_idle: attempting to sleep in C0"
-argument_list|)
+name|sc
+operator|->
+name|cpu_prev_sleep
+operator|=
+literal|1000000
+operator|/
+name|hz
 expr_stmt|;
-comment|/* NOTREACHED */
-case|case
-name|ACPI_STATE_C1
-case|:
-comment|/* Execute HLT (or equivalent) and wait for an interrupt. */
 name|acpi_cpu_c1
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We can't calculate the time spent in C1 since the place we 	 * wake up is an ISR.  Use a constant time of 1 ms. 	 */
-name|start_time
-operator|=
-literal|0
-expr_stmt|;
-name|end_time
-operator|=
-literal|1000
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_STATE_C2
-case|:
-comment|/* 	 * Read from P_LVLx to enter C2, checking time spent asleep. 	 * Use the ACPI timer for measuring sleep time.  Since we need to 	 * get the time very close to the CPU start/stop clock logic, this 	 * is the only reliable time source. 	 */
-name|AcpiHwLowLevelRead
-argument_list|(
-literal|32
-argument_list|,
-operator|&
-name|start_time
-argument_list|,
-operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPmTmrBlk
-argument_list|)
-expr_stmt|;
-name|CPU_GET_REG
-argument_list|(
+return|return;
+block|}
+comment|/* For C3, disable bus master arbitration and enable bus master wake. */
+if|if
+condition|(
 name|cx_next
 operator|->
-name|p_lvlx
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Read the end time twice.  Since it may take an arbitrary time 	 * to enter the idle state, the first read may be executed before 	 * the processor has stopped.  Doing it again provides enough 	 * margin that we are certain to have a correct value. 	 */
-name|AcpiHwLowLevelRead
-argument_list|(
-literal|32
-argument_list|,
-operator|&
-name|end_time
-argument_list|,
-operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPmTmrBlk
-argument_list|)
-expr_stmt|;
-name|AcpiHwLowLevelRead
-argument_list|(
-literal|32
-argument_list|,
-operator|&
-name|end_time
-argument_list|,
-operator|&
-name|AcpiGbl_FADT
-operator|->
-name|XPmTmrBlk
-argument_list|)
-expr_stmt|;
-name|ACPI_ENABLE_IRQS
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
+name|type
+operator|==
 name|ACPI_STATE_C3
-case|:
-default|default:
-comment|/* Disable bus master arbitration and enable bus master wakeup. */
+condition|)
+block|{
 name|AcpiSetRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
@@ -4057,7 +4014,8 @@ argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
-comment|/* Read from P_LVLx to enter C3, checking time spent asleep. */
+block|}
+comment|/*      * Read from P_LVLx to enter C2(+), checking time spent asleep.      * Use the ACPI timer for measuring sleep time.  Since we need to      * get the time very close to the CPU start/stop clock logic, this      * is the only reliable time source.      */
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|32
@@ -4080,7 +4038,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Read the end time twice.  See comment for C2 above. */
+comment|/*      * Read the end time twice.  Since it may take an arbitrary time      * to enter the idle state, the first read may be executed before      * the processor has stopped.  Doing it again provides enough      * margin that we are certain to have a correct value.      */
 name|AcpiHwLowLevelRead
 argument_list|(
 literal|32
@@ -4108,6 +4066,15 @@ name|XPmTmrBlk
 argument_list|)
 expr_stmt|;
 comment|/* Enable bus master arbitration and disable bus master wakeup. */
+if|if
+condition|(
+name|cx_next
+operator|->
+name|type
+operator|==
+name|ACPI_STATE_C3
+condition|)
+block|{
 name|AcpiSetRegister
 argument_list|(
 name|ACPI_BITREG_ARB_DISABLE
@@ -4126,10 +4093,6 @@ argument_list|,
 name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
-name|ACPI_ENABLE_IRQS
-argument_list|()
-expr_stmt|;
-break|break;
 block|}
 comment|/* Find the actual time asleep in microseconds, minus overhead. */
 name|end_time
@@ -4141,7 +4104,9 @@ argument_list|,
 name|start_time
 argument_list|)
 expr_stmt|;
-name|asleep
+name|sc
+operator|->
+name|cpu_prev_sleep
 operator|=
 name|PM_USEC
 argument_list|(
@@ -4152,89 +4117,8 @@ name|cx_next
 operator|->
 name|trans_lat
 expr_stmt|;
-comment|/* Record statistics */
-if|if
-condition|(
-name|asleep
-operator|<
-name|cx_next
-operator|->
-name|trans_lat
-condition|)
-name|cpu_cx_stats
-index|[
-name|cpu_cx_next
-index|]
-operator|.
-name|short_slp
-operator|++
-expr_stmt|;
-else|else
-name|cpu_cx_stats
-index|[
-name|cpu_cx_next
-index|]
-operator|.
-name|long_slp
-operator|++
-expr_stmt|;
-comment|/*      * If we slept 100 us or more, use the lowest Cx state.      * Otherwise, find the lowest state that has a latency less than      * or equal to the length of our last sleep.      */
-if|if
-condition|(
-name|asleep
-operator|>=
-literal|100
-condition|)
-name|cpu_cx_next
-operator|=
-name|cpu_cx_lowest
-expr_stmt|;
-else|else
-block|{
-for|for
-control|(
-name|i
-operator|=
-name|cpu_cx_lowest
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|cpu_cx_states
-index|[
-name|i
-index|]
-operator|.
-name|trans_lat
-operator|<=
-name|asleep
-condition|)
-block|{
-name|cpu_cx_next
-operator|=
-name|i
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-comment|/* Decrement reference count checked by acpi_cpu_shutdown(). */
-name|atomic_subtract_int
-argument_list|(
-operator|&
-name|cpu_idle_busy
-argument_list|,
-literal|1
-argument_list|)
+name|ACPI_ENABLE_IRQS
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4562,7 +4446,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|acpi_cpu_history_sysctl
+name|acpi_cpu_usage_sysctl
 parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
@@ -4580,6 +4464,34 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|u_int
+name|sum
+decl_stmt|;
+comment|/* Avoid divide by 0 potential error. */
+name|sum
+operator|=
+literal|1
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|cpu_cx_count
+condition|;
+name|i
+operator|++
+control|)
+name|sum
+operator|+=
+name|cpu_cx_stats
+index|[
+name|i
+index|]
+expr_stmt|;
 name|sbuf_new
 argument_list|(
 operator|&
@@ -4608,30 +4520,25 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|sbuf_printf
 argument_list|(
 operator|&
 name|sb
 argument_list|,
-literal|"%u/%u "
+literal|"%u%% "
 argument_list|,
+operator|(
 name|cpu_cx_stats
 index|[
 name|i
 index|]
-operator|.
-name|long_slp
-argument_list|,
-name|cpu_cx_stats
-index|[
-name|i
-index|]
-operator|.
-name|short_slp
+operator|*
+literal|100
+operator|)
+operator|/
+name|sum
 argument_list|)
 expr_stmt|;
-block|}
 name|sbuf_trim
 argument_list|(
 operator|&
@@ -4821,12 +4728,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Use the new value for the next idle slice. */
 name|cpu_cx_lowest
-operator|=
-name|val
-expr_stmt|;
-name|cpu_cx_next
 operator|=
 name|val
 expr_stmt|;
@@ -4871,11 +4773,9 @@ break|break;
 block|}
 block|}
 comment|/* Reset the statistics counters. */
-name|memset
+name|bzero
 argument_list|(
 name|cpu_cx_stats
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
