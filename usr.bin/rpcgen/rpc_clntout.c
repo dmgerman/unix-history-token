@@ -13,15 +13,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)rpc_clntout.c 1.11 89/02/22 (C) 1987 SMI"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_clntout.c 1.11 89/02/22 (C) 1987 SMI";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

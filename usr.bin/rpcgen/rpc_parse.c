@@ -17,15 +17,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)rpc_parse.c 1.8 89/02/22 (C) 1987 SMI"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rpc_parse.c 1.8 89/02/22 (C) 1987 SMI";
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -228,26 +230,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|strdup
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * return the next definition you see  */
@@ -2894,23 +2876,11 @@ break|break;
 case|case
 name|TOK_HYPER
 case|:
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|*
 name|typep
 operator|=
 literal|"int64_t"
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|typep
-operator|=
-literal|"longlong_t"
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -3098,23 +3068,11 @@ operator|&
 name|tok
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 operator|*
 name|typep
 operator|=
 literal|"u_int64_t"
 expr_stmt|;
-else|#
-directive|else
-operator|*
-name|typep
-operator|=
-literal|"longlong_t"
-expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)

@@ -433,43 +433,12 @@ name|SVR4_CPP
 value|"/usr/ccs/lib/cpp"
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|SUNOS_CPP
 value|"/usr/bin/cpp"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SUNOS_CPP
-value|"/usr/lib/cpp"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -700,20 +669,6 @@ begin_comment
 comment|/* errors */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|inetdflag
@@ -723,37 +678,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Support for inetd  is now the default */
+comment|/* Support for inetd is disabled by default, use -I */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|inetdflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Support for inetd  is now the default */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
 name|pmflag
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Support for port monitors */
+comment|/* Support for port monitors is disabled by default */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tirpc_socket
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* TI-RPC on socket, no TLI library */
 end_comment
 
 begin_decl_stmt
@@ -788,43 +737,12 @@ begin_comment
 comment|/* Support for MT */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|INLINE
 value|0
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INLINE
-value|5
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* length at which to start doing an inline */
@@ -917,37 +835,6 @@ begin_comment
 comment|/* generate all files */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|tirpcflag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* generating code for tirpc, by default */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|tirpcflag
@@ -959,11 +846,6 @@ end_decl_stmt
 begin_comment
 comment|/* generating code for tirpc, by default */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|xdrfunc
@@ -1510,17 +1392,6 @@ begin_function
 specifier|static
 name|char
 modifier|*
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|extendfile
 parameter_list|(
 name|path
@@ -1531,20 +1402,6 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-else|#
-directive|else
-function|extendfile
-parameter_list|(
-name|file
-parameter_list|,
-name|ext
-parameter_list|)
-name|char
-modifier|*
-name|file
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|ext
@@ -1558,17 +1415,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|char
 modifier|*
 name|file
@@ -1596,8 +1442,6 @@ else|else
 name|file
 operator|++
 expr_stmt|;
-endif|#
-directive|endif
 name|res
 operator|=
 name|alloc
@@ -2814,36 +2658,6 @@ if|if
 condition|(
 name|mtflag
 condition|)
-block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"#include<synch.h>\n"
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"#include<thread.h>\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|f_print
 argument_list|(
 name|fout
@@ -2851,10 +2665,6 @@ argument_list|,
 literal|"#include<pthread.h>\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
-empty_stmt|;
 comment|/* put the C++ support */
 if|if
 condition|(
@@ -3441,22 +3251,26 @@ argument_list|,
 literal|"#endif /* __cplusplus */\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tirpcflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"#include<unistd.h> /* setsid */\n"
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
 name|tirpcflag
 condition|)
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<fcntl.h> /* open */\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"#include<unistd.h> /* fork / setsid */\n"
+argument_list|)
+expr_stmt|;
 name|f_print
 argument_list|(
 name|fout
@@ -3464,6 +3278,7 @@ argument_list|,
 literal|"#include<sys/types.h>\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
@@ -3471,32 +3286,6 @@ argument_list|,
 literal|"#include<memory.h>\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-else|#
-directive|else
-if|if
-condition|(
-name|tirpcflag
-condition|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"#include<stropts.h>\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|inetdflag
@@ -3560,6 +3349,8 @@ operator|||
 name|inetdflag
 operator|||
 name|pmflag
+operator|||
+name|tirpcflag
 condition|)
 name|f_print
 argument_list|(
@@ -4705,39 +4496,9 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\nCPPFLAGS += -D_REENTRANT\nCFLAGS += -g \nLDLIBS += -lnsl -lthread\n"
+literal|"\nCFLAGS += -D_REENTRANT -D_THEAD_SAFE \nLDLIBS += -pthread\n"
 argument_list|)
 expr_stmt|;
-else|else
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\nCFLAGS += -g \nLDLIBS +=\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\nCFLAGS += -g \nLDLIBS += -lnsl\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|f_print
 argument_list|(
 name|fout
@@ -4794,17 +4555,6 @@ argument_list|,
 literal|"$(CLIENT) : $(OBJECTS_CLNT) \n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -4812,17 +4562,6 @@ argument_list|,
 literal|"\t$(CC) -o $(CLIENT) $(OBJECTS_CLNT) \ $(LDLIBS) \n\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t$(LINK.c) -o $(CLIENT) $(OBJECTS_CLNT) \ $(LDLIBS) \n\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|f_print
 argument_list|(
 name|fout
@@ -4830,17 +4569,6 @@ argument_list|,
 literal|"$(SERVER) : $(OBJECTS_SVC) \n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -4855,24 +4583,6 @@ argument_list|,
 literal|"clean:\n\t $(RM) -f core $(TARGETS) $(OBJECTS_CLNT) \ $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"\t$(LINK.c) -o $(SERVER) $(OBJECTS_SVC) $(LDLIBS)\n\n "
-argument_list|)
-expr_stmt|;
-name|f_print
-argument_list|(
-name|fout
-argument_list|,
-literal|"clean:\n\t $(RM) core $(TARGETS) $(OBJECTS_CLNT) \ $(OBJECTS_SVC) $(CLIENT) $(SERVER)\n\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -5675,29 +5385,10 @@ case|case
 literal|'b'
 case|:
 comment|/* 					 *  Turn TIRPC flag off for 					 *  generating backward compatible 					 *  code 					 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|tirpcflag
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
 name|tirpcflag
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'I'
@@ -5719,6 +5410,14 @@ case|case
 literal|'L'
 case|:
 name|logflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|pmflag
 operator|=
 literal|1
 expr_stmt|;
@@ -6118,15 +5817,14 @@ condition|(
 name|tirpcflag
 condition|)
 block|{
+if|if
+condition|(
+name|inetdflag
+condition|)
 name|pmflag
 operator|=
-name|inetdflag
-condition|?
 literal|0
-else|:
-literal|1
 expr_stmt|;
-comment|/* pmflag or inetdflag is always TRUE */
 if|if
 condition|(
 operator|(
@@ -6159,26 +5857,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* set pmflag only in tirpcmode */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|inetdflag
-operator|=
-literal|1
-expr_stmt|;
-comment|/* inetdflag is TRUE by default */
-endif|#
-directive|endif
 if|if
 condition|(
 name|cmd
@@ -6370,7 +6048,7 @@ literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: rpcgen infile"
 argument_list|,
-literal|"       rpcgen [-abCLNTM] [-Dname[=value]] [-i size]\ [-I [-K seconds]] [-Y path] infile"
+literal|"       rpcgen [-abCLNTM] [-Dname[=value]] [-i size]\ [-I -P [-K seconds]] [-Y path] infile"
 argument_list|,
 literal|"       rpcgen [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm]\ [-o outfile] [infile]"
 argument_list|,
@@ -6414,7 +6092,7 @@ name|f_print
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-b\t\tbackward compatibility mode (generates code\ for SunOS 4.X)\n"
+literal|"-b\t\tbackward compatibility mode (generates code \ for FreeBSD 4.X)\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -6456,7 +6134,7 @@ name|f_print
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-I\t\tgenerate code for inetd support in server\ (for SunOS 4.X)\n"
+literal|"-I\t\tgenerate code for inetd support in server\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -6519,6 +6197,13 @@ name|f_print
 argument_list|(
 name|stderr
 argument_list|,
+literal|"-P\t\tgenerate code for port monitoring support in server\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|stderr
+argument_list|,
 literal|"-s nettype\tgenerate server code that supports named\ nettype\n"
 argument_list|)
 expr_stmt|;
@@ -6571,82 +6256,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_function
-name|char
-modifier|*
-name|rindex
-parameter_list|(
-name|sp
-parameter_list|,
-name|c
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-name|c
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|r
-decl_stmt|;
-name|r
-operator|=
-name|NULL
-expr_stmt|;
-do|do
-block|{
-if|if
-condition|(
-operator|*
-name|sp
-operator|==
-name|c
-condition|)
-name|r
-operator|=
-name|sp
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|*
-name|sp
-operator|++
-condition|)
-do|;
-return|return
-operator|(
-name|r
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

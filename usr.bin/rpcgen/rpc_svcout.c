@@ -70,6 +70,13 @@ file|"rpc_util.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|tirpc_socket
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|char
 name|RQSTP
@@ -488,6 +495,8 @@ if|if
 condition|(
 operator|!
 name|tirpcflag
+operator|||
+name|tirpc_socket
 condition|)
 block|{
 name|f_print
@@ -604,7 +613,14 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\nmain()\n"
+literal|"\nint\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"main()\n"
 argument_list|)
 expr_stmt|;
 name|f_print
@@ -669,6 +685,32 @@ argument_list|,
 literal|"\tint i;\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmflag
+condition|)
+block|{
+if|if
+condition|(
+name|tirpc_socket
+condition|)
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\tstruct sockaddr_storage saddr;\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\tint asize = sizeof (saddr);\n\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|f_print
 argument_list|(
 name|fout
@@ -676,6 +718,7 @@ argument_list|,
 literal|"\tchar mname[FMNAMESZ + 1];\n\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mtflag
@@ -689,6 +732,11 @@ argument_list|,
 literal|"\tmutex_init(&_svcstate_lock, USYNC_THREAD, NULL);\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pmflag
+condition|)
+block|{
 name|write_pm_most
 argument_list|(
 name|infile
@@ -715,6 +763,15 @@ argument_list|(
 name|fout
 argument_list|,
 literal|"\t}\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|write_rpc_svc_fg
+argument_list|(
+name|infile
+argument_list|,
+literal|"\t\t"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4221,6 +4278,28 @@ name|version_list
 modifier|*
 name|vp
 decl_stmt|;
+if|if
+condition|(
+name|tirpc_socket
+condition|)
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\tif (getsockname(0, (struct sockaddr *)&saddr,&asize) == 0) {\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\tint ssize = sizeof (int);\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|f_print
 argument_list|(
 name|fout
@@ -4235,6 +4314,14 @@ argument_list|,
 literal|"\t\t(!strcmp(mname, \"sockmod\") ||"
 argument_list|)
 expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|" !strcmp(mname, \"timod\"))) {\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
@@ -4292,6 +4379,54 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tirpc_socket
+condition|)
+block|{
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\tif (saddr.ss_family != AF_INET&&\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\t    saddr.ss_family != AF_INET6)\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\t\texit(1);\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\tif (getsockopt(0, SOL_SOCKET, SO_TYPE,\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\t\t\t(char *)&_rpcfdtype,&ssize) == -1)\n"
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\t\t\texit(1);\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
@@ -4363,13 +4498,27 @@ if|if
 condition|(
 name|timerflag
 condition|)
+block|{
+if|if
+condition|(
+name|tirpc_socket
+condition|)
 name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\n\t\t\tpmclose = \ (t_getstate(0) != T_DATAXFER);\n"
+literal|"\n\t\t\tpmclose = 1;\t/* XXX */\n"
 argument_list|)
 expr_stmt|;
+else|else
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"\n\t\t\tpmclose = (t_getstate(0) != T_DATAXFER);\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout
@@ -4378,6 +4527,12 @@ literal|"\t\t}\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * A kludgy support for inetd services. Inetd only works with 	 * sockmod, and RPC works only with timod, hence all this jugglery 	 */
+if|if
+condition|(
+operator|!
+name|tirpc_socket
+condition|)
+block|{
 name|f_print
 argument_list|(
 name|fout
@@ -4389,7 +4544,14 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\t\t\tif (ioctl(0, I_POP, 0) || \ ioctl(0, I_PUSH, \"timod\")) {\n"
+literal|"\t\t\tif (ioctl(0, I_POP, 0) || "
+argument_list|)
+expr_stmt|;
+name|f_print
+argument_list|(
+name|fout
+argument_list|,
+literal|"ioctl(0, I_PUSH, \"timod\")) {\n"
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -4425,6 +4587,7 @@ argument_list|,
 literal|"\t\t}\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|f_print
 argument_list|(
 name|fout

@@ -326,6 +326,7 @@ expr_stmt|;
 break|break;
 comment|/* DEF_CONST and DEF_PROGRAM have already been handled */
 default|default:
+break|break;
 block|}
 name|print_trailer
 argument_list|()
@@ -1910,6 +1911,10 @@ name|indent
 init|=
 literal|1
 decl_stmt|;
+name|cur
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|flag
@@ -2422,6 +2427,7 @@ name|i
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|sizestr
@@ -2590,6 +2596,7 @@ argument_list|,
 literal|"\t\t}\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -3334,7 +3341,9 @@ argument_list|,
 literal|"}\n"
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
+break|break;
 block|}
 block|}
 end_function
