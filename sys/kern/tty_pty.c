@@ -4019,6 +4019,7 @@ argument_list|,
 name|FREAD
 argument_list|)
 expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
