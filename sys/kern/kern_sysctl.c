@@ -2008,6 +2008,20 @@ condition|)
 return|return
 name|ENOENT
 return|;
+if|if
+condition|(
+name|req
+operator|->
+name|newlen
+operator|>=
+name|MAXPATHLEN
+condition|)
+comment|/* XXX arbitrary, undocumented */
+return|return
+operator|(
+name|ENAMETOOLONG
+operator|)
+return|;
 name|p
 operator|=
 name|malloc
@@ -2532,7 +2546,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/*  * Handle a long, signed or unsigned.  * Two cases:  *     a variable:  point arg1 at it.  *     a constant:  pass it in arg2.  */
+comment|/*  * Handle a long, signed or unsigned.  arg1 points to it.  */
 end_comment
 
 begin_decl_stmt
@@ -2545,6 +2559,16 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|arg1
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -2573,16 +2597,6 @@ operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
-operator|!
-name|arg1
-condition|)
-name|error
-operator|=
-name|EPERM
-expr_stmt|;
-else|else
 name|error
 operator|=
 name|SYSCTL_IN
@@ -2647,9 +2661,6 @@ operator|!
 name|req
 operator|->
 name|newptr
-operator|||
-operator|!
-name|arg2
 condition|)
 return|return
 operator|(
@@ -2667,13 +2678,13 @@ name|req
 operator|->
 name|newidx
 operator|)
-operator|>
+operator|>=
 name|arg2
 condition|)
 block|{
 name|error
 operator|=
-name|E2BIG
+name|EINVAL
 expr_stmt|;
 block|}
 else|else
