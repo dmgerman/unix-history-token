@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.10 (Berkeley) %G%  *  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.11 (Berkeley) %G%  *  */
 end_comment
 
 begin_comment
@@ -672,6 +672,11 @@ name|u_long
 name|ra_type
 decl_stmt|;
 comment|/* drive type */
+define|#
+directive|define
+name|RA_TYPE_RX50
+value|7
+comment|/* special: see udaopen */
 name|u_long
 name|ra_mediaid
 decl_stmt|;
@@ -2173,6 +2178,28 @@ index|]
 operator|=
 name|ui
 expr_stmt|;
+comment|/* 	 * RX50s cannot be brought on line unless there is 	 * a floppy in the drive.  Since an ONLINE while cold 	 * takes ten seconds to fail, and (when notyet becomes now) 	 * no sensible person will swap to an RX50, we just 	 * defer the ONLINE until someone tries to use the drive. 	 */
+if|if
+condition|(
+name|ra_info
+index|[
+name|unit
+index|]
+operator|.
+name|ra_type
+operator|==
+name|RA_TYPE_RX50
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ra%d: rx50\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|uda_rainit
