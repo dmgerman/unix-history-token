@@ -226,19 +226,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|PrintAddr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|Finish
 parameter_list|(

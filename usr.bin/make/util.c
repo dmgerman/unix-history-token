@@ -655,38 +655,5 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Printaddr --  * 	Print the address of a node, used as an interative function.  */
-end_comment
-
-begin_function
-name|int
-name|PrintAddr
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|,
-name|void
-modifier|*
-name|b
-name|__unused
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"%p "
-argument_list|,
-name|a
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 end_unit
 

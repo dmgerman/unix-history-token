@@ -600,6 +600,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_SRC
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|int
+name|PrintAddr
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG_SRC */
+end_comment
+
 begin_comment
 comment|/*************** Lst Predicates ****************/
 end_comment
@@ -7506,6 +7535,55 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_SRC
+end_ifdef
+
+begin_comment
+comment|/*  * Printaddr --  * 	Print the address of a node.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|PrintAddr
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|,
+name|void
+modifier|*
+name|b
+name|__unused
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"%p "
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG_SRC */
+end_comment
 
 end_unit
 
