@@ -317,6 +317,16 @@ name|nargs
 operator|=
 literal|8
 expr_stmt|;
+if|if
+condition|(
+name|bsp
+operator|>=
+name|IA64_RR_BASE
+argument_list|(
+literal|5
+argument_list|)
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -379,6 +389,7 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|db_printf
 argument_list|(
