@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)order.c	1.7 (Berkeley) %G%"
+literal|"@(#)order.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2760,6 +2760,9 @@ specifier|register
 name|int
 name|size
 decl_stmt|;
+name|int
+name|count
+decl_stmt|;
 comment|/* generate code for the arguments */
 comment|/*  first, do the arguments on the right */
 while|while
@@ -2879,8 +2882,12 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* turn it into an oreg */
-if|if
-condition|(
+for|for
+control|(
+name|count
+operator|=
+literal|0
+init|;
 name|p
 operator|->
 name|in
@@ -2888,7 +2895,14 @@ operator|.
 name|op
 operator|!=
 name|OREG
-condition|)
+operator|&&
+name|count
+operator|<
+literal|10
+condition|;
+operator|++
+name|count
+control|)
 block|{
 name|offstar
 argument_list|(
@@ -2904,31 +2918,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|->
-name|in
-operator|.
-name|op
-operator|!=
-name|OREG
-condition|)
-block|{
-name|offstar
-argument_list|(
-name|p
-operator|->
-name|in
-operator|.
-name|left
-argument_list|)
-expr_stmt|;
-name|canon
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|p
@@ -2944,8 +2934,6 @@ argument_list|(
 literal|"stuck starg"
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 name|ptemp
 operator|->
