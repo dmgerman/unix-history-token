@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.38 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.39 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.38 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.39 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1764,6 +1764,11 @@ decl_stmt|;
 name|int
 name|falen
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|IDENTPROTO
@@ -1784,11 +1789,6 @@ name|s
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
 decl_stmt|;
 name|EVENT
 modifier|*
