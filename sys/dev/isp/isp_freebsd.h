@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.11 1999/02/09 01:05:42 mjacob Exp $ */
+comment|/* $Id: isp_freebsd.h,v 1.12 1999/03/17 05:04:39 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_16_99 */
+comment|/* release_03_25_99 */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|98
+value|99
 end_define
 
 begin_include
@@ -314,7 +314,7 @@ name|XS_LUN
 parameter_list|(
 name|xs
 parameter_list|)
-value|(xs)->sc_link->lun
+value|((int) (xs)->sc_link->lun)
 end_define
 
 begin_define
@@ -324,7 +324,7 @@ name|XS_TGT
 parameter_list|(
 name|xs
 parameter_list|)
-value|(xs)->sc_link->target
+value|((int) (xs)->sc_link->target)
 end_define
 
 begin_define
@@ -1428,13 +1428,6 @@ begin_define
 define|#
 directive|define
 name|ISP_NO_FASTPOST_FC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_DISABLE_1080_SUPPORT
 value|1
 end_define
 

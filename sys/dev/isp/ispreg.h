@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispreg.h,v 1.6 1999/02/09 01:09:35 mjacob Exp $ */
+comment|/* $Id: ispreg.h,v 1.7 1999/03/17 05:04:39 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_16_99 */
+comment|/* release_03_25_99 */
 end_comment
 
 begin_comment
-comment|/*  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  *  *---------------------------------------  * Copyright (c) 1997 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *---------------------------------------  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Machine Independent (well, as best as possible) register  * definitions for Qlogic ISP SCSI adapters.  *  * Copyright (c) 1997, 1998, 1999 by Matthew Jacob  * NASA/Ames Research Center  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -3311,6 +3311,64 @@ comment|/* Enable SXP initiator mode */
 end_comment
 
 begin_comment
+comment|/* 1080 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SXP_PINS_LVD_MODE
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_PINS_HVD_MODE
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|SXP_PINS_SE_MODE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* The above have to be put together with the DIFFM pin to make sense */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP1080_LVD_MODE
+value|(SXP_PINS_LVD_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_HVD_MODE
+value|(SXP_PINS_HVD_MODE|SXP_PINS_DIFF_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_SE_MODE
+value|(SXP_PINS_SE_MODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP1080_MODE_MASK
+define|\
+value|(SXP_PINS_LVD_MODE|SXP_PINS_HVD_MODE|SXP_PINS_SE_MODE|SXP_PINS_DIFF_MODE)
+end_define
+
+begin_comment
 comment|/*  * RISC and Host Command and Control Block Register Offsets  */
 end_comment
 
@@ -4644,7 +4702,7 @@ name|ISP2100_NVRAM_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|( \ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
+value|(\ 		(((u_int64_t)(c)[18])<< 56) | \ 		(((u_int64_t)(c)[19])<< 48) | \ 		(((u_int64_t)(c)[20])<< 40) | \ 		(((u_int64_t)(c)[21])<< 32) | \ 		(((u_int64_t)(c)[22])<< 24) | \ 		(((u_int64_t)(c)[23])<< 16) | \ 		(((u_int64_t)(c)[24])<<  8) | \ 		(((u_int64_t)(c)[25])<<  0))
 end_define
 
 begin_define
@@ -4734,7 +4792,7 @@ name|ISP2100_NVRAM_BOOT_NODE_NAME
 parameter_list|(
 name|c
 parameter_list|)
-value|( \ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
+value|(\ 		(((u_int64_t)(c)[72])<< 56) | \ 		(((u_int64_t)(c)[73])<< 48) | \ 		(((u_int64_t)(c)[74])<< 40) | \ 		(((u_int64_t)(c)[75])<< 32) | \ 		(((u_int64_t)(c)[76])<< 24) | \ 		(((u_int64_t)(c)[77])<< 16) | \ 		(((u_int64_t)(c)[78])<<  8) | \ 		(((u_int64_t)(c)[79])<<  0))
 end_define
 
 begin_define

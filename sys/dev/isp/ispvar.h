@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.10 1999/02/09 01:11:35 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.11 1999/03/17 05:04:39 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_03_16_99 */
+comment|/* release_03_25_99 */
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|6
+value|7
 end_define
 
 begin_comment
@@ -421,6 +421,10 @@ name|isp_diffmode
 range|:
 literal|1
 decl_stmt|,
+name|isp_lvdmode
+range|:
+literal|1
+decl_stmt|,
 name|isp_fast_mttr
 range|:
 literal|1
@@ -475,20 +479,28 @@ literal|1
 decl_stmt|,
 name|exc_throttle
 range|:
-literal|7
+literal|8
+decl_stmt|,
+name|cur_offset
+range|:
+literal|4
 decl_stmt|,
 name|sync_offset
 range|:
 literal|4
-decl_stmt|,
-name|sync_period
-range|:
-literal|8
 decl_stmt|;
+name|u_int8_t
+name|cur_period
+decl_stmt|;
+comment|/* current sync period */
+name|u_int8_t
+name|sync_period
+decl_stmt|;
+comment|/* goal sync period */
 name|u_int16_t
 name|dev_flags
 decl_stmt|;
-comment|/* persistent device flags */
+comment|/* goal device flags */
 name|u_int16_t
 name|cur_dflags
 decl_stmt|;
@@ -602,6 +614,17 @@ define|#
 directive|define
 name|DPARM_SAFE_DFLT
 value|(DPARM_DEFAULT& ~(DPARM_WIDE|DPARM_SYNC|DPARM_TQING))
+end_define
+
+begin_comment
+comment|/* technically, not really correct, as they need to be rated based upon clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISP_40M_SYNCPARMS
+value|0x080a
 end_define
 
 begin_define
@@ -915,9 +938,11 @@ name|isp_confopts
 operator|:
 literal|8
 operator|,
+name|isp_port
 operator|:
 literal|1
 operator|,
+comment|/* for dual ported impls */
 name|isp_used
 operator|:
 literal|1
@@ -1232,6 +1257,13 @@ begin_define
 define|#
 directive|define
 name|ISP_HA_SCSI_1080
+value|0xd
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_HA_SCSI_12X0
 value|0xe
 end_define
 
@@ -1267,6 +1299,16 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|(isp->isp_type == ISP_HA_SCSI_1080)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_12X0
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_12X0)
 end_define
 
 begin_define
