@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.4 %G%"
+literal|"@(#)rval.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,18 @@ name|char
 modifier|*
 name|opnames
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line number of the last record comparison warning */
+end_comment
+
+begin_decl_stmt
+name|short
+name|reccompline
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -3787,13 +3799,6 @@ name|p
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|contype
-operator|=
-name|p
-expr_stmt|;
-block|}
 comment|/* 			     *	put out the width of the comparison. 			     */
 name|putleaf
 argument_list|(
@@ -5236,6 +5241,20 @@ name|TREC
 case|:
 if|if
 condition|(
+name|line
+operator|!=
+name|reccompline
+condition|)
+block|{
+name|reccompline
+operator|=
+name|line
+expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|opt
 argument_list|(
 literal|'s'
@@ -5245,6 +5264,7 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"record comparison is non-standard"

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.2 %G%"
+literal|"@(#)proc.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1342,6 +1342,9 @@ break|break;
 case|case
 name|TSCAL
 case|:
+name|warning
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -1353,12 +1356,12 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"Writing scalars to text files is non-standard"
 argument_list|)
 expr_stmt|;
-block|}
 case|case
 name|TBOOL
 case|:
@@ -2828,6 +2831,9 @@ name|ap
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -2839,12 +2845,12 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
-literal|"Reading of enumerated types is non-standard"
+literal|"Reading scalars from text files is non-standard"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 			 * Data read is on the stack. 			 * Assign it. 			 */
 if|if

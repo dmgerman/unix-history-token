@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcproc.c 1.2 %G%"
+literal|"@(#)pcproc.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1734,6 +1734,9 @@ break|break;
 case|case
 name|TSCAL
 case|:
+name|warning
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -1745,12 +1748,12 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"Writing scalars to text files is non-standard"
 argument_list|)
 expr_stmt|;
-block|}
 case|case
 name|TBOOL
 case|:
@@ -4738,6 +4741,9 @@ argument_list|,
 name|P2INT
 argument_list|)
 expr_stmt|;
+name|warning
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -4749,12 +4755,12 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
-literal|"Reading of enumerated types is non-standard"
+literal|"Reading scalars from text files is non-standard"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|putop
 argument_list|(

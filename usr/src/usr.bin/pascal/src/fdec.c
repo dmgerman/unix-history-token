@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.6 %G%"
+literal|"@(#)fdec.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,9 @@ case|:
 case|case
 name|TSTR
 case|:
+name|warning
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -581,6 +584,7 @@ block|{
 name|standard
 argument_list|()
 expr_stmt|;
+block|}
 name|error
 argument_list|(
 literal|"Functions should not return %ss"
@@ -591,7 +595,6 @@ name|o
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
