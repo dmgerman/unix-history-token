@@ -5696,9 +5696,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|uma_bucket_t
-name|swap
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|UMA_DEBUG_ALLOC
@@ -5709,7 +5706,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|swap
+name|bucket
 operator|=
 name|cache
 operator|->
@@ -5727,7 +5724,7 @@ name|cache
 operator|->
 name|uc_allocbucket
 operator|=
-name|swap
+name|bucket
 expr_stmt|;
 goto|goto
 name|zalloc_start
@@ -6923,10 +6920,7 @@ operator|->
 name|ub_cnt
 condition|)
 block|{
-name|uma_bucket_t
-name|swap
-decl_stmt|;
-name|swap
+name|bucket
 operator|=
 name|cache
 operator|->
@@ -6944,7 +6938,7 @@ name|cache
 operator|->
 name|uc_allocbucket
 operator|=
-name|swap
+name|bucket
 expr_stmt|;
 goto|goto
 name|zfree_start
