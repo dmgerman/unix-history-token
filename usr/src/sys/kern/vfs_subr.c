@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.57 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.58 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3569,7 +3569,7 @@ operator|*
 operator|(
 name|origops
 operator|->
-name|vn_unlock
+name|vop_unlock
 operator|)
 operator|)
 operator|(
@@ -3592,7 +3592,7 @@ operator|*
 operator|(
 name|origops
 operator|->
-name|vn_close
+name|vop_close
 operator|)
 operator|)
 operator|(
@@ -3610,7 +3610,7 @@ operator|*
 operator|(
 name|origops
 operator|->
-name|vn_inactive
+name|vop_inactive
 operator|)
 operator|)
 operator|(
@@ -3628,7 +3628,7 @@ operator|*
 operator|(
 name|origops
 operator|->
-name|vn_reclaim
+name|vop_reclaim
 operator|)
 operator|)
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -518,7 +518,7 @@ name|vnodeops
 block|{
 name|int
 argument_list|(
-argument|*vn_lookup
+argument|*vop_lookup
 argument_list|)
 name|__P
 argument_list|(
@@ -542,7 +542,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_create
+argument|*vop_create
 argument_list|)
 name|__P
 argument_list|(
@@ -566,7 +566,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_mknod
+argument|*vop_mknod
 argument_list|)
 name|__P
 argument_list|(
@@ -595,7 +595,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_open
+argument|*vop_open
 argument_list|)
 name|__P
 argument_list|(
@@ -622,7 +622,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_close
+argument|*vop_close
 argument_list|)
 name|__P
 argument_list|(
@@ -649,7 +649,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_access
+argument|*vop_access
 argument_list|)
 name|__P
 argument_list|(
@@ -676,7 +676,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_getattr
+argument|*vop_getattr
 argument_list|)
 name|__P
 argument_list|(
@@ -705,7 +705,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_setattr
+argument|*vop_setattr
 argument_list|)
 name|__P
 argument_list|(
@@ -734,7 +734,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_read
+argument|*vop_read
 argument_list|)
 name|__P
 argument_list|(
@@ -761,7 +761,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_write
+argument|*vop_write
 argument_list|)
 name|__P
 argument_list|(
@@ -788,7 +788,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_ioctl
+argument|*vop_ioctl
 argument_list|)
 name|__P
 argument_list|(
@@ -821,7 +821,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_select
+argument|*vop_select
 argument_list|)
 name|__P
 argument_list|(
@@ -851,7 +851,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_mmap
+argument|*vop_mmap
 argument_list|)
 name|__P
 argument_list|(
@@ -878,7 +878,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_fsync
+argument|*vop_fsync
 argument_list|)
 name|__P
 argument_list|(
@@ -908,7 +908,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_seek
+argument|*vop_seek
 argument_list|)
 name|__P
 argument_list|(
@@ -933,7 +933,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_remove
+argument|*vop_remove
 argument_list|)
 name|__P
 argument_list|(
@@ -952,7 +952,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_link
+argument|*vop_link
 argument_list|)
 name|__P
 argument_list|(
@@ -976,7 +976,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_rename
+argument|*vop_rename
 argument_list|)
 name|__P
 argument_list|(
@@ -1000,7 +1000,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_mkdir
+argument|*vop_mkdir
 argument_list|)
 name|__P
 argument_list|(
@@ -1024,7 +1024,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_rmdir
+argument|*vop_rmdir
 argument_list|)
 name|__P
 argument_list|(
@@ -1043,7 +1043,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_symlink
+argument|*vop_symlink
 argument_list|)
 name|__P
 argument_list|(
@@ -1071,7 +1071,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_readdir
+argument|*vop_readdir
 argument_list|)
 name|__P
 argument_list|(
@@ -1099,7 +1099,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_readlink
+argument|*vop_readlink
 argument_list|)
 name|__P
 argument_list|(
@@ -1123,7 +1123,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_abortop
+argument|*vop_abortop
 argument_list|)
 name|__P
 argument_list|(
@@ -1137,7 +1137,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_inactive
+argument|*vop_inactive
 argument_list|)
 name|__P
 argument_list|(
@@ -1156,7 +1156,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_reclaim
+argument|*vop_reclaim
 argument_list|)
 name|__P
 argument_list|(
@@ -1170,7 +1170,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_lock
+argument|*vop_lock
 argument_list|)
 name|__P
 argument_list|(
@@ -1184,7 +1184,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_unlock
+argument|*vop_unlock
 argument_list|)
 name|__P
 argument_list|(
@@ -1198,7 +1198,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_bmap
+argument|*vop_bmap
 argument_list|)
 name|__P
 argument_list|(
@@ -1225,7 +1225,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_strategy
+argument|*vop_strategy
 argument_list|)
 name|__P
 argument_list|(
@@ -1239,7 +1239,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_print
+argument|*vop_print
 argument_list|)
 name|__P
 argument_list|(
@@ -1253,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_islocked
+argument|*vop_islocked
 argument_list|)
 name|__P
 argument_list|(
@@ -1267,7 +1267,7 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
-argument|*vn_advlock
+argument|*vop_advlock
 argument_list|)
 name|__P
 argument_list|(
@@ -1312,7 +1312,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_lookup))(v,n,p)
+value|(*((v)->v_op->vop_lookup))(v,n,p)
 end_define
 
 begin_define
@@ -1326,7 +1326,7 @@ name|a
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_create))(n,a,p)
+value|(*((n)->ni_dvp->v_op->vop_create))(n,a,p)
 end_define
 
 begin_define
@@ -1342,7 +1342,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_mknod))(n,a,c,p)
+value|(*((n)->ni_dvp->v_op->vop_mknod))(n,a,c,p)
 end_define
 
 begin_define
@@ -1358,7 +1358,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_open))(v,f,c,p)
+value|(*((v)->v_op->vop_open))(v,f,c,p)
 end_define
 
 begin_define
@@ -1374,7 +1374,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_close))(v,f,c,p)
+value|(*((v)->v_op->vop_close))(v,f,c,p)
 end_define
 
 begin_define
@@ -1390,7 +1390,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_access))(v,f,c,p)
+value|(*((v)->v_op->vop_access))(v,f,c,p)
 end_define
 
 begin_define
@@ -1406,7 +1406,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_getattr))(v,a,c,p)
+value|(*((v)->v_op->vop_getattr))(v,a,c,p)
 end_define
 
 begin_define
@@ -1422,7 +1422,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_setattr))(v,a,c,p)
+value|(*((v)->v_op->vop_setattr))(v,a,c,p)
 end_define
 
 begin_define
@@ -1438,7 +1438,7 @@ name|i
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((v)->v_op->vn_read))(v,u,i,c)
+value|(*((v)->v_op->vop_read))(v,u,i,c)
 end_define
 
 begin_define
@@ -1454,7 +1454,7 @@ name|i
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((v)->v_op->vn_write))(v,u,i,c)
+value|(*((v)->v_op->vop_write))(v,u,i,c)
 end_define
 
 begin_define
@@ -1474,7 +1474,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_ioctl))(v,o,d,f,c,p)
+value|(*((v)->v_op->vop_ioctl))(v,o,d,f,c,p)
 end_define
 
 begin_define
@@ -1492,7 +1492,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_select))(v,w,f,c,p)
+value|(*((v)->v_op->vop_select))(v,w,f,c,p)
 end_define
 
 begin_define
@@ -1506,7 +1506,7 @@ name|c
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_mmap))(v,c,p)
+value|(*((v)->v_op->vop_mmap))(v,c,p)
 end_define
 
 begin_define
@@ -1524,7 +1524,7 @@ name|w
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_fsync))(v,f,c,w,p)
+value|(*((v)->v_op->vop_fsync))(v,f,c,w,p)
 end_define
 
 begin_define
@@ -1540,7 +1540,7 @@ name|o
 parameter_list|,
 name|w
 parameter_list|)
-value|(*((v)->v_op->vn_seek))(v,p,o,w)
+value|(*((v)->v_op->vop_seek))(v,p,o,w)
 end_define
 
 begin_define
@@ -1552,7 +1552,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_remove))(n,p)
+value|(*((n)->ni_dvp->v_op->vop_remove))(n,p)
 end_define
 
 begin_define
@@ -1566,7 +1566,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_link))(v,n,p)
+value|(*((n)->ni_dvp->v_op->vop_link))(v,n,p)
 end_define
 
 begin_define
@@ -1580,7 +1580,7 @@ name|t
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((s)->ni_dvp->v_op->vn_rename))(s,t,p)
+value|(*((s)->ni_dvp->v_op->vop_rename))(s,t,p)
 end_define
 
 begin_define
@@ -1594,7 +1594,7 @@ name|a
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_mkdir))(n,a,p)
+value|(*((n)->ni_dvp->v_op->vop_mkdir))(n,a,p)
 end_define
 
 begin_define
@@ -1606,7 +1606,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_rmdir))(n,p)
+value|(*((n)->ni_dvp->v_op->vop_rmdir))(n,p)
 end_define
 
 begin_define
@@ -1622,7 +1622,7 @@ name|m
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_symlink))(n,a,m,p)
+value|(*((n)->ni_dvp->v_op->vop_symlink))(n,a,m,p)
 end_define
 
 begin_define
@@ -1638,7 +1638,7 @@ name|c
 parameter_list|,
 name|e
 parameter_list|)
-value|(*((v)->v_op->vn_readdir))(v,u,c,e)
+value|(*((v)->v_op->vop_readdir))(v,u,c,e)
 end_define
 
 begin_define
@@ -1652,7 +1652,7 @@ name|u
 parameter_list|,
 name|c
 parameter_list|)
-value|(*((v)->v_op->vn_readlink))(v,u,c)
+value|(*((v)->v_op->vop_readlink))(v,u,c)
 end_define
 
 begin_define
@@ -1662,7 +1662,7 @@ name|VOP_ABORTOP
 parameter_list|(
 name|n
 parameter_list|)
-value|(*((n)->ni_dvp->v_op->vn_abortop))(n)
+value|(*((n)->ni_dvp->v_op->vop_abortop))(n)
 end_define
 
 begin_define
@@ -1674,7 +1674,7 @@ name|v
 parameter_list|,
 name|p
 parameter_list|)
-value|(*((v)->v_op->vn_inactive))(v,p)
+value|(*((v)->v_op->vop_inactive))(v,p)
 end_define
 
 begin_define
@@ -1684,7 +1684,7 @@ name|VOP_RECLAIM
 parameter_list|(
 name|v
 parameter_list|)
-value|(*((v)->v_op->vn_reclaim))(v)
+value|(*((v)->v_op->vop_reclaim))(v)
 end_define
 
 begin_define
@@ -1694,7 +1694,7 @@ name|VOP_LOCK
 parameter_list|(
 name|v
 parameter_list|)
-value|(*((v)->v_op->vn_lock))(v)
+value|(*((v)->v_op->vop_lock))(v)
 end_define
 
 begin_define
@@ -1704,7 +1704,7 @@ name|VOP_UNLOCK
 parameter_list|(
 name|v
 parameter_list|)
-value|(*((v)->v_op->vn_unlock))(v)
+value|(*((v)->v_op->vop_unlock))(v)
 end_define
 
 begin_define
@@ -1720,7 +1720,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|(*((v)->v_op->vn_bmap))(v,s,p,n)
+value|(*((v)->v_op->vop_bmap))(v,s,p,n)
 end_define
 
 begin_define
@@ -1730,7 +1730,7 @@ name|VOP_STRATEGY
 parameter_list|(
 name|b
 parameter_list|)
-value|(*((b)->b_vp->v_op->vn_strategy))(b)
+value|(*((b)->b_vp->v_op->vop_strategy))(b)
 end_define
 
 begin_define
@@ -1740,7 +1740,7 @@ name|VOP_PRINT
 parameter_list|(
 name|v
 parameter_list|)
-value|(*((v)->v_op->vn_print))(v)
+value|(*((v)->v_op->vop_print))(v)
 end_define
 
 begin_define
@@ -1750,7 +1750,7 @@ name|VOP_ISLOCKED
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)->v_flag& VXLOCK) || \ 				(*((v)->v_op->vn_islocked))(v))
+value|(((v)->v_flag& VXLOCK) || \ 				(*((v)->v_op->vop_islocked))(v))
 end_define
 
 begin_define
@@ -1768,7 +1768,7 @@ name|l
 parameter_list|,
 name|f
 parameter_list|)
-value|(*((v)->v_op->vn_advlock))(v,p,o,l,f)
+value|(*((v)->v_op->vop_advlock))(v,p,o,l,f)
 end_define
 
 begin_comment
