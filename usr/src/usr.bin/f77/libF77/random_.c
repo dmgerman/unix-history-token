@@ -1,12 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)random_.c	5.2	%G%  *   * Routines to return random values  *  * calling sequence:  *	double precision d, drandm  *	i = irandm(iflag)  *	x = random(iflag)  *	d = drandm(iflag)  * where:  *	If arg is nonzero, generator is restarted and value is returned.  *	If arg is 0, next value is returned.  *	Integer values will range from 0 thru 2147483647 (see random(3)).  *	Real values will range from 0.0 thru 1.0 .  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)random_.c	5.3	%G%  *   * Routines to return random values  *  * calling sequence:  *	double precision d, drandm  *	i = irandm(iflag)  *	x = random(iflag)  *	d = drandm(iflag)  * where:  *	If arg is nonzero, generator is restarted and value is returned.  *	If arg is 0, next value is returned.  *	Integer values will range from 0 thru 2147483647 (see random(3)).  *	Real values will range from 0.0 thru 1.0 .  */
 end_comment
 
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 end_if
 
 begin_define
@@ -19,7 +27,7 @@ end_define
 begin_else
 else|#
 directive|else
-else|vax
+else|vax || tahoe
 end_else
 
 begin_expr_stmt
@@ -28,7 +36,7 @@ name|MACHINE
 operator|!
 endif|#
 directive|endif
-endif|vax
+endif|vax || tahoe
 name|long
 name|irandm_
 argument_list|(
