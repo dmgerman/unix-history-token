@@ -36,7 +36,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.10"
+value|"4.12"
 end_define
 
 begin_comment
@@ -672,7 +672,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.10"
+value|"4.12"
 end_define
 
 begin_comment
