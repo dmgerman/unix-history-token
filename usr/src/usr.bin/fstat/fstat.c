@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.6 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -180,6 +180,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -570,14 +576,28 @@ condition|(
 name|pflg
 operator|++
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
+if|if
+condition|(
+operator|!
+name|isdigit
 argument_list|(
-literal|1
+operator|*
+name|optarg
 argument_list|)
+condition|)
+block|{
+name|fputs
+argument_list|(
+literal|"fstat: -p option requires a process id.\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|pid
