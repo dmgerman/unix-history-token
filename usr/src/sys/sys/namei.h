@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.7	84/08/28	*/
+comment|/*	namei.h	6.8	85/02/15	*/
 end_comment
 
 begin_ifndef
@@ -63,6 +63,10 @@ name|short
 name|ni_error
 decl_stmt|;
 comment|/* error return if any */
+name|off_t
+name|ni_endoff
+decl_stmt|;
+comment|/* end of useful stuff in directory */
 name|struct
 name|inode
 modifier|*
