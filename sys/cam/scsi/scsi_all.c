@@ -11641,8 +11641,6 @@ name|u_int32_t
 name|timeout
 parameter_list|)
 block|{
-return|return
-operator|(
 name|scsi_mode_sense_len
 argument_list|(
 name|csio
@@ -11669,8 +11667,7 @@ name|sense_len
 argument_list|,
 name|timeout
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -11974,8 +11971,6 @@ name|u_int32_t
 name|timeout
 parameter_list|)
 block|{
-return|return
-operator|(
 name|scsi_mode_select_len
 argument_list|(
 name|csio
@@ -12000,8 +11995,7 @@ name|sense_len
 argument_list|,
 name|timeout
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
