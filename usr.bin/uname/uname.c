@@ -657,7 +657,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|void						\ native_##var(void)				\ {						\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	if (sysctlbyname(name,&buf,&len, NULL,\ 	    0) == -1)				\ 		err(1, "sysctlbyname");
+value|void						\ native_##var(void)				\ {						\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	len = sizeof buf;			\ 	if (sysctlbyname(name,&buf,&len, NULL,\ 	    0) == -1)				\ 		err(1, "sysctlbyname");
 end_define
 
 begin_define
