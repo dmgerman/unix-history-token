@@ -860,7 +860,7 @@ if|if
 condition|(
 name|mflag
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -869,7 +869,7 @@ argument_list|)
 condition|)
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

@@ -3539,7 +3539,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|prog
 argument_list|,
@@ -4727,7 +4727,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|IF
 argument_list|,
@@ -6581,7 +6581,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|_PATH_SENDMAIL
 argument_list|,
@@ -7750,7 +7750,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|LP
 argument_list|,
@@ -7909,7 +7909,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|OF
 argument_list|,

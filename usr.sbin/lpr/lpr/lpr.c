@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.16 1997/07/08 21:03:16 dima Exp $\n"
+literal|"\n$Id: lpr.c,v 1.17 1997/07/23 00:49:37 imp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1394,7 +1394,7 @@ operator|=
 operator|(
 name|arg
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2350,7 +2350,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|buf
 argument_list|,
@@ -3118,7 +3118,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,

@@ -949,7 +949,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|dfname
 argument_list|,
