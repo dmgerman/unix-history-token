@@ -780,7 +780,9 @@ operator|=
 literal|1
 expr_stmt|;
 name|pr_rthdr
-argument_list|()
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 name|p_tree
 argument_list|(
@@ -926,12 +928,6 @@ begin_comment
 comment|/* column widths; each followed by one space */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -954,15 +950,16 @@ begin_comment
 comment|/* width of gateway column */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|WID_DST
+name|WID_DST6
 value|(lflag ? 39 : (nflag ? 33: 18))
 end_define
 
@@ -973,7 +970,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WID_GW
+name|WID_GW6
 value|(lflag ? 31 : (nflag ? 29 : 18))
 end_define
 
@@ -997,8 +994,45 @@ end_comment
 begin_function
 name|void
 name|pr_rthdr
-parameter_list|()
+parameter_list|(
+name|af
+parameter_list|)
 block|{
+name|int
+name|wid_dst
+decl_stmt|,
+name|wid_gw
+decl_stmt|;
+name|wid_dst
+operator|=
+ifdef|#
+directive|ifdef
+name|INET6
+name|af
+operator|==
+name|AF_INET6
+condition|?
+name|WID_DST6
+else|:
+endif|#
+directive|endif
+name|WID_DST
+expr_stmt|;
+name|wid_gw
+operator|=
+ifdef|#
+directive|ifdef
+name|INET6
+name|af
+operator|==
+name|AF_INET6
+condition|?
+name|WID_GW6
+else|:
+endif|#
+directive|endif
+name|WID_GW
+expr_stmt|;
 if|if
 condition|(
 name|Aflag
@@ -1018,15 +1052,15 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*.*s %-6.6s  %6.6s%8.8s  %8.8s %6s\n"
 argument_list|,
-name|WID_DST
+name|wid_dst
 argument_list|,
-name|WID_DST
+name|wid_dst
 argument_list|,
 literal|"Destination"
 argument_list|,
-name|WID_GW
+name|wid_gw
 argument_list|,
-name|WID_GW
+name|wid_gw
 argument_list|,
 literal|"Gateway"
 argument_list|,
@@ -1046,15 +1080,15 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*.*s %-6.6s  %8.8s %6s\n"
 argument_list|,
-name|WID_DST
+name|wid_dst
 argument_list|,
-name|WID_DST
+name|wid_dst
 argument_list|,
 literal|"Destination"
 argument_list|,
-name|WID_GW
+name|wid_gw
 argument_list|,
-name|WID_GW
+name|wid_gw
 argument_list|,
 literal|"Gateway"
 argument_list|,
@@ -2939,6 +2973,21 @@ name|rt
 operator|->
 name|rt_flags
 argument_list|,
+ifdef|#
+directive|ifdef
+name|INET6
+name|addr
+operator|.
+name|u_sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+condition|?
+name|WID_DST6
+else|:
+endif|#
+directive|endif
 name|WID_DST
 argument_list|)
 expr_stmt|;
@@ -2955,6 +3004,24 @@ name|NULL
 argument_list|,
 name|RTF_HOST
 argument_list|,
+ifdef|#
+directive|ifdef
+name|INET6
+name|kgetsa
+argument_list|(
+name|rt
+operator|->
+name|rt_gateway
+argument_list|)
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|?
+name|WID_GW6
+else|:
+endif|#
+directive|endif
 name|WID_GW
 argument_list|)
 expr_stmt|;
