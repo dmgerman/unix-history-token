@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.15 1995/05/30 03:55:13 rgrimes Exp $"
+literal|"$Id: ypbind.c,v 1.15.4.1 1995/08/26 12:56:07 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -859,6 +859,32 @@ name|ypbind_error
 operator|=
 name|YPBIND_ERR_NOSERV
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|argp
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Domain name '%s' has embedded slash -- \ rejecting."
+argument_list|,
+name|argp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|res
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|ypdb
@@ -1178,6 +1204,31 @@ name|fromsin
 decl_stmt|,
 name|bindsin
 decl_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|argp
+operator|->
+name|ypsetdom_domain
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Domain name '%s' has embedded slash -- \ rejecting."
+argument_list|,
+name|argp
+operator|->
+name|ypsetdom_domain
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|fromsin
 operator|=
 name|svc_getcaller
