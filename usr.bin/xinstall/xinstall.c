@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.5 1996/02/08 06:17:50 pst Exp $"
+literal|"$Id: xinstall.c,v 1.1.1.1.6.3 1996/02/22 19:43:36 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2339,6 +2339,7 @@ literal|1
 operator|||
 name|status
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2347,6 +2348,12 @@ argument_list|(
 name|to_name
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_SOFTWARE
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function
