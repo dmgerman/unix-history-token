@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -391,10 +391,6 @@ operator|(
 expr|struct
 name|segment
 operator|*
-operator|,
-expr|struct
-name|vnode
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -627,6 +623,12 @@ operator|->
 name|seg_flags
 operator|=
 name|SEGM_CKP
+expr_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 * Keep a cumulative count of the outstanding I/O operations.  If the 	 * disk drive catches up with us it could go to zero before we finish, 	 * so we artificially increment it by one until we've scheduled all of 	 * the writes we intend to do. 	 */
 name|s
@@ -1218,6 +1220,12 @@ condition|?
 name|SEGM_CKP
 else|:
 literal|0
+expr_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|NULL
 expr_stmt|;
 name|lfs_initseg
 argument_list|(
@@ -2511,6 +2519,24 @@ name|int
 name|version
 decl_stmt|;
 comment|/* 	 * If full, finish this segment.  We may be doing I/O, so 	 * release and reacquire the splbio(). 	 */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+if|if
+condition|(
+name|sp
+operator|->
+name|vp
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"lfs_gatherblock: Null vp in segment"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|fs
 operator|=
 name|sp
@@ -2550,10 +2576,6 @@ expr_stmt|;
 name|lfs_updatemeta
 argument_list|(
 name|sp
-argument_list|,
-name|bp
-operator|->
-name|b_vp
 argument_list|)
 expr_stmt|;
 comment|/* Add the current file to the segment summary. */
@@ -2613,9 +2635,9 @@ name|fi_ino
 operator|=
 name|VTOI
 argument_list|(
-name|bp
+name|sp
 operator|->
-name|b_vp
+name|vp
 argument_list|)
 operator|->
 name|i_number
@@ -2768,6 +2790,12 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|vp
+expr_stmt|;
 name|s
 operator|=
 name|splbio
@@ -2876,9 +2904,13 @@ expr_stmt|;
 name|lfs_updatemeta
 argument_list|(
 name|sp
-argument_list|,
-name|vp
 argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|vp
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 end_block
@@ -2892,18 +2924,11 @@ name|void
 name|lfs_updatemeta
 parameter_list|(
 name|sp
-parameter_list|,
-name|vp
 parameter_list|)
 name|struct
 name|segment
 modifier|*
 name|sp
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
 decl_stmt|;
 block|{
 name|SEGUSE
@@ -2919,6 +2944,11 @@ name|struct
 name|lfs
 modifier|*
 name|fs
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
 decl_stmt|;
 name|INDIR
 name|a
@@ -2952,6 +2982,12 @@ name|nblocks
 decl_stmt|,
 name|num
 decl_stmt|;
+name|vp
+operator|=
+name|sp
+operator|->
+name|vp
+expr_stmt|;
 name|nblocks
 operator|=
 operator|&
@@ -2974,6 +3010,10 @@ name|start_lbp
 expr_stmt|;
 if|if
 condition|(
+name|vp
+operator|==
+name|NULL
+operator|||
 name|nblocks
 operator|==
 literal|0
@@ -5153,6 +5193,8 @@ name|bp
 operator|->
 name|b_flags
 operator||=
+name|B_BUSY
+operator||
 name|B_CALL
 operator||
 name|B_NOCACHE
