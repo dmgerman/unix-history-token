@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)if_imphost.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -522,7 +522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset a given imp unit's host entries.  */
+comment|/*  * Reset a given imp unit's host entries.  * Must be called at splimp.  */
 end_comment
 
 begin_macro
@@ -786,6 +786,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Release mbufs in host table that contain no entries  * currently in use.  Must be called at splimp.  */
+end_comment
+
 begin_macro
 name|hostcompress
 argument_list|(
@@ -811,15 +815,29 @@ modifier|*
 modifier|*
 name|mprev
 decl_stmt|;
-name|mprev
-operator|=
+name|struct
+name|imp_softc
+modifier|*
+name|sc
+init|=
 operator|&
 name|imp_softc
 index|[
 name|unit
 index|]
-operator|.
+decl_stmt|;
+name|mprev
+operator|=
+operator|&
+name|sc
+operator|->
 name|imp_hosts
+expr_stmt|;
+name|sc
+operator|->
+name|imp_hostq
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
