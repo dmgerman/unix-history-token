@@ -4395,6 +4395,14 @@ name|backing_object
 operator|=
 name|source
 expr_stmt|;
+comment|/* 	 * Store the offset into the source object, and fix up the offset into 	 * the new object. 	 */
+name|result
+operator|->
+name|backing_object_offset
+operator|=
+operator|*
+name|offset
+expr_stmt|;
 if|if
 condition|(
 name|source
@@ -4507,14 +4515,6 @@ operator|&
 name|PQ_L2_MASK
 expr_stmt|;
 block|}
-comment|/* 	 * Store the offset into the source object, and fix up the offset into 	 * the new object. 	 */
-name|result
-operator|->
-name|backing_object_offset
-operator|=
-operator|*
-name|offset
-expr_stmt|;
 comment|/* 	 * Return the new things 	 */
 operator|*
 name|offset
