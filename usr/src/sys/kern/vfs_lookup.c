@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.43 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.44 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1298,7 +1298,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 */
+comment|/* 	 * Handle "..": two special cases. 	 * 1. If at root directory (e.g. after chroot) 	 *    or at absolute root directory 	 *    then ignore it so can't get out. 	 * 2. If this vnode is the root of a mounted 	 *    filesystem, then replace it with the 	 *    vnode which was mounted on so we take the 	 *    .. in the other file system. 	 */
 if|if
 condition|(
 name|cnp
@@ -1321,6 +1321,10 @@ operator|==
 name|ndp
 operator|->
 name|ni_rootdir
+operator|||
+name|dp
+operator|==
+name|rootdir
 condition|)
 block|{
 name|ndp
