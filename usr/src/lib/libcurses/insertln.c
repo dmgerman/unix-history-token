@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine performs an insert-line on the window, leaving  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)insertln.c	1.2  */
+comment|/*  *	This routine performs an insert-line on the window, leaving  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)insertln.c	1.3  */
 end_comment
 
 begin_macro
@@ -48,7 +48,9 @@ name|_y
 index|[
 name|win
 operator|->
-name|_cury
+name|_maxy
+operator|-
+literal|1
 index|]
 expr_stmt|;
 name|win
@@ -158,6 +160,21 @@ name|temp
 operator|++
 operator|=
 literal|' '
+expr_stmt|;
+name|win
+operator|->
+name|_y
+index|[
+name|win
+operator|->
+name|_cury
+index|]
+operator|=
+name|temp
+operator|-
+name|win
+operator|->
+name|_maxx
 expr_stmt|;
 block|}
 end_block

@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine deletes a line from the screen.  It leaves  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)deleteln.c	1.2  */
+comment|/*  *	This routine deletes a line from the screen.  It leaves  * (_cury,_curx) unchanged.  *  * %G% (Berkeley) @(#)deleteln.c	1.3  */
 end_comment
 
 begin_macro
@@ -143,6 +143,10 @@ literal|1
 index|]
 operator|=
 name|temp
+operator|-
+name|win
+operator|->
+name|_maxx
 expr_stmt|;
 block|}
 end_block
