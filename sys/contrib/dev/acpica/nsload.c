@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiLoadNamespace  *  * PARAMETERS:  DisplayAmlDuringLoad  *  * RETURN:      Status  *  * DESCRIPTION: Load the name space from what ever is pointed to by DSDT.  *              (DSDT points to either the BIOS or a buffer.)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLoadNamespace  *  * PARAMETERS:  DisplayAmlDuringLoad  *  * RETURN:      Status  *  * DESCRIPTION: Load the name space from what ever is pointed to by DSDT.  *              (DSDT points to either the BIOS or a buffer.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -96,7 +96,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -278,12 +278,12 @@ operator|=
 name|ACPI_ROOT_NAME
 expr_stmt|;
 comment|/* Pass 1:  Parse everything except control method bodies */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"NsParseTable: *PARSE* pass %d parse\n"
+literal|"*PARSE* pass %d parse\n"
 operator|,
 name|PassNumber
 operator|)
@@ -413,7 +413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiNsLoadTable  *  * PARAMETERS:  *PcodeAddr          - Address of pcode block  *              PcodeLength         - Length of pcode block  *  * RETURN:      Status  *  * DESCRIPTION: Load one ACPI table into the namespace  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLoadTable  *  * PARAMETERS:  *PcodeAddr          - Address of pcode block  *              PcodeLength         - Length of pcode block  *  * RETURN:      Status  *  * DESCRIPTION: Load one ACPI table into the namespace  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -445,12 +445,12 @@ operator|->
 name|AmlPointer
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsLoadTable: Null AML pointer\n"
+literal|"Null AML pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -460,12 +460,12 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTable: AML block at %p\n"
+literal|"AML block at %p\n"
 operator|,
 name|TableDesc
 operator|->
@@ -481,12 +481,12 @@ operator|->
 name|AmlLength
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"NsLoadTable: Zero-length AML block\n"
+literal|"Zero-length AML block\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -497,16 +497,16 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Parse the table and load the namespace with all named      * objects found within.  Control methods are NOT parsed      * at this time.  In fact, the control methods cannot be      * parsed until the entire namespace is loaded, because      * if a control method makes a forward reference (call)      * to another control method, we can't continue parsing      * because we don't know how many arguments to parse next!      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTable: **** Loading table into namespace ****\n"
+literal|"**** Loading table into namespace ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -522,7 +522,7 @@ operator|->
 name|Child
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -542,12 +542,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Now we can parse the control methods.  We always parse      * them here for a sanity check, and if configured for      * just-in-time parsing, we delete the control method      * parse trees.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTable: **** Begin Table Method Parsing and Object Initialization ****\n"
+literal|"**** Begin Table Method Parsing and Object Initialization ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -560,12 +560,12 @@ argument_list|,
 name|Node
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTable: **** Completed Table Method Parsing and Object Initialization ****\n"
+literal|"**** Completed Table Method Parsing and Object Initialization ****\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -578,7 +578,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsLoadTableByType  *  * PARAMETERS:  TableType           - Id of the table type to load  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table or tables into the namespace.  All tables  *              of the given type are loaded.  The mechanism allows this  *              routine to be called repeatedly.  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsLoadTableByType  *  * PARAMETERS:  TableType           - Id of the table type to load  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table or tables into the namespace.  All tables  *              of the given type are loaded.  The mechanism allows this  *              routine to be called repeatedly.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -597,10 +597,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_TABLE_HEADER
-modifier|*
-name|TablePtr
-decl_stmt|;
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableDesc
@@ -610,7 +606,7 @@ argument_list|(
 literal|"NsLoadTableByType"
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -624,12 +620,12 @@ block|{
 case|case
 name|ACPI_TABLE_DSDT
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTableByType: Loading DSDT\n"
+literal|"Loading DSDT\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -688,12 +684,12 @@ break|break;
 case|case
 name|ACPI_TABLE_SSDT
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTableByType: Loading %d SSDTs\n"
+literal|"Loading %d SSDTs\n"
 operator|,
 name|AcpiGbl_AcpiTables
 index|[
@@ -732,12 +728,6 @@ name|i
 operator|++
 control|)
 block|{
-name|TablePtr
-operator|=
-name|TableDesc
-operator|->
-name|Pointer
-expr_stmt|;
 comment|/*              * Only attempt to load table if it is not              * already loaded!              */
 if|if
 condition|(
@@ -784,12 +774,12 @@ break|break;
 case|case
 name|ACPI_TABLE_PSDT
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"NsLoadTableByType: Loading %d PSDTs\n"
+literal|"Loading %d PSDTs\n"
 operator|,
 name|AcpiGbl_AcpiTables
 index|[
@@ -828,12 +818,6 @@ name|i
 operator|++
 control|)
 block|{
-name|TablePtr
-operator|=
-name|TableDesc
-operator|->
-name|Pointer
-expr_stmt|;
 comment|/* Only attempt to load table if it is not already loaded! */
 if|if
 condition|(
@@ -882,10 +866,11 @@ name|Status
 operator|=
 name|AE_SUPPORT
 expr_stmt|;
+break|break;
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_TABLES
 argument_list|)
@@ -899,7 +884,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiNsDeleteSubtree  *  * PARAMETERS:  StartHandle         - Handle in namespace where search begins  *  * RETURNS      Status  *  * DESCRIPTION: Walks the namespace starting at the given handle and deletes  *              all objects, entries, and scopes in the entire subtree.  *  *              TBD: [Investigate] What if any part of this subtree is in use?  *              (i.e. on one of the object stacks?)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDeleteSubtree  *  * PARAMETERS:  StartHandle         - Handle in namespace where search begins  *  * RETURNS      Status  *  * DESCRIPTION: Walks the namespace starting at the given handle and deletes  *              all objects, entries, and scopes in the entire subtree.  *  *              TBD: [Investigate] What if any part of this subtree is in use?  *              (i.e. on one of the object stacks?)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1055,7 +1040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event.  Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ****************************************************************************/
+comment|/*******************************************************************************  *  *  FUNCTION:       AcpiNsUnloadNameSpace  *  *  PARAMETERS:     Handle          - Root of namespace subtree to be deleted  *  *  RETURN:         Status  *  *  DESCRIPTION:    Shrinks the namespace, typically in response to an undocking  *                  event.  Deletes an entire subtree starting from (and  *                  including) the given handle.  *  ******************************************************************************/
 end_comment
 
 begin_function

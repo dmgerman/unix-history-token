@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmcopy - Internal to external object translation utilities  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMCOPY_C__
+name|__UTCOPY_C__
 end_define
 
 begin_include
@@ -41,24 +41,24 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmcopy"
+literal|"utcopy"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIsimpleToEsimple  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *Buffer             - Where the object is returned  *              *SpaceUsed          - Where the data length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a simple object in a user  *              buffer.  *  *              The buffer is assumed to have sufficient space for the object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIsimpleToEsimple  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *Buffer             - Where the object is returned  *              *SpaceUsed          - Where the data length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a simple object in a user  *              buffer.  *  *              The buffer is assumed to have sufficient space for the object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiCmCopyIsimpleToEsimple
+name|AcpiUtCopyIsimpleToEsimple
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -89,7 +89,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyIsimpleToEsimple"
+literal|"UtCopyIsimpleToEsimple"
 argument_list|)
 expr_stmt|;
 comment|/*      * Check for NULL object case (could be an uninitialized      * package element      */
@@ -282,7 +282,7 @@ name|InternalObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -340,7 +340,7 @@ name|ACPI_INTEGER_MAX
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 comment|/*              * This is a named reference, get the string.  We already know that              * we have room for it, use max length              */
 name|Length
@@ -389,9 +389,18 @@ operator|)
 name|DataSpace
 argument_list|)
 expr_stmt|;
+comment|/* Converted (external) string length is returned from above */
+name|ExternalObject
+operator|->
+name|String
+operator|.
+name|Length
+operator|=
+name|Length
+expr_stmt|;
 break|break;
 default|default:
-comment|/*               * Use the object type of "Any" to indicate a reference              * to object containing a handle to an ACPI named object.              */
+comment|/*              * Use the object type of "Any" to indicate a reference              * to object containing a handle to an ACPI named object.              */
 name|ExternalObject
 operator|->
 name|Type
@@ -510,12 +519,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIelementToEelement  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Copy one package element to another package element  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIelementToEelement  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status  *  * DESCRIPTION: Copy one package element to another package element  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyIelementToEelement
+name|AcpiUtCopyIelementToEelement
 parameter_list|(
 name|UINT8
 name|ObjectType
@@ -600,12 +609,12 @@ name|ObjectType
 condition|)
 block|{
 case|case
-literal|0
+name|ACPI_COPY_TYPE_SIMPLE
 case|:
 comment|/*          * This is a simple or null object -- get the size          */
 name|Status
 operator|=
-name|AcpiCmCopyIsimpleToEsimple
+name|AcpiUtCopyIsimpleToEsimple
 argument_list|(
 name|SourceObject
 argument_list|,
@@ -635,7 +644,7 @@ return|;
 block|}
 break|break;
 case|case
-literal|1
+name|ACPI_COPY_TYPE_PACKAGE
 case|:
 comment|/*          * Build the package object          */
 name|TargetObject
@@ -728,13 +737,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIpackageToEpackage  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are returning  *              *Buffer             - Where the object is returned  *              *SpaceUsed          - Where the object length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiCmGetObjectSize function before calling this function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToEpackage  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are returning  *              *Buffer             - Where the object is returned  *              *SpaceUsed          - Where the object length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiUtGetObjectSize function before calling this function.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiCmCopyIpackageToEpackage
+name|AcpiUtCopyIpackageToEpackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -761,7 +770,7 @@ name|Info
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyIpackageToEpackage"
+literal|"UtCopyIpackageToEpackage"
 argument_list|)
 expr_stmt|;
 comment|/*      * First package at head of the buffer      */
@@ -863,13 +872,13 @@ argument_list|)
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiCmWalkPackageTree
+name|AcpiUtWalkPackageTree
 argument_list|(
 name|InternalObject
 argument_list|,
 name|ExternalObject
 argument_list|,
-name|AcpiCmCopyIelementToEelement
+name|AcpiUtCopyIelementToEelement
 argument_list|,
 operator|&
 name|Info
@@ -891,12 +900,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIobjectToEobject  *  * PARAMETERS:  *InternalObject     - The internal object to be converted  *              *BufferPtr          - Where the object is returned  *  * RETURN:      Status   *  * DESCRIPTION: This function is called to build an API object to be returned to  *              the caller.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIobjectToEobject  *  * PARAMETERS:  *InternalObject     - The internal object to be converted  *              *BufferPtr          - Where the object is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to build an API object to be returned to  *              the caller.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyIobjectToEobject
+name|AcpiUtCopyIobjectToEobject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -912,7 +921,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyIobjectToEobject"
+literal|"UtCopyIobjectToEobject"
 argument_list|)
 expr_stmt|;
 if|if
@@ -925,10 +934,10 @@ name|ACPI_TYPE_PACKAGE
 argument_list|)
 condition|)
 block|{
-comment|/*          * Package object:  Copy all subobjects (including           * nested packages)          */
+comment|/*          * Package object:  Copy all subobjects (including          * nested packages)          */
 name|Status
 operator|=
-name|AcpiCmCopyIpackageToEpackage
+name|AcpiUtCopyIpackageToEpackage
 argument_list|(
 name|InternalObject
 argument_list|,
@@ -948,7 +957,7 @@ block|{
 comment|/*          * Build a simple object (no nested objects)          */
 name|Status
 operator|=
-name|AcpiCmCopyIsimpleToEsimple
+name|AcpiUtCopyIsimpleToEsimple
 argument_list|(
 name|InternalObject
 argument_list|,
@@ -1004,12 +1013,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyEsimpleToIsimple  *  * PARAMETERS:  *ExternalObject    - The external object to be converted  *              *InternalObject    - Where the internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function copies an external object to an internal one.  *              NOTE: Pointers can be copied, we don't need to copy data.  *              (The pointers have to be valid in our address space no matter  *              what we do with them!)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyEsimpleToIsimple  *  * PARAMETERS:  *ExternalObject    - The external object to be converted  *              *InternalObject    - Where the internal object is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function copies an external object to an internal one.  *              NOTE: Pointers can be copied, we don't need to copy data.  *              (The pointers have to be valid in our address space no matter  *              what we do with them!)  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyEsimpleToIsimple
+name|AcpiUtCopyEsimpleToIsimple
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -1022,7 +1031,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyEsimpleToIsimple"
+literal|"UtCopyEsimpleToIsimple"
 argument_list|)
 expr_stmt|;
 name|InternalObject
@@ -1145,13 +1154,13 @@ comment|/* Code to convert packages that are parameters to control methods */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyEpackageToIpackage  *  * PARAMETERS:  *InternalObject    - Pointer to the object we are returning  *              *Buffer         - Where the object is returned  *              *SpaceUsed      - Where the length of the object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiCmGetObjectSize function before calling this function.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyEpackageToIpackage  *  * PARAMETERS:  *InternalObject    - Pointer to the object we are returning  *              *Buffer         - Where the object is returned  *              *SpaceUsed      - Where the length of the object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiUtGetObjectSize function before calling this function.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiCmCopyEpackageToIpackage
+name|AcpiUtCopyEpackageToIpackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1197,7 +1206,7 @@ name|ThisExternalObj
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyEpackageToIpackage"
+literal|"UtCopyEpackageToIpackage"
 argument_list|)
 expr_stmt|;
 comment|/*      * First package at head of the buffer      */
@@ -1281,12 +1290,12 @@ comment|/* Future implementation */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyEobjectToIobject  *  * PARAMETERS:  *InternalObject    - The external object to be converted  *              *BufferPtr      - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Converts an external object to an internal object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyEobjectToIobject  *  * PARAMETERS:  *InternalObject    - The external object to be converted  *              *BufferPtr      - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Converts an external object to an internal object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyEobjectToIobject
+name|AcpiUtCopyEobjectToIobject
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -1302,7 +1311,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiCmCopyEobjectToIobject"
+literal|"UtCopyEobjectToIobject"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1315,13 +1324,13 @@ name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
 comment|/*          * Package objects contain other objects (which can be objects)          * buildpackage does it all          *          * TBD: Package conversion must be completed and tested          * NOTE: this code converts packages as input parameters to          * control methods only.  This is a very, very rare case.          */
-comment|/*         Status = AcpiCmCopyEpackageToIpackage(InternalObject,                                                   RetBuffer->Pointer,&RetBuffer->Length); */
-name|DEBUG_PRINT
+comment|/*         Status = AcpiUtCopyEpackageToIpackage(InternalObject,                                                   RetBuffer->Pointer,&RetBuffer->Length); */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiCmCopyEobjectToIobject: Packages as parameters not implemented!\n"
+literal|"Packages as parameters not implemented!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1336,7 +1345,7 @@ block|{
 comment|/*          * Build a simple object (no nested objects)          */
 name|Status
 operator|=
-name|AcpiCmCopyEsimpleToIsimple
+name|AcpiUtCopyEsimpleToIsimple
 argument_list|(
 name|ExternalObject
 argument_list|,
@@ -1354,12 +1363,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIelementToIelement  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Copy one package element to another package element  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIelementToIelement  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Copy one package element to another package element  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyIelementToIelement
+name|AcpiUtCopyIelementToIelement
 parameter_list|(
 name|UINT8
 name|ObjectType
@@ -1434,7 +1443,7 @@ case|:
 comment|/*          * This is a simple object, just copy it          */
 name|TargetObject
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|SourceObject
 operator|->
@@ -1457,7 +1466,7 @@ return|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlStoreObjectToObject
+name|AcpiExStoreObjectToObject
 argument_list|(
 name|SourceObject
 argument_list|,
@@ -1493,10 +1502,10 @@ break|break;
 case|case
 literal|1
 case|:
-comment|/*          * This object is a package - go down another nesting level           * Create and build the package object          */
+comment|/*          * This object is a package - go down another nesting level          * Create and build the package object          */
 name|TargetObject
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_PACKAGE
 argument_list|)
@@ -1558,12 +1567,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyIpackageToIpackage  *  * PARAMETERS:  *SourceObj      - Pointer to the source package object  *              *DestObj        - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to copy an internal package object  *              into another internal package object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCopyIpackageToIpackage  *  * PARAMETERS:  *SourceObj      - Pointer to the source package object  *              *DestObj        - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to copy an internal package object  *              into another internal package object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmCopyIpackageToIpackage
+name|AcpiUtCopyIpackageToIpackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1585,7 +1594,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmCopyIpackageToIpackage"
+literal|"UtCopyIpackageToIpackage"
 argument_list|)
 expr_stmt|;
 name|DestObj
@@ -1619,7 +1628,7 @@ name|Package
 operator|.
 name|Elements
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 operator|(
 name|SourceObj
@@ -1675,13 +1684,13 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiCmWalkPackageTree
+name|AcpiUtWalkPackageTree
 argument_list|(
 name|SourceObj
 argument_list|,
 name|DestObj
 argument_list|,
-name|AcpiCmCopyIelementToIelement
+name|AcpiUtCopyIelementToIelement
 argument_list|,
 name|WalkState
 argument_list|)

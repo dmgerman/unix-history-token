@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cminit - Common ACPI subsystem initialization  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMINIT_C__
+name|__UTINIT_C__
 end_define
 
 begin_include
@@ -53,13 +53,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cminit"
+literal|"utinit"
 argument_list|)
 end_macro
 
@@ -86,13 +86,13 @@ value|ACPI_OFFSET (FADT_DESCRIPTOR, o)
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmFadtRegisterError  *  * PARAMETERS:  *RegisterName           - Pointer to string identifying register  *              Value                   - Actual register contents value  *              AcpiTestSpecSection     - TDS section containing assertion  *              AcpiAssertion           - Assertion number being tested  *  * RETURN:      AE_BAD_VALUE  *  * DESCRIPTION: Display failure message and link failure to TDS assertion  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFadtRegisterError  *  * PARAMETERS:  *RegisterName           - Pointer to string identifying register  *              Value                   - Actual register contents value  *              AcpiTestSpecSection     - TDS section containing assertion  *              AcpiAssertion           - Assertion number being tested  *  * RETURN:      AE_BAD_VALUE  *  * DESCRIPTION: Display failure message and link failure to TDS assertion  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -129,12 +129,12 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmValidateFadt  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Validate various ACPI registers in the FADT  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiUtValidateFadt  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Validate various ACPI registers in the FADT  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmValidateFadt
+name|AcpiUtValidateFadt
 parameter_list|(
 name|void
 parameter_list|)
@@ -156,7 +156,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"PM1_EVT_LEN"
 argument_list|,
@@ -184,7 +184,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"PM1_CNT_LEN"
 argument_list|,
@@ -212,7 +212,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"X_PM1a_EVT_BLK"
 argument_list|,
@@ -242,7 +242,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"X_PM1a_CNT_BLK"
 argument_list|,
@@ -272,7 +272,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"X_PM_TMR_BLK"
 argument_list|,
@@ -308,7 +308,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"PM2_CNT_LEN"
 argument_list|,
@@ -337,7 +337,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"PM_TM_LEN"
 argument_list|,
@@ -378,7 +378,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"(x)GPE0_BLK_LEN"
 argument_list|,
@@ -418,7 +418,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmFadtRegisterError
+name|AcpiUtFadtRegisterError
 argument_list|(
 literal|"(x)GPE1_BLK_LEN"
 argument_list|,
@@ -445,19 +445,19 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiUtTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmTerminate
+name|AcpiUtTerminate
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmTerminate"
+literal|"UtTerminate"
 argument_list|)
 expr_stmt|;
 comment|/* Free global tables, etc. */
@@ -466,7 +466,7 @@ condition|(
 name|AcpiGbl_Gpe0EnableRegisterSave
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_Gpe0EnableRegisterSave
 argument_list|)
@@ -477,7 +477,7 @@ condition|(
 name|AcpiGbl_Gpe1EnableRegisterSave
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_Gpe1EnableRegisterSave
 argument_list|)
@@ -489,19 +489,19 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiCmSubsystemShutdown  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Shutdown the various subsystems.  Don't delete the mutex  *              objects here -- because the AML debugger may be still running.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtSubsystemShutdown  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Shutdown the various subsystems.  Don't delete the mutex  *              objects here -- because the AML debugger may be still running.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmSubsystemShutdown
+name|AcpiUtSubsystemShutdown
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmSubsystemShutdown"
+literal|"UtSubsystemShutdown"
 argument_list|)
 expr_stmt|;
 comment|/* Just exit if subsystem is already shutdown */
@@ -510,7 +510,7 @@ condition|(
 name|AcpiGbl_Shutdown
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -530,7 +530,7 @@ name|AcpiGbl_Shutdown
 operator|=
 name|TRUE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -548,14 +548,14 @@ name|AcpiEvTerminate
 argument_list|()
 expr_stmt|;
 comment|/* Close the globals */
-name|AcpiCmTerminate
+name|AcpiUtTerminate
 argument_list|()
 expr_stmt|;
 comment|/* Flush the local cache(s) */
-name|AcpiCmDeleteGenericStateCache
+name|AcpiUtDeleteGenericStateCache
 argument_list|()
 expr_stmt|;
-name|AcpiCmDeleteObjectCache
+name|AcpiUtDeleteObjectCache
 argument_list|()
 expr_stmt|;
 name|AcpiDsDeleteWalkStateCache
@@ -570,7 +570,7 @@ comment|/* Debug only - display leftover memory allocation, if any */
 ifdef|#
 directive|ifdef
 name|ENABLE_DEBUGGER
-name|AcpiCmDumpCurrentAllocations
+name|AcpiUtDumpCurrentAllocations
 argument_list|(
 name|ACPI_UINT32_MAX
 argument_list|,

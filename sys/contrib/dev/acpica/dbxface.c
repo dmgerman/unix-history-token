@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 37 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -65,7 +65,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -164,7 +164,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 condition|)
 block|{
 return|return
@@ -218,7 +218,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 return|return
 operator|(
@@ -442,7 +442,7 @@ name|Op
 operator|->
 name|Opcode
 operator|!=
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 condition|)
 block|{
 comment|/* Not a method call, just keep executing */
@@ -465,7 +465,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 condition|)
 block|{
 name|AcpiGbl_CmSingleStep
@@ -485,7 +485,7 @@ expr_stmt|;
 comment|/* Must be non-zero! */
 block|}
 comment|/* TBD: [Investigate] what are the namespace locking issues here */
-comment|/* AcpiCmReleaseMutex (ACPI_MTX_NAMESPACE); */
+comment|/* AcpiUtReleaseMutex (ACPI_MTX_NAMESPACE); */
 comment|/* Go into the command loop and await next user command */
 name|AcpiGbl_MethodExecuting
 operator|=
@@ -510,12 +510,12 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/* Handshake with the front-end that gets user command lines */
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_COMPLETE
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_READY
 argument_list|)
@@ -574,7 +574,7 @@ name|Op
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* AcpiCmAcquireMutex (ACPI_MTX_NAMESPACE); */
+comment|/* AcpiUtAcquireMutex (ACPI_MTX_NAMESPACE); */
 comment|/* User commands complete, continue execution of the interrupted method */
 return|return
 operator|(
@@ -627,12 +627,12 @@ name|DEBUGGER_MULTI_THREADED
 condition|)
 block|{
 comment|/* These were created with one unit, grab it */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_COMPLETE
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_DEBUG_CMD_READY
 argument_list|)

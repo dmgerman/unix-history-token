@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -138,14 +138,14 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsGetPredicateValue: Could not get result from predicate evaluation, %s\n"
+literal|"Could not get result from predicate evaluation, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -188,7 +188,7 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 operator|&
 name|WalkState
@@ -231,12 +231,12 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecEndOp: No predicate ObjDesc=%X State=%X\n"
+literal|"No predicate ObjDesc=%X State=%X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -262,12 +262,12 @@ operator|!=
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecEndOp: Bad predicate (not a number) ObjDesc=%X State=%X Type=%X\n"
+literal|"Bad predicate (not a number) ObjDesc=%X State=%X Type=%X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -290,7 +290,7 @@ name|Cleanup
 goto|;
 block|}
 comment|/* Truncate the predicate to 32-bits if necessary */
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -338,12 +338,12 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"ExecEndOp: Completed a predicate eval=%X Op=%X\n"
+literal|"Completed a predicate eval=%X Op=%X\n"
 operator|,
 name|WalkState
 operator|->
@@ -369,7 +369,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Delete the predicate result object (we know that      * we don't need it anymore)      */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -520,12 +520,12 @@ name|CONTROL_CONDITIONAL_EXECUTING
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"BeginOp: Exec predicate Op=%X State=%X\n"
+literal|"Exec predicate Op=%X State=%X\n"
 operator|,
 name|Op
 operator|,
@@ -571,7 +571,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
 name|OpInfo
@@ -761,10 +761,6 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|NextOp
 decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-decl_stmt|;
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|FirstArg
@@ -778,9 +774,6 @@ decl_stmt|;
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
-decl_stmt|;
-name|UINT32
-name|OperandIndex
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
@@ -817,14 +810,16 @@ operator|!=
 name|ACPI_OP_TYPE_OPCODE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecEndOp: Unknown opcode. Op=%X\n"
+literal|"Unknown opcode %X\n"
 operator|,
 name|Op
+operator|->
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -906,12 +901,12 @@ block|{
 case|case
 name|OPTYPE_UNDEFINED
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecEndOp: Undefined opcode type Op=%X\n"
+literal|"Undefined opcode type Op=%X\n"
 operator|,
 name|Op
 operator|)
@@ -926,12 +921,12 @@ break|break;
 case|case
 name|OPTYPE_BOGUS
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"ExecEndOp: Internal opcode=%X type Op=%X\n"
+literal|"Internal opcode=%X type Op=%X\n"
 operator|,
 name|Opcode
 operator|,
@@ -1017,14 +1012,6 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|OperandIndex
-operator|=
-name|WalkState
-operator|->
-name|NumOperands
-operator|-
-literal|1
-expr_stmt|;
 comment|/* Done with this result state (Now that operand stack is built) */
 name|Status
 operator|=
@@ -1056,7 +1043,7 @@ case|:
 comment|/* 1 Operand, 0 ExternalResult, 0 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecMonadic1
+name|AcpiExMonadic1
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1070,7 +1057,7 @@ case|:
 comment|/* 1 Operand, 0 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecMonadic2
+name|AcpiExMonadic2
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1087,7 +1074,7 @@ case|:
 comment|/* 1 Operand, 1 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecMonadic2R
+name|AcpiExMonadic2R
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1104,7 +1091,7 @@ case|:
 comment|/* 2 Operands, 0 ExternalResult, 0 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecDyadic1
+name|AcpiExDyadic1
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1118,7 +1105,7 @@ case|:
 comment|/* 2 Operands, 0 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecDyadic2
+name|AcpiExDyadic2
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1135,7 +1122,7 @@ case|:
 comment|/* 2 Operands, 1 or 2 ExternalResults, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecDyadic2R
+name|AcpiExDyadic2R
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1153,7 +1140,7 @@ comment|/* Synchronization Operator */
 comment|/* 2 Operands, 0 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecDyadic2S
+name|AcpiExDyadic2S
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1171,7 +1158,7 @@ comment|/* Type 2 opcode with 3 operands */
 comment|/* 3 Operands, 1 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecIndex
+name|AcpiExIndex
 argument_list|(
 name|WalkState
 argument_list|,
@@ -1187,7 +1174,7 @@ comment|/* Type 2 opcode with 6 operands */
 comment|/* 6 Operands, 0 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecMatch
+name|AcpiExMatch
 argument_list|(
 name|WalkState
 argument_list|,
@@ -1202,7 +1189,7 @@ case|:
 comment|/* 1 or 2 operands, 0 Internal Result */
 name|Status
 operator|=
-name|AcpiAmlExecReconfiguration
+name|AcpiExReconfiguration
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1216,7 +1203,7 @@ case|:
 comment|/* 3 Operands, 0 ExternalResult, 0 InternalResult */
 name|Status
 operator|=
-name|AcpiAmlExecFatal
+name|AcpiExFatal
 argument_list|(
 name|WalkState
 argument_list|)
@@ -1268,12 +1255,12 @@ break|break;
 case|case
 name|OPTYPE_METHOD_CALL
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_DISPATCH
 argument_list|,
 operator|(
-literal|"ExecEndOp: Method invocation, Op=%X\n"
+literal|"Method invocation, Op=%X\n"
 operator|,
 name|Op
 operator|)
@@ -1284,12 +1271,6 @@ comment|/* NextOp points to the op that holds the method name */
 name|NextOp
 operator|=
 name|FirstArg
-expr_stmt|;
-name|Node
-operator|=
-name|NextOp
-operator|->
-name|Node
 expr_stmt|;
 comment|/* NextOp points to first argument op */
 name|NextOp
@@ -1351,12 +1332,12 @@ break|break;
 case|case
 name|OPTYPE_CREATE_FIELD
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"ExecEndOp: Executing CreateField Buffer/Index Op=%X\n"
+literal|"Executing CreateField Buffer/Index Op=%X\n"
 operator|,
 name|Op
 operator|)
@@ -1383,7 +1364,7 @@ break|break;
 block|}
 name|Status
 operator|=
-name|AcpiDsEvalFieldUnitOperands
+name|AcpiDsEvalBufferFieldOperands
 argument_list|(
 name|WalkState
 argument_list|,
@@ -1423,12 +1404,12 @@ block|{
 case|case
 name|AML_REGION_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"ExecEndOp: Executing OpRegion Address/Length Op=%X\n"
+literal|"Executing OpRegion Address/Length Op=%X\n"
 operator|,
 name|Op
 operator|)
@@ -1480,12 +1461,12 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecEndOp: Unimplemented opcode, type=%X Opcode=%X Op=%X\n"
+literal|"Unimplemented opcode, type=%X Opcode=%X Op=%X\n"
 operator|,
 name|Optype
 operator|,
@@ -1504,7 +1485,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*      * ACPI 2.0 support for 64-bit integers:      * Truncate numeric result value if we are executing from a 32-bit ACPI table      */
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|ResultObj
 argument_list|,

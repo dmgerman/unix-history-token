@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiInstallFixedEventHandler  *  * PARAMETERS:  Event           - Event type to enable.  *              Handler         - Pointer to the handler function for the  *                                event  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Saves the pointer to the handler function and then enables the  *              event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallFixedEventHandler  *  * PARAMETERS:  Event           - Event type to enable.  *              Handler         - Pointer to the handler function for the  *                                event  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Saves the pointer to the handler function and then enables the  *              event.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -74,7 +74,7 @@ parameter_list|(
 name|UINT32
 name|Event
 parameter_list|,
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -84,20 +84,38 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
-init|=
-name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiInstallFixedEventHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Sanity check the parameters. */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Parameter validation */
 if|if
 condition|(
 name|Event
-operator|>=
-name|NUM_FIXED_EVENTS
+operator|>
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -106,7 +124,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -169,7 +187,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
@@ -197,15 +215,10 @@ name|Context
 operator|=
 name|NULL
 expr_stmt|;
-name|Status
-operator|=
-name|AE_ERROR
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
 block|}
-name|DEBUG_PRINT
+else|else
+block|{
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -218,9 +231,10 @@ name|Handler
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|Cleanup
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -234,7 +248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiRemoveFixedEventHandler  *  * PARAMETERS:  Event           - Event type to disable.  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Disables the event and unregisters the event handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveFixedEventHandler  *  * PARAMETERS:  Event           - Event type to disable.  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Disables the event and unregisters the event handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -244,7 +258,7 @@ parameter_list|(
 name|UINT32
 name|Event
 parameter_list|,
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 name|Handler
 parameter_list|)
 block|{
@@ -258,12 +272,32 @@ argument_list|(
 literal|"AcpiRemoveFixedEventHandler"
 argument_list|)
 expr_stmt|;
-comment|/* Sanity check the parameters. */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Parameter validation */
 if|if
 condition|(
 name|Event
-operator|>=
-name|NUM_FIXED_EVENTS
+operator|>
+name|ACPI_EVENT_MAX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -272,7 +306,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -287,40 +321,7 @@ argument_list|,
 name|ACPI_EVENT_FIXED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_WARN
-argument_list|,
-operator|(
-literal|"Could not write to fixed event enable register.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_ERROR
-expr_stmt|;
-name|AcpiCmReleaseMutex
-argument_list|(
-name|ACPI_MTX_EVENTS
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Remove the handler */
+comment|/* Always Remove the handler */
 name|AcpiGbl_FixedEventHandlers
 index|[
 name|Event
@@ -339,7 +340,28 @@ name|Context
 operator|=
 name|NULL
 expr_stmt|;
-name|DEBUG_PRINT
+if|if
+condition|(
+operator|!
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_WARN
+argument_list|,
+operator|(
+literal|"Could not write to fixed event enable register.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -350,7 +372,8 @@ name|Event
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+block|}
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -364,7 +387,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiInstallNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for notifies on an ACPI device  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for notifies on an ACPI device  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -377,7 +400,7 @@ parameter_list|,
 name|UINT32
 name|HandlerType
 parameter_list|,
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -407,6 +430,26 @@ argument_list|(
 literal|"AcpiInstallNotifyHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -428,7 +471,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -601,9 +644,6 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|DeviceNode
 argument_list|)
 expr_stmt|;
@@ -658,7 +698,7 @@ block|{
 comment|/* Create a new object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|DeviceNode
 operator|->
@@ -712,7 +752,7 @@ block|}
 comment|/* Install the handler */
 name|NotifyObj
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_NOTIFY
 argument_list|)
@@ -786,7 +826,7 @@ block|}
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -800,7 +840,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveNotifyHandler  *  * PARAMETERS:  Device          - The device for which notifies will be handled  *              HandlerType     - The type of handler:  *                                  ACPI_SYSTEM_NOTIFY: SystemHandler (00-7f)  *                                  ACPI_DEVICE_NOTIFY: DriverHandler (80-ff)  *              Handler         - Address of the handler  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for notifies on an ACPI device  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -813,7 +853,7 @@ parameter_list|,
 name|UINT32
 name|HandlerType
 parameter_list|,
-name|NOTIFY_HANDLER
+name|ACPI_NOTIFY_HANDLER
 name|Handler
 parameter_list|)
 block|{
@@ -839,6 +879,26 @@ argument_list|(
 literal|"AcpiRemoveNotifyHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -860,7 +920,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -895,7 +955,7 @@ operator|==
 name|ACPI_ROOT_OBJECT
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -1041,9 +1101,6 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
 name|DeviceNode
 argument_list|)
 expr_stmt|;
@@ -1143,7 +1200,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|NotifyObj
 argument_list|)
@@ -1151,7 +1208,7 @@ expr_stmt|;
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1165,7 +1222,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiInstallGpeHandler  *  * PARAMETERS:  GpeNumber       - The GPE number.  The numbering scheme is  *                                bank 0 first, then bank 1.  *              Type            - Whether this GPE should be treated as an  *                                edge- or level-triggered interrupt.  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for a General Purpose Event.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiInstallGpeHandler  *  * PARAMETERS:  GpeNumber       - The GPE number.  The numbering scheme is  *                                bank 0 first, then bank 1.  *              Type            - Whether this GPE should be treated as an  *                                edge- or level-triggered interrupt.  *              Handler         - Address of the handler  *              Context         - Value passed to the handler on each GPE  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for a General Purpose Event.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1178,7 +1235,7 @@ parameter_list|,
 name|UINT32
 name|Type
 parameter_list|,
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 name|Handler
 parameter_list|,
 name|void
@@ -1196,6 +1253,26 @@ argument_list|(
 literal|"AcpiInstallGpeHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1205,7 +1282,7 @@ operator|||
 operator|(
 name|GpeNumber
 operator|>
-name|NUM_GPE
+name|ACPI_GPE_MAX
 operator|)
 condition|)
 block|{
@@ -1232,7 +1309,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1300,7 +1377,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1314,7 +1391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiRemoveGpeHandler  *  * PARAMETERS:  GpeNumber       - The event to remove a handler  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for a General Purpose AcpiEvent.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveGpeHandler  *  * PARAMETERS:  GpeNumber       - The event to remove a handler  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a handler for a General Purpose AcpiEvent.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1324,7 +1401,7 @@ parameter_list|(
 name|UINT32
 name|GpeNumber
 parameter_list|,
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 name|Handler
 parameter_list|)
 block|{
@@ -1338,6 +1415,26 @@ argument_list|(
 literal|"AcpiRemoveGpeHandler"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1347,7 +1444,7 @@ operator|||
 operator|(
 name|GpeNumber
 operator|>
-name|NUM_GPE
+name|ACPI_GPE_MAX
 operator|)
 condition|)
 block|{
@@ -1380,7 +1477,7 @@ argument_list|(
 name|GpeNumber
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1432,7 +1529,7 @@ name|NULL
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS
 argument_list|)
@@ -1446,7 +1543,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiAcquireGlobalLock  *  * PARAMETERS:  Timeout         - How long the caller is willing to wait  *              OutHandle       - A handle to the lock if acquired  *  * RETURN:      Status  *  * DESCRIPTION: Acquire the ACPI Global Lock  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiAcquireGlobalLock  *  * PARAMETERS:  Timeout         - How long the caller is willing to wait  *              OutHandle       - A handle to the lock if acquired  *  * RETURN:      Status  *  * DESCRIPTION: Acquire the ACPI Global Lock  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1459,16 +1556,52 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|AcpiAmlEnterInterpreter
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|Status
+operator|=
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/*      * TBD: [Restructure] add timeout param to internal interface, and      * perhaps INTERPRETER_LOCKED      */
 name|Status
 operator|=
 name|AcpiEvAcquireGlobalLock
 argument_list|()
 expr_stmt|;
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 return|return
@@ -1480,7 +1613,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiReleaseGlobalLock  *  * PARAMETERS:  Handle      - Returned from AcpiAcquireGlobalLock  *  * RETURN:      Status  *  * DESCRIPTION: Release the ACPI Global Lock  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiReleaseGlobalLock  *  * PARAMETERS:  Handle      - Returned from AcpiAcquireGlobalLock  *  * RETURN:      Status  *  * DESCRIPTION: Release the ACPI Global Lock  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1490,6 +1623,29 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 name|AcpiEvReleaseGlobalLock
 argument_list|()
 expr_stmt|;

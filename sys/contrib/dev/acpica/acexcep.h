@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -239,8 +239,50 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_ACQUIRE_DEADLOCK
+value|(ACPI_STATUS) (0x0015 | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_RELEASE_DEADLOCK
+value|(ACPI_STATUS) (0x0016 | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_NOT_ACQUIRED
+value|(ACPI_STATUS) (0x0017 | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_ALREADY_ACQUIRED
+value|(ACPI_STATUS) (0x0018 | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_NO_HARDWARE_RESPONSE
+value|(ACPI_STATUS) (0x0019 | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_NO_GLOBAL_LOCK
+value|(ACPI_STATUS) (0x001A | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x0014
+value|0x001A
 end_define
 
 begin_comment
@@ -475,8 +517,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_METHOD_LIMIT
+value|(ACPI_STATUS) (0x0015 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_NOT_OWNER
+value|(ACPI_STATUS) (0x0016 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_MUTEX_ORDER
+value|(ACPI_STATUS) (0x0017 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_MUTEX_NOT_ACQUIRED
+value|(ACPI_STATUS) (0x0018 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_INVALID_RESOURCE_TYPE
+value|(ACPI_STATUS) (0x0019 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x0014
+value|0x0019
 end_define
 
 begin_comment
@@ -605,6 +682,18 @@ block|,
 literal|"AE_TIME"
 block|,
 literal|"AE_UNKNOWN_STATUS"
+block|,
+literal|"AE_ACQUIRE_DEADLOCK"
+block|,
+literal|"AE_RELEASE_DEADLOCK"
+block|,
+literal|"AE_NOT_ACQUIRED"
+block|,
+literal|"AE_ALREADY_ACQUIRED"
+block|,
+literal|"AE_NO_HARDWARE_RESPONSE"
+block|,
+literal|"AE_NO_GLOBAL_LOCK"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -696,6 +785,16 @@ block|,
 literal|"AE_AML_STRING_LIMIT"
 block|,
 literal|"AE_AML_NO_RETURN_VALUE"
+block|,
+literal|"AE_AML_METHOD_LIMIT"
+block|,
+literal|"AE_AML_NOT_OWNER"
+block|,
+literal|"AE_AML_MUTEX_ORDER"
+block|,
+literal|"AE_AML_MUTEX_NOT_ACQUIRED"
+block|,
+literal|"AE_AML_INVALID_RESOURCE_TYPE"
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ parameter_list|(
 name|UINT32
 name|Width
 parameter_list|,
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
 parameter_list|,
@@ -168,7 +168,7 @@ parameter_list|,
 name|UINT32
 name|Value
 parameter_list|,
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
 parameter_list|,

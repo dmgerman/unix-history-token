@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amcreate - Named object creation  *              $Revision: 53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMCREATE_C__
+name|__EXCREATE_C__
 end_define
 
 begin_include
@@ -59,23 +59,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amcreate"
+literal|"excreate"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateField  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Execute CreateField operators: CreateBitFieldOp,  *              CreateByteFieldOp, CreateWordFieldOp, CreateDWordFieldOp,  *              CreateFieldOp (which define fields in buffers)  *  * ALLOCATION:  Deletes CreateFieldOp's count operand descriptor  *  *  *  ACPI SPECIFICATION REFERENCES:  *  DefCreateBitField   :=  CreateBitFieldOp    SrcBuf  BitIdx    NameString  *  DefCreateByteField  :=  CreateByteFieldOp   SrcBuf  ByteIdx   NameString  *  DefCreateDWordField :=  CreateDWordFieldOp  SrcBuf  ByteIdx   NameString  *  DefCreateField      :=  CreateFieldOp       SrcBuf  BitIdx    NumBits     NameString  *  DefCreateWordField  :=  CreateWordFieldOp   SrcBuf  ByteIdx   NameString  *  BitIndex            :=  TermArg=>Integer  *  ByteIndex           :=  TermArg=>Integer  *  NumBits             :=  TermArg=>Integer  *  SourceBuff          :=  TermArg=>Buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCreateBufferField  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Execute CreateField operators: CreateBitFieldOp,  *              CreateByteFieldOp, CreateWordFieldOp, CreateDWordFieldOp,  *              CreateFieldOp (which define fields in buffers)  *  * ALLOCATION:  Deletes CreateFieldOp's count operand descriptor  *  *  *  ACPI SPECIFICATION REFERENCES:  *  DefCreateBitField   :=  CreateBitFieldOp    SrcBuf  BitIdx    NameString  *  DefCreateByteField  :=  CreateByteFieldOp   SrcBuf  ByteIdx   NameString  *  DefCreateDWordField :=  CreateDWordFieldOp  SrcBuf  ByteIdx   NameString  *  DefCreateField      :=  CreateFieldOp       SrcBuf  BitIdx    NumBits     NameString  *  DefCreateWordField  :=  CreateWordFieldOp   SrcBuf  ByteIdx   NameString  *  BitIndex            :=  TermArg=>Integer  *  ByteIndex           :=  TermArg=>Integer  *  NumBits             :=  TermArg=>Integer  *  SourceBuff          :=  TermArg=>Buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateField
+name|AcpiExCreateBufferField
 parameter_list|(
 name|UINT8
 modifier|*
@@ -106,15 +106,15 @@ name|TmpDesc
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecCreateField"
+literal|"ExCreateBufferField"
 argument_list|)
 expr_stmt|;
-comment|/* Create the region descriptor */
+comment|/* Create the descriptor */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 argument_list|)
 expr_stmt|;
 if|if
@@ -131,48 +131,14 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/* Construct the field object */
-name|ObjDesc
-operator|->
-name|FieldUnit
-operator|.
-name|Access
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|ACCESS_ANY_ACC
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|FieldUnit
-operator|.
-name|LockRule
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|GLOCK_NEVER_LOCK
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|FieldUnit
-operator|.
-name|UpdateRule
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|UPDATE_PRESERVE
-expr_stmt|;
 comment|/*      * Allocate a method object for this field unit      */
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_EXTRA
 argument_list|)
@@ -182,7 +148,7 @@ condition|(
 operator|!
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 condition|)
@@ -198,7 +164,7 @@ block|}
 comment|/*      * Remember location in AML stream of the field unit      * opcode and operands -- since the buffer and index      * operands must be evaluated.      */
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 operator|->
@@ -210,7 +176,7 @@ name|AmlPtr
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Extra
 operator|->
@@ -222,13 +188,13 @@ name|AmlLength
 expr_stmt|;
 name|ObjDesc
 operator|->
-name|FieldUnit
+name|BufferField
 operator|.
 name|Node
 operator|=
 name|Node
 expr_stmt|;
-comment|/*      * This operation is supposed to cause the destination Name to refer      * to the defined FieldUnit -- it must not store the constructed      * FieldUnit object (or its current value) in some location that the      * Name may already be pointing to.  So, if the Name currently contains      * a reference which would cause AcpiAmlExecStore() to perform an indirect      * store rather than setting the value of the Name itself, clobber that      * reference before calling AcpiAmlExecStore().      */
+comment|/*      * This operation is supposed to cause the destination Name to refer      * to the defined BufferField -- it must not store the constructed      * BufferField object (or its current value) in some location that the      * Name may already be pointing to.  So, if the Name currently contains      * a reference which would cause AcpiExStore() to perform an indirect      * store rather than setting the value of the Name itself, clobber that      * reference before calling AcpiExStore().      */
 comment|/* Type of Name's existing value */
 switch|switch
 condition|(
@@ -239,16 +205,16 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
 name|INTERNAL_TYPE_ALIAS
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|INTERNAL_TYPE_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_DEF_FIELD
+name|INTERNAL_TYPE_BANK_FIELD
 case|:
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
@@ -270,7 +236,7 @@ name|DUMP_PATHNAME
 argument_list|(
 name|Node
 argument_list|,
-literal|"AmlExecCreateField: Removing Current Reference"
+literal|"ExCreateBufferField: Removing Current Reference"
 argument_list|,
 name|TRACE_BFIELD
 argument_list|,
@@ -289,7 +255,7 @@ argument_list|(
 name|TmpDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|TmpDesc
 argument_list|)
@@ -328,7 +294,7 @@ block|}
 comment|/* Store constructed field descriptor in result location */
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -353,7 +319,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -373,7 +339,7 @@ name|ObjDesc
 condition|)
 block|{
 comment|/* Remove deletes both objects! */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -392,12 +358,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateAlias  *  * PARAMETERS:  Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new named alias  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateAlias  *  * PARAMETERS:  WalkState            - Current state, contains List of  *                                      operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new named alias  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateAlias
+name|AcpiExCreateAlias
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -417,10 +383,10 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecCreateAlias"
+literal|"ExCreateAlias"
 argument_list|)
 expr_stmt|;
-comment|/* Get the source/alias operands (both NTEs) */
+comment|/* Get the source/alias operands (both namespace nodes) */
 name|Status
 operator|=
 name|AcpiDsObjStackPopObject
@@ -461,7 +427,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 comment|/* Add an additional reference to the object */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|SourceNode
 operator|->
@@ -485,7 +451,7 @@ name|Type
 argument_list|)
 expr_stmt|;
 comment|/*      * The new alias assumes the type of the source, but it points      * to the same object.  The reference count of the object has two      * additional references to prevent deletion out from under either the      * source or the alias Node      */
-comment|/* Since both operands are NTEs, we don't need to delete them */
+comment|/* Since both operands are Nodes, we don't need to delete them */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -495,12 +461,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateEvent  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a new event object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateEvent  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a new event object  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateEvent
+name|AcpiExCreateEvent
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -516,14 +482,14 @@ name|ObjDesc
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecCreateEvent"
+literal|"ExCreateEvent"
 argument_list|)
 expr_stmt|;
 name|BREAKPOINT3
 expr_stmt|;
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_EVENT
 argument_list|)
@@ -568,7 +534,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -614,7 +580,7 @@ operator|.
 name|Semaphore
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -634,12 +600,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateMutex  *  * PARAMETERS:  InterpreterMode     - Current running mode (load1/Load2/Exec)  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new mutex object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMutex  *  * PARAMETERS:  InterpreterMode     - Current running mode (load1/Load2/Exec)  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new mutex object  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateMutex
+name|AcpiExCreateMutex
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -661,7 +627,7 @@ name|ObjDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecCreateMutex"
+literal|"ExCreateMutex"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -694,7 +660,7 @@ block|}
 comment|/* Attempt to allocate a new object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_MUTEX
 argument_list|)
@@ -738,7 +704,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -799,7 +765,7 @@ operator|.
 name|Semaphore
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -811,7 +777,7 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete the operand */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|SyncDesc
 argument_list|)
@@ -825,12 +791,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateRegion  *  * PARAMETERS:  AmlPtr              - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              Operands            - List of operands for the opcode  *              InterpreterMode     - Load1/Load2/Execute  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateRegion  *  * PARAMETERS:  AmlPtr              - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              Operands            - List of operands for the opcode  *              InterpreterMode     - Load1/Load2/Execute  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateRegion
+name|AcpiExCreateRegion
 parameter_list|(
 name|UINT8
 modifier|*
@@ -860,7 +826,7 @@ name|Node
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecCreateRegion"
+literal|"ExCreateRegion"
 argument_list|)
 expr_stmt|;
 comment|/*      * Space ID must be one of the predefined IDs, or in the user-defined      * range      */
@@ -894,14 +860,14 @@ name|AE_AML_INVALID_SPACE_ID
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_LOAD
 argument_list|,
 operator|(
-literal|"AmlExecCreateRegion: Region Type - %s (%X)\n"
+literal|"Region Type - %s (%X)\n"
 operator|,
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 argument_list|(
 name|RegionSpace
 argument_list|)
@@ -927,7 +893,7 @@ expr_stmt|;
 comment|/* Create the region descriptor */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_REGION
 argument_list|)
@@ -953,7 +919,7 @@ name|Region
 operator|.
 name|Extra
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_EXTRA
 argument_list|)
@@ -1110,7 +1076,7 @@ name|ObjDesc
 condition|)
 block|{
 comment|/* Remove deletes both objects! */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1130,19 +1096,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateProcessor  *  * PARAMETERS:  Op              - Op containing the Processor definition and  *                                args  *              ProcessorNTE    - Node for the containing Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new processor object and populate the fields  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateProcessor  *  * PARAMETERS:  Op              - Op containing the Processor definition and  *                                args  *              ProcessorNode   - Parent Node for the processor object  *  * RETURN:      Status  *  * DESCRIPTION: Create a new processor object and populate the fields  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateProcessor
+name|AcpiExCreateProcessor
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
-name|ProcessorNTE
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ProcessorNode
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1158,14 +1125,14 @@ name|ObjDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecCreateProcessor"
+literal|"ExCreateProcessor"
 argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_PROCESSOR
 argument_list|)
@@ -1176,13 +1143,9 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1191,7 +1154,7 @@ name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-name|ProcessorNTE
+name|ProcessorNode
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -1209,12 +1172,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtDeleteObjectDesc
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get first arg and verify existence */
 name|Arg
 operator|=
 name|Op
@@ -1223,20 +1192,15 @@ name|Value
 operator|.
 name|Arg
 expr_stmt|;
-comment|/* check existence */
 if|if
 condition|(
 operator|!
 name|Arg
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_AML_NO_OPERAND
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
@@ -1256,7 +1220,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-comment|/* Move to next arg and check existence */
+comment|/* Get second arg and verify existence */
 name|Arg
 operator|=
 name|Arg
@@ -1269,13 +1233,9 @@ operator|!
 name|Arg
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_AML_NO_OPERAND
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
@@ -1295,7 +1255,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-comment|/* Move to next arg and check existence */
+comment|/* Get third arg and verify existence */
 name|Arg
 operator|=
 name|Arg
@@ -1308,13 +1268,9 @@ operator|!
 name|Arg
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_AML_NO_OPERAND
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
@@ -1343,19 +1299,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreatePowerResource  *  * PARAMETERS:  Op              - Op containing the PowerResource definition  *                                and args  *              PowerResNTE     - Node for the containing Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new PowerResource object and populate the fields  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreatePowerResource  *  * PARAMETERS:  Op              - Op containing the PowerResource definition  *                                and args  *              PowerNode       - Parent Node for the power object  *  * RETURN:      Status  *  * DESCRIPTION: Create a new PowerResource object and populate the fields  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreatePowerResource
+name|AcpiExCreatePowerResource
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
-name|PowerResNTE
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|PowerNode
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1371,14 +1328,14 @@ name|ObjDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecCreatePowerResource"
+literal|"ExCreatePowerResource"
 argument_list|,
 name|Op
 argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_POWER
 argument_list|)
@@ -1389,13 +1346,9 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_NO_MEMORY
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
@@ -1404,7 +1357,7 @@ name|Status
 operator|=
 name|AcpiNsAttachObject
 argument_list|(
-name|PowerResNTE
+name|PowerNode
 argument_list|,
 name|ObjDesc
 argument_list|,
@@ -1428,6 +1381,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get first arg and verify existence */
 name|Arg
 operator|=
 name|Op
@@ -1436,20 +1390,15 @@ name|Value
 operator|.
 name|Arg
 expr_stmt|;
-comment|/* check existence */
 if|if
 condition|(
 operator|!
 name|Arg
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_AML_NO_OPERAND
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
@@ -1469,7 +1418,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-comment|/* Move to next arg and check existence */
+comment|/* Get second arg and check existence */
 name|Arg
 operator|=
 name|Arg
@@ -1482,13 +1431,9 @@ operator|!
 name|Arg
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_AML_NO_OPERAND
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
@@ -1517,12 +1462,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecCreateMethod  *  * PARAMETERS:  AmlPtr          - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              MethodFlags     - AML method flag byte  *              Method          - Method Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlPtr          - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              MethodFlags     - AML method flag byte  *              Method          - Method Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecCreateMethod
+name|AcpiExCreateMethod
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1534,7 +1479,8 @@ parameter_list|,
 name|UINT32
 name|MethodFlags
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|Method
 parameter_list|)
 block|{
@@ -1547,7 +1493,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecCreateMethod"
+literal|"ExCreateMethod"
 argument_list|,
 name|Method
 argument_list|)
@@ -1555,7 +1501,7 @@ expr_stmt|;
 comment|/* Create a new method object */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_METHOD
 argument_list|)
@@ -1616,7 +1562,7 @@ operator|&
 name|METHOD_FLAGS_ARG_COUNT
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the concurrency count.  If required, a semaphore will be      * created for this method when it is parsed.      *      * TBD: [Future]  for APCI 2.0, there will be a SyncLevel value, not      * just a flag      * Concurrency = SyncLevel + 1;.      */
+comment|/*      * Get the concurrency count.  If required, a semaphore will be      * created for this method when it is parsed.      */
 if|if
 condition|(
 name|MethodFlags
@@ -1624,13 +1570,29 @@ operator|&
 name|METHOD_FLAGS_SERIALIZED
 condition|)
 block|{
+comment|/*          * ACPI 1.0: Concurrency = 1          * ACPI 2.0: Concurrency = (SyncLevel (in method declaration) + 1)          */
 name|ObjDesc
 operator|->
 name|Method
 operator|.
 name|Concurrency
 operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+operator|(
+operator|(
+name|MethodFlags
+operator|&
+name|METHOD_FLAGS_SYNCH_LEVEL
+operator|)
+operator|>>
+literal|4
+operator|)
+operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1667,7 +1629,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 argument_list|(
 name|ObjDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -103,6 +103,27 @@ name|PrefixNode
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+comment|/* Parameter Validation */
 if|if
 condition|(
 operator|!
@@ -124,7 +145,7 @@ condition|(
 name|Parent
 condition|)
 block|{
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -142,7 +163,7 @@ operator|!
 name|PrefixNode
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -153,7 +174,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -255,6 +276,26 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Buffer pointer must be valid always */
 if|if
 condition|(
@@ -328,7 +369,7 @@ operator|)
 return|;
 block|}
 comment|/*      * Wants the single segment ACPI name.      * Validate handle and convert to an Node      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -418,7 +459,7 @@ name|AE_OK
 expr_stmt|;
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -447,10 +488,10 @@ modifier|*
 name|Info
 parameter_list|)
 block|{
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 name|Hid
 decl_stmt|;
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 name|Uid
 decl_stmt|;
 name|ACPI_STATUS
@@ -470,6 +511,26 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -486,7 +547,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -504,7 +565,7 @@ operator|!
 name|Node
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -531,7 +592,7 @@ name|Node
 operator|->
 name|Name
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -562,7 +623,7 @@ expr_stmt|;
 comment|/* Execute the _HID method and save the result */
 name|Status
 operator|=
-name|AcpiCmExecute_HID
+name|AcpiUtExecute_HID
 argument_list|(
 name|Node
 argument_list|,
@@ -606,7 +667,7 @@ block|}
 comment|/* Execute the _UID method and save the result */
 name|Status
 operator|=
-name|AcpiCmExecute_UID
+name|AcpiUtExecute_UID
 argument_list|(
 name|Node
 argument_list|,
@@ -643,7 +704,7 @@ block|}
 comment|/*      * Execute the _STA method and save the result      * _STA is not always present      */
 name|Status
 operator|=
-name|AcpiCmExecute_STA
+name|AcpiUtExecute_STA
 argument_list|(
 name|Node
 argument_list|,
@@ -675,7 +736,7 @@ block|}
 comment|/*      * Execute the _ADR method and save result if successful      * _ADR is not always present      */
 name|Status
 operator|=
-name|AcpiCmEvaluateNumericObject
+name|AcpiUtEvaluateNumericObject
 argument_list|(
 name|METHOD_NAME__ADR
 argument_list|,

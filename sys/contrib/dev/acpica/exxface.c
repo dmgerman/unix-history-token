@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amxface - External interpreter interfaces  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exxface - External interpreter interfaces  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMXFACE_C__
+name|__EXXFACE_C__
 end_define
 
 begin_include
@@ -29,13 +29,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amxface"
+literal|"exxface"
 argument_list|)
 end_macro
 
@@ -68,12 +68,12 @@ file|"acnamesp.h"
 end_include
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecuteMethod  *  * PARAMETERS:  Pcode               - Pointer to the pcode stream  *              PcodeLength         - Length of pcode that comprises the method  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExExecuteMethod  *  * PARAMETERS:  Pcode               - Pointer to the pcode stream  *              PcodeLength         - Length of pcode that comprises the method  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecuteMethod
+name|AcpiExExecuteMethod
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -95,13 +95,29 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecuteMethod"
+literal|"ExExecuteMethod"
 argument_list|)
 expr_stmt|;
 comment|/*      * The point here is to lock the interpreter and call the low      * level execute.      */
-name|AcpiAmlEnterInterpreter
+name|Status
+operator|=
+name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiPsxExecute
@@ -113,7 +129,7 @@ argument_list|,
 name|ReturnObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS

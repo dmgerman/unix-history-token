@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmglobal - Global variables for the ACPI subsystem  *              $Revision: 116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 122 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMGLOBAL_C__
+name|__UTGLOBAL_C__
 end_define
 
 begin_define
@@ -53,13 +53,13 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmglobal"
+literal|"utglobal"
 argument_list|)
 end_macro
 
@@ -115,7 +115,7 @@ begin_decl_stmt
 name|UINT32
 name|AcpiDbgLayer
 init|=
-name|COMPONENT_DEFAULT
+name|ACPI_COMPONENT_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Names built-in to the interpreter  *  * Initial values are currently supported only for types String and Number.  * To avoid type punning, both are specified as strings in this table.  */
+comment|/*  * Names built-in to the interpreter  *  * Initial values are currently supported only for types String and Number.  * To avoid type punning, both are specified as strings in this table.  *  * NOTES:  * 1) _SB_ is defined to be a device to allow _SB_/_INI to be run  *    during the initialization sequence.  */
 end_comment
 
 begin_decl_stmt
@@ -235,7 +235,7 @@ block|,
 block|{
 literal|"_SB_"
 block|,
-name|INTERNAL_TYPE_DEF_ANY
+name|ACPI_TYPE_DEVICE
 block|}
 block|,
 block|{
@@ -274,12 +274,12 @@ block|,
 literal|"0"
 block|}
 block|,
-comment|/* Table terminator */
 block|{
 name|NULL
 block|,
 name|ACPI_TYPE_ANY
 block|}
+comment|/* Table terminator */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -662,13 +662,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmGetMutexName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetMutexName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetMutexName
+name|AcpiUtGetMutexName
 parameter_list|(
 name|UINT32
 name|MutexId
@@ -775,7 +775,7 @@ comment|/* 13 */
 literal|"Thermal"
 block|,
 comment|/* 14 */
-literal|"BufferFld"
+literal|"BuffField"
 block|,
 comment|/* 15 */
 literal|"DdbHandle"
@@ -784,13 +784,13 @@ comment|/* 16 */
 literal|"DebugObj"
 block|,
 comment|/* 17 */
-literal|"DefField"
+literal|"RegnField"
 block|,
 comment|/* 18 */
-literal|"BnkField"
+literal|"BankField"
 block|,
 comment|/* 19 */
-literal|"IdxField"
+literal|"IndxField"
 block|,
 comment|/* 20 */
 literal|"Reference"
@@ -808,7 +808,7 @@ comment|/* 24 */
 literal|"Resource"
 block|,
 comment|/* 25 */
-literal|"DefFldDfn"
+literal|"RgnFldDfn"
 block|,
 comment|/* 26 */
 literal|"BnkFldDfn"
@@ -841,13 +841,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmGetTypeName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Type ID into a name string (Debug only)  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetTypeName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Type ID into a name string (Debug only)  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 parameter_list|(
 name|UINT32
 name|Type
@@ -908,13 +908,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmGetRegionName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetRegionName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Space ID into a name string (Debug only)  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 parameter_list|(
 name|UINT8
 name|SpaceId
@@ -1066,12 +1066,12 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmValidObjectType  *  * PARAMETERS:  None.  *  * RETURN:      TRUE if valid object type  *  * DESCRIPTION: Validate an object type  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtValidObjectType  *  * PARAMETERS:  None.  *  * RETURN:      TRUE if valid object type  *  * DESCRIPTION: Validate an object type  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiCmValidObjectType
+name|AcpiUtValidObjectType
 parameter_list|(
 name|UINT32
 name|Type
@@ -1115,13 +1115,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmFormatException  *  * PARAMETERS:  Status              - Acpi status to be formatted  *  * RETURN:      Formatted status string  *  * DESCRIPTION: Convert an ACPI exception to a string  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtFormatException  *  * PARAMETERS:  Status              - Acpi status to be formatted  *  * RETURN:      Formatted status string  *  * DESCRIPTION: Convert an ACPI exception to a string  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 parameter_list|(
 name|ACPI_STATUS
 name|Status
@@ -1267,12 +1267,12 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmAllocateOwnerId  *  * PARAMETERS:  IdType          - Type of ID (method or table)  *  * DESCRIPTION: Allocate a table or method owner id  *  ***************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiUtAllocateOwnerId  *  * PARAMETERS:  IdType          - Type of ID (method or table)  *  * DESCRIPTION: Allocate a table or method owner id  *  ***************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_OWNER_ID
-name|AcpiCmAllocateOwnerId
+name|AcpiUtAllocateOwnerId
 parameter_list|(
 name|UINT32
 name|IdType
@@ -1285,10 +1285,10 @@ literal|0xFFFF
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmAllocateOwnerId"
+literal|"UtAllocateOwnerId"
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1345,7 +1345,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -1359,12 +1359,12 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmInitGlobals  *  * PARAMETERS:  none  *  * DESCRIPTION: Init library globals.  All globals that require specific  *              initialization should be initialized here!  *  ***************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiUtInitGlobals  *  * PARAMETERS:  none  *  * DESCRIPTION: Init library globals.  All globals that require specific  *              initialization should be initialized here!  *  ***************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmInitGlobals
+name|AcpiUtInitGlobals
 parameter_list|(
 name|void
 parameter_list|)
@@ -1374,7 +1374,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmInitGlobals"
+literal|"UtInitGlobals"
 argument_list|)
 expr_stmt|;
 comment|/* ACPI table structure */
@@ -1518,9 +1518,9 @@ index|[
 name|i
 index|]
 operator|.
-name|Locked
+name|OwnerId
 operator|=
-name|FALSE
+name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
 name|AcpiGbl_AcpiMutexInfo
 index|[
@@ -1583,10 +1583,6 @@ expr_stmt|;
 name|AcpiGbl_StartupFlags
 operator|=
 literal|0
-expr_stmt|;
-name|AcpiGbl_GlobalLockSet
-operator|=
-name|FALSE
 expr_stmt|;
 name|AcpiGbl_RsdpOriginalLocation
 operator|=

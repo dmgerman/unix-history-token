@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|HARDWARE
+value|ACPI_HARDWARE
 end_define
 
 begin_macro
@@ -74,12 +74,12 @@ name|AcpiGbl_RestoreAcpiChipset
 operator|=
 name|FALSE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"HwInitialize: No FADT!\n"
+literal|"No FADT!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -90,7 +90,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Must support *some* mode! */
-comment|/*     if (!(SystemFlags& SYS_MODES_MASK))     {         RestoreAcpiChipset = FALSE;          DEBUG_PRINT (ACPI_ERROR,             ("CmHardwareInitialize: Supported modes uninitialized!\n"));         return_ACPI_STATUS (AE_ERROR);     }  */
+comment|/*     if (!(SystemFlags& SYS_MODES_MASK))     {         RestoreAcpiChipset = FALSE;          DEBUG_PRINTP (ACPI_ERROR,             ("Supported modes uninitialized!\n"));         return_ACPI_STATUS (AE_ERROR);     }  */
 switch|switch
 condition|(
 name|AcpiGbl_SystemFlags
@@ -108,7 +108,7 @@ name|AcpiGbl_OriginalMode
 operator|=
 name|SYS_MODE_ACPI
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -127,7 +127,7 @@ name|AcpiGbl_OriginalMode
 operator|=
 name|SYS_MODE_LEGACY
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -164,7 +164,7 @@ operator|=
 name|SYS_MODE_LEGACY
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -173,7 +173,7 @@ literal|"System supports both ACPI and LEGACY modes.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -235,7 +235,7 @@ block|{
 comment|/* GPE0 specified in FADT  */
 name|AcpiGbl_Gpe0EnableRegisterSave
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|DIV_2
 argument_list|(
@@ -322,7 +322,7 @@ block|{
 comment|/* GPE1 defined */
 name|AcpiGbl_Gpe1EnableRegisterSave
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|DIV_2
 argument_list|(
@@ -414,7 +414,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 init|=
-name|AE_ERROR
+name|AE_NO_HARDWARE_RESPONSE
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -440,7 +440,7 @@ operator|->
 name|AcpiEnable
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -470,7 +470,7 @@ operator|->
 name|AcpiDisable
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -488,7 +488,7 @@ operator|==
 name|Mode
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmdebug - Debug print routines  *              $Revision: 64 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMDEBUG_C__
+name|__UTDEBUG_C__
 end_define
 
 begin_include
@@ -23,15 +23,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmdebug"
+literal|"utdebug"
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|UINT32
+name|PrevThreadId
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    Get/Set debug level  *  * DESCRIPTION: Get or set value of the debug flag  *  *              These are used to allow user's to get/set the debug level  *  ****************************************************************************/
@@ -356,7 +364,7 @@ name|AcpiGbl_NestingLevel
 argument_list|,
 name|FunctionName
 argument_list|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -502,6 +510,14 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+name|UINT32
+name|ThreadId
+decl_stmt|;
+name|ThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
 comment|/* Both the level and the component must be enabled */
 if|if
 condition|(
@@ -525,6 +541,56 @@ argument_list|,
 name|Format
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ThreadId
+operator|!=
+name|PrevThreadId
+condition|)
+block|{
+if|if
+condition|(
+name|TRACE_THREADS
+operator|&
+name|AcpiDbgLevel
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Context Switch from TID %X to TID %X ****\n\n"
+argument_list|,
+name|PrevThreadId
+argument_list|,
+name|ThreadId
+argument_list|)
+expr_stmt|;
+block|}
+name|PrevThreadId
+operator|=
+name|ThreadId
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TRACE_THREADS
+operator|&
+name|AcpiDbgLevel
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8s-%04d[%04X]: "
+argument_list|,
+name|ModuleName
+argument_list|,
+name|LineNumber
+argument_list|,
+name|ThreadId
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"%8s-%04d: "
@@ -534,6 +600,7 @@ argument_list|,
 name|LineNumber
 argument_list|)
 expr_stmt|;
+block|}
 name|AcpiOsVprintf
 argument_list|(
 name|Format
@@ -561,6 +628,64 @@ name|UINT32
 name|LineNumber
 parameter_list|)
 block|{
+name|UINT32
+name|ThreadId
+decl_stmt|;
+name|ThreadId
+operator|=
+name|AcpiOsGetThreadId
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ThreadId
+operator|!=
+name|PrevThreadId
+condition|)
+block|{
+if|if
+condition|(
+name|TRACE_THREADS
+operator|&
+name|AcpiDbgLevel
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n**** Context Switch from TID %X to TID %X ****\n\n"
+argument_list|,
+name|PrevThreadId
+argument_list|,
+name|ThreadId
+argument_list|)
+expr_stmt|;
+block|}
+name|PrevThreadId
+operator|=
+name|ThreadId
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TRACE_THREADS
+operator|&
+name|AcpiDbgLevel
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8s-%04d[%04X]: "
+argument_list|,
+name|ModuleName
+argument_list|,
+name|LineNumber
+argument_list|,
+name|ThreadId
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"%8s-%04d: "
@@ -570,6 +695,7 @@ argument_list|,
 name|LineNumber
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -614,12 +740,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiCmDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtDumpBuffer  *  * PARAMETERS:  Buffer              - Buffer to dump  *              Count               - Amount to dump, in bytes  *              ComponentID         - Caller's component ID  *  * RETURN:      None  *  * DESCRIPTION: Generic dump buffer in both hex and ascii.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*

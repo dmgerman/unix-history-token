@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions do dump out the resource structures.  *              $Revision: 16 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 19 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -40,24 +40,24 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpIrq
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|IRQ_RESOURCE
+name|ACPI_RESOURCE_IRQ
 modifier|*
 name|IrqData
 init|=
 operator|(
-name|IRQ_RESOURCE
+name|ACPI_RESOURCE_IRQ
 operator|*
 operator|)
 name|Data
@@ -165,24 +165,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpDma  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpDma  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpDma
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|DMA_RESOURCE
+name|ACPI_RESOURCE_DMA
 modifier|*
 name|DmaData
 init|=
 operator|(
-name|DMA_RESOURCE
+name|ACPI_RESOURCE_DMA
 operator|*
 operator|)
 name|Data
@@ -353,24 +353,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpStartDependentFunctions  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpStartDependentFunctions  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpStartDependentFunctions
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
+name|ACPI_RESOURCE_START_DPF
 modifier|*
 name|SdfData
 init|=
 operator|(
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
+name|ACPI_RESOURCE_START_DPF
 operator|*
 operator|)
 name|Data
@@ -470,24 +470,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIo  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIo  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpIo
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 modifier|*
 name|IoData
 init|=
 operator|(
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 operator|*
 operator|)
 name|Data
@@ -553,24 +553,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpFixedIo  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpFixedIo  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpFixedIo
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|FIXED_IO_RESOURCE
+name|ACPI_RESOURCE_FIXED_IO
 modifier|*
 name|FixedIoData
 init|=
 operator|(
-name|FIXED_IO_RESOURCE
+name|ACPI_RESOURCE_FIXED_IO
 operator|*
 operator|)
 name|Data
@@ -603,24 +603,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpVendorSpecific  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpVendorSpecific  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpVendorSpecific
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 modifier|*
 name|VendorData
 init|=
 operator|(
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 operator|*
 operator|)
 name|Data
@@ -680,24 +680,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpMemory24  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpMemory24  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpMemory24
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 modifier|*
 name|Memory24Data
 init|=
 operator|(
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 operator|*
 operator|)
 name|Data
@@ -763,24 +763,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpMemory32  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpMemory32  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpMemory32
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 modifier|*
 name|Memory32Data
 init|=
 operator|(
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 operator|*
 operator|)
 name|Data
@@ -853,17 +853,17 @@ begin_function
 name|void
 name|AcpiRsDumpFixedMemory32
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 modifier|*
 name|FixedMemory32Data
 init|=
 operator|(
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 operator|*
 operator|)
 name|Data
@@ -911,24 +911,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpAddress16  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpAddress16  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpAddress16
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|ADDRESS16_RESOURCE
+name|ACPI_RESOURCE_ADDRESS16
 modifier|*
 name|Address16Data
 init|=
 operator|(
-name|ADDRESS16_RESOURCE
+name|ACPI_RESOURCE_ADDRESS16
 operator|*
 operator|)
 name|Data
@@ -1225,7 +1225,9 @@ literal|0xFF
 operator|!=
 name|Address16Data
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1234,7 +1236,9 @@ literal|"\t\tResource Source Index: %X\n"
 argument_list|,
 name|Address16Data
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1244,6 +1248,8 @@ argument_list|,
 name|Address16Data
 operator|->
 name|ResourceSource
+operator|.
+name|StringPtr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1252,24 +1258,24 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpAddress32  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpAddress32  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpAddress32
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|ADDRESS32_RESOURCE
+name|ACPI_RESOURCE_ADDRESS32
 modifier|*
 name|Address32Data
 init|=
 operator|(
-name|ADDRESS32_RESOURCE
+name|ACPI_RESOURCE_ADDRESS32
 operator|*
 operator|)
 name|Data
@@ -1561,7 +1567,9 @@ literal|0xFF
 operator|!=
 name|Address32Data
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1570,7 +1578,9 @@ literal|"\t\tResource Source Index: %X\n"
 argument_list|,
 name|Address32Data
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1580,6 +1590,8 @@ argument_list|,
 name|Address32Data
 operator|->
 name|ResourceSource
+operator|.
+name|StringPtr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1588,24 +1600,366 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpExtendedIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpAddress64  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiRsDumpAddress64
+parameter_list|(
+name|ACPI_RESOURCE_DATA
+modifier|*
+name|Data
+parameter_list|)
+block|{
+name|ACPI_RESOURCE_ADDRESS64
+modifier|*
+name|Address64Data
+init|=
+operator|(
+name|ACPI_RESOURCE_ADDRESS64
+operator|*
+operator|)
+name|Data
+decl_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t64-Bit Address Space Resource\n"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Address64Data
+operator|->
+name|ResourceType
+condition|)
+block|{
+case|case
+name|MEMORY_RANGE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource Type: Memory Range\n"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Address64Data
+operator|->
+name|Attribute
+operator|.
+name|Memory
+operator|.
+name|CacheAttribute
+condition|)
+block|{
+case|case
+name|NON_CACHEABLE_MEMORY
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Noncacheable memory\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CACHABLE_MEMORY
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Cacheable memory\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|WRITE_COMBINING_MEMORY
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Write-combining memory\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PREFETCHABLE_MEMORY
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Prefetchable memory\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Invalid cache attribute\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: Read%s\n"
+argument_list|,
+name|READ_WRITE_MEMORY
+operator|==
+name|Address64Data
+operator|->
+name|Attribute
+operator|.
+name|Memory
+operator|.
+name|ReadWriteAttribute
+condition|?
+literal|"/Write"
+else|:
+literal|" Only"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IO_RANGE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource Type: Io Range\n"
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|Address64Data
+operator|->
+name|Attribute
+operator|.
+name|Io
+operator|.
+name|RangeAttribute
+condition|)
+block|{
+case|case
+name|NON_ISA_ONLY_RANGES
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Non-ISA Io Addresses\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ISA_ONLY_RANGES
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"ISA Io Addresses\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ENTIRE_RANGE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"ISA and non-ISA Io Addresses\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tType Specific: "
+literal|"Invalid Range attribute"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|BUS_NUMBER_RANGE
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource Type: Bus Number Range\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tInvalid Resource Type..exiting.\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource %s\n"
+argument_list|,
+name|CONSUMER
+operator|==
+name|Address64Data
+operator|->
+name|ProducerConsumer
+condition|?
+literal|"Consumer"
+else|:
+literal|"Producer"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\t%s decode\n"
+argument_list|,
+name|SUB_DECODE
+operator|==
+name|Address64Data
+operator|->
+name|Decode
+condition|?
+literal|"Subtractive"
+else|:
+literal|"Positive"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tMin address is %s fixed\n"
+argument_list|,
+name|ADDRESS_FIXED
+operator|==
+name|Address64Data
+operator|->
+name|MinAddressFixed
+condition|?
+literal|""
+else|:
+literal|"not "
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tMax address is %s fixed\n"
+argument_list|,
+name|ADDRESS_FIXED
+operator|==
+name|Address64Data
+operator|->
+name|MaxAddressFixed
+condition|?
+literal|""
+else|:
+literal|"not "
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tGranularity: %16X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|Granularity
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tAddress range min: %16X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|MinAddressRange
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tAddress range max: %16X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|MaxAddressRange
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tAddress translation offset: %16X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|AddressTranslationOffset
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tAddress Length: %16X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|AddressLength
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+literal|0xFF
+operator|!=
+name|Address64Data
+operator|->
+name|ResourceSource
+operator|.
+name|Index
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource Source Index: %X\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|ResourceSource
+operator|.
+name|Index
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\t\tResource Source: %s\n"
+argument_list|,
+name|Address64Data
+operator|->
+name|ResourceSource
+operator|.
+name|StringPtr
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpExtendedIrq  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Prints out the various members of the Data structure type.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpExtendedIrq
 parameter_list|(
-name|RESOURCE_DATA
+name|ACPI_RESOURCE_DATA
 modifier|*
 name|Data
 parameter_list|)
 block|{
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 modifier|*
 name|ExtIrqData
 init|=
 operator|(
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 operator|*
 operator|)
 name|Data
@@ -1729,7 +2083,9 @@ literal|0xFF
 operator|!=
 name|ExtIrqData
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1738,7 +2094,9 @@ literal|"\t\tResource Source Index: %X"
 argument_list|,
 name|ExtIrqData
 operator|->
-name|ResourceSourceIndex
+name|ResourceSource
+operator|.
+name|Index
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1748,6 +2106,8 @@ argument_list|,
 name|ExtIrqData
 operator|->
 name|ResourceSource
+operator|.
+name|StringPtr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1756,14 +2116,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpResourceList  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:  *  * DESCRIPTION: Dispatches the structure to the correct dump routine.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpResourceList  *  * PARAMETERS:  Data            - pointer to the resource structure to dump.  *  * RETURN:      None  *  * DESCRIPTION: Dispatches the structure to the correct dump routine.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 name|AcpiRsDumpResourceList
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|Resource
 parameter_list|)
@@ -1811,7 +2171,7 @@ name|Id
 condition|)
 block|{
 case|case
-name|Irq
+name|ACPI_RSTYPE_IRQ
 case|:
 name|AcpiRsDumpIrq
 argument_list|(
@@ -1823,7 +2183,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Dma
+name|ACPI_RSTYPE_DMA
 case|:
 name|AcpiRsDumpDma
 argument_list|(
@@ -1835,7 +2195,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|StartDependentFunctions
+name|ACPI_RSTYPE_START_DPF
 case|:
 name|AcpiRsDumpStartDependentFunctions
 argument_list|(
@@ -1847,7 +2207,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EndDependentFunctions
+name|ACPI_RSTYPE_END_DPF
 case|:
 name|AcpiOsPrintf
 argument_list|(
@@ -1857,7 +2217,7 @@ expr_stmt|;
 comment|/* AcpiRsDumpEndDependentFunctions (Resource->Data);*/
 break|break;
 case|case
-name|Io
+name|ACPI_RSTYPE_IO
 case|:
 name|AcpiRsDumpIo
 argument_list|(
@@ -1869,7 +2229,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FixedIo
+name|ACPI_RSTYPE_FIXED_IO
 case|:
 name|AcpiRsDumpFixedIo
 argument_list|(
@@ -1881,7 +2241,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VendorSpecific
+name|ACPI_RSTYPE_VENDOR
 case|:
 name|AcpiRsDumpVendorSpecific
 argument_list|(
@@ -1893,7 +2253,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EndTag
+name|ACPI_RSTYPE_END_TAG
 case|:
 comment|/*RsDumpEndTag (Resource->Data);*/
 name|AcpiOsPrintf
@@ -1907,7 +2267,7 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-name|Memory24
+name|ACPI_RSTYPE_MEM24
 case|:
 name|AcpiRsDumpMemory24
 argument_list|(
@@ -1919,7 +2279,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Memory32
+name|ACPI_RSTYPE_MEM32
 case|:
 name|AcpiRsDumpMemory32
 argument_list|(
@@ -1931,7 +2291,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FixedMemory32
+name|ACPI_RSTYPE_FIXED_MEM32
 case|:
 name|AcpiRsDumpFixedMemory32
 argument_list|(
@@ -1943,7 +2303,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address16
+name|ACPI_RSTYPE_ADDRESS16
 case|:
 name|AcpiRsDumpAddress16
 argument_list|(
@@ -1955,7 +2315,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address32
+name|ACPI_RSTYPE_ADDRESS32
 case|:
 name|AcpiRsDumpAddress32
 argument_list|(
@@ -1967,7 +2327,19 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ExtendedIrq
+name|ACPI_RSTYPE_ADDRESS64
+case|:
+name|AcpiRsDumpAddress64
+argument_list|(
+operator|&
+name|Resource
+operator|->
+name|Data
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_RSTYPE_EXT_IRQ
 case|:
 name|AcpiRsDumpExtendedIrq
 argument_list|(
@@ -1988,23 +2360,16 @@ break|break;
 block|}
 name|Resource
 operator|=
-operator|(
-name|RESOURCE
-operator|*
-operator|)
-operator|(
-operator|(
-name|NATIVE_UINT
-operator|)
+name|POINTER_ADD
+argument_list|(
+name|ACPI_RESOURCE
+argument_list|,
 name|Resource
-operator|+
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 name|Resource
 operator|->
 name|Length
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2013,7 +2378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrqList  *  * PARAMETERS:  Data            - pointer to the routing table to dump.  *  * RETURN:  *  * DESCRIPTION: Dispatches the structures to the correct dump routine.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsDumpIrqList  *  * PARAMETERS:  Data            - pointer to the routing table to dump.  *  * RETURN:      None  *  * DESCRIPTION: Dispatches the structures to the correct dump routine.  *  ******************************************************************************/
 end_comment
 
 begin_function

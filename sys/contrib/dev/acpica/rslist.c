@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - AcpiRsByteStreamToList  *                       AcpiListToByteStream  *              $Revision: 11 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 17 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -40,7 +40,63 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsByteStreamToList  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Length of ByteStreamBuffer  *              OutputBuffer            - Pointer to the buffer that will  *                                          contain the output structures  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Takes the resource byte stream and parses it, creating a  *              linked list of resources in the caller's output buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetResourceType  *  * PARAMETERS:  ResourceStartByte       - Byte 0 of a resource descriptor  *  * RETURN:      The Resource Type (Name) with no extraneous bits  *  * DESCRIPTION: Extract the Resource Type/Name from the first byte of  *              a resource descriptor.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|UINT8
+name|AcpiRsGetResourceType
+parameter_list|(
+name|UINT8
+name|ResourceStartByte
+parameter_list|)
+block|{
+comment|/*      * Determine if this is a small or large resource      */
+switch|switch
+condition|(
+name|ResourceStartByte
+operator|&
+name|RESOURCE_DESC_TYPE_MASK
+condition|)
+block|{
+case|case
+name|RESOURCE_DESC_TYPE_SMALL
+case|:
+comment|/*          * Small Resource Type -- Only bits 6:3 are valid          */
+return|return
+operator|(
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|ResourceStartByte
+operator|&
+name|RESOURCE_DESC_SMALL_MASK
+argument_list|)
+operator|)
+return|;
+break|break;
+case|case
+name|RESOURCE_DESC_TYPE_LARGE
+case|:
+comment|/*          * Large Resource Type -- All bits are valid          */
+return|return
+operator|(
+name|ResourceStartByte
+operator|)
+return|;
+break|break;
+block|}
+return|return
+operator|(
+literal|0xFF
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsByteStreamToList  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Length of ByteStreamBuffer  *              OutputBuffer            - Pointer to the buffer that will  *                                        contain the output structures  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it, creating a  *              linked list of resources in the caller's output buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -111,30 +167,24 @@ operator|==
 name|EndTagProcessed
 condition|)
 block|{
-comment|/*          * Look at the next byte in the stream          */
+comment|/*          * The next byte in the stream is the resource type          */
 name|ResourceType
 operator|=
+name|AcpiRsGetResourceType
+argument_list|(
 operator|*
 name|ByteStreamBuffer
+argument_list|)
 expr_stmt|;
-comment|/*          * See if this is a small or large resource          */
-if|if
-condition|(
-name|ResourceType
-operator|&
-literal|0x80
-condition|)
-block|{
-comment|/*              * Large Resource Type              */
 switch|switch
 condition|(
 name|ResourceType
 condition|)
 block|{
 case|case
-name|MEMORY_RANGE_24
+name|RESOURCE_DESC_MEMORY_24
 case|:
-comment|/*                  * 24-Bit Memory Resource                  */
+comment|/*              * 24-Bit Memory Resource              */
 name|Status
 operator|=
 name|AcpiRsMemory24Resource
@@ -152,9 +202,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|LARGE_VENDOR_DEFINED
+name|RESOURCE_DESC_LARGE_VENDOR
 case|:
-comment|/*                  * Vendor Defined Resource                  */
+comment|/*              * Vendor Defined Resource              */
 name|Status
 operator|=
 name|AcpiRsVendorResource
@@ -172,9 +222,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MEMORY_RANGE_32
+name|RESOURCE_DESC_MEMORY_32
 case|:
-comment|/*                  * 32-Bit Memory Range Resource                  */
+comment|/*              * 32-Bit Memory Range Resource              */
 name|Status
 operator|=
 name|AcpiRsMemory32RangeResource
@@ -192,9 +242,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FIXED_MEMORY_RANGE_32
+name|RESOURCE_DESC_FIXED_MEMORY_32
 case|:
-comment|/*                  * 32-Bit Fixed Memory Resource                  */
+comment|/*              * 32-Bit Fixed Memory Resource              */
 name|Status
 operator|=
 name|AcpiRsFixedMemory32Resource
@@ -212,9 +262,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DWORD_ADDRESS_SPACE
+name|RESOURCE_DESC_QWORD_ADDRESS_SPACE
 case|:
-comment|/*                  * 32-Bit Address Resource                  */
+comment|/*              * 64-Bit Address Resource              */
+name|Status
+operator|=
+name|AcpiRsAddress64Resource
+argument_list|(
+name|ByteStreamBuffer
+argument_list|,
+operator|&
+name|BytesConsumed
+argument_list|,
+name|Buffer
+argument_list|,
+operator|&
+name|StructureSize
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RESOURCE_DESC_DWORD_ADDRESS_SPACE
+case|:
+comment|/*              * 32-Bit Address Resource              */
 name|Status
 operator|=
 name|AcpiRsAddress32Resource
@@ -232,9 +302,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|WORD_ADDRESS_SPACE
+name|RESOURCE_DESC_WORD_ADDRESS_SPACE
 case|:
-comment|/*                  * 16-Bit Address Resource                  */
+comment|/*              * 16-Bit Address Resource              */
 name|Status
 operator|=
 name|AcpiRsAddress16Resource
@@ -252,9 +322,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EXTENDED_IRQ
+name|RESOURCE_DESC_EXTENDED_XRUPT
 case|:
-comment|/*                  * Extended IRQ                  */
+comment|/*              * Extended IRQ              */
 name|Status
 operator|=
 name|AcpiRsExtendedIrqResource
@@ -271,34 +341,10 @@ name|StructureSize
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* TBD: [Future] 64-bit not currently supported */
-comment|/*             case 0x8A:                 break; */
-default|default:
-comment|/*                  * If we get here, everything is out of sync,                  *  so exit with an error                  */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_ERROR
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-else|else
-block|{
-comment|/*              * Small Resource Type              *  Only bits 7:3 are valid              */
-name|ResourceType
-operator|>>=
-literal|3
-expr_stmt|;
-switch|switch
-condition|(
-name|ResourceType
-condition|)
-block|{
 case|case
-name|IRQ_FORMAT
+name|RESOURCE_DESC_IRQ_FORMAT
 case|:
-comment|/*                  * IRQ Resource                  */
+comment|/*              * IRQ Resource              */
 name|Status
 operator|=
 name|AcpiRsIrqResource
@@ -316,9 +362,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|DMA_FORMAT
+name|RESOURCE_DESC_DMA_FORMAT
 case|:
-comment|/*                  * DMA Resource                  */
+comment|/*              * DMA Resource              */
 name|Status
 operator|=
 name|AcpiRsDmaResource
@@ -336,9 +382,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|START_DEPENDENT_TAG
+name|RESOURCE_DESC_START_DEPENDENT
 case|:
-comment|/*                  * Start Dependent Functions Resource                  */
+comment|/*              * Start Dependent Functions Resource              */
 name|Status
 operator|=
 name|AcpiRsStartDependentFunctionsResource
@@ -356,9 +402,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|END_DEPENDENT_TAG
+name|RESOURCE_DESC_END_DEPENDENT
 case|:
-comment|/*                  * End Dependent Functions Resource                  */
+comment|/*              * End Dependent Functions Resource              */
 name|Status
 operator|=
 name|AcpiRsEndDependentFunctionsResource
@@ -376,9 +422,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IO_PORT_DESCRIPTOR
+name|RESOURCE_DESC_IO_PORT
 case|:
-comment|/*                  * IO Port Resource                  */
+comment|/*              * IO Port Resource              */
 name|Status
 operator|=
 name|AcpiRsIoResource
@@ -396,9 +442,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FIXED_LOCATION_IO_DESCRIPTOR
+name|RESOURCE_DESC_FIXED_IO_PORT
 case|:
-comment|/*                  * Fixed IO Port Resource                  */
+comment|/*              * Fixed IO Port Resource              */
 name|Status
 operator|=
 name|AcpiRsFixedIoResource
@@ -416,9 +462,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|SMALL_VENDOR_DEFINED
+name|RESOURCE_DESC_SMALL_VENDOR
 case|:
-comment|/*                  * Vendor Specific Resource                  */
+comment|/*              * Vendor Specific Resource              */
 name|Status
 operator|=
 name|AcpiRsVendorResource
@@ -436,9 +482,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|END_TAG
+name|RESOURCE_DESC_END_TAG
 case|:
-comment|/*                  * End Tag                  */
+comment|/*              * End Tag              */
+name|EndTagProcessed
+operator|=
+name|TRUE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiRsEndTagResource
@@ -454,23 +504,30 @@ operator|&
 name|StructureSize
 argument_list|)
 expr_stmt|;
-name|EndTagProcessed
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 default|default:
-comment|/*                  * If we get here, everything is out of sync,                  *  so exit with an error                  */
-name|return_ACPI_STATUS
-argument_list|(
+comment|/*              * Invalid/Unknowns resource type              */
+name|Status
+operator|=
 name|AE_AML_ERROR
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch */
+if|if
+condition|(
+operator|!
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* end else */
 comment|/*          * Update the return value and counter          */
 name|BytesParsed
 operator|+=
@@ -512,14 +569,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsListToByteStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              ByteSteamSizeNeeded     - Calculated size of the byte stream  *                                          needed from calling  *                                          AcpiRsCalculateByteStreamLength()  *                                          The size of the OutputBuffer is  *                                          guaranteed to be>=  *                                          ByteStreamSizeNeeded  *              OutputBuffer            - Pointer to the buffer that will  *                                          contain the byte stream  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Takes the resource linked list and parses it, creating a  *              byte stream of resources in the caller's output buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsListToByteStream  *  * PARAMETERS:  LinkedList              - Pointer to the resource linked list  *              ByteSteamSizeNeeded     - Calculated size of the byte stream  *                                        needed from calling  *                                        AcpiRsCalculateByteStreamLength()  *                                        The size of the OutputBuffer is  *                                        guaranteed to be>=  *                                        ByteStreamSizeNeeded  *              OutputBuffer            - Pointer to the buffer that will  *                                        contain the byte stream  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource linked list and parses it, creating a  *              byte stream of resources in the caller's output buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsListToByteStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -571,7 +628,7 @@ name|Id
 condition|)
 block|{
 case|case
-name|Irq
+name|ACPI_RSTYPE_IRQ
 case|:
 comment|/*              * IRQ Resource              */
 name|Status
@@ -589,7 +646,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Dma
+name|ACPI_RSTYPE_DMA
 case|:
 comment|/*              * DMA Resource              */
 name|Status
@@ -607,7 +664,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|StartDependentFunctions
+name|ACPI_RSTYPE_START_DPF
 case|:
 comment|/*              * Start Dependent Functions Resource              */
 name|Status
@@ -625,7 +682,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EndDependentFunctions
+name|ACPI_RSTYPE_END_DPF
 case|:
 comment|/*              * End Dependent Functions Resource              */
 name|Status
@@ -643,7 +700,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Io
+name|ACPI_RSTYPE_IO
 case|:
 comment|/*              * IO Port Resource              */
 name|Status
@@ -661,7 +718,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FixedIo
+name|ACPI_RSTYPE_FIXED_IO
 case|:
 comment|/*              * Fixed IO Port Resource              */
 name|Status
@@ -679,7 +736,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|VendorSpecific
+name|ACPI_RSTYPE_VENDOR
 case|:
 comment|/*              * Vendor Defined Resource              */
 name|Status
@@ -697,7 +754,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|EndTag
+name|ACPI_RSTYPE_END_TAG
 case|:
 comment|/*              * End Tag              */
 name|Status
@@ -720,7 +777,7 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-name|Memory24
+name|ACPI_RSTYPE_MEM24
 case|:
 comment|/*              * 24-Bit Memory Resource              */
 name|Status
@@ -738,7 +795,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Memory32
+name|ACPI_RSTYPE_MEM32
 case|:
 comment|/*              * 32-Bit Memory Range Resource              */
 name|Status
@@ -756,7 +813,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|FixedMemory32
+name|ACPI_RSTYPE_FIXED_MEM32
 case|:
 comment|/*              * 32-Bit Fixed Memory Resource              */
 name|Status
@@ -774,7 +831,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address16
+name|ACPI_RSTYPE_ADDRESS16
 case|:
 comment|/*              * 16-Bit Address Descriptor Resource              */
 name|Status
@@ -792,7 +849,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|Address32
+name|ACPI_RSTYPE_ADDRESS32
 case|:
 comment|/*              * 32-Bit Address Descriptor Resource              */
 name|Status
@@ -810,7 +867,25 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ExtendedIrq
+name|ACPI_RSTYPE_ADDRESS64
+case|:
+comment|/*              * 64-Bit Address Descriptor Resource              */
+name|Status
+operator|=
+name|AcpiRsAddress64Stream
+argument_list|(
+name|LinkedList
+argument_list|,
+operator|&
+name|Buffer
+argument_list|,
+operator|&
+name|BytesConsumed
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_RSTYPE_EXT_IRQ
 case|:
 comment|/*              * Extended IRQ Resource              */
 name|Status
@@ -829,14 +904,28 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*              * If we get here, everything is out of sync,              *  so exit with an error              */
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_BAD_DATA
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
 comment|/* switch (LinkedList->Id) */
+if|if
+condition|(
+operator|!
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*          * Set the Buffer to point to the open byte          */
 name|Buffer
 operator|+=
@@ -845,23 +934,16 @@ expr_stmt|;
 comment|/*          * Point to the next object          */
 name|LinkedList
 operator|=
-operator|(
-name|RESOURCE
-operator|*
-operator|)
-operator|(
-operator|(
-name|NATIVE_UINT
-operator|)
+name|POINTER_ADD
+argument_list|(
+name|ACPI_RESOURCE
+argument_list|,
 name|LinkedList
-operator|+
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 name|LinkedList
 operator|->
 name|Length
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 name|return_ACPI_STATUS

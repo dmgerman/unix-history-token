@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ammonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 99 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMMONAD_C__
+name|__EXMONAD_C__
 end_define
 
 begin_include
@@ -53,24 +53,24 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"ammonad"
+literal|"exmonad"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlGetObjectReference  *  * PARAMETERS:  ObjDesc         - Create a reference to this object  *              RetDesc         - Where to store the reference  *  * RETURN:      Status  *  * DESCRIPTION: Obtain and return a "reference" to the target object  *              Common code for the RefOfOp and the CondRefOfOp.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetObjectReference  *  * PARAMETERS:  ObjDesc         - Create a reference to this object  *              RetDesc         - Where to store the reference  *  * RETURN:      Status  *  * DESCRIPTION: Obtain and return a "reference" to the target object  *              Common code for the RefOfOp and the CondRefOfOp.  *  ******************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiAmlGetObjectReference
+name|AcpiExGetObjectReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -93,7 +93,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlGetObjectReference"
+literal|"ExGetObjectReference"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -132,42 +132,19 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*          * Not a Name -- an indirect name pointer would have          * been converted to a direct name pointer in AcpiAmlResolveOperands          */
+comment|/*          * Not a Name -- an indirect name pointer would have          * been converted to a direct name pointer in AcpiExResolveOperands          */
 switch|switch
 condition|(
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
 name|AML_LOCAL_OP
 case|:
-operator|*
-name|RetDesc
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|AcpiDsMethodDataGetNte
-argument_list|(
-name|MTH_TYPE_LOCAL
-argument_list|,
-operator|(
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-operator|)
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|AML_ARG_OP
 case|:
@@ -178,35 +155,37 @@ operator|(
 name|void
 operator|*
 operator|)
-name|AcpiDsMethodDataGetNte
+name|AcpiDsMethodDataGetNode
 argument_list|(
-name|MTH_TYPE_ARG
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
 argument_list|,
-operator|(
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlGetObjectReference: (Internal) Unknown Ref subtype %02x\n"
+literal|"(Internal) Unknown Ref subtype %02x\n"
 operator|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -256,12 +235,12 @@ expr_stmt|;
 block|}
 name|Cleanup
 label|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"AmlGetObjectReference: Obj=%p Ref=%p\n"
+literal|"Obj=%p Ref=%p\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -279,12 +258,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecMonadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 monadic operator with numeric operand on  *              object stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 monadic operator with numeric operand on  *              object stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic1
+name|AcpiExMonadic1
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -303,7 +282,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecMonadic1"
+literal|"ExMonadic1"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -311,7 +290,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -333,7 +312,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -355,19 +334,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic1/%s: bad operand(s) (Status=%s)\n"
+literal|"bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -390,9 +369,11 @@ name|AML_RELEASE_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlSystemReleaseMutex
+name|AcpiExReleaseMutex
 argument_list|(
 name|ObjDesc
+argument_list|,
+name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
@@ -402,7 +383,7 @@ name|AML_RESET_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlSystemResetEvent
+name|AcpiExSystemResetEvent
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -414,7 +395,7 @@ name|AML_SIGNAL_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlSystemSignalEvent
+name|AcpiExSystemSignalEvent
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -424,7 +405,7 @@ comment|/*  DefSleep    :=  SleepOp     MsecTime    */
 case|case
 name|AML_SLEEP_OP
 case|:
-name|AcpiAmlSystemDoSuspend
+name|AcpiExSystemDoSuspend
 argument_list|(
 operator|(
 name|UINT32
@@ -441,7 +422,7 @@ comment|/*  DefStall    :=  StallOp     UsecTime    */
 case|case
 name|AML_STALL_OP
 case|:
-name|AcpiAmlSystemDoStall
+name|AcpiExSystemDoStall
 argument_list|(
 operator|(
 name|UINT32
@@ -459,7 +440,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecMonadic1: Unknown monadic opcode %X\n"
+literal|"AcpiExMonadic1: Unknown monadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -475,7 +456,7 @@ comment|/* switch */
 name|Cleanup
 label|:
 comment|/* Always delete the operand */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -489,12 +470,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecMonadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand and  *              result operand on operand stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand and  *              result operand on operand stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic2R
+name|AcpiExMonadic2R
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -546,7 +527,7 @@ name|Digit
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecMonadic2R"
+literal|"ExMonadic2R"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -554,7 +535,7 @@ expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -576,7 +557,7 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -608,19 +589,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2R/%s: bad operand(s) (Status=%s)\n"
+literal|"bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -657,7 +638,7 @@ name|AML_COND_REF_OF_OP
 case|:
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -717,7 +698,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundry condition is valid.          */
+comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
 for|for
 control|(
 name|ResVal
@@ -772,7 +753,7 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundry condition is valid.          */
+comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
 for|for
 control|(
 name|ResVal
@@ -883,12 +864,12 @@ operator|>
 literal|9
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Monadic2R/FromBCDOp: BCD digit too large: \n"
+literal|"BCD digit too large: \n"
 operator|,
 name|Digit
 operator|)
@@ -955,12 +936,12 @@ operator|>
 name|ACPI_MAX_BCD_VALUE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Monadic2R/ToBCDOp: BCD overflow: %d\n"
+literal|"BCD overflow: %d\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -1086,7 +1067,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*              * Must delete the result descriptor since there is no reference              * being returned              */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
@@ -1098,7 +1079,7 @@ block|}
 comment|/* Get the object reference and store it */
 name|Status
 operator|=
-name|AcpiAmlGetObjectReference
+name|AcpiExGetObjectReference
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1122,7 +1103,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc2
 argument_list|,
@@ -1151,7 +1132,7 @@ comment|/*          * A store operand is typically a number, string, buffer or l
 comment|/*          * Do the store, and be careful about deleting the source object,          * since the object itself may have been stored.          */
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -1169,7 +1150,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* On failure, just delete the ObjDesc */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1198,12 +1179,12 @@ case|case
 name|AML_DEBUG_OP
 case|:
 comment|/* Reference, returning an Reference */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2R: DebugOp should never get here!\n"
+literal|"DebugOp should never get here!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1222,12 +1203,12 @@ case|:
 case|case
 name|AML_SHIFT_RIGHT_BIT_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2R: %s unimplemented\n"
+literal|"%s is unimplemented\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
@@ -1248,7 +1229,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecMonadic2R: Unknown monadic opcode %X\n"
+literal|"AcpiExMonadic2R: Unknown monadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -1264,7 +1245,7 @@ goto|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc
 argument_list|,
@@ -1276,7 +1257,7 @@ expr_stmt|;
 name|Cleanup
 label|:
 comment|/* Always delete the operand object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -1290,7 +1271,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
@@ -1301,7 +1282,7 @@ condition|(
 name|RetDesc
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -1327,12 +1308,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecMonadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand:  *              DerefOfOp, RefOfOp, SizeOfOp, TypeOp, IncrementOp,  *              DecrementOp, LNotOp,  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand:  *              DerefOfOp, RefOfOp, SizeOfOp, TypeOp, IncrementOp,  *              DecrementOp, LNotOp,  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic2
+name|AcpiExMonadic2
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -1375,7 +1356,7 @@ name|Value
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecMonadic2"
+literal|"ExMonadic2"
 argument_list|,
 name|WALK_OPERANDS
 argument_list|)
@@ -1383,7 +1364,7 @@ expr_stmt|;
 comment|/* Attempt to resolve the operands */
 name|ResolveStatus
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -1405,7 +1386,7 @@ argument_list|)
 argument_list|,
 literal|1
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Always get all operands */
@@ -1428,19 +1409,19 @@ name|ResolveStatus
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2[%s]: Could not resolve operands, %s\n"
+literal|"[%s]: Could not resolve operands, %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|ResolveStatus
 argument_list|)
@@ -1459,19 +1440,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2[%s]: Bad operand(s), %s\n"
+literal|"[%s]: Bad operand(s), %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1494,7 +1475,7 @@ name|AML_LNOT_OP
 case|:
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1556,7 +1537,7 @@ block|{
 comment|/*              * Duplicate the Reference in a new object so that we can resolve it              * without destroying the original Reference object              */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_REFERENCE
 argument_list|)
@@ -1579,13 +1560,13 @@ name|RetDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 expr_stmt|;
 name|RetDesc
 operator|->
@@ -1615,7 +1596,7 @@ block|}
 comment|/*          * Convert the RetDesc Reference to a Number          * (This deletes the original RetDesc)          */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|AML_LNOT_OP
 argument_list|,
@@ -1633,19 +1614,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMonadic2/%s: bad operand(s) (Status=%s)\n"
+literal|"%s: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1685,7 +1666,7 @@ block|}
 comment|/* Store the result back in the original descriptor */
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc
 argument_list|,
@@ -1722,7 +1703,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -1791,24 +1772,6 @@ break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|Type
-operator|=
-name|AcpiDsMethodDataGetType
-argument_list|(
-name|MTH_TYPE_LOCAL
-argument_list|,
-operator|(
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-operator|)
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|AML_ARG_OP
 case|:
@@ -1816,15 +1779,17 @@ name|Type
 operator|=
 name|AcpiDsMethodDataGetType
 argument_list|(
-name|MTH_TYPE_ARG
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
 argument_list|,
-operator|(
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|,
 name|WalkState
 argument_list|)
@@ -1834,13 +1799,13 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecMonadic2/TypeOp: Internal error - Unknown Reference subtype %X\n"
+literal|"AcpiExMonadic2/TypeOp: Internal error - Unknown Reference subtype %X\n"
 operator|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1861,16 +1826,37 @@ operator|=
 name|AcpiNsGetType
 argument_list|(
 operator|(
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+operator|*
 operator|)
 name|ObjDesc
 argument_list|)
 expr_stmt|;
+comment|/* Convert internal types to external types */
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|INTERNAL_TYPE_REGION_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_BANK_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_INDEX_FIELD
+case|:
+name|Type
+operator|=
+name|ACPI_TYPE_FIELD_UNIT
+expr_stmt|;
+block|}
 block|}
 comment|/* Allocate a descriptor to hold the type. */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1916,6 +1902,10 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
+operator|(
+name|ACPI_NAMESPACE_NODE
+operator|*
+operator|)
 name|ObjDesc
 argument_list|)
 expr_stmt|;
@@ -1987,12 +1977,12 @@ literal|4
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2: Not Buf/Str/Pkg - found type %X\n"
+literal|"Not Buf/Str/Pkg - found type %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -2014,7 +2004,7 @@ block|}
 comment|/*          * Now that we have the size of the object, create a result          * object to hold the value          */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -2048,7 +2038,7 @@ name|AML_REF_OF_OP
 case|:
 name|Status
 operator|=
-name|AcpiAmlGetObjectReference
+name|AcpiExGetObjectReference
 argument_list|(
 name|ObjDesc
 argument_list|,
@@ -2094,56 +2084,29 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 comment|/* Set ObjDesc to the value of the local/arg */
 case|case
 name|AML_LOCAL_OP
 case|:
-name|AcpiDsMethodDataGetValue
-argument_list|(
-name|MTH_TYPE_LOCAL
-argument_list|,
-operator|(
-name|ObjDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-operator|)
-argument_list|,
-name|WalkState
-argument_list|,
-operator|&
-name|TmpDesc
-argument_list|)
-expr_stmt|;
-comment|/*                  * Delete our reference to the input object and                  * point to the object just retrieved                  */
-name|AcpiCmRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-name|ObjDesc
-operator|=
-name|TmpDesc
-expr_stmt|;
-break|break;
 case|case
 name|AML_ARG_OP
 case|:
 name|AcpiDsMethodDataGetValue
 argument_list|(
-name|MTH_TYPE_ARG
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
 argument_list|,
-operator|(
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|,
 name|WalkState
 argument_list|,
@@ -2152,7 +2115,7 @@ name|TmpDesc
 argument_list|)
 expr_stmt|;
 comment|/*                  * Delete our reference to the input object and                  * point to the object just retrieved                  */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -2192,7 +2155,7 @@ operator|->
 name|Object
 expr_stmt|;
 comment|/* Returning a pointer to the object, add another reference! */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -2208,7 +2171,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|!=
 name|AML_INDEX_OP
 operator|)
@@ -2218,20 +2181,26 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|!=
 name|AML_REF_OF_OP
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2: DerefOf, invalid obj ref %p\n"
+literal|"Unknown opcode in ref(%p) - %X\n"
 operator|,
 name|ObjDesc
+operator|,
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2249,7 +2218,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -2270,7 +2239,7 @@ block|{
 comment|/*                      * The target is a buffer, we must create a new object that                      * contains one element of the buffer, the element pointed                      * to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -2349,12 +2318,12 @@ name|RetDesc
 condition|)
 block|{
 comment|/*                          * We can't return a NULL dereferenced value.  This is                          * an uninitialized package element and is thus a                          * severe error.                          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2: DerefOf, NULL package element obj %p\n"
+literal|"NULL package element obj %p\n"
 operator|,
 name|ObjDesc
 operator|)
@@ -2368,7 +2337,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -2376,12 +2345,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMonadic2: DerefOf, Unknown TargetType %X in obj %p\n"
+literal|"Unknown TargetType %X in obj %p\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -2414,7 +2383,7 @@ operator|.
 name|Object
 expr_stmt|;
 comment|/* Add another reference to the object! */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -2427,7 +2396,7 @@ default|default:
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"AcpiAmlExecMonadic2: Unknown monadic opcode %X\n"
+literal|"AcpiExMonadic2: Unknown monadic opcode %X\n"
 operator|,
 name|Opcode
 operator|)
@@ -2448,7 +2417,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -2467,7 +2436,7 @@ name|RetDesc
 operator|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 55 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -436,6 +436,22 @@ name|WalkState
 operator|=
 name|NULL
 expr_stmt|;
+name|WalkList
+operator|.
+name|AcquiredMutexList
+operator|.
+name|Prev
+operator|=
+name|NULL
+expr_stmt|;
+name|WalkList
+operator|.
+name|AcquiredMutexList
+operator|.
+name|Next
+operator|=
+name|NULL
+expr_stmt|;
 name|WalkState
 operator|=
 name|AcpiDsCreateWalkState
@@ -523,6 +539,18 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* We are done with this walk */
+name|AcpiExReleaseAllMutexes
+argument_list|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+operator|&
+name|WalkList
+operator|.
+name|AcquiredMutexList
+argument_list|)
+expr_stmt|;
 name|AcpiDsDeleteWalkState
 argument_list|(
 name|WalkState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -460,7 +460,7 @@ comment|/* Processor is usable if set */
 name|UINT32_BIT
 name|Reserved1
 range|:
-literal|32
+literal|31
 decl_stmt|;
 block|}
 name|PROCESSOR_APIC

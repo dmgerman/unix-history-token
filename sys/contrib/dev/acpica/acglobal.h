@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -457,17 +457,6 @@ end_decl_stmt
 begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
-name|AcpiGbl_GlobalLockSet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TBD: [Restructure] OBSOLETE?? */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|BOOLEAN
 name|AcpiGbl_StepToNextCall
 decl_stmt|;
 end_decl_stmt
@@ -476,6 +465,13 @@ begin_decl_stmt
 name|ACPI_EXTERN
 name|BOOLEAN
 name|AcpiGbl_AcpiHardwarePresent
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|BOOLEAN
+name|AcpiGbl_GlobalLockPresent
 decl_stmt|;
 end_decl_stmt
 
@@ -528,7 +524,9 @@ begin_decl_stmt
 specifier|extern
 name|NATIVE_CHAR
 name|AcpiGbl_HexToAscii
-index|[]
+index|[
+literal|16
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -597,7 +595,7 @@ end_ifdef
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|AcpiGbl_HeadAllocPtr
 decl_stmt|;
@@ -605,7 +603,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 modifier|*
 name|AcpiGbl_TailAllocPtr
 decl_stmt|;
@@ -629,23 +627,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Handle to the last method found - used during pass1 of load  */
-end_comment
-
-begin_decl_stmt
-name|ACPI_EXTERN
-name|ACPI_HANDLE
-name|AcpiGbl_LastMethod
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Table of Address Space handlers  */
 end_comment
 
 begin_decl_stmt
 name|ACPI_EXTERN
-name|ACPI_ADDRESS_SPACE_INFO
+name|ACPI_ADR_SPACE_INFO
 name|AcpiGbl_AddressSpaces
 index|[
 name|ACPI_NUM_ADDRESS_SPACES
@@ -706,7 +693,7 @@ name|ACPI_EXTERN
 name|ACPI_FIXED_EVENT_INFO
 name|AcpiGbl_FixedEventHandlers
 index|[
-name|NUM_FIXED_EVENTS
+name|ACPI_NUM_FIXED_EVENTS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -750,7 +737,7 @@ name|ACPI_EXTERN
 name|UINT8
 name|AcpiGbl_GpeValid
 index|[
-name|NUM_GPE
+name|ACPI_NUM_GPE
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -770,7 +757,7 @@ name|ACPI_EXTERN
 name|UINT32
 name|AcpiGbl_EventCount
 index|[
-name|NUM_FIXED_EVENTS
+name|ACPI_NUM_FIXED_EVENTS
 index|]
 decl_stmt|;
 end_decl_stmt

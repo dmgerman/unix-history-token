@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -52,15 +52,16 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/**************************************************************************  *  * FUNCTION:    AcpiEvNotifyDispatch  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  *************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvQueueNotifyRequest  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|void
-name|AcpiEvNotifyDispatch
+name|ACPI_STATUS
+name|AcpiEvQueueNotifyRequest
 parameter_list|(
-name|ACPI_HANDLE
-name|Device
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|UINT32
 name|NotifyValue
@@ -73,21 +74,34 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|HandlerObj
+init|=
+name|NULL
 decl_stmt|;
-name|NOTIFY_HANDLER
-name|Handler
+name|ACPI_GENERIC_STATE
+modifier|*
+name|NotifyInfo
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"EvQueueNotifyRequest"
+argument_list|)
+expr_stmt|;
 comment|/*      * For value 1 (Ejection Request), some device method may need to be run.      * For value 2 (Device Wake) if _PRW exists, the _PS0 method may need to be run.      * For value 0x80 (Status Change) on the power button or sleep button,      * initiate soft-off or sleep operation?      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Dispatching Notify(%X) on device %p\n"
+literal|"Dispatching Notify(%X) on node %p\n"
 operator|,
 name|NotifyValue
 operator|,
-name|Device
+name|Node
 operator|)
 argument_list|)
 expr_stmt|;
@@ -99,7 +113,7 @@ block|{
 case|case
 literal|0
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -112,7 +126,7 @@ break|break;
 case|case
 literal|1
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -125,7 +139,7 @@ break|break;
 case|case
 literal|2
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -138,7 +152,7 @@ break|break;
 case|case
 literal|0x80
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -149,7 +163,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -162,94 +176,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*      * Invoke a global notify handler if installed.      * This is done _before_ we invoke the per-device handler attached to the device.      */
-if|if
-condition|(
-name|NotifyValue
-operator|<=
-name|MAX_SYS_NOTIFY
-condition|)
-block|{
-comment|/* Global system notification handler */
-if|if
-condition|(
-name|AcpiGbl_SysNotify
-operator|.
-name|Handler
-condition|)
-block|{
-name|AcpiGbl_SysNotify
-operator|.
-name|Handler
-argument_list|(
-name|Device
-argument_list|,
-name|NotifyValue
-argument_list|,
-name|AcpiGbl_SysNotify
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* Global driver notification handler */
-if|if
-condition|(
-name|AcpiGbl_DrvNotify
-operator|.
-name|Handler
-condition|)
-block|{
-name|AcpiGbl_DrvNotify
-operator|.
-name|Handler
-argument_list|(
-name|Device
-argument_list|,
-name|NotifyValue
-argument_list|,
-name|AcpiGbl_DrvNotify
-operator|.
-name|Context
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/*      * Get the notify object which must be attached to the device Node      */
+comment|/*      * Get the notify object attached to the device Node      */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
-name|Device
+name|Node
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/* There can be no notify handler for this device */
-name|DEBUG_PRINT
-argument_list|(
-name|ACPI_INFO
-argument_list|,
-operator|(
-literal|"No notify handler for device %p \n"
-operator|,
-name|Device
-operator|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* We have the notify object, Get the right handler */
+switch|switch
+condition|(
+name|Node
+operator|->
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_DEVICE
+case|:
 if|if
 condition|(
 name|NotifyValue
@@ -277,41 +227,318 @@ operator|.
 name|DrvHandler
 expr_stmt|;
 block|}
-comment|/* Validate the handler */
+break|break;
+case|case
+name|ACPI_TYPE_THERMAL
+case|:
+if|if
+condition|(
+name|NotifyValue
+operator|<=
+name|MAX_SYS_NOTIFY
+condition|)
+block|{
+name|HandlerObj
+operator|=
+name|ObjDesc
+operator|->
+name|ThermalZone
+operator|.
+name|SysHandler
+expr_stmt|;
+block|}
+else|else
+block|{
+name|HandlerObj
+operator|=
+name|ObjDesc
+operator|->
+name|ThermalZone
+operator|.
+name|DrvHandler
+expr_stmt|;
+block|}
+break|break;
+block|}
+block|}
+comment|/* If there is any handler to run, schedule the dispatcher */
+if|if
+condition|(
+operator|(
+name|AcpiGbl_SysNotify
+operator|.
+name|Handler
+operator|&&
+operator|(
+name|NotifyValue
+operator|<=
+name|MAX_SYS_NOTIFY
+operator|)
+operator|)
+operator|||
+operator|(
+name|AcpiGbl_DrvNotify
+operator|.
+name|Handler
+operator|&&
+operator|(
+name|NotifyValue
+operator|>
+name|MAX_SYS_NOTIFY
+operator|)
+operator|)
+operator|||
+name|HandlerObj
+condition|)
+block|{
+name|NotifyInfo
+operator|=
+name|AcpiUtCreateGenericState
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NotifyInfo
+condition|)
+block|{
+return|return
+operator|(
+name|AE_NO_MEMORY
+operator|)
+return|;
+block|}
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Node
+operator|=
+name|Node
+expr_stmt|;
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Value
+operator|=
+operator|(
+name|UINT16
+operator|)
+name|NotifyValue
+expr_stmt|;
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|HandlerObj
+operator|=
+name|HandlerObj
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiOsQueueForExecution
+argument_list|(
+name|OSD_PRIORITY_HIGH
+argument_list|,
+name|AcpiEvNotifyDispatch
+argument_list|,
+name|NotifyInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiUtDeleteGenericState
+argument_list|(
+name|NotifyInfo
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|!
 name|HandlerObj
 condition|)
 block|{
-comment|/* There is no notify handler for this device */
-name|DEBUG_PRINT
+comment|/* There is no per-device notify handler for this device */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"No notify handler for device %p \n"
+literal|"No notify handler for node %p \n"
 operator|,
-name|Device
+name|Node
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
-comment|/* There is a handler, invoke it */
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvNotifyDispatch  *  * PARAMETERS:  *  * RETURN:      None.  *  * DESCRIPTION: Dispatch a device notification event to a previously  *              installed handler.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiEvNotifyDispatch
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+block|{
+name|ACPI_GENERIC_STATE
+modifier|*
+name|NotifyInfo
+init|=
+operator|(
+name|ACPI_GENERIC_STATE
+operator|*
+operator|)
+name|Context
+decl_stmt|;
+name|ACPI_NOTIFY_HANDLER
+name|GlobalHandler
+init|=
+name|NULL
+decl_stmt|;
+name|void
+modifier|*
+name|GlobalContext
+init|=
+name|NULL
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|HandlerObj
+decl_stmt|;
+comment|/*      * We will invoke a global notify handler if installed.      * This is done _before_ we invoke the per-device handler attached to the device.      */
+if|if
+condition|(
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Value
+operator|<=
+name|MAX_SYS_NOTIFY
+condition|)
+block|{
+comment|/* Global system notification handler */
+if|if
+condition|(
+name|AcpiGbl_SysNotify
+operator|.
 name|Handler
+condition|)
+block|{
+name|GlobalHandler
 operator|=
+name|AcpiGbl_SysNotify
+operator|.
+name|Handler
+expr_stmt|;
+name|GlobalContext
+operator|=
+name|AcpiGbl_SysNotify
+operator|.
+name|Context
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* Global driver notification handler */
+if|if
+condition|(
+name|AcpiGbl_DrvNotify
+operator|.
+name|Handler
+condition|)
+block|{
+name|GlobalHandler
+operator|=
+name|AcpiGbl_DrvNotify
+operator|.
+name|Handler
+expr_stmt|;
+name|GlobalContext
+operator|=
+name|AcpiGbl_DrvNotify
+operator|.
+name|Context
+expr_stmt|;
+block|}
+block|}
+comment|/* Invoke the system handler first, if present */
+if|if
+condition|(
+name|GlobalHandler
+condition|)
+block|{
+name|GlobalHandler
+argument_list|(
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Node
+argument_list|,
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Value
+argument_list|,
+name|GlobalContext
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Now invoke the per-device handler, if present */
+name|HandlerObj
+operator|=
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|HandlerObj
+expr_stmt|;
+if|if
+condition|(
+name|HandlerObj
+condition|)
+block|{
 name|HandlerObj
 operator|->
 name|NotifyHandler
 operator|.
 name|Handler
-expr_stmt|;
-name|Handler
 argument_list|(
-name|Device
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Node
 argument_list|,
-name|NotifyValue
+name|NotifyInfo
+operator|->
+name|Notify
+operator|.
+name|Value
 argument_list|,
 name|HandlerObj
 operator|->
@@ -321,10 +548,17 @@ name|Context
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* All done with the info object */
+name|AcpiUtDeleteGenericState
+argument_list|(
+name|NotifyInfo
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
-comment|/***************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockThread  *  * RETURN:      None  *  * DESCRIPTION: Invoked by SCI interrupt handler upon acquisition of the  *              Global Lock.  Simply signal all threads that are waiting  *              for the lock.  *  **************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockThread  *  * RETURN:      None  *  * DESCRIPTION: Invoked by SCI interrupt handler upon acquisition of the  *              Global Lock.  Simply signal all threads that are waiting  *              for the lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -356,7 +590,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs.  Grab the global lock and queue  *              the global lock thread for execution  *  **************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Invoked directly from the SCI handler when a global lock  *              release interrupt occurs.  Grab the global lock and queue  *              the global lock thread for execution  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -422,7 +656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************************  *  * FUNCTION:    AcpiEvInitGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for the global lock release event  *  **************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvInitGlobalLockHandler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for the global lock release event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -440,6 +674,10 @@ argument_list|(
 literal|"EvInitGlobalLockHandler"
 argument_list|)
 expr_stmt|;
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|TRUE
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiInstallFixedEventHandler
@@ -451,6 +689,23 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*      * If the global lock does not exist on this platform, the attempt      * to enable GBL_STS will fail (the GBL_EN bit will not stick)      * Map to AE_OK, but mark global lock as not present.      * Any attempt to actually use the global lock will be flagged      * with an error.      */
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_NO_HARDWARE_RESPONSE
+condition|)
+block|{
+name|AcpiGbl_GlobalLockPresent
+operator|=
+name|FALSE
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -460,7 +715,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  **************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiEvAcquireGlobalLock  *  * RETURN:      Status  *  * DESCRIPTION: Attempt to gain ownership of the Global Lock.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -489,6 +744,19 @@ argument_list|(
 literal|"EvAcquireGlobalLock"
 argument_list|)
 expr_stmt|;
+comment|/* Make sure that we actually have a global lock */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_GlobalLockPresent
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NO_GLOBAL_LOCK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* One more thread wants the global lock */
 name|AcpiGbl_GlobalLockThreadCount
 operator|++
@@ -538,12 +806,12 @@ name|Acquired
 condition|)
 block|{
 comment|/* We got the lock */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"Acquired the HW Global Lock\n"
+literal|"Acquired the Global Lock\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -558,7 +826,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Did not get the lock.  The pending bit was set above, and we must now      * wait until we get the global lock released interrupt.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -570,7 +838,7 @@ expr_stmt|;
 comment|/*       * Acquire the global lock semaphore first.       * Since this wait will block, we must release the interpreter       */
 name|Status
 operator|=
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 argument_list|(
 name|AcpiGbl_GlobalLockSemaphore
 argument_list|,
@@ -586,7 +854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************************  *  * FUNCTION:    AcpiEvReleaseGlobalLock  *  * DESCRIPTION: Releases ownership of the Global Lock.  *  **************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvReleaseGlobalLock  *  * DESCRIPTION: Releases ownership of the Global Lock.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -619,7 +887,7 @@ block|{
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Releasing a non-acquired Global Lock\n"
+literal|"Global Lock has not be acquired, cannot release\n"
 operator|)
 argument_list|)
 expr_stmt|;

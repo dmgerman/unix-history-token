@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acpiosxf.h - All interfaces to the OS-dependent layer.  These  *                    interfaces must be implemented by the OS-dependent  *                    front-end to the ACPI subsystem.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acpiosxf.h - All interfaces to the OS Services Layer (OSL).  These  *                    interfaces must be implemented by OSL to interface the  *                    ACPI components to the host operating system.  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,19 +10,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACPIOSD_H__
+name|__ACPIOSXF_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACPIOSD_H__
+name|__ACPIOSXF_H__
 end_define
 
 begin_include
 include|#
 directive|include
-file|"acenv.h"
+file|"platform/acenv.h"
 end_include
 
 begin_include
@@ -78,7 +78,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Types specific to the OS-dependent layer interfaces  */
+comment|/*  * Types specific to the OS service interfaces  */
 end_comment
 
 begin_typedef
@@ -112,7 +112,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Initialization and shutdown primitives  (Optional)  */
+comment|/*  * OSL Initialization and shutdown primitives  */
 end_comment
 
 begin_function_decl
@@ -312,8 +312,17 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Scheduling  */
+comment|/*  * Threads and Scheduling  */
 end_comment
+
+begin_function_decl
+name|UINT32
+name|AcpiOsGetThreadId
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
@@ -745,7 +754,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ACPIOSD_H__ */
+comment|/* __ACPIOSXF_H__ */
 end_comment
 
 end_unit

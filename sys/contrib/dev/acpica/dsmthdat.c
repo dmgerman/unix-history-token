@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 39 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 46 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DISPATCHER
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -84,7 +84,7 @@ argument_list|(
 literal|"DsMethodDataInit"
 argument_list|)
 expr_stmt|;
-comment|/*      * WalkState fields are initialized to zero by the      * AcpiCmCallocate().      *      * An Node is assigned to each argument and local so      * that RefOf() can return a pointer to the Node.      */
+comment|/*      * WalkState fields are initialized to zero by the      * AcpiUtCallocate().      *      * An Node is assigned to each argument and local so      * that RefOf() can return a pointer to the Node.      */
 comment|/* Init the method arguments */
 for|for
 control|(
@@ -281,12 +281,12 @@ literal|"DsMethodDataDeleteAll"
 argument_list|)
 expr_stmt|;
 comment|/* Delete the locals */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"MethodDeleteAll: Deleting local variables in %p\n"
+literal|"Deleting local variables in %p\n"
 operator|,
 name|WalkState
 operator|)
@@ -322,12 +322,12 @@ condition|(
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"MethodDeleteAll: Deleting Local%d=%p\n"
+literal|"Deleting Local%d=%p\n"
 operator|,
 name|Index
 operator|,
@@ -348,7 +348,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Was given a ref when stored */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|Object
 argument_list|)
@@ -356,12 +356,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Delete the arguments */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"MethodDeleteAll: Deleting arguments in %p\n"
+literal|"Deleting arguments in %p\n"
 operator|,
 name|WalkState
 operator|)
@@ -397,12 +397,12 @@ condition|(
 name|Object
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"MethodDeleteAll: Deleting Arg%d=%p\n"
+literal|"Deleting Arg%d=%p\n"
 operator|,
 name|Index
 operator|,
@@ -423,7 +423,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Was given a ref when stored */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|Object
 argument_list|)
@@ -481,12 +481,12 @@ operator|!
 name|Params
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsMethodDataInitArgs: No param list passed to method\n"
+literal|"No param list passed to method\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -532,9 +532,9 @@ block|{
 comment|/*              * A valid parameter.              * Set the current method argument to the              * Params[Pindex++] argument object descriptor              */
 name|Status
 operator|=
-name|AcpiDsMethodDataSetValue
+name|AcpiDsStoreObjectToLocal
 argument_list|(
-name|MTH_TYPE_ARG
+name|AML_ARG_OP
 argument_list|,
 name|Mindex
 argument_list|,
@@ -565,12 +565,12 @@ block|{
 break|break;
 block|}
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsMethodDataInitArgs: %d args passed to method\n"
+literal|"%d args passed to method\n"
 operator|,
 name|Pindex
 operator|)
@@ -585,15 +585,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetEntry  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument to get  *              Entry               - Pointer to where a pointer to the stack  *                                    entry is returned.  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Get the address of the stack entry given by Type:Index  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetEntry  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to get  *              Entry               - Pointer to where a pointer to the stack  *                                    entry is returned.  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Get the address of the object entry given by Opcode:Index  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDsMethodDataGetEntry
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -616,14 +616,14 @@ argument_list|,
 name|Index
 argument_list|)
 expr_stmt|;
-comment|/*      * Get the requested object.      * The stack "Type" is either a LocalVariable or an Argument      */
+comment|/*      * Get the requested object.      * The stack "Opcode" is either a LocalVariable or an Argument      */
 switch|switch
 condition|(
-name|Type
+name|Opcode
 condition|)
 block|{
 case|case
-name|MTH_TYPE_LOCAL
+name|AML_LOCAL_OP
 case|:
 if|if
 condition|(
@@ -632,12 +632,12 @@ operator|>
 name|MTH_MAX_LOCAL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: LocalVar index %d is invalid (max %d)\n"
+literal|"LocalVar index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
@@ -671,7 +671,7 @@ name|Object
 expr_stmt|;
 break|break;
 case|case
-name|MTH_TYPE_ARG
+name|AML_ARG_OP
 case|:
 if|if
 condition|(
@@ -680,12 +680,12 @@ operator|>
 name|MTH_MAX_ARG
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: Argument index %d is invalid (max %d)\n"
+literal|"Arg index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
@@ -719,14 +719,14 @@ name|Object
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: Stack type %d is invalid\n"
+literal|"Opcode %d is invalid\n"
 operator|,
-name|Type
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -745,15 +745,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataSetEntry  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument to get  *              Object              - Object to be inserted into the stack entry  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Insert an object onto the method stack at entry Type:Index.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataSetEntry  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to get  *              Object              - Object to be inserted into the stack entry  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Insert an object onto the method stack at entry Opcode:Index.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDsMethodDataSetEntry
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -785,7 +785,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataGetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -810,7 +810,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Increment ref count so object can't be deleted while installed */
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|Object
 argument_list|)
@@ -830,15 +830,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetType  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument whose type  *                                      to get  *              WalkState           - Current walk state object  *  * RETURN:      Data type of selected Arg or Local  *              Used only in ExecMonadic2()/TypeOp.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetType  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument whose type  *                                      to get  *              WalkState           - Current walk state object  *  * RETURN:      Data type of selected Arg or Local  *              Used only in ExecMonadic2()/TypeOp.  *  ******************************************************************************/
 end_comment
 
 begin_function
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|AcpiDsMethodDataGetType
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -870,7 +870,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataGetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -929,16 +929,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetNte  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument whose type  *                                      to get  *              WalkState           - Current walk state object  *  * RETURN:      Get the Node associated with a local or arg.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetNode  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument whose type  *                                      to get  *              WalkState           - Current walk state object  *  * RETURN:      Get the Node associated with a local or arg.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|AcpiDsMethodDataGetNte
+name|AcpiDsMethodDataGetNode
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -956,16 +956,16 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"DsMethodDataGetNte"
+literal|"DsMethodDataGetNode"
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|Type
+name|Opcode
 condition|)
 block|{
 case|case
-name|MTH_TYPE_LOCAL
+name|AML_LOCAL_OP
 case|:
 if|if
 condition|(
@@ -974,12 +974,12 @@ operator|>
 name|MTH_MAX_LOCAL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: LocalVar index %d is invalid (max %d)\n"
+literal|"Local index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
@@ -1005,7 +1005,7 @@ index|]
 expr_stmt|;
 break|break;
 case|case
-name|MTH_TYPE_ARG
+name|AML_ARG_OP
 case|:
 if|if
 condition|(
@@ -1014,12 +1014,12 @@ operator|>
 name|MTH_MAX_ARG
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: Argument index %d is invalid (max %d)\n"
+literal|"Arg index %d is invalid (max %d)\n"
 operator|,
 name|Index
 operator|,
@@ -1045,14 +1045,14 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetEntry: Stack type %d is invalid\n"
+literal|"Opcode %d is invalid\n"
 operator|,
-name|Type
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1067,15 +1067,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetValue  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument to get  *              WalkState           - Current walk state object  *              *DestDesc           - Ptr to Descriptor into which selected Arg  *                                    or Local value should be copied  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve value of selected Arg or Local from the method frame  *              at the current top of the method stack.  *              Used only in AcpiAmlResolveToValue().  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataGetValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to get  *              WalkState           - Current walk state object  *              *DestDesc           - Ptr to Descriptor into which selected Arg  *                                    or Local value should be copied  *  * RETURN:      Status  *  * DESCRIPTION: Retrieve value of selected Arg or Local from the method frame  *              at the current top of the method stack.  *              Used only in AcpiExResolveToValue().  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDsMethodDataGetValue
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -1114,12 +1114,12 @@ operator|!
 name|DestDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetValue: NULL object descriptor pointer\n"
+literal|"Null object descriptor pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1134,7 +1134,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataGetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -1174,18 +1174,18 @@ block|{
 comment|/*          * Index points to uninitialized object stack value.          * This means that either 1) The expected argument was          * not passed to the method, or 2) A local variable          * was referenced by the method (via the ASL)          * before it was initialized.  Either case is an error.          */
 switch|switch
 condition|(
-name|Type
+name|Opcode
 condition|)
 block|{
 case|case
-name|MTH_TYPE_ARG
+name|AML_ARG_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetValue: Uninitialized Arg[%d] at entry %p\n"
+literal|"Uninitialized Arg[%d] at entry %p\n"
 operator|,
 name|Index
 operator|,
@@ -1200,14 +1200,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MTH_TYPE_LOCAL
+name|AML_LOCAL_OP
 case|:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsMethodDataGetValue: Uninitialized Local[%d] at entry %p\n"
+literal|"Uninitialized Local[%d] at entry %p\n"
 operator|,
 name|Index
 operator|,
@@ -1229,7 +1229,7 @@ name|DestDesc
 operator|=
 name|Object
 expr_stmt|;
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|Object
 argument_list|)
@@ -1243,15 +1243,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Delete the entry at Type:Index on the method stack.  Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataDeleteValue  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to delete  *              WalkState           - Current walk state object  *  * RETURN:      Status  *  * DESCRIPTION: Delete the entry at Opcode:Index on the method stack.  Inserts  *              a null into the stack slot after the object is deleted.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDsMethodDataDeleteValue
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -1283,7 +1283,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataGetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -1336,7 +1336,7 @@ operator|)
 condition|)
 block|{
 comment|/*          * There is a valid object in this slot          * Decrement the reference count by one to balance the          * increment when the object was stored in the slot.          */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|Object
 argument_list|)
@@ -1351,15 +1351,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsMethodDataSetValue  *  * PARAMETERS:  Type                - Either MTH_TYPE_LOCAL or MTH_TYPE_ARG  *              Index               - Which localVar or argument to set  *              SrcDesc             - Value to be stored  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store a value in an Arg or Local.  The SrcDesc is installed  *              as the new value for the Arg or Local and the reference count  *              for SrcDesc is incremented.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsStoreObjectToLocal  *  * PARAMETERS:  Opcode              - Either AML_LOCAL_OP or AML_ARG_OP  *              Index               - Which localVar or argument to set  *              SrcDesc             - Value to be stored  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store a value in an Arg or Local.  The SrcDesc is installed  *              as the new value for the Arg or Local and the reference count  *              for SrcDesc is incremented.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDsMethodDataSetValue
+name|AcpiDsStoreObjectToLocal
 parameter_list|(
-name|UINT32
-name|Type
+name|UINT16
+name|Opcode
 parameter_list|,
 name|UINT32
 name|Index
@@ -1386,14 +1386,14 @@ argument_list|(
 literal|"DsMethodDataSetValue"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsMethodDataSetValue: Type=%d Idx=%d Obj=%p\n"
+literal|"Opcode=%d Idx=%d Obj=%p\n"
 operator|,
-name|Type
+name|Opcode
 operator|,
 name|Index
 operator|,
@@ -1419,7 +1419,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataGetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -1449,12 +1449,12 @@ operator|==
 name|SrcDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsMethodDataSetValue: Obj=%p already installed!\n"
+literal|"Obj=%p already installed!\n"
 operator|,
 name|SrcDesc
 operator|)
@@ -1475,9 +1475,9 @@ comment|/*          * Check for an indirect store if an argument          * cont
 if|if
 condition|(
 operator|(
-name|Type
+name|Opcode
 operator|==
-name|MTH_TYPE_ARG
+name|AML_ARG_OP
 operator|)
 operator|&&
 operator|(
@@ -1491,12 +1491,12 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsMethodDataSetValue: Arg (%p) is an ObjRef(Node), storing in %p\n"
+literal|"Arg (%p) is an ObjRef(Node), storing in %p\n"
 operator|,
 name|SrcDesc
 operator|,
@@ -1543,10 +1543,13 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|ACPI_ENABLE_IMPLICIT_CONVERSION
 comment|/*          * Perform "Implicit conversion" of the new object to the type of the          * existing object          */
 name|Status
 operator|=
-name|AcpiAmlConvertToTargetType
+name|AcpiExConvertToTargetType
 argument_list|(
 operator|(
 operator|*
@@ -1575,10 +1578,12 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/*          * Delete the existing object          * before storing the new one          */
 name|AcpiDsMethodDataDeleteValue
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,
@@ -1591,7 +1596,7 @@ name|Status
 operator|=
 name|AcpiDsMethodDataSetEntry
 argument_list|(
-name|Type
+name|Opcode
 argument_list|,
 name|Index
 argument_list|,

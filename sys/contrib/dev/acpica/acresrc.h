@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acresrc.h - Resource Manager function prototypes  *       $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acresrc.h - Resource Manager function prototypes  *       $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsCreateByteStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedListBuffer
 parameter_list|,
@@ -144,7 +144,7 @@ begin_function_decl
 name|void
 name|AcpiRsDumpResourceList
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|Resource
 parameter_list|)
@@ -204,7 +204,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsCalculateByteStreamLength
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedListBuffer
 parameter_list|,
@@ -253,7 +253,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsListToByteStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -320,7 +320,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsIoStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -340,7 +340,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsFixedIoStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -384,7 +384,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsIrqStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -428,7 +428,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsDmaStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -472,7 +472,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsAddress16Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -516,7 +516,51 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsAddress32Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
+modifier|*
+name|LinkedList
+parameter_list|,
+name|UINT8
+modifier|*
+modifier|*
+name|OutputBuffer
+parameter_list|,
+name|UINT32
+modifier|*
+name|BytesConsumed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiRsAddress64Resource
+parameter_list|(
+name|UINT8
+modifier|*
+name|ByteStreamBuffer
+parameter_list|,
+name|UINT32
+modifier|*
+name|BytesConsumed
+parameter_list|,
+name|UINT8
+modifier|*
+modifier|*
+name|OutputBuffer
+parameter_list|,
+name|UINT32
+modifier|*
+name|StructureSize
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiRsAddress64Stream
+parameter_list|(
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -584,7 +628,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsStartDependentFunctionsStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -604,7 +648,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsEndDependentFunctionsStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -648,7 +692,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsMemory24Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -716,7 +760,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsMemory32RangeStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -736,7 +780,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsFixedMemory32Stream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -780,7 +824,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsExtendedIrqStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -824,7 +868,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsEndTagStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -868,7 +912,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiRsVendorStream
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -880,6 +924,16 @@ parameter_list|,
 name|UINT32
 modifier|*
 name|BytesConsumed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UINT8
+name|AcpiRsGetResourceType
+parameter_list|(
+name|UINT8
+name|ResourceStartByte
 parameter_list|)
 function_decl|;
 end_function_decl

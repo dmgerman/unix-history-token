@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmeval - Object evaluation  *              $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMEVAL_C__
+name|__UTEVAL_C__
 end_define
 
 begin_include
@@ -35,23 +35,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmeval"
+literal|"uteval"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmEvaluateNumericObject  *  * PARAMETERS:  *ObjectName         - Object name to be evaluated  *              DeviceNode          - Node for the device  *              *Address            - Where the value is returned  *  * RETURN:      Status  *  * DESCRIPTION: evaluates a numeric namespace object for a selected device  *              and stores results in *Address.  *  *              NOTE: Internal function, no parameter validation  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtEvaluateNumericObject  *  * PARAMETERS:  *ObjectName         - Object name to be evaluated  *              DeviceNode          - Node for the device  *              *Address            - Where the value is returned  *  * RETURN:      Status  *  * DESCRIPTION: evaluates a numeric namespace object for a selected device  *              and stores results in *Address.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmEvaluateNumericObject
+name|AcpiUtEvaluateNumericObject
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -75,7 +75,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmEvaluateNumericObject"
+literal|"UtEvaluateNumericObject"
 argument_list|)
 expr_stmt|;
 comment|/* Execute the method */
@@ -108,7 +108,7 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -127,12 +127,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"%s on %4.4s failed with status %4.4x\n"
+literal|"%s on %4.4s failed with status %s\n"
 operator|,
 name|ObjectName
 operator|,
@@ -141,7 +141,7 @@ name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -162,7 +162,7 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -195,7 +195,7 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -227,7 +227,7 @@ name|Value
 expr_stmt|;
 block|}
 comment|/* On exit, we must delete the return object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -241,18 +241,18 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmExecute_HID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Hid                - Where the HID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _HID control method that returns the hardware  *              ID of the device.  *  *              NOTE: Internal function, no parameter validation  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_HID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Hid                - Where the HID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _HID control method that returns the hardware  *              ID of the device.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmExecute_HID
+name|AcpiUtExecute_HID
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 modifier|*
 name|Hid
 parameter_list|)
@@ -266,7 +266,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmExecute_HID"
+literal|"UtExecute_HID"
 argument_list|)
 expr_stmt|;
 comment|/* Execute the method */
@@ -299,7 +299,7 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -316,19 +316,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"_HID on %4.4s failed with status %4.4x\n"
+literal|"_HID on %4.4s failed %s\n"
 operator|,
 operator|&
 name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -349,7 +349,7 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -392,14 +392,14 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
 literal|"Type returned from _HID not a number or string: %s(%X) \n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|ObjDesc
 operator|->
@@ -431,7 +431,7 @@ name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 comment|/* Convert the Numeric HID to string */
-name|AcpiAmlEisaIdToString
+name|AcpiExEisaIdToString
 argument_list|(
 operator|(
 name|UINT32
@@ -474,7 +474,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* On exit, we must delete the return object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -488,18 +488,18 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmExecute_UID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Uid                - Where the UID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _UID control method that returns the hardware  *              ID of the device.  *  *              NOTE: Internal function, no parameter validation  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_UID  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Uid                - Where the UID is returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes the _UID control method that returns the hardware  *              ID of the device.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmExecute_UID
+name|AcpiUtExecute_UID
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 modifier|*
 name|Uid
 parameter_list|)
@@ -511,6 +511,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"UtExecute_UID"
+argument_list|)
+expr_stmt|;
 comment|/* Execute the method */
 name|Status
 operator|=
@@ -541,7 +546,7 @@ operator|==
 name|AE_NOT_FOUND
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -558,19 +563,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"_UID on %4.4s failed with status %4.4x\n"
+literal|"_UID on %4.4s failed %s\n"
 operator|,
 operator|&
 name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -591,7 +596,7 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -634,7 +639,7 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -664,7 +669,7 @@ name|ACPI_TYPE_INTEGER
 condition|)
 block|{
 comment|/* Convert the Numeric UID to string */
-name|AcpiAmlUnsignedIntegerToString
+name|AcpiExUnsignedIntegerToString
 argument_list|(
 name|ObjDesc
 operator|->
@@ -704,7 +709,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* On exit, we must delete the return object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -718,12 +723,12 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * FUNCTION:    AcpiCmExecute_STA  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Flags              - Where the status flags are returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes _STA for selected device and stores results in  *              *Flags.  *  *              NOTE: Internal function, no parameter validation  *  ***************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtExecute_STA  *  * PARAMETERS:  DeviceNode          - Node for the device  *              *Flags              - Where the status flags are returned  *  * RETURN:      Status  *  * DESCRIPTION: Executes _STA for selected device and stores results in  *              *Flags.  *  *              NOTE: Internal function, no parameter validation  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmExecute_STA
+name|AcpiUtExecute_STA
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -743,7 +748,7 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmExecute_STA"
+literal|"UtExecute_STA"
 argument_list|)
 expr_stmt|;
 comment|/* Execute the method */
@@ -768,7 +773,7 @@ operator|==
 name|Status
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
@@ -801,19 +806,19 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"_STA on %4.4s failed with status %s\n"
+literal|"_STA on %4.4s failed %s\n"
 operator|,
 operator|&
 name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -831,7 +836,7 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -862,7 +867,7 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -895,7 +900,7 @@ name|Value
 expr_stmt|;
 block|}
 comment|/* On exit, we must delete the return object */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - AcpiRsCalculateByteStreamLength  *                       AcpiRsCalculateListLength  *              $Revision: 21 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 30 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -52,14 +52,14 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateByteStreamLength  *  * PARAMETERS:  LinkedList          - Pointer to the resource linked list  *              SizeNeeded          - UINT32 pointer of the size buffer needed  *                                      to properly return the parsed data  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateByteStreamLength  *  * PARAMETERS:  LinkedList          - Pointer to the resource linked list  *              SizeNeeded          - UINT32 pointer of the size buffer needed  *                                    to properly return the parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiRsCalculateByteStreamLength
 parameter_list|(
-name|RESOURCE
+name|ACPI_RESOURCE
 modifier|*
 name|LinkedList
 parameter_list|,
@@ -76,7 +76,7 @@ decl_stmt|;
 name|UINT32
 name|SegmentSize
 decl_stmt|;
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 modifier|*
 name|ExIrq
 init|=
@@ -98,7 +98,7 @@ operator|!
 name|Done
 condition|)
 block|{
-comment|/*          * Init the variable that will hold the size to add to the          *  total.          */
+comment|/*          * Init the variable that will hold the size to add to the total.          */
 name|SegmentSize
 operator|=
 literal|0
@@ -111,70 +111,63 @@ name|Id
 condition|)
 block|{
 case|case
-name|Irq
+name|ACPI_RSTYPE_IRQ
 case|:
-comment|/*              * IRQ Resource              */
-comment|/*              * For an IRQ Resource, Byte 3, although optional, will              *  always be created - it holds IRQ information.              */
+comment|/*              * IRQ Resource              * For an IRQ Resource, Byte 3, although optional, will              * always be created - it holds IRQ information.              */
 name|SegmentSize
 operator|=
 literal|4
 expr_stmt|;
 break|break;
 case|case
-name|Dma
+name|ACPI_RSTYPE_DMA
 case|:
-comment|/*              * DMA Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * DMA Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|3
 expr_stmt|;
 break|break;
 case|case
-name|StartDependentFunctions
+name|ACPI_RSTYPE_START_DPF
 case|:
-comment|/*              * Start Dependent Functions Resource              */
-comment|/*              * For a StartDependentFunctions Resource, Byte 1,              * although optional, will always be created.              */
+comment|/*              * Start Dependent Functions Resource              * For a StartDependentFunctions Resource, Byte 1,              * although optional, will always be created.              */
 name|SegmentSize
 operator|=
 literal|2
 expr_stmt|;
 break|break;
 case|case
-name|EndDependentFunctions
+name|ACPI_RSTYPE_END_DPF
 case|:
-comment|/*              * End Dependent Functions Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * End Dependent Functions Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|1
 expr_stmt|;
 break|break;
 case|case
-name|Io
+name|ACPI_RSTYPE_IO
 case|:
-comment|/*              * IO Port Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * IO Port Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|8
 expr_stmt|;
 break|break;
 case|case
-name|FixedIo
+name|ACPI_RSTYPE_FIXED_IO
 case|:
-comment|/*              * Fixed IO Port Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * Fixed IO Port Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|4
 expr_stmt|;
 break|break;
 case|case
-name|VendorSpecific
+name|ACPI_RSTYPE_VENDOR
 case|:
-comment|/*              * Vendor Defined Resource              */
-comment|/*              * For a Vendor Specific resource, if the Length is              *  between 1 and 7 it will be created as a Small              *  Resource data type, otherwise it is a Large              *  Resource data type.              */
+comment|/*              * Vendor Defined Resource              * For a Vendor Specific resource, if the Length is              * between 1 and 7 it will be created as a Small              * Resource data type, otherwise it is a Large              * Resource data type.              */
 if|if
 condition|(
 name|LinkedList
@@ -212,10 +205,9 @@ name|Length
 expr_stmt|;
 break|break;
 case|case
-name|EndTag
+name|ACPI_RSTYPE_END_TAG
 case|:
-comment|/*              * End Tag              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * End Tag              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|2
@@ -226,40 +218,36 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-name|Memory24
+name|ACPI_RSTYPE_MEM24
 case|:
-comment|/*              * 24-Bit Memory Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * 24-Bit Memory Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|12
 expr_stmt|;
 break|break;
 case|case
-name|Memory32
+name|ACPI_RSTYPE_MEM32
 case|:
-comment|/*              * 32-Bit Memory Range Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * 32-Bit Memory Range Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|20
 expr_stmt|;
 break|break;
 case|case
-name|FixedMemory32
+name|ACPI_RSTYPE_FIXED_MEM32
 case|:
-comment|/*              * 32-Bit Fixed Memory Resource              */
-comment|/*              * For this resource the size is static              */
+comment|/*              * 32-Bit Fixed Memory Resource              * For this resource the size is static              */
 name|SegmentSize
 operator|=
 literal|12
 expr_stmt|;
 break|break;
 case|case
-name|Address16
+name|ACPI_RSTYPE_ADDRESS16
 case|:
-comment|/*              * 16-Bit Address Resource              */
-comment|/*              * The base size of this byte stream is 16. If a              *  Resource Source string is not NULL, add 1 for              *  the Index + the length of the null terminated              *  string Resource Source + 1 for the null.              */
+comment|/*              * 16-Bit Address Resource              * The base size of this byte stream is 16. If a              * Resource Source string is not NULL, add 1 for              * the Index + the length of the null terminated              * string Resource Source + 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|16
@@ -275,6 +263,8 @@ operator|.
 name|Address16
 operator|.
 name|ResourceSource
+operator|.
+name|StringPtr
 condition|)
 block|{
 name|SegmentSize
@@ -288,16 +278,17 @@ name|Data
 operator|.
 name|Address16
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 operator|)
 expr_stmt|;
 block|}
 break|break;
 case|case
-name|Address32
+name|ACPI_RSTYPE_ADDRESS32
 case|:
-comment|/*              * 32-Bit Address Resource              */
-comment|/*              * The base size of this byte stream is 26. If a Resource              *  Source string is not NULL, add 1 for the Index + the              *  length of the null terminated string Resource Source +              *  1 for the null.              */
+comment|/*              * 32-Bit Address Resource              * The base size of this byte stream is 26. If a Resource              * Source string is not NULL, add 1 for the Index + the              * length of the null terminated string Resource Source +              * 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|26
@@ -310,9 +301,11 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|Address16
+name|Address32
 operator|.
 name|ResourceSource
+operator|.
+name|StringPtr
 condition|)
 block|{
 name|SegmentSize
@@ -324,24 +317,65 @@ name|LinkedList
 operator|->
 name|Data
 operator|.
-name|Address16
+name|Address32
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 operator|)
 expr_stmt|;
 block|}
 break|break;
 case|case
-name|ExtendedIrq
+name|ACPI_RSTYPE_ADDRESS64
 case|:
-comment|/*              * Extended IRQ Resource              */
-comment|/*              * The base size of this byte stream is 9. This is for an              *  Interrupt table length of 1.  For each additional              *  interrupt, add 4.              * If a Resource Source string is not NULL, add 1 for the              *  Index + the length of the null terminated string              *  Resource Source + 1 for the null.              */
+comment|/*              * 64-Bit Address Resource              * The base size of this byte stream is 46. If a Resource              * Source string is not NULL, add 1 for the Index + the              * length of the null terminated string Resource Source +              * 1 for the null.              */
+name|SegmentSize
+operator|=
+literal|46
+expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+name|LinkedList
+operator|->
+name|Data
+operator|.
+name|Address64
+operator|.
+name|ResourceSource
+operator|.
+name|StringPtr
+condition|)
+block|{
+name|SegmentSize
+operator|+=
+operator|(
+literal|1
+operator|+
+name|LinkedList
+operator|->
+name|Data
+operator|.
+name|Address64
+operator|.
+name|ResourceSource
+operator|.
+name|StringLength
+operator|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|ACPI_RSTYPE_EXT_IRQ
+case|:
+comment|/*              * Extended IRQ Resource              * The base size of this byte stream is 9. This is for an              * Interrupt table length of 1.  For each additional              * interrupt, add 4.              * If a Resource Source string is not NULL, add 1 for the              * Index + the length of the null terminated string              * Resource Source + 1 for the null.              */
 name|SegmentSize
 operator|=
 literal|9
-expr_stmt|;
-name|SegmentSize
-operator|+=
+operator|+
+operator|(
 operator|(
 name|LinkedList
 operator|->
@@ -355,6 +389,7 @@ literal|1
 operator|)
 operator|*
 literal|4
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -363,6 +398,8 @@ operator|!=
 name|ExIrq
 operator|->
 name|ResourceSource
+operator|.
+name|StringPtr
 condition|)
 block|{
 name|SegmentSize
@@ -376,16 +413,18 @@ name|Data
 operator|.
 name|ExtendedIrq
 operator|.
-name|ResourceSourceStringLength
+name|ResourceSource
+operator|.
+name|StringLength
 operator|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-comment|/*              * If we get here, everything is out of sync,              *  so exit with an error              */
+comment|/*              * If we get here, everything is out of sync,              * so exit with an error              */
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_INVALID_RESOURCE_TYPE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -399,23 +438,16 @@ expr_stmt|;
 comment|/*          * Point to the next object          */
 name|LinkedList
 operator|=
-operator|(
-name|RESOURCE
-operator|*
-operator|)
-operator|(
-operator|(
-name|NATIVE_UINT
-operator|)
+name|POINTER_ADD
+argument_list|(
+name|ACPI_RESOURCE
+argument_list|,
 name|LinkedList
-operator|+
-operator|(
-name|NATIVE_UINT
-operator|)
+argument_list|,
 name|LinkedList
 operator|->
 name|Length
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * This is the data the caller needs      */
@@ -433,7 +465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateListLength  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Size of ByteStreamBuffer  *              SizeNeeded              - UINT32 pointer of the size buffer  *                                          needed to properly return the  *                                          parsed data  *  * RETURN:      Status  AE_OK if okay, else a valid ACPI_STATUS code  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculateListLength  *  * PARAMETERS:  ByteStreamBuffer        - Pointer to the resource byte stream  *              ByteStreamBufferLength  - Size of ByteStreamBuffer  *              SizeNeeded              - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Takes the resource byte stream and parses it once, calculating  *              the size buffer needed to hold the linked list that conveys  *              the resource data.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -509,48 +541,40 @@ operator|<
 name|ByteStreamBufferLength
 condition|)
 block|{
-comment|/*          * Look at the next byte in the stream          */
+comment|/*          * The next byte in the stream is the resource type          */
 name|ResourceType
 operator|=
+name|AcpiRsGetResourceType
+argument_list|(
 operator|*
 name|ByteStreamBuffer
+argument_list|)
 expr_stmt|;
-comment|/*          * See if this is a small or large resource          */
-if|if
-condition|(
-name|ResourceType
-operator|&
-literal|0x80
-condition|)
-block|{
-comment|/*              * Large Resource Type              */
 switch|switch
 condition|(
 name|ResourceType
 condition|)
 block|{
 case|case
-name|MEMORY_RANGE_24
+name|RESOURCE_DESC_MEMORY_24
 case|:
-comment|/*                  * 24-Bit Memory Resource                  */
+comment|/*              * 24-Bit Memory Resource              */
 name|BytesConsumed
 operator|=
 literal|12
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|MEMORY24_RESOURCE
+name|ACPI_RESOURCE_MEM24
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|LARGE_VENDOR_DEFINED
+name|RESOURCE_DESC_LARGE_VENDOR
 case|:
-comment|/*                  * Vendor Defined Resource                  */
+comment|/*              * Vendor Defined Resource              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -572,7 +596,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*                  * Ensure a 32-bit boundary for the structure                  */
+comment|/*              * Ensure a 32-bit boundary for the structure              */
 name|Temp16
 operator|=
 operator|(
@@ -585,12 +609,10 @@ argument_list|)
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|Temp16
@@ -603,45 +625,41 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|MEMORY_RANGE_32
+name|RESOURCE_DESC_MEMORY_32
 case|:
-comment|/*                  * 32-Bit Memory Range Resource                  */
+comment|/*              * 32-Bit Memory Range Resource              */
 name|BytesConsumed
 operator|=
 literal|20
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|MEMORY32_RESOURCE
+name|ACPI_RESOURCE_MEM32
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|FIXED_MEMORY_RANGE_32
+name|RESOURCE_DESC_FIXED_MEMORY_32
 case|:
-comment|/*                  * 32-Bit Fixed Memory Resource                  */
+comment|/*              * 32-Bit Fixed Memory Resource              */
 name|BytesConsumed
 operator|=
 literal|12
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|FIXED_MEMORY32_RESOURCE
+name|ACPI_RESOURCE_FIXED_MEM32
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|DWORD_ADDRESS_SPACE
+name|RESOURCE_DESC_QWORD_ADDRESS_SPACE
 case|:
-comment|/*                  * 32-Bit Address Resource                  */
+comment|/*              * 64-Bit Address Resource              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -663,7 +681,87 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*                  * Resource Source Index and Resource Source are                  *  optional elements.  Check the length of the                  *  Bytestream.  If it is greater than 23, that                  *  means that an Index exists and is followed by                  *  a null termininated string.  Therefore, set                  *  the temp variable to the length minus the minimum                  *  byte stream length plus the byte for the Index to                  *  determine the size of the NULL terminiated string.                  */
+comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 43, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
+if|if
+condition|(
+literal|43
+operator|<
+name|Temp16
+condition|)
+block|{
+name|Temp8
+operator|=
+call|(
+name|UINT8
+call|)
+argument_list|(
+name|Temp16
+operator|-
+literal|44
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Temp8
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/*              * Ensure a 64-bit boundary for the structure              */
+name|Temp8
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|ROUND_UP_TO_64BITS
+argument_list|(
+name|Temp8
+argument_list|)
+expr_stmt|;
+name|StructureSize
+operator|=
+name|SIZEOF_RESOURCE
+argument_list|(
+name|ACPI_RESOURCE_ADDRESS64
+argument_list|)
+operator|+
+operator|(
+name|Temp8
+operator|*
+sizeof|sizeof
+argument_list|(
+name|UINT8
+argument_list|)
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|RESOURCE_DESC_DWORD_ADDRESS_SPACE
+case|:
+comment|/*              * 32-Bit Address Resource              */
+name|Buffer
+operator|=
+name|ByteStreamBuffer
+expr_stmt|;
+operator|++
+name|Buffer
+expr_stmt|;
+name|MOVE_UNALIGNED16_TO_16
+argument_list|(
+operator|&
+name|Temp16
+argument_list|,
+name|Buffer
+argument_list|)
+expr_stmt|;
+name|BytesConsumed
+operator|=
+name|Temp16
+operator|+
+literal|3
+expr_stmt|;
+comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 23, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
 if|if
 condition|(
 literal|23
@@ -690,7 +788,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*                  * Ensure a 32-bit boundary for the structure                  */
+comment|/*              * Ensure a 32-bit boundary for the structure              */
 name|Temp8
 operator|=
 operator|(
@@ -703,12 +801,10 @@ argument_list|)
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|ADDRESS32_RESOURCE
+name|ACPI_RESOURCE_ADDRESS32
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|Temp8
@@ -721,9 +817,9 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|WORD_ADDRESS_SPACE
+name|RESOURCE_DESC_WORD_ADDRESS_SPACE
 case|:
-comment|/*                  * 16-Bit Address Resource                  */
+comment|/*              * 16-Bit Address Resource              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -745,7 +841,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*                  * Resource Source Index and Resource Source are                  *  optional elements.  Check the length of the                  *  Bytestream.  If it is greater than 13, that                  *  means that an Index exists and is followed by                  *  a null termininated string.  Therefore, set                  *  the temp variable to the length minus the minimum                  *  byte stream length plus the byte for the Index to                  *  determine the size of the NULL terminiated string.                  */
+comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 13, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
 if|if
 condition|(
 literal|13
@@ -772,7 +868,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*                  * Ensure a 32-bit boundry for the structure                  */
+comment|/*              * Ensure a 32-bit boundary for the structure              */
 name|Temp8
 operator|=
 operator|(
@@ -785,12 +881,10 @@ argument_list|)
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|ADDRESS16_RESOURCE
+name|ACPI_RESOURCE_ADDRESS16
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|Temp8
@@ -803,9 +897,9 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|EXTENDED_IRQ
+name|RESOURCE_DESC_EXTENDED_XRUPT
 case|:
-comment|/*                  * Extended IRQ                  */
+comment|/*              * Extended IRQ              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -827,7 +921,7 @@ name|Temp16
 operator|+
 literal|3
 expr_stmt|;
-comment|/*                  * Point past the length field and the                  *  Interrupt vector flags to save off the                  *  Interrupt table length to the Temp8 variable.                  */
+comment|/*              * Point past the length field and the              * Interrupt vector flags to save off the              * Interrupt table length to the Temp8 variable.              */
 name|Buffer
 operator|+=
 literal|3
@@ -837,7 +931,7 @@ operator|=
 operator|*
 name|Buffer
 expr_stmt|;
-comment|/*                  * To compensate for multiple interrupt numbers,                  *  Add 4 bytes for each additional interrupts                  *  greater than 1                  */
+comment|/*              * To compensate for multiple interrupt numbers, add 4 bytes for               * each additional interrupts greater than 1              */
 name|AdditionalBytes
 operator|=
 call|(
@@ -853,7 +947,7 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/*                  * Resource Source Index and Resource Source are                  *  optional elements.  Check the length of the                  *  Bytestream.  If it is greater than 9, that                  *  means that an Index exists and is followed by                  *  a null termininated string.  Therefore, set                  *  the temp variable to the length minus the minimum                  *  byte stream length plus the byte for the Index to                  *  determine the size of the NULL terminiated string.                  */
+comment|/*              * Resource Source Index and Resource Source are              * optional elements.  Check the length of the              * Bytestream.  If it is greater than 9, that              * means that an Index exists and is followed by              * a null termininated string.  Therefore, set              * the temp variable to the length minus the minimum              * byte stream length plus the byte for the Index to              * determine the size of the NULL terminiated string.              */
 if|if
 condition|(
 literal|9
@@ -886,7 +980,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*                  * Ensure a 32-bit boundry for the structure                  */
+comment|/*              * Ensure a 32-bit boundary for the structure              */
 name|Temp8
 operator|=
 operator|(
@@ -899,12 +993,10 @@ argument_list|)
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|EXTENDED_IRQ_RESOURCE
+name|ACPI_RESOURCE_EXT_IRQ
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|AdditionalBytes
@@ -925,35 +1017,10 @@ argument_list|)
 operator|)
 expr_stmt|;
 break|break;
-comment|/* TBD: [Future] 64-bit not currently supported */
-comment|/*             case 0x8A:                 break; */
-default|default:
-comment|/*                  * If we get here, everything is out of sync,                  *  so exit with an error                  */
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_ERROR
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-else|else
-block|{
-comment|/*              * Small Resource Type              *  Only bits 7:3 are valid              */
-name|ResourceType
-operator|>>=
-literal|3
-expr_stmt|;
-switch|switch
-condition|(
-name|ResourceType
-condition|)
-block|{
 case|case
-name|IRQ_FORMAT
+name|RESOURCE_DESC_IRQ_FORMAT
 case|:
-comment|/*                  * IRQ Resource                  */
-comment|/*                  * Determine if it there are two or three                  *  trailing bytes                  */
+comment|/*              * IRQ Resource.              * Determine if it there are two or three trailing bytes              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -982,11 +1049,11 @@ operator|=
 literal|3
 expr_stmt|;
 block|}
-comment|/*                  * Point past the descriptor                  */
+comment|/*              * Point past the descriptor              */
 operator|++
 name|Buffer
 expr_stmt|;
-comment|/*                  * Look at the number of bits set                  */
+comment|/*              * Look at the number of bits set              */
 name|MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
@@ -1027,12 +1094,10 @@ expr_stmt|;
 block|}
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|NumberOfInterrupts
@@ -1045,9 +1110,9 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|DMA_FORMAT
+name|RESOURCE_DESC_DMA_FORMAT
 case|:
-comment|/*                  * DMA Resource                  */
+comment|/*              * DMA Resource              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -1056,11 +1121,11 @@ name|BytesConsumed
 operator|=
 literal|3
 expr_stmt|;
-comment|/*                  * Point past the descriptor                  */
+comment|/*              * Point past the descriptor              */
 operator|++
 name|Buffer
 expr_stmt|;
-comment|/*                  * Look at the number of bits set                  */
+comment|/*              * Look at the number of bits set              */
 name|Temp8
 operator|=
 operator|*
@@ -1098,12 +1163,10 @@ expr_stmt|;
 block|}
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|DMA_RESOURCE
+name|ACPI_RESOURCE_DMA
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|NumberOfChannels
@@ -1116,10 +1179,9 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|START_DEPENDENT_TAG
+name|RESOURCE_DESC_START_DEPENDENT
 case|:
-comment|/*                  * Start Dependent Functions Resource                  */
-comment|/*                  * Determine if it there are two or three trailing bytes                  */
+comment|/*              * Start Dependent Functions Resource              * Determine if it there are two or three trailing bytes              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -1150,67 +1212,61 @@ expr_stmt|;
 block|}
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|START_DEPENDENT_FUNCTIONS_RESOURCE
+name|ACPI_RESOURCE_START_DPF
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|END_DEPENDENT_TAG
+name|RESOURCE_DESC_END_DEPENDENT
 case|:
-comment|/*                  * End Dependent Functions Resource                  */
+comment|/*              * End Dependent Functions Resource              */
 name|BytesConsumed
 operator|=
 literal|1
 expr_stmt|;
 name|StructureSize
 operator|=
-name|RESOURCE_LENGTH
+name|ACPI_RESOURCE_LENGTH
 expr_stmt|;
 break|break;
 case|case
-name|IO_PORT_DESCRIPTOR
+name|RESOURCE_DESC_IO_PORT
 case|:
-comment|/*                  * IO Port Resource                  */
+comment|/*              * IO Port Resource              */
 name|BytesConsumed
 operator|=
 literal|8
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|IO_RESOURCE
+name|ACPI_RESOURCE_IO
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|FIXED_LOCATION_IO_DESCRIPTOR
+name|RESOURCE_DESC_FIXED_IO_PORT
 case|:
-comment|/*                  * Fixed IO Port Resource                  */
+comment|/*              * Fixed IO Port Resource              */
 name|BytesConsumed
 operator|=
 literal|4
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|FIXED_IO_RESOURCE
+name|ACPI_RESOURCE_FIXED_IO
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 expr_stmt|;
 break|break;
 case|case
-name|SMALL_VENDOR_DEFINED
+name|RESOURCE_DESC_SMALL_VENDOR
 case|:
-comment|/*                  * Vendor Specific Resource                  */
+comment|/*              * Vendor Specific Resource              */
 name|Buffer
 operator|=
 name|ByteStreamBuffer
@@ -1237,7 +1293,7 @@ name|Temp8
 operator|+
 literal|1
 expr_stmt|;
-comment|/*                  * Ensure a 32-bit boundry for the structure                  */
+comment|/*              * Ensure a 32-bit boundary for the structure              */
 name|Temp8
 operator|=
 operator|(
@@ -1250,12 +1306,10 @@ argument_list|)
 expr_stmt|;
 name|StructureSize
 operator|=
-sizeof|sizeof
+name|SIZEOF_RESOURCE
 argument_list|(
-name|VENDOR_RESOURCE
+name|ACPI_RESOURCE_VENDOR
 argument_list|)
-operator|+
-name|RESOURCE_LENGTH_NO_DATA
 operator|+
 operator|(
 name|Temp8
@@ -1268,16 +1322,16 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
-name|END_TAG
+name|RESOURCE_DESC_END_TAG
 case|:
-comment|/*                  * End Tag                  */
+comment|/*              * End Tag              */
 name|BytesConsumed
 operator|=
 literal|2
 expr_stmt|;
 name|StructureSize
 operator|=
-name|RESOURCE_LENGTH
+name|ACPI_RESOURCE_LENGTH
 expr_stmt|;
 name|ByteStreamBufferLength
 operator|=
@@ -1285,17 +1339,14 @@ name|BytesParsed
 expr_stmt|;
 break|break;
 default|default:
-comment|/*                  * If we get here, everything is out of sync,                  *  so exit with an error                  */
+comment|/*              * If we get here, everything is out of sync,              *  so exit with an error              */
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_AML_ERROR
+name|AE_AML_INVALID_RESOURCE_TYPE
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch */
-block|}
-comment|/* if(ResourceType& 0x80) */
 comment|/*          * Update the return value and counter          */
 name|BufferSize
 operator|+=
@@ -1326,7 +1377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculatePciRoutingTableLength  *  * PARAMETERS:  PackageObject           - Pointer to the package object  *              BufferSizeNeeded        - UINT32 pointer of the size buffer  *                                          needed to properly return the  *                                          parsed data  *  * RETURN:      Status  AE_OK  *  * DESCRIPTION: Given a package representing a PCI routing table, this  *                calculates the size of the corresponding linked list of  *                descriptions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsCalculatePciRoutingTableLength  *  * PARAMETERS:  PackageObject           - Pointer to the package object  *              BufferSizeNeeded        - UINT32 pointer of the size buffer  *                                        needed to properly return the  *                                        parsed data  *  * RETURN:      Status  *  * DESCRIPTION: Given a package representing a PCI routing table, this  *              calculates the size of the corresponding linked list of  *              descriptions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1386,8 +1437,7 @@ name|Package
 operator|.
 name|Count
 expr_stmt|;
-comment|/*      * Calculate the size of the return buffer.      * The base size is the number of elements * the sizes of the      * structures.  Additional space for the strings is added below.      * The minus one is to subtract the size of the UINT8 Source[1]      * member because it is added below.      *      * NOTE: The NumberOfElements is incremented by one to add an end      * table structure that is essentially a structure of zeros.      */
-comment|/*      * But each PRT_ENTRY structure has a pointer to a string and      * the size of that string must be found.      */
+comment|/*      * Calculate the size of the return buffer.      * The base size is the number of elements * the sizes of the      * structures.  Additional space for the strings is added below.      * The minus one is to subtract the size of the UINT8 Source[1]      * member because it is added below.      *      * But each PRT_ENTRY structure has a pointer to a string and      * the size of that string must be found.      */
 name|TopObjectList
 operator|=
 name|PackageObject
@@ -1484,9 +1534,9 @@ operator|)
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 operator|)
 operator|)
 condition|)
@@ -1570,7 +1620,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*              * If no name was found, then this is a NULL, which is              *  translated as a UINT32 zero.              */
+comment|/*              * If no name was found, then this is a NULL, which is              * translated as a UINT32 zero.              */
 name|TempSizeNeeded
 operator|+=
 sizeof|sizeof
@@ -1592,10 +1642,16 @@ name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
+comment|/*      * Adding an extra element to the end of the list, essentially a NULL terminator      */
 operator|*
 name|BufferSizeNeeded
 operator|=
 name|TempSizeNeeded
+operator|+
+sizeof|sizeof
+argument_list|(
+name|PCI_ROUTING_TABLE
+argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(

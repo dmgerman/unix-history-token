@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 19 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 22 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -50,44 +50,6 @@ argument_list|(
 literal|"tbconvrt"
 argument_list|)
 end_macro
-
-begin_comment
-comment|/*  * Build a GAS structure from earlier ACPI table entries (V1.0 and 0.71 extensions)  *  * 1) Address space  * 2) Length in bytes -- convert to length in bits  * 3) Bit offset is zero  * 4) Reserved field is zero  * 5) Expand address to 64 bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASL_BUILD_GAS_FROM_ENTRY
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|{a.AddressSpaceId = (UINT8) d;\                                              a.RegisterBitWidth = (UINT8) MUL_8 (b);\                                              a.RegisterBitOffset = 0;\                                              a.Reserved = 0;\                                              ACPI_STORE_ADDRESS (a.Address,c);}
-end_define
-
-begin_comment
-comment|/* ACPI V1.0 entries -- address space is always I/O */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASL_BUILD_GAS_FROM_V1_ENTRY
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|ASL_BUILD_GAS_FROM_ENTRY(a,b,c,ADDRESS_SPACE_SYSTEM_IO)
-end_define
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
@@ -195,7 +157,7 @@ expr_stmt|;
 comment|/* Allocate an XSDT */
 name|NewTable
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|TableSize
 argument_list|)
@@ -446,7 +408,7 @@ comment|/* AcpiGbl_FADT is valid */
 comment|/* Allocate and zero the 2.0 buffer */
 name|FADT2
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1399,7 +1361,7 @@ expr_stmt|;
 comment|/* Allocate a common FACS */
 name|CommonFacs
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(

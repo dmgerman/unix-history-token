@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_DISPATCHER
 end_define
 
 begin_macro
@@ -111,7 +111,7 @@ name|Value
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|ScopeInfo
 argument_list|)
@@ -132,7 +132,7 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -173,7 +173,7 @@ comment|/* Make sure object type is valid */
 if|if
 condition|(
 operator|!
-name|AcpiAmlValidateObjectType
+name|AcpiExValidateObjectType
 argument_list|(
 name|Type
 argument_list|)
@@ -190,7 +190,7 @@ block|}
 comment|/* Allocate a new scope object */
 name|ScopeInfo
 operator|=
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 argument_list|()
 expr_stmt|;
 if|if
@@ -226,7 +226,7 @@ operator|)
 name|Type
 expr_stmt|;
 comment|/* Push new scope object onto stack */
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 argument_list|(
 operator|&
 name|WalkState
@@ -269,7 +269,7 @@ expr_stmt|;
 comment|/*      * Pop scope info object off the stack.      */
 name|ScopeInfo
 operator|=
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 argument_list|(
 operator|&
 name|WalkState
@@ -304,7 +304,7 @@ name|Value
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 argument_list|(
 name|ScopeInfo
 argument_list|)

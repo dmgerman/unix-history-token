@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMCONFIG_C__
+name|__EXCONFIG_C__
 end_define
 
 begin_include
@@ -65,24 +65,24 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amconfig"
+literal|"exconfig"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecLoadTable  *  * PARAMETERS:  RgnDesc         - Op region where the table will be obtained  *              DdbHandle       - Where a handle to the table will be returned  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExLoadTableOp  *  * PARAMETERS:  RgnDesc         - Op region where the table will be obtained  *              DdbHandle       - Where a handle to the table will be returned  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table  *  ****************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiAmlExecLoadTable
+name|AcpiExLoadTableOp
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -121,7 +121,7 @@ name|i
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecLoadTable"
+literal|"ExLoadTable"
 argument_list|)
 expr_stmt|;
 comment|/* TBD: [Unhandled] Object can be either a field or an opregion */
@@ -155,7 +155,7 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 argument_list|,
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -198,7 +198,7 @@ block|}
 comment|/* Allocate a buffer for the entire table */
 name|TablePtr
 operator|=
-name|AcpiCmAllocate
+name|AcpiUtAllocate
 argument_list|(
 name|TableHeader
 operator|.
@@ -263,7 +263,7 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
-name|ADDRESS_SPACE_READ
+name|ACPI_READ_ADR_SPACE
 argument_list|,
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -348,7 +348,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -372,7 +372,7 @@ block|}
 comment|/* Create an object to be the table handle */
 name|TableDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_REFERENCE
 argument_list|)
@@ -455,7 +455,7 @@ name|TableDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_LOAD_OP
 expr_stmt|;
@@ -481,12 +481,12 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|TableDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|TablePtr
 argument_list|)
@@ -500,13 +500,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecUnloadTable  *  * PARAMETERS:  DdbHandle           - Handle to a previously loaded table  *  * RETURN:      Status  *  * DESCRIPTION: Unload an ACPI table  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExUnloadTable  *  * PARAMETERS:  DdbHandle           - Handle to a previously loaded table  *  * RETURN:      Status  *  * DESCRIPTION: Unload an ACPI table  *  ****************************************************************************/
 end_comment
 
 begin_function
 specifier|static
 name|ACPI_STATUS
-name|AcpiAmlExecUnloadTable
+name|AcpiExUnloadTable
 parameter_list|(
 name|ACPI_HANDLE
 name|DdbHandle
@@ -533,11 +533,11 @@ name|TableInfo
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecUnloadTable"
+literal|"ExUnloadTable"
 argument_list|)
 expr_stmt|;
 comment|/* Validate the handle */
-comment|/* Although the handle is partially validated in AcpiAmlExecReconfiguration(),      *  when it calls AcpiAmlResolveOperands(), the handle is more completely      *  validated here.      */
+comment|/* Although the handle is partially validated in AcpiExReconfiguration(),      *  when it calls AcpiExResolveOperands(), the handle is more completely      *  validated here.      */
 if|if
 condition|(
 operator|(
@@ -624,7 +624,7 @@ name|InstalledDesc
 argument_list|)
 expr_stmt|;
 comment|/* Delete the table descriptor (DdbHandle) */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|TableDesc
 argument_list|)
@@ -638,12 +638,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiAmlExecReconfiguration  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Reconfiguration opcodes such as LOAD and UNLOAD  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExReconfiguration  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current state of the parse tree walk  *  * RETURN:      Status  *  * DESCRIPTION: Reconfiguration opcodes such as LOAD and UNLOAD  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecReconfiguration
+name|AcpiExReconfiguration
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -668,13 +668,13 @@ name|DdbHandle
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecReconfiguration"
+literal|"ExReconfiguration"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve the operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|Opcode
 argument_list|,
@@ -696,7 +696,7 @@ argument_list|)
 argument_list|,
 literal|2
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get the table handle, common for both opcodes */
@@ -742,18 +742,21 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecReconfiguration/AML_LOAD_OP: bad operand(s) (%X)\n"
+literal|"bad operand(s) (Load) (%s)\n"
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RegionDesc
 argument_list|)
@@ -766,7 +769,7 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecLoadTable
+name|AcpiExLoadTableOp
 argument_list|(
 name|RegionDesc
 argument_list|,
@@ -785,14 +788,17 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecReconfiguration/AML_UNLOAD_OP: bad operand(s) (%X)\n"
+literal|"bad operand(s) (unload) (%s)\n"
 operator|,
+name|AcpiUtFormatException
+argument_list|(
 name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -804,19 +810,19 @@ expr_stmt|;
 block|}
 name|Status
 operator|=
-name|AcpiAmlExecUnloadTable
+name|AcpiExUnloadTable
 argument_list|(
 name|DdbHandle
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecReconfiguration: bad opcode=%X\n"
+literal|"bad opcode=%X\n"
 operator|,
 name|Opcode
 operator|)

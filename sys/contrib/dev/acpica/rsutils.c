@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 14 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 19 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -46,7 +46,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrtMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get the _PRT value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrtMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRT value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -119,7 +119,7 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -179,7 +179,7 @@ expr_stmt|;
 comment|/* On exit, we must delete the object returned by evaluateObject */
 name|Cleanup
 label|:
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetObj
 argument_list|)
@@ -193,7 +193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetCrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get the _CRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetCrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _CRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -264,7 +264,7 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -314,22 +314,6 @@ operator|&
 name|BufferSpaceNeeded
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|DUMP_RESOURCE_LIST
-argument_list|(
-name|RetBuffer
-operator|->
-name|Pointer
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * Tell the user how much of the buffer we have used or is needed      *  and return the final status.      */
 name|RetBuffer
 operator|->
@@ -340,7 +324,7 @@ expr_stmt|;
 comment|/* On exit, we must delete the object returned by evaluateObject */
 name|Cleanup
 label|:
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetObj
 argument_list|)
@@ -354,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get the _PRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsGetPrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              RetBuffer       - a pointer to a buffer structure for the  *                                  results  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the _PRS value of an object  *              contained in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -425,7 +409,7 @@ name|RetObj
 condition|)
 block|{
 comment|/* Return object is required */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -485,7 +469,7 @@ expr_stmt|;
 comment|/* On exit, we must delete the object returned by evaluateObject */
 name|Cleanup
 label|:
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetObj
 argument_list|)
@@ -499,7 +483,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsSetSrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              InBuffer        - a pointer to a buffer structure of the  *                                  parameter  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to set the _SRS of an object contained  *              in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRsSetSrsMethodData  *  * PARAMETERS:  Handle          - a handle to the containing object  *              InBuffer        - a pointer to a buffer structure of the  *                                  parameter  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to set the _SRS of an object contained  *              in an object specified by the handle passed in  *  *              If the function fails an appropriate status will be returned  *              and the contents of the callers buffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -544,7 +528,7 @@ literal|"RsSetSrsMethodData"
 argument_list|)
 expr_stmt|;
 comment|/* already validated params, so we won't repeat here */
-comment|/*      * The InBuffer parameter will point to a linked list of      *  resource parameters.  It needs to be formatted into a      *  byte stream to be sent in as an input parameter.      */
+comment|/*      * The InBuffer parameter will point to a linked list of      * resource parameters.  It needs to be formatted into a      * byte stream to be sent in as an input parameter.      */
 name|BufferSizeNeeded
 operator|=
 literal|0
@@ -564,7 +548,7 @@ operator|&
 name|BufferSizeNeeded
 argument_list|)
 expr_stmt|;
-comment|/*      * We expect a return of AE_BUFFER_OVERFLOW      *  if not, exit with the error      */
+comment|/*      * We expect a return of AE_BUFFER_OVERFLOW      * if not, exit with the error      */
 if|if
 condition|(
 name|AE_BUFFER_OVERFLOW
@@ -581,7 +565,7 @@ block|}
 comment|/*      * Allocate the buffer needed      */
 name|ByteStream
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|BufferSizeNeeded
 argument_list|)
@@ -626,14 +610,14 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      *  Init the param object      */
-name|AcpiCmInitStaticObject
+comment|/*      * Init the param object      */
+name|AcpiUtInitStaticObject
 argument_list|(
 operator|&
 name|ParamObj
 argument_list|)
 expr_stmt|;
-comment|/*      *  Method requires one parameter.  Set it up      */
+comment|/*      * Method requires one parameter.  Set it up      */
 name|Params
 index|[
 literal|0
@@ -674,7 +658,7 @@ name|Pointer
 operator|=
 name|ByteStream
 expr_stmt|;
-comment|/*      *  Execute the method, no return value      */
+comment|/*      * Execute the method, no return value      */
 name|Status
 operator|=
 name|AcpiNsEvaluateRelative
@@ -688,10 +672,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      *  Clean up and return the status from AcpiNsEvaluateRelative      */
+comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */
 name|Cleanup
 label|:
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ByteStream
 argument_list|)

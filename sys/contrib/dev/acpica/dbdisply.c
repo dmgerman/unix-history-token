@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 45 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|DEBUGGER
+value|ACPI_DEBUGGER
 end_define
 
 begin_macro
@@ -511,7 +511,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -525,7 +525,7 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
-name|AcpiAmlDumpObjectDescriptor
+name|AcpiExDumpObjectDescriptor
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -570,7 +570,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -616,7 +616,7 @@ literal|64
 expr_stmt|;
 block|}
 comment|/* Just dump some memory */
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 name|ObjPtr
 argument_list|,
@@ -710,7 +710,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 operator|(
 name|void
@@ -728,7 +728,7 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
-name|AcpiAmlDumpNode
+name|AcpiExDumpNode
 argument_list|(
 name|Node
 argument_list|,
@@ -778,7 +778,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 argument_list|(
 name|Node
 operator|->
@@ -794,7 +794,7 @@ argument_list|,
 name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
-name|AcpiAmlDumpObjectDescriptor
+name|AcpiExDumpObjectDescriptor
 argument_list|(
 name|Node
 operator|->
@@ -835,7 +835,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %s"
 argument_list|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1034,7 +1034,7 @@ operator|)
 operator|->
 name|Name
 argument_list|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|(
@@ -1150,7 +1150,7 @@ name|ObjDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -2043,10 +2043,6 @@ name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
@@ -2071,12 +2067,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ObjDesc
-operator|=
-name|WalkState
-operator|->
-name|MethodDesc
-expr_stmt|;
 name|Node
 operator|=
 name|WalkState
@@ -2100,12 +2090,6 @@ name|i
 operator|++
 control|)
 block|{
-name|ObjDesc
-operator|=
-name|WalkState
-operator|->
-name|MethodDesc
-expr_stmt|;
 name|Node
 operator|=
 name|WalkState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20010208
+value|0x20010518
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/*  * Debugger threading model  * Use single threaded if the entire subsystem is contained in an application  * Use multiple threaded when the the subsystem is running in the kernel.  *  * By default the model is single threaded if ACPI_APPLICATION is set,  * multi-threaded if ACPI_APPLICATION is not set.  */
+comment|/*  * Debugger threading model  * Use single threaded if the entire subsystem is contained in an application  * Use multiple threaded when the subsystem is running in the kernel.  *  * By default the model is single threaded if ACPI_APPLICATION is set,  * multi-threaded if ACPI_APPLICATION is not set.  */
 end_comment
 
 begin_define
@@ -343,6 +343,24 @@ define|#
 directive|define
 name|RSDP_SCAN_STEP
 value|16
+end_define
+
+begin_comment
+comment|/* Maximum SpaceIds for Operation Regions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_ADDRESS_SPACE
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NUM_ADDRESS_SPACES
+value|256
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 69 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -201,72 +201,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvSciCount  *  * PARAMETERS:  Event       Event that generated an SCI.  *  * RETURN:      Number of SCI's for requested event since last time  *              SciOccured() was called for this event.  *  * DESCRIPTION: Checks to see if SCI has been generated from requested source  *              since the last time this function was called.  *  ******************************************************************************/
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-end_ifdef
-
-begin_function
-name|UINT32
-name|AcpiEvSciCount
-parameter_list|(
-name|UINT32
-name|Event
-parameter_list|)
-block|{
-name|UINT32
-name|Count
-decl_stmt|;
-name|FUNCTION_TRACE
-argument_list|(
-literal|"EvSciCount"
-argument_list|)
-expr_stmt|;
-comment|/*      * Elements correspond to counts for TMR, NOT_USED, GBL,      * PWR_BTN, SLP_BTN, RTC, and GENERAL respectively.      */
-if|if
-condition|(
-name|Event
-operator|>=
-name|NUM_FIXED_EVENTS
-condition|)
-block|{
-name|Count
-operator|=
-operator|(
-name|UINT32
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|Count
-operator|=
-name|AcpiGbl_EventCount
-index|[
-name|Event
-index|]
-expr_stmt|;
-block|}
-name|return_VALUE
-argument_list|(
-name|Count
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvRestoreAcpiState  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: Restore the original ACPI state of the machine  *  ******************************************************************************/
@@ -478,7 +412,7 @@ condition|(
 name|AcpiGbl_GpeRegisters
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_GpeRegisters
 argument_list|)
@@ -489,7 +423,7 @@ condition|(
 name|AcpiGbl_GpeInfo
 condition|)
 block|{
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_GpeInfo
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl2.h - ACPI Specification Revision 2.0 Tables  *       $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,15 +20,7 @@ name|__ACTBL2_H__
 end_define
 
 begin_comment
-comment|/**************************************/
-end_comment
-
-begin_comment
-comment|/* Prefered Power Management Profiles */
-end_comment
-
-begin_comment
-comment|/**************************************/
+comment|/*  * Prefered Power Management Profiles  */
 end_comment
 
 begin_define
@@ -81,15 +73,7 @@ value|6
 end_define
 
 begin_comment
-comment|/*********************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Boot Arch Flags, See spec Table 5-10 */
-end_comment
-
-begin_comment
-comment|/*********************************************/
+comment|/*  * ACPI Boot Arch Flags  */
 end_comment
 
 begin_define
@@ -123,19 +107,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Specification Rev 2.0 for    */
-end_comment
-
-begin_comment
-comment|/* the Root System Description Table */
-end_comment
-
-begin_comment
-comment|/*************************************/
+comment|/*  * ACPI Specification Rev 2.0 for the Root System Description Table  */
 end_comment
 
 begin_typedef
@@ -160,19 +132,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/********************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Specification Rev 2.0 for the       */
-end_comment
-
-begin_comment
-comment|/* Extended System Description Table (XSDT) */
-end_comment
-
-begin_comment
-comment|/********************************************/
+comment|/*  * ACPI Specification Rev 2.0 for the Extended System Description Table (XSDT)  */
 end_comment
 
 begin_typedef
@@ -197,19 +157,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/***************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Specification Rev 2.0 for      */
-end_comment
-
-begin_comment
-comment|/* the Firmware ACPI Control Structure */
-end_comment
-
-begin_comment
-comment|/***************************************/
+comment|/*  * ACPI Specification Rev 2.0 for the Firmware ACPI Control Structure  */
 end_comment
 
 begin_typedef
@@ -272,19 +220,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/***************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Specification Rev 2.0 for      */
-end_comment
-
-begin_comment
-comment|/* the Generic Address Structure (GAS) */
-end_comment
-
-begin_comment
-comment|/***************************************/
+comment|/*  * ACPI Specification Rev 2.0 for the Generic Address Structure (GAS)  */
 end_comment
 
 begin_typedef
@@ -312,24 +248,12 @@ name|Address
 decl_stmt|;
 comment|/* 64-bit address of struct or register */
 block|}
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 typedef|;
 end_typedef
 
 begin_comment
-comment|/************************************/
-end_comment
-
-begin_comment
-comment|/* ACPI Specification Rev 2.0 for   */
-end_comment
-
-begin_comment
-comment|/* the Fixed ACPI Description Table */
-end_comment
-
-begin_comment
-comment|/************************************/
+comment|/*  * ACPI Specification Rev 2.0 for the Fixed ACPI Description Table  */
 end_comment
 
 begin_typedef
@@ -579,7 +503,7 @@ range|:
 literal|18
 decl_stmt|;
 comment|/* reserved - must be zero */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|ResetRegister
 decl_stmt|;
 comment|/* Reset register address in GAS format */
@@ -602,35 +526,35 @@ name|UINT64
 name|XDsdt
 decl_stmt|;
 comment|/* 64-bit physical address of DSDT */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPm1aEvtBlk
 decl_stmt|;
 comment|/* Extended Power Mgt 1a AcpiEvent Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPm1bEvtBlk
 decl_stmt|;
 comment|/* Extended Power Mgt 1b AcpiEvent Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPm1aCntBlk
 decl_stmt|;
 comment|/* Extended Power Mgt 1a Control Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPm1bCntBlk
 decl_stmt|;
 comment|/* Extended Power Mgt 1b Control Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPm2CntBlk
 decl_stmt|;
 comment|/* Extended Power Mgt 2 Control Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XPmTmrBlk
 decl_stmt|;
 comment|/* Extended Power Mgt Timer Ctrl Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XGpe0Blk
 decl_stmt|;
 comment|/* Extended General Purpose AcpiEvent 0 Reg Blk address */
-name|ACPI_GAS
+name|ACPI_GENERIC_ADDRESS
 name|XGpe1Blk
 decl_stmt|;
 comment|/* Extended General Purpose AcpiEvent 1 Reg Blk address */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 102 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ end_define
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -115,7 +115,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlLoadTable
+name|AcpiExLoadTable
 parameter_list|(
 name|ACPI_TABLE_TYPE
 name|TableId
@@ -125,7 +125,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecuteMethod
+name|AcpiExExecuteMethod
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -150,7 +150,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlConvertToInteger
+name|AcpiExConvertToInteger
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -166,7 +166,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlConvertToBuffer
+name|AcpiExConvertToBuffer
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -182,7 +182,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlConvertToString
+name|AcpiExConvertToString
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -198,9 +198,9 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlConvertToTargetType
+name|AcpiExConvertToTargetType
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DestinationType
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
@@ -221,7 +221,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlReadField
+name|AcpiExExtractFromField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -233,25 +233,13 @@ name|Buffer
 parameter_list|,
 name|UINT32
 name|BufferLength
-parameter_list|,
-name|UINT32
-name|ByteLength
-parameter_list|,
-name|UINT32
-name|DatumLength
-parameter_list|,
-name|UINT32
-name|BitGranularity
-parameter_list|,
-name|UINT32
-name|ByteGranularity
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlWriteField
+name|AcpiExInsertIntoField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -263,43 +251,13 @@ name|Buffer
 parameter_list|,
 name|UINT32
 name|BufferLength
-parameter_list|,
-name|UINT32
-name|ByteLength
-parameter_list|,
-name|UINT32
-name|DatumLength
-parameter_list|,
-name|UINT32
-name|BitGranularity
-parameter_list|,
-name|UINT32
-name|ByteGranularity
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSetupField
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|RgnDesc
-parameter_list|,
-name|UINT32
-name|FieldBitWidth
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiAmlReadFieldData
+name|AcpiExSetupField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -307,9 +265,20 @@ name|ObjDesc
 parameter_list|,
 name|UINT32
 name|FieldByteOffset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExReadFieldDatum
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|,
 name|UINT32
-name|FieldBitWidth
+name|FieldByteOffset
 parameter_list|,
 name|UINT32
 modifier|*
@@ -320,20 +289,136 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlAccessNamedField
+name|AcpiExCommonAccessField
 parameter_list|(
 name|UINT32
 name|Mode
 parameter_list|,
-name|ACPI_HANDLE
-name|NamedField
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|,
 name|void
 modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
-name|Length
+name|BufferLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExAccessIndexField
+parameter_list|(
+name|UINT32
+name|Mode
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|void
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExAccessBankField
+parameter_list|(
+name|UINT32
+name|Mode
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|void
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExAccessRegionField
+parameter_list|(
+name|UINT32
+name|Mode
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|void
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExAccessBufferField
+parameter_list|(
+name|UINT32
+name|Mode
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|void
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|BufferLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExReadDataFromField
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|RetBufferDesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExWriteDataToField
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SourceDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -344,7 +429,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateField
+name|AcpiExCreateBufferField
 parameter_list|(
 name|UINT8
 modifier|*
@@ -366,7 +451,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecReconfiguration
+name|AcpiExReconfiguration
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -380,7 +465,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecFatal
+name|AcpiExFatal
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -391,23 +476,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecIndex
-parameter_list|(
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiAmlExecMatch
+name|AcpiExIndex
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -423,7 +492,23 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateMutex
+name|AcpiExMatch
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnDesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExCreateMutex
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -434,42 +519,44 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateProcessor
+name|AcpiExCreateProcessor
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
-name|ProcessorNTE
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ProcessorNode
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreatePowerResource
+name|AcpiExCreatePowerResource
 parameter_list|(
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
 parameter_list|,
-name|ACPI_HANDLE
-name|ProcessorNTE
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|PowerNode
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateRegion
+name|AcpiExCreateRegion
 parameter_list|(
 name|UINT8
 modifier|*
 name|AmlPtr
 parameter_list|,
 name|UINT32
-name|AcpiAmlLength
+name|AmlLength
 parameter_list|,
 name|UINT8
 name|RegionSpace
@@ -483,7 +570,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateEvent
+name|AcpiExCreateEvent
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -494,7 +581,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateAlias
+name|AcpiExCreateAlias
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -505,20 +592,81 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecCreateMethod
+name|AcpiExCreateMethod
 parameter_list|(
 name|UINT8
 modifier|*
 name|AmlPtr
 parameter_list|,
 name|UINT32
-name|AcpiAmlLength
+name|AmlLength
 parameter_list|,
 name|UINT32
 name|MethodFlags
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|Method
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * ammutex - mutex support  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExAcquireMutex
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|TimeDesc
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExReleaseMutex
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExReleaseAllMutexes
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|MutexList
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiExUnlinkMutex
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,20 +677,14 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlPrepDefFieldValue
+name|AcpiExPrepCommonFieldObject
 parameter_list|(
-name|ACPI_NAMESPACE_NODE
+name|ACPI_OPERAND_OBJECT
 modifier|*
-name|Node
-parameter_list|,
-name|ACPI_HANDLE
-name|Region
+name|ObjDesc
 parameter_list|,
 name|UINT8
 name|FieldFlags
-parameter_list|,
-name|UINT8
-name|FieldAttribute
 parameter_list|,
 name|UINT32
 name|FieldPosition
@@ -555,7 +697,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlPrepBankFieldValue
+name|AcpiExPrepRegionFieldValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -564,8 +706,33 @@ parameter_list|,
 name|ACPI_HANDLE
 name|Region
 parameter_list|,
-name|ACPI_HANDLE
-name|BankReg
+name|UINT8
+name|FieldFlags
+parameter_list|,
+name|UINT32
+name|FieldPosition
+parameter_list|,
+name|UINT32
+name|FieldLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExPrepBankFieldValue
+parameter_list|(
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|RegionNode
+parameter_list|,
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|BankRegisterNode
 parameter_list|,
 name|UINT32
 name|BankVal
@@ -573,9 +740,6 @@ parameter_list|,
 name|UINT8
 name|FieldFlags
 parameter_list|,
-name|UINT8
-name|FieldAttribute
-parameter_list|,
 name|UINT32
 name|FieldPosition
 parameter_list|,
@@ -587,23 +751,22 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlPrepIndexFieldValue
+name|AcpiExPrepIndexFieldValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|IndexReg
 parameter_list|,
-name|ACPI_HANDLE
+name|ACPI_NAMESPACE_NODE
+modifier|*
 name|DataReg
 parameter_list|,
 name|UINT8
 name|FieldFlags
-parameter_list|,
-name|UINT8
-name|FieldAttribute
 parameter_list|,
 name|UINT32
 name|FieldPosition
@@ -619,17 +782,8 @@ comment|/*  * amsystem - Interface to OS services  */
 end_comment
 
 begin_function_decl
-name|UINT16
-name|AcpiAmlSystemThreadId
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemDoNotifyOp
+name|AcpiExSystemDoNotifyOp
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -644,7 +798,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlSystemDoSuspend
+name|AcpiExSystemDoSuspend
 parameter_list|(
 name|UINT32
 name|Time
@@ -654,7 +808,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlSystemDoStall
+name|AcpiExSystemDoStall
 parameter_list|(
 name|UINT32
 name|Time
@@ -664,7 +818,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemAcquireMutex
+name|AcpiExSystemAcquireMutex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -679,7 +833,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemReleaseMutex
+name|AcpiExSystemReleaseMutex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -690,7 +844,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemSignalEvent
+name|AcpiExSystemSignalEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -701,7 +855,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemWaitEvent
+name|AcpiExSystemWaitEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -716,7 +870,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemResetEvent
+name|AcpiExSystemResetEvent
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -727,7 +881,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemWaitSemaphore
+name|AcpiExSystemWaitSemaphore
 parameter_list|(
 name|ACPI_HANDLE
 name|Semaphore
@@ -744,7 +898,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic1
+name|AcpiExMonadic1
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -758,7 +912,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic2
+name|AcpiExMonadic2
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -777,7 +931,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecMonadic2R
+name|AcpiExMonadic2R
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -800,7 +954,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic1
+name|AcpiExDyadic1
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -814,26 +968,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic2
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiAmlExecDyadic2R
+name|AcpiExDyadic2
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -852,7 +987,26 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecDyadic2S
+name|AcpiExDyadic2R
+parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+modifier|*
+name|ReturnDesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiExDyadic2S
 parameter_list|(
 name|UINT16
 name|Opcode
@@ -875,7 +1029,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -891,7 +1045,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlResolveNodeToValue
+name|AcpiExResolveNodeToValue
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -907,7 +1061,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlResolveObjectToValue
+name|AcpiExResolveObjectToValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -923,7 +1077,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlGetFieldUnitValue
+name|AcpiExGetBufferFieldValue
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -942,7 +1096,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|AcpiAmlShowHexValue
+name|AcpiExShowHexValue
 parameter_list|(
 name|UINT32
 name|ByteCount
@@ -959,7 +1113,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlDumpOperand
+name|AcpiExDumpOperand
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -970,7 +1124,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlDumpOperands
+name|AcpiExDumpOperands
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1003,7 +1157,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlDumpObjectDescriptor
+name|AcpiExDumpObjectDescriptor
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1017,7 +1171,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlDumpNode
+name|AcpiExDumpNode
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -1036,7 +1190,7 @@ end_comment
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiAmlAllocateNameString
+name|AcpiExAllocateNameString
 parameter_list|(
 name|UINT32
 name|PrefixCount
@@ -1049,7 +1203,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiAmlGoodChar
+name|AcpiExGoodChar
 parameter_list|(
 name|UINT32
 name|Character
@@ -1059,7 +1213,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecNameSegment
+name|AcpiExNameSegment
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1075,9 +1229,9 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlGetNameString
+name|AcpiExGetNameString
 parameter_list|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DataType
 parameter_list|,
 name|UINT8
@@ -1098,7 +1252,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlDoName
+name|AcpiExDoName
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|DataType
@@ -1115,7 +1269,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlExecStore
+name|AcpiExStore
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1134,7 +1288,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToIndex
+name|AcpiExStoreObjectToIndex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1153,7 +1307,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToNode
+name|AcpiExStoreObjectToNode
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1172,7 +1326,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToObject
+name|AcpiExStoreObjectToObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1190,19 +1344,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *   */
+comment|/*  *  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlResolveObject
+name|AcpiExResolveObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|SourceDescPtr
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TargetType
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -1214,13 +1368,13 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlStoreObject
+name|AcpiExStoreObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|SourceDesc
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TargetType
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
@@ -1241,7 +1395,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyBufferToBuffer
+name|AcpiExCopyBufferToBuffer
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1256,7 +1410,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyStringToString
+name|AcpiExCopyStringToString
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1271,7 +1425,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyIntegerToIndexField
+name|AcpiExCopyIntegerToIndexField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1286,7 +1440,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyIntegerToBankField
+name|AcpiExCopyIntegerToBankField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1301,7 +1455,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyDataToNamedField
+name|AcpiExCopyDataToNamedField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1316,7 +1470,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlCopyIntegerToFieldUnit
+name|AcpiExCopyIntegerToBufferField
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1334,8 +1488,8 @@ comment|/*  * amutils - interpreter/scanner utilities  */
 end_comment
 
 begin_function_decl
-name|void
-name|AcpiAmlEnterInterpreter
+name|ACPI_STATUS
+name|AcpiExEnterInterpreter
 parameter_list|(
 name|void
 parameter_list|)
@@ -1344,7 +1498,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlExitInterpreter
+name|AcpiExExitInterpreter
 parameter_list|(
 name|void
 parameter_list|)
@@ -1353,7 +1507,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1368,7 +1522,7 @@ end_function_decl
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiAmlValidateObjectType
+name|AcpiExValidateObjectType
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
@@ -1378,7 +1532,7 @@ end_function_decl
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiAmlAcquireGlobalLock
+name|AcpiExAcquireGlobalLock
 parameter_list|(
 name|UINT32
 name|Rule
@@ -1388,7 +1542,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlReleaseGlobalLock
+name|AcpiExReleaseGlobalLock
 parameter_list|(
 name|BOOLEAN
 name|Locked
@@ -1398,7 +1552,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiAmlDigitsNeeded
+name|AcpiExDigitsNeeded
 parameter_list|(
 name|ACPI_INTEGER
 name|Value
@@ -1411,7 +1565,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlEisaIdToString
+name|AcpiExEisaIdToString
 parameter_list|(
 name|UINT32
 name|NumericId
@@ -1425,7 +1579,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlUnsignedIntegerToString
+name|AcpiExUnsignedIntegerToString
 parameter_list|(
 name|ACPI_INTEGER
 name|Value
@@ -1443,7 +1597,7 @@ end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemMemorySpaceHandler
+name|AcpiExSystemMemorySpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -1471,7 +1625,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSystemIoSpaceHandler
+name|AcpiExSystemIoSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -1499,7 +1653,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlPciConfigSpaceHandler
+name|AcpiExPciConfigSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -1527,7 +1681,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlEmbeddedControllerSpaceHandler
+name|AcpiExEmbeddedControllerSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function
@@ -1555,7 +1709,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiAmlSmBusSpaceHandler
+name|AcpiExSmBusSpaceHandler
 parameter_list|(
 name|UINT32
 name|Function

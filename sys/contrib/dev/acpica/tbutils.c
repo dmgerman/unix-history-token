@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|TABLE_MANAGER
+value|ACPI_TABLES
 end_define
 
 begin_macro
@@ -351,6 +351,11 @@ block|{
 name|ACPI_NAME
 name|Signature
 decl_stmt|;
+name|PROC_NAME
+argument_list|(
+literal|"TbValidateTableHeader"
+argument_list|)
+expr_stmt|;
 comment|/* Verify that this is a valid address */
 if|if
 condition|(
@@ -366,7 +371,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -398,13 +403,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AcpiCmValidAcpiName
+name|AcpiUtValidAcpiName
 argument_list|(
 name|Signature
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -421,7 +426,10 @@ expr_stmt|;
 name|REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Invalid table signature found\n"
+literal|"Invalid table signature %4.4s found\n"
+operator|,
+operator|&
+name|Signature
 operator|)
 argument_list|)
 expr_stmt|;
@@ -454,7 +462,7 @@ name|ACPI_TABLE_HEADER
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,

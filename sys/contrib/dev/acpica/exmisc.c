@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ammisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 77 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMMISC_C__
+name|__EXMISC_C__
 end_define
 
 begin_include
@@ -47,23 +47,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"ammisc"
+literal|"exmisc"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecFatal  *  * PARAMETERS:  none  *  * RETURN:      Status.  If the OS returns from the OSD call, we just keep  *              on going.  *  * DESCRIPTION: Execute Fatal operator  *  * ACPI SPECIFICATION REFERENCES:  *  DefFatal    :=  FatalOp FatalType   FatalCode   FatalArg  *  FatalType   :=  ByteData  *  FatalCode   :=  DWordData  *  FatalArg    :=  TermArg=>Integer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExFatal  *  * PARAMETERS:  none  *  * RETURN:      Status.  If the OS returns from the OSD call, we just keep  *              on going.  *  * DESCRIPTION: Execute Fatal operator  *  * ACPI SPECIFICATION REFERENCES:  *  DefFatal    :=  FatalOp FatalType   FatalCode   FatalArg  *  FatalType   :=  ByteData  *  FatalCode   :=  DWordData  *  FatalArg    :=  TermArg=>Integer  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecFatal
+name|AcpiExFatal
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -87,13 +87,13 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecFatal"
+literal|"ExFatal"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|AML_FATAL_OP
 argument_list|,
@@ -115,7 +115,7 @@ argument_list|)
 argument_list|,
 literal|3
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get operands */
@@ -158,12 +158,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiAmlExecFatal/AML_FATAL_OP: bad operand(s) (Status=%X)\n"
+literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)
@@ -174,12 +174,12 @@ name|Cleanup
 goto|;
 block|}
 comment|/* DefFatal    :=  FatalOp FatalType   FatalCode   FatalArg    */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"FatalOp: Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
+literal|"Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
 operator|,
 name|TypeDesc
 operator|->
@@ -205,17 +205,17 @@ comment|/*      * TBD: [Unhandled] call OSD interface to notify OS of fatal erro
 name|Cleanup
 label|:
 comment|/* Free the operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ArgDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|CodeDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|TypeDesc
 argument_list|)
@@ -237,12 +237,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecIndex  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Index operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  *  ACPI SPECIFICATION REFERENCES:  *  DefIndex    :=  IndexOp BuffPkgObj IndexValue Result  *  IndexValue  :=  TermArg=>Integer  *  NameString  :=<RootChar NamePath> |<PrefixPath NamePath>  *  Result      :=  SuperName  *  SuperName   :=  NameString | ArgObj | LocalObj | DebugObj | DefIndex  *                             Local4Op | Local5Op | Local6Op | Local7Op  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIndex  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Index operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  *  ACPI SPECIFICATION REFERENCES:  *  DefIndex    :=  IndexOp BuffPkgObj IndexValue Result  *  IndexValue  :=  TermArg=>Integer  *  NameString  :=<RootChar NamePath> |<PrefixPath NamePath>  *  Result      :=  SuperName  *  SuperName   :=  NameString | ArgObj | LocalObj | DebugObj | DefIndex  *                             Local4Op | Local5Op | Local6Op | Local7Op  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecIndex
+name|AcpiExIndex
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -281,14 +281,14 @@ name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecIndex"
+literal|"ExIndex"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve operands */
 comment|/* First operand can be either a package or a buffer */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|AML_INDEX_OP
 argument_list|,
@@ -310,7 +310,7 @@ argument_list|)
 argument_list|,
 literal|3
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -353,12 +353,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiAmlExecIndex/AML_INDEX_OP: bad operand(s) (Status=%X)\n"
+literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)
@@ -371,7 +371,7 @@ block|}
 comment|/* Create the internal return object */
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|INTERNAL_TYPE_REFERENCE
 argument_list|)
@@ -418,12 +418,12 @@ operator|.
 name|Count
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecIndex: Index value out of range\n"
+literal|"Index value beyond package end\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -452,14 +452,14 @@ name|ResDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|==
 name|AML_ZERO_OP
 operator|)
 condition|)
 block|{
 comment|/*              * There is no actual result descriptor (the ZeroOp Result              * descriptor is a placeholder), so just delete the placeholder and              * return a reference to the package element              */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
@@ -487,7 +487,7 @@ name|RetDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_INDEX_OP
 expr_stmt|;
@@ -513,7 +513,7 @@ name|TmpDesc
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc
 argument_list|,
@@ -536,7 +536,7 @@ name|RetDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_INDEX_OP
 expr_stmt|;
@@ -587,12 +587,12 @@ operator|.
 name|Length
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecIndex: Index value out of range\n"
+literal|"Index value beyond end of buffer\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -608,7 +608,7 @@ name|RetDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|=
 name|AML_INDEX_OP
 expr_stmt|;
@@ -645,7 +645,7 @@ name|Value
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiAmlExecStore
+name|AcpiExStore
 argument_list|(
 name|RetDesc
 argument_list|,
@@ -658,12 +658,12 @@ block|}
 name|Cleanup
 label|:
 comment|/* Always delete operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|IdxDesc
 argument_list|)
@@ -677,7 +677,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
 argument_list|)
@@ -687,7 +687,7 @@ condition|(
 name|RetDesc
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)
@@ -713,12 +713,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecMatch  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Match operator  *  * ACPI SPECIFICATION REFERENCES:  *  DefMatch    :=  MatchOp SearchPkg   Opcode1     Operand1  *                              Opcode2 Operand2    StartIndex  *  Opcode1     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Opcode2     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Operand1    :=  TermArg=>Integer  *  Operand2    :=  TermArg=>Integer  *  SearchPkg   :=  TermArg=>PackageObject  *  StartIndex  :=  TermArg=>Integer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMatch  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Match operator  *  * ACPI SPECIFICATION REFERENCES:  *  DefMatch    :=  MatchOp SearchPkg   Opcode1     Operand1  *                              Opcode2 Operand2    StartIndex  *  Opcode1     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Opcode2     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Operand1    :=  TermArg=>Integer  *  Operand2    :=  TermArg=>Integer  *  SearchPkg   :=  TermArg=>PackageObject  *  StartIndex  :=  TermArg=>Integer  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecMatch
+name|AcpiExMatch
 parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
@@ -777,13 +777,13 @@ literal|1
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlExecMatch"
+literal|"ExMatch"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve all operands */
 name|Status
 operator|=
-name|AcpiAmlResolveOperands
+name|AcpiExResolveOperands
 argument_list|(
 name|AML_MATCH_OP
 argument_list|,
@@ -805,7 +805,7 @@ argument_list|)
 argument_list|,
 literal|6
 argument_list|,
-literal|"after AcpiAmlResolveOperands"
+literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
@@ -878,12 +878,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* Invalid parameters on object stack  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ExecMatch/AML_MATCH_OP: bad operand(s) (Status=%X)\n"
+literal|"bad operand(s) (Status=%X)\n"
 operator|,
 name|Status
 operator|)
@@ -917,12 +917,12 @@ name|MAX_MATCH_OPERATOR
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMatch: operation encoding out of range\n"
+literal|"operation encoding out of range\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -959,12 +959,12 @@ operator|.
 name|Count
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecMatch: start position value out of range\n"
+literal|"Start position value out of range\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -978,7 +978,7 @@ goto|;
 block|}
 name|RetDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ACPI_TYPE_INTEGER
 argument_list|)
@@ -1383,32 +1383,32 @@ expr_stmt|;
 name|Cleanup
 label|:
 comment|/* Free the operands */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|StartDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|V2Desc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|Op2Desc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|V1Desc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|Op1Desc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|PkgDesc
 argument_list|)
@@ -1426,7 +1426,7 @@ name|RetDesc
 operator|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RetDesc
 argument_list|)

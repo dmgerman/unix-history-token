@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -145,6 +145,8 @@ argument_list|(
 name|MethodNode
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -182,7 +184,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|Params
 index|[
@@ -193,12 +195,12 @@ expr_stmt|;
 block|}
 block|}
 comment|/*      * Perform the first pass parse of the method to enter any      * named objects that it creates into the namespace      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"PsxExecute: **** Begin Method Execution **** Entry=%p obj=%p\n"
+literal|"**** Begin Method Execution **** Entry=%p obj=%p\n"
 operator|,
 name|MethodNode
 operator|,
@@ -360,7 +362,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiCmUpdateObjectReference
+name|AcpiUtUpdateObjectReference
 argument_list|(
 name|Params
 index|[
@@ -379,7 +381,7 @@ operator|*
 name|ReturnObjDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,

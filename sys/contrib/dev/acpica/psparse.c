@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,11 +47,17 @@ directive|include
 file|"acdebug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -151,7 +157,7 @@ expr_stmt|;
 name|Aml
 operator|++
 expr_stmt|;
-comment|/*      * Original code special cased LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL.      * These opcodes are no longer recognized. Instead, they are broken into      * two opcodes.      *      *      *    if (Opcode == AML_EXTOP      *       || (Opcode == AML_LNOT      *&& (GET8 (AcpiAml) == AML_LEQUAL      *               || GET8 (AcpiAml) == AML_LGREATER      *               || GET8 (AcpiAml) == AML_LLESS)))      *      *     extended Opcode, !=,<=, or>=      */
+comment|/*      * Original code special cased LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL.      * These opcodes are no longer recognized. Instead, they are broken into      * two opcodes.      *      *      *    if (Opcode == AML_EXTOP      *       || (Opcode == AML_LNOT      *&& (GET8 (Aml) == AML_LEQUAL      *               || GET8 (Aml) == AML_LGREATER      *               || GET8 (Aml) == AML_LLESS)))      *      *     extended Opcode, !=,<=, or>=      */
 if|if
 condition|(
 name|Opcode
@@ -192,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsCreateState  *  * PARAMETERS:  AcpiAml             - AcpiAml code pointer  *              AcpiAmlSize         - Length of AML code  *  * RETURN:      A new parser state object  *  * DESCRIPTION: Create and initialize a new parser state object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsCreateState  *  * PARAMETERS:  Aml             - Aml code pointer  *              AmlSize         - Length of AML code  *  * RETURN:      A new parser state object  *  * DESCRIPTION: Create and initialize a new parser state object  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -219,7 +225,7 @@ argument_list|)
 expr_stmt|;
 name|ParserState
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -233,7 +239,7 @@ operator|!
 name|ParserState
 condition|)
 block|{
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
@@ -507,7 +513,7 @@ name|Op
 operator|->
 name|Opcode
 operator|!=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 operator|)
 condition|)
 block|{
@@ -578,7 +584,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -588,7 +594,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -598,7 +604,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -608,7 +614,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -618,7 +624,7 @@ name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_QWORD_FIELD_OP
+name|AML_CREATE_QWORD_FIELD_OP
 operator|)
 condition|)
 block|{
@@ -626,7 +632,7 @@ name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_RETURN_VALUE_OP
+name|AML_INT_RETURN_VALUE_OP
 argument_list|)
 expr_stmt|;
 if|if
@@ -648,7 +654,7 @@ name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_RETURN_VALUE_OP
+name|AML_INT_RETURN_VALUE_OP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1121,7 +1127,7 @@ name|ArgTypes
 init|=
 literal|0
 decl_stmt|;
-name|ACPI_PTRDIFF
+name|UINT32
 name|AmlOffset
 decl_stmt|;
 name|UINT16
@@ -1271,14 +1277,14 @@ operator|==
 name|AE_AML_NO_RETURN_VALUE
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"PsParseLoop: Invoked method did not return a value, %s\n"
+literal|"Invoked method did not return a value, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1286,14 +1292,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"PsParseLoop: GetPredicate Failed, %s\n"
+literal|"GetPredicate Failed, %s\n"
 operator|,
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1332,12 +1338,12 @@ operator|&
 name|ArgCount
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"ParseLoop:  Popped scope, Op=%p\n"
+literal|"Popped scope, Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -1462,7 +1468,7 @@ case|:
 comment|/*                  * Starts with a valid prefix or ASCII char, this is a name                  * string.  Convert the bare name string to a namepath.                  */
 name|Opcode
 operator|=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 expr_stmt|;
 name|ArgTypes
 operator|=
@@ -1473,12 +1479,12 @@ case|case
 name|ACPI_OP_TYPE_UNKNOWN
 case|:
 comment|/* The opcode is unrecognized.  Just skip unknown opcodes */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"ParseLoop: Found unknown opcode %lX at AML offset %X, ignoring\n"
+literal|"Found unknown opcode %lX at AML offset %X, ignoring\n"
 operator|,
 name|Opcode
 operator|,
@@ -1733,7 +1739,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -1741,7 +1747,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -1749,7 +1755,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -1757,7 +1763,15 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_CREATE_QWORD_FIELD_OP
 operator|)
 condition|)
 block|{
@@ -1872,12 +1886,12 @@ condition|(
 name|OpInfo
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"ParseLoop:  Op=%p Opcode=%4.4lX Aml %p Oft=%5.5lX\n"
+literal|"Op=%p Opcode=%4.4lX Aml %p Oft=%5.5lX\n"
 operator|,
 name|Op
 operator|,
@@ -1947,7 +1961,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 case|:
 comment|/* AML_NAMESTRING_ARG */
 name|AcpiPsGetNextNamepath
@@ -2065,6 +2079,10 @@ name|DeferredOp
 operator|->
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|ParserState
 operator|->
 name|PkgEnd
@@ -2072,6 +2090,7 @@ operator|-
 name|ParserState
 operator|->
 name|Aml
+argument_list|)
 expr_stmt|;
 comment|/*                          * Skip body of method.  For OpRegions, we must continue                          * parsing because the opregion is not a standalone                          * package (We don't know where the end is).                          */
 name|ParserState
@@ -2144,6 +2163,10 @@ name|DeferredOp
 operator|->
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|ParserState
 operator|->
 name|Aml
@@ -2151,6 +2174,7 @@ operator|-
 name|DeferredOp
 operator|->
 name|Data
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2170,7 +2194,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_BIT_FIELD_OP
+name|AML_CREATE_BIT_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -2178,7 +2202,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_BYTE_FIELD_OP
+name|AML_CREATE_BYTE_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -2186,7 +2210,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_WORD_FIELD_OP
+name|AML_CREATE_WORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -2194,7 +2218,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_DWORD_FIELD_OP
+name|AML_CREATE_DWORD_FIELD_OP
 operator|)
 operator|||
 operator|(
@@ -2202,7 +2226,7 @@ name|Op
 operator|->
 name|Opcode
 operator|==
-name|AML_QWORD_FIELD_OP
+name|AML_CREATE_QWORD_FIELD_OP
 operator|)
 condition|)
 block|{
@@ -2219,6 +2243,10 @@ name|DeferredOp
 operator|->
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|ParserState
 operator|->
 name|Aml
@@ -2226,6 +2254,7 @@ operator|-
 name|DeferredOp
 operator|->
 name|Data
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* This op complete, notify the dispatcher */
@@ -2506,12 +2535,12 @@ operator|&
 name|ArgCount
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"ParseLoop:  Popped scope, Op=%p\n"
+literal|"Popped scope, Op=%p\n"
 operator|,
 name|Op
 operator|)
@@ -2549,12 +2578,12 @@ block|}
 block|}
 comment|/* while ParserState->Aml */
 comment|/*      * Complete the last Op (if not completed), and clear the scope stack.      * It is easily possible to end an AML "package" with an unbounded number      * of open scopes (such as when several AML blocks are closed with      * sequential closing braces).  We want to terminate each one cleanly.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsParseLoop: Package complete at Op %p\n"
+literal|"Package complete at Op %p\n"
 operator|,
 name|Op
 operator|)
@@ -2809,12 +2838,12 @@ argument_list|(
 literal|"PsParseAml"
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsParseAml: Entered with Scope=%p Aml=%p size=%lX\n"
+literal|"Entered with Scope=%p Aml=%p size=%lX\n"
 operator|,
 name|StartScope
 operator|,
@@ -2870,6 +2899,22 @@ comment|/* Create and initialize a new walk list */
 name|WalkList
 operator|.
 name|WalkState
+operator|=
+name|NULL
+expr_stmt|;
+name|WalkList
+operator|.
+name|AcquiredMutexList
+operator|.
+name|Prev
+operator|=
+name|NULL
+expr_stmt|;
+name|WalkList
+operator|.
+name|AcquiredMutexList
+operator|.
+name|Next
 operator|=
 name|NULL
 expr_stmt|;
@@ -3049,12 +3094,12 @@ operator|=
 name|AE_OK
 expr_stmt|;
 comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsParseAml: State=%p\n"
+literal|"State=%p\n"
 operator|,
 name|WalkState
 operator|)
@@ -3081,12 +3126,12 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsParseAml: Completed one call to walk loop, State=%p\n"
+literal|"Completed one call to walk loop, State=%p\n"
 operator|,
 name|WalkState
 operator|)
@@ -3152,12 +3197,12 @@ name|WalkState
 operator|->
 name|ReturnDesc
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsParseAml: ReturnValue=%p, State=%p\n"
+literal|"ReturnValue=%p, State=%p\n"
 operator|,
 name|WalkState
 operator|->
@@ -3201,7 +3246,7 @@ operator|->
 name|ParserState
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|WalkState
 operator|->
@@ -3269,7 +3314,7 @@ name|ReturnDesc
 condition|)
 block|{
 comment|/* Caller doesn't want it, must delete it */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnDesc
 argument_list|)
@@ -3277,6 +3322,18 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Normal exit */
+name|AcpiExReleaseAllMutexes
+argument_list|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+operator|&
+name|WalkList
+operator|.
+name|AcquiredMutexList
+argument_list|)
+expr_stmt|;
 name|AcpiGbl_CurrentWalkList
 operator|=
 name|PrevWalkList
@@ -3299,9 +3356,21 @@ argument_list|(
 name|ParserState
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|ParserState
+argument_list|)
+expr_stmt|;
+name|AcpiExReleaseAllMutexes
+argument_list|(
+operator|(
+name|ACPI_OPERAND_OBJECT
+operator|*
+operator|)
+operator|&
+name|WalkList
+operator|.
+name|AcquiredMutexList
 argument_list|)
 expr_stmt|;
 name|AcpiGbl_CurrentWalkList

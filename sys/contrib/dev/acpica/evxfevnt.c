@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|EVENT_HANDLING
+value|ACPI_EVENTS
 end_define
 
 begin_macro
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/**************************************************************************  *  * FUNCTION:    AcpiEnable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Transfers the system into ACPI mode.  *  *************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Transfers the system into ACPI mode.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -89,7 +89,7 @@ operator|!
 name|AcpiGbl_DSDT
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
@@ -113,12 +113,12 @@ name|AcpiHwGetModeCapabilities
 argument_list|()
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"AcpiEnable: Only legacy mode supported!\n"
+literal|"Only legacy mode supported!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -144,7 +144,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_FATAL
 argument_list|,
@@ -159,7 +159,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_OK
 argument_list|,
@@ -177,7 +177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************  *  * FUNCTION:    AcpiDisable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Returns the system to original ACPI/legacy mode, and  *              uninstalls the SCI interrupt handler.  *  *************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisable  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Returns the system to original ACPI/legacy mode, and  *              uninstalls the SCI interrupt handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -195,6 +195,26 @@ argument_list|(
 literal|"AcpiDisable"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Restore original mode  */
 name|Status
 operator|=
@@ -211,7 +231,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -242,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiEnableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Enable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Enable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -269,6 +289,26 @@ argument_list|(
 literal|"AcpiEnableEvent"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -358,18 +398,18 @@ name|RegisterId
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"Fixed event bit clear when it should be set,\n"
+literal|"Fixed event bit clear when it should be set\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_ERROR
+name|AE_NO_HARDWARE_RESPONSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -382,8 +422,8 @@ if|if
 condition|(
 operator|(
 name|Event
-operator|>=
-name|NUM_GPE
+operator|>
+name|ACPI_GPE_MAX
 operator|)
 operator|||
 operator|(
@@ -424,7 +464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiDisableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Disable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDisableEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be enabled  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Disable an ACPI event (fixed and general purpose)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -451,6 +491,26 @@ argument_list|(
 literal|"AcpiDisableEvent"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -540,7 +600,7 @@ name|RegisterId
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
@@ -551,7 +611,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_ERROR
+name|AE_NO_HARDWARE_RESPONSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,8 +624,8 @@ if|if
 condition|(
 operator|(
 name|Event
-operator|>=
-name|NUM_GPE
+operator|>
+name|ACPI_GPE_MAX
 operator|)
 operator|||
 operator|(
@@ -606,7 +666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiClearEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be cleared  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Clear an ACPI event (fixed and general purpose)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiClearEvent  *  * PARAMETERS:  Event           - The fixed event or GPE to be cleared  *              Type            - The type of event  *  * RETURN:      Status  *  * DESCRIPTION: Clear an ACPI event (fixed and general purpose)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -633,6 +693,26 @@ argument_list|(
 literal|"AcpiClearEvent"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* The Type must be either Fixed AcpiEvent or GPE */
 switch|switch
 condition|(
@@ -717,8 +797,8 @@ if|if
 condition|(
 operator|(
 name|Event
-operator|>=
-name|NUM_GPE
+operator|>
+name|ACPI_GPE_MAX
 operator|)
 operator|||
 operator|(
@@ -758,7 +838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetEventStatus  *  * PARAMETERS:  Event           - The fixed event or GPE  *              Type            - The type of event  *              Status          - Where the current status of the event will  *                                be returned  *  * RETURN:      Status  *  * DESCRIPTION: Obtains and returns the current status of the event  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetEventStatus  *  * PARAMETERS:  Event           - The fixed event or GPE  *              Type            - The type of event  *              Status          - Where the current status of the event will  *                                be returned  *  * RETURN:      Status  *  * DESCRIPTION: Obtains and returns the current status of the event  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -789,6 +869,26 @@ argument_list|(
 literal|"AcpiGetEventStatus"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -886,8 +986,8 @@ if|if
 condition|(
 operator|(
 name|Event
-operator|>=
-name|NUM_GPE
+operator|>
+name|ACPI_GPE_MAX
 operator|)
 operator|||
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -96,97 +96,97 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Predefined handles for the mutex objects used within the subsystem  * All mutex objects are automatically created by AcpiCmMutexInitialize.  * NOTE: any changes here must be reflected in the AcpiGbl_MutexNames table also!  */
+comment|/*  * Predefined handles for the mutex objects used within the subsystem  * All mutex objects are automatically created by AcpiUtMutexInitialize.  *  * The acquire/release ordering protocol is implied via this list.  Mutexes  * with a lower value must be acquired before mutexes with a higher value.  *  * NOTE: any changes here must be reflected in the AcpiGbl_MutexNames table also!  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_HARDWARE
+name|ACPI_MTX_EXECUTE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_MEMORY
+name|ACPI_MTX_INTERPRETER
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_CACHES
+name|ACPI_MTX_PARSER
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_TABLES
+name|ACPI_MTX_DISPATCHER
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_PARSER
+name|ACPI_MTX_TABLES
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_DISPATCHER
+name|ACPI_MTX_OP_REGIONS
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_INTERPRETER
+name|ACPI_MTX_NAMESPACE
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_EXECUTE
+name|ACPI_MTX_EVENTS
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_NAMESPACE
+name|ACPI_MTX_HARDWARE
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_EVENTS
+name|ACPI_MTX_CACHES
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_OP_REGIONS
+name|ACPI_MTX_MEMORY
 value|10
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_DEBUG_CMD_READY
+name|ACPI_MTX_DEBUG_CMD_COMPLETE
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MTX_DEBUG_CMD_COMPLETE
+name|ACPI_MTX_DEBUG_CMD_READY
 value|12
 end_define
 
@@ -236,32 +236,32 @@ name|AcpiGbl_MutexNames
 index|[]
 init|=
 block|{
-literal|"ACPI_MTX_Hardware"
+literal|"ACPI_MTX_Execute"
 block|,
-literal|"ACPI_MTX_Memory"
-block|,
-literal|"ACPI_MTX_Caches"
-block|,
-literal|"ACPI_MTX_Tables"
+literal|"ACPI_MTX_Interpreter"
 block|,
 literal|"ACPI_MTX_Parser"
 block|,
 literal|"ACPI_MTX_Dispatcher"
 block|,
-literal|"ACPI_MTX_Interpreter"
+literal|"ACPI_MTX_Tables"
 block|,
-literal|"ACPI_MTX_Execute"
+literal|"ACPI_MTX_OpRegions"
 block|,
 literal|"ACPI_MTX_Namespace"
 block|,
 literal|"ACPI_MTX_Events"
 block|,
-literal|"ACPI_MTX_OpRegions"
+literal|"ACPI_MTX_Hardware"
 block|,
-literal|"ACPI_MTX_DebugCmdReady"
+literal|"ACPI_MTX_Caches"
+block|,
+literal|"ACPI_MTX_Memory"
 block|,
 literal|"ACPI_MTX_DebugCmdComplete"
-block|}
+block|,
+literal|"ACPI_MTX_DebugCmdReady"
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -290,13 +290,24 @@ decl_stmt|;
 name|UINT32
 name|UseCount
 decl_stmt|;
-name|BOOLEAN
-name|Locked
+name|UINT32
+name|OwnerId
 decl_stmt|;
 block|}
 name|ACPI_MUTEX_INFO
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* This owner ID means that the mutex is not in use (unlocked) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MUTEX_NOT_ACQUIRED
+value|(UINT32) (-1)
+end_define
 
 begin_comment
 comment|/* Lock flag parameter for various interfaces */
@@ -360,6 +371,38 @@ define|#
 directive|define
 name|TABLE_ID_DSDT
 value|(ACPI_OWNER_ID) 0x8000
+end_define
+
+begin_comment
+comment|/* Field access granularities */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIELD_BYTE_GRANULARITY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIELD_WORD_GRANULARITY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIELD_DWORD_GRANULARITY
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FIELD_QWORD_GRANULARITY
+value|8
 end_define
 
 begin_comment
@@ -609,20 +652,6 @@ begin_comment
 comment|/*  * Predefined Namespace items  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_ADDRESS_SPACE
-value|255
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NUM_ADDRESS_SPACES
-value|256
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -631,7 +660,7 @@ name|NATIVE_CHAR
 modifier|*
 name|Name
 decl_stmt|;
-name|ACPI_OBJECT_TYPE
+name|ACPI_OBJECT_TYPE8
 name|Type
 decl_stmt|;
 name|NATIVE_CHAR
@@ -640,6 +669,62 @@ name|Val
 decl_stmt|;
 block|}
 name|PREDEFINED_NAMES
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Object types used during package copies */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COPY_TYPE_SIMPLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_COPY_TYPE_PACKAGE
+value|1
+end_define
+
+begin_comment
+comment|/* Info structure used to convert external<->internal namestrings */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_namestring_info
+block|{
+name|NATIVE_CHAR
+modifier|*
+name|ExternalName
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|NextExternalChar
+decl_stmt|;
+name|NATIVE_CHAR
+modifier|*
+name|InternalName
+decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+name|UINT32
+name|NumSegments
+decl_stmt|;
+name|UINT32
+name|NumCarats
+decl_stmt|;
+name|BOOLEAN
+name|FullyQualified
+decl_stmt|;
+block|}
+name|ACPI_NAMESTRING_INFO
 typedef|;
 end_typedef
 
@@ -733,7 +818,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|ADDRESS_SPACE_HANDLER
+name|ACPI_ADR_SPACE_HANDLER
 name|Handler
 decl_stmt|;
 name|void
@@ -741,7 +826,7 @@ modifier|*
 name|Context
 decl_stmt|;
 block|}
-name|ACPI_ADDRESS_SPACE_INFO
+name|ACPI_ADR_SPACE_INFO
 typedef|;
 end_typedef
 
@@ -808,7 +893,7 @@ name|ACPI_HANDLE
 name|MethodHandle
 decl_stmt|;
 comment|/* Method handle for direct (fast) execution */
-name|GPE_HANDLER
+name|ACPI_GPE_HANDLER
 name|Handler
 decl_stmt|;
 comment|/* Address of handler, if any */
@@ -830,7 +915,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|FIXED_EVENT_HANDLER
+name|ACPI_EVENT_HANDLER
 name|Handler
 decl_stmt|;
 comment|/* Address of handler. */
@@ -906,7 +991,7 @@ value|0xC4
 end_define
 
 begin_comment
-comment|/* Forward declaration */
+comment|/* Forward declarations */
 end_comment
 
 begin_struct_decl
@@ -917,7 +1002,19 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|acpi_walk_list
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|acpi_parse_obj
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|acpi_obj_mutex
 struct_decl|;
 end_struct_decl
 
@@ -1112,6 +1209,30 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Notify info - used to pass info to the deferred notify  * handler/dispatcher.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_notify_info
+block|{
+name|ACPI_STATE_COMMON
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+name|union
+name|acpi_operand_obj
+modifier|*
+name|HandlerObj
+decl_stmt|;
+block|}
+name|ACPI_NOTIFY_INFO
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Generic state is union of structs above */
 end_comment
 
@@ -1140,6 +1261,9 @@ name|Pkg
 decl_stmt|;
 name|ACPI_RESULT_VALUES
 name|Results
+decl_stmt|;
+name|ACPI_NOTIFY_INFO
+name|Notify
 decl_stmt|;
 block|}
 name|ACPI_GENERIC_STATE
@@ -1485,337 +1609,6 @@ name|Next
 decl_stmt|;
 block|}
 name|ACPI_PARSE_STATE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*****************************************************************************  *  * Tree walking typedefs and structs  *  ****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * Walk state - current state of a parse tree walk.  Used for both a leisurely stroll through  * the tree (for whatever reason), and for control method execution.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEXT_OP_DOWNWARD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEXT_OP_UPWARD
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|WALK_NON_METHOD
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|WALK_METHOD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|WALK_METHOD_RESTART
-value|2
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_walk_state
-block|{
-name|UINT8
-name|DataType
-decl_stmt|;
-comment|/* To differentiate various internal objs */
-block|\
-name|ACPI_OWNER_ID
-name|OwnerId
-decl_stmt|;
-comment|/* Owner of objects created during the walk */
-name|BOOLEAN
-name|LastPredicate
-decl_stmt|;
-comment|/* Result of last predicate */
-name|UINT8
-name|NextOpInfo
-decl_stmt|;
-comment|/* Info about NextOp */
-name|UINT8
-name|NumOperands
-decl_stmt|;
-comment|/* Stack pointer for Operands[] array */
-name|UINT8
-name|CurrentResult
-decl_stmt|;
-comment|/* */
-name|struct
-name|acpi_walk_state
-modifier|*
-name|Next
-decl_stmt|;
-comment|/* Next WalkState in list */
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Origin
-decl_stmt|;
-comment|/* Start of walk [Obsolete] */
-comment|/* TBD: Obsolete with removal of WALK procedure ? */
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|PrevOp
-decl_stmt|;
-comment|/* Last op that was processed */
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|NextOp
-decl_stmt|;
-comment|/* next op to be processed */
-name|ACPI_GENERIC_STATE
-modifier|*
-name|Results
-decl_stmt|;
-comment|/* Stack of accumulated results */
-name|ACPI_GENERIC_STATE
-modifier|*
-name|ControlState
-decl_stmt|;
-comment|/* List of control states (nested IFs) */
-name|ACPI_GENERIC_STATE
-modifier|*
-name|ScopeInfo
-decl_stmt|;
-comment|/* Stack of nested scopes */
-name|ACPI_PARSE_STATE
-modifier|*
-name|ParserState
-decl_stmt|;
-comment|/* Current state of parser */
-name|UINT8
-modifier|*
-name|AmlLastWhile
-decl_stmt|;
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
-decl_stmt|;
-comment|/* Info on current opcode */
-name|ACPI_PARSE_DOWNWARDS
-name|DescendingCallback
-decl_stmt|;
-name|ACPI_PARSE_UPWARDS
-name|AscendingCallback
-decl_stmt|;
-name|union
-name|acpi_operand_obj
-modifier|*
-name|ReturnDesc
-decl_stmt|;
-comment|/* Return object, if any */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|MethodDesc
-decl_stmt|;
-comment|/* Method descriptor if running a method */
-name|struct
-name|acpi_node
-modifier|*
-name|MethodNode
-decl_stmt|;
-comment|/* Method Node if running a method */
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|MethodCallOp
-decl_stmt|;
-comment|/* MethodCall Op if running a method */
-name|struct
-name|acpi_node
-modifier|*
-name|MethodCallNode
-decl_stmt|;
-comment|/* Called method Node*/
-name|union
-name|acpi_operand_obj
-modifier|*
-name|Operands
-index|[
-name|OBJ_NUM_OPERANDS
-index|]
-decl_stmt|;
-comment|/* Operands passed to the interpreter */
-name|struct
-name|acpi_node
-name|Arguments
-index|[
-name|MTH_NUM_ARGS
-index|]
-decl_stmt|;
-comment|/* Control method arguments */
-name|struct
-name|acpi_node
-name|LocalVariables
-index|[
-name|MTH_NUM_LOCALS
-index|]
-decl_stmt|;
-comment|/* Control method locals */
-name|UINT32
-name|ParseFlags
-decl_stmt|;
-name|UINT8
-name|WalkType
-decl_stmt|;
-name|UINT8
-name|ReturnUsed
-decl_stmt|;
-name|UINT16
-name|Opcode
-decl_stmt|;
-comment|/* Current AML opcode */
-name|UINT32
-name|PrevArgTypes
-decl_stmt|;
-comment|/* Debug support */
-name|UINT32
-name|MethodBreakpoint
-decl_stmt|;
-block|}
-name|ACPI_WALK_STATE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Walk list - head of a tree of walk states.  Multiple walk states are created when there  * are nested control methods executing.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_walk_list
-block|{
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-decl_stmt|;
-block|}
-name|ACPI_WALK_LIST
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Info used by AcpiPsInitObjects */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_init_walk_info
-block|{
-name|UINT16
-name|MethodCount
-decl_stmt|;
-name|UINT16
-name|OpRegionCount
-decl_stmt|;
-name|UINT16
-name|FieldCount
-decl_stmt|;
-name|UINT16
-name|OpRegionInit
-decl_stmt|;
-name|UINT16
-name|FieldInit
-decl_stmt|;
-name|UINT16
-name|ObjectCount
-decl_stmt|;
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableDesc
-decl_stmt|;
-block|}
-name|ACPI_INIT_WALK_INFO
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Info used by TBD */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_device_walk_info
-block|{
-name|UINT16
-name|DeviceCount
-decl_stmt|;
-name|UINT16
-name|Num_STA
-decl_stmt|;
-name|UINT16
-name|Num_INI
-decl_stmt|;
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableDesc
-decl_stmt|;
-block|}
-name|ACPI_DEVICE_WALK_INFO
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* TBD: [Restructure] Merge with struct above */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_walk_info
-block|{
-name|UINT32
-name|DebugLevel
-decl_stmt|;
-name|UINT32
-name|OwnerId
-decl_stmt|;
-block|}
-name|ACPI_WALK_INFO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_get_devices_info
-block|{
-name|WALK_CALLBACK
-name|UserFunction
-decl_stmt|;
-name|void
-modifier|*
-name|Context
-decl_stmt|;
-name|NATIVE_CHAR
-modifier|*
-name|Hid
-decl_stmt|;
-block|}
-name|ACPI_GET_DEVICES_INFO
 typedef|;
 end_typedef
 
@@ -2336,7 +2129,7 @@ begin_define
 define|#
 directive|define
 name|ALL_FIXED_STS_BITS
-value|(TMR_STS_MASK   | BM_STS_MASK  | GBL_STS_MASK \                                     | PWRBTN_STS_MASK | SLPBTN_STS_MASK \                                     | RTC_STS_MASK | WAK_STS_MASK)
+value|(TMR_STS_MASK   | BM_STS_MASK  | GBL_STS_MASK \                                         | PWRBTN_STS_MASK | SLPBTN_STS_MASK \                                         | RTC_STS_MASK | WAK_STS_MASK)
 end_define
 
 begin_define
@@ -2462,204 +2255,205 @@ value|2
 end_define
 
 begin_comment
-comment|/* Plug and play */
+comment|/*****************************************************************************  *  * Resource descriptors  *  ****************************************************************************/
 end_comment
 
 begin_comment
-comment|/* Pnp and ACPI data */
+comment|/* ResourceType values */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VERSION_NO
-value|0x01
+name|RESOURCE_TYPE_MEMORY_RANGE
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOGICAL_DEVICE_ID
-value|0x02
+name|RESOURCE_TYPE_IO_RANGE
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMPATIBLE_DEVICE_ID
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|IRQ_FORMAT
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMA_FORMAT
-value|0x05
-end_define
-
-begin_define
-define|#
-directive|define
-name|START_DEPENDENT_TAG
-value|0x06
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_DEPENDENT_TAG
-value|0x07
-end_define
-
-begin_define
-define|#
-directive|define
-name|IO_PORT_DESCRIPTOR
-value|0x08
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIXED_LOCATION_IO_DESCRIPTOR
-value|0x09
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESERVED_TYPE0
-value|0x0A
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESERVED_TYPE1
-value|0x0B
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESERVED_TYPE2
-value|0x0C
-end_define
-
-begin_define
-define|#
-directive|define
-name|RESERVED_TYPE3
-value|0x0D
-end_define
-
-begin_define
-define|#
-directive|define
-name|SMALL_VENDOR_DEFINED
-value|0x0E
-end_define
-
-begin_define
-define|#
-directive|define
-name|END_TAG
-value|0x0F
+name|RESOURCE_TYPE_BUS_NUMBER_RANGE
+value|2
 end_define
 
 begin_comment
-comment|/* Pnp and ACPI data */
+comment|/* Resource descriptor types and masks */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MEMORY_RANGE_24
+name|RESOURCE_DESC_TYPE_LARGE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_TYPE_SMALL
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_TYPE_MASK
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_SMALL_MASK
+value|0x78
+end_define
+
+begin_comment
+comment|/* Only bits 6:3 contain the type */
+end_comment
+
+begin_comment
+comment|/*  * Small resource descriptor types  * Note: The 3 length bits (2:0) must be zero  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_IRQ_FORMAT
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_DMA_FORMAT
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_START_DEPENDENT
+value|0x30
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_END_DEPENDENT
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_IO_PORT
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_FIXED_IO_PORT
+value|0x48
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_SMALL_VENDOR
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_END_TAG
+value|0x78
+end_define
+
+begin_comment
+comment|/*  * Large resource descriptor types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_MEMORY_24
 value|0x81
 end_define
 
 begin_define
 define|#
 directive|define
-name|ISA_MEMORY_RANGE
-value|0x81
+name|RESOURCE_DESC_GENERAL_REGISTER
+value|0x82
 end_define
 
 begin_define
 define|#
 directive|define
-name|LARGE_VENDOR_DEFINED
+name|RESOURCE_DESC_LARGE_VENDOR
 value|0x84
 end_define
 
 begin_define
 define|#
 directive|define
-name|EISA_MEMORY_RANGE
+name|RESOURCE_DESC_MEMORY_32
 value|0x85
 end_define
 
 begin_define
 define|#
 directive|define
-name|MEMORY_RANGE_32
-value|0x85
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIXED_EISA_MEMORY_RANGE
+name|RESOURCE_DESC_FIXED_MEMORY_32
 value|0x86
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIXED_MEMORY_RANGE_32
-value|0x86
-end_define
-
-begin_comment
-comment|/* ACPI only data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DWORD_ADDRESS_SPACE
+name|RESOURCE_DESC_DWORD_ADDRESS_SPACE
 value|0x87
 end_define
 
 begin_define
 define|#
 directive|define
-name|WORD_ADDRESS_SPACE
+name|RESOURCE_DESC_WORD_ADDRESS_SPACE
 value|0x88
 end_define
 
 begin_define
 define|#
 directive|define
-name|EXTENDED_IRQ
+name|RESOURCE_DESC_EXTENDED_XRUPT
 value|0x89
 end_define
 
+begin_define
+define|#
+directive|define
+name|RESOURCE_DESC_QWORD_ADDRESS_SPACE
+value|0x8A
+end_define
+
 begin_comment
-comment|/* MUST HAVES */
+comment|/* String version of device HIDs and UIDs */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DEVICE_ID_LENGTH
+name|ACPI_DEVICE_ID_LENGTH
 value|0x09
 end_define
 
@@ -2670,11 +2464,11 @@ block|{
 name|NATIVE_CHAR
 name|Buffer
 index|[
-name|DEVICE_ID_LENGTH
+name|ACPI_DEVICE_ID_LENGTH
 index|]
 decl_stmt|;
 block|}
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 typedef|;
 end_typedef
 
@@ -2716,15 +2510,15 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
-name|AllocationInfo
+name|AcpiAllocationInfo
 block|{
 name|struct
-name|AllocationInfo
+name|AcpiAllocationInfo
 modifier|*
 name|Previous
 decl_stmt|;
 name|struct
-name|AllocationInfo
+name|AcpiAllocationInfo
 modifier|*
 name|Next
 decl_stmt|;
@@ -2751,7 +2545,7 @@ name|UINT8
 name|AllocType
 decl_stmt|;
 block|}
-name|ALLOCATION_INFO
+name|ACPI_ALLOCATION_INFO
 typedef|;
 end_typedef
 

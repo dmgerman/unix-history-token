@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl71.h - IA-64 Extensions to the ACPI Spec Rev. 0.71  *                   This file includes tables specific to this  *                   specification revision.  *       $Revision: 9 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl71.h - IA-64 Extensions to the ACPI Spec Rev. 0.71  *                   This file includes tables specific to this  *                   specification revision.  *       $Revision: 11 $  *  *****************************************************************************/
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the ACPI subsystem  *              $Revision: 10 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsxface - Public interfaces to the resource manager  *              $Revision: 13 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|RESOURCE_MANAGER
+value|ACPI_RESOURCES
 end_define
 
 begin_macro
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetIrqRoutingTable  *  * PARAMETERS:  DeviceHandle    - a handle to the Bus device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                current resources for the device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get the IRQ routing table for a  *              specific bus.  The caller must first acquire a handle for the  *              desired bus.  The routine table is placed in the buffer pointed  *              to by the RetBuffer variable parameter.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  *              This function attempts to execute the _PRT method contained in  *              the object indicated by the passed DeviceHandle.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetIrqRoutingTable  *  * PARAMETERS:  DeviceHandle    - a handle to the Bus device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                current resources for the device  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the IRQ routing table for a  *              specific bus.  The caller must first acquire a handle for the  *              desired bus.  The routine table is placed in the buffer pointed  *              to by the RetBuffer variable parameter.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  *              This function attempts to execute the _PRT method contained in  *              the object indicated by the passed DeviceHandle.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -75,7 +75,27 @@ argument_list|(
 literal|"AcpiGetIrqRoutingTable "
 argument_list|)
 expr_stmt|;
-comment|/*      *  Must have a valid handle and buffer, So we have to have a handle      *  and a return buffer structure, and if there is a non-zero buffer length      *  we also need a valid pointer in the buffer. If it's a zero buffer length,      *  we'll be returning the needed buffer size, so keep going.      */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
 operator|(
@@ -128,7 +148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetCurrentResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                current resources for the device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get the current resources for a  *              specific device.  The caller must first acquire a handle for  *              the desired device.  The resource data is placed in the buffer  *              pointed to by the RetBuffer variable parameter.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  *              This function attempts to execute the _CRS method contained in  *              the object indicated by the passed DeviceHandle.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetCurrentResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                current resources for the device  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the current resources for a  *              specific device.  The caller must first acquire a handle for  *              the desired device.  The resource data is placed in the buffer  *              pointed to by the RetBuffer variable parameter.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  *              This function attempts to execute the _CRS method contained in  *              the object indicated by the passed DeviceHandle.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -151,7 +171,27 @@ argument_list|(
 literal|"AcpiGetCurrentResources"
 argument_list|)
 expr_stmt|;
-comment|/*      *  Must have a valid handle and buffer, So we have to have a handle      *  and a return buffer structure, and if there is a non-zero buffer length      *  we also need a valid pointer in the buffer. If it's a zero buffer length,      *  we'll be returning the needed buffer size, so keep going.      */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
 operator|(
@@ -204,7 +244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetPossibleResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                resources for the device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to get a list of the possible resources  *              for a specific device.  The caller must first acquire a handle  *              for the desired device.  The resource data is placed in the  *              buffer pointed to by the RetBuffer variable.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetPossibleResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are querying  *              RetBuffer       - a pointer to a buffer to receive the  *                                resources for the device  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get a list of the possible resources  *              for a specific device.  The caller must first acquire a handle  *              for the desired device.  The resource data is placed in the  *              buffer pointed to by the RetBuffer variable.  *  *              If the function fails an appropriate status will be returned  *              and the value of RetBuffer is undefined.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -227,7 +267,27 @@ argument_list|(
 literal|"AcpiGetPossibleResources"
 argument_list|)
 expr_stmt|;
-comment|/*      *  Must have a valid handle and buffer, So we have to have a handle      *  and a return buffer structure, and if there is a non-zero buffer length      *  we also need a valid pointer in the buffer. If it's a zero buffer length,      *  we'll be returning the needed buffer size, so keep going.      */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Must have a valid handle and buffer, So we have to have a handle      * and a return buffer structure, and if there is a non-zero buffer length      * we also need a valid pointer in the buffer. If it's a zero buffer length,      * we'll be returning the needed buffer size, so keep going.      */
 if|if
 condition|(
 operator|(
@@ -280,7 +340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetCurrentResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are changing the resources of  *              InBuffer        - a pointer to a buffer containing the  *                                resources to be set for the device  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to set the current resources for a  *              specific device.  The caller must first acquire a handle for  *              the desired device.  The resource data is passed to the routine  *              the buffer pointed to by the InBuffer variable.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiSetCurrentResources  *  * PARAMETERS:  DeviceHandle    - a handle to the device object for the  *                                device we are changing the resources of  *              InBuffer        - a pointer to a buffer containing the  *                                resources to be set for the device  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to set the current resources for a  *              specific device.  The caller must first acquire a handle for  *              the desired device.  The resource data is passed to the routine  *              the buffer pointed to by the InBuffer variable.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -303,7 +363,27 @@ argument_list|(
 literal|"AcpiSetCurrentResources"
 argument_list|)
 expr_stmt|;
-comment|/*      *  Must have a valid handle and buffer      */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Must have a valid handle and buffer      */
 if|if
 condition|(
 operator|(

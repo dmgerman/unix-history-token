@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ACCOMMON_H
+name|_ACUTILS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ACCOMMON_H
+name|_ACUTILS_H
 end_define
 
 begin_typedef
@@ -47,7 +47,7 @@ end_typedef
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmWalkPackageTree
+name|AcpiUtWalkPackageTree
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -112,7 +112,7 @@ value|(UINT16) 2
 end_define
 
 begin_comment
-comment|/* AcpiCmDumpBuffer */
+comment|/* AcpiUtDumpBuffer */
 end_comment
 
 begin_define
@@ -149,7 +149,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|AcpiCmInitGlobals
+name|AcpiUtInitGlobals
 parameter_list|(
 name|void
 parameter_list|)
@@ -158,7 +158,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmTerminate
+name|AcpiUtTerminate
 parameter_list|(
 name|void
 parameter_list|)
@@ -166,12 +166,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmInit - miscellaneous initialization and shutdown  */
+comment|/*  * UtInit - miscellaneous initialization and shutdown  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmHardwareInitialize
+name|AcpiUtHardwareInitialize
 parameter_list|(
 name|void
 parameter_list|)
@@ -180,7 +180,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmSubsystemShutdown
+name|AcpiUtSubsystemShutdown
 parameter_list|(
 name|void
 parameter_list|)
@@ -189,7 +189,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmValidateFadt
+name|AcpiUtValidateFadt
 parameter_list|(
 name|void
 parameter_list|)
@@ -197,7 +197,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmGlobal - Global data structures and procedures  */
+comment|/*  * UtGlobal - Global data structures and procedures  */
 end_comment
 
 begin_ifdef
@@ -209,7 +209,7 @@ end_ifdef
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetMutexName
+name|AcpiUtGetMutexName
 parameter_list|(
 name|UINT32
 name|MutexId
@@ -220,7 +220,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 parameter_list|(
 name|UINT32
 name|Type
@@ -231,7 +231,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmGetRegionName
+name|AcpiUtGetRegionName
 parameter_list|(
 name|UINT8
 name|SpaceId
@@ -246,7 +246,7 @@ end_endif
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiCmValidObjectType
+name|AcpiUtValidObjectType
 parameter_list|(
 name|UINT32
 name|Type
@@ -256,7 +256,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_OWNER_ID
-name|AcpiCmAllocateOwnerId
+name|AcpiUtAllocateOwnerId
 parameter_list|(
 name|UINT32
 name|IdType
@@ -265,7 +265,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmClib - Local implementations of C library functions  */
+comment|/*  * UtClib - Local implementations of C library functions  */
 end_comment
 
 begin_ifndef
@@ -275,8 +275,8 @@ name|ACPI_USE_SYSTEM_CLIBRARY
 end_ifndef
 
 begin_function_decl
-name|NATIVE_UINT
-name|AcpiCmStrlen
+name|UINT32
+name|AcpiUtStrlen
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -289,7 +289,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrcpy
+name|AcpiUtStrcpy
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -306,7 +306,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrncpy
+name|AcpiUtStrncpy
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -325,7 +325,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiCmStrncmp
+name|AcpiUtStrncmp
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -345,7 +345,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiCmStrcmp
+name|AcpiUtStrcmp
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -363,7 +363,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrcat
+name|AcpiUtStrcat
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -380,7 +380,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrncat
+name|AcpiUtStrncat
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -399,7 +399,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiCmStrtoul
+name|AcpiUtStrtoul
 parameter_list|(
 specifier|const
 name|NATIVE_CHAR
@@ -411,7 +411,7 @@ modifier|*
 modifier|*
 name|Terminator
 parameter_list|,
-name|NATIVE_UINT
+name|UINT32
 name|Base
 parameter_list|)
 function_decl|;
@@ -420,7 +420,7 @@ end_function_decl
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmStrstr
+name|AcpiUtStrstr
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -434,21 +434,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|NATIVE_CHAR
-modifier|*
-name|AcpiCmStrupr
-parameter_list|(
-name|NATIVE_CHAR
-modifier|*
-name|SrcString
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
-name|AcpiCmMemcpy
+name|AcpiUtMemcpy
 parameter_list|(
 name|void
 modifier|*
@@ -468,7 +456,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|AcpiCmMemset
+name|AcpiUtMemset
 parameter_list|(
 name|void
 modifier|*
@@ -485,7 +473,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiCmToUpper
+name|AcpiUtToUpper
 parameter_list|(
 name|UINT32
 name|c
@@ -495,7 +483,7 @@ end_function_decl
 
 begin_function_decl
 name|UINT32
-name|AcpiCmToLower
+name|AcpiUtToLower
 parameter_list|(
 name|UINT32
 name|c
@@ -513,12 +501,12 @@ comment|/* ACPI_USE_SYSTEM_CLIBRARY */
 end_comment
 
 begin_comment
-comment|/*  * CmCopy - Object construction and conversion interfaces  */
+comment|/*  * UtCopy - Object construction and conversion interfaces  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildSimpleObject
+name|AcpiUtBuildSimpleObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -541,7 +529,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmBuildPackageObject
+name|AcpiUtBuildPackageObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -560,7 +548,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyIobjectToEobject
+name|AcpiUtCopyIobjectToEobject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -575,7 +563,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyEsimpleToIsimple
+name|AcpiUtCopyEsimpleToIsimple
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -590,7 +578,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyEobjectToIobject
+name|AcpiUtCopyEobjectToIobject
 parameter_list|(
 name|ACPI_OBJECT
 modifier|*
@@ -605,7 +593,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyISimpleToIsimple
+name|AcpiUtCopyISimpleToIsimple
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -620,7 +608,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCopyIpackageToIpackage
+name|AcpiUtCopyIpackageToIpackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -638,12 +626,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmCreate - Object creation  */
+comment|/*  * UtCreate - Object creation  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmUpdateObjectReference
+name|AcpiUtUpdateObjectReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -658,7 +646,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|_CmCreateInternalObject
+name|_UtCreateInternalObject
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -670,14 +658,14 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmDebug - Debug interfaces  */
+comment|/*  * UtDebug - Debug interfaces  */
 end_comment
 
 begin_function_decl
@@ -994,7 +982,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDumpBuffer
+name|AcpiUtDumpBuffer
 parameter_list|(
 name|UINT8
 modifier|*
@@ -1013,12 +1001,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmDelete - Object deletion  */
+comment|/*  * UtDelete - Object deletion  */
 end_comment
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteInternalObj
+name|AcpiUtDeleteInternalObj
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1029,7 +1017,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteInternalPackageObject
+name|AcpiUtDeleteInternalPackageObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1040,7 +1028,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteInternalSimpleObject
+name|AcpiUtDeleteInternalSimpleObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1051,7 +1039,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmDeleteInternalObjectList
+name|AcpiUtDeleteInternalObjectList
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1062,7 +1050,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmEval - object evaluation  */
+comment|/*  * UtEval - object evaluation  */
 end_comment
 
 begin_comment
@@ -1120,7 +1108,7 @@ end_define
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmEvaluateNumericObject
+name|AcpiUtEvaluateNumericObject
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -1139,13 +1127,13 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmExecute_HID
+name|AcpiUtExecute_HID
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 modifier|*
 name|Hid
 parameter_list|)
@@ -1154,7 +1142,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmExecute_STA
+name|AcpiUtExecute_STA
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -1169,13 +1157,13 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmExecute_UID
+name|AcpiUtExecute_UID
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 modifier|*
 name|Uid
 parameter_list|)
@@ -1183,13 +1171,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmError - exception interfaces  */
+comment|/*  * UtError - exception interfaces  */
 end_comment
 
 begin_function_decl
 name|NATIVE_CHAR
 modifier|*
-name|AcpiCmFormatException
+name|AcpiUtFormatException
 parameter_list|(
 name|ACPI_STATUS
 name|Status
@@ -1198,12 +1186,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmMutex - mutual exclusion interfaces  */
+comment|/*  * UtMutex - mutual exclusion interfaces  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmMutexInitialize
+name|AcpiUtMutexInitialize
 parameter_list|(
 name|void
 parameter_list|)
@@ -1212,7 +1200,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmMutexTerminate
+name|AcpiUtMutexTerminate
 parameter_list|(
 name|void
 parameter_list|)
@@ -1221,7 +1209,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCreateMutex
+name|AcpiUtCreateMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -1231,7 +1219,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmDeleteMutex
+name|AcpiUtDeleteMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -1241,7 +1229,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -1251,7 +1239,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 parameter_list|(
 name|ACPI_MUTEX_HANDLE
 name|MutexId
@@ -1260,13 +1248,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmObject - internal object create/delete/cache routines  */
+comment|/*  * UtObject - internal object create/delete/cache routines  */
 end_comment
 
 begin_function_decl
 name|void
 modifier|*
-name|_CmAllocateObjectDesc
+name|_UtAllocateObjectDesc
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -1284,24 +1272,24 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 parameter_list|(
 name|t
 parameter_list|)
-value|_CmCreateInternalObject(_THIS_MODULE,__LINE__,_COMPONENT,t)
+value|_UtCreateInternalObject(_THIS_MODULE,__LINE__,_COMPONENT,t)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AcpiCmAllocateObjectDesc
+name|AcpiUtAllocateObjectDesc
 parameter_list|()
-value|_CmAllocateObjectDesc(_THIS_MODULE,__LINE__,_COMPONENT)
+value|_UtAllocateObjectDesc(_THIS_MODULE,__LINE__,_COMPONENT)
 end_define
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1312,7 +1300,7 @@ end_function_decl
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiCmValidInternalObject
+name|AcpiUtValidInternalObject
 parameter_list|(
 name|void
 modifier|*
@@ -1322,12 +1310,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmRefCnt - Object reference count management  */
+comment|/*  * UtRefCnt - Object reference count management  */
 end_comment
 
 begin_function_decl
 name|void
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1338,7 +1326,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1348,12 +1336,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmSize - Object size routines  */
+comment|/*  * UtSize - Object size routines  */
 end_comment
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmGetSimpleObjectSize
+name|AcpiUtGetSimpleObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1368,7 +1356,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmGetPackageObjectSize
+name|AcpiUtGetPackageObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1383,7 +1371,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmGetObjectSize
+name|AcpiUtGetObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1397,12 +1385,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * CmState - Generic state creation/cache routines  */
+comment|/*  * UtState - Generic state creation/cache routines  */
 end_comment
 
 begin_function_decl
 name|void
-name|AcpiCmPushGenericState
+name|AcpiUtPushGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -1419,7 +1407,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmPopGenericState
+name|AcpiUtPopGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -1432,7 +1420,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateGenericState
+name|AcpiUtCreateGenericState
 parameter_list|(
 name|void
 parameter_list|)
@@ -1442,7 +1430,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateUpdateState
+name|AcpiUtCreateUpdateState
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1457,7 +1445,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreatePkgState
+name|AcpiUtCreatePkgState
 parameter_list|(
 name|void
 modifier|*
@@ -1475,7 +1463,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCreateUpdateStateAndPush
+name|AcpiUtCreateUpdateStateAndPush
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1494,7 +1482,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmCreatePkgStateAndPush
+name|AcpiUtCreatePkgStateAndPush
 parameter_list|(
 name|void
 modifier|*
@@ -1518,7 +1506,7 @@ end_function_decl
 begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
-name|AcpiCmCreateControlState
+name|AcpiUtCreateControlState
 parameter_list|(
 name|void
 parameter_list|)
@@ -1527,7 +1515,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteGenericState
+name|AcpiUtDeleteGenericState
 parameter_list|(
 name|ACPI_GENERIC_STATE
 modifier|*
@@ -1538,7 +1526,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteGenericStateCache
+name|AcpiUtDeleteGenericStateCache
 parameter_list|(
 name|void
 parameter_list|)
@@ -1547,7 +1535,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmDeleteObjectCache
+name|AcpiUtDeleteObjectCache
 parameter_list|(
 name|void
 parameter_list|)
@@ -1555,12 +1543,12 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Cmutils  */
+comment|/*  * Ututils  */
 end_comment
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiCmValidAcpiName
+name|AcpiUtValidAcpiName
 parameter_list|(
 name|UINT32
 name|Name
@@ -1570,7 +1558,7 @@ end_function_decl
 
 begin_function_decl
 name|BOOLEAN
-name|AcpiCmValidAcpiCharacter
+name|AcpiUtValidAcpiCharacter
 parameter_list|(
 name|NATIVE_CHAR
 name|Character
@@ -1579,8 +1567,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtStrupr
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|SrcString
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmResolvePackageReferences
+name|AcpiUtResolvePackageReferences
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1597,7 +1597,7 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|AcpiCmDisplayInitPathname
+name|AcpiUtDisplayInitPathname
 parameter_list|(
 name|ACPI_HANDLE
 name|ObjHandle
@@ -1621,7 +1621,7 @@ end_comment
 begin_function_decl
 name|void
 modifier|*
-name|_CmAllocate
+name|_UtAllocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1642,7 +1642,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|_CmCallocate
+name|_UtCallocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1662,7 +1662,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_CmFree
+name|_UtFree
 parameter_list|(
 name|void
 modifier|*
@@ -1683,7 +1683,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiCmInitStaticObject
+name|AcpiUtInitStaticObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1692,206 +1692,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|AcpiCmAllocate
-parameter_list|(
-name|a
-parameter_list|)
-value|_CmAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiCmCallocate
-parameter_list|(
-name|a
-parameter_list|)
-value|_CmCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiCmFree
-parameter_list|(
-name|a
-parameter_list|)
-value|_CmFree(a,_COMPONENT,_THIS_MODULE,__LINE__)
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ACPI_DEBUG_TRACK_ALLOCATIONS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|AcpiCmAddElementToAllocList
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiCmDeleteElementFromAllocList
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiCmDumpCurrentAllocations
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiCmDumpAllocationInfo
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_ALLOCATION_METRICS
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INITIALIZE_ALLOCATION_METRICS
-parameter_list|()
-define|\
-value|AcpiGbl_CurrentObjectCount = 0; \     AcpiGbl_CurrentObjectSize = 0; \     AcpiGbl_RunningObjectCount = 0; \     AcpiGbl_RunningObjectSize = 0; \     AcpiGbl_MaxConcurrentObjectCount = 0; \     AcpiGbl_MaxConcurrentObjectSize = 0; \     AcpiGbl_CurrentAllocSize = 0; \     AcpiGbl_CurrentAllocCount = 0; \     AcpiGbl_RunningAllocSize = 0; \     AcpiGbl_RunningAllocCount = 0; \     AcpiGbl_MaxConcurrentAllocSize = 0; \     AcpiGbl_MaxConcurrentAllocCount = 0; \     AcpiGbl_CurrentNodeCount = 0; \     AcpiGbl_CurrentNodeSize = 0; \     AcpiGbl_MaxConcurrentNodeCount = 0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentObjectCount--; \     AcpiGbl_CurrentObjectSize -= a
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_OBJECT_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentObjectCount++; \     AcpiGbl_RunningObjectCount++; \     if (AcpiGbl_MaxConcurrentObjectCount< AcpiGbl_CurrentObjectCount) \     { \         AcpiGbl_MaxConcurrentObjectCount = AcpiGbl_CurrentObjectCount; \     } \     AcpiGbl_RunningObjectSize += a; \     AcpiGbl_CurrentObjectSize += a; \     if (AcpiGbl_MaxConcurrentObjectSize< AcpiGbl_CurrentObjectSize) \     { \         AcpiGbl_MaxConcurrentObjectSize = AcpiGbl_CurrentObjectSize; \     }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DECREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentNodeCount--; \     AcpiGbl_CurrentNodeSize -= (a)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INCREMENT_NAME_TABLE_METRICS
-parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|AcpiGbl_CurrentNodeCount++; \     AcpiGbl_CurrentNodeSize+= (a); \     if (AcpiGbl_MaxConcurrentNodeCount< AcpiGbl_CurrentNodeCount) \     { \         AcpiGbl_MaxConcurrentNodeCount = AcpiGbl_CurrentNodeCount; \     } \   void
-end_define
-
-begin_expr_stmt
-name|AcpiCmDumpAllocationInfo
-argument_list|(
-name|void
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_ifdef
 
 begin_function_decl
 name|void
-name|AcpiCmDumpCurrentAllocations
+name|AcpiUtDumpAllocationInfo
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiUtDumpCurrentAllocations
 parameter_list|(
 name|UINT32
 name|Component
@@ -1908,13 +1726,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|AcpiUtAllocate
+parameter_list|(
+name|a
+parameter_list|)
+value|_UtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiUtCallocate
+parameter_list|(
+name|a
+parameter_list|)
+value|_UtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiUtFree
+parameter_list|(
+name|a
+parameter_list|)
+value|_UtFree(a,_COMPONENT,_THIS_MODULE,__LINE__)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _ACCOMMON_H */
+comment|/* _ACUTILS_H */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstore - AML Interpreter object store support  *              $Revision: 123 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 139 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMSTORE_C__
+name|__EXSTORE_C__
 end_define
 
 begin_include
@@ -59,23 +59,23 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amstore"
+literal|"exstore"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlExecStore  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *DestDesc           - Where to store it 0 Must be (ACPI_HANDLE)  *                                    or an ACPI_OPERAND_OBJECT  of type  *                                    Reference; if the latter the descriptor  *                                    will be either reused or deleted.  *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by ValDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStore  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *DestDesc           - Where to store it.  Must be an NS node  *                                    or an ACPI_OPERAND_OBJECT of type  *                                    Reference; if the latter the descriptor  *                                    will be either reused or deleted.  *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by ValDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlExecStore
+name|AcpiExStore
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -103,7 +103,7 @@ name|DestDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AmlExecStore"
+literal|"ExStore"
 argument_list|,
 name|DestDesc
 argument_list|)
@@ -118,12 +118,12 @@ operator|!
 name|DestDesc
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore: Internal error - null pointer\n"
+literal|"Internal - null pointer\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -144,10 +144,10 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-comment|/*           * Dest is a namespace node,          * Storing an object into a Name "container"           */
+comment|/*          * Dest is a namespace node,          * Storing an object into a Name "container"          */
 name|Status
 operator|=
-name|AcpiAmlStoreObjectToNode
+name|AcpiExStoreObjectToNode
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -180,12 +180,12 @@ name|INTERNAL_TYPE_REFERENCE
 condition|)
 block|{
 comment|/* Destination is not an Reference */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore: Destination is not a ReferenceObj [%p]\n"
+literal|"Destination is not a ReferenceObj [%p]\n"
 operator|,
 name|DestDesc
 operator|)
@@ -208,7 +208,7 @@ name|DestDesc
 argument_list|,
 name|IMODE_EXECUTE
 argument_list|,
-literal|"AmlExecStore"
+literal|"ExStore"
 argument_list|,
 literal|2
 argument_list|,
@@ -221,14 +221,14 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Examine the Reference opcode.  These cases are handled:      *      * 1) Store to Name (Change the object associated with a name)      * 2) Store to an indexed area of a Buffer or Package      * 3) Store to a Method Local or Arg      * 4) Store to the debug object      * 5) Store to a constant -- a noop      */
+comment|/*      * Examine the Reference opcode.  These cases are handled:      *      * 1) Store to Name (Change the object associated with a name)      * 2) Store to an indexed area of a Buffer or Package      * 3) Store to a Method Local or Arg      * 4) Store to the debug object      * 5) Store to a constant -- a noop      */
 switch|switch
 condition|(
 name|RefDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 condition|)
 block|{
 case|case
@@ -237,7 +237,7 @@ case|:
 comment|/* Storing an object into a Name "container" */
 name|Status
 operator|=
-name|AcpiAmlStoreObjectToNode
+name|AcpiExStoreObjectToNode
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -257,7 +257,7 @@ case|:
 comment|/* Storing to an Index (pointer into a packager or buffer) */
 name|Status
 operator|=
-name|AcpiAmlStoreObjectToIndex
+name|AcpiExStoreObjectToIndex
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -270,42 +270,25 @@ break|break;
 case|case
 name|AML_LOCAL_OP
 case|:
-name|Status
-operator|=
-name|AcpiDsMethodDataSetValue
-argument_list|(
-name|MTH_TYPE_LOCAL
-argument_list|,
-operator|(
-name|RefDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-operator|)
-argument_list|,
-name|ValDesc
-argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|AML_ARG_OP
 case|:
+comment|/* Store to a method local/arg  */
 name|Status
 operator|=
-name|AcpiDsMethodDataSetValue
+name|AcpiDsStoreObjectToLocal
 argument_list|(
-name|MTH_TYPE_ARG
+name|RefDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
 argument_list|,
-operator|(
 name|RefDesc
 operator|->
 name|Reference
 operator|.
 name|Offset
-operator|)
 argument_list|,
 name|ValDesc
 argument_list|,
@@ -316,7 +299,7 @@ break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
-comment|/*          * Storing to the Debug object causes the value stored to be          * displayed and otherwise has no effect -- see ACPI Specification          *          * TBD: print known object types "prettier".          */
+comment|/*          * Storing to the Debug object causes the value stored to be          * displayed and otherwise has no effect -- see ACPI Specification          */
 name|DEBUG_PRINT
 argument_list|(
 name|ACPI_INFO
@@ -326,20 +309,92 @@ literal|"**** Write to Debug Object: ****: \n"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
+name|DEBUG_PRINT_RAW
+argument_list|(
+name|ACPI_DEBUG_OBJECT
+argument_list|,
+operator|(
+literal|"[ACPI Debug] %s: "
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ValDesc
+operator|->
+name|Common
+operator|.
+name|Type
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+switch|switch
 condition|(
 name|ValDesc
 operator|->
 name|Common
 operator|.
 name|Type
-operator|==
-name|ACPI_TYPE_STRING
 condition|)
 block|{
-name|DEBUG_PRINT
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+name|DEBUG_PRINT_RAW
 argument_list|(
-name|ACPI_INFO
+name|ACPI_DEBUG_OBJECT
+argument_list|,
+operator|(
+literal|"0x%X (%d)\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ValDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ValDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+name|DEBUG_PRINT_RAW
+argument_list|(
+name|ACPI_DEBUG_OBJECT
+argument_list|,
+operator|(
+literal|"Length 0x%X\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ValDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_STRING
+case|:
+name|DEBUG_PRINT_RAW
+argument_list|(
+name|ACPI_DEBUG_OBJECT
 argument_list|,
 operator|(
 literal|"%s\n"
@@ -352,14 +407,42 @@ name|Pointer
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|DUMP_STACK_ENTRY
+break|break;
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+name|DEBUG_PRINT_RAW
 argument_list|(
+name|ACPI_DEBUG_OBJECT
+argument_list|,
+operator|(
+literal|"Elements - 0x%X\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
 name|ValDesc
+operator|->
+name|Package
+operator|.
+name|Elements
+operator|)
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|DEBUG_PRINT_RAW
+argument_list|(
+name|ACPI_DEBUG_OBJECT
+argument_list|,
+operator|(
+literal|"@0x%p\n"
+operator|,
+name|ValDesc
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -374,18 +457,18 @@ case|:
 comment|/*          * Storing to a constant is a no-op -- see ACPI Specification          * Delete the reference descriptor, however          */
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore: Internal error - Unknown Reference subtype %02x\n"
+literal|"Internal - Unknown Reference subtype %02x\n"
 operator|,
 name|RefDesc
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
@@ -406,14 +489,14 @@ name|AE_AML_INTERNAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch (RefDesc->Reference.OpCode) */
+comment|/* switch (RefDesc->Reference.Opcode) */
 comment|/* Always delete the reference descriptor object */
 if|if
 condition|(
 name|RefDesc
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|RefDesc
 argument_list|)
@@ -428,12 +511,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlStoreObjectToIndex  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *Node           - Named object to recieve the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToIndex  *  * PARAMETERS:  *ValDesc            - Value to be stored  *              *Node               - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToIndex
+name|AcpiExStoreObjectToIndex
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -470,7 +553,7 @@ literal|0
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AcpiAmlStoreObjectToIndex"
+literal|"AcpiExStoreObjectToIndex"
 argument_list|)
 expr_stmt|;
 comment|/*      * Destination must be a reference pointer, and      * must point to either a buffer or a package      */
@@ -528,12 +611,12 @@ name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
 comment|/*                      * Take away the reference for being part of a package and                      * delete                      */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
 expr_stmt|;
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -550,10 +633,10 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized package                  * element has been used as a destination (this is OK), therefore,                   * we must create the destination element to match the type of the                   * source element NOTE: ValDesc can be of any type.                  */
+comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized package                  * element has been used as a destination (this is OK), therefore,                  * we must create the destination element to match the type of the                  * source element NOTE: ValDesc can be of any type.                  */
 name|ObjDesc
 operator|=
-name|AcpiCmCreateInternalObject
+name|AcpiUtCreateInternalObject
 argument_list|(
 name|ValDesc
 operator|->
@@ -588,7 +671,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmCopyIpackageToIpackage
+name|AcpiUtCopyIpackageToIpackage
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -605,7 +688,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -629,7 +712,7 @@ operator|)
 operator|=
 name|ObjDesc
 expr_stmt|;
-name|AcpiCmAddReference
+name|AcpiUtAddReference
 argument_list|(
 name|ObjDesc
 argument_list|)
@@ -649,7 +732,7 @@ block|{
 comment|/*                  * The destination element is not a package, so we need to                  * convert the contents of the source (ValDesc) and copy into                  * the destination (ObjDesc)                  */
 name|Status
 operator|=
-name|AcpiAmlStoreObjectToObject
+name|AcpiExStoreObjectToObject
 argument_list|(
 name|ValDesc
 argument_list|,
@@ -667,12 +750,12 @@ argument_list|)
 condition|)
 block|{
 comment|/*                      * An error occurrered when copying the internal object                      * so delete the reference.                      */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore/Index: Unable to copy the internal object\n"
+literal|"Unable to copy the internal object\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -688,6 +771,7 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
+comment|/* TBD: can probably call the generic Buffer/Field routines */
 comment|/*          * Storing into a buffer at a location defined by an Index.          *          * Each 8-bit element of the source object is written to the          * 8-bit Buffer Field of the Index destination object.          */
 comment|/*          * Set the ObjDesc to the destination object and type check.          */
 name|ObjDesc
@@ -725,10 +809,10 @@ operator|.
 name|Type
 condition|)
 block|{
-comment|/*          * If the type is Integer, assign bytewise          * This loop to assign each of the elements is somewhat          * backward because of the Big Endian-ness of IA-64          */
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
+comment|/*              * Type is Integer, assign bytewise              * This loop to assign each of the elements is somewhat              * backward because of the Big Endian-ness of IA-64              */
 name|Length
 operator|=
 sizeof|sizeof
@@ -789,10 +873,10 @@ name|Value
 expr_stmt|;
 block|}
 break|break;
-comment|/*          * If the type is Buffer, the Length is in the structure.          * Just loop through the elements and assign each one in turn.          */
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+comment|/*              * Type is Buffer, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
 name|Length
 operator|=
 name|ValDesc
@@ -845,10 +929,10 @@ name|Value
 expr_stmt|;
 block|}
 break|break;
-comment|/*          * If the type is String, the Length is in the structure.          * Just loop through the elements and assign each one in turn.          */
 case|case
 name|ACPI_TYPE_STRING
 case|:
+comment|/*              * Type is String, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
 name|Length
 operator|=
 name|ValDesc
@@ -901,14 +985,14 @@ name|Value
 expr_stmt|;
 block|}
 break|break;
-comment|/*          * If source is not a valid type so return an error.          */
 default|default:
-name|DEBUG_PRINT
+comment|/* Other types are invalid */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStore/Index: Source must be Number/Buffer/String type, not %X\n"
+literal|"Source must be Number/Buffer/String type, not %X\n"
 operator|,
 name|ValDesc
 operator|->
@@ -926,12 +1010,12 @@ break|break;
 block|}
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlExecStoreIndex: Target is not a Package or BufferField\n"
+literal|"Target is not a Package or BufferField\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -950,12 +1034,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlStoreObjectToNode  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *Node               - Named object to recieve the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              NOTE: the global lock is acquired early.  This will result  *              in the global lock being held a bit longer.  Also, if the  *              function fails during set up we may get the lock when we  *              don't really need it.  I don't think we care.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *Node                  - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              NOTE: the global lock is acquired early.  This will result  *              in the global lock being held a bit longer.  Also, if the  *              function fails during set up we may get the lock when we  *              don't really need it.  I don't think we care.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToNode
+name|AcpiExStoreObjectToNode
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -979,14 +1063,14 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|TargetDesc
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TargetType
 init|=
 name|ACPI_TYPE_ANY
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlStoreObjectToNode"
+literal|"ExStoreObjectToNode"
 argument_list|)
 expr_stmt|;
 comment|/*      * Assuming the parameters were already validated      */
@@ -1016,16 +1100,16 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: Storing %p(%s) into node %p(%s)\n"
+literal|"Storing %p(%s) into node %p(%s)\n"
 operator|,
 name|Node
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|SourceDesc
 operator|->
@@ -1036,17 +1120,17 @@ argument_list|)
 operator|,
 name|SourceDesc
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TargetType
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Resolve the source object to an actual value      * (If it is a reference object)       */
+comment|/*      * Resolve the source object to an actual value      * (If it is a reference object)      */
 name|Status
 operator|=
-name|AcpiAmlResolveObject
+name|AcpiExResolveObject
 argument_list|(
 operator|&
 name|SourceDesc
@@ -1070,23 +1154,32 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Do the actual store operation       */
+comment|/*      * Do the actual store operation      */
 switch|switch
 condition|(
 name|TargetType
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_DEF_FIELD
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
-comment|/* Raw data copy for target types Integer/String/Buffer */
+case|case
+name|INTERNAL_TYPE_REGION_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_BANK_FIELD
+case|:
+case|case
+name|INTERNAL_TYPE_INDEX_FIELD
+case|:
+comment|/*          * For fields, copy the source data to the target field.          */
 name|Status
 operator|=
-name|AcpiAmlCopyDataToNamedField
+name|AcpiExWriteDataToField
 argument_list|(
 name|SourceDesc
 argument_list|,
-name|Node
+name|TargetDesc
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1099,19 +1192,10 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-case|case
-name|INTERNAL_TYPE_BANK_FIELD
-case|:
-case|case
-name|INTERNAL_TYPE_INDEX_FIELD
-case|:
-case|case
-name|ACPI_TYPE_FIELD_UNIT
-case|:
-comment|/*           * These target types are all of type Integer/String/Buffer, and          * therefore support implicit conversion before the store.          *           * Copy and/or convert the source object to a new target object           */
+comment|/*          * These target types are all of type Integer/String/Buffer, and          * therefore support implicit conversion before the store.          *          * Copy and/or convert the source object to a new target object          */
 name|Status
 operator|=
-name|AcpiAmlStoreObject
+name|AcpiExStoreObject
 argument_list|(
 name|SourceDesc
 argument_list|,
@@ -1149,14 +1233,14 @@ argument_list|,
 name|TargetType
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: Store %s into %s via Convert/Attach\n"
+literal|"Store %s into %s via Convert/Attach\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TargetDesc
 operator|->
@@ -1165,7 +1249,7 @@ operator|.
 name|Type
 argument_list|)
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TargetType
 argument_list|)
@@ -1190,14 +1274,14 @@ operator|.
 name|Type
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToNode: Store %s into %s via Attach only\n"
+literal|"Store %s into %s via Attach only\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|SourceDesc
 operator|->
@@ -1206,7 +1290,7 @@ operator|.
 name|Type
 argument_list|)
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|SourceDesc
 operator|->
@@ -1228,12 +1312,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlStoreObjectToObject  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *DestDesc           - Object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store an object to another object.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              and Buffer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *DestDesc           - Object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store an object to another object.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              and Buffer.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlStoreObjectToObject
+name|AcpiExStoreObjectToObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1253,7 +1337,7 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|DestinationType
 init|=
 name|DestDesc
@@ -1264,7 +1348,7 @@ name|Type
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlStoreObjectToObject"
+literal|"ExStoreObjectToObject"
 argument_list|)
 expr_stmt|;
 comment|/*      *  Assuming the parameters are valid!      */
@@ -1279,16 +1363,16 @@ name|SourceDesc
 operator|)
 argument_list|)
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToObject: Storing %p(%s) to %p(%s)\n"
+literal|"Storing %p(%s) to %p(%s)\n"
 operator|,
 name|SourceDesc
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|SourceDesc
 operator|->
@@ -1299,7 +1383,7 @@ argument_list|)
 operator|,
 name|DestDesc
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|DestDesc
 operator|->
@@ -1327,14 +1411,14 @@ name|ACPI_TYPE_BUFFER
 case|:
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"AmlStoreObjectToObject: Store into %s not implemented\n"
+literal|"Store into %s not implemented\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|DestDesc
 operator|->
@@ -1351,10 +1435,10 @@ name|AE_NOT_IMPLEMENTED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Resolve the source object to an actual value      * (If it is a reference object)       */
+comment|/*      * Resolve the source object to an actual value      * (If it is a reference object)      */
 name|Status
 operator|=
-name|AcpiAmlResolveObject
+name|AcpiExResolveObject
 argument_list|(
 operator|&
 name|SourceDesc
@@ -1378,10 +1462,10 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Copy and/or convert the source object to the destination object       */
+comment|/*      * Copy and/or convert the source object to the destination object      */
 name|Status
 operator|=
-name|AcpiAmlStoreObject
+name|AcpiExStoreObject
 argument_list|(
 name|SourceDesc
 argument_list|,

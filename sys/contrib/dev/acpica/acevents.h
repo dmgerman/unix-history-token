@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -137,14 +137,26 @@ comment|/*  * AcpiEvnotify - Device Notify handling and dispatch  */
 end_comment
 
 begin_function_decl
-name|void
-name|AcpiEvNotifyDispatch
+name|ACPI_STATUS
+name|AcpiEvQueueNotifyRequest
 parameter_list|(
-name|ACPI_HANDLE
-name|Device
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 parameter_list|,
 name|UINT32
 name|NotifyValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiEvNotifyDispatch
+parameter_list|(
+name|void
+modifier|*
+name|Context
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -395,55 +407,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Debug support */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-end_ifdef
-
-begin_function_decl
-name|UINT32
-name|AcpiEvSciCount
-parameter_list|(
-name|UINT32
-name|AcpiEvent
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|DEBUG_INCREMENT_EVENT_COUNT
-parameter_list|(
-name|a
-parameter_list|)
-value|AcpiGbl_EventCount[a]++;
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEBUG_INCREMENT_EVENT_COUNT
-parameter_list|(
-name|a
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

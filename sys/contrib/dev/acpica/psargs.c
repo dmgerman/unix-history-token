@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|PARSER
+value|ACPI_PARSER
 end_define
 
 begin_macro
@@ -530,7 +530,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 name|Arg
@@ -615,7 +615,7 @@ name|NameOp
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 if|if
@@ -628,7 +628,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 argument_list|)
 expr_stmt|;
 name|NameOp
@@ -681,7 +681,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 name|Arg
@@ -772,7 +772,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 name|Arg
@@ -865,12 +865,12 @@ name|MethodNode
 operator|=
 name|Node
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_PARSE
 argument_list|,
 operator|(
-literal|"PsGetNextNamepath: method - %p Path=%p\n"
+literal|"method - %p Path=%p\n"
 operator|,
 name|MethodNode
 operator|,
@@ -882,7 +882,7 @@ name|NameOp
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 if|if
@@ -895,7 +895,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_METHODCALL_OP
+name|AML_INT_METHODCALL_OP
 argument_list|)
 expr_stmt|;
 name|NameOp
@@ -964,7 +964,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 name|Arg
@@ -1171,7 +1171,7 @@ name|AcpiPsInitOp
 argument_list|(
 name|Arg
 argument_list|,
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 name|Arg
@@ -1206,7 +1206,7 @@ modifier|*
 name|ParserState
 parameter_list|)
 block|{
-name|ACPI_PTRDIFF
+name|UINT32
 name|AmlOffset
 init|=
 name|ParserState
@@ -1246,7 +1246,7 @@ block|{
 default|default:
 name|Opcode
 operator|=
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 expr_stmt|;
 break|break;
 case|case
@@ -1254,7 +1254,7 @@ literal|0x00
 case|:
 name|Opcode
 operator|=
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 expr_stmt|;
 name|ParserState
 operator|->
@@ -1267,7 +1267,7 @@ literal|0x01
 case|:
 name|Opcode
 operator|=
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 expr_stmt|;
 name|ParserState
 operator|->
@@ -1302,7 +1302,7 @@ name|Opcode
 condition|)
 block|{
 case|case
-name|AML_NAMEDFIELD_OP
+name|AML_INT_NAMEDFIELD_OP
 case|:
 comment|/* Get the 4-character name */
 name|MOVE_UNALIGNED32_TO_32
@@ -1342,7 +1342,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_RESERVEDFIELD_OP
+name|AML_INT_RESERVEDFIELD_OP
 case|:
 comment|/* Get the length which is encoded as a package length */
 name|Field
@@ -1358,7 +1358,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|AML_ACCESSFIELD_OP
+name|AML_INT_ACCESSFIELD_OP
 case|:
 comment|/* Get AccessType and AccessAtrib and merge into the field Op */
 name|Field
@@ -1607,7 +1607,7 @@ name|Arg
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_BYTELIST_OP
+name|AML_INT_BYTELIST_OP
 argument_list|)
 expr_stmt|;
 if|if
@@ -1694,7 +1694,7 @@ name|Arg
 operator|=
 name|AcpiPsAllocOp
 argument_list|(
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 argument_list|)
 expr_stmt|;
 if|if

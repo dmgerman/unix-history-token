@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -350,7 +350,7 @@ name|STRUPR
 parameter_list|(
 name|s
 parameter_list|)
-value|strupr((s))
+value|AcpiUtStrupr  ((s))
 end_define
 
 begin_define
@@ -360,7 +360,7 @@ name|STRLEN
 parameter_list|(
 name|s
 parameter_list|)
-value|strlen((s))
+value|(UINT32) strlen((s))
 end_define
 
 begin_define
@@ -560,14 +560,14 @@ begin_define
 define|#
 directive|define
 name|_AUPBND
-value|(sizeof(int) - 1)
+value|(sizeof (NATIVE_INT) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|_ADNBND
-value|(sizeof(int) - 1)
+value|(sizeof (NATIVE_INT) - 1)
 end_define
 
 begin_comment
@@ -583,7 +583,7 @@ name|X
 parameter_list|,
 name|bnd
 parameter_list|)
-value|(((sizeof(X)) + (bnd))& (~(bnd)))
+value|(((sizeof (X)) + (bnd))& (~(bnd)))
 end_define
 
 begin_define
@@ -595,7 +595,7 @@ name|ap
 parameter_list|,
 name|T
 parameter_list|)
-value|(*(T *)(((ap)+=((_Bnd(T, _AUPBND)))-(_Bnd(T,_ADNBND)))))
+value|(*(T *)(((ap) += (_Bnd (T, _AUPBND))) - (_Bnd (T,_ADNBND))))
 end_define
 
 begin_define
@@ -605,7 +605,7 @@ name|va_end
 parameter_list|(
 name|ap
 parameter_list|)
-value|(void)0
+value|(void) 0
 end_define
 
 begin_define
@@ -617,7 +617,7 @@ name|ap
 parameter_list|,
 name|A
 parameter_list|)
-value|(void)((ap)=(((char*)&(A))+(_Bnd(A,_AUPBND))))
+value|(void) ((ap) = (((char *)&(A)) + (_Bnd (A,_AUPBND))))
 end_define
 
 begin_endif
@@ -638,7 +638,7 @@ name|s1
 parameter_list|,
 name|s2
 parameter_list|)
-value|AcpiCmStrstr  ((s1), (s2))
+value|AcpiUtStrstr  ((s1), (s2))
 end_define
 
 begin_define
@@ -648,7 +648,7 @@ name|STRUPR
 parameter_list|(
 name|s
 parameter_list|)
-value|AcpiCmStrupr  ((s))
+value|AcpiUtStrupr  ((s))
 end_define
 
 begin_define
@@ -658,7 +658,7 @@ name|STRLEN
 parameter_list|(
 name|s
 parameter_list|)
-value|AcpiCmStrlen  ((s))
+value|AcpiUtStrlen  ((s))
 end_define
 
 begin_define
@@ -670,7 +670,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|AcpiCmStrcpy  ((d), (s))
+value|AcpiUtStrcpy  ((d), (s))
 end_define
 
 begin_define
@@ -684,7 +684,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmStrncpy ((d), (s), (n))
+value|AcpiUtStrncpy ((d), (s), (n))
 end_define
 
 begin_define
@@ -698,7 +698,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmStrncmp ((d), (s), (n))
+value|AcpiUtStrncmp ((d), (s), (n))
 end_define
 
 begin_define
@@ -710,7 +710,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|AcpiCmStrcmp  ((d), (s))
+value|AcpiUtStrcmp  ((d), (s))
 end_define
 
 begin_define
@@ -722,7 +722,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|AcpiCmStrcat  ((d), (s))
+value|AcpiUtStrcat  ((d), (s))
 end_define
 
 begin_define
@@ -736,7 +736,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmStrncat ((d), (s), (n))
+value|AcpiUtStrncat ((d), (s), (n))
 end_define
 
 begin_define
@@ -750,7 +750,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmStrtoul ((d), (s),(n))
+value|AcpiUtStrtoul ((d), (s),(n))
 end_define
 
 begin_define
@@ -764,7 +764,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmMemcpy  ((d), (s), (n))
+value|AcpiUtMemcpy  ((d), (s), (n))
 end_define
 
 begin_define
@@ -778,21 +778,21 @@ name|v
 parameter_list|,
 name|n
 parameter_list|)
-value|AcpiCmMemset  ((d), (v), (n))
+value|AcpiUtMemset  ((d), (v), (n))
 end_define
 
 begin_define
 define|#
 directive|define
 name|TOUPPER
-value|AcpiCmToUpper
+value|AcpiUtToUpper
 end_define
 
 begin_define
 define|#
 directive|define
 name|TOLOWER
-value|AcpiCmToLower
+value|AcpiUtToLower
 end_define
 
 begin_endif

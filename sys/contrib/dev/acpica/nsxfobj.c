@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 80 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 86 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|NAMESPACE
+value|ACPI_NAMESPACE
 end_define
 
 begin_macro
@@ -119,6 +119,26 @@ argument_list|(
 literal|"AcpiEvaluateObject"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If there are parameters to be passed to the object      * (which must be a control method), the external objects      * must be converted to internal objects      */
 if|if
 condition|(
@@ -161,7 +181,7 @@ argument_list|)
 expr_stmt|;
 name|ParamPtr
 operator|=
-name|AcpiCmCallocate
+name|AcpiUtCallocate
 argument_list|(
 name|ParamLength
 operator|+
@@ -224,7 +244,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|AcpiCmInitStaticObject
+name|AcpiUtInitStaticObject
 argument_list|(
 operator|&
 name|ObjectPtr
@@ -258,7 +278,7 @@ control|)
 block|{
 name|Status
 operator|=
-name|AcpiCmCopyEobjectToIobject
+name|AcpiUtCopyEobjectToIobject
 argument_list|(
 operator|&
 name|ParamObjects
@@ -282,7 +302,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiCmDeleteInternalObjectList
+name|AcpiUtDeleteInternalObjectList
 argument_list|(
 name|ParamPtr
 argument_list|)
@@ -341,24 +361,24 @@ operator|!
 name|Pathname
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiEvaluateObject: Both Handle and Pathname are NULL\n"
+literal|"Both Handle and Pathname are NULL\n"
 operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AcpiEvaluateObject: Handle is NULL and Pathname is relative\n"
+literal|"Handle is NULL and Pathname is relative\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -465,7 +485,7 @@ block|{
 comment|/*                  * Find out how large a buffer is needed                  * to contain the returned object                  */
 name|Status
 operator|=
-name|AcpiCmGetObjectSize
+name|AcpiUtGetObjectSize
 argument_list|(
 name|ReturnObj
 argument_list|,
@@ -490,12 +510,12 @@ name|BufferSpaceNeeded
 condition|)
 block|{
 comment|/*                          * Caller's buffer is too small, can't                          * give him partial results fail the call                          * but return the buffer size needed                          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"AcpiEvaluateObject: Needed buffer size %X, received %X\n"
+literal|"Needed buffer size %X, received %X\n"
 operator|,
 name|BufferSpaceNeeded
 operator|,
@@ -519,7 +539,7 @@ block|{
 comment|/*                          *  We have enough space for the object, build it                          */
 name|Status
 operator|=
-name|AcpiCmCopyIobjectToEobject
+name|AcpiUtCopyIobjectToEobject
 argument_list|(
 name|ReturnObj
 argument_list|,
@@ -544,7 +564,7 @@ name|ReturnObj
 condition|)
 block|{
 comment|/*          * Delete the internal return object. (Or at least          * decrement the reference count by one)          */
-name|AcpiCmRemoveReference
+name|AcpiUtRemoveReference
 argument_list|(
 name|ReturnObj
 argument_list|)
@@ -557,7 +577,7 @@ name|ParamPtr
 condition|)
 block|{
 comment|/* Free the allocated parameter block */
-name|AcpiCmDeleteInternalObjectList
+name|AcpiUtDeleteInternalObjectList
 argument_list|(
 name|ParamPtr
 argument_list|)
@@ -614,6 +634,26 @@ name|ChildNode
 init|=
 name|NULL
 decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -628,7 +668,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -695,7 +735,7 @@ operator|=
 name|AcpiNsGetNextObject
 argument_list|(
 operator|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 operator|)
 name|Type
 argument_list|,
@@ -734,7 +774,7 @@ expr_stmt|;
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -767,6 +807,29 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/* Parameter Validation */
 if|if
 condition|(
@@ -799,7 +862,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -818,7 +881,7 @@ operator|!
 name|Node
 condition|)
 block|{
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -836,7 +899,7 @@ name|Node
 operator|->
 name|Type
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -874,7 +937,26 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-comment|/* No trace macro, too verbose */
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -901,7 +983,7 @@ name|AE_NULL_ENTRY
 operator|)
 return|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -957,7 +1039,7 @@ expr_stmt|;
 block|}
 name|UnlockAndExit
 label|:
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -987,7 +1069,7 @@ parameter_list|,
 name|UINT32
 name|MaxDepth
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -1008,6 +1090,26 @@ argument_list|(
 literal|"AcpiWalkNamespace"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1035,7 +1137,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Lock the namespace around the walk.      * The namespace will be unlocked/locked around each call      * to the user function - since this function      * must be allowed to make Acpi calls itself.      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1045,7 +1147,7 @@ operator|=
 name|AcpiNsWalkNamespace
 argument_list|(
 operator|(
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 operator|)
 name|Type
 argument_list|,
@@ -1062,7 +1164,7 @@ argument_list|,
 name|ReturnValue
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1110,7 +1212,7 @@ decl_stmt|;
 name|UINT32
 name|Flags
 decl_stmt|;
-name|DEVICE_ID
+name|ACPI_DEVICE_ID
 name|DeviceId
 decl_stmt|;
 name|ACPI_GET_DEVICES_INFO
@@ -1121,7 +1223,7 @@ name|Info
 operator|=
 name|Context
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1133,7 +1235,7 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1153,7 +1255,7 @@ block|}
 comment|/*      * Run _STA to determine if device is present      */
 name|Status
 operator|=
-name|AcpiCmExecute_STA
+name|AcpiUtExecute_STA
 argument_list|(
 name|Node
 argument_list|,
@@ -1171,7 +1273,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|Status
+name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
@@ -1204,7 +1306,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmExecute_HID
+name|AcpiUtExecute_HID
 argument_list|(
 name|Node
 argument_list|,
@@ -1236,7 +1338,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|Status
+name|AE_CTRL_DEPTH
 operator|)
 return|;
 block|}
@@ -1305,7 +1407,7 @@ name|NATIVE_CHAR
 modifier|*
 name|HID
 parameter_list|,
-name|WALK_CALLBACK
+name|ACPI_WALK_CALLBACK
 name|UserFunction
 parameter_list|,
 name|void
@@ -1329,6 +1431,26 @@ argument_list|(
 literal|"AcpiGetDevices"
 argument_list|)
 expr_stmt|;
+comment|/* Ensure that ACPI has been initialized */
+name|ACPI_IS_INITIALIZATION_COMPLETE
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1362,7 +1484,7 @@ operator|=
 name|HID
 expr_stmt|;
 comment|/*      * Lock the namespace around the walk.      * The namespace will be unlocked/locked around each call      * to the user function - since this function      * must be allowed to make Acpi calls itself.      */
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
@@ -1387,7 +1509,7 @@ argument_list|,
 name|ReturnValue
 argument_list|)
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmobject - ACPI object create/delete/size/cache routines  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__CMOBJECT_C__
+name|__UTOBJECT_C__
 end_define
 
 begin_include
@@ -47,24 +47,24 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|MISCELLANEOUS
+value|ACPI_UTILITIES
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"cmobject"
+literal|"utobject"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _CmCreateInternalObject  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because   *              these objects are cached, and we want them to be   *              one-size-satisifies-any-request.  This in itself may not be   *              the most memory efficient, but the efficiency of the object   *              cache should more than make up for this!  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _UtCreateInternalObject  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *              Type                - ACPI Type of the new object  *  * RETURN:      Object              - The new object.  Null on failure  *  * DESCRIPTION: Create and initialize a new internal object.  *  * NOTE:        We always allocate the worst-case object descriptor because  *              these objects are cached, and we want them to be  *              one-size-satisifies-any-request.  This in itself may not be  *              the most memory efficient, but the efficiency of the object  *              cache should more than make up for this!  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|_CmCreateInternalObject
+name|_UtCreateInternalObject
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -76,7 +76,7 @@ parameter_list|,
 name|UINT32
 name|ComponentId
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|Type
 parameter_list|)
 block|{
@@ -86,9 +86,9 @@ name|Object
 decl_stmt|;
 name|FUNCTION_TRACE_STR
 argument_list|(
-literal|"CmCreateInternalObject"
+literal|"UtCreateInternalObject"
 argument_list|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|Type
 argument_list|)
@@ -97,7 +97,7 @@ expr_stmt|;
 comment|/* Allocate the raw object descriptor */
 name|Object
 operator|=
-name|_CmAllocateObjectDesc
+name|_UtAllocateObjectDesc
 argument_list|(
 name|ModuleName
 argument_list|,
@@ -113,7 +113,7 @@ name|Object
 condition|)
 block|{
 comment|/* Allocation failure */
-name|return_VALUE
+name|return_PTR
 argument_list|(
 name|NULL
 argument_list|)
@@ -147,18 +147,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmValidInternalObject  *  * PARAMETERS:  Operand             - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtValidInternalObject  *  * PARAMETERS:  Operand             - Object to be validated  *  * RETURN:      Validate a pointer to be an ACPI_OPERAND_OBJECT  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|BOOLEAN
-name|AcpiCmValidInternalObject
+name|AcpiUtValidInternalObject
 parameter_list|(
 name|void
 modifier|*
 name|Object
 parameter_list|)
 block|{
+name|PROC_NAME
+argument_list|(
+literal|"UtValidInternalObject"
+argument_list|)
+expr_stmt|;
 comment|/* Check for a null pointer */
 if|if
 condition|(
@@ -171,7 +176,7 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmValidInternalObject: **** Null Object Ptr\n"
+literal|"**** Null Object Ptr\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -190,12 +195,12 @@ name|Object
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmValidInternalObject: **** Object %p is a Pcode Ptr\n"
+literal|"**** Object %p is a Pcode Ptr\n"
 operator|,
 name|Object
 operator|)
@@ -230,12 +235,12 @@ name|ACPI_DESC_TYPE_NAMED
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmValidInternalObject: **** Obj %p is a named obj, not ACPI obj\n"
+literal|"**** Obj %p is a named obj, not ACPI obj\n"
 operator|,
 name|Object
 operator|)
@@ -253,12 +258,12 @@ name|ACPI_DESC_TYPE_PARSER
 argument_list|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmValidInternalObject: **** Obj %p is a parser obj, not ACPI obj\n"
+literal|"**** Obj %p is a parser obj, not ACPI obj\n"
 operator|,
 name|Object
 operator|)
@@ -267,12 +272,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"CmValidInternalObject: **** Obj %p is of unknown type\n"
+literal|"**** Obj %p is of unknown type\n"
 operator|,
 name|Object
 operator|)
@@ -295,13 +300,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _CmAllocateObjectDesc  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    _UtAllocateObjectDesc  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      Pointer to newly allocated object descriptor.  Null on error  *  * DESCRIPTION: Allocate a new object descriptor.  Gracefully handle  *              error conditions.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_CmAllocateObjectDesc
+name|_UtAllocateObjectDesc
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
@@ -323,7 +328,7 @@ argument_list|(
 literal|"_AllocateObjectDesc"
 argument_list|)
 expr_stmt|;
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -364,7 +369,7 @@ expr_stmt|;
 name|AcpiGbl_ObjectCacheDepth
 operator|--
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -373,7 +378,7 @@ block|}
 else|else
 block|{
 comment|/* The cache is empty, create a new object */
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -381,7 +386,7 @@ expr_stmt|;
 comment|/* Attempt to allocate new descriptor */
 name|Object
 operator|=
-name|_CmCallocate
+name|_UtCallocate
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -440,12 +445,12 @@ name|DataType
 operator|=
 name|ACPI_DESC_TYPE_INTERNAL
 expr_stmt|;
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
 argument_list|,
 operator|(
-literal|"AllocateObjectDesc: %p Size %X\n"
+literal|"%p Size %X\n"
 operator|,
 name|Object
 operator|,
@@ -465,12 +470,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectDesc  *  * PARAMETERS:  Object          - Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectDesc  *  * PARAMETERS:  Object          - Acpi internal object to be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Free an ACPI object descriptor or add it to the object cache  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteObjectDesc
+name|AcpiUtDeleteObjectDesc
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -479,7 +484,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiCmDeleteObjectDesc"
+literal|"AcpiUtDeleteObjectDesc"
 argument_list|,
 name|Object
 argument_list|)
@@ -500,12 +505,12 @@ name|ACPI_CACHED_OBJECT
 operator|)
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmDeleteObjectDesc: Obj %p is already in the object cache\n"
+literal|"Obj %p is already in the object cache\n"
 operator|,
 name|Object
 operator|)
@@ -526,12 +531,12 @@ operator|!=
 name|ACPI_DESC_TYPE_INTERNAL
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmDeleteObjectDesc: Obj %p is not an ACPI object\n"
+literal|"Obj %p is not an ACPI object\n"
 operator|,
 name|Object
 operator|)
@@ -557,7 +562,7 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|Object
 argument_list|)
@@ -565,7 +570,7 @@ expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-name|AcpiCmAcquireMutex
+name|AcpiUtAcquireMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -609,7 +614,7 @@ expr_stmt|;
 name|AcpiGbl_ObjectCacheDepth
 operator|++
 expr_stmt|;
-name|AcpiCmReleaseMutex
+name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
 argument_list|)
@@ -620,12 +625,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDeleteObjectCache  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Purge the global state object cache.  Used during subsystem  *              termination.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmDeleteObjectCache
+name|AcpiUtDeleteObjectCache
 parameter_list|(
 name|void
 parameter_list|)
@@ -636,7 +641,7 @@ name|Next
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"CmDeleteObjectCache"
+literal|"UtDeleteObjectCache"
 argument_list|)
 expr_stmt|;
 comment|/* Traverse the global cache list */
@@ -671,7 +676,7 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiCmFree
+name|AcpiUtFree
 argument_list|(
 name|AcpiGbl_ObjectCache
 argument_list|)
@@ -690,12 +695,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmInitStaticObject  *  * PARAMETERS:  ObjDesc             - Pointer to a "static" object - on stack  *                                    or in the data segment.  *  * RETURN:      None.  *  * DESCRIPTION: Initialize a static object.  Sets flags to disallow dynamic  *              deletion of the object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitStaticObject  *  * PARAMETERS:  ObjDesc             - Pointer to a "static" object - on stack  *                                    or in the data segment.  *  * RETURN:      None.  *  * DESCRIPTION: Initialize a static object.  Sets flags to disallow dynamic  *              deletion of the object.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|AcpiCmInitStaticObject
+name|AcpiUtInitStaticObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -704,7 +709,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmInitStaticObject"
+literal|"UtInitStaticObject"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -766,12 +771,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetSimpleObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an API user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetSimpleObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a simple object for return to an API user.  *  *              The length includes the object structure plus any additional  *              needed space.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmGetSimpleObjectSize
+name|AcpiUtGetSimpleObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -792,7 +797,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmGetSimpleObjectSize"
+literal|"UtGetSimpleObjectSize"
 argument_list|,
 name|InternalObject
 argument_list|)
@@ -851,7 +856,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * The final length depends on the object type      * Strings and Buffers are packed right up against the parent object and      * must be accessed bytewise or there may be alignment problems.      *      * TBD:[Investigate] do strings and buffers require alignment also?      */
+comment|/*      * The final length depends on the object type      * Strings and Buffers are packed right up against the parent object and      * must be accessed bytewise or there may be alignment problems on      * certain processors      */
 switch|switch
 condition|(
 name|InternalObject
@@ -901,30 +906,30 @@ break|break;
 case|case
 name|INTERNAL_TYPE_REFERENCE
 case|:
-comment|/*          * The only type that should be here is opcode AML_NAMEPATH_OP -- since          * this means an object reference          */
+comment|/*          * The only type that should be here is internal opcode NAMEPATH_OP -- since          * this means an object reference          */
 if|if
 condition|(
 name|InternalObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|!=
-name|AML_NAMEPATH_OP
+name|AML_INT_NAMEPATH_OP
 condition|)
 block|{
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmGetSimpleObjectSize: Unsupported Reference opcode=%X in object %p\n"
+literal|"Unsupported Reference opcode=%X in object %p\n"
 operator|,
 name|InternalObject
 operator|->
 name|Reference
 operator|.
-name|OpCode
+name|Opcode
 operator|,
 name|InternalObject
 operator|)
@@ -935,14 +940,32 @@ operator|=
 name|AE_TYPE
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/*              * Get the actual length of the full pathname to this object.              * The reference will be converted to the pathname to the object              */
+name|Length
+operator|+=
+name|ROUND_UP_TO_NATIVE_WORD
+argument_list|(
+name|AcpiNsGetPathnameLength
+argument_list|(
+name|InternalObject
+operator|->
+name|Reference
+operator|.
+name|Node
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"CmGetSimpleObjectSize: Unsupported type=%X in object %p\n"
+literal|"Unsupported type=%X in object %p\n"
 operator|,
 name|InternalObject
 operator|->
@@ -981,12 +1004,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmCopyPackageToInternal  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION:   *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetElementLength  *  * PARAMETERS:  ACPI_PKG_CALLBACK  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Get the length of one package element.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmGetElementLength
+name|AcpiUtGetElementLength
 parameter_list|(
 name|UINT8
 name|ObjectType
@@ -1033,7 +1056,7 @@ case|:
 comment|/*          * Simple object - just get the size (Null object/entry is handled          * here also) and sum it into the running package length          */
 name|Status
 operator|=
-name|AcpiCmGetSimpleObjectSize
+name|AcpiUtGetSimpleObjectSize
 argument_list|(
 name|SourceObject
 argument_list|,
@@ -1096,12 +1119,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetPackageObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to   *              contain a package object for return to an API user.  *  *              This is moderately complex since a package contains other   *              objects including packages.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetPackageObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length is returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain a package object for return to an API user.  *  *              This is moderately complex since a package contains other  *              objects including packages.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmGetPackageObjectSize
+name|AcpiUtGetPackageObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1120,7 +1143,7 @@ name|Info
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"CmGetPackageObjectSize"
+literal|"UtGetPackageObjectSize"
 argument_list|,
 name|InternalObject
 argument_list|)
@@ -1145,13 +1168,13 @@ literal|1
 expr_stmt|;
 name|Status
 operator|=
-name|AcpiCmWalkPackageTree
+name|AcpiUtWalkPackageTree
 argument_list|(
 name|InternalObject
 argument_list|,
 name|NULL
 argument_list|,
-name|AcpiCmGetElementLength
+name|AcpiUtGetElementLength
 argument_list|,
 operator|&
 name|Info
@@ -1191,12 +1214,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiCmGetObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length will be returned  *  * RETURN:      Status   *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtGetObjectSize  *  * PARAMETERS:  *InternalObject     - Pointer to the object we are examining  *              *RetLength          - Where the length will be returned  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to determine the space required to  *              contain an object for return to an API user.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiCmGetObjectSize
+name|AcpiUtGetObjectSize
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1233,7 +1256,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiCmGetPackageObjectSize
+name|AcpiUtGetPackageObjectSize
 argument_list|(
 name|InternalObject
 argument_list|,
@@ -1245,7 +1268,7 @@ else|else
 block|{
 name|Status
 operator|=
-name|AcpiCmGetSimpleObjectSize
+name|AcpiUtGetSimpleObjectSize
 argument_list|(
 name|InternalObject
 argument_list|,

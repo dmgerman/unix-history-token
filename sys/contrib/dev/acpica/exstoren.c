@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|__AMSTOREN_C__
+name|__EXSTOREN_C__
 end_define
 
 begin_include
@@ -59,30 +59,30 @@ begin_define
 define|#
 directive|define
 name|_COMPONENT
-value|INTERPRETER
+value|ACPI_EXECUTER
 end_define
 
 begin_macro
 name|MODULE_NAME
 argument_list|(
-literal|"amstoren"
+literal|"exstoren"
 argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlResolveObject  *  * PARAMETERS:  SourceDescPtr       - Pointer to the source object  *              TargetType          - Current type of the target  *              WalkState           - Current walk state  *  * RETURN:      Status, resolved object in SourceDescPtr.  *  * DESCRIPTION: Resolve an object.  If the object is a reference, dereference   *              it and return the actual object in the SourceDescPtr.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExResolveObject  *  * PARAMETERS:  SourceDescPtr       - Pointer to the source object  *              TargetType          - Current type of the target  *              WalkState           - Current walk state  *  * RETURN:      Status, resolved object in SourceDescPtr.  *  * DESCRIPTION: Resolve an object.  If the object is a reference, dereference  *              it and return the actual object in the SourceDescPtr.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlResolveObject
+name|AcpiExResolveObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
 name|SourceDescPtr
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TargetType
 parameter_list|,
 name|ACPI_WALK_STATE
@@ -104,7 +104,7 @@ name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlResolveObject"
+literal|"ExResolveObject"
 argument_list|)
 expr_stmt|;
 comment|/*      * Ensure we have a Source that can be stored in the target      */
@@ -116,10 +116,10 @@ block|{
 comment|/* This case handles the "interchangeable" types Integer, String, and Buffer. */
 comment|/*      * These cases all require only Integers or values that      * can be converted to Integers (Strings or Buffers)      */
 case|case
-name|ACPI_TYPE_INTEGER
+name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|ACPI_TYPE_FIELD_UNIT
+name|INTERNAL_TYPE_REGION_FIELD
 case|:
 case|case
 name|INTERNAL_TYPE_BANK_FIELD
@@ -127,16 +127,17 @@ case|:
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-comment|/*      * Stores into a Field/Region or into a Buffer/String       * are all essentially the same.      */
+comment|/*      * Stores into a Field/Region or into a Buffer/String      * are all essentially the same.      */
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
 case|case
 name|ACPI_TYPE_STRING
 case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-case|case
-name|INTERNAL_TYPE_DEF_FIELD
-case|:
+comment|/* TBD: FIX - check for source==REF, resolve, then check type */
 comment|/*          * If SourceDesc is not a valid type, try to resolve it to one.          */
 if|if
 condition|(
@@ -174,7 +175,7 @@ block|{
 comment|/*              * Initially not a valid type, convert              */
 name|Status
 operator|=
-name|AcpiAmlResolveToValue
+name|AcpiExResolveToValue
 argument_list|(
 name|SourceDescPtr
 argument_list|,
@@ -220,14 +221,14 @@ operator|)
 condition|)
 block|{
 comment|/*                  * Conversion successful but still not a valid type                  */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"AmlResolveObject: Cannot assign type %s to %s (must be type Int/Str/Buf)\n"
+literal|"Cannot assign type %s to %s (must be type Int/Str/Buf)\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 operator|(
 operator|*
@@ -239,7 +240,7 @@ operator|.
 name|Type
 argument_list|)
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TargetType
 argument_list|)
@@ -256,13 +257,13 @@ break|break;
 case|case
 name|INTERNAL_TYPE_ALIAS
 case|:
-comment|/*          * Aliases are resolved by AcpiAmlPrepOperands          */
-name|DEBUG_PRINT
+comment|/*          * Aliases are resolved by AcpiExPrepOperands          */
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"AmlResolveObject: Store into Alias - should never happen\n"
+literal|"Store into Alias - should never happen\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -287,18 +288,18 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiAmlStoreObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              TargetType          - Current type of the target  *              TargetDescPtr       - Pointer to the target  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object.  This may include   *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObject  *  * PARAMETERS:  SourceDesc          - Object to store  *              TargetType          - Current type of the target  *              TargetDescPtr       - Pointer to the target  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: "Store" an object to another object.  This may include  *              converting the source type to the target type (implicit  *              conversion), and a copy of the value of the source to  *              the target.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiAmlStoreObject
+name|AcpiExStoreObject
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|SourceDesc
 parameter_list|,
-name|OBJECT_TYPE_INTERNAL
+name|ACPI_OBJECT_TYPE8
 name|TargetType
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
@@ -320,16 +321,18 @@ name|TargetDescPtr
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"AmlStoreObject"
+literal|"ExStoreObject"
 argument_list|)
 expr_stmt|;
 comment|/*      * Perform the "implicit conversion" of the source to the current type      * of the target - As per the ACPI specification.      *      * If no conversion performed, SourceDesc is left alone, otherwise it      * is updated with a new object.      */
 name|Status
 operator|=
-name|AcpiAmlConvertToTargetType
+name|AcpiExConvertToTargetType
 argument_list|(
 name|TargetType
 argument_list|,
@@ -365,7 +368,7 @@ case|:
 case|case
 name|INTERNAL_TYPE_DEF_ANY
 case|:
-comment|/*           * The target namespace node is uninitialized (has no target object),          * and will take on the type of the source object          */
+comment|/*          * The target namespace node is uninitialized (has no target object),          * and will take on the type of the source object          */
 operator|*
 name|TargetDescPtr
 operator|=
@@ -388,7 +391,7 @@ operator|.
 name|Value
 expr_stmt|;
 comment|/* Truncate value if we are executing from a 32-bit ACPI table */
-name|AcpiAmlTruncateFor32bitTable
+name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|TargetDesc
 argument_list|,
@@ -397,50 +400,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TYPE_FIELD_UNIT
-case|:
-name|Status
-operator|=
-name|AcpiAmlCopyIntegerToFieldUnit
-argument_list|(
-name|SourceDesc
-argument_list|,
-name|TargetDesc
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|INTERNAL_TYPE_BANK_FIELD
-case|:
-name|Status
-operator|=
-name|AcpiAmlCopyIntegerToBankField
-argument_list|(
-name|SourceDesc
-argument_list|,
-name|TargetDesc
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|INTERNAL_TYPE_INDEX_FIELD
-case|:
-name|Status
-operator|=
-name|AcpiAmlCopyIntegerToIndexField
-argument_list|(
-name|SourceDesc
-argument_list|,
-name|TargetDesc
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|ACPI_TYPE_STRING
 case|:
 name|Status
 operator|=
-name|AcpiAmlCopyStringToString
+name|AcpiExCopyStringToString
 argument_list|(
 name|SourceDesc
 argument_list|,
@@ -453,7 +417,7 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|Status
 operator|=
-name|AcpiAmlCopyBufferToBuffer
+name|AcpiExCopyBufferToBuffer
 argument_list|(
 name|SourceDesc
 argument_list|,
@@ -472,14 +436,14 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/*          * All other types come here.          */
-name|DEBUG_PRINT
+name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"AmlStoreObject: Store into type %s not implemented\n"
+literal|"Store into type %s not implemented\n"
 operator|,
-name|AcpiCmGetTypeName
+name|AcpiUtGetTypeName
 argument_list|(
 name|TargetType
 argument_list|)
