@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.16 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,10 +312,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|setreuid
+name|seteuid
 argument_list|(
-literal|0
-argument_list|,
 name|pwd
 operator|->
 name|pw_uid
@@ -374,7 +372,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|setuid
+name|seteuid
 argument_list|(
 literal|0
 argument_list|)
