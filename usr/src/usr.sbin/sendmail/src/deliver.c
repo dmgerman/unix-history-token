@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.32 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,6 +431,10 @@ literal|8
 condition|)
 name|logdelivery
 argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|,
 literal|"queued"
 argument_list|,
 name|e
@@ -1059,6 +1063,8 @@ name|EX_UNAVAILABLE
 argument_list|,
 name|m
 argument_list|,
+name|NULL
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1085,6 +1091,8 @@ argument_list|(
 name|rcode
 argument_list|,
 name|m
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
@@ -1180,6 +1188,8 @@ argument_list|(
 name|rcode
 argument_list|,
 name|m
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
@@ -1729,6 +1739,8 @@ name|i
 argument_list|,
 name|m
 argument_list|,
+name|mci
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1931,6 +1943,8 @@ argument_list|(
 name|rcode
 argument_list|,
 name|m
+argument_list|,
+name|mci
 argument_list|,
 name|e
 argument_list|)
@@ -3889,7 +3903,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer descriptor for this mailer. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
+comment|/* **  GIVERESPONSE -- Interpret an error response from a mailer ** **	Parameters: **		stat -- the status code from the mailer (high byte **			only; core dumps must have been taken care of **			already). **		m -- the mailer info for this mailer. **		mci -- the mailer connection info -- can be NULL if the **			response is given before the connection is made. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Errors may be incremented. **		ExitStat may be set. */
 end_comment
 
 begin_macro
@@ -3898,6 +3912,8 @@ argument_list|(
 argument|stat
 argument_list|,
 argument|m
+argument_list|,
+argument|mci
 argument_list|,
 argument|e
 argument_list|)
@@ -3914,6 +3930,14 @@ specifier|register
 name|MAILER
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|MCI
+modifier|*
+name|mci
 decl_stmt|;
 end_decl_stmt
 
@@ -3960,19 +3984,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-return|return;
-endif|#
-directive|endif
-endif|lint
 comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=
@@ -4229,6 +4240,10 @@ operator|)
 condition|)
 name|logdelivery
 argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
 operator|&
 name|statmsg
 index|[
@@ -4305,17 +4320,36 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Parameters: **		stat -- the message to print for the status ** **	Returns: **		none ** **	Side Effects: **		none */
+comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
 end_comment
 
 begin_macro
 name|logdelivery
 argument_list|(
+argument|m
+argument_list|,
+argument|mci
+argument_list|,
 argument|stat
 argument_list|,
 argument|e
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -4338,6 +4372,10 @@ name|char
 modifier|*
 name|delay
 decl_stmt|;
+name|char
+modifier|*
+name|curhost
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -4347,6 +4385,29 @@ function_decl|;
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|mci
+operator|!=
+name|NULL
+operator|&&
+name|mci
+operator|->
+name|mci_host
+operator|!=
+name|NULL
+condition|)
+name|curhost
+operator|=
+name|mci
+operator|->
+name|mci_host
+expr_stmt|;
+else|else
+name|curhost
+operator|=
+name|CurHostName
+expr_stmt|;
 name|delay
 operator|=
 name|pintvl
@@ -4372,13 +4433,17 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|CurHostName
+name|m
+operator|==
+name|NULL
+operator|||
+name|curhost
 operator|==
 name|NULL
 operator|||
 name|strcmp
 argument_list|(
-name|CurHostName
+name|curhost
 argument_list|,
 literal|"localhost"
 argument_list|)
@@ -4423,7 +4488,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|CurHostName
+name|curhost
 index|[
 literal|0
 index|]
@@ -4459,7 +4524,7 @@ literal|"local"
 expr_stmt|;
 name|p2
 operator|=
-name|CurHostName
+name|curhost
 expr_stmt|;
 block|}
 ifdef|#
@@ -4480,7 +4545,7 @@ parameter_list|()
 function_decl|;
 name|p1
 operator|=
-name|CurHostName
+name|curhost
 expr_stmt|;
 name|p2
 operator|=
@@ -4498,7 +4563,7 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: to=%s, delay=%s, stat=Sent to %s (%s)"
+literal|"%s: to=%s, delay=%s, mailer=%s, stat=Sent to %s (%s)"
 argument_list|,
 name|e
 operator|->
@@ -4509,6 +4574,10 @@ operator|->
 name|e_to
 argument_list|,
 name|delay
+argument_list|,
+name|m
+operator|->
+name|m_name
 argument_list|,
 name|p1
 argument_list|,

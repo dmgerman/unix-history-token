@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.21 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1279,6 +1279,8 @@ name|EX_CANTCREAT
 argument_list|,
 name|m
 argument_list|,
+name|NULL
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -1576,6 +1578,8 @@ argument_list|(
 name|EX_NOUSER
 argument_list|,
 name|m
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
