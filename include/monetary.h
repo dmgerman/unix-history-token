@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_MONETARY_H
+name|_MONETARY_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_MONETARY_H
+name|_MONETARY_H_
 end_define
 
 begin_include
@@ -104,7 +104,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_MONETARY_H */
+comment|/* !_MONETARY_H_ */
 end_comment
 
 end_unit
