@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
+file|"bpfilter.h"
 end_include
 
 begin_include
