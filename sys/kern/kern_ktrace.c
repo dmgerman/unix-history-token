@@ -81,6 +81,12 @@ directive|include
 file|<sys/syslog.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysent.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1730,6 +1736,22 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|SCARG
+argument_list|(
+name|uap
+argument_list|,
+name|len
+argument_list|)
+operator|>
+name|KTR_USER_MAXLEN
+condition|)
+return|return
+operator|(
+name|EINVAL
 operator|)
 return|;
 name|p
