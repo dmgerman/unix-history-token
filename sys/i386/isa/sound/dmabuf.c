@@ -4215,10 +4215,30 @@ name|int
 name|dev
 parameter_list|)
 block|{
+name|int
+name|chan
+init|=
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|dmachan
+decl_stmt|;
 if|#
 directive|if
 literal|0
-block|int             chan = audio_devs[dev]->dmachan;    disable_dma (chan);
+block|disable_dma (chan);
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|isa_dmadone_nobounce
+argument_list|(
+name|chan
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
