@@ -1726,7 +1726,7 @@ name|PHOLD
 parameter_list|(
 name|p
 parameter_list|)
-value|{							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0)	\ 		faultin(p);						\ }
+value|do {							\ 	if ((p)->p_lock++ == 0&& ((p)->p_flag& P_INMEM) == 0)		\ 		faultin(p);						\ } while(0)
 end_define
 
 begin_define
