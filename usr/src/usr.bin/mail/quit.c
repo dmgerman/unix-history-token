@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)quit.c	2.3 %G%"
+literal|"@(#)quit.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -928,6 +928,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -1319,6 +1321,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
