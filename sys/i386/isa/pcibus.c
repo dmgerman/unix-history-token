@@ -592,13 +592,15 @@ break|break;
 comment|/* XXX unknown chipset, but working */
 case|case
 literal|0x00171166
+case|:
 comment|/* FALLTHROUGH */
 case|case
 literal|0x01011166
+case|:
 name|s
 operator|=
 literal|"ServerWorks host to PCI bridge(unknown chipset)"
-empty_stmt|;
+expr_stmt|;
 operator|*
 name|busnum
 operator|=
