@@ -1710,6 +1710,20 @@ name|s2
 operator|.
 name|lastch
 expr_stmt|;
+comment|/* 			 * Chars taken from s2 can be different this time 			 * due to lack of complex upper/lower processing, 			 * so fill string2 again to not miss some. 			 */
+if|if
+condition|(
+name|sflag
+condition|)
+name|string2
+index|[
+name|s2
+operator|.
+name|lastch
+index|]
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 if|if
