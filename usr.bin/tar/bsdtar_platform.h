@@ -588,10 +588,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* XXX get fnmatch GNU extensions (FNM_LEADING_DIR)  * (should probably use AC_FUNC_FNMATCH_GNU once using autoconf...) */
-end_comment
-
 begin_if
 if|#
 directive|if

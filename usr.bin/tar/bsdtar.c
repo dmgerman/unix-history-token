@@ -217,6 +217,24 @@ directive|include
 file|"bsdtar.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PATH_DEFTAPE
+value|"/dev/st0"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
