@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 2.1 %G%"
+literal|"@(#)pccaseop.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1205,7 +1205,7 @@ literal|'J'
 argument_list|)
 condition|)
 block|{
-comment|/* 	     *	We have a table of absolute addresses. 	     * 	     *	subl2	to make r0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	blssu	error if out of bounds. 	     *	ashl	to make r0 a 0-origin long offset, 	     *	jmp	and indirect through it. 	     */
+comment|/* 	     *	We have a table of absolute addresses. 	     * 	     *	subl2	to make r0 a 0-origin byte offset. 	     *	cmpl	check against upper limit. 	     *	jlssu	error if out of bounds. 	     *	ashl	to make r0 a 0-origin long offset, 	     *	jmp	and indirect through it. 	     */
 name|putprintf
 argument_list|(
 literal|"	subl2	$%d,%s"
@@ -1261,7 +1261,7 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
-literal|"	blssu	%s%d"
+literal|"	jlssu	%s%d"
 argument_list|,
 literal|0
 argument_list|,
