@@ -193,6 +193,9 @@ name|void
 modifier|*
 name|ad_private
 decl_stmt|;
+name|int
+name|ad_flags
+decl_stmt|;
 comment|/* Resources */
 name|struct
 name|resource_list
@@ -201,6 +204,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ACPI_PRW_MAX_POWERRES
+value|8
+end_define
 
 begin_struct
 struct|struct
@@ -215,9 +225,14 @@ decl_stmt|;
 name|int
 name|lowest_wake
 decl_stmt|;
-name|void
-modifier|*
+name|ACPI_OBJECT
 name|power_res
+index|[
+name|ACPI_PRW_MAX_POWERRES
+index|]
+decl_stmt|;
+name|int
+name|power_res_count
 decl_stmt|;
 block|}
 struct|;
@@ -230,15 +245,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACPI_FLAG_WAKE_CAPABLE
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_FLAG_WAKE_ENABLED
-value|0x2
+value|0x1
 end_define
 
 begin_if
@@ -515,6 +523,13 @@ name|ACPI_IVAR_PRIVATE
 value|0x102
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_IVAR_FLAGS
+value|0x103
+end_define
+
 begin_comment
 comment|/*  * Accessor functions for our ivars.  Default value for BUS_READ_IVAR is  * (type) 0.  The<sys/bus.h> accessor functions don't check return values.  */
 end_comment
@@ -580,6 +595,21 @@ argument_list|,
 argument|PRIVATE
 argument_list|,
 argument|void *
+argument_list|)
+end_macro
+
+begin_macro
+name|__ACPI_BUS_ACCESSOR
+argument_list|(
+argument|acpi
+argument_list|,
+argument|flags
+argument_list|,
+argument|ACPI
+argument_list|,
+argument|FLAGS
+argument_list|,
+argument|int
 argument_list|)
 end_macro
 
@@ -1021,23 +1051,15 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acpi_wake_sleep_prep
+name|acpi_parse_prw
 parameter_list|(
-name|device_t
-name|dev
+name|ACPI_HANDLE
+name|h
 parameter_list|,
-name|int
-name|sstate
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acpi_wake_run_prep
-parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|acpi_prw_data
+modifier|*
+name|prw
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1524,6 +1546,19 @@ end_expr_stmt
 begin_comment
 comment|/* Device power control. */
 end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|acpi_pwr_wake_enable
+parameter_list|(
+name|ACPI_HANDLE
+name|consumer
+parameter_list|,
+name|int
+name|enable
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
