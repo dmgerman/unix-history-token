@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.38 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.39 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.38 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.39 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2429,7 +2429,7 @@ name|vrfy
 condition|)
 name|message
 argument_list|(
-literal|"252 Who's to say?"
+literal|"252 Cannot VRFY user; try RCPT to attempt delivery (or try finger)"
 argument_list|)
 expr_stmt|;
 else|else
