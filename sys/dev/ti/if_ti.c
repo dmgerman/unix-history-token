@@ -1176,7 +1176,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ti
+name|if_ti
 argument_list|,
 name|pci
 argument_list|,

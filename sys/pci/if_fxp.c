@@ -2944,7 +2944,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|fxp
+name|if_fxp
 argument_list|,
 name|pci
 argument_list|,
