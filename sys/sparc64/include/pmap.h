@@ -224,6 +224,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pmap_qenter_flags
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|,
+name|vm_page_t
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|count
+parameter_list|,
+name|u_long
+name|fl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pmap_cache_enter
 parameter_list|(

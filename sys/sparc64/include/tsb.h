@@ -18,6 +18,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|TSB_BSHIFT
+value|PAGE_SHIFT_8K
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSB_BSIZE
+value|(1UL<< TSB_BSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TSB_SIZE
+value|(TSB_BSIZE / sizeof(struct tte))
+end_define
+
+begin_define
+define|#
+directive|define
 name|TSB_BUCKET_SHIFT
 value|(2)
 end_define
@@ -34,7 +55,7 @@ define|#
 directive|define
 name|TSB_BUCKET_ADDRESS_BITS
 define|\
-value|(PAGE_SHIFT_8K - TSB_BUCKET_SHIFT - TTE_SHIFT)
+value|(TSB_BSHIFT - TSB_BUCKET_SHIFT - TTE_SHIFT)
 end_define
 
 begin_define
@@ -192,6 +213,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+name|tsb_callback_t
+function_decl|)
+parameter_list|(
+name|struct
+name|pmap
+modifier|*
+parameter_list|,
+name|struct
+name|tte
+modifier|*
+parameter_list|,
+name|vm_offset_t
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_function_decl
 name|struct
 name|tte
@@ -249,6 +290,26 @@ name|struct
 name|tte
 modifier|*
 name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tsb_foreach
+parameter_list|(
+name|pmap_t
+name|pm
+parameter_list|,
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
+parameter_list|,
+name|tsb_callback_t
+modifier|*
+name|callback
 parameter_list|)
 function_decl|;
 end_function_decl
