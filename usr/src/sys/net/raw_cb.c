@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.8	82/04/11	*/
+comment|/*	raw_cb.c	4.9	82/06/20	*/
 end_comment
 
 begin_include
@@ -119,11 +119,6 @@ name|rawcb
 modifier|*
 name|rp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RAW_ATTACH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifnet
@@ -469,11 +464,6 @@ name|rp
 operator|->
 name|rcb_socket
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RAW_DETACH
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -525,11 +515,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|RAW_DISCONNECT
-argument_list|)
-expr_stmt|;
 name|rp
 operator|->
 name|rcb_flags
@@ -586,11 +571,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|RAW_CONNADDR
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.16	82/06/13	*/
+comment|/*	if.c	4.17	82/06/20	*/
 end_comment
 
 begin_include
@@ -220,11 +220,6 @@ init|=
 operator|&
 name|ifnet
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_ATTACH
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -278,11 +273,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_IFWITHADDR
-argument_list|)
-expr_stmt|;
 define|#
 directive|define
 name|equal

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	4.10	82/06/12	*/
+comment|/*	route.c	4.11	82/06/20	*/
 end_comment
 
 begin_include
@@ -150,11 +150,6 @@ name|dst
 operator|->
 name|sa_family
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RTALLOC
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ro
@@ -609,11 +604,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RTREQUEST
-argument_list|)
-expr_stmt|;
 name|af
 operator|=
 name|entry

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_systm.h	4.11	82/05/31	*/
+comment|/*	in_systm.h	4.12	82/06/20	*/
 end_comment
 
 begin_comment
@@ -178,75 +178,12 @@ begin_comment
 comment|/* scheduling bits for network */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_function_decl
 name|n_time
 name|iptime
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KPROF
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../inet/count.h"
-end_include
-
-begin_define
-define|#
-directive|define
-name|COUNT
-parameter_list|(
-name|i
-parameter_list|)
-value|nrcount[i]++
-end_define
-
-begin_decl_stmt
-name|int
-name|nrcount
-index|[
-name|NCOUNTERS
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|COUNT
-parameter_list|(
-name|i
-parameter_list|)
-end_define
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_pup.c	4.11	82/04/10	*/
+comment|/*	raw_pup.c	4.12	82/06/20	*/
 end_comment
 
 begin_include
@@ -141,11 +141,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RPUP_OUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Verify user has supplied necessary space 	 * for the header and check parameters in it. 	 */
 if|if
 condition|(

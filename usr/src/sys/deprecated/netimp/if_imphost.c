@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.12	82/05/11	*/
+comment|/*	if_imphost.c	4.13	82/06/20	*/
 end_comment
 
 begin_include
@@ -113,11 +113,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTLOOKUP
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|m
@@ -246,11 +241,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTENTER
-argument_list|)
-expr_stmt|;
 name|mprev
 operator|=
 operator|&
@@ -489,11 +479,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTFREE
-argument_list|)
-expr_stmt|;
 name|hp
 operator|->
 name|h_flags
@@ -566,11 +551,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTRESET
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|m
@@ -696,11 +676,6 @@ argument_list|(
 name|hp
 argument_list|)
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTRELEASE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Discard any packets left on the waiting q 	 */
 if|if
 condition|(
@@ -910,11 +885,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|HOSTSLOWTIMO
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|m

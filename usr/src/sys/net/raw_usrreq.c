@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.16	82/04/25	*/
+comment|/*	raw_usrreq.c	4.17	82/06/20	*/
 end_comment
 
 begin_include
@@ -88,11 +88,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|RAW_INIT
-argument_list|)
-expr_stmt|;
 name|rawcb
 operator|.
 name|rcb_next
@@ -173,11 +168,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RAW_INPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Rip off an mbuf for a generic header. 	 */
 name|m
 operator|=
@@ -337,11 +327,6 @@ name|socket
 modifier|*
 name|last
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RAWINTR
-argument_list|)
-expr_stmt|;
 name|next
 label|:
 name|s
@@ -655,11 +640,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|RAW_CTLINPUT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -737,11 +717,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RAW_USRREQ
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|rp

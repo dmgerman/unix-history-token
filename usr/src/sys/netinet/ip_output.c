@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.34	82/06/13	*/
+comment|/*	ip_output.c	1.35	82/06/20	*/
 end_comment
 
 begin_include
@@ -175,11 +175,6 @@ name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_OUTPUT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|opt
@@ -1042,11 +1037,6 @@ name|optlen
 decl_stmt|,
 name|cnt
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_OPTCOPY
-argument_list|)
-expr_stmt|;
 name|cp
 operator|=
 operator|(

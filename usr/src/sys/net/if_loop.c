@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.12	82/06/12	*/
+comment|/*	if_loop.c	4.13	82/06/20	*/
 end_comment
 
 begin_comment
@@ -129,11 +129,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|LOATTACH
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_name
@@ -259,11 +254,6 @@ name|ifqueue
 modifier|*
 name|ifq
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|LOOUTPUT
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_opackets

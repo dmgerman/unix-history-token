@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.66	82/06/14	*/
+comment|/*	if_en.c	4.67	82/06/20	*/
 end_comment
 
 begin_include
@@ -341,11 +341,6 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -474,11 +469,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENATTACH
-argument_list|)
-expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -710,11 +700,6 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1053,11 +1038,6 @@ decl_stmt|;
 name|int
 name|dest
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENSTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|es
@@ -1314,11 +1294,6 @@ name|ui
 operator|->
 name|ui_addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENXINT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|es
@@ -1470,11 +1445,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENCOLLIDE
-argument_list|)
-expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -1688,11 +1658,6 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENRINT
-argument_list|)
-expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -2236,11 +2201,6 @@ specifier|register
 name|int
 name|off
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENOUTPUT
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|dst

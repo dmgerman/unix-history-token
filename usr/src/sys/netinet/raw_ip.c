@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.12	82/06/12	*/
+comment|/*	raw_ip.c	4.13	82/06/20	*/
 end_comment
 
 begin_include
@@ -157,11 +157,6 @@ name|ip
 operator|*
 argument_list|)
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RIP_INPUT
-argument_list|)
-expr_stmt|;
 name|ripproto
 operator|.
 name|sp_protocol
@@ -283,11 +278,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RIP_OUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Calculate data length and get an mbuf 	 * for IP header. 	 */
 for|for
 control|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.44	82/06/13	*/
+comment|/*	ip_input.c	1.45	82/06/20	*/
 end_comment
 
 begin_include
@@ -141,11 +141,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_INIT
-argument_list|)
-expr_stmt|;
 name|pr
 operator|=
 name|pffindproto
@@ -337,11 +332,6 @@ name|hlen
 decl_stmt|,
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IPINTR
-argument_list|)
-expr_stmt|;
 name|next
 label|:
 comment|/* 	 * Get next datagram off input queue and get IP header 	 * in first mbuf. 	 */
@@ -1056,11 +1046,6 @@ name|i
 decl_stmt|,
 name|next
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_REASS
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Presence of header sizes in mbufs 	 * would confuse code below. 	 */
 name|m
 operator|->
@@ -1696,11 +1681,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_FREEF
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|q
@@ -1792,11 +1772,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IP_ENQ
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|ipf_prev
@@ -1847,11 +1822,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IP_DEQ
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|ipf_prev
@@ -1898,11 +1868,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_SLOWTIMO
-argument_list|)
-expr_stmt|;
 name|fp
 operator|=
 name|ipq
@@ -1972,11 +1937,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IP_DRAIN
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|ipq
@@ -2057,11 +2017,6 @@ name|struct
 name|in_addr
 name|t
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_DOOPTIONS
-argument_list|)
-expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -2591,11 +2546,6 @@ decl_stmt|;
 name|int
 name|olen
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IP_STRIPOPTIONS
-argument_list|)
-expr_stmt|;
 name|olen
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.22	82/06/12	*/
+comment|/*	tcp_timer.c	4.23	82/06/20	*/
 end_comment
 
 begin_include
@@ -160,11 +160,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_FASTTIMO
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|tcb
@@ -279,11 +274,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_SLOWTIMO
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Search through tcb's and update active timers. 	 */
 name|ip
 operator|=
@@ -469,11 +459,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_CANCELTIMERS
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -573,11 +558,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|TCP_TIMERS
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|timer

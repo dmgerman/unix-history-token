@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.16	82/06/13	*/
+comment|/*	if_dmc.c	4.17	82/06/20	*/
 end_comment
 
 begin_include
@@ -400,11 +400,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -581,11 +576,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCATTACH
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_if
@@ -757,11 +747,6 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -858,11 +843,6 @@ decl_stmt|;
 name|int
 name|base
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCINIT
-argument_list|)
-expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcinit\n"
@@ -1177,11 +1157,6 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCSTART
-argument_list|)
-expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcstart\n"
@@ -1367,11 +1342,6 @@ name|sps
 decl_stmt|,
 name|n
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCLOAD
-argument_list|)
-expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcload: 0x%x 0x%x 0x%x\n"
@@ -1526,11 +1496,6 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCRINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1725,11 +1690,6 @@ name|cmd
 decl_stmt|,
 name|len
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCXINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -2164,11 +2124,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|DMCOUTPUT
-argument_list|)
-expr_stmt|;
 name|printd
 argument_list|(
 literal|"dmcoutput\n"

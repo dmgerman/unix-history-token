@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.36	82/06/15	*/
+comment|/*	if_imp.c	4.37	82/06/20	*/
 end_comment
 
 begin_include
@@ -271,11 +271,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPATTACH
-argument_list|)
-expr_stmt|;
 comment|/* UNIT COULD BE AMBIGUOUS */
 name|ifp
 operator|->
@@ -412,11 +407,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPINIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 call|(
@@ -606,11 +596,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPINPUT
-argument_list|)
-expr_stmt|;
 comment|/* verify leader length. */
 if|if
 condition|(
@@ -1441,11 +1426,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IMPDOWN
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|imp_state
@@ -1519,11 +1499,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IMPMSG
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"imp%d: "
@@ -1595,11 +1570,6 @@ name|struct
 name|in_addr
 name|in
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPNOTIFY
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -1764,11 +1734,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPOUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Don't even try if the IMP is unavailable. 	 */
 if|if
 condition|(
@@ -2159,11 +2124,6 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPSND
-argument_list|)
-expr_stmt|;
 name|ip
 operator|=
 name|mtod
@@ -2491,11 +2451,6 @@ decl_stmt|;
 name|int
 name|x
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IMPNOOPS
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|imp_dropcnt

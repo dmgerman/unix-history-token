@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	1.58	82/06/12	*/
+comment|/*	tcp_usrreq.c	1.59	82/06/20	*/
 end_comment
 
 begin_include
@@ -229,11 +229,6 @@ decl_stmt|;
 name|int
 name|ostate
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_USRREQ
-argument_list|)
-expr_stmt|;
 comment|/* 	 * When a TCP is attached to a socket, then there will be 	 * a (struct inpcb) pointed at by the socket, and this 	 * structure will point at a subsidary (struct tcpcb). 	 * The normal sequence of events is: 	 *	PRU_ATTACH		creating these structures 	 *	PRU_CONNECT		connecting to a remote peer 	 *	(PRU_SEND|PRU_RCVD)*	exchanging data 	 *	PRU_DISCONNECT		disconnecting from remote peer 	 *	PRU_DETACH		deleting the structures 	 * With the operations from PRU_CONNECT through PRU_DISCONNECT 	 * possible repeated several times. 	 * 	 * MULTIPLE CONNECTS ARE NOT YET IMPLEMENTED. 	 */
 if|if
 condition|(

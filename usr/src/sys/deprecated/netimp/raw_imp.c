@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_imp.c	4.11	82/04/11	*/
+comment|/*	raw_imp.c	4.12	82/06/20	*/
 end_comment
 
 begin_include
@@ -147,11 +147,6 @@ name|control_leader
 modifier|*
 name|cp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|RIMP_OUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Verify user has supplied necessary space 	 * for the leader and check parameters in it. 	 */
 if|if
 condition|(

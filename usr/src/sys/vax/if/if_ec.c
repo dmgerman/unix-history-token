@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.18	82/06/17	*/
+comment|/*	if_ec.c	4.19	82/06/20	*/
 end_comment
 
 begin_include
@@ -382,11 +382,6 @@ index|[
 literal|0600000
 index|]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -605,11 +600,6 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECATTACH
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_unit
@@ -1006,11 +996,6 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1244,11 +1229,6 @@ decl_stmt|;
 name|caddr_t
 name|ecbuf
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECSTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|es
@@ -1379,11 +1359,6 @@ index|]
 operator|->
 name|ui_addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECXINT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|es
@@ -1545,11 +1520,6 @@ index|[
 name|unit
 index|]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECCOLLIDE
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"ec%d: collision\n"
@@ -1788,11 +1758,6 @@ index|]
 operator|->
 name|ui_addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECRINT
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|addr
@@ -1884,11 +1849,6 @@ decl_stmt|;
 name|caddr_t
 name|ecbuf
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECREAD
-argument_list|)
-expr_stmt|;
 name|es
 operator|->
 name|es_if
@@ -2360,11 +2320,6 @@ operator|)
 literal|0
 decl_stmt|;
 comment|/* Null */
-name|COUNT
-argument_list|(
-name|ECOUTPUT
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|dst
@@ -3094,11 +3049,6 @@ specifier|register
 name|int
 name|off
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECPUT
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|off
@@ -3353,11 +3303,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ECGET
-argument_list|)
-expr_stmt|;
 name|top
 operator|=
 literal|0

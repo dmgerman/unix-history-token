@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.7	82/06/18	*/
+comment|/*	if_il.c	4.8	82/06/20	*/
 end_comment
 
 begin_include
@@ -365,11 +365,6 @@ decl_stmt|;
 specifier|register
 name|i
 expr_stmt|;
-name|COUNT
-argument_list|(
-name|ILPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -523,11 +518,6 @@ name|s
 decl_stmt|,
 name|ubaddr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILATTACH
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_unit
@@ -1024,11 +1014,6 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1394,11 +1379,6 @@ decl_stmt|;
 name|short
 name|csr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILSTART
-argument_list|)
-expr_stmt|;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -1586,11 +1566,6 @@ decl_stmt|;
 name|short
 name|csr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILCINT
-argument_list|)
-expr_stmt|;
 name|csr
 operator|=
 name|addr
@@ -1860,11 +1835,6 @@ decl_stmt|;
 name|short
 name|csr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILRINT
-argument_list|)
-expr_stmt|;
 name|is
 operator|->
 name|is_if
@@ -2402,11 +2372,6 @@ name|off
 decl_stmt|,
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ILOUTPUT
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|dst

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.4	82/06/15	*/
+comment|/*	if_vv.c	4.5	82/06/20	*/
 end_comment
 
 begin_comment
@@ -511,11 +511,6 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|VVATTACH
-argument_list|)
-expr_stmt|;
 name|vs
 operator|->
 name|vs_if
@@ -723,11 +718,6 @@ name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|VVRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1715,11 +1705,6 @@ decl_stmt|;
 name|int
 name|dest
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|VVSTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vs
@@ -1955,11 +1940,6 @@ specifier|register
 name|int
 name|oc
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ENXINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -2247,11 +2227,6 @@ name|len
 decl_stmt|,
 name|off
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|VVRINT
-argument_list|)
-expr_stmt|;
 name|vs
 operator|->
 name|vs_if

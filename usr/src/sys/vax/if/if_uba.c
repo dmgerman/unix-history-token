@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_uba.c	4.11	82/05/19	*/
+comment|/*	if_uba.c	4.12	82/06/20	*/
 end_comment
 
 begin_include
@@ -147,11 +147,6 @@ name|i
 decl_stmt|,
 name|ncl
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_UBAINIT
-argument_list|)
-expr_stmt|;
 name|ncl
 operator|=
 name|clrnd
@@ -424,11 +419,6 @@ specifier|register
 name|int
 name|info
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_UBAALLOC
-argument_list|)
-expr_stmt|;
 name|info
 operator|=
 name|uballoc
@@ -583,11 +573,6 @@ name|ifu
 operator|->
 name|ifu_hlen
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_RUBAGET
-argument_list|)
-expr_stmt|;
 name|top
 operator|=
 literal|0
@@ -1055,11 +1040,6 @@ name|x
 decl_stmt|,
 name|cc
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_WUBAPUT
-argument_list|)
-expr_stmt|;
 name|cp
 operator|=
 name|ifu

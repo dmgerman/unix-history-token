@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.26	82/04/30	*/
+comment|/*	tcp_subr.c	4.27	82/06/20	*/
 end_comment
 
 begin_include
@@ -140,11 +140,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|TCP_INIT
-argument_list|)
-expr_stmt|;
 name|tcp_iss
 operator|=
 literal|1
@@ -212,11 +207,6 @@ name|tcpiphdr
 modifier|*
 name|n
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_TEMPLATE
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m_get
@@ -468,11 +458,6 @@ name|ro
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_RESPOND
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -907,11 +892,6 @@ name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_NEWTCPCB
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m
@@ -1026,11 +1006,6 @@ name|t_inpcb
 operator|->
 name|inp_socket
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_DROP
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|TCPS_HAVERCVDSYN
@@ -1137,11 +1112,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_CLOSE
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|tp
@@ -1272,13 +1242,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{
-name|COUNT
-argument_list|(
-name|TCP_DRAIN
-argument_list|)
-expr_stmt|;
-block|}
+block|{  }
 end_block
 
 begin_macro
@@ -1314,11 +1278,6 @@ name|u_char
 name|inetctlerrmap
 index|[]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_CTLINPUT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd

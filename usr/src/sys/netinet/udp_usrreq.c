@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.29	82/06/12	*/
+comment|/*	udp_usrreq.c	4.30	82/06/20	*/
 end_comment
 
 begin_include
@@ -122,11 +122,6 @@ end_macro
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|UDP_INIT
-argument_list|)
-expr_stmt|;
 name|udb
 operator|.
 name|inp_next
@@ -198,11 +193,6 @@ name|len
 decl_stmt|,
 name|ulen
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|UDP_INPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Get IP and UDP header together in first mbuf. 	 */
 name|m
 operator|=
@@ -702,11 +692,6 @@ name|u_char
 name|inetctlerrmap
 index|[]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|UDP_CTLINPUT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|cmd
@@ -829,11 +814,6 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|UDP_OUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Calculate data length and get a mbuf 	 * for UDP and IP headers. 	 */
 for|for
 control|(
@@ -1170,11 +1150,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|UDP_USRREQ
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|inp

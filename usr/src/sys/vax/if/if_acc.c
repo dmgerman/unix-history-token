@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.18	82/06/15	*/
+comment|/*	if_acc.c	4.19	82/06/20	*/
 end_comment
 
 begin_include
@@ -299,11 +299,6 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCPROBE
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -475,11 +470,6 @@ block|}
 modifier|*
 name|ifimp
 struct|;
-name|COUNT
-argument_list|(
-name|ACCATTACH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -595,11 +585,6 @@ name|acc_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCRESET
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -703,11 +688,6 @@ name|info
 decl_stmt|,
 name|i
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCINIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -1125,11 +1105,6 @@ decl_stmt|;
 name|u_short
 name|cmd
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCSTART
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1340,11 +1315,6 @@ name|accdevice
 modifier|*
 name|addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCXINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -1522,11 +1492,6 @@ name|len
 decl_stmt|,
 name|info
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ACCRINT
-argument_list|)
-expr_stmt|;
 name|addr
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.27	82/06/13	*/
+comment|/*	in_pcb.c	4.28	82/06/20	*/
 end_comment
 
 begin_include
@@ -161,11 +161,6 @@ name|lport
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IN_PCBATTACH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifnet
@@ -585,11 +580,6 @@ name|sockaddr_in
 modifier|*
 name|ifaddr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IN_PCBCONNECT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sin
@@ -788,11 +778,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IN_PCBDISCONNECT
-argument_list|)
-expr_stmt|;
 name|inp
 operator|->
 name|inp_faddr
@@ -851,11 +836,6 @@ name|inp
 operator|->
 name|inp_socket
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IN_PCBDETACH
-argument_list|)
-expr_stmt|;
 name|so
 operator|->
 name|so_pcb
@@ -929,11 +909,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|IN_SETSOCKADDR
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sin
@@ -1051,11 +1026,6 @@ init|=
 name|splimp
 argument_list|()
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|INP_PCBNOTIFY
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|inp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.41	82/06/12	*/
+comment|/*	tcp_output.c	4.42	82/06/20	*/
 end_comment
 
 begin_include
@@ -276,11 +276,6 @@ decl_stmt|;
 name|int
 name|sendalot
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_OUTPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Determine length of data that should be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
 name|again
 label|:

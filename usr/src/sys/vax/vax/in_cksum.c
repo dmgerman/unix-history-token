@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.11 81/11/26 */
+comment|/* in_cksum.c 1.12 82/06/20 */
 end_comment
 
 begin_include
@@ -80,11 +80,6 @@ name|mlen
 init|=
 literal|0
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IN_CKSUM
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;

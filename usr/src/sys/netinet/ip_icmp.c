@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.16	82/05/02	*/
+comment|/*	ip_icmp.c	4.17	82/06/20	*/
 end_comment
 
 begin_include
@@ -134,11 +134,6 @@ name|ip
 modifier|*
 name|nip
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ICMP_ERROR
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|icmpprintfs
@@ -548,11 +543,6 @@ name|u_char
 name|ip_protox
 index|[]
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ICMP_INPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Locate icmp structure in mbuf, and check 	 * that not corrupted and of at least minimum length. 	 */
 if|if
 condition|(
@@ -951,11 +941,6 @@ name|struct
 name|in_addr
 name|t
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ICMP_REFLECT
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|ip
@@ -1040,11 +1025,6 @@ argument_list|(
 name|ip
 argument_list|)
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|ICMP_SEND
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1143,11 +1123,6 @@ decl_stmt|;
 name|u_long
 name|t
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IPTIME
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.67	82/04/10	*/
+comment|/*	tcp_input.c	1.68	82/06/20	*/
 end_comment
 
 begin_include
@@ -257,11 +257,6 @@ name|struct
 name|in_addr
 name|laddr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_INPUT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Get IP and TCP header together in first mbuf. 	 * Note: IP leaves IP header in first mbuf. 	 */
 name|m
 operator|=
@@ -3728,11 +3723,6 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|TCP_REASS
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Call with ti==0 after become established to 	 * force pre-ESTABLISHED data up to user socket. 	 */
 if|if
 condition|(

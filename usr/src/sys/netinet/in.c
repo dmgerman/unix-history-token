@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.2	82/06/13	*/
+comment|/*	in.c	4.3	82/06/20	*/
 end_comment
 
 begin_include
@@ -94,11 +94,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|INET_HASH
-argument_list|)
-expr_stmt|;
 name|hp
 operator|->
 name|afh_nethash
@@ -165,11 +160,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|COUNT
-argument_list|(
-name|INET_NETMATCH
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|sin1
@@ -210,11 +200,6 @@ block|{
 name|u_long
 name|addr
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_MAKEADDR
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|net
@@ -379,11 +364,6 @@ name|struct
 name|sockaddr_in
 name|sin
 decl_stmt|;
-name|COUNT
-argument_list|(
-name|IF_RTINIT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
