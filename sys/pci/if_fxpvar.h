@@ -26,6 +26,14 @@ modifier|*
 name|mem
 decl_stmt|;
 comment|/* resource descriptor for registers */
+name|int
+name|rtp
+decl_stmt|;
+comment|/* register resource type */
+name|int
+name|rgd
+decl_stmt|;
+comment|/* register descriptor in use */
 name|struct
 name|resource
 modifier|*
