@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -375,6 +381,60 @@ name|mtx
 name|pcicfg_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* sysctl vars */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_pci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|uint32_t
+name|pci_irq_override_mask
+init|=
+literal|0xdef4
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.irq_override_mask"
+argument_list|,
+operator|&
+name|pci_irq_override_mask
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|irq_override_mask
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pci_irq_override_mask
+argument_list|,
+literal|0xdef4
+argument_list|,
+literal|"Mask of allowed irqs to try to route when it has no good clue about\n"
+literal|"which irqs it should use."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Some BIOS writers seem to want to ignore the spec and put  * 0 in the intline rather than 255 to indicate none.  Some use  * numbers in the range 128-254 to indicate something strange and  * apparently undocumented anywhere.  Assume these are completely bogus  * and map them to 255, which means "none".  */
@@ -2289,6 +2349,17 @@ operator|<<
 name|irq
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ibit
+operator|&
+name|pci_irq_override_mask
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|pe
