@@ -1777,12 +1777,12 @@ name|char
 modifier|*
 name|p
 parameter_list|,
-name|size_t
+name|off_t
 modifier|*
 name|length
 parameter_list|)
 block|{
-name|size_t
+name|off_t
 name|len
 decl_stmt|;
 for|for
@@ -1822,7 +1822,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"content length: [\033[1m%d\033[m]\n"
+literal|"content length: [\033[1m%lld\033[m]\n"
 argument_list|,
 name|len
 argument_list|)
@@ -1856,11 +1856,11 @@ name|off_t
 modifier|*
 name|offset
 parameter_list|,
-name|size_t
+name|off_t
 modifier|*
 name|length
 parameter_list|,
-name|size_t
+name|off_t
 modifier|*
 name|size
 parameter_list|)
@@ -3483,8 +3483,7 @@ name|n
 decl_stmt|;
 name|off_t
 name|offset
-decl_stmt|;
-name|size_t
+decl_stmt|,
 name|clength
 decl_stmt|,
 name|length
@@ -4383,7 +4382,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"offset: %lld, length: %d, size: %d, clength: %d\n"
+literal|"offset %lld, length %lld, size %lld, clength %lld\n"
 argument_list|,
 name|offset
 argument_list|,
