@@ -216,7 +216,7 @@ operator|(
 name|c
 operator|>
 name|maxsize
-operator|&&
+operator|||
 name|UINT_MAX
 operator|/
 name|elsize
