@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.20 1998/10/15 23:46:24 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.21 1998/12/22 00:52:27 eivind Exp $"
 end_empty
 
 begin_define
@@ -1439,8 +1439,9 @@ name|NULL
 operator|)
 return|;
 block|}
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|bus_dmamap_load
 argument_list|(
 name|dpt
@@ -1467,36 +1468,7 @@ argument_list|,
 comment|/*flags*/
 literal|0
 argument_list|)
-condition|)
-block|{
-name|bus_dmamem_free
-argument_list|(
-name|dpt
-operator|->
-name|sg_dmat
-argument_list|,
-name|sg_map
-operator|->
-name|sg_vaddr
-argument_list|,
-name|sg_map
-operator|->
-name|sg_dmamap
-argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|sg_map
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
