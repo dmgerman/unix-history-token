@@ -124,7 +124,7 @@ else|else
 operator|*
 name|str
 operator|=
-name|get_file_contents
+name|fileGetContents
 argument_list|(
 name|s
 argument_list|)
