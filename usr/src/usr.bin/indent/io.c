@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley and the University of  * Illinois at Urbana.  The name of either University may not be used  * to endorse or promote products derived from this software without  * specific prior written permission. This software is provided  * ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,18 +15,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.5 (Berkeley) %G%"
+literal|"@(#)io.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*-  *			  Copyright (C) 1976  *				by the  *			  Board of Trustees  *				of the  *			University of Illinois  *			 All rights reserved  * FILE NAME:  *	io.c  * PURPOSE:  *	Contains routines to handle i/o related stuff for indent.  * GLOBALS:  *	None  * FUNCTIONS:  *	dump_line  *	fill_buffer  *	pad_output  *	count_spaces  *	eqin  *	cmp  *  */
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * FILE NAME:  *	io.c  * PURPOSE:  *	Contains routines to handle i/o related stuff for indent.  * GLOBALS:  *	None  * FUNCTIONS:  *	dump_line  *	fill_buffer  *	pad_output  *	count_spaces  *	eqin  *	cmp  *  */
 end_comment
 
 begin_escape

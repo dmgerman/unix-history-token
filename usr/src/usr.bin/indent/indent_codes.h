@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)indent_codes.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley and the University of  * Illinois at Urbana.  The name of either University may not be used  * to endorse or promote products derived from this software without  * specific prior written permission. This software is provided  * ``as is'' without express or implied warranty.  *  *	@(#)indent_codes.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  			  Copyright (C) 1976 				by the 			  Board of Trustees 				of the 			University of Illinois  			 All rights reserved  FILE NAME: 	indent_codes.h  PURPOSE: 	This include file contains defines for codes used within indent.  They 	are here so that codes passed between and within routines can be 	referenced symbolically.  GLOBALS: 	No global variables, just a bunch of defines  FUNCTIONS: 	None */
+comment|/* FILE NAME: 	indent_codes.h  PURPOSE: 	This include file contains defines for codes used within indent.  They 	are here so that codes passed between and within routines can be 	referenced symbolically.  GLOBALS: 	No global variables, just a bunch of defines  FUNCTIONS: 	None */
 end_comment
 
 begin_escape

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * Copyright (c) 1976 Board of Trustees of the University of Illinois.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley and the University of  * Illinois at Urbana.  The name of either University may not be used  * to endorse or promote products derived from this software without  * specific prior written permission. This software is provided  * ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -15,18 +15,21 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lexi.c	5.5 (Berkeley) %G%"
+literal|"@(#)lexi.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*-  *  *			  Copyright (C) 1976  *				by the  *			  Board of Trustees  *				of the  *			University of Illinois  *  *			 All rights reserved  *  *  * NAME:  *	lexi  *  * FUNCTION:  *	This is the token scanner for indent  *  * ALGORITHM:  *	1) Strip off intervening blanks and/or tabs.  *	2) If it is an alphanumeric token, move it to the token buffer "token".  *	   Check if it is a special reserved word that indent will want to  *	   know about.  *	3) Non-alphanumeric tokens are handled with a big switch statement.  A  *	   flag is kept to remember if the last token was a "unary delimiter",  *	   which forces a following operator to be unary as opposed to binary.  *  * PARAMETERS:  *	None  *  * RETURNS:  *	An integer code indicating the type of token scanned.  *  * GLOBALS:  *	buf_ptr =  *	had_eof  *	ps.last_u_d =	Set to true iff this token is a "unary delimiter"  *  * CALLS:  *	fill_buffer  *	printf (lib)  *  * CALLED BY:  *	main  *  * NOTES:  *	Start of comment is passed back so that the comment can be scanned by  *	pr_comment.  *  *	Strings and character literals are returned just like identifiers.  *  * HISTORY:  *	initial coding 	November 1976	D A Willcox of CAC  *	1/7/77		D A Willcox of CAC	Fix to provide proper handling  *						of "int a -1;"  *  */
+comment|/* not lint */
+end_comment
+
+begin_comment
+comment|/*  * NAME:  *	lexi  *  * FUNCTION:  *	This is the token scanner for indent  *  * ALGORITHM:  *	1) Strip off intervening blanks and/or tabs.  *	2) If it is an alphanumeric token, move it to the token buffer "token".  *	   Check if it is a special reserved word that indent will want to  *	   know about.  *	3) Non-alphanumeric tokens are handled with a big switch statement.  A  *	   flag is kept to remember if the last token was a "unary delimiter",  *	   which forces a following operator to be unary as opposed to binary.  *  * PARAMETERS:  *	None  *  * RETURNS:  *	An integer code indicating the type of token scanned.  *  * GLOBALS:  *	buf_ptr =  *	had_eof  *	ps.last_u_d =	Set to true iff this token is a "unary delimiter"  *  * CALLS:  *	fill_buffer  *	printf (lib)  *  * CALLED BY:  *	main  *  * NOTES:  *	Start of comment is passed back so that the comment can be scanned by  *	pr_comment.  *  *	Strings and character literals are returned just like identifiers.  *  * HISTORY:  *	initial coding 	November 1976	D A Willcox of CAC  *	1/7/77		D A Willcox of CAC	Fix to provide proper handling  *						of "int a -1;"  *  */
 end_comment
 
 begin_escape
