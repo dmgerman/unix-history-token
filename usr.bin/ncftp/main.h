@@ -15,10 +15,6 @@ directive|define
 name|_main_h_
 end_define
 
-begin_comment
-comment|/*  $RCSfile: main.h,v $  *  $Revision: 14020.12 $  *  $Date: 93/05/21 05:45:33 $  */
-end_comment
-
 begin_struct
 struct|struct
 name|userinfo
