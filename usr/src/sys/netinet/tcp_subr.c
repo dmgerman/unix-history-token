@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_subr.c 4.10 81/12/20 */
+comment|/*	tcp_subr.c	4.11	81/12/21	*/
 end_comment
 
 begin_include
@@ -432,6 +432,11 @@ decl_stmt|;
 name|COUNT
 argument_list|(
 name|TCP_RESPOND
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tcp_respond\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -903,13 +908,6 @@ expr_stmt|;
 if|if
 condition|(
 name|TCPS_HAVERCVDSYN
-argument_list|(
-name|tp
-operator|->
-name|t_state
-argument_list|)
-operator|&&
-name|TCPS_OURFINNOTACKED
 argument_list|(
 name|tp
 operator|->
