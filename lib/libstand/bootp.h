@@ -4,7 +4,7 @@ comment|/*	$NetBSD: bootp.h,v 1.4 1997/09/06 13:55:57 drochner Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Bootstrap Protocol (BOOTP).  RFC951 and RFC1048.  *  * This file specifies the "implementation-independent" BOOTP protocol  * information which is common to both client and server.  *  * Copyright 1988 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  */
+comment|/*  * Bootstrap Protocol (BOOTP).  RFC951 and RFC1048.  *  * This file specifies the "implementation-independent" BOOTP protocol  * information which is common to both client and server.  *  * Copyright 1988 by Carnegie Mellon.  *  * Permission to use, copy, modify, and distribute this program for any  * purpose and without fee is hereby granted, provided that this copyright  * and permission notice appear on all copies and supporting documentation,  * the name of Carnegie Mellon not be used in advertising or publicity  * pertaining to distribution of the program without specific prior  * permission, and notice be given in supporting documentation that copying  * and distribution is by permission of Carnegie Mellon and Stanford  * University.  Carnegie Mellon makes no representations about the  * suitability of this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $FreeBSD$  */
 end_comment
 
 begin_struct
@@ -464,6 +464,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * bootp flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTP_NONE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* No flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOOTP_PXE
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Booting from PXE. */
+end_comment
 
 begin_comment
 comment|/*  * "vendor" data permitted for CMU bootp clients.  */

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<bootp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<bootstrap.h>
 end_include
 
@@ -1255,6 +1261,8 @@ comment|/* 		 * Do a bootp/dhcp request to find out where our 		 * NFS/TFTP serv
 name|bootp
 argument_list|(
 name|pxe_sock
+argument_list|,
+name|BOOTP_PXE
 argument_list|)
 expr_stmt|;
 if|if
