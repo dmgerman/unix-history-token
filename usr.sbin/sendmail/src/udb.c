@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.33 (Berkeley) 11/29/95 (with USERDB)"
+literal|"@(#)udb.c	8.33.1.2 (Berkeley) 9/16/96 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.33 (Berkeley) 11/29/95 (without USERDB)"
+literal|"@(#)udb.c	8.33.1.2 (Berkeley) 9/16/96 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1406,11 +1406,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
-name|info
-operator|.
-name|data
+name|pobuf
+argument_list|,
+sizeof|sizeof
+name|pobuf
 argument_list|,
 literal|"%s@%s"
 argument_list|,
@@ -1838,9 +1839,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|user
+argument_list|,
+name|i
 argument_list|,
 literal|"%s@%s"
 argument_list|,
@@ -4034,6 +4037,24 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|key
+operator|->
+name|data
+argument_list|)
+operator|>=
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|kbuf
+condition|)
+return|return
+literal|0
+return|;
 name|strcpy
 argument_list|(
 name|kbuf

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.87 (Berkeley) 10/28/95"
+literal|"@(#)savemail.c	8.87.1.2 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,18 +1123,16 @@ name|ESM_PANIC
 expr_stmt|;
 break|break;
 block|}
-name|strcpy
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%sdead.letter"
 argument_list|,
 name|_PATH_VARTMP
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
-literal|"dead.letter"
 argument_list|)
 expr_stmt|;
 name|sfflags
@@ -1967,8 +1965,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s.%ld/%.100s"
@@ -1995,8 +1996,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 if|#
@@ -2190,8 +2194,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Returned mail: %.*s"
@@ -2224,8 +2231,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"auto-generated (%s)"
@@ -2577,8 +2587,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s"
@@ -2693,8 +2706,11 @@ name|mci
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"The original message was received at %s"
@@ -3059,8 +3075,11 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s  (%s)"
@@ -3093,8 +3112,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"    (expanded from: %s)"
@@ -3285,8 +3307,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s"
@@ -3333,8 +3358,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Original-Envelope-Id: %.800s"
@@ -3361,8 +3389,11 @@ comment|/* Reporting-MTA: is us (required) */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Reporting-MTA: dns; %.800s"
@@ -3422,8 +3453,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Received-From-MTA: %s; %.800s"
@@ -3445,8 +3479,11 @@ comment|/* Arrival-Date: -- when it arrived here */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Arrival-Date: %s"
@@ -3636,8 +3673,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Original-Recipient: %.800s"
@@ -3714,8 +3754,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Final-Recipient: %s; %.700s@%.100s"
@@ -3735,8 +3778,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Final-Recipient: %s; %.800s"
@@ -3790,8 +3836,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"X-Actual-Recipient: %s; %.700s@%.100s"
@@ -3811,8 +3860,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"X-Actual-Recipient: %s; %.800s"
@@ -3834,8 +3886,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Action: -- what happened? */
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Action: %s"
@@ -3851,13 +3906,6 @@ name|mci
 argument_list|)
 expr_stmt|;
 comment|/* Status: -- what _really_ happened? */
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
-literal|"Status: "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|q
@@ -3866,14 +3914,11 @@ name|q_status
 operator|!=
 name|NULL
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
+name|p
+operator|=
 name|q
 operator|->
 name|q_status
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -3887,12 +3932,9 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
+name|p
+operator|=
 literal|"5.0.0"
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -3906,19 +3948,25 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-name|strcat
-argument_list|(
-name|buf
-argument_list|,
+name|p
+operator|=
 literal|"4.0.0"
-argument_list|)
 expr_stmt|;
 else|else
-name|strcat
+name|p
+operator|=
+literal|"2.0.0"
+expr_stmt|;
+name|snprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"2.0.0"
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"Status: %s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|putline
@@ -3965,8 +4013,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Remote-MTA: %s; %.800s"
@@ -4042,8 +4093,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Diagnostic-Code: %s; %.800s"
@@ -4085,8 +4139,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Last-Attempt-Date: %s"
@@ -4155,8 +4212,11 @@ operator|->
 name|e_timeoutclass
 index|]
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Will-Retry-Until: %s"
@@ -4273,8 +4333,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s"
@@ -4294,8 +4357,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Content-Type: %s"
@@ -4377,8 +4443,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Content-Transfer-Encoding: %s"
@@ -4497,8 +4566,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"--%s--"
@@ -5392,6 +5464,9 @@ decl_stmt|;
 name|int
 name|rcode
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|char
 name|hostbuf
 index|[
@@ -5473,6 +5548,28 @@ return|return
 name|FALSE
 return|;
 comment|/* slice off the angle brackets */
+name|i
+operator|=
+name|strlen
+argument_list|(
+name|at
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|hostbuf
+condition|)
+return|return
+name|FALSE
+return|;
 name|strcpy
 argument_list|(
 name|hostbuf
@@ -5484,10 +5581,7 @@ argument_list|)
 expr_stmt|;
 name|hostbuf
 index|[
-name|strlen
-argument_list|(
-name|hostbuf
-argument_list|)
+name|i
 operator|-
 literal|1
 index|]
@@ -5553,6 +5647,8 @@ expr_stmt|;
 if|if
 condition|(
 name|comma
+operator|!=
+name|NULL
 operator|&&
 name|comma
 index|[
@@ -5560,6 +5656,19 @@ literal|1
 index|]
 operator|==
 literal|'@'
+operator|&&
+name|strlen
+argument_list|(
+name|comma
+operator|+
+literal|2
+argument_list|)
+operator|<
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|hostbuf
 condition|)
 name|strcpy
 argument_list|(
@@ -5573,7 +5682,7 @@ expr_stmt|;
 else|else
 name|comma
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 operator|*
 name|start

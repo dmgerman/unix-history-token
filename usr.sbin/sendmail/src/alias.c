@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.52 (Berkeley) 10/28/95"
+literal|"@(#)alias.c	8.52.1.3 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|obuf
 index|[
 name|MAXNAME
 operator|+
-literal|6
+literal|7
 index|]
 decl_stmt|;
 specifier|extern
@@ -428,6 +428,21 @@ literal|6
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strlen
+argument_list|(
+name|a
+operator|->
+name|q_user
+argument_list|)
+operator|>
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|obuf
+operator|-
+literal|7
 condition|)
 operator|(
 name|void
@@ -814,8 +829,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Alias%d"
@@ -1383,31 +1401,25 @@ name|stb
 operator|.
 name|st_mtime
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%s%s"
 argument_list|,
 name|map
 operator|->
 name|map_file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ext
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
 argument_list|,
+name|ext
+operator|==
+name|NULL
+condition|?
+literal|""
+else|:
 name|ext
 argument_list|)
 expr_stmt|;
@@ -1880,10 +1892,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* avoid denial-of-service attacks */
-name|resetlimits
-argument_list|()
-expr_stmt|;
 name|oldsigint
 operator|=
 name|setsignal

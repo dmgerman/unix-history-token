@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.162 (Berkeley) 11/18/95"
+literal|"@(#)main.c	8.162.1.3 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,6 +458,16 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+specifier|extern
+name|void
+name|resetlimits
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* 	**  Check to see if we reentered. 	**	This would normally happen if e_putheader or e_putbody 	**	were NULL when invoked. 	*/
 if|if
 condition|(
@@ -778,9 +788,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|rnamebuf
+argument_list|,
+sizeof|sizeof
+name|rnamebuf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pw
 operator|->
@@ -791,8 +806,11 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|rnamebuf
+argument_list|,
+sizeof|sizeof
 name|rnamebuf
 argument_list|,
 literal|"Unknown UID %d"
@@ -1784,8 +1802,11 @@ index|[
 literal|103
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|ipbuf
+argument_list|,
+sizeof|sizeof
 name|ipbuf
 argument_list|,
 literal|"[%.100s]"
@@ -2806,6 +2827,10 @@ name|vendor_post_defaults
 argument_list|(
 name|CurEnv
 argument_list|)
+expr_stmt|;
+comment|/* avoid denial-of-service attacks */
+name|resetlimits
+argument_list|()
 expr_stmt|;
 comment|/* suppress error printing if errors mailed back or whatever */
 if|if
@@ -5896,8 +5921,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s: "
@@ -7434,6 +7462,25 @@ block|{
 name|printf
 argument_list|(
 literal|"Usage: /canon address\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|>=
+sizeof|sizeof
+name|host
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Name too long\n"
 argument_list|)
 expr_stmt|;
 return|return;
