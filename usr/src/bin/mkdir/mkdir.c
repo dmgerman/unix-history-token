@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkdir.c	5.4 (Berkeley) %G%"
+literal|"@(#)mkdir.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,13 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -100,8 +107,6 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|errno
-decl_stmt|,
 name|optind
 decl_stmt|;
 name|int
