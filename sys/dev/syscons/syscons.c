@@ -520,27 +520,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_hw_syscons_saver
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|blanktime
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|scrn_blank_time
-argument_list|,
-literal|0
-argument_list|,
-literal|"screensaver timeout"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 if|#
 directive|if
