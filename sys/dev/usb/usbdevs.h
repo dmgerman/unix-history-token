@@ -4,6 +4,10 @@ comment|/*	$NetBSD: usbdevs.h,v 1.8 1998/12/02 22:51:50 augustss Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	FreeBSD $Id$ */
+end_comment
+
+begin_comment
 comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	NetBSD: usbdevs,v 1.8 1998/12/02 22:49:51 augustss Exp   */
 end_comment
 
