@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tar.c	4.20 (Berkeley) %G%"
+literal|"@(#)tar.c	4.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
