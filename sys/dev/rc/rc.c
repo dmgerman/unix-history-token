@@ -1518,8 +1518,6 @@ operator|*
 name|rcb
 operator|->
 name|rcb_unit
-operator|+
-literal|128
 argument_list|)
 expr_stmt|;
 block|}
