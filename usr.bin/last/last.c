@@ -292,6 +292,32 @@ comment|/* wtmp file */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|sflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show delta in seconds */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|width
+init|=
+literal|5
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show seconds in delta */
+end_comment
+
+begin_decl_stmt
 name|void
 name|addarg
 name|__P
@@ -372,6 +398,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
+name|usage
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: last [-#] [-f file] [-h hostname] [-t tty] [-s|w] [user ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -430,7 +481,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"0123456789f:h:t:"
+literal|"0123456789f:h:st:w"
 argument_list|)
 operator|)
 operator|!=
@@ -570,6 +621,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|sflag
+operator|++
+expr_stmt|;
+comment|/* Show delta as seconds */
+break|break;
+case|case
 literal|'t'
 case|:
 name|addarg
@@ -584,25 +643,32 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'w'
+case|:
+name|width
+operator|=
+literal|8
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: last [-#] [-f file] [-t tty] [-h hostname] [user ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sflag
+operator|&&
+name|width
+operator|==
+literal|8
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -1526,6 +1592,21 @@ name|bp
 operator|->
 name|ut_time
 expr_stmt|;
+if|if
+condition|(
+name|sflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"  (%8lu)\n"
+argument_list|,
+name|delta
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|tm
 operator|=
 name|gmtime
@@ -1559,7 +1640,11 @@ literal|86400
 condition|)
 name|printf
 argument_list|(
-literal|"  (%5.5s)\n"
+literal|"  (%*.*s)\n"
+argument_list|,
+name|width
+argument_list|,
+name|width
 argument_list|,
 name|ct
 operator|+
@@ -1569,17 +1654,22 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" (%ld+%5.5s)\n"
+literal|" (%ld+%*.*s)\n"
 argument_list|,
 name|delta
 operator|/
 literal|86400
+argument_list|,
+name|width
+argument_list|,
+name|width
 argument_list|,
 name|ct
 operator|+
 literal|11
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|LIST_REMOVE
 argument_list|(
