@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.11 (Berkeley) %G%"
+literal|"@(#)strip.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -689,6 +689,36 @@ operator|==
 literal|0
 condition|)
 return|return;
+comment|/* Stat the file. */
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|err
+argument_list|(
+literal|0
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|fn
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Check size. */
 if|if
 condition|(
@@ -718,14 +748,6 @@ block|}
 comment|/* Map the file. */
 if|if
 condition|(
-name|fstat
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|||
 operator|(
 name|ep
 operator|=
