@@ -73,7 +73,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"-more %s"
+literal|"-more -e %s"
 argument_list|,
 name|_PATH_HELPFILE
 argument_list|)
