@@ -342,7 +342,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Old value from CSRG; this is probably better. */
+comment|/* Old value from 4.4BSD-Lite math.h; this is probably better. */
 end_comment
 
 begin_define
@@ -1693,48 +1693,6 @@ end_endif
 begin_comment
 comment|/* !_MATH_H_ */
 end_comment
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
-
-begin_escape
-end_escape
 
 end_unit
 
