@@ -646,7 +646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *      vm_pager_page_unswapped  *   *      called at splvm() to destroy swap associated with the page.  *   *      This function may not block.  */
+comment|/*   *      vm_pager_page_unswapped  *   *      called at splvm() to destroy swap associated with the page.  *   *      This function may not block.  *  *	XXX: A much better name would be "vm_pager_page_dirtied()"  *	XXX: It is not obvious if this could be profitably used by any  *	XXX: pagers besides the swap_pager or if it should even be a  *	XXX: generic pager_op in the first place.  */
 end_comment
 
 begin_function
