@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.1	%H%	*/
+comment|/*	kern_proc.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -506,9 +506,24 @@ name|u
 operator|.
 name|u_error
 condition|)
+block|{
+if|if
+condition|(
+name|bp
+condition|)
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|badarg
 goto|;
+block|}
 if|if
 condition|(
 operator|(
