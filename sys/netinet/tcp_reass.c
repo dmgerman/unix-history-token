@@ -2635,6 +2635,9 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2660,6 +2663,8 @@ goto|;
 block|}
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|inp
