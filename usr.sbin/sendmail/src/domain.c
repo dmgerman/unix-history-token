@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.54 (Berkeley) 9/28/95 (with name server)"
+literal|"@(#)domain.c	8.54.1.2 (Berkeley) 9/16/96 (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.54 (Berkeley) 9/28/95 (without name server)"
+literal|"@(#)domain.c	8.54.1.2 (Berkeley) 9/16/96 (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,9 +1335,50 @@ operator|-
 literal|1
 return|;
 block|}
-name|strcpy
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|host
+argument_list|)
+operator|>=
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|MXHostBuf
+condition|)
+block|{
+operator|*
+name|rcode
+operator|=
+name|EX_CONFIG
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"Host name %s too long"
+argument_list|,
+name|shortenstring
+argument_list|(
+name|host
+argument_list|,
+literal|203
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|snprintf
 argument_list|(
 name|MXHostBuf
+argument_list|,
+sizeof|sizeof
+name|MXHostBuf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|host
 argument_list|)
@@ -2683,8 +2724,11 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|ebuf
+argument_list|,
+sizeof|sizeof
 name|ebuf
 argument_list|,
 literal|"Deferred: DNS failure: CNAME loop for %.100s"
@@ -2852,8 +2896,11 @@ comment|/* 	**  Create canonical name and return. 	**  If saved domain name is n
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|nbuf
+argument_list|,
+sizeof|sizeof
 name|nbuf
 argument_list|,
 literal|"%.*s%s%.*s"

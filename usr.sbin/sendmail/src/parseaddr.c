@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.87 (Berkeley) 11/29/95"
+literal|"@(#)parseaddr.c	8.87.1.1 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -5185,8 +5185,11 @@ index|[
 literal|300
 index|]
 decl_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|mbuf
+argument_list|,
+sizeof|sizeof
 name|mbuf
 argument_list|,
 literal|"%.80s map: lookup (%s): deferred"

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.185 (Berkeley) 11/18/95"
+literal|"@(#)deliver.c	8.185.1.2 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1172,9 +1172,14 @@ name|e_dfp
 operator|=
 name|NULL
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|df1buf
+argument_list|,
+sizeof|sizeof
+name|df1buf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|queuename
 argument_list|(
@@ -1184,9 +1189,14 @@ literal|'d'
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|snprintf
 argument_list|(
 name|df2buf
+argument_list|,
+sizeof|sizeof
+name|df2buf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|queuename
 argument_list|(
@@ -2061,8 +2071,11 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|wbuf
+argument_list|,
+sizeof|sizeof
 name|wbuf
 argument_list|,
 literal|"sendall(%.*s)"
@@ -2687,13 +2700,8 @@ name|e_from
 operator|.
 name|q_paddr
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|rpathbuf
-argument_list|,
+name|p
+operator|=
 name|remotename
 argument_list|(
 name|p
@@ -2709,6 +2717,48 @@ name|rcode
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|>=
+operator|(
+name|SIZE_T
+operator|)
+sizeof|sizeof
+name|rpathbuf
+condition|)
+block|{
+name|p
+operator|=
+name|shortenstring
+argument_list|(
+name|p
+argument_list|,
+literal|203
+argument_list|)
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"remotename: huge return %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|snprintf
+argument_list|(
+name|rpathbuf
+argument_list|,
+sizeof|sizeof
+name|rpathbuf
+argument_list|,
+literal|"%s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|define
@@ -3852,8 +3902,11 @@ name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* make absolutely certain 0, 1, and 2 are in use */
-name|sprintf
+name|snprintf
 argument_list|(
+name|wbuf
+argument_list|,
+sizeof|sizeof
 name|wbuf
 argument_list|,
 literal|"%s... openmailer(%s)"
@@ -7002,8 +7055,11 @@ name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* make absolutely certain 0, 1, and 2 are in use */
-name|sprintf
+name|snprintf
 argument_list|(
+name|wbuf
+argument_list|,
+sizeof|sizeof
 name|wbuf
 argument_list|,
 literal|"%s... end of deliver(%s)"
@@ -7369,8 +7425,11 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%d"
@@ -7757,8 +7816,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s (%s)"
@@ -7796,8 +7858,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"554 unknown mailer error %d"
@@ -7822,12 +7887,24 @@ operator|==
 name|EX_TEMPFAIL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|char
+modifier|*
+name|bp
+init|=
+name|buf
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
 argument_list|(
 name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|SysExMsg
 index|[
@@ -7835,6 +7912,13 @@ name|i
 index|]
 operator|+
 literal|1
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 if|#
@@ -7906,28 +7990,22 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcat
+name|snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
 argument_list|(
 name|buf
 argument_list|,
-literal|": "
+name|bp
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|buf
+argument_list|,
+literal|": %s"
 argument_list|,
 name|statmsg
 argument_list|)
 expr_stmt|;
-block|}
 name|statmsg
 operator|=
 name|buf
@@ -7960,8 +8038,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s (%s)"
@@ -8004,8 +8085,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"%s: %s"
@@ -8091,8 +8175,11 @@ decl_stmt|;
 name|Errors
 operator|++
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
+name|mbuf
+argument_list|,
+sizeof|sizeof
 name|mbuf
 argument_list|,
 literal|"%.3s %%s"
@@ -8266,16 +8353,6 @@ begin_comment
 comment|/* **  LOGDELIVERY -- log the delivery in the system log ** **	Care is taken to avoid logging lines that are too long, because **	some versions of syslog have an unfortunate proclivity for core **	dumping.  This is a hack, to be sure, that is at best empirical. ** **	Parameters: **		m -- the mailer info.  Can be NULL for initial queue. **		mci -- the mailer connection info -- can be NULL if the **			log is occuring when no connection is active. **		stat -- the message to print for the status. **		ctladdr -- the controlling address for the to list. **		xstart -- the transaction start time, used for **			computing transaction delay. **		e -- the current envelope. ** **	Returns: **		none ** **	Side Effects: **		none */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SPACELEFT
-parameter_list|(
-name|bp
-parameter_list|)
-value|(sizeof buf - ((bp) - buf))
-end_define
-
 begin_function
 name|void
 name|logdelivery
@@ -8360,16 +8437,18 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|snprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|", ctladdr="
-argument_list|)
-expr_stmt|;
-name|strcat
+name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
+argument_list|)
+argument_list|,
+literal|", ctladdr=%s"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -8409,6 +8488,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8439,6 +8520,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8480,6 +8563,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8518,6 +8603,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8565,6 +8652,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8607,6 +8696,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8667,6 +8758,8 @@ name|bp
 argument_list|,
 name|SPACELEFT
 argument_list|(
+name|buf
+argument_list|,
 name|bp
 argument_list|)
 argument_list|,
@@ -8995,23 +9088,18 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
-name|strcpy
+name|snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
 argument_list|(
 name|buf
 argument_list|,
-literal|"ctladdr="
-argument_list|)
-expr_stmt|;
 name|bp
-operator|+=
-name|strlen
-argument_list|(
-name|buf
 argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|bp
+argument_list|,
+literal|"ctladdr=%s"
 argument_list|,
 name|shortenstring
 argument_list|(
@@ -9027,7 +9115,7 @@ name|bp
 operator|+=
 name|strlen
 argument_list|(
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 if|if
@@ -9045,9 +9133,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|" (%d/%d)"
 argument_list|,
@@ -9086,9 +9181,16 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|"delay=%s"
 argument_list|,
@@ -9122,9 +9224,16 @@ operator|)
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|", xdelay=%s"
 argument_list|,
@@ -9154,9 +9263,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|", mailer=%s"
 argument_list|,
@@ -9193,6 +9309,10 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 if|if
 condition|(
 name|mci
@@ -9215,15 +9335,29 @@ name|CurHostAddr
 decl_stmt|;
 endif|#
 directive|endif
-name|sprintf
+name|snprintf
+argument_list|(
+name|bp
+argument_list|,
+name|SPACELEFT
 argument_list|(
 name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|"relay=%.100s"
 argument_list|,
 name|mci
 operator|->
 name|mci_host
+argument_list|)
+expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -9239,9 +9373,16 @@ name|sa_family
 operator|!=
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
 argument_list|,
 literal|" [%.100s]"
 argument_list|,
@@ -9292,8 +9433,11 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"relay=%.100s"
@@ -9350,12 +9494,6 @@ directive|endif
 comment|/* LOG */
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|SPACELEFT
-end_undef
 
 begin_escape
 end_escape
@@ -9483,8 +9621,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|xbuf
+argument_list|,
+sizeof|sizeof
 name|xbuf
 argument_list|,
 literal|"From %.800s  \201d remote from %.100s\n"
@@ -9840,8 +9981,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
