@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.4	%G%	*/
+comment|/*	trap.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -307,6 +307,12 @@ name|ARITHTRAP
 operator|+
 name|USER
 case|:
+name|u
+operator|.
+name|u_code
+operator|=
+name|code
+expr_stmt|;
 name|i
 operator|=
 name|SIGFPE
@@ -318,7 +324,6 @@ name|SEGFLT
 operator|+
 name|USER
 case|:
-comment|/* segmentation exception */
 if|if
 condition|(
 name|grow
@@ -357,7 +362,7 @@ case|:
 comment|/* page table fault */
 name|panic
 argument_list|(
-literal|"page table fault"
+literal|"ptable fault"
 argument_list|)
 expr_stmt|;
 case|case
@@ -381,16 +386,30 @@ argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
-comment|/* bring in page containing virtual addr */
 name|u
 operator|.
 name|u_error
 operator|=
 name|i
 expr_stmt|;
-comment|/* 		if (type == PAGEFLT) */
+ifdef|#
+directive|ifdef
+name|notdef
+if|if
+condition|(
+name|type
+operator|==
+name|PAGEFLT
+condition|)
 return|return;
-comment|/* 		goto out; */
+goto|goto
+name|out
+goto|;
+else|#
+directive|else
+return|return;
+endif|#
+directive|endif
 case|case
 name|BPTFLT
 operator|+
@@ -411,7 +430,6 @@ operator|&=
 operator|~
 name|PSL_T
 expr_stmt|;
-comment|/* turn off trace bit */
 name|i
 operator|=
 name|SIGTRAP
@@ -436,7 +454,7 @@ case|:
 comment|/* compatibility mode fault */
 name|u
 operator|.
-name|u_cfcode
+name|u_code
 operator|=
 name|code
 expr_stmt|;
