@@ -161,6 +161,9 @@ literal|1000000
 expr_stmt|;
 do|do
 block|{
+operator|(
+name|void
+operator|)
 name|nanosleep
 argument_list|(
 operator|&
@@ -257,6 +260,8 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sigprocmask
 argument_list|(
 name|SIG_BLOCK
@@ -267,7 +272,8 @@ argument_list|,
 operator|&
 name|omask
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 name|alarm_termination
 operator|=
 literal|0
@@ -309,6 +315,8 @@ name|sa_handler
 operator|=
 name|sleephandler
 expr_stmt|;
+if|if
+condition|(
 name|sigaction
 argument_list|(
 name|SIGALRM
@@ -319,11 +327,34 @@ argument_list|,
 operator|&
 name|oact
 argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|omask
+argument_list|,
+operator|(
+name|sigset_t
+operator|*
+operator|)
+literal|0
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 block|}
 comment|/*   		 * signanosleep() uses the given mask for the lifetime of   		 * the syscall only - it resets on return.  Note that the 		 * old sleep() explicitly unblocks SIGALRM during the sleep, 		 * we don't do that now since we don't depend on SIGALRM 		 * to end the timeout.  If the process blocks SIGALRM, it 		 * gets what it asks for.   		 */
 do|do
 block|{
+operator|(
+name|void
+operator|)
 name|signanosleep
 argument_list|(
 operator|&
@@ -368,6 +399,9 @@ name|alarm_blocked
 condition|)
 block|{
 comment|/* Unwind */
+operator|(
+name|void
+operator|)
 name|sigaction
 argument_list|(
 name|SIGALRM
@@ -383,6 +417,9 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigprocmask
 argument_list|(
 name|SIG_SETMASK
