@@ -1584,7 +1584,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_slice_spoiled
+name|g_std_spoiled
 argument_list|(
 name|cp
 argument_list|)
@@ -2152,14 +2152,7 @@ index|]
 operator|!=
 literal|0xaa
 condition|)
-block|{
-name|g_free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 for|for
 control|(
 name|i
@@ -2447,7 +2440,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_slice_spoiled
+name|g_std_spoiled
 argument_list|(
 name|cp
 argument_list|)

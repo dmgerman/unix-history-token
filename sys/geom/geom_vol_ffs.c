@@ -302,22 +302,12 @@ condition|(
 name|fs
 operator|==
 name|NULL
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|||
 name|error
 operator|!=
 literal|0
 condition|)
-block|{
-name|g_free
-argument_list|(
-name|fs
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 comment|/* Check for magic and make sure things are the right size */
 if|if
 condition|(
@@ -490,7 +480,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_slice_spoiled
+name|g_std_spoiled
 argument_list|(
 name|cp
 argument_list|)

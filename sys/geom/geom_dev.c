@@ -1063,18 +1063,6 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_GEOMGIO
-argument_list|,
-literal|"GEOMGIO"
-argument_list|,
-literal|"Geom data structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * XXX: Until we have unmessed the ioctl situation, there is a race against  * XXX: a concurrent orphanization.  We cannot close it by holding topology  * XXX: since that would prevent us from doing our job, and stalling events  * XXX: will break (actually: stall) the BSD disklabel hacks.  */
 end_comment
@@ -1186,6 +1174,10 @@ argument_list|)
 expr_stmt|;
 name|DROP_GIANT
 argument_list|()
+expr_stmt|;
+name|gio
+operator|=
+name|NULL
 expr_stmt|;
 name|i
 operator|=
@@ -1433,13 +1425,11 @@ break|break;
 default|default:
 name|gio
 operator|=
-name|malloc
+name|g_malloc
 argument_list|(
 sizeof|sizeof
 expr|*
 name|gio
-argument_list|,
-name|M_GEOMGIO
 argument_list|,
 name|M_WAITOK
 operator||
@@ -1681,11 +1671,9 @@ name|gio
 operator|!=
 name|NULL
 condition|)
-name|free
+name|g_free
 argument_list|(
 name|gio
-argument_list|,
-name|M_GEOMGIO
 argument_list|)
 expr_stmt|;
 return|return
