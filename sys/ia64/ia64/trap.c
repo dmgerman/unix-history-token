@@ -2180,9 +2180,9 @@ condition|(
 operator|(
 name|callp
 operator|->
-name|sys_narg
+name|sy_narg
 operator|&
-name|SYS_MPSAFE
+name|SYF_MPSAFE
 operator|)
 operator|==
 literal|0
