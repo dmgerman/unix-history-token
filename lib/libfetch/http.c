@@ -232,9 +232,9 @@ decl_stmt|;
 name|long
 name|chunksize
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|long
 name|total
 decl_stmt|;
@@ -406,9 +406,9 @@ argument_list|)
 operator|-
 literal|'a'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|c
 operator|->
 name|total
