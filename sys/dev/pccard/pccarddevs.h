@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.22 2001/11/19 05:22:28 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.23 2001/11/19 06:27:33 imp Exp   */
 end_comment
 
 begin_comment
@@ -3840,6 +3840,17 @@ end_define
 
 begin_comment
 comment|/* Y-E DATA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ZOOM
+value|-1
+end_define
+
+begin_comment
+comment|/* ZOOM */
 end_comment
 
 begin_define
