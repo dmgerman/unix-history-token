@@ -539,10 +539,6 @@ while|while
 condition|(
 name|prwlock
 operator|->
-name|blocked_writers
-operator|||
-name|prwlock
-operator|->
 name|state
 operator|<
 literal|0
