@@ -452,21 +452,18 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_int16_t
 name|dkcksum
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|disklabel
-operator|*
+modifier|*
 name|lp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -474,13 +471,11 @@ name|__inline
 name|u_int16_t
 name|dkcksum
 parameter_list|(
-name|lp
-parameter_list|)
 name|struct
 name|disklabel
 modifier|*
 name|lp
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int16_t
 modifier|*
