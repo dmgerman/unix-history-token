@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chown.c,v 1.9 1997/09/21 09:13:57 wosch Exp $"
+literal|"$Id: chown.c,v 1.10 1998/03/09 08:54:31 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -712,10 +712,6 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
-case|case
-name|FTS_SL
-case|:
-comment|/* Ignore. */
 case|case
 name|FTS_SLNONE
 case|:
