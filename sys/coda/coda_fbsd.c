@@ -261,11 +261,6 @@ name|ap
 init|=
 name|v
 decl_stmt|;
-name|int
-name|ret
-init|=
-literal|0
-decl_stmt|;
 if|#
 directive|if
 literal|1
