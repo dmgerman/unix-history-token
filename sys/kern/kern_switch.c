@@ -1245,6 +1245,12 @@ name|td
 operator|->
 name|td_kse
 expr_stmt|;
+name|ke
+operator|->
+name|ke_bound
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|ke
