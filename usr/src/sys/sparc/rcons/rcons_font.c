@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)rcons_font.c	7.2 (Berkeley) %G%  *  * from: $Header: rcons_font.c,v 1.8 92/06/17 06:23:37 torek Exp $  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)rcons_font.c	7.3 (Berkeley) %G%  *  * from: $Header: rcons_font.c,v 1.8 92/06/17 06:23:37 torek Exp $  */
 end_comment
 
 begin_ifdef
@@ -12,31 +12,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/fbio.h"
+file|<sys/fbio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/fbvar.h"
+file|<machine/fbvar.h>
 end_include
 
 begin_else
@@ -64,13 +64,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"raster.h"
+file|<sparc/rcons/raster.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"gallant19.h"
+file|<sparc/rcons/gallant19.h>
 end_include
 
 begin_function

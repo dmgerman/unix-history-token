@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_clnp.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_clnp.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_endif
@@ -54,7 +54,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_endif
@@ -65,19 +65,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../netiso/iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/clnp.h"
+file|<netiso/clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_pcb.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_ifndef
@@ -89,7 +89,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_endif
@@ -100,7 +100,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../netiso/iso_var.h"
+file|<netiso/iso_var.h>
 end_include
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_iso.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_iso.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,121 +24,121 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_pcb.h"
+file|<netiso/tp_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_trace.h"
+file|<netiso/tp_trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_tpdu.h"
+file|<netiso/tp_tpdu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_clnp.h"
+file|<netiso/tp_clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cltp_var.h"
+file|<netiso/cltp_var.h>
 end_include
 
 begin_comment

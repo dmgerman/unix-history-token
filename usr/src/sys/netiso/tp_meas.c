@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_meas.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_meas.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,25 +18,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_meas.h"
+file|<netiso/tp_meas.h>
 end_include
 
 begin_decl_stmt

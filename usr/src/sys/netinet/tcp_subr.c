@@ -1,144 +1,144 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_subr.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"in_pcb.h"
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_var.h"
+file|<netinet/ip_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ip_icmp.h"
+file|<netinet/ip_icmp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp.h"
+file|<netinet/tcp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_fsm.h"
+file|<netinet/tcp_fsm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_seq.h"
+file|<netinet/tcp_seq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_timer.h"
+file|<netinet/tcp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcp_var.h"
+file|<netinet/tcp_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tcpip.h"
+file|<netinet/tcpip.h>
 end_include
 
 begin_comment

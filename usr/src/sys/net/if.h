@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -17,33 +17,11 @@ begin_comment
 comment|/*  XXX fast fix for SNMP, going away soon */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../sys/time.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<sys/time.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1058,6 +1036,12 @@ block|}
 struct|;
 end_struct
 
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1074,12 +1058,6 @@ parameter_list|)
 define|\
 value|if ((ifa)->ifa_refcnt<= 0) \ 		ifafree(ifa); \ 	else \ 		(ifa)->ifa_refcnt--;
 end_define
-
-begin_include
-include|#
-directive|include
-file|"../net/if_arp.h"
-end_include
 
 begin_decl_stmt
 name|struct
@@ -1155,22 +1133,9 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-else|KERNEL
-end_else
-
-begin_include
-include|#
-directive|include
-file|<net/if_arp.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
-endif|KERNEL
 end_endif
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,19 +30,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_param.h"
+file|<netiso/netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_timer.h"
+file|<netiso/netiso/tp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netiso/tp_user.h"
+file|<netiso/netiso/tp_user.h>
 end_include
 
 begin_ifndef
@@ -54,7 +54,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_endif

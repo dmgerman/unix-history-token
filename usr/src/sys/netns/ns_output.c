@@ -1,78 +1,78 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_output.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_output.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"idp.h"
+file|<netns/idp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"idp_var.h"
+file|<netns/idp_var.h>
 end_include
 
 begin_ifdef
@@ -84,7 +84,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"vax/include/mtpr.h"
+file|<machine/mtpr.h>
 end_include
 
 begin_endif

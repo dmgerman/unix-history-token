@@ -6,73 +6,73 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"raw_cb.h"
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)fpu_explode.c	7.2 (Berkeley) %G%  *  * from: $Header: fpu_explode.c,v 1.2 92/06/17 05:41:32 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)fpu_explode.c	7.3 (Berkeley) %G%  *  * from: $Header: fpu_explode.c,v 1.2 92/06/17 05:41:32 torek Exp $  */
 end_comment
 
 begin_comment
@@ -10,37 +10,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/ieee.h"
+file|<machine/ieee.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/instr.h"
+file|<machine/instr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fpu_arith.h"
+file|<sparc/fpu/fpu_arith.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"fpu_emu.h"
+file|<sparc/fpu/fpu_emu.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1989, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_sl.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,97 +24,97 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dk.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if_types.h"
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netisr.h"
+file|<net/netisr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"route.h"
+file|<net/route.h>
 end_include
 
 begin_if
@@ -126,25 +126,25 @@ end_if
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_else
@@ -163,10 +163,10 @@ endif|#
 directive|endif
 include|#
 directive|include
-file|"slcompress.h"
+file|<net/slcompress.h>
 include|#
 directive|include
-file|"if_slvar.h"
+file|<net/if_slvar.h>
 comment|/*  * SLMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is a hard limit on output packet size.  To insure good  * interactive response, SLMTU wants to be the smallest size that  * amortizes the header cost.  (Remember that even with  * type-of-service queuing, we have to wait for any in-progress  * packet to finish.  I.e., we wait, on the average, 1/2 * mtu /  * cps, where cps is the line speed in characters per second.  * E.g., 533ms wait for a 1024 byte MTU on a 9600 baud line.  The  * average compressed header size is 6-8 bytes so any MTU> 90  * bytes will give us 90% of the line bandwidth.  A 100ms wait is  * tolerable (500ms is not), so want an MTU around 296.  (Since TCP  * will send 256 byte segments (to allow for 40 byte headers), the  * typical packet size on the wire will be around 260 bytes).  In  * 4.3tahoe+ systems, we can set an MTU in a route so we do that&  * leave the interface MTU relatively high (so we don't IP fragment  * when acting as a gateway to someone using a stupid MTU).  *  * Similar considerations apply to SLIP_HIWAT:  It's the amount of  * data that will be queued 'downstream' of us (i.e., in clists  * waiting to be picked up by the tty output interrupt).  If we  * queue a lot of data downstream, it's immune to our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
 define|#
 directive|define

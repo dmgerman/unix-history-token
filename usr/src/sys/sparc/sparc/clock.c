@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	7.2 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.14 92/07/07 05:34:08 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)clock.c	7.3 (Berkeley) %G%  *  * from: $Header: clock.c,v 1.14 92/07/07 05:34:08 leres Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -10,31 +10,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_ifdef
@@ -46,7 +46,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/gmon.h"
+file|<sys/gmon.h>
 end_include
 
 begin_endif
@@ -57,13 +57,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/autoconf.h"
+file|<machine/autoconf.h>
 end_include
 
 begin_ifdef
@@ -75,7 +75,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_endif
@@ -86,19 +86,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"clockreg.h"
+file|<sparc/sparc/clockreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"intreg.h"
+file|<sparc/sparc/intreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"timerreg.h"
+file|<sparc/sparc/timerreg.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_inet.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_inet.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,97 +24,97 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_ip.h"
+file|<netiso/tp_ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_pcb.h"
+file|<netiso/tp_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_trace.h"
+file|<netiso/tp_trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_tpdu.h"
+file|<netiso/tp_tpdu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_ifndef
@@ -126,7 +126,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"iso_chksum.c"
+file|<netiso/iso_chksum.c>
 end_include
 
 begin_endif
@@ -1412,13 +1412,13 @@ end_function
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip_icmp.h"
+file|<netinet/ip_icmp.h>
 end_include
 
 begin_function_decl

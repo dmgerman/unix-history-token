@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.12 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,91 +24,91 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clnp.h"
+file|<netiso/clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_pcb.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_var.h"
+file|<netiso/iso_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_ifdef
@@ -120,19 +120,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|<netccitt/x25.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk.h"
+file|<netccitt/pk.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk_var.h"
+file|<netccitt/pk_var.h>
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.2 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.14 92/07/03 23:21:23 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)bsd_audio.c	7.3 (Berkeley) %G%  *  * from: $Header: bsd_audio.c,v 1.14 92/07/03 23:21:23 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -20,13 +20,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_if
@@ -62,43 +62,43 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/time.h"
+file|<sys/time.h>
 end_include
 
 begin_ifndef
@@ -110,7 +110,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_endif
@@ -121,7 +121,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_ifdef
@@ -150,13 +150,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/autoconf.h"
+file|<machine/autoconf.h>
 end_include
 
 begin_endif
@@ -167,7 +167,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_comment
@@ -222,19 +222,19 @@ end_else
 begin_include
 include|#
 directive|include
-file|"../dev/bsd_audioreg.h"
+file|<sparc/dev/bsd_audioreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/bsd_audiovar.h"
+file|<sparc/dev/bsd_audiovar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/bsd_audioio.h"
+file|<machine/bsd_audioio.h>
 end_include
 
 begin_endif

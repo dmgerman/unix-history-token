@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,67 +28,61 @@ end_define
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_undef
@@ -100,97 +94,97 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_ip.h"
+file|<netiso/tp_ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_errno.h"
+file|<netiso/iso_errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_pcb.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_timer.h"
+file|<netiso/tp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_tpdu.h"
+file|<netiso/tp_tpdu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_pcb.h"
+file|<netiso/tp_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_seq.h"
+file|<netiso/tp_seq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_trace.h"
+file|<netiso/tp_trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_user.h"
+file|<netiso/tp_user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cons.h"
+file|<netiso/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_types.h"
+file|<net/if_types.h>
 end_include
 
 begin_ifdef
@@ -219,19 +213,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../netccitt/x25.h"
+file|<netccitt/x25.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk.h"
+file|<netccitt/pk.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netccitt/pk_var.h"
+file|<netccitt/pk_var.h>
 end_include
 
 begin_function_decl

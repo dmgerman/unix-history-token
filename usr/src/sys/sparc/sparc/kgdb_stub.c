@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.2 (Berkeley) %G%  *  * from: $Header: kgdb_stub.c,v 1.11 92/06/17 05:22:07 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.3 (Berkeley) %G%  *  * from: $Header: kgdb_stub.c,v 1.11 92/06/17 05:22:07 torek Exp $  */
 end_comment
 
 begin_comment
@@ -41,67 +41,67 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pte.h"
+file|<machine/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/trap.h"
+file|<machine/trap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"asm.h"
+file|<sparc/sparc/asm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ctlreg.h"
+file|<sparc/sparc/ctlreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kgdb_proto.h"
+file|<sparc/sparc/kgdb_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/remote-sl.h"
+file|<machine/remote-sl.h>
 end_include
 
 begin_ifndef

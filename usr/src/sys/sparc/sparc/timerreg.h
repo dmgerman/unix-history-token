@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)timerreg.h	7.2 (Berkeley) %G%  *  * from: $Header: timerreg.h,v 1.6 92/07/07 04:56:09 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)timerreg.h	7.3 (Berkeley) %G%  *  * from: $Header: timerreg.h,v 1.6 92/07/07 04:56:09 leres Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"vaddrs.h"
+file|<sparc/sparc/vaddrs.h>
 end_include
 
 begin_define

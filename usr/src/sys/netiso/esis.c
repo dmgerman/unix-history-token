@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)esis.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -20,139 +20,133 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if_dl.h"
+file|<net/if_dl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/raw_cb.h"
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_pcb.h"
+file|<netiso/iso_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_var.h"
+file|<netiso/iso_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_snpac.h"
+file|<netiso/iso_snpac.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clnl.h"
+file|<netiso/clnl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clnp.h"
+file|<netiso/clnp.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clnp_stat.h"
+file|<netiso/clnp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"esis.h"
+file|<netiso/esis.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_comment

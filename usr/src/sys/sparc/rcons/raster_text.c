@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster_text.c	7.1 (Berkeley) %G%  *  * from: $Header: raster_text.c,v 1.15 92/06/17 08:14:45 torek Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster_text.c	7.2 (Berkeley) %G%  *  * from: $Header: raster_text.c,v 1.15 92/06/17 08:14:45 torek Exp $  */
 end_comment
 
 begin_comment
@@ -16,13 +16,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"raster.h"
+file|<sparc/rcons/raster.h>
 end_include
 
 begin_ifdef
@@ -34,7 +34,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_define
@@ -66,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"raster.h"
+file|<sparc/rcons/raster.h>
 end_include
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.1 (Berkeley) %G%  *  * from: $Header: if_le.c,v 1.17 92/07/10 06:45:17 torek Exp $  */
+comment|/*-  * Copyright (c) 1982, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.2 (Berkeley) %G%  *  * from: $Header: if_le.c,v 1.17 92/07/10 06:45:17 torek Exp $  */
 end_comment
 
 begin_include
@@ -16,85 +16,85 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/netisr.h"
+file|<net/netisr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|<net/route.h>
 end_include
 
 begin_if
@@ -108,19 +108,19 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/select.h"
+file|<sys/select.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/bpfdesc.h"
+file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -137,31 +137,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -178,13 +178,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netns/ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_endif
@@ -201,7 +201,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netddp/atalk.h"
+file|<netddp/atalk.h>
 end_include
 
 begin_endif
@@ -212,31 +212,31 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"machine/autoconf.h"
+file|<machine/autoconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pmap.h"
+file|<machine/pmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if_lereg.h"
+file|<sparc/sbus/if_lereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sbusvar.h"
+file|<sparc/sbus/sbusvar.h>
 end_include
 
 begin_comment

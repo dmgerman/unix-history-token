@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_param.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1201,7 +1201,7 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_define
@@ -1220,13 +1220,13 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"tp_states.h"
+file|<netiso/tp_states.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_events.h"
+file|<netiso/tp_events.h>
 end_include
 
 begin_if

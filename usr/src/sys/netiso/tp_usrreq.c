@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.26 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,121 +18,121 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_timer.h"
+file|<netiso/tp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_seq.h"
+file|<netiso/tp_seq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_ip.h"
+file|<netiso/tp_ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_pcb.h"
+file|<netiso/tp_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_trace.h"
+file|<netiso/tp_trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_meas.h"
+file|<netiso/tp_meas.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"iso_errno.h"
+file|<netiso/iso_errno.h>
 end_include
 
 begin_decl_stmt

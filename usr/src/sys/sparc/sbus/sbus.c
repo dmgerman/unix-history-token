@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)sbus.c	7.2 (Berkeley) %G%  *  * from: $Header: sbus.c,v 1.8 92/06/17 06:59:43 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)sbus.c	7.3 (Berkeley) %G%  *  * from: $Header: sbus.c,v 1.8 92/06/17 06:59:43 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -25,31 +25,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/autoconf.h"
+file|<machine/autoconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sbusreg.h"
+file|<sparc/sbus/sbusreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sbusvar.h"
+file|<sparc/sbus/sbusvar.h>
 end_include
 
 begin_comment

@@ -1,96 +1,96 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.31 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.c	7.32 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socketvar.h"
+file|<sys/socketvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"domain.h"
+file|<sys/domain.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"protosw.h"
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"af.h"
+file|<net/af.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"route.h"
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"raw_cb.h"
+file|<net/raw_cb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_ifdef
@@ -102,7 +102,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	7.3 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.22 92/06/17 06:59:33 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	7.4 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.22 92/06/17 06:59:33 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -10,55 +10,55 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/device.h"
+file|<sys/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/scsi/scsi.h"
+file|<dev/scsi/scsi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dev/scsi/scsivar.h"
+file|<dev/scsi/scsivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/autoconf.h"
+file|<machine/autoconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dmareg.h"
+file|<sparc/sbus/dmareg.h>
 end_include
 
 begin_define
@@ -70,13 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"espreg.h"
+file|<sparc/sbus/espreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sbusvar.h"
+file|<sparc/sbus/sbusvar.h>
 end_include
 
 begin_ifdef

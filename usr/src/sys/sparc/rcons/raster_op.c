@@ -1,28 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster_op.c	7.1 (Berkeley) %G%  *  * from: $Header: raster_op.c,v 1.22 92/06/17 08:14:44 torek Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to the Computer Systems  * Engineering Group at Lawrence Berkeley Laboratory and to the University  * of California at Berkeley by Jef Poskanzer.  *  * %sccs.include.redist.c%  *  *	@(#)raster_op.c	7.2 (Berkeley) %G%  *  * from: $Header: raster_op.c,v 1.22 92/06/17 08:14:44 torek Exp $  */
 end_comment
 
 begin_comment
 comment|/*  * Bitblit routine for raster library.  *  * This raster-op is machined to exacting tolerances by skilled native  * craftsmen with pride in their work.  *  * The various cases are broken down like this:  *  *   src required  *       1-bit to 1-bit  *       1-bit to 8-bits  *       8-bits to 8-bits  *   no src required  *       1-bit no-src  *       8-bits no-src  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"sys/types.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
@@ -30,15 +13,10 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|"raster.h"
+file|<sparc/rcons/raster.h>
 end_include
 
 begin_comment

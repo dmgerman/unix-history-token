@@ -1,72 +1,72 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.2 (Berkeley) %G%  *  * from: $Header: genassym.c,v 1.12 92/06/28 10:13:01 mccanne $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  *  * from: $Header: genassym.c,v 1.12 92/06/28 10:13:01 mccanne $ (LBL)  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/msgbuf.h"
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syscall.h"
+file|<sys/syscall.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pmap.h"
+file|<machine/pmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_ifdef
@@ -78,13 +78,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../dev/zsreg.h"
+file|<sparc/dev/zsreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/zsvar.h"
+file|<sparc/dev/zsvar.h>
 end_include
 
 begin_endif
@@ -95,19 +95,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../dev/bsd_audioreg.h"
+file|<sparc/dev/bsd_audioreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/bsd_audiovar.h"
+file|<sparc/dev/bsd_audiovar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"intreg.h"
+file|<sparc/sparc/intreg.h>
 end_include
 
 begin_include
@@ -117,7 +117,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/*nclude<stddef.h>*/
+comment|/*#include<stddef.h>*/
 end_comment
 
 begin_ifndef

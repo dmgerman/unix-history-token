@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkboot.c	7.3 (Berkeley) %G%"
+literal|"@(#)mkboot.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,31 +49,31 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"exec.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"disklabel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dec_boot.h"
+file|<pmax/stand/dec_boot.h>
 end_include
 
 begin_comment

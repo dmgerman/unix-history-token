@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_trace.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,91 +24,85 @@ end_define
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"types.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_timer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_timer.h"
+file|<netiso/tp_stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_stat.h"
+file|<netiso/tp_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_param.h"
+file|<netiso/tp_ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_ip.h"
+file|<netiso/tp_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_pcb.h"
+file|<netiso/tp_tpdu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tp_tpdu.h"
+file|<netiso/argo_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"tp_trace.h"
+file|<netiso/tp_trace.h>
 end_include
 
 begin_ifdef
