@@ -1675,8 +1675,7 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|olen
 decl_stmt|,
 name|plen
