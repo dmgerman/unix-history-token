@@ -123,7 +123,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Test for kernel trace point  */
+comment|/*  * Test for kernel trace point (MP SAFE)  */
 end_comment
 
 begin_define

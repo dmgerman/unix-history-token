@@ -173,7 +173,7 @@ value|((framep)->cf_eip)
 end_define
 
 begin_comment
-comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
+comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  *  * XXX: if astpending is later changed to an |= here due to more flags being  * added, we will have an atomicy problem.  The type of atomicy we need is  * a non-locked orl.  */
 end_comment
 
 begin_define
@@ -181,7 +181,7 @@ define|#
 directive|define
 name|need_resched
 parameter_list|()
-value|do { want_resched = 1; aston(); } while (0)
+value|do { astpending = AST_RESCHED|AST_PENDING; } while (0)
 end_define
 
 begin_define
@@ -189,7 +189,7 @@ define|#
 directive|define
 name|resched_wanted
 parameter_list|()
-value|want_resched
+value|(astpending& AST_RESCHED)
 end_define
 
 begin_comment
@@ -208,7 +208,7 @@ value|do { (p)->p_flag |= P_OWEUPC; aston(); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
+comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  *  * XXX: aston() really needs to be an atomic (not locked, but an orl),  * in case need_resched() is set by an interrupt.  But with astpending a  * per-cpu variable this is not trivial to do efficiently.  For now we blow  * it off (asynchronous need_resched() conflicts are not critical).  */
 end_comment
 
 begin_define
@@ -226,7 +226,7 @@ define|#
 directive|define
 name|aston
 parameter_list|()
-value|do { astpending = 1; } while (0)
+value|do { astpending |= AST_PENDING; } while (0)
 end_define
 
 begin_define
@@ -321,13 +321,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|astpending
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|char
 name|btext
 index|[]
@@ -348,17 +341,6 @@ name|u_char
 name|intr_nesting_level
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resched was called */
-end_comment
 
 begin_decl_stmt
 name|void

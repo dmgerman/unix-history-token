@@ -167,6 +167,13 @@ name|tss_gdt
 value|GLOBAL_LVALUE(tss_gdt, struct segment_descriptor *)
 end_define
 
+begin_define
+define|#
+directive|define
+name|astpending
+value|GLOBAL_LVALUE(astpending, u_int)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -286,6 +293,13 @@ begin_macro
 name|GLOBAL_FUNC
 argument_list|(
 argument|curproc
+argument_list|)
+end_macro
+
+begin_macro
+name|GLOBAL_FUNC
+argument_list|(
+argument|astpending
 argument_list|)
 end_macro
 

@@ -46,7 +46,7 @@ file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_comment
-comment|/*  * The volatile bitmap variables must be set atomically.  This normally  * involves using a machine-dependent bit-set or `or' instruction.  *  * Note: setbits uses a locked or, making simple cases MP safe.  */
+comment|/*  * Bits in the ipending bitmap variable must be set atomically because  * ipending may be manipulated by interrupts or other cpu's without holding   * any locks.  *  * Note: setbits uses a locked or, making simple cases MP safe.  */
 end_comment
 
 begin_define
@@ -212,6 +212,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Support for SPL assertions.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -412,6 +416,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/************************************************************************  *			GENERAL SPL CODE				*  ************************************************************************  *  *  Implement splXXX(), spl0(), splx(), and splq().  splXXX() disables a  *  set of interrupts (e.g. splbio() disables interrupts relating to   *  device I/O) and returns the previous interrupt mask.  splx() restores  *  the previous interrupt mask, spl0() is a special case which enables  *  all interrupts and is typically used inside i386/i386 swtch.s and  *  fork_trampoline.  splq() is a generic version of splXXX().  *  *  The SPL routines mess around with the 'cpl' global, which masks   *  interrupts.  Interrupts are not *actually* masked.  What happens is   *  that if an interrupt masked by the cpl occurs, the appropriate bit  *  in 'ipending' is set and the interrupt is defered.  When we clear  *  bits in the cpl we must check to see if any ipending interrupts have  *  been unmasked and issue the synchronously, which is what the splz()  *  call does.  *  *  Because the cpl is often saved and restored in a nested fashion, cpl  *  modifications are only allowed in the SMP case when the MP lock is held  *  to prevent multiple processes from tripping over each other's masks.  *  The cpl is saved when you do a context switch (mi_switch()) and restored  *  when your process gets cpu again.  *  *  An interrupt routine is allowed to modify the cpl as long as it restores  *  it prior to returning (thus the interrupted mainline code doesn't notice  *  anything amiss).  For the SMP case, the interrupt routine must hold   *  the MP lock for any cpl manipulation.  *  *  Likewise, due to the deterministic nature of cpl modifications, we do  *  NOT need to use locked instructions to modify it.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -527,230 +535,8 @@ directive|include
 file|<machine/smptests.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SPL_DEBUG_POSTCODE
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|POSTCODE
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|POSTCODE_LO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|POSTCODE_HI
-end_undef
-
-begin_define
-define|#
-directive|define
-name|POSTCODE
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_LO
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|POSTCODE_HI
-parameter_list|(
-name|X
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* SPL_DEBUG_POSTCODE */
-end_comment
-
-begin_comment
-comment|/*  * This version has to check for bsp_apic_ready,  * as calling simple_lock() (ie ss_lock) before then deadlocks the system.  * A sample count of GENSPL calls before bsp_apic_ready was set: 2193  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTR_SPL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPL_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MAXZ
-value|100000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPIN_VAR
-value|unsigned z;
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPIN_RESET
-value|z = 0;
-end_define
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|SPIN_SPL
-define|\
-value|if (++z>= MAXZ) {				\
-comment|/* XXX allow lock-free panic */
-value|\ 				bsp_apic_ready = 0;			\ 				panic("\ncil: 0x%08x", cil);		\ 			}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SPIN_SPL
-define|\
-value|if (++z>= MAXZ) {				\
-comment|/* XXX allow lock-free panic */
-value|\ 				bsp_apic_ready = 0;			\ 				printf("\ncil: 0x%08x", cil);		\ 				breakpoint();				\ 			}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0/1 */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* SPL_DEBUG */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPIN_VAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPIN_RESET
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPIN_SPL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* SPL_DEBUG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTR_SPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|GENSPL
-parameter_list|(
-name|NAME
-parameter_list|,
-name|OP
-parameter_list|,
-name|MODIFIER
-parameter_list|,
-name|PC
-parameter_list|)
-define|\
-value|GENSPLASSERT(NAME, MODIFIER)						\ unsigned NAME(void)							\ {									\ 	unsigned x, y;							\ 	SPIN_VAR;							\ 									\ 	if (!bsp_apic_ready) {						\ 		x = cpl;						\ 		cpl OP MODIFIER;					\ 		return (x);						\ 	}								\ 									\ 	for (;;) {							\ 		IFCPL_LOCK();
-comment|/* MP-safe */
-value|\ 		x = y = cpl;
-comment|/* current value */
-value|\ 		POSTCODE(0x20 | PC);					\ 		if (inside_intr)					\ 			break;
-comment|/* XXX only 1 INT allowed */
-value|\ 		y OP MODIFIER;
-comment|/* desired value */
-value|\ 		if (cil& y) {
-comment|/* not now */
-value|\ 			IFCPL_UNLOCK();
-comment|/* allow cil to change */
-value|\ 			SPIN_RESET;					\ 			while (cil& y)					\ 				SPIN_SPL				\ 			continue;
-comment|/* try again */
-value|\ 		}							\ 		break;							\ 	}								\ 	cpl OP MODIFIER;
-comment|/* make the change */
-value|\ 	IFCPL_UNLOCK();							\ 									\ 	return (x);							\ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* INTR_SPL */
+comment|/*  *	SMP CASE  *  *	Mostly the same as the non-SMP case now, but it didn't used to be  *	this clean.  */
 end_comment
 
 begin_define
@@ -767,16 +553,11 @@ parameter_list|,
 name|PC
 parameter_list|)
 define|\
-value|GENSPLASSERT(NAME, MODIFIER)			\ unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	IFCPL_LOCK();				\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 	IFCPL_UNLOCK();				\ 						\ 	return (x);				\ }
+value|GENSPLASSERT(NAME, MODIFIER)			\ unsigned NAME(void)				\ {						\ 	unsigned x;				\ 						\ 	x = cpl;				\ 	cpl OP MODIFIER;			\ 						\ 	return (x);				\ }
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* INTR_SPL */
+comment|/*  * spl0() -	unmask all interrupts  *  *	The MP lock must be held on entry  *	This routine may only be called from mainline code.  */
 end_comment
 
 begin_function
@@ -786,75 +567,34 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|unpend
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INTR_SPL
-name|SPIN_VAR
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-name|POSTCODE_HI
+name|KASSERT
 argument_list|(
-literal|0xc
+name|inside_intr
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"spl0: called from interrupt"
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX SWI_AST_MASK in ipending has moved to 1 in astpending, 		 * so the following code is dead, but just removing it may 		 * not be right. 		 */
-if|#
-directive|if
-literal|0
-block|if (cil& SWI_AST_MASK) {
-comment|/* not now */
-block|IFCPL_UNLOCK();
-comment|/* allow cil to change */
-block|SPIN_RESET; 			while (cil& SWI_AST_MASK) 				SPIN_SPL 			continue;
-comment|/* try again */
-block|}
-endif|#
-directive|endif
-break|break;
-block|}
-else|#
-directive|else
-comment|/* INTR_SPL */
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INTR_SPL */
 name|cpl
 operator|=
 literal|0
 expr_stmt|;
-name|unpend
-operator|=
-name|ipending
-expr_stmt|;
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|unpend
-operator|&&
-operator|!
-name|inside_intr
+name|ipending
 condition|)
 name|splz
 argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * splx() -	restore previous interrupt mask  *  *	The MP lock must be held on entry  */
+end_comment
 
 begin_function
 name|void
@@ -864,94 +604,24 @@ name|unsigned
 name|ipl
 parameter_list|)
 block|{
-name|int
-name|unpend
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INTR_SPL
-name|SPIN_VAR
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-name|POSTCODE_HI
-argument_list|(
-literal|0xe
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|inside_intr
-condition|)
-break|break;
-comment|/* XXX only 1 INT allowed */
-name|POSTCODE_HI
-argument_list|(
-literal|0xf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cil
-operator|&
-name|ipl
-condition|)
-block|{
-comment|/* not now */
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
-comment|/* allow cil to change */
-name|SPIN_RESET
-expr_stmt|;
-while|while
-condition|(
-name|cil
-operator|&
-name|ipl
-condition|)
-name|SPIN_SPL
-continue|continue;
-comment|/* try again */
-block|}
-break|break;
-block|}
-else|#
-directive|else
-comment|/* INTR_SPL */
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INTR_SPL */
 name|cpl
 operator|=
 name|ipl
 expr_stmt|;
-name|unpend
-operator|=
+if|if
+condition|(
+name|inside_intr
+operator|==
+literal|0
+operator|&&
+operator|(
 name|ipending
 operator|&
 operator|~
-name|ipl
-expr_stmt|;
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|unpend
-operator|&&
-operator|!
-name|inside_intr
+name|cpl
+operator|)
+operator|!=
+literal|0
 condition|)
 name|splz
 argument_list|()
@@ -960,7 +630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Replaces UP specific inline found in (?) pci/pci_support.c.  *  * Stefan said:  * You know, that splq() is used in the shared interrupt multiplexer, and that  * the SMP version should not have too much overhead. If it is significantly  * slower, then moving the splq() out of the loop in intr_mux() and passing in  * the logical OR of all mask values might be a better solution than the  * current code. (This logical OR could of course be pre-calculated whenever  * another shared interrupt is registered ...)  */
+comment|/*  * splq() -	blocks specified interrupts  *  *	The MP lock must be held on entry  */
 end_comment
 
 begin_function
@@ -973,80 +643,12 @@ parameter_list|)
 block|{
 name|intrmask_t
 name|tmp
+init|=
+name|cpl
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INTR_SPL
-name|intrmask_t
-name|tmp2
-decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-name|tmp
-operator|=
-name|tmp2
-operator|=
-name|cpl
-expr_stmt|;
-name|tmp2
-operator||=
-name|mask
-expr_stmt|;
-if|if
-condition|(
-name|cil
-operator|&
-name|tmp2
-condition|)
-block|{
-comment|/* not now */
-name|IFCPL_UNLOCK
-argument_list|()
-expr_stmt|;
-comment|/* allow cil to change */
-while|while
-condition|(
-name|cil
-operator|&
-name|tmp2
-condition|)
-comment|/* spin */
-empty_stmt|;
-continue|continue;
-comment|/* try again */
-block|}
-break|break;
-block|}
-name|cpl
-operator|=
-name|tmp2
-expr_stmt|;
-else|#
-directive|else
-comment|/* INTR_SPL */
-name|IFCPL_LOCK
-argument_list|()
-expr_stmt|;
-name|tmp
-operator|=
-name|cpl
-expr_stmt|;
 name|cpl
 operator||=
 name|mask
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* INTR_SPL */
-name|IFCPL_UNLOCK
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

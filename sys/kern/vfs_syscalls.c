@@ -15837,7 +15837,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the mode mask for creation of filesystem nodes.  */
+comment|/*  * Set the mode mask for creation of filesystem nodes.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef

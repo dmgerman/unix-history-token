@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/ipl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb_ext.h>
 end_include
 

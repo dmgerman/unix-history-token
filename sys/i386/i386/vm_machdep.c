@@ -2139,12 +2139,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|rel_mplock();
-endif|#
-directive|endif
 name|pmap_zero_page
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -2153,12 +2147,6 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|get_mplock();
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -2266,6 +2254,8 @@ name|SMP
 block|}
 endif|#
 directive|endif
+comment|/* 	 * We have to enable interrupts for a moment if the try_mplock fails 	 * in order to potentially take an IPI.   XXX this should be in  	 * swtch.s 	 */
+asm|__asm __volatile("sti; nop; cli" : : : "memory");
 return|return
 operator|(
 literal|0

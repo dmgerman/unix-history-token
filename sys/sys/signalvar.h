@@ -31,6 +31,12 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel signal definitions and data structures,  * not exported to user programs.  */
 end_comment
@@ -864,7 +870,7 @@ value|__cursig(p)
 end_define
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  *  * MP SAFE  */
 end_comment
 
 begin_function
@@ -882,6 +888,9 @@ block|{
 name|sigset_t
 name|tmpset
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|tmpset
 operator|=
 name|p
@@ -897,9 +906,8 @@ operator|->
 name|p_sigmask
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|(
+if|if
+condition|(
 name|SIGISEMPTY
 argument_list|(
 name|p
@@ -922,14 +930,30 @@ argument_list|(
 name|tmpset
 argument_list|)
 operator|)
-operator|)
-condition|?
+condition|)
+block|{
+return|return
+operator|(
 literal|0
-else|:
+operator|)
+return|;
+block|}
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|r
+operator|=
 name|issignal
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+name|rel_mplock
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|r
 operator|)
 return|;
 block|}

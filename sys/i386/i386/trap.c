@@ -319,7 +319,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|syscall
+name|syscall2
 name|__P
 argument_list|(
 operator|(
@@ -498,7 +498,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|__inline
-name|void
+name|int
 name|userret
 name|__P
 argument_list|(
@@ -515,6 +515,9 @@ name|frame
 operator|,
 name|u_quad_t
 name|oticks
+operator|,
+name|int
+name|have_mplock
 operator|)
 argument_list|)
 decl_stmt|;
@@ -550,7 +553,7 @@ end_endif
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|userret
 parameter_list|(
 name|p
@@ -558,6 +561,8 @@ parameter_list|,
 name|frame
 parameter_list|,
 name|oticks
+parameter_list|,
+name|have_mplock
 parameter_list|)
 name|struct
 name|proc
@@ -571,6 +576,9 @@ name|frame
 decl_stmt|;
 name|u_quad_t
 name|oticks
+decl_stmt|;
+name|int
+name|have_mplock
 decl_stmt|;
 block|{
 name|int
@@ -591,17 +599,28 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|postsig
 argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (!want_resched&& 		(p->p_priority<= p->p_usrpri)&& 		(p->p_rtprio.type == RTP_PRIO_NORMAL)) { 		 int newpriority; 		 p->p_estcpu += 1; 		 newpriority = PUSER + p->p_estcpu / 4 + 2 * p->p_nice; 		 newpriority = min(newpriority, MAXPRI); 		 p->p_usrpri = newpriority; 	}
-endif|#
-directive|endif
+block|}
 name|p
 operator|->
 name|p_priority
@@ -612,10 +631,26 @@ name|p_usrpri
 expr_stmt|;
 if|if
 condition|(
-name|want_resched
+name|resched_wanted
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrunqueue ourselves but before we 		 * mi_switch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|splhigh
@@ -671,6 +706,22 @@ name|p_flag
 operator|&
 name|P_PROFIL
 condition|)
+block|{
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|addupc_task
 argument_list|(
 name|p
@@ -693,12 +744,18 @@ operator|*
 name|psratio
 argument_list|)
 expr_stmt|;
+block|}
 name|curpriority
 operator|=
 name|p
 operator|->
 name|p_priority
 expr_stmt|;
+return|return
+operator|(
+name|have_mplock
+operator|)
+return|;
 block|}
 end_function
 
@@ -1915,6 +1972,8 @@ operator|&
 name|frame
 argument_list|,
 name|sticks
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3413,12 +3472,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * System call request from POSIX system call gate interface to kernel.  * Like trap(), argument is call by reference.  */
+comment|/*  *	syscall2 -	MP aware system call request C handler  *  *	A system call is essentially treated as a trap except that the  *	MP lock is not held on entry or return.  We are responsible for  *	obtaining the MP lock if necessary and for handling ASTs  *	(e.g. a task switch) prior to return.  *  *	In general, only simple access and manipulation of curproc and  *	the current stack is allowed without having to hold MP lock.  */
 end_comment
 
 begin_function
 name|void
-name|syscall
+name|syscall2
 parameter_list|(
 name|frame
 parameter_list|)
@@ -3452,10 +3511,18 @@ name|int
 name|error
 decl_stmt|;
 name|int
+name|narg
+decl_stmt|;
+name|int
 name|args
 index|[
 literal|8
 index|]
+decl_stmt|;
+name|int
+name|have_mplock
+init|=
+literal|0
 decl_stmt|;
 name|u_int
 name|code
@@ -3474,16 +3541,61 @@ argument_list|)
 operator|!=
 name|SEL_UPL
 condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"syscall"
 argument_list|)
 expr_stmt|;
+comment|/* NOT REACHED */
+block|}
 endif|#
 directive|endif
+comment|/* 	 * handle atomicy by looping since interrupts are enabled and the  	 * MP lock is not held. 	 */
 name|sticks
 operator|=
+operator|(
+operator|(
+specifier|volatile
+expr|struct
+name|proc
+operator|*
+operator|)
 name|p
+operator|)
+operator|->
+name|p_sticks
+expr_stmt|;
+while|while
+condition|(
+name|sticks
+operator|!=
+operator|(
+operator|(
+specifier|volatile
+expr|struct
+name|proc
+operator|*
+operator|)
+name|p
+operator|)
+operator|->
+name|p_sticks
+condition|)
+name|sticks
+operator|=
+operator|(
+operator|(
+specifier|volatile
+expr|struct
+name|proc
+operator|*
+operator|)
+name|p
+operator|)
 operator|->
 name|p_sticks
 expr_stmt|;
@@ -3525,6 +3637,10 @@ operator|->
 name|sv_prepsyscall
 condition|)
 block|{
+comment|/* 		 * The prep code is not MP aware. 		 */
+name|get_mplock
+argument_list|()
+expr_stmt|;
 call|(
 modifier|*
 name|p
@@ -3546,10 +3662,13 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
+name|rel_mplock
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 */
+comment|/* 		 * Need to check if this is a 32 bit or 64 bit syscall. 		 * fuword is MP aware. 		 */
 if|if
 condition|(
 name|code
@@ -3649,6 +3768,15 @@ index|[
 name|code
 index|]
 expr_stmt|;
+name|narg
+operator|=
+name|callp
+operator|->
+name|sy_narg
+operator|&
+name|SYF_ARGMASK
+expr_stmt|;
+comment|/* 	 * copyin is MP aware, but the tracing code is not 	 */
 if|if
 condition|(
 name|params
@@ -3656,9 +3784,7 @@ operator|&&
 operator|(
 name|i
 operator|=
-name|callp
-operator|->
-name|sy_narg
+name|narg
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3686,6 +3812,13 @@ argument_list|)
 operator|)
 condition|)
 block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -3706,9 +3839,7 @@ name|p_tracep
 argument_list|,
 name|code
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|narg
 argument_list|,
 name|args
 argument_list|)
@@ -3718,6 +3849,28 @@ directive|endif
 goto|goto
 name|bad
 goto|;
+block|}
+comment|/* 	 * Try to run the syscall without the MP lock if the syscall 	 * is MP safe.  We have to obtain the MP lock no matter what if  	 * we are ktracing 	 */
+if|if
+condition|(
+operator|(
+name|callp
+operator|->
+name|sy_narg
+operator|&
+name|SYF_MPSAFE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -3731,6 +3884,22 @@ argument_list|,
 name|KTR_SYSCALL
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ktrsyscall
 argument_list|(
 name|p
@@ -3739,13 +3908,12 @@ name|p_tracep
 argument_list|,
 name|code
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|narg
 argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|p
@@ -3774,11 +3942,10 @@ name|p
 argument_list|,
 name|S_SCE
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|narg
 argument_list|)
 expr_stmt|;
+comment|/* MP aware */
 name|error
 operator|=
 call|(
@@ -3793,6 +3960,7 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* 	 * MP SAFE (we may or may not have the MP lock at this point) 	 */
 switch|switch
 condition|(
 name|error
@@ -3908,6 +4076,7 @@ name|PSL_C
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Traced syscall.  trapsignal() is not MP aware. 	 */
 if|if
 condition|(
 operator|(
@@ -3928,7 +4097,21 @@ name|PSL_VM
 operator|)
 condition|)
 block|{
-comment|/* Traced syscall. */
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|frame
 operator|.
 name|tf_eflags
@@ -3946,6 +4129,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Handle reschedule and other end-of-syscall issues 	 */
+name|have_mplock
+operator|=
 name|userret
 argument_list|(
 name|p
@@ -3954,6 +4140,8 @@ operator|&
 name|frame
 argument_list|,
 name|sticks
+argument_list|,
+name|have_mplock
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3968,6 +4156,22 @@ argument_list|,
 name|KTR_SYSRET
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+name|have_mplock
+operator|==
+literal|0
+condition|)
+block|{
+name|get_mplock
+argument_list|()
+expr_stmt|;
+name|have_mplock
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|ktrsysret
 argument_list|(
 name|p
@@ -3986,6 +4190,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * This works because errno is findable through the 	 * register set.  If we ever support an emulation where this 	 * is not the case, this code will need to be revisited. 	 */
@@ -3998,11 +4203,19 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Release the MP lock if we had to get it 	 */
+if|if
+condition|(
+name|have_mplock
+condition|)
+name|rel_mplock
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Simplified back end of syscall(), used when returning from fork()  * directly into user mode.  */
+comment|/*  * Simplified back end of syscall(), used when returning from fork()  * directly into user mode.  MP lock is held on entry and should be   * held on return.  */
 end_comment
 
 begin_function
@@ -4052,6 +4265,8 @@ operator|&
 name|frame
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#

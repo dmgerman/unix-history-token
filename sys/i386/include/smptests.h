@@ -58,326 +58,6 @@ name|PUSHDOWN_LEVEL_4_NOT
 end_define
 
 begin_comment
-comment|/*  * XXX some temp debug control of cpl locks  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUSHDOWN_LEVEL_2
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|REAL_ECPL
-end_define
-
-begin_comment
-comment|/* exception.s:		SCPL_LOCK/SCPL_UNLOCK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ICPL
-end_define
-
-begin_comment
-comment|/* ipl.s:		CPL_LOCK/CPL_UNLOCK/FAST */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_AICPL
-end_define
-
-begin_comment
-comment|/* apic_ipl.s:		SCPL_LOCK/SCPL_UNLOCK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_AVCPL
-end_define
-
-begin_comment
-comment|/* apic_vector.s:	CPL_LOCK/CPL_UNLOCK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_IFCPL
-end_define
-
-begin_comment
-comment|/* ipl_funcs.c:		SCPL_LOCK/SCPL_UNLOCK */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PUSHDOWN_LEVEL_2 */
-end_comment
-
-begin_comment
-comment|/*  * The xCPL_LOCK/xCPL_UNLOCK defines control the spinlocks  * that protect cpl/cml/cil and the spl functions.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ECPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ECPL_LOCK
-value|SCPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ECPL_UNLOCK
-value|SCPL_UNLOCK
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ECPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ECPL_UNLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_ECPL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_ICPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ICPL_LOCK
-value|CPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ICPL_UNLOCK
-value|CPL_UNLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAST_ICPL_UNLOCK
-value|movl	$0, _cpl_lock
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ICPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|ICPL_UNLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|FAST_ICPL_UNLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_ICPL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_AICPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AICPL_LOCK
-value|SCPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|AICPL_UNLOCK
-value|SCPL_UNLOCK
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|AICPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|AICPL_UNLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_AICPL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_AVCPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|AVCPL_LOCK
-value|CPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|AVCPL_UNLOCK
-value|CPL_UNLOCK
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|AVCPL_LOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|AVCPL_UNLOCK
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_AVCPL */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|REAL_IFCPL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IFCPL_LOCK
-parameter_list|()
-value|SCPL_LOCK()
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCPL_UNLOCK
-parameter_list|()
-value|SCPL_UNLOCK()
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IFCPL_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|IFCPL_UNLOCK
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* REAL_IFCPL */
-end_comment
-
-begin_comment
 comment|/*  * Debug version of simple_lock.  This will store the CPU id of the  * holding CPU along with the lock.  When a CPU fails to get the lock  * it compares its own id to the holder id.  If they are the same it  * panic()s, as simple locks are binary, and this would cause a deadlock.  *  */
 end_comment
 
@@ -442,7 +122,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Regular INTerrupts without the giant lock, NOT READY YET!!!  */
+comment|/*  * INTR_SIMPLELOCK has been removed, as the interrupt mechanism will likely  * not use this sort of optimization if we move to interrupt threads.  */
 end_comment
 
 begin_ifdef
@@ -451,19 +131,13 @@ directive|ifdef
 name|PUSHDOWN_LEVEL_4
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|INTR_SIMPLELOCK
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Separate the INTR() portion of cpl into another variable: cml.  */
+comment|/*  * CPL_AND_CML has been removed.  Interrupt threads will eventually not  * use either mechanism so there is no point trying to optimize it.  */
 end_comment
 
 begin_ifdef
@@ -472,46 +146,17 @@ directive|ifdef
 name|PUSHDOWN_LEVEL_3
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|CPL_AND_CML
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Forces spl functions to spin while waiting for safe time to change cpl.  * #define SPL_DEBUG_POSTCODE	(slows the system down noticably)  */
+comment|/*  * SPL_DEBUG_POSTCODE/INTR_SPL/SPL_DEBUG - removed  *  * These functions were too expensive for the standard case but, more   * importantly, we should be able to come up with a much cleaner way  * to handle the cpl.  Having to do any locking at all is a mistake  * for something that is modified as often as cpl is.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PUSHDOWN_LEVEL_3
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INTR_SPL
-end_define
-
-begin_define
-define|#
-directive|define
-name|SPL_DEBUG
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Ignore the ipending bits when exiting FAST_INTR() routines.  *  ***  * according to Bruce:  *  * setsoft*() may set ipending.  setsofttty() is actually used in the  * FAST_INTR handler in some serial drivers.  This is necessary to get  * output completions and other urgent events handled as soon as possible.  * The flag(s) could be set in a variable other than ipending, but they  * needs to be checked against cpl to decide whether the software interrupt  * handler can/should run.  *  *  (FAST_INTR used to just return  * in all cases until rev.1.7 of vector.s.  This worked OK provided there  * were no user-mode CPU hogs.  CPU hogs caused an average latency of 1/2  * clock tick for output completions...)  ***  *  * So I need to restore cpl handling someday, but AFTER  *  I finish making spl/cpl MP-safe.  */
+comment|/*  * FAST_WITHOUTCPL - now made the default (define removed).  Text below   * contains the current discussion.  I am confident we can find a solution  * that does not require us to process softints from a hard int, which can  * kill serial performance due to the lack of true hardware ipl's.  *  ****  *  * Ignore the ipending bits when exiting FAST_INTR() routines.  *  * according to Bruce:  *  * setsoft*() may set ipending.  setsofttty() is actually used in the  * FAST_INTR handler in some serial drivers.  This is necessary to get  * output completions and other urgent events handled as soon as possible.  * The flag(s) could be set in a variable other than ipending, but they  * needs to be checked against cpl to decide whether the software interrupt  * handler can/should run.  *  *  (FAST_INTR used to just return  * in all cases until rev.1.7 of vector.s.  This worked OK provided there  * were no user-mode CPU hogs.  CPU hogs caused an average latency of 1/2  * clock tick for output completions...)  ***  *  * So I need to restore cpl handling someday, but AFTER  *  I finish making spl/cpl MP-safe.  */
 end_comment
 
 begin_ifdef
@@ -520,19 +165,13 @@ directive|ifdef
 name|PUSHDOWN_LEVEL_1
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|FAST_WITHOUTCPL
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Use a simplelock to serialize FAST_INTR()s.  * sio.c, and probably other FAST_INTR() drivers, never expected several CPUs  * to be inside them at once.  Things such as global vars prevent more  * than 1 thread of execution from existing at once, so we serialize  * the access of FAST_INTR()s via a simple lock.  * One optimization on this would be a simple lock per DRIVER, but I'm  * not sure how to organize that yet...  */
+comment|/*  * FAST_SIMPLELOCK no longer exists, because it doesn't help us.  The cpu  * is likely to already hold the MP lock and recursive MP locks are now  * very cheap, so we do not need this optimization.  Eventually *ALL*   * interrupts will run in their own thread, so there is no sense complicating  * matters now.  */
 end_comment
 
 begin_ifdef
@@ -540,12 +179,6 @@ ifdef|#
 directive|ifdef
 name|PUSHDOWN_LEVEL_1
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FAST_SIMPLELOCK
-end_define
 
 begin_endif
 endif|#

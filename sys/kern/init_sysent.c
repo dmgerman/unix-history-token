@@ -341,6 +341,8 @@ block|}
 block|,
 comment|/* 23 = setuid */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -352,6 +354,8 @@ block|}
 block|,
 comment|/* 24 = getuid */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -591,6 +595,8 @@ block|}
 block|,
 comment|/* 46 = old sigaction */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -604,6 +610,7 @@ comment|/* 47 = getgid */
 block|{
 name|compat
 argument_list|(
+argument|SYF_MPSAFE |
 literal|2
 argument_list|,
 argument|sigprocmask
@@ -732,6 +739,8 @@ block|}
 block|,
 comment|/* 59 = execve */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|1
 block|,
 operator|(
@@ -959,6 +968,8 @@ block|}
 block|,
 comment|/* 80 = setgroups */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|0
 block|,
 operator|(
@@ -3782,6 +3793,8 @@ block|}
 block|,
 comment|/* 339 = pioctl */
 block|{
+name|SYF_MPSAFE
+operator||
 literal|3
 block|,
 operator|(

@@ -1522,6 +1522,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|GD_ASTPENDING
+argument_list|,
+name|offsetof
+argument_list|(
+expr|struct
+name|globaldata
+argument_list|,
+name|gd_astpending
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef

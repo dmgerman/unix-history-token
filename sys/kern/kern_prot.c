@@ -97,6 +97,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * NOT MP SAFE due to p_pptr access  */
+end_comment
+
+begin_comment
 comment|/* ARGSUSED */
 end_comment
 
@@ -231,7 +235,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get process group ID; note that POSIX getpgrp takes no parameter */
+comment|/*   * Get process group ID; note that POSIX getpgrp takes no parameter   *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -504,6 +508,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * getuid() - MP SAFE  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -596,6 +604,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * geteuid() - MP SAFE  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -661,6 +673,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * getgid() - MP SAFE  */
+end_comment
 
 begin_ifndef
 ifndef|#

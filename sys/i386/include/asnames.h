@@ -749,13 +749,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_astpending
-value|astpending
-end_define
-
-begin_define
-define|#
-directive|define
 name|_bcopy
 value|bcopy
 end_define
@@ -1813,8 +1806,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_syscall
-value|syscall
+name|_syscall2
+value|syscall2
 end_define
 
 begin_define
@@ -1906,13 +1899,6 @@ define|#
 directive|define
 name|_vm_page_zero_idle
 value|vm_page_zero_idle
-end_define
-
-begin_define
-define|#
-directive|define
-name|_want_resched
-value|want_resched
 end_define
 
 begin_define
@@ -2021,6 +2007,13 @@ define|#
 directive|define
 name|_curproc
 value|FS(curproc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_astpending
+value|FS(astpending)
 end_define
 
 begin_define
