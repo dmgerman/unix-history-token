@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)func.c	5.10 (Berkeley) %G%"
+literal|"@(#)sh.func.c	5.10 (Berkeley) 11/20/89"
 decl_stmt|;
 end_decl_stmt
 
@@ -1552,7 +1552,7 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
-name|glob
+name|globall
 argument_list|(
 name|v
 argument_list|)
@@ -3308,7 +3308,7 @@ condition|)
 block|{
 name|v
 operator|=
-name|glob
+name|globall
 argument_list|(
 name|v
 argument_list|)
@@ -5389,7 +5389,7 @@ name|gv
 operator|=
 name|v
 operator|=
-name|glob
+name|globall
 argument_list|(
 name|v
 argument_list|)
