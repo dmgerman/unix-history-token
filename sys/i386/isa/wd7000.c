@@ -933,7 +933,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int32
+name|int32_t
 name|wds_scsi_cmd
 parameter_list|(
 name|struct
@@ -945,7 +945,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32
+name|u_int32_t
 name|wds_adapter_info
 parameter_list|(
 name|int
@@ -1393,7 +1393,7 @@ block|}
 end_function
 
 begin_function
-name|int32
+name|int32_t
 name|wds_scsi_cmd
 parameter_list|(
 name|struct
@@ -2038,7 +2038,7 @@ block|}
 end_function
 
 begin_function
-name|u_int32
+name|u_int32_t
 name|wds_adapter_info
 parameter_list|(
 name|int
