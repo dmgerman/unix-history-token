@@ -1977,7 +1977,9 @@ block|{
 comment|/* can't find any cpp */
 name|warnx
 argument_list|(
-literal|"cannot find any C preprocessor (cpp)"
+literal|"cannot find C preprocessor: %s"
+argument_list|,
+name|CPP
 argument_list|)
 expr_stmt|;
 name|crash
