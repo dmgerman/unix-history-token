@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -154,7 +160,7 @@ modifier|*
 name|req
 parameter_list|,
 name|unsigned
-name|f
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -267,6 +273,26 @@ name|G_TYPE_STRING
 block|}
 block|,
 block|{
+literal|'d'
+block|,
+literal|"dynamic"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
+literal|'h'
+block|,
+literal|"hardcode"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
 literal|'n'
 block|,
 literal|"noautosync"
@@ -340,6 +366,16 @@ name|G_TYPE_STRING
 block|}
 block|,
 block|{
+literal|'h'
+block|,
+literal|"hardcode"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
+block|{
 literal|'n'
 block|,
 literal|"noautosync"
@@ -372,6 +408,16 @@ block|,
 name|NULL
 block|,
 block|{
+block|{
+literal|'h'
+block|,
+literal|"hardcode"
+block|,
+name|NULL
+block|,
+name|G_TYPE_NONE
+block|}
+block|,
 block|{
 literal|'i'
 block|,
@@ -478,16 +524,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s label [-nv] [-b balance] [-s slice] name dev1 [dev2 [...]]\n"
-literal|"       %s clear [-v] dev1 [dev2 [...]]\n"
-literal|"       %s dump dev1 [dev2 [...]]\n"
-literal|"       %s configure [-anv] [-b balance] [-s slice] name\n"
-literal|"       %s rebuild [-v] name dev1 [dev2 [...]]\n"
-literal|"       %s insert [-iv] [-p priority] name dev1 [dev2 [...]]\n"
-literal|"       %s remove [-v] name dev1 [dev2 [...]]\n"
-literal|"       %s activate [-v] name dev1 [dev2 [...]]\n"
-literal|"       %s deactivate [-v] name dev1 [dev2 [...]]\n"
-literal|"       %s forget dev1 [dev2 [...]]\n"
+literal|"usage: %s label [-hnv] [-b balance] [-s slice] name prov [prov [...]]\n"
+literal|"       %s clear [-v] prov [prov [...]]\n"
+literal|"       %s dump prov [prov [...]]\n"
+literal|"       %s configure [-adhnv] [-b balance] [-s slice] name\n"
+literal|"       %s rebuild [-v] name prov [prov [...]]\n"
+literal|"       %s insert [-hiv] [-p priority] name prov [prov [...]]\n"
+literal|"       %s remove [-v] name prov [prov [...]]\n"
+literal|"       %s activate [-v] name prov [prov [...]]\n"
+literal|"       %s deactivate [-v] name prov [prov [...]]\n"
+literal|"       %s forget prov [prov [...]]\n"
 literal|"       %s stop [-fv] name\n"
 argument_list|,
 name|comm
@@ -532,7 +578,7 @@ modifier|*
 name|req
 parameter_list|,
 name|unsigned
-name|f
+name|flags
 parameter_list|)
 block|{
 specifier|const
@@ -543,7 +589,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|f
+name|flags
 operator|&
 name|G_FLAG_VERBOSE
 operator|)
@@ -694,6 +740,9 @@ literal|16
 index|]
 decl_stmt|;
 name|int
+modifier|*
+name|hardcode
+decl_stmt|,
 modifier|*
 name|nargs
 decl_stmt|,
@@ -1012,6 +1061,39 @@ name|md_mflags
 operator||=
 name|G_MIRROR_DEVICE_FLAG_NOAUTOSYNC
 expr_stmt|;
+name|hardcode
+operator|=
+name|gctl_get_paraml
+argument_list|(
+name|req
+argument_list|,
+literal|"hardcode"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|hardcode
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hardcode
+operator|==
+name|NULL
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"No '%s' argument."
+argument_list|,
+literal|"hardcode"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Calculate sectorsize by finding least common multiple from 	 * sectorsizes of every disk and find the smallest mediasize. 	 */
 name|mediasize
 operator|=
@@ -1289,6 +1371,68 @@ name|i
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|hardcode
+condition|)
+name|bzero
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|str
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|str
+operator|+=
+name|strlen
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+expr_stmt|;
+name|strlcpy
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|,
+name|str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|md
+operator|.
+name|md_provider
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|mirror_metadata_encode
 argument_list|(
 operator|&
