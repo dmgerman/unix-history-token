@@ -1258,6 +1258,8 @@ name|B_CLUSTEROK
 expr_stmt|;
 name|cluster_write
 argument_list|(
+name|vp
+argument_list|,
 name|bp
 argument_list|,
 name|ip

@@ -2320,6 +2320,10 @@ name|void
 name|cluster_write
 parameter_list|(
 name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
 name|buf
 modifier|*
 parameter_list|,
