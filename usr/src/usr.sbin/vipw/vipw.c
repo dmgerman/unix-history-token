@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vipw.c	4.4 (Berkeley) %G%"
+literal|"@(#)vipw.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,8 +62,8 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
 name|temp
+index|[]
 init|=
 literal|"/etc/ptmp"
 decl_stmt|;
@@ -71,8 +71,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|temp_pag
+index|[]
 init|=
 literal|"/etc/ptmp.pag"
 decl_stmt|;
@@ -80,8 +80,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|temp_dir
+index|[]
 init|=
 literal|"/etc/ptmp.dir"
 decl_stmt|;
@@ -89,8 +89,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|passwd
+index|[]
 init|=
 literal|"/etc/passwd"
 decl_stmt|;
@@ -98,8 +98,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|passwd_pag
+index|[]
 init|=
 literal|"/etc/passwd.pag"
 decl_stmt|;
@@ -107,8 +107,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
 name|passwd_dir
+index|[]
 init|=
 literal|"/etc/passwd.dir"
 decl_stmt|;
@@ -175,6 +175,13 @@ name|editor
 decl_stmt|;
 name|signal
 argument_list|(
+name|SIGHUP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
@@ -189,7 +196,7 @@ argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-name|SIGHUP
+name|SIGTSTP
 argument_list|,
 name|SIG_IGN
 argument_list|)
@@ -814,6 +821,16 @@ expr_stmt|;
 block|}
 name|bad
 label|:
+name|unlink
+argument_list|(
+name|temp_pag
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|temp_dir
+argument_list|)
+expr_stmt|;
 name|unlink
 argument_list|(
 name|temp
