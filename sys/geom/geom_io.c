@@ -1821,6 +1821,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+switch|switch
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+condition|)
+block|{
+case|case
+name|BIO_READ
+case|:
+case|case
+name|BIO_WRITE
+case|:
+case|case
+name|BIO_DELETE
+case|:
 comment|/* Truncate requests to the end of providers media. */
 name|excess
 operator|=
@@ -1876,6 +1892,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
+break|break;
+default|default:
+break|break;
 block|}
 name|bp
 operator|->
