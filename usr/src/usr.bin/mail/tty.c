@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	2.5 %G%"
+literal|"@(#)tty.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,11 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|VMUNIX
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|cp2
