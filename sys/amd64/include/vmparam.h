@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|VADDR(UMAXPTDI, UMAXPTEOFF)
+value|VADDR(PTDPTDI, 0)
 end_define
 
 begin_define

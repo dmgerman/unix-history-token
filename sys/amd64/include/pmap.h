@@ -431,28 +431,6 @@ begin_comment
 comment|/* ptd entry that points to ptd! */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UMAXPTDI
-value|(PTDPTDI-1)
-end_define
-
-begin_comment
-comment|/* ptd entry for user space end */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UMAXPTEOFF
-value|(NPTEPG)
-end_define
-
-begin_comment
-comment|/* pte entry for user space end */
-end_comment
-
 begin_comment
 comment|/*  * XXX doesn't really belong here I guess...  */
 end_comment
