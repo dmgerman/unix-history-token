@@ -179,7 +179,7 @@ name|struct
 name|ath_node
 modifier|*
 parameter_list|,
-name|HAL_BOOL
+name|int
 name|shortPreamble
 parameter_list|,
 name|size_t
@@ -220,7 +220,7 @@ name|struct
 name|ath_desc
 modifier|*
 parameter_list|,
-name|HAL_BOOL
+name|int
 name|shortPreamble
 parameter_list|,
 name|u_int8_t

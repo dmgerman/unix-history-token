@@ -383,7 +383,7 @@ name|ath_node
 modifier|*
 name|an
 parameter_list|,
-name|HAL_BOOL
+name|int
 name|shortPreamble
 parameter_list|,
 name|size_t
@@ -467,7 +467,7 @@ name|ath_desc
 modifier|*
 name|ds
 parameter_list|,
-name|HAL_BOOL
+name|int
 name|shortPreamble
 parameter_list|,
 name|u_int8_t
