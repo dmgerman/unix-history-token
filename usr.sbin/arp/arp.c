@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1031,11 +1037,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
 name|bzero
 argument_list|(
 operator|(
