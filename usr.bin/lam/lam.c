@@ -596,6 +596,10 @@ switch|switch
 condition|(
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|c
 argument_list|)
