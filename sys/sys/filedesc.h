@@ -654,24 +654,10 @@ name|file
 operator|*
 name|fget_locked
 argument_list|(
-argument|fdp
+argument|struct filedesc *fdp
 argument_list|,
-argument|fd
+argument|int fd
 argument_list|)
-expr|struct
-name|filedesc
-operator|*
-name|fdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|int
-name|fd
-decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* u_int cast checks for negative descriptors. */
 return|return
@@ -681,12 +667,15 @@ name|u_int
 operator|)
 name|fd
 operator|>=
+operator|(
+name|u_int
+operator|)
 name|fdp
 operator|->
 name|fd_nfiles
-condition|?
+operator|?
 name|NULL
-else|:
+operator|:
 name|fdp
 operator|->
 name|fd_ofiles
@@ -696,7 +685,7 @@ index|]
 operator|)
 return|;
 block|}
-end_block
+end_expr_stmt
 
 begin_endif
 endif|#
