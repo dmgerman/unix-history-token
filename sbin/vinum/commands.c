@@ -202,6 +202,13 @@ name|BUFSIZE
 index|]
 decl_stmt|;
 comment|/* read config file in here */
+name|char
+name|commandline
+index|[
+name|BUFSIZE
+index|]
+decl_stmt|;
+comment|/* issue command from here */
 name|struct
 name|_ioctl_reply
 modifier|*
@@ -372,14 +379,20 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+name|strcpy
+argument_list|(
+name|commandline
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
+comment|/* make a copy */
 name|ioctl
 argument_list|(
 name|superdev
 argument_list|,
 name|VINUM_CREATE
 argument_list|,
-operator|&
 name|buffer
 argument_list|)
 expr_stmt|;
@@ -405,7 +418,7 @@ literal|"%4d: %s"
 argument_list|,
 name|file_line
 argument_list|,
-name|buffer
+name|commandline
 argument_list|)
 expr_stmt|;
 name|fprintf
