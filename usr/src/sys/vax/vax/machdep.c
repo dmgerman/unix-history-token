@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.18	%G%	*/
+comment|/*	machdep.c	3.19	%G%	*/
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.18) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.19) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,16 +461,7 @@ name|deltat
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|deltat
-operator|<
-literal|0
-condition|?
-operator|-
-name|deltat
-else|:
-name|deltat
-operator|)
 operator|>=
 literal|2
 operator|*
@@ -480,9 +471,9 @@ name|printf
 argument_list|(
 literal|"warning: %s %d days; check the date\n"
 argument_list|,
-name|deltat
+name|time
 operator|<
-literal|0
+name|base
 condition|?
 literal|"lost"
 else|:
