@@ -138,7 +138,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/linux/linprocfs/linprocfs.h>
+file|<compat/linprocfs/linprocfs.h>
 end_include
 
 begin_comment
