@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.2	85/01/09	"
+literal|"	quiz.c	4.3	87/06/17	"
 decl_stmt|;
 end_decl_stmt
 
@@ -2256,6 +2256,13 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|rights
+operator|+
+name|wrongs
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\nRights %d, wrongs %d, "
@@ -2291,6 +2298,7 @@ name|wrongs
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 literal|0
