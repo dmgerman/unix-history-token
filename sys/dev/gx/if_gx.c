@@ -1333,7 +1333,7 @@ name|gx
 operator|->
 name|gx_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1342,13 +1342,6 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
-argument_list|,
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;
@@ -1356,7 +1349,7 @@ if|#
 directive|if
 literal|0
 comment|/* support PIO mode */
-block|rid = PCI_LOIO; 	gx->gx_res = bus_alloc_resource(dev, SYS_RES_IOPORT,&rid, 	    0, ~0, 1, RF_ACTIVE);
+block|rid = PCI_LOIO; 	gx->gx_res = bus_alloc_resource_any(dev, SYS_RES_IOPORT,&rid, 	    RF_ACTIVE);
 endif|#
 directive|endif
 if|if
@@ -1414,7 +1407,7 @@ name|gx
 operator|->
 name|gx_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1422,13 +1415,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||

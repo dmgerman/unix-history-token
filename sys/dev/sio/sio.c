@@ -1025,6 +1025,9 @@ decl_stmt|;
 name|u_long
 name|rclk
 decl_stmt|;
+name|int
+name|gdb
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -5287,7 +5290,7 @@ name|com
 operator|->
 name|irqres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -5295,13 +5298,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -5417,17 +5413,28 @@ name|defined
 argument_list|(
 name|ALT_BREAK_TO_DEBUGGER
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GDB_AUTO_ENTER
+argument_list|)
 operator|)
-comment|/* 		 * Enable interrupts for early break-to-debugger support 		 * on the console. 		 */
+comment|/* 		 * Enable interrupts for early break-to-debugger support 		 * on the console and/or gdb port. 		 */
 if|if
 condition|(
 name|ret
 operator|==
 literal|0
 operator|&&
+operator|(
 name|unit
 operator|==
 name|comconsole
+operator|||
+name|unit
+operator|==
+name|siogdbunit
+operator|)
 condition|)
 name|outb
 argument_list|(
@@ -6573,6 +6580,11 @@ name|defined
 argument_list|(
 name|ALT_BREAK_TO_DEBUGGER
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|GDB_AUTO_ENTER
+argument_list|)
 operator|)
 comment|/* 	 * Leave interrupts enabled and don't clear DTR if this is the 	 * console. This allows us to detect break-to-debugger events 	 * while the console device is closed. 	 */
 if|if
@@ -6582,6 +6594,12 @@ operator|->
 name|unit
 operator|!=
 name|comconsole
+operator|||
+name|com
+operator|->
+name|unit
+operator|!=
+name|siogdbunit
 condition|)
 endif|#
 directive|endif
@@ -8348,6 +8366,62 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ALT_BREAK_TO_DEBUGGER */
+ifdef|#
+directive|ifdef
+name|GDB_AUTO_ENTER
+if|if
+condition|(
+name|gdb_auto_enter
+operator|!=
+literal|0
+operator|&&
+name|com
+operator|->
+name|unit
+operator|==
+name|siogdbunit
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"gdb: %c\n"
+argument_list|,
+name|recv_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|db_gdb_packet
+argument_list|(
+name|recv_data
+argument_list|,
+operator|&
+name|com
+operator|->
+name|gdb
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"going to gdb mode\n"
+argument_list|)
+expr_stmt|;
+name|boothowto
+operator||=
+name|RB_GDB
+expr_stmt|;
+name|breakpoint
+argument_list|()
+expr_stmt|;
+comment|/* goto cont; */
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* GDB_AUTO_ENTER */
 endif|#
 directive|endif
 comment|/* DDB */

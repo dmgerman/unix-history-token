@@ -394,7 +394,7 @@ name|res
 decl_stmt|;
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -403,18 +403,9 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
-argument_list|,
-operator|(
 name|RF_ACTIVE
 operator||
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 if|if

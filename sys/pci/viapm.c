@@ -1298,7 +1298,7 @@ name|viapm
 operator|->
 name|iores
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1308,13 +1308,6 @@ operator|&
 name|viapm
 operator|->
 name|iorid
-argument_list|,
-literal|0l
-argument_list|,
-operator|~
-literal|0l
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1666,7 +1659,7 @@ name|viapm
 operator|->
 name|iores
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1676,13 +1669,6 @@ operator|&
 name|viapm
 operator|->
 name|iorid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 operator||

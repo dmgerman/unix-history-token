@@ -677,7 +677,7 @@ name|gsc
 operator|->
 name|gsc_sres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -687,13 +687,6 @@ operator|&
 name|gsc
 operator|->
 name|gsc_srid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -730,7 +723,7 @@ name|gsc
 operator|->
 name|gsc_ires
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -740,13 +733,6 @@ operator|&
 name|gsc
 operator|->
 name|gsc_irid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||

@@ -2562,7 +2562,7 @@ name|cfe
 operator|->
 name|irqres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|bus
 argument_list|,
@@ -2572,13 +2572,6 @@ operator|&
 name|cfe
 operator|->
 name|irqrid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 literal|0
 argument_list|)

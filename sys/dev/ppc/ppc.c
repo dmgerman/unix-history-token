@@ -7857,7 +7857,7 @@ name|ppc
 operator|->
 name|res_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -7868,13 +7868,6 @@ name|ppc
 operator|->
 name|rid_irq
 argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
-argument_list|,
 name|RF_SHAREABLE
 argument_list|)
 expr_stmt|;
@@ -7882,7 +7875,7 @@ name|ppc
 operator|->
 name|res_drq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -7892,13 +7885,6 @@ operator|&
 name|ppc
 operator|->
 name|rid_drq
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

@@ -1123,7 +1123,7 @@ name|sc
 operator|->
 name|memres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1131,13 +1131,6 @@ name|SYS_RES_MEMORY
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1199,7 +1192,7 @@ name|sc
 operator|->
 name|irqres
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -1209,13 +1202,6 @@ operator|&
 name|sc
 operator|->
 name|irqid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||

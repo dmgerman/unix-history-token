@@ -2431,7 +2431,7 @@ name|sc
 operator|->
 name|res_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|device
 argument_list|,
@@ -2441,13 +2441,6 @@ operator|&
 name|sc
 operator|->
 name|rid_irq
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||

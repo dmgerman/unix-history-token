@@ -1884,7 +1884,7 @@ name|sc
 operator|->
 name|mly_regs_resource
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|sc
 operator|->
@@ -1896,13 +1896,6 @@ operator|&
 name|sc
 operator|->
 name|mly_regs_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1958,7 +1951,7 @@ name|sc
 operator|->
 name|mly_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|sc
 operator|->
@@ -1970,13 +1963,6 @@ operator|&
 name|sc
 operator|->
 name|mly_irq_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 operator||

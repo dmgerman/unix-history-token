@@ -347,7 +347,7 @@ name|dev
 operator|->
 name|irqr
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 operator|->
@@ -359,13 +359,6 @@ operator|&
 name|dev
 operator|->
 name|irqrid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_SHAREABLE
 argument_list|)

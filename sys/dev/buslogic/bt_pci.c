@@ -186,7 +186,7 @@ if|#
 directive|if
 literal|0
 comment|/* XXX Memory Mapped I/O seems to cause problems */
-block|if (command& PCIM_CMD_MEMEN) { 		type = SYS_RES_MEMORY; 		rid = BT_PCI_MEMADDR; 		regs = bus_alloc_resource(dev, type,&rid, 					  0, ~0, 1, RF_ACTIVE); 	}
+block|if (command& PCIM_CMD_MEMEN) { 		type = SYS_RES_MEMORY; 		rid = BT_PCI_MEMADDR; 		regs = bus_alloc_resource_any(dev, type,&rid, RF_ACTIVE); 	}
 else|#
 directive|else
 if|if
@@ -211,7 +211,7 @@ name|BT_PCI_IOADDR
 expr_stmt|;
 name|regs
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -219,13 +219,6 @@ name|type
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -249,7 +242,7 @@ literal|0
 expr_stmt|;
 name|irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -257,13 +250,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|zero
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 operator||

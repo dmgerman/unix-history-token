@@ -1569,7 +1569,7 @@ name|sc
 operator|->
 name|ec_data_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|sc
 operator|->
@@ -1581,13 +1581,6 @@ operator|&
 name|sc
 operator|->
 name|ec_data_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
@@ -1648,7 +1641,7 @@ name|sc
 operator|->
 name|ec_csr_res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|sc
 operator|->
@@ -1660,13 +1653,6 @@ operator|&
 name|sc
 operator|->
 name|ec_csr_rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)

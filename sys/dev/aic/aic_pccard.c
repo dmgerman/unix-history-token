@@ -311,7 +311,7 @@ name|sc
 operator|->
 name|sc_irq
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|dev
 argument_list|,
@@ -319,13 +319,6 @@ name|SYS_RES_IRQ
 argument_list|,
 operator|&
 name|rid
-argument_list|,
-literal|0ul
-argument_list|,
-operator|~
-literal|0ul
-argument_list|,
-literal|1
 argument_list|,
 name|RF_ACTIVE
 argument_list|)
