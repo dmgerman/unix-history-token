@@ -981,6 +981,11 @@ name|EFTYPE
 operator|)
 return|;
 block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
