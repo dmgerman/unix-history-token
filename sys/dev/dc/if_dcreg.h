@@ -3526,6 +3526,13 @@ name|DC_REDUCED_MII_POLL
 value|0x00000200
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_TX_INTR_ALWAYS
+value|0x00000400
+end_define
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
