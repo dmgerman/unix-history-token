@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Harris Corp.  *  * %sccs.include.redist.c%  *  *	@(#)hd.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Harris Corp.  *  * %sccs.include.redist.c%  *  *	@(#)hd.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,24 +13,6 @@ begin_include
 include|#
 directive|include
 file|"sys/time.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/vnode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ufs/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ufs/fs.h"
 end_include
 
 begin_include
