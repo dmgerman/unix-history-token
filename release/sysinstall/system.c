@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.91 1999/02/15 00:49:33 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: system.c,v 1.92 1999/07/16 22:07:09 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -234,9 +234,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -1533,7 +1530,7 @@ condition|(
 name|msgYesNo
 argument_list|(
 literal|"There seems to be an emergency holographic shell\n"
-literal|"already running von VTY 4.\n"
+literal|"already running on VTY 4.\n\n"
 literal|"Kill it and start a new one?"
 argument_list|)
 condition|)
