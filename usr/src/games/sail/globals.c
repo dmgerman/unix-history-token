@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)globals.c	1.5 83/10/05"
+literal|"@(#)globals.c	1.6 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,18 +37,12 @@ name|scene
 index|[]
 init|=
 block|{
-comment|/* 	 * int winddir; 	 * int windspeed; 	 * int windchange; 	 * int turn; 	 * int people; 	 * int time; 	 * int vessels; 	 * char *name; 	 * struct ship ship[NSHIP]; 	 */
+comment|/* 	 * int winddir; 	 * int windspeed; 	 * int windchange; 	 * int vessels; 	 * char *name; 	 * struct ship ship[NSHIP]; 	 */
 literal|5
 block|,
 literal|3
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|2
 block|,
@@ -98,12 +92,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"The Battle of Flamborough Head"
@@ -151,12 +139,6 @@ block|,
 literal|5
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|10
 block|,
@@ -350,12 +332,6 @@ block|,
 literal|3
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|10
 block|,
@@ -551,12 +527,6 @@ literal|3
 block|,
 literal|4
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Nymphe vs. Cleopatre"
@@ -604,12 +574,6 @@ block|,
 literal|3
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|2
 block|,
@@ -659,12 +623,6 @@ literal|3
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Ambuscade vs. Baionnaise"
@@ -712,12 +670,6 @@ block|,
 literal|5
 block|,
 literal|6
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|2
 block|,
@@ -767,12 +719,6 @@ literal|3
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Constellation vs. Vengeance"
@@ -820,12 +766,6 @@ block|,
 literal|3
 block|,
 literal|6
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|10
 block|,
@@ -1019,12 +959,6 @@ literal|5
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Constitution vs. Guerriere"
@@ -1072,12 +1006,6 @@ block|,
 literal|3
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|2
 block|,
@@ -1127,12 +1055,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Constitution vs. Java"
@@ -1181,12 +1103,6 @@ literal|3
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Chesapeake vs. Shannon"
@@ -1234,12 +1150,6 @@ block|,
 literal|1
 block|,
 literal|6
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|5
 block|,
@@ -1343,12 +1253,6 @@ literal|1
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Wasp vs. Reindeer"
@@ -1396,12 +1300,6 @@ block|,
 literal|2
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|3
 block|,
@@ -1469,12 +1367,6 @@ literal|5
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|3
 block|,
 literal|"Pellew vs. Droits de L'Homme"
@@ -1540,12 +1432,6 @@ block|,
 literal|2
 block|,
 literal|3
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|10
 block|,
@@ -1739,12 +1625,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|7
 block|,
 literal|"Lake Champlain"
@@ -1883,12 +1763,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|4
 block|,
 literal|"Last Voyage of the USS President"
@@ -1974,12 +1848,6 @@ literal|5
 block|,
 literal|5
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Hornblower and the Natividad"
@@ -2028,12 +1896,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|2
 block|,
 literal|"Curse of the Flying Dutchman"
@@ -2081,12 +1943,6 @@ block|,
 literal|4
 block|,
 literal|1
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|4
 block|,
@@ -2171,12 +2027,6 @@ block|,
 literal|3
 block|,
 literal|6
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|5
 block|,
@@ -2280,12 +2130,6 @@ literal|4
 block|,
 literal|7
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|5
 block|,
 literal|"Cape Horn"
@@ -2388,12 +2232,6 @@ literal|3
 block|,
 literal|7
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|3
 block|,
 literal|"New Orleans"
@@ -2460,12 +2298,6 @@ literal|3
 block|,
 literal|7
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|3
 block|,
 literal|"Botany Bay"
@@ -2531,12 +2363,6 @@ block|,
 literal|3
 block|,
 literal|6
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|4
 block|,
@@ -2622,12 +2448,6 @@ literal|3
 block|,
 literal|6
 block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
-block|,
 literal|3
 block|,
 literal|"Frigate Action"
@@ -2693,12 +2513,6 @@ block|,
 literal|2
 block|,
 literal|5
-block|,
-literal|0
-block|,
-literal|1
-block|,
-literal|0
 block|,
 literal|6
 block|,
@@ -2814,14 +2628,10 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* 	4, 3, 4, 0, 1, 0, 8, "Star Trek", 	{ 		{ "Enterprise",		specs+72, N_A, 20,  4, 2, 0 }, 		{ "Yorktown",		specs+72, N_A, 19,  2, 2, 0 }, 		{ "Reliant",		specs+73, N_A, 18,  3, 2, 0 }, 		{ "Galileo",		specs+74, N_A, 20,  6, 2, 0 }, 		{ "Kobayashi Maru",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Klingon two",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Klingon three",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Blue Orion",		specs+63, N_S, 31, 11, 5, 0 } 	} 	*/
+comment|/* 	4, 3, 4, 8, "Star Trek", 	{ 		{ "Enterprise",		specs+72, N_A, 20,  4, 2, 0 }, 		{ "Yorktown",		specs+72, N_A, 19,  2, 2, 0 }, 		{ "Reliant",		specs+73, N_A, 18,  3, 2, 0 }, 		{ "Galileo",		specs+74, N_A, 20,  6, 2, 0 }, 		{ "Kobayashi Maru",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Klingon two",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Klingon three",	specs+75, N_F, 31, 11, 5, 0 }, 		{ "Blue Orion",		specs+63, N_S, 31, 11, 5, 0 } 	} 	*/
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* happy */
-end_comment
 
 begin_decl_stmt
 name|struct

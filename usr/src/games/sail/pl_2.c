@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	1.4 83/10/05"
+literal|"@(#)pl_2.c	1.5 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -808,7 +808,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|3
+name|NBP
 condition|;
 name|n
 operator|++
@@ -845,7 +845,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|3
+name|NBP
 condition|;
 name|n
 operator|++
@@ -1003,7 +1003,7 @@ argument_list|,
 name|sp
 argument_list|)
 operator|>
-literal|0
+literal|1
 condition|)
 continue|continue;
 if|if
@@ -1055,12 +1055,21 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|fouled2
+argument_list|(
+name|ms
+argument_list|,
+name|sp
+argument_list|)
+operator|||
 name|grappled2
 argument_list|(
 name|ms
 argument_list|,
 name|sp
 argument_list|)
+operator|)
 operator|&&
 name|crew
 index|[

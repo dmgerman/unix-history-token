@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_3.c	1.4 83/07/20"
+literal|"@(#)dr_3.c	1.5 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,8 @@ decl_stmt|;
 comment|/* r8, r7, r6, */
 name|int
 name|ta
-decl_stmt|,
+decl_stmt|;
+name|char
 name|af
 decl_stmt|;
 name|int
@@ -137,7 +138,9 @@ index|]
 operator|||
 name|sp
 operator|->
-name|shipdir
+name|file
+operator|->
+name|dir
 operator|==
 literal|0
 condition|)
@@ -171,17 +174,10 @@ operator|=
 name|maxturns
 argument_list|(
 name|sp
-argument_list|)
-expr_stmt|;
-name|af
-operator|=
-name|ta
+argument_list|,
 operator|&
-literal|0100000
-expr_stmt|;
-name|ta
-operator|&=
-literal|077777
+name|af
+argument_list|)
 expr_stmt|;
 name|ma
 operator|=

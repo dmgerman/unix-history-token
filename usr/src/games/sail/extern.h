@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	1.6 83/10/05  */
+comment|/*  * @(#)extern.h	1.7 83/10/10  */
 end_comment
 
 begin_include
@@ -447,12 +447,9 @@ name|W_PCREW
 value|15
 end_define
 
-begin_define
-define|#
-directive|define
-name|W_PEOPLE
-value|16
-end_define
+begin_comment
+comment|/* 16 */
+end_comment
 
 begin_define
 define|#
@@ -531,7 +528,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|W_TIME
+name|W_ALIVE
 value|28
 end_define
 
@@ -589,6 +586,20 @@ define|#
 directive|define
 name|W_RIG4
 value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|W_BEGIN
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|W_END
+value|38
 end_define
 
 begin_struct
@@ -910,18 +921,6 @@ name|char
 name|windchange
 decl_stmt|;
 comment|/* 4 */
-name|short
-name|turn
-decl_stmt|;
-comment|/* 6 */
-name|char
-name|people
-decl_stmt|;
-comment|/* 8 */
-name|char
-name|time
-decl_stmt|;
-comment|/* 10 */
 name|char
 name|vessels
 decl_stmt|;
@@ -1260,17 +1259,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|lastsync
+name|int
+name|winddir
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|winddir
-decl_stmt|,
 name|windspeed
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|turn
 decl_stmt|;
 end_decl_stmt
@@ -1282,18 +1283,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|Outbuf
-index|[
-name|BUFSIZE
-index|]
+name|int
+name|alive
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|FILE
-modifier|*
-name|syncfile
+name|int
+name|people
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)game.c	1.4 83/07/20"
+literal|"@(#)game.c	1.5 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,8 @@ begin_expr_stmt
 name|maxturns
 argument_list|(
 name|ship
+argument_list|,
+name|af
 argument_list|)
 specifier|register
 expr|struct
@@ -38,6 +40,13 @@ operator|*
 name|ship
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|af
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -55,6 +64,10 @@ name|ta
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|af
+operator|=
+operator|(
 name|ship
 operator|->
 name|file
@@ -64,6 +77,7 @@ operator|>
 literal|1
 operator|&&
 name|turns
+operator|)
 condition|)
 block|{
 name|turns
@@ -82,10 +96,6 @@ condition|)
 name|turns
 operator|=
 literal|0
-expr_stmt|;
-name|turns
-operator||=
-literal|0100000
 expr_stmt|;
 block|}
 return|return

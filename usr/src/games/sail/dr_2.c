@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_2.c	1.3 83/10/05"
+literal|"@(#)dr_2.c	1.4 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,9 +239,7 @@ name|explode
 decl_stmt|,
 name|sink
 decl_stmt|;
-name|readpos
-argument_list|()
-expr_stmt|;
+comment|/* 	readpos(); 	*/
 name|foreachship
 argument_list|(
 argument|sp
@@ -1136,9 +1134,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|drift
-decl_stmt|;
 specifier|register
 name|struct
 name|File
@@ -1149,6 +1144,34 @@ name|ship
 operator|->
 name|file
 decl_stmt|;
+name|int
+name|drift
+init|=
+name|fp
+operator|->
+name|drift
+decl_stmt|;
+name|int
+name|row
+init|=
+name|fp
+operator|->
+name|row
+decl_stmt|;
+name|int
+name|col
+init|=
+name|fp
+operator|->
+name|col
+decl_stmt|;
+name|int
+name|dir
+init|=
+name|fp
+operator|->
+name|dir
+decl_stmt|;
 if|if
 condition|(
 name|fp
@@ -1158,12 +1181,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|drift
-operator|=
-name|fp
-operator|->
-name|drift
-expr_stmt|;
 name|move
 argument_list|(
 name|movement
@@ -1212,10 +1229,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|drift
-operator|!=
 name|fp
 operator|->
+name|drift
+operator|!=
 name|drift
 condition|)
 name|Write
@@ -1241,9 +1258,7 @@ name|fp
 operator|->
 name|row
 operator|!=
-name|ship
-operator|->
-name|shiprow
+name|row
 condition|)
 name|Write
 argument_list|(
@@ -1270,9 +1285,7 @@ name|fp
 operator|->
 name|col
 operator|!=
-name|ship
-operator|->
-name|shipcol
+name|col
 condition|)
 name|Write
 argument_list|(
@@ -1299,9 +1312,7 @@ name|fp
 operator|->
 name|dir
 operator|!=
-name|ship
-operator|->
-name|shipdir
+name|dir
 condition|)
 name|Write
 argument_list|(

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_4.c	1.2 83/10/05"
+literal|"@(#)pl_4.c	1.3 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,6 +869,13 @@ name|changed
 operator|=
 literal|0
 expr_stmt|;
+name|movebuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -935,13 +942,6 @@ name|readyR
 operator|=
 name|R_LOADED
 expr_stmt|;
-name|movebuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|Sync
 argument_list|()
 expr_stmt|;
@@ -956,7 +956,7 @@ condition|)
 comment|/* still playing */
 name|Write
 argument_list|(
-name|W_TIME
+name|W_ALIVE
 argument_list|,
 name|SHIP
 argument_list|(
@@ -965,7 +965,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -975,24 +975,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|windspeed
-operator|=
-name|cc
-operator|->
-name|windspeed
-expr_stmt|;
-name|winddir
-operator|=
-name|cc
-operator|->
-name|winddir
-expr_stmt|;
-name|turn
-operator|=
-name|cc
-operator|->
-name|turn
-expr_stmt|;
 if|if
 condition|(
 name|mf
@@ -1017,9 +999,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|readpos
-argument_list|()
 expr_stmt|;
 name|adjustview
 argument_list|()

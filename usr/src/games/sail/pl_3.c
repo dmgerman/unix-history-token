@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_3.c	1.1 83/07/20"
+literal|"@(#)pl_3.c	1.2 83/10/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -1869,7 +1869,11 @@ if|if
 condition|(
 name|ship
 operator|->
-name|shipdir
+name|file
+operator|->
+name|dir
+operator|!=
+literal|0
 condition|)
 block|{
 name|Signal
