@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * netgraph.h  *  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Julian Elischer<julian@whistle.com>  *  * $FreeBSD$  * $Whistle: netgraph.h,v 1.24 1999/01/28 23:54:52 julian Exp $  */
+comment|/*  * netgraph.h  *  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Julian Elischer<julian@whistle.com>  *  * $FreeBSD$  * $Whistle: netgraph.h,v 1.29 1999/11/01 07:56:13 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -407,45 +407,25 @@ comment|/* trace when handing this data to a node */
 end_comment
 
 begin_comment
-comment|/*  * Structure of a node type  */
+comment|/* node method definitions */
 end_comment
 
-begin_struct
-struct|struct
-name|ng_type
-block|{
-comment|/* Netgraph version number (must equal NG_VERSION) */
-name|u_int32_t
-name|version
-decl_stmt|;
-comment|/* Unique type name */
-specifier|const
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Module event handler (optional) */
-name|modeventhand_t
-name|mod_event
-decl_stmt|;
-comment|/* Node constructor */
+begin_typedef
+typedef|typedef
 name|int
-function_decl|(
-modifier|*
-name|constructor
-function_decl|)
+name|ng_constructor_t
 parameter_list|(
 name|node_p
 modifier|*
 name|node
 parameter_list|)
 function_decl|;
-comment|/* Calls using the node */
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
-function_decl|(
-modifier|*
-name|rcvmsg
-function_decl|)
+name|ng_rcvmsg_t
 parameter_list|(
 name|node_p
 name|node
@@ -467,109 +447,163 @@ modifier|*
 name|resp
 parameter_list|)
 function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
-function_decl|(
+name|ng_shutdown_t
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_newhook_t
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+name|hook_p
+name|hook
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|hook_p
+name|ng_findhook_t
+parameter_list|(
+name|node_p
+name|node
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_connect_t
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_rcvdata_t
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|meta_p
+name|meta
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|ng_disconnect_t
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*  * Structure of a node type  */
+end_comment
+
+begin_struct
+struct|struct
+name|ng_type
+block|{
+name|u_int32_t
+name|version
+decl_stmt|;
+comment|/* must equal NG_VERSION */
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* Unique type name */
+name|modeventhand_t
+name|mod_event
+decl_stmt|;
+comment|/* Module event handler (optional) */
+name|ng_constructor_t
+modifier|*
+name|constructor
+decl_stmt|;
+comment|/* Node constructor */
+name|ng_rcvmsg_t
+modifier|*
+name|rcvmsg
+decl_stmt|;
+comment|/* control messages come here */
+name|ng_shutdown_t
 modifier|*
 name|shutdown
-function_decl|)
-parameter_list|(
-name|node_p
-name|node
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
+decl_stmt|;
+comment|/* reset, and free resources */
+name|ng_newhook_t
 modifier|*
 name|newhook
-function_decl|)
-parameter_list|(
-name|node_p
-name|node
-parameter_list|,
-name|hook_p
-name|hook
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-name|hook_p
-function_decl|(
+decl_stmt|;
+comment|/* first notification of new hook */
+name|ng_findhook_t
 modifier|*
 name|findhook
-function_decl|)
-parameter_list|(
-name|node_p
-name|node
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
-function_decl|;
-comment|/* Calls using the hook */
-name|int
-function_decl|(
+decl_stmt|;
+comment|/* only if you have 23000 hooks */
+name|ng_connect_t
 modifier|*
 name|connect
-function_decl|)
-parameter_list|(
-name|hook_p
-name|hook
-parameter_list|)
-function_decl|;
-comment|/* already linked in */
-name|int
-function_decl|(
+decl_stmt|;
+comment|/* final notification of new hook */
+name|ng_rcvdata_t
 modifier|*
 name|rcvdata
-function_decl|)
-parameter_list|(
-name|hook_p
-name|hook
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
+decl_stmt|;
+comment|/* date comes here */
+name|ng_rcvdata_t
 modifier|*
 name|rcvdataq
-function_decl|)
-parameter_list|(
-name|hook_p
-name|hook
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|meta_p
-name|meta
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
+decl_stmt|;
+comment|/* or here if been queued */
+name|ng_disconnect_t
 modifier|*
 name|disconnect
-function_decl|)
-parameter_list|(
-name|hook_p
-name|hook
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* notify on disconnect */
-comment|/* These are private to the base netgraph code */
+comment|/* R/W data  private to the base netgraph code DON'T TOUCH!*/
 name|LIST_ENTRY
 argument_list|(
 argument|ng_type
