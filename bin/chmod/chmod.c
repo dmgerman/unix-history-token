@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char const sccsid[] = "@(#)chmod.c	8.8 (Berkeley) 4/1/94";
+unit|static char sccsid[] = "@(#)chmod.c	8.8 (Berkeley) 4/1/94";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chmod.c,v 1.10 1998/05/06 06:50:08 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
