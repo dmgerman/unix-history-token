@@ -843,16 +843,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|usage
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|rewritelabel
 parameter_list|(
 name|char
@@ -867,6 +857,16 @@ name|struct
 name|disklabel
 modifier|*
 name|lp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1436,8 +1436,7 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s: unknown optimization preference: "
-literal|"use `space' or `time'"
+literal|"%s: unknown optimization preference: use `space' or `time'"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1653,10 +1652,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * No path prefix; try /dev/%s. 		 */
-operator|(
-name|void
-operator|)
+comment|/* 		 * No path prefix; try prefixing _PATH_DEV. 		 */
 name|snprintf
 argument_list|(
 name|device
@@ -2115,8 +2111,7 @@ name|p_size
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: maximum file system size on the "
-literal|"`%c' partition is %d"
+literal|"%s: maximum file system size on the `%c' partition is %d"
 argument_list|,
 name|argv
 index|[
