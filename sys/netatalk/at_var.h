@@ -174,12 +174,6 @@ name|atintrq2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|atdebug
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
