@@ -3044,13 +3044,6 @@ operator|!=
 name|BDG_LOCAL
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|oldm
-init|=
-name|m
-decl_stmt|;
 name|save_eh
 operator|=
 operator|*
