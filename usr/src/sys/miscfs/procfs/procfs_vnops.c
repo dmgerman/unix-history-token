@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.16 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993, 1995 Jan-Simon Pendry  * Copyright (c) 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_vnops.c	8.17 (Berkeley) %G%  *  * From:  *	$Id: procfs_vnops.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -1806,6 +1806,15 @@ name|cnp
 operator|->
 name|cn_nameptr
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|curp
+init|=
+name|cnp
+operator|->
+name|cn_proc
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -1885,7 +1894,7 @@ argument_list|(
 name|dvp
 argument_list|)
 expr_stmt|;
-comment|/*VOP_LOCK(dvp);*/
+comment|/* vn_lock(dvp, LK_EXCLUSIVE | LK_RETRY, curp); */
 return|return
 operator|(
 literal|0
@@ -2129,9 +2138,15 @@ argument_list|(
 name|fvp
 argument_list|)
 expr_stmt|;
-name|VOP_LOCK
+name|vn_lock
 argument_list|(
 name|fvp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|curp
 argument_list|)
 expr_stmt|;
 operator|*

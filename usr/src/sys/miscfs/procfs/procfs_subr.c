@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_subr.c	8.5 (Berkeley) %G%  *  * From:  *	$Id: procfs_subr.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 Jan-Simon Pendry  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_subr.c	8.6 (Berkeley) %G%  *  * From:  *	$Id: procfs_subr.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -102,6 +102,14 @@ name|pfs_type
 decl_stmt|;
 block|{
 name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
+name|struct
 name|pfsnode
 modifier|*
 name|pfs
@@ -174,6 +182,8 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|,
+name|p
 argument_list|)
 condition|)
 goto|goto
