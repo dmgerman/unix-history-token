@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -106,6 +106,17 @@ define|#
 directive|define
 name|MAXCSBUFS
 value|32
+end_define
+
+begin_comment
+comment|/*  * A summary of contiguous blocks of various sizes is maintained  * in each cylinder group. Normally this is set by the initial  * value of fs_maxcontig. To conserve space, a maximum summary size  * is set by FS_MAXCONTIG.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_MAXCONTIG
+value|16
 end_define
 
 begin_comment
@@ -422,10 +433,14 @@ comment|/* old rotation block list head */
 name|long
 name|fs_sparecon
 index|[
-literal|51
+literal|50
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
+name|long
+name|fs_contigsumsize
+decl_stmt|;
+comment|/* size of cluster summary array */
 name|long
 name|fs_maxsymlinklen
 decl_stmt|;
@@ -717,9 +732,21 @@ name|cg_nextfreeoff
 decl_stmt|;
 comment|/* (u_char) next available space */
 name|long
+name|cg_clustersumoff
+decl_stmt|;
+comment|/* (long) counts of avail clusters */
+name|long
+name|cg_clusteroff
+decl_stmt|;
+comment|/* (char) free cluster map */
+name|long
+name|cg_nclusterblks
+decl_stmt|;
+comment|/* number of clusters this cg */
+name|long
 name|cg_sparecon
 index|[
-literal|16
+literal|13
 index|]
 decl_stmt|;
 comment|/* reserved for future use */
@@ -796,6 +823,28 @@ name|cgp
 parameter_list|)
 define|\
 value|((cgp)->cg_magic == CG_MAGIC || ((struct ocg *)(cgp))->cg_magic == CG_MAGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_clustersfree
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|((u_char *)((char *)(cgp) + (cgp)->cg_clusteroff))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cg_clustersum
+parameter_list|(
+name|cgp
+parameter_list|)
+define|\
+value|((long *)((char *)(cgp) + (cgp)->cg_clustersumoff))
 end_define
 
 begin_comment
