@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for C parsing and type checking.    Copyright (C) 1987, 1993, 1994, 1995, 1997 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for C parsing and type checking.    Copyright (C) 1987, 93, 94, 95, 97, 98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef
@@ -202,6 +206,58 @@ parameter_list|(
 name|type
 parameter_list|)
 value|TYPE_LANG_FLAG_0 (type)
+end_define
+
+begin_comment
+comment|/* C types are partitioned into three subsets: object, function, and    incomplete types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_TYPE_OBJECT_P
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(TREE_CODE (type) != FUNCTION_TYPE&& TYPE_SIZE (type))
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_TYPE_FUNCTION_P
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(TREE_CODE (type) == FUNCTION_TYPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|C_TYPE_INCOMPLETE_P
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(TREE_CODE (type) != FUNCTION_TYPE&& TYPE_SIZE (type) == 0)
+end_define
+
+begin_comment
+comment|/* For convenience we define a single macro to identify the class of    object or incomplete types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_TYPE_OBJECT_OR_INCOMPLETE_P
+parameter_list|(
+name|type
+parameter_list|)
+define|\
+value|(!C_TYPE_FUNCTION_P (type))
 end_define
 
 begin_comment
@@ -546,6 +602,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -650,6 +707,21 @@ name|c_get_alias_set
 name|PROTO
 argument_list|(
 operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|c_apply_type_quals_to_decl
+name|PROTO
+argument_list|(
+operator|(
+name|int
+operator|,
 name|tree
 operator|)
 argument_list|)
@@ -1051,12 +1123,25 @@ name|float_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|tree
 name|intTI_type_node
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1261,12 +1346,25 @@ name|unsigned_char_type_node
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|HOST_BITS_PER_WIDE_INT
+operator|>=
+literal|64
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|tree
 name|unsigned_intTI_type_node
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1392,6 +1490,7 @@ name|builtin_function
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1401,6 +1500,7 @@ expr|enum
 name|built_in_function
 name|function_
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1415,19 +1515,32 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|tree
-name|c_build_type_variant
+name|c_build_qualified_type
 name|PROTO
 argument_list|(
 operator|(
 name|tree
 operator|,
 name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|c_build_type_variant
+parameter_list|(
+name|TYPE
+parameter_list|,
+name|CONST_P
+parameter_list|,
+name|VOLATILE_P
+parameter_list|)
+define|\
+value|c_build_qualified_type (TYPE, 				  \ 			  ((CONST_P) ? TYPE_QUAL_CONST : 0) |	  \ 			  ((VOLATILE_P) ? TYPE_QUAL_VOLATILE : 0))
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1705,6 +1818,7 @@ name|grokfield
 name|PROTO
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -2453,6 +2567,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2568,6 +2683,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2584,6 +2700,7 @@ argument_list|(
 operator|(
 name|tree
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2704,12 +2821,7 @@ name|error_init
 name|PROTO
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -2724,12 +2836,7 @@ name|pedwarn_init
 name|PROTO
 argument_list|(
 operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -3072,17 +3179,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means ignore `#ident' directives.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_no_ident
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means warn about implicit declarations.  */
 end_comment
 
@@ -3100,7 +3196,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_write_strings
+name|flag_const_strings
 decl_stmt|;
 end_decl_stmt
 
@@ -3171,6 +3267,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Warn about functions which might be candidates for attribute noreturn. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_missing_noreturn
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Warn about traditional constructs whose meanings changed in ANSI C.  */
 end_comment
 
@@ -3237,6 +3344,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means use the ISO C9x dialect of C.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_isoc9x
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means to allow single precision math even if we're generally    being traditional. */
 end_comment
 
@@ -3288,6 +3406,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|warn_multichar
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about long long.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_long_long
 decl_stmt|;
 end_decl_stmt
 
