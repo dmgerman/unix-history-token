@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.72
+literal|3.73
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.72
+literal|3.73
 operator|%
 name|G
 operator|%
@@ -692,6 +692,7 @@ name|bool
 name|bitzerop
 parameter_list|()
 function_decl|;
+comment|/* don't output null headers */
 if|if
 condition|(
 name|h
@@ -710,6 +711,30 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
+comment|/* don't output resent headers on non-resent messages */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_RESENT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|EF_RESENT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+continue|continue;
+comment|/* output this header */
 name|fprintf
 argument_list|(
 name|tfp
@@ -717,6 +742,7 @@ argument_list|,
 literal|"H"
 argument_list|)
 expr_stmt|;
+comment|/* if conditional, output the set of conditions */
 if|if
 condition|(
 operator|!
@@ -788,6 +814,7 @@ name|tfp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* output the header: expand macros, convert addresses */
 if|if
 condition|(
 name|bitset
