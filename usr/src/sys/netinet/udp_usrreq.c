@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)udp_usrreq.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1365,19 +1365,6 @@ break|break;
 case|case
 name|PRU_DETACH
 case|:
-if|if
-condition|(
-name|inp
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOTCONN
-expr_stmt|;
-break|break;
-block|}
 name|in_pcbdetach
 argument_list|(
 name|inp
@@ -1487,11 +1474,14 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|soisdisconnected
-argument_list|(
 name|so
-argument_list|)
+operator|->
+name|so_state
+operator|&=
+operator|~
+name|SS_ISCONNECTED
 expr_stmt|;
+comment|/* XXX */
 break|break;
 case|case
 name|PRU_SHUTDOWN
