@@ -30,19 +30,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -54,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<dirent.h>
 end_include
 
 begin_include
@@ -66,13 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dirent.h>
+file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdarg.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
