@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)times.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)times.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,12 +12,12 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_CLOCK_T_
+name|_BSD_CLOCK_T_
 end_ifdef
 
 begin_typedef
 typedef|typedef
-name|_CLOCK_T_
+name|_BSD_CLOCK_T_
 name|clock_t
 typedef|;
 end_typedef
@@ -25,7 +25,7 @@ end_typedef
 begin_undef
 undef|#
 directive|undef
-name|_CLOCK_T_
+name|_BSD_CLOCK_T_
 end_undef
 
 begin_endif
