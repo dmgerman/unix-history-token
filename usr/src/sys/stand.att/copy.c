@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	copy.c	4.4	83/02/20	*/
+comment|/*	copy.c	4.5	83/02/24	*/
 end_comment
 
 begin_comment
@@ -139,6 +139,23 @@ name|buffer
 argument_list|)
 argument_list|,
 name|rcc
+argument_list|)
+expr_stmt|;
+comment|/* 		 * For bug in ht driver. 		 */
+if|if
+condition|(
+name|rcc
+operator|>
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+condition|)
+name|rcc
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buffer
 argument_list|)
 expr_stmt|;
 name|wcc
