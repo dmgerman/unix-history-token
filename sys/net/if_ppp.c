@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.39 1997/02/22 09:41:03 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.40 1997/03/24 11:52:29 bde Exp $ */
 end_comment
 
 begin_comment
@@ -268,6 +268,24 @@ name|ppp_softc
 index|[
 name|NPPP
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX layering violation */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|pppasyncattach
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +740,12 @@ argument_list|(
 name|NETISR_PPP
 argument_list|,
 name|pppintr
+argument_list|)
+expr_stmt|;
+comment|/*      * XXX layering violation - if_ppp can work over any lower level      * transport that cares to attach to it.      */
+name|pppasyncattach
+argument_list|(
+name|dummy
 argument_list|)
 expr_stmt|;
 block|}

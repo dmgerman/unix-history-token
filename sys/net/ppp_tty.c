@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.15 1997/03/24 11:24:46 bde Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.16 1997/05/31 09:49:35 peter Exp $ */
 end_comment
 
 begin_comment
@@ -208,30 +208,6 @@ include|#
 directive|include
 file|<net/if_pppvar.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|void
-name|pppasyncattach
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|PSEUDO_SET
-argument_list|(
-name|pppasyncattach
-argument_list|,
-name|ppp_tty
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -506,6 +482,23 @@ name|ppp_softc
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX called from if_ppp.c - layering violation */
+end_comment
+
+begin_decl_stmt
+name|void
+name|pppasyncattach
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
