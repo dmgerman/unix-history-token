@@ -5606,6 +5606,27 @@ name|which
 condition|)
 block|{
 case|case
+name|PCI_IVAR_ETHADDR
+case|:
+comment|/* 		 * The generic accessor doesn't deal with failure, so 		 * we set the return value, then return an error. 		 */
+operator|*
+operator|(
+operator|(
+name|u_int8_t
+operator|*
+operator|*
+operator|)
+name|result
+operator|)
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+case|case
 name|PCI_IVAR_SUBVENDOR
 case|:
 operator|*
@@ -5827,6 +5848,9 @@ condition|(
 name|which
 condition|)
 block|{
+case|case
+name|PCI_IVAR_ETHADDR
+case|:
 case|case
 name|PCI_IVAR_SUBVENDOR
 case|:

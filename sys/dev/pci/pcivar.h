@@ -619,6 +619,8 @@ block|,
 name|PCI_IVAR_SLOT
 block|,
 name|PCI_IVAR_FUNCTION
+block|,
+name|PCI_IVAR_ETHADDR
 block|, }
 enum|;
 end_enum
@@ -793,6 +795,17 @@ argument_list|,
 argument|FUNCTION
 argument_list|,
 argument|u_int8_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PCI_ACCESSOR
+argument_list|(
+argument|ether
+argument_list|,
+argument|ETHADDR
+argument_list|,
+argument|u_int8_t *
 argument_list|)
 end_macro
 
