@@ -262,12 +262,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/procfs/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<alpha/osf1/osf1_signal.h>
 end_include
 
