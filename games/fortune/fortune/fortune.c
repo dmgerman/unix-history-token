@@ -5765,6 +5765,7 @@ name|how
 init|=
 literal|0
 decl_stmt|;
+specifier|static
 name|int
 name|fd
 decl_stmt|;
