@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)languages.c 1.2 %G%"
+literal|"@(#)languages.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,10 @@ block|,
 name|L_PRINTVAL
 block|,
 name|L_TYPEMATCH
+block|,
+name|L_BUILDAREF
+block|,
+name|L_EVALAREF
 block|}
 name|LanguageOp
 typedef|;
@@ -129,6 +133,9 @@ name|language_init
 parameter_list|()
 block|{
 name|c_init
+argument_list|()
+expr_stmt|;
+name|fortran_init
 argument_list|()
 expr_stmt|;
 name|pascal_init
@@ -324,7 +331,7 @@ argument_list|)
 operator|<=
 name|ord
 argument_list|(
-name|L_TYPEMATCH
+name|L_EVALAREF
 argument_list|)
 argument_list|)
 expr_stmt|;
