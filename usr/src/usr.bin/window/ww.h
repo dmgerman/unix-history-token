@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.64 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Edward Wang at The University of California, Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)ww.h	3.65 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -1489,6 +1489,30 @@ begin_comment
 comment|/* terminal-specific but window-independent 				   part of the window termcap */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TERMINFO
+end_ifdef
+
+begin_comment
+comment|/* where to put the temporary terminfo directory */
+end_comment
+
+begin_decl_stmt
+name|char
+name|wwterminfopath
+index|[
+literal|1024
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* our functions */
 end_comment
@@ -1511,7 +1535,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|wwsuspend
+name|wwquit
 parameter_list|()
 function_decl|;
 end_function_decl

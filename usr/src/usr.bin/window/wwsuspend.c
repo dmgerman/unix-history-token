@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsuspend.c	3.15 (Berkeley) %G%"
+literal|"@(#)wwsuspend.c	3.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,9 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|wwend
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 operator|(
 name|void

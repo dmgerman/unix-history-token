@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd.c	3.40 (Berkeley) %G%"
+literal|"@(#)cmd.c	3.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,12 @@ literal|'k'
 case|:
 case|case
 literal|'l'
+case|:
+case|case
+literal|'y'
+case|:
+case|case
+literal|'p'
 case|:
 case|case
 name|ctrl
@@ -496,6 +502,20 @@ name|ww_alt
 operator|.
 name|nc
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'y'
+case|:
+name|c_yank
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|c_put
+argument_list|()
 expr_stmt|;
 break|break;
 case|case

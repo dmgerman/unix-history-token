@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.42 (Berkeley) %G%"
+literal|"@(#)main.c	3.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -818,7 +818,9 @@ expr_stmt|;
 name|bad
 label|:
 name|wwend
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

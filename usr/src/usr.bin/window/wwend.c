@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.16 (Berkeley) %G%"
+literal|"@(#)wwend.c	3.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,9 +40,15 @@ directive|include
 file|"tt.h"
 end_include
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|wwend
-argument_list|()
+argument_list|(
+argument|exit
+argument_list|)
 end_macro
 
 begin_block
@@ -61,8 +67,38 @@ operator|&
 name|wwoldtty
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERMINFO
+if|if
+condition|(
+name|exit
+condition|)
+name|wwterminfoend
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
+
+begin_function
+name|void
+name|wwquit
+parameter_list|()
+block|{
+name|wwend
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
