@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.111 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.112 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4973,7 +4973,7 @@ end_block
 
 begin_struct
 struct|struct
-name|__lseek_args
+name|lseek_args
 block|{
 name|int
 name|fdes
@@ -5017,7 +5017,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|__lseek_args
+name|lseek_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -5231,7 +5231,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|lseek_args
+name|olseek_args
 block|{
 name|int
 name|fdes
@@ -5268,7 +5268,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|lseek_args
+name|olseek_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -5284,7 +5284,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|__lseek_args
+name|lseek_args
 name|nuap
 decl_stmt|;
 name|off_t
@@ -5319,7 +5319,7 @@ name|sbase
 expr_stmt|;
 name|error
 operator|=
-name|__lseek
+name|lseek
 argument_list|(
 name|p
 argument_list|,
@@ -8583,7 +8583,7 @@ end_block
 
 begin_struct
 struct|struct
-name|__truncate_args
+name|truncate_args
 block|{
 name|char
 modifier|*
@@ -8629,7 +8629,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|__truncate_args
+name|truncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -8813,7 +8813,7 @@ end_block
 
 begin_struct
 struct|struct
-name|__ftruncate_args
+name|ftruncate_args
 block|{
 name|int
 name|fd
@@ -8858,7 +8858,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|__ftruncate_args
+name|ftruncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -9053,7 +9053,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|truncate_args
+name|otruncate_args
 block|{
 name|char
 modifier|*
@@ -9092,7 +9092,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|truncate_args
+name|otruncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -9108,7 +9108,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|__truncate_args
+name|truncate_args
 name|nuap
 decl_stmt|;
 name|nuap
@@ -9129,7 +9129,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|__truncate
+name|truncate
 argument_list|(
 name|p
 argument_list|,
@@ -9149,7 +9149,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|ftruncate_args
+name|oftruncate_args
 block|{
 name|int
 name|fd
@@ -9187,7 +9187,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|struct
-name|ftruncate_args
+name|oftruncate_args
 modifier|*
 name|uap
 decl_stmt|;
@@ -9203,7 +9203,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|__ftruncate_args
+name|ftruncate_args
 name|nuap
 decl_stmt|;
 name|nuap
@@ -9224,7 +9224,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|__ftruncate
+name|ftruncate
 argument_list|(
 name|p
 argument_list|,
