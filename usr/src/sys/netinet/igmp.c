@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Stephen Deering.  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)igmp.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Stephen Deering.  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)igmp.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -146,7 +146,7 @@ name|igmp_input
 parameter_list|(
 name|m
 parameter_list|,
-name|ifp
+name|iphlen
 parameter_list|)
 specifier|register
 name|struct
@@ -155,10 +155,8 @@ modifier|*
 name|m
 decl_stmt|;
 specifier|register
-name|struct
-name|ifnet
-modifier|*
-name|ifp
+name|int
+name|iphlen
 decl_stmt|;
 block|{
 specifier|register
@@ -178,8 +176,16 @@ name|int
 name|igmplen
 decl_stmt|;
 specifier|register
-name|int
-name|iphlen
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
 decl_stmt|;
 specifier|register
 name|int
@@ -216,14 +222,6 @@ expr|struct
 name|ip
 operator|*
 argument_list|)
-expr_stmt|;
-name|iphlen
-operator|=
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
 expr_stmt|;
 name|igmplen
 operator|=
@@ -861,6 +859,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* 	 * Assume max_linkhdr + sizeof(struct ip) + IGMP_MINLEN 	 * is smaller than mbuf size returned by MGETHDR. 	 */
 name|m
 operator|->
 name|m_data
@@ -870,6 +869,20 @@ expr_stmt|;
 name|m
 operator|->
 name|m_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|+
+name|IGMP_MINLEN
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 operator|=
 sizeof|sizeof
 argument_list|(
