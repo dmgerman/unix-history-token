@@ -176,6 +176,25 @@ name|ret
 operator|==
 name|_LDP_LOADED
 condition|)
+block|{
+comment|/* Can't be empty according to C99 */
+if|if
+condition|(
+operator|*
+name|_numeric_locale
+operator|.
+name|decimal_point
+operator|==
+literal|'\0'
+condition|)
+name|_numeric_locale
+operator|.
+name|decimal_point
+operator|=
+name|_C_numeric_locale
+operator|.
+name|decimal_point
+expr_stmt|;
 name|_numeric_locale
 operator|.
 name|grouping
@@ -187,6 +206,7 @@ operator|.
 name|grouping
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|ret
