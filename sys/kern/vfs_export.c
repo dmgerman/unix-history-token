@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.72 1997/02/26 15:35:42 bde Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.31 (Berkeley) 5/26/95  * $Id: vfs_subr.c,v 1.73 1997/02/27 02:57:03 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -3050,7 +3050,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"brelvp: NULL"
+literal|"pbrelvp: NULL"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4227,7 +4227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decrement the active use count.  */
+comment|/*  * Do the inverse of vop_nolock, handling the interlock in a compatible way.  */
 end_comment
 
 begin_function
@@ -4260,11 +4260,31 @@ name|v_vnlock
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_flags
+operator|&
+name|LK_INTERLOCK
+condition|)
+name|simple_unlock
+argument_list|(
+operator|&
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_interlock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|lockmgr
@@ -4274,8 +4294,17 @@ operator|->
 name|v_vnlock
 argument_list|,
 name|LK_RELEASE
+operator||
+name|ap
+operator|->
+name|a_flags
 argument_list|,
-name|NULL
+operator|&
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_interlock
 argument_list|,
 name|ap
 operator|->
@@ -4546,14 +4575,6 @@ operator|&=
 operator|~
 name|OBJ_VFS_REF
 expr_stmt|;
-name|simple_unlock
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|put
@@ -4563,9 +4584,20 @@ name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
-literal|0
+name|LK_INTERLOCK
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -4587,14 +4619,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|simple_unlock
-argument_list|(
-operator|&
-name|vp
-operator|->
-name|v_interlock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|put
@@ -4604,9 +4628,20 @@ name|VOP_UNLOCK
 argument_list|(
 name|vp
 argument_list|,
-literal|0
+name|LK_INTERLOCK
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|simple_unlock
+argument_list|(
+operator|&
+name|vp
+operator|->
+name|v_interlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -4707,12 +4742,21 @@ name|v_freelist
 argument_list|)
 expr_stmt|;
 block|}
+name|freevnodes
+operator|++
+expr_stmt|;
 name|simple_unlock
 argument_list|(
 operator|&
 name|vnode_free_list_slock
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are doing a vput, the node is already locked, and we must 	 * call VOP_INACTIVE with the node locked.  So, in the case of 	 * vrele, we explicitly lock the vnode before calling VOP_INACTIVE. 	 */
+if|if
+condition|(
+name|put
+condition|)
+block|{
 name|simple_unlock
 argument_list|(
 operator|&
@@ -4721,15 +4765,17 @@ operator|->
 name|v_interlock
 argument_list|)
 expr_stmt|;
-name|freevnodes
-operator|++
+name|VOP_INACTIVE
+argument_list|(
+name|vp
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
-comment|/* 	 * If we are doing a vput, the node is already locked, and we must 	 * call VOP_INACTIVE with the node locked.  So, in the case of 	 * vrele, we explicitly lock the vnode before calling VOP_INACTIVE. 	 */
+block|}
+elseif|else
 if|if
 condition|(
-name|put
-operator|||
-operator|(
 name|vn_lock
 argument_list|(
 name|vp
@@ -4742,8 +4788,8 @@ name|p
 argument_list|)
 operator|==
 literal|0
-operator|)
 condition|)
+block|{
 name|VOP_INACTIVE
 argument_list|(
 name|vp
@@ -4751,6 +4797,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
