@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.3 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.18 92/06/11 17:55:56 torek Exp $  */
+comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.4 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.24 92/11/19 04:37:33 torek Exp $  */
 end_comment
 
 begin_comment
@@ -76,37 +76,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/scsi/scsi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/scsi/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/scsi/scsivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/scsi/scsi_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsi.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"disk.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"scsivar.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"scsi_ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sdtrace.h"
+file|<dev/scsi/sdtrace.h>
 end_include
 
 begin_ifdef
@@ -414,15 +414,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
+name|dkdriver
 name|sddkdriver
 init|=
 block|{
@@ -430,11 +425,6 @@ name|sdstrategy
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1487,29 +1477,6 @@ name|si_version
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notyet
-name|sc
-operator|->
-name|sc_dk
-operator|.
-name|dk_driver
-operator|=
-operator|&
-name|sddkdriver
-expr_stmt|;
-name|dk_establish
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_dk
-argument_list|)
-expr_stmt|;
-comment|/* READ DISK LABEL HERE, UNLESS REMOVABLE MEDIUM... NEEDS THOUGHT */
-endif|#
-directive|endif
 name|CDB10
 argument_list|(
 operator|&
@@ -1655,6 +1622,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* XXX shouldn't bail for removable media */
 name|printf
 argument_list|(
 literal|": unable to determine drive capacity [sts=%x]\n"
@@ -1761,19 +1729,25 @@ name|sc
 operator|->
 name|sc_dk
 operator|.
-name|dk_wpms
+name|dk_driver
 operator|=
-literal|32
-operator|*
-operator|(
-literal|60
-operator|*
-name|DEV_BSIZE
-operator|/
-literal|2
-operator|)
+operator|&
+name|sddkdriver
 expr_stmt|;
-comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|notyet
+name|dk_establish
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_dk
+argument_list|)
+expr_stmt|;
+comment|/* READ DISK LABEL HERE, UNLESS REMOVABLE MEDIUM... NEEDS THOUGHT */
+else|#
+directive|else
 name|sc
 operator|->
 name|sc_dk
@@ -1782,6 +1756,23 @@ name|dk_label
 operator|.
 name|d_secsize
 operator|=
+literal|512
+expr_stmt|;
+comment|/* XXX */
+name|sc
+operator|->
+name|sc_dk
+operator|.
+name|dk_bps
+operator|=
+operator|(
+literal|3600
+operator|/
+literal|60
+operator|)
+operator|*
+literal|32
+operator|*
 literal|512
 expr_stmt|;
 comment|/* XXX */
@@ -1946,6 +1937,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* notyet */
 block|}
 end_block
 
@@ -2195,8 +2189,10 @@ name|cbuf
 decl_stmt|;
 name|struct
 name|buf
+modifier|*
 name|tbp
 decl_stmt|;
+comment|/* should probably use geteblk() here, but I fear consequences */
 name|cbuf
 operator|=
 operator|(
@@ -2211,26 +2207,44 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|tbp
+operator|=
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|tbp
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|tbp
 argument_list|,
 sizeof|sizeof
+expr|*
 name|tbp
 argument_list|)
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_proc
 operator|=
 name|curproc
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_dev
 operator|=
 name|bp
@@ -2348,7 +2362,7 @@ name|boff
 argument_list|)
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_flags
 operator|=
 name|B_BUSY
@@ -2356,7 +2370,7 @@ operator||
 name|B_READ
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_blkno
 operator|=
 name|bn
@@ -2367,7 +2381,7 @@ name|boff
 argument_list|)
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_un
 operator|.
 name|b_addr
@@ -2375,7 +2389,7 @@ operator|=
 name|cbuf
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_bcount
 operator|=
 name|bsize
@@ -2394,7 +2408,7 @@ argument_list|(
 literal|" readahead: bn %x cnt %x off %x addr %x\n"
 argument_list|,
 name|tbp
-operator|.
+operator|->
 name|b_blkno
 argument_list|,
 name|count
@@ -2408,20 +2422,18 @@ endif|#
 directive|endif
 name|sdstrategy
 argument_list|(
-operator|&
 name|tbp
 argument_list|)
 expr_stmt|;
 name|biowait
 argument_list|(
-operator|&
 name|tbp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|tbp
-operator|.
+operator|->
 name|b_flags
 operator|&
 name|B_ERROR
@@ -2438,7 +2450,7 @@ operator|->
 name|b_error
 operator|=
 name|tbp
-operator|.
+operator|->
 name|b_error
 expr_stmt|;
 break|break;
@@ -2496,7 +2508,7 @@ argument_list|(
 literal|" writeback: bn %x cnt %x off %x addr %x\n"
 argument_list|,
 name|tbp
-operator|.
+operator|->
 name|b_blkno
 argument_list|,
 name|count
@@ -2523,13 +2535,13 @@ literal|1
 operator|)
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_blkno
 operator|=
 name|bn
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_un
 operator|.
 name|b_addr
@@ -2537,7 +2549,7 @@ operator|=
 name|addr
 expr_stmt|;
 name|tbp
-operator|.
+operator|->
 name|b_bcount
 operator|=
 name|count
@@ -2556,7 +2568,7 @@ argument_list|(
 literal|" fulltrans: bn %x cnt %x addr %x\n"
 argument_list|,
 name|tbp
-operator|.
+operator|->
 name|b_blkno
 argument_list|,
 name|count
@@ -2568,7 +2580,7 @@ endif|#
 directive|endif
 block|}
 name|tbp
-operator|.
+operator|->
 name|b_flags
 operator|=
 name|B_BUSY
@@ -2583,20 +2595,18 @@ operator|)
 expr_stmt|;
 name|sdstrategy
 argument_list|(
-operator|&
 name|tbp
 argument_list|)
 expr_stmt|;
 name|biowait
 argument_list|(
-operator|&
 name|tbp
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|tbp
-operator|.
+operator|->
 name|b_flags
 operator|&
 name|B_ERROR
@@ -2613,7 +2623,7 @@ operator|->
 name|b_error
 operator|=
 name|tbp
-operator|.
+operator|->
 name|b_error
 expr_stmt|;
 break|break;
@@ -2661,6 +2671,16 @@ block|}
 name|free
 argument_list|(
 name|cbuf
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|tbp
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -4384,7 +4404,7 @@ define|#
 directive|define
 name|cdb
 value|((struct scsi_cdb *)data)
-comment|/* 		 * Save what user gave us as SCSI cdb to use with next 		 * read or write to the char device. 		 */
+comment|/* 		 * Save what user gave us as SCSI cdb to use with next 		 * read or write to the char device.  Be sure to replace 		 * the lun field with the actual unit number. 		 */
 if|if
 condition|(
 name|sc
@@ -4425,6 +4445,43 @@ name|sc_cmd
 operator|=
 operator|*
 name|cdb
+expr_stmt|;
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|cdb_bytes
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|sc
+operator|->
+name|sc_cmd
+operator|.
+name|cdb_bytes
+index|[
+literal|1
+index|]
+operator|&
+operator|~
+operator|(
+literal|7
+operator|<<
+literal|5
+operator|)
+operator|)
+operator||
+operator|(
+name|sc
+operator|->
+name|sc_unit
+operator|.
+name|u_unit
+operator|<<
+literal|5
+operator|)
 expr_stmt|;
 undef|#
 directive|undef
