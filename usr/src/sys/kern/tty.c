@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.20	82/01/25	*/
+comment|/*	tty.c	4.21	82/01/30	*/
 end_comment
 
 begin_comment
@@ -1262,18 +1262,7 @@ name|SIGTTOU
 index|]
 operator|!=
 name|SIG_HOLD
-operator|&&
-operator|(
-name|u
-operator|.
-name|u_procp
-operator|->
-name|p_flag
-operator|&
-name|SDETACH
-operator|)
-operator|==
-literal|0
+comment|/*&& 		   (u.u_procp->p_flag&SDETACH)==0) { */
 condition|)
 block|{
 name|gsignal
