@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_output.c,v 5.4 88/11/18 17:28:08 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_output.c,v $  *	@(#)tp_output.c	7.6 (Berkeley) %G% *  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
+comment|/*   * ARGO TP  *  * $Header: tp_output.c,v 5.4 88/11/18 17:28:08 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_output.c,v $  *	@(#)tp_output.c	7.7 (Berkeley) %G% *  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
 end_comment
 
 begin_ifndef
@@ -1942,15 +1942,15 @@ name|done
 goto|;
 block|}
 block|}
-name|tp_intercepts
-operator|=
-name|tpcb
-expr_stmt|;
 name|tpcb
 operator|->
 name|tp_nextlisten
 operator|=
 name|tp_intercepts
+expr_stmt|;
+name|tp_intercepts
+operator|=
+name|tpcb
 expr_stmt|;
 break|break;
 case|case

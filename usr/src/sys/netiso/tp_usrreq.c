@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.12 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
+comment|/*   * ARGO TP  *  * $Header: tp_usrreq.c,v 5.4 88/11/18 17:29:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_usrreq.c,v $  *	@(#)tp_usrreq.c	7.13 (Berkeley) %G%  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
 end_comment
 
 begin_ifndef
@@ -1850,8 +1850,6 @@ expr_stmt|;
 name|tp_listeners
 operator|=
 name|tpcb
-operator|->
-name|tp_nextlisten
 expr_stmt|;
 block|}
 name|IFDEBUG

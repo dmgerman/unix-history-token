@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.12 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.13 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -2410,6 +2410,8 @@ init|;
 name|t
 condition|;
 name|t
+operator|=
+name|t
 operator|->
 name|tp_nextlisten
 control|)
@@ -2431,7 +2433,7 @@ if|if
 condition|(
 call|(
 modifier|*
-name|tpcb
+name|t
 operator|->
 name|tp_nlproto
 operator|->
@@ -2466,10 +2468,11 @@ init|;
 name|t
 condition|;
 name|t
+operator|=
+name|t
 operator|->
 name|tp_nextlisten
 control|)
-block|{
 if|if
 condition|(
 name|bcmp
@@ -2482,24 +2485,20 @@ name|tp_lsuffix
 argument_list|,
 name|lsufxlen
 argument_list|)
-operator|!=
+operator|==
 literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
+operator|&&
 name|laddr
 operator|->
 name|sa_family
-operator|!=
+operator|==
 name|t
 operator|->
 name|tp_nlproto
 operator|->
 name|nlp_afamily
 condition|)
-continue|continue;
-block|}
+break|break;
 name|CHECK
 argument_list|(
 argument|t ==
@@ -2518,12 +2517,22 @@ literal|2
 argument|+ (caddr_t)&hdr->_tpduf - (caddr_t)hdr)
 argument_list|)
 comment|/* _tpduf is the fixed part; add 2 to get the dref bits of  				 * the fixed part (can't take the address of a bit field)  				 */
+name|IFDEBUG
+argument_list|(
+argument|D_TPINPUT
+argument_list|)
+name|printf
+argument_list|(
+literal|"checking if dup CR\n"
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 name|check_duplicate_cr
-label|:
+range|:
 name|tpcb
 operator|=
 name|t
-expr_stmt|;
+decl_stmt|;
 for|for
 control|(
 name|t
@@ -3075,9 +3084,9 @@ argument_list|)
 expr_stmt|;
 name|insque
 argument_list|(
-name|parent_tpcb
-argument_list|,
 name|tpcb
+argument_list|,
+name|parent_tpcb
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Stash the addresses in the net level pcb  			 * kind of like a pcbconnect() but don't need 			 * or want all those checks. 			 */
