@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Context-format output routines for GNU DIFF.    Copyright (C) 1988,1989,1991,1992,1993,1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Context-format output routines for GNU DIFF.    Copyright (C) 1988,1989,1991,1992,1993,1994,1998 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU DIFF; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -220,10 +220,8 @@ if|if
 condition|(
 name|label
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%s %s\n"
 argument_list|,
 name|mark
@@ -258,10 +256,8 @@ operator|=
 literal|"?\n"
 expr_stmt|;
 comment|/* See Posix.2 section 4.17.6.1.4 for this format.  */
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%s %s\t%s"
 argument_list|,
 name|mark
@@ -533,10 +529,8 @@ name|trans_b
 operator|>
 name|trans_a
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%d,%d"
 argument_list|,
 name|trans_a
@@ -545,10 +539,8 @@ name|trans_b
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%d"
 argument_list|,
 name|trans_b
@@ -609,10 +601,6 @@ name|function
 decl_stmt|;
 name|size_t
 name|function_length
-decl_stmt|;
-name|FILE
-modifier|*
-name|out
 decl_stmt|;
 comment|/* Determine range of line numbers involved in each file.  */
 name|analyze_hunk
@@ -745,15 +733,9 @@ expr_stmt|;
 name|begin_output
 argument_list|()
 expr_stmt|;
-name|out
-operator|=
-name|outfile
-expr_stmt|;
 comment|/* If we looked for and found a function this is part of,      include its name in the header of the diff section.  */
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|"***************"
 argument_list|)
 expr_stmt|;
@@ -762,18 +744,14 @@ condition|(
 name|function
 condition|)
 block|{
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-name|fwrite
+name|write_output
 argument_list|(
 name|function
-argument_list|,
-literal|1
 argument_list|,
 name|min
 argument_list|(
@@ -783,15 +761,11 @@ literal|1
 argument_list|,
 literal|40
 argument_list|)
-argument_list|,
-name|out
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|"\n*** "
 argument_list|)
 expr_stmt|;
@@ -808,10 +782,8 @@ argument_list|,
 name|last0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|" ****\n"
 argument_list|)
 expr_stmt|;
@@ -907,10 +879,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|"--- "
 argument_list|)
 expr_stmt|;
@@ -927,10 +897,8 @@ argument_list|,
 name|last1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|" ----\n"
 argument_list|)
 expr_stmt|;
@@ -1086,10 +1054,8 @@ name|trans_b
 operator|<=
 name|trans_a
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 name|trans_b
 operator|==
 name|trans_a
@@ -1102,10 +1068,8 @@ name|trans_b
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"%d,%d"
 argument_list|,
 name|trans_a
@@ -1171,10 +1135,6 @@ name|function
 decl_stmt|;
 name|size_t
 name|function_length
-decl_stmt|;
-name|FILE
-modifier|*
-name|out
 decl_stmt|;
 comment|/* Determine range of line numbers involved in each file.  */
 name|analyze_hunk
@@ -1307,14 +1267,8 @@ expr_stmt|;
 name|begin_output
 argument_list|()
 expr_stmt|;
-name|out
-operator|=
-name|outfile
-expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|"@@ -"
 argument_list|)
 expr_stmt|;
@@ -1331,10 +1285,8 @@ argument_list|,
 name|last0
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|" +"
 argument_list|)
 expr_stmt|;
@@ -1351,10 +1303,8 @@ argument_list|,
 name|last1
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 literal|" @@"
 argument_list|)
 expr_stmt|;
@@ -1364,18 +1314,16 @@ condition|(
 name|function
 condition|)
 block|{
-name|putc
+name|write_output
 argument_list|(
-literal|' '
-argument_list|,
-name|out
-argument_list|)
-expr_stmt|;
-name|fwrite
-argument_list|(
-name|function
+literal|" "
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|write_output
+argument_list|(
+name|function
 argument_list|,
 name|min
 argument_list|(
@@ -1385,16 +1333,14 @@ literal|1
 argument_list|,
 literal|40
 argument_list|)
-argument_list|,
-name|out
 argument_list|)
 expr_stmt|;
 block|}
-name|putc
+name|write_output
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|next
@@ -1433,15 +1379,15 @@ operator|->
 name|line0
 condition|)
 block|{
-name|putc
+name|write_output
 argument_list|(
 name|tab_align_flag
 condition|?
-literal|'\t'
+literal|"\t"
 else|:
-literal|' '
+literal|" "
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|print_1_line
@@ -1480,22 +1426,22 @@ name|k
 operator|--
 condition|)
 block|{
-name|putc
+name|write_output
 argument_list|(
-literal|'-'
+literal|"-"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|tab_align_flag
 condition|)
-name|putc
+name|write_output
 argument_list|(
-literal|'\t'
+literal|"\t"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|print_1_line
@@ -1529,22 +1475,22 @@ name|k
 operator|--
 condition|)
 block|{
-name|putc
+name|write_output
 argument_list|(
-literal|'+'
+literal|"+"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|tab_align_flag
 condition|)
-name|putc
+name|write_output
 argument_list|(
-literal|'\t'
+literal|"\t"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|print_1_line

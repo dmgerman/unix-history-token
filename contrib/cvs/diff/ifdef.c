@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* #ifdef-format output routines for GNU DIFF.    Copyright (C) 1989, 1991, 1992, 1993, 1994 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
+comment|/* #ifdef-format output routines for GNU DIFF.    Copyright (C) 1989, 1991, 1992, 1993, 1994, 1998 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
 end_comment
 
 begin_include
@@ -37,8 +37,7 @@ name|format_group
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|int
 operator|,
 name|char
 operator|*
@@ -149,8 +148,7 @@ name|print_ifdef_lines
 name|PARAMS
 argument_list|(
 operator|(
-name|FILE
-operator|*
+name|int
 operator|,
 name|char
 operator|*
@@ -514,7 +512,7 @@ name|end1
 expr_stmt|;
 name|format_group
 argument_list|(
-name|outfile
+literal|1
 argument_list|,
 name|format
 argument_list|,
@@ -527,7 +525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print to file OUT a set of lines according to FORMAT.    The format ends at the first free instance of ENDCHAR.    Yield the address of the terminating character.    GROUPS specifies which lines to print.    If OUT is zero, do not actually print anything; just scan the format.  */
+comment|/* If DOIT is non-zero, output a set of lines according to FORMAT.    The format ends at the first free instance of ENDCHAR.    Yield the address of the terminating character.    GROUPS specifies which lines to print.    If OUT is zero, do not actually print anything; just scan the format.  */
 end_comment
 
 begin_function
@@ -536,7 +534,7 @@ name|char
 modifier|*
 name|format_group
 parameter_list|(
-name|out
+name|doit
 parameter_list|,
 name|format
 parameter_list|,
@@ -544,10 +542,8 @@ name|endchar
 parameter_list|,
 name|groups
 parameter_list|)
-specifier|register
-name|FILE
-modifier|*
-name|out
+name|int
+name|doit
 decl_stmt|;
 name|char
 modifier|*
@@ -634,12 +630,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|FILE
-modifier|*
-name|thenout
+name|int
+name|thendoit
 decl_stmt|,
-modifier|*
-name|elseout
+name|elsedoit
 decl_stmt|;
 for|for
 control|(
@@ -754,28 +748,28 @@ index|[
 literal|1
 index|]
 condition|)
-name|thenout
+name|thendoit
 operator|=
-name|out
+name|doit
 operator|,
-name|elseout
+name|elsedoit
 operator|=
 literal|0
 expr_stmt|;
 else|else
-name|thenout
+name|thendoit
 operator|=
 literal|0
 operator|,
-name|elseout
+name|elsedoit
 operator|=
-name|out
+name|doit
 expr_stmt|;
 name|f
 operator|=
 name|format_group
 argument_list|(
-name|thenout
+name|thendoit
 argument_list|,
 name|f
 argument_list|,
@@ -794,7 +788,7 @@ name|f
 operator|=
 name|format_group
 argument_list|(
-name|elseout
+name|elsedoit
 argument_list|,
 name|f
 operator|+
@@ -822,7 +816,7 @@ case|:
 comment|/* Print lines deleted from first file.  */
 name|print_ifdef_lines
 argument_list|(
-name|out
+name|doit
 argument_list|,
 name|line_format
 index|[
@@ -843,7 +837,7 @@ case|:
 comment|/* Print common lines.  */
 name|print_ifdef_lines
 argument_list|(
-name|out
+name|doit
 argument_list|,
 name|line_format
 index|[
@@ -864,7 +858,7 @@ case|:
 comment|/* Print lines inserted from second file.  */
 name|print_ifdef_lines
 argument_list|(
-name|out
+name|doit
 argument_list|,
 name|line_format
 index|[
@@ -963,7 +957,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|out
+name|doit
 condition|)
 block|{
 comment|/* Temporarily replace e.g. "%3dnx" with "%3d\0x".  */
@@ -972,10 +966,8 @@ name|speclim
 operator|=
 literal|0
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 name|spec
 operator|-
 literal|1
@@ -1007,15 +999,24 @@ block|}
 block|}
 if|if
 condition|(
-name|out
+name|doit
 condition|)
-name|putc
-argument_list|(
+block|{
+comment|/* Don't take the address of a register variable.  */
+name|char
+name|cc
+init|=
 name|c
+decl_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 name|f
@@ -1156,7 +1157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print to file OUT, using FORMAT to print the line group GROUP.    But do nothing if OUT is zero.  */
+comment|/* Output using FORMAT to print the line group GROUP.    But do nothing if DOIT is zero.  */
 end_comment
 
 begin_function
@@ -1164,16 +1165,14 @@ specifier|static
 name|void
 name|print_ifdef_lines
 parameter_list|(
-name|out
+name|doit
 parameter_list|,
 name|format
 parameter_list|,
 name|group
 parameter_list|)
-specifier|register
-name|FILE
-modifier|*
-name|out
+name|int
+name|doit
 decl_stmt|;
 name|char
 modifier|*
@@ -1223,7 +1222,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|out
+name|doit
 condition|)
 return|return;
 comment|/* If possible, use a single fwrite; it's faster.  */
@@ -1263,18 +1262,14 @@ literal|3
 index|]
 condition|)
 block|{
-name|fwrite
+name|write_output
 argument_list|(
 name|linbuf
 index|[
 name|from
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-argument_list|,
+operator|(
 name|linbuf
 index|[
 name|upto
@@ -1297,8 +1292,7 @@ name|linbuf
 index|[
 name|from
 index|]
-argument_list|,
-name|out
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1319,17 +1313,12 @@ literal|2
 index|]
 condition|)
 block|{
-name|fwrite
+name|write_output
 argument_list|(
 name|linbuf
 index|[
 name|from
 index|]
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
 argument_list|,
 name|linbuf
 index|[
@@ -1340,8 +1329,6 @@ name|linbuf
 index|[
 name|from
 index|]
-argument_list|,
-name|out
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1368,6 +1355,9 @@ modifier|*
 name|f
 init|=
 name|format
+decl_stmt|;
+name|char
+name|cc
 decl_stmt|;
 while|while
 condition|(
@@ -1556,10 +1546,8 @@ name|speclim
 operator|=
 literal|0
 expr_stmt|;
-name|fprintf
+name|printf_output
 argument_list|(
-name|out
-argument_list|,
 name|spec
 operator|-
 literal|1
@@ -1588,11 +1576,17 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|putc
-argument_list|(
+comment|/* Don't take the address of a register variable.  */
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

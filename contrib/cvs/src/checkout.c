@@ -821,6 +821,26 @@ name|tag
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+if|if
+condition|(
+name|server_active
+operator|&&
+name|where
+operator|!=
+name|NULL
+condition|)
+block|{
+name|server_pathname_check
+argument_list|(
+name|where
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1495,6 +1515,10 @@ name|char
 modifier|*
 name|dirpath
 decl_stmt|;
+comment|/* If set, don't build the directory, just change to it.        The caller will also want to set REPOSITORY to NULL.  */
+name|int
+name|just_chdir
+decl_stmt|;
 name|struct
 name|dir_to_build
 modifier|*
@@ -1518,9 +1542,6 @@ name|list
 operator|,
 name|int
 name|sticky
-operator|,
-name|int
-name|check_existing_dirs
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2502,6 +2523,12 @@ name|next
 operator|=
 name|NULL
 expr_stmt|;
+name|head
+operator|->
+name|just_chdir
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Make a copy of the repository name to play with. */
 name|reposcopy
 operator|=
@@ -2631,7 +2658,54 @@ literal|"/"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now figure out what repository directory to generate.                The most complete case would be something like this:  	       The modules file contains 	         foo -d bar/baz quux  	       The command issued was: 	         cvs co -d what/ever -N foo 	        	       The results in the CVS/Repository files should be: 	         .     -> .          (this is where we executed the cmd) 		 what  -> Emptydir   (generated dir -- not in repos) 		 ever  -> .          (same as "cd what/ever; cvs co -N foo") 		 bar   -> Emptydir   (generated dir -- not in repos) 		 baz   -> quux       (finally!) */
+name|new
+operator|->
+name|next
+operator|=
+name|head
+expr_stmt|;
+name|head
+operator|=
+name|new
+expr_stmt|;
+comment|/* If where consists of multiple pathname components, 	       then we want to just cd into it, without creating 	       directories or modifying CVS directories as we go. 	       In CVS 1.9 and earlier, the code actually does a 	       CVS_CHDIR up-front; I'm not going to try to go back 	       to that exact code but this is somewhat similar 	       in spirit.  */
+if|if
+condition|(
+name|where_orig
+operator|!=
+name|NULL
+operator|&&
+name|cp
+operator|-
+name|where
+operator|<
+name|strlen
+argument_list|(
+name|where_orig
+argument_list|)
+condition|)
+block|{
+name|new
+operator|->
+name|repository
+operator|=
+name|NULL
+expr_stmt|;
+name|new
+operator|->
+name|just_chdir
+operator|=
+literal|1
+expr_stmt|;
+continue|continue;
+block|}
+name|new
+operator|->
+name|just_chdir
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Now figure out what repository directory to generate.                The most complete case would be something like this:  	       The modules file contains 	         foo -d bar/baz quux  	       The command issued was: 	         cvs co -d what/ever -N foo 	        	       The results in the CVS/Repository files should be: 	         .     -> (don't touch CVS/Repository) 			  (I think this case might be buggy currently) 		 what  -> (don't touch CVS/Repository) 		 ever  -> .          (same as "cd what/ever; cvs co -N foo") 		 bar   -> Emptydir   (generated dir -- not in repos) 		 baz   -> quux       (finally!) */
 if|if
 condition|(
 name|strcmp
@@ -2799,16 +2873,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|new
-operator|->
-name|next
-operator|=
-name|head
-expr_stmt|;
-name|head
-operator|=
-name|new
-expr_stmt|;
 block|}
 comment|/* clean up */
 name|free
@@ -2826,10 +2890,13 @@ name|where
 argument_list|)
 decl_stmt|;
 comment|/* The top-level CVSADM directory should always be 	       CVSroot_directory.  Create it, but only if WHERE is 	       relative.  If WHERE is absolute, our current directory 	       may not have a thing to do with where the sources are 	       being checked out.  If it does, build_dirs_and_chdir 	       will take care of creating adm files here. */
+comment|/* FIXME: checking where_is_absolute is a horrid kludge; 	       I suspect we probably can just skip the call to 	       build_one_dir whenever the -d command option was specified 	       to checkout.  */
 if|if
 condition|(
 operator|!
 name|where_is_absolute
+operator|&&
+name|top_level_admin
 condition|)
 block|{
 comment|/* It may be argued that we shouldn't set any sticky 		   bits for the top-level repository.  FIXME?  */
@@ -2845,6 +2912,23 @@ operator|<=
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_SUPPORT
+comment|/* We _always_ want to have a top-level admin 		   directory.  If we're running in client/server mode, 		   send a "Clear-static-directory" command to make 		   sure it is created on the client side.  (See 5.10 		   in cvsclient.dvi to convince yourself that this is 		   OK.)  If this is a duplicate command being sent, it 		   will be ignored on the client side.  */
+if|if
+condition|(
+name|server_active
+condition|)
+name|server_clear_entstat
+argument_list|(
+literal|"."
+argument_list|,
+name|CVSroot_directory
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Build dirs on the path if necessary and leave us in the 	       bottom directory (where if where was specified) doesn't 	       contain a CVS subdir yet, but all the others contain 	       CVS and Entries.Static files */
 if|if
@@ -2857,8 +2941,6 @@ operator|*
 name|pargc
 operator|<=
 literal|1
-argument_list|,
-name|where_is_absolute
 argument_list|)
 operator|!=
 literal|0
@@ -3932,7 +4014,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Build all the dirs along the path to DIRS with CVS subdirs with    appropriate repositories.  If ->repository is NULL, do not create a    CVSADM directory for that subdirectory; just CVS_CHDIR into it.  If    check_existing_dirs is nonzero, don't create directories if they    already exist, and don't try to write adm files in directories    where we don't have write permission.  We use this last option    primarily when a user has specified an absolute path for checkout    -- we will often not have permission to top-level directories, so    we shouldn't complain. */
+comment|/* Build all the dirs along the path to DIRS with CVS subdirs with appropriate    repositories.  If ->repository is NULL, do not create a CVSADM directory    for that subdirectory; just CVS_CHDIR into it.  */
 end_comment
 
 begin_function
@@ -3943,8 +4025,6 @@ parameter_list|(
 name|dirs
 parameter_list|,
 name|sticky
-parameter_list|,
-name|check_existing_dirs
 parameter_list|)
 name|struct
 name|dir_to_build
@@ -3953,9 +4033,6 @@ name|dirs
 decl_stmt|;
 name|int
 name|sticky
-decl_stmt|;
-name|int
-name|check_existing_dirs
 decl_stmt|;
 block|{
 name|int
@@ -3986,24 +4063,14 @@ operator|->
 name|dirpath
 argument_list|)
 decl_stmt|;
-name|int
-name|dir_is_writeable
-decl_stmt|;
 if|if
 condition|(
-operator|(
 operator|!
-name|check_existing_dirs
-operator|)
-operator|||
-operator|(
-operator|!
-name|isdir
-argument_list|(
-name|dir
-argument_list|)
-operator|)
+name|dirs
+operator|->
+name|just_chdir
 condition|)
+block|{
 name|mkdir_if_needed
 argument_list|(
 name|dir
@@ -4018,18 +4085,7 @@ argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
-comment|/* This is an expensive call -- only make it if necessary. */
-if|if
-condition|(
-name|check_existing_dirs
-condition|)
-name|dir_is_writeable
-operator|=
-name|iswritable
-argument_list|(
-name|dir
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
 name|CVS_CHDIR
@@ -4061,22 +4117,11 @@ goto|;
 block|}
 if|if
 condition|(
-operator|(
 name|dirs
 operator|->
 name|repository
 operator|!=
 name|NULL
-operator|)
-operator|&&
-operator|(
-operator|(
-operator|!
-name|check_existing_dirs
-operator|)
-operator|||
-name|dir_is_writeable
-operator|)
 condition|)
 block|{
 name|build_one_dir

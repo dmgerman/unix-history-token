@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sdiff-format output routines for GNU DIFF.    Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
+comment|/* sdiff-format output routines for GNU DIFF.    Copyright (C) 1991, 1992, 1993, 1998 Free Software Foundation, Inc.  This file is part of GNU DIFF.  GNU DIFF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility to anyone for the consequences of using it or for whether it serves any particular purpose or works at all, unless he says so in writing.  Refer to the GNU DIFF General Public License for full details.  Everyone is granted permission to copy, modify and redistribute GNU DIFF, but only under the conditions described in the GNU DIFF General Public License.   A copy of this license is supposed to have been given to you along with GNU DIFF so you can know your rights and responsibilities.  It should be in a file named COPYING.  Among other things, the copyright notice and this notice must be preserved on all copies.  */
 end_comment
 
 begin_include
@@ -192,12 +192,6 @@ decl_stmt|,
 name|to
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|out
-init|=
-name|outfile
-decl_stmt|;
 name|unsigned
 name|tab
 decl_stmt|;
@@ -227,11 +221,11 @@ operator|+=
 name|TAB_WIDTH
 control|)
 block|{
-name|putc
+name|write_output
 argument_list|(
-literal|'\t'
+literal|"\t"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|from
@@ -246,11 +240,11 @@ operator|++
 operator|<
 name|to
 condition|)
-name|putc
+name|write_output
 argument_list|(
-literal|' '
+literal|" "
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -287,12 +281,6 @@ decl_stmt|,
 name|out_bound
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|out
-init|=
-name|outfile
-decl_stmt|;
 specifier|register
 name|unsigned
 name|in_position
@@ -337,6 +325,10 @@ init|=
 operator|*
 name|text_pointer
 operator|++
+decl_stmt|;
+comment|/* We use CC to avoid taking the address of the register          variable C.  */
+name|char
+name|cc
 decl_stmt|;
 switch|switch
 condition|(
@@ -395,11 +387,11 @@ condition|;
 name|out_position
 operator|++
 control|)
-name|putc
+name|write_output
 argument_list|(
-literal|' '
+literal|" "
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -415,11 +407,16 @@ name|out_position
 operator|=
 name|tabstop
 expr_stmt|;
-name|putc
-argument_list|(
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -434,11 +431,16 @@ case|case
 literal|'\r'
 case|:
 block|{
-name|putc
-argument_list|(
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 name|tab_from_to
@@ -487,11 +489,11 @@ condition|;
 name|out_position
 operator|++
 control|)
-name|putc
+name|write_output
 argument_list|(
-literal|' '
+literal|" "
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 else|else
@@ -500,11 +502,16 @@ name|out_position
 operator|=
 name|in_position
 expr_stmt|;
-name|putc
-argument_list|(
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -523,13 +530,20 @@ name|in_position
 operator|<
 name|out_bound
 condition|)
-name|putc
-argument_list|(
+block|{
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 if|if
@@ -559,11 +573,16 @@ name|out_position
 operator|=
 name|in_position
 expr_stmt|;
-name|putc
-argument_list|(
+name|cc
+operator|=
 name|c
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -615,12 +634,6 @@ modifier|*
 name|right
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|out
-init|=
-name|outfile
-decl_stmt|;
 name|unsigned
 name|hw
 init|=
@@ -681,6 +694,9 @@ operator|!=
 literal|' '
 condition|)
 block|{
+name|char
+name|cc
+decl_stmt|;
 name|col
 operator|=
 name|tab_from_to
@@ -729,11 +745,16 @@ literal|'/'
 else|:
 literal|'\\'
 expr_stmt|;
-name|putc
-argument_list|(
+name|cc
+operator|=
 name|sep
+expr_stmt|;
+name|write_output
+argument_list|(
+operator|&
+name|cc
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -792,11 +813,11 @@ if|if
 condition|(
 name|put_newline
 condition|)
-name|putc
+name|write_output
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|,
-name|out
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -850,10 +871,8 @@ if|if
 condition|(
 name|sdiff_help_sdiff
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"i%d,%d\n"
 argument_list|,
 name|limit0
@@ -1054,10 +1073,8 @@ if|if
 condition|(
 name|sdiff_help_sdiff
 condition|)
-name|fprintf
+name|printf_output
 argument_list|(
-name|outfile
-argument_list|,
 literal|"c%d,%d\n"
 argument_list|,
 name|last0

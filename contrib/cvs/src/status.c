@@ -132,7 +132,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|status
+name|cvsstatus
 parameter_list|(
 name|argc
 parameter_list|,
