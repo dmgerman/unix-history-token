@@ -920,6 +920,8 @@ operator|&
 name|sf
 operator|->
 name|sf_uc
+operator|.
+name|uc_mcontext
 operator|)
 expr_stmt|;
 block|}
