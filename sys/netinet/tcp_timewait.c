@@ -2057,6 +2057,12 @@ name|nth
 operator|->
 name|th_sum
 operator|=
+literal|0
+expr_stmt|;
+name|nth
+operator|->
+name|th_sum
+operator|=
 name|in6_cksum
 argument_list|(
 name|m
