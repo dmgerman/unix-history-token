@@ -6,7 +6,7 @@ name|IMPLOOP
 end_define
 
 begin_comment
-comment|/*	ip_output.c	1.17	81/11/21	*/
+comment|/*	ip_output.c	1.18	81/11/23	*/
 end_comment
 
 begin_include
@@ -139,12 +139,6 @@ operator|->
 name|ip_off
 operator|&=
 name|IP_DF
-expr_stmt|;
-name|ip
-operator|->
-name|ip_ttl
-operator|=
-name|MAXTTL
 expr_stmt|;
 name|ip
 operator|->
