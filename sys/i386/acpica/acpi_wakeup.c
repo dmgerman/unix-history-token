@@ -1024,6 +1024,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|cold
+condition|)
+return|return;
+if|if
+condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent */

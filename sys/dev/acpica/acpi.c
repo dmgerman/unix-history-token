@@ -1012,11 +1012,18 @@ condition|(
 operator|!
 name|cold
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"The ACPI driver cannot be loaded after boot.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPERM
 operator|)
 return|;
+block|}
 break|break;
 case|case
 name|MOD_UNLOAD
@@ -1097,14 +1104,8 @@ condition|(
 operator|!
 name|cold
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Don't load this driver from userland!!\n"
-argument_list|)
+name|return_VOID
 expr_stmt|;
-return|return ;
-block|}
 comment|/*      * Check that we haven't been disabled with a hint.      */
 if|if
 condition|(
@@ -8660,6 +8661,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+return|return;
 name|AcpiDbgLayer
 operator|=
 literal|0
@@ -8939,6 +8946,12 @@ block|{
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|cold
+condition|)
+return|return;
 if|if
 condition|(
 operator|!
