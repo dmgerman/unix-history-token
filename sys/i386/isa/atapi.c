@@ -2806,7 +2806,11 @@ name|result
 operator|.
 name|status
 operator|&
+operator|(
 name|ARS_DRQ
+operator||
+name|ARS_BSY
+operator|)
 operator|)
 expr_stmt|;
 if|if
@@ -5373,6 +5377,7 @@ condition|;
 operator|--
 name|cnt
 control|)
+block|{
 if|if
 condition|(
 operator|!
@@ -5390,6 +5395,12 @@ name|ARS_DRQ
 operator|)
 condition|)
 break|break;
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
