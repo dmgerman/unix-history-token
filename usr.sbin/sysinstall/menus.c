@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.91 1996/11/04 17:42:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.92 1996/11/06 19:15:30 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1270,6 +1270,21 @@ name|MenuSyscons
 block|}
 block|,
 block|{
+literal|"Syscons, Font"
+block|,
+literal|"The console screen font."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsFont
+block|}
+block|,
+block|{
 literal|"Syscons, Keymap"
 block|,
 literal|"The console keymap configuration menu."
@@ -1312,6 +1327,21 @@ name|NULL
 block|,
 operator|&
 name|MenuSysconsSaver
+block|}
+block|,
+block|{
+literal|"Syscons, Screenmap"
+block|,
+literal|"The console screenmap configuration menu."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
@@ -6900,6 +6930,21 @@ name|NULL
 block|,
 block|{
 block|{
+literal|"Font"
+block|,
+literal|"Choose an alternate screen font"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsFont
+block|}
+block|,
+block|{
 literal|"Keymap"
 block|,
 literal|"Choose an alternate keyboard map"
@@ -6942,6 +6987,21 @@ name|NULL
 block|,
 operator|&
 name|MenuSysconsSaver
+block|}
+block|,
+block|{
+literal|"Screenmap"
+block|,
+literal|"Choose an alternate screenmap"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSysconsScrnmap
 block|}
 block|,
 block|{
@@ -7317,13 +7377,229 @@ literal|"Timeout"
 block|,
 literal|"Set the screen saver timeout interval"
 block|,
-name|dmenuVarCheck
+name|NULL
 block|,
 name|configSaverTimeout
 block|,
 name|NULL
 block|,
-literal|"blanktime"
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsScrnmap
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Screenmap"
+block|,
+literal|"Unless you load a specific font, most PC hardware defaults to\n"
+literal|"displaying characters in the IBM 437 character set.  However,\n"
+literal|"in the Unix world, this character set is very rarely used.  Most\n"
+literal|"Western European countries, for example, prefer ISO 8859-1.\n"
+literal|"American users won't notice the difference since the bottom half\n"
+literal|"of all these character sets is ANSI anyway.\n"
+literal|"If your hardware is capable of downloading a new display font,\n"
+literal|"you should probably choose that option.  However, for hardware\n"
+literal|"where this is not possible (e.g. monochrome adapters), a screen\n"
+literal|"map will give you the best approximation that your hardware can\n"
+literal|"display at all."
+block|,
+literal|"Choose a screen map"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"None"
+block|,
+literal|"No screenmap, use default font"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=NO"
+block|}
+block|,
+block|{
+literal|"KOI8-R to IBM866"
+block|,
+literal|"Russian KOI8-R to IBM 866 screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=koi8-r2cp866"
+block|}
+block|,
+block|{
+literal|"ISO 8859-1 to IBM437"
+block|,
+literal|"W-Europe ISO 8859-1 to IBM 437 screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=iso-8859-1_to_cp437"
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSysconsFont
+init|=
+block|{
+name|DMENU_RADIO_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"System Console Font"
+block|,
+literal|"Most PC hardware defaults to displaying characters in the\n"
+literal|"IBM 437 character set.  However, in the Unix world, this\n"
+literal|"character set is very rarely used.  Most Western European\n"
+literal|"countries, for example, prefer ISO 8859-1.\n"
+literal|"American users won't notice the difference since the bottom half\n"
+literal|"of all these charactersets is ANSI anyway.  However, they might\n"
+literal|"want to load a font anyway to use the 30- or 50-line displays.\n"
+literal|"If your hardware is capable of downloading a new display font,\n"
+literal|"you can select the appropriate font below."
+block|,
+literal|"Choose a font"
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"None"
+block|,
+literal|"Use default font"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=NO,font8x14=NO,font8x16=NO"
+block|}
+block|,
+block|{
+literal|"IBM 437"
+block|,
+literal|"English"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp437-8x8,font8x14=cp437-8x14,font8x16=cp437-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 850"
+block|,
+literal|"Western Europe, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp850-8x8,font8x14=cp850-8x14,font8x16=cp850-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 865"
+block|,
+literal|"Norwegian, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp865-8x8,font8x14=cp865-8x14,font8x16=cp865-8x16"
+block|}
+block|,
+block|{
+literal|"IBM 866"
+block|,
+literal|"Russian, IBM encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=cp866-8x8,font8x14=cp866-8x14,font8x16=cp866-8x16"
+block|}
+block|,
+block|{
+literal|"ISO 8859-1"
+block|,
+literal|"Western Europe, ISO encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=iso-8x8,font8x14=iso-8x14,font8x16=iso-8x16"
+block|}
+block|,
+block|{
+literal|"KOI8-R"
+block|,
+literal|"Russian, KOI8-R encoding"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariables
+block|,
+name|NULL
+block|,
+literal|"font8x8=koi8-r-8x8,font8x14=koi8-r-8x14,font8x16=koi8-r-8x16"
 block|}
 block|,
 block|{
