@@ -5847,7 +5847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a vnode for a block device.  * Used for mounting the root file system.  */
+comment|/*  * Create a vnode for a block device.  * Used for mounting the root file system.  * XXX: This now changed to a VCHR due to the block/char merging.  */
 end_comment
 
 begin_function
@@ -5943,7 +5943,7 @@ name|vp
 operator|->
 name|v_type
 operator|=
-name|VBLK
+name|VCHR
 expr_stmt|;
 name|addalias
 argument_list|(
