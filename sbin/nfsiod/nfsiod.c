@@ -23,7 +23,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_ifndef
@@ -58,7 +57,6 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_include
@@ -89,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -163,8 +167,6 @@ parameter_list|)
 block|{
 name|int
 name|ch
-decl_stmt|,
-name|num_servers
 decl_stmt|;
 name|struct
 name|vfsconf
@@ -176,10 +178,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|iodmin
-decl_stmt|;
-name|unsigned
-name|int
+decl_stmt|,
 name|iodmax
+decl_stmt|,
+name|num_servers
 decl_stmt|;
 name|size_t
 name|len
@@ -506,6 +508,11 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"sysctlbyname(\"vfs.nfs.iodmax\")"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
