@@ -551,7 +551,7 @@ name|int
 name|kn_sfflags
 decl_stmt|;
 comment|/* saved filter flags */
-name|u_long
+name|intptr_t
 name|kn_sdata
 decl_stmt|;
 comment|/* saved data field */
