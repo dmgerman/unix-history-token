@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -23,13 +23,25 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|statfs
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|proc
+name|timeval
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
 struct_decl|;
 end_struct_decl
 
@@ -102,6 +114,30 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|lfs_bmaparray
+name|__P
+argument_list|(
+operator|(
+name|VNODE
+operator|*
+operator|,
+name|daddr_t
+operator|,
+name|daddr_t
+operator|*
+operator|,
+name|INDIR
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|lfs_bwrite
 name|__P
 argument_list|(
@@ -157,23 +193,6 @@ operator|,
 expr|struct
 name|proc
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_long
-name|lfs_getversion
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|lfs
-operator|*
-name|fs
-operator|,
-name|ino_t
 operator|)
 argument_list|)
 decl_stmt|;
