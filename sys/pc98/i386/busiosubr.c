@@ -339,14 +339,16 @@ end_decl_stmt
 begin_include
 include|#
 directive|include
-file|"opt_mecia.h"
+file|"mecia.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_MECIA
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NMECIA
+operator|>
+literal|0
+end_if
 
 begin_macro
 name|_BUS_SPACE_CALL_FUNCS_PROTO
@@ -540,7 +542,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEV_MECIA */
+comment|/* NMECIA> 0 */
 end_comment
 
 begin_comment
