@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: tcp.c,v 1.1 1999/05/08 11:07:45 brian Exp $  */
+comment|/*-  * Copyright (c) 1999 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: udp.c,v 1.1 1999/05/12 09:49:09 brian Exp $  */
 end_comment
 
 begin_include
@@ -612,11 +612,6 @@ name|int
 name|maxiov
 parameter_list|)
 block|{
-name|struct
-name|device
-modifier|*
-name|dev
-decl_stmt|;
 if|if
 condition|(
 name|type
@@ -624,12 +619,14 @@ operator|==
 name|UDP_DEVICE
 condition|)
 block|{
-comment|/* It's one of ours !  Let's create the device */
+name|struct
+name|udpdevice
+modifier|*
 name|dev
-operator|=
+init|=
 operator|(
 expr|struct
-name|device
+name|udpdevice
 operator|*
 operator|)
 name|iov
@@ -642,36 +639,46 @@ operator|++
 index|]
 operator|.
 name|iov_base
-expr_stmt|;
+decl_stmt|;
 comment|/* Refresh function pointers etc */
 name|memcpy
 argument_list|(
+operator|&
+name|dev
+operator|->
 name|dev
 argument_list|,
 operator|&
 name|baseudpdevice
 argument_list|,
 sizeof|sizeof
-expr|*
+name|dev
+operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Remember, there's really more than (sizeof *dev) there */
 name|physical_SetupStack
 argument_list|(
 name|p
 argument_list|,
+name|dev
+operator|->
+name|dev
+operator|.
+name|name
+argument_list|,
 name|PHYSICAL_FORCE_SYNC
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-name|dev
-operator|=
-name|NULL
-expr_stmt|;
 return|return
+operator|&
 name|dev
+operator|->
+name|dev
+return|;
+block|}
+return|return
+name|NULL
 return|;
 block|}
 end_function
@@ -1379,6 +1386,12 @@ expr_stmt|;
 name|physical_SetupStack
 argument_list|(
 name|p
+argument_list|,
+name|dev
+operator|->
+name|dev
+operator|.
+name|name
 argument_list|,
 name|PHYSICAL_FORCE_SYNC
 argument_list|)

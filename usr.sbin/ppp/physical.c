@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.12 1999/05/13 19:29:40 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.c,v 1.13 1999/05/18 01:37:46 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -3809,6 +3809,8 @@ name|physical_SetupStack
 argument_list|(
 name|p
 argument_list|,
+literal|"unknown"
+argument_list|,
 name|PHYSICAL_NOFORCE
 argument_list|)
 expr_stmt|;
@@ -5692,6 +5694,8 @@ name|physical_SetupStack
 argument_list|(
 name|p
 argument_list|,
+literal|"unknown"
+argument_list|,
 name|PHYSICAL_NOFORCE
 argument_list|)
 expr_stmt|;
@@ -5929,6 +5933,11 @@ name|physical
 modifier|*
 name|p
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|who
+parameter_list|,
 name|int
 name|how
 parameter_list|)
@@ -6083,17 +6092,7 @@ name|LogWARN
 argument_list|,
 literal|"Sync device setting ignored for ``%s'' device\n"
 argument_list|,
-name|p
-operator|->
-name|handler
-condition|?
-name|p
-operator|->
-name|handler
-operator|->
-name|name
-else|:
-literal|"unknown"
+name|who
 argument_list|)
 expr_stmt|;
 name|p
@@ -6125,17 +6124,7 @@ name|LogWARN
 argument_list|,
 literal|"Async device setting ignored for ``%s'' device\n"
 argument_list|,
-name|p
-operator|->
-name|handler
-condition|?
-name|p
-operator|->
-name|handler
-operator|->
-name|name
-else|:
-literal|"unknown"
+name|who
 argument_list|)
 expr_stmt|;
 name|physical_SetSync
