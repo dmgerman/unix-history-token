@@ -8456,14 +8456,6 @@ name|status
 operator|=
 name|CAM_REQ_CMP
 expr_stmt|;
-name|pccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|=
-name|CAM_REQ_CMP
-expr_stmt|;
 if|if
 condition|(
 name|pSRB
