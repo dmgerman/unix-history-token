@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	8.1 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.28 93/04/27 14:40:44 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1988, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)esp.c	8.2 (Berkeley) %G%  *  * from: $Header: esp.c,v 1.28 93/04/27 14:40:44 torek Exp $ (LBL)  *  * Loosely derived from Mary Baker's devSCSIC90.c from the Berkeley  * Sprite project, which is:  *  * Copyright 1988 Regents of the University of California  * Permission to use, copy, modify, and distribute this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies.  The University of California  * makes no representations about the suitability of this  * software for any purpose.  It is provided "as is" without  * express or implied warranty.  *  * from /sprite/src/kernel/dev/sun4c.md/RCS/devSCSIC90.c,v 1.4  * 90/12/19 12:37:58 mgbaker Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
@@ -79,27 +79,14 @@ directive|include
 file|<sparc/sbus/sbusvar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|espdebug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<libkern/libkern.h>
+end_include
 
 begin_comment
-comment|/*  * This driver is organized as a collection of state machines.  The  * primary machine is the SCSI sequencer:  *  *	Given some previous SCSI state (as set up or tracked by us earlier)  *	and the interrupt registers provided on the chips (dmacsr, espstat,  *	espstep, and espintr), derive an action.  In many cases this is  *	just a matter of reading the target's phase and following its orders,  *	which sets a new state.  *  * This sequencing is done in espact(); the state is primed in espselect().  *  * There will be (update this comment when there is) another state machine  * used to handle transfers that fall afoul of chip limits (16 bit DMA  * counter; 24 bit address counter in 32 bit address field).  *  * Another state bit is used to recover from bus resets:  *  *	A single TEST UNIT READY is attempted on each target before any  *	real communication begins; this TEST UNIT READY is allowed to  *	fail in any way.  This is required for the Quantum ProDrive 100  *	MB disks, for instance, which respond to their first selection  *	with status phase, and for anything that insists on implementing  *	the broken SCSI-2 synch transfer initial message.  *  * This is done in espclear() (which calls espselect(); functions that  * call espselect() must check for clearing first).  *  * The state machines actually intermingle, as some SCSI sequences are  * only allowed during clearing.  */
+comment|/*  * This driver is largely a giant state machine:  *  *	Given some previous SCSI state (as set up or tracked by us  *	earlier) and the interrupt registers provided on the chips  *	(dmacsr, espstat, espstep, and espintr), derive an action.  *	In many cases this is just a matter of reading the target's  *	phase and following its orders, which sets a new state.  *  * This sequencing is done in espact(); the state is primed in espselect().  *  * Data transfer is always done via DMA.  Unfortunately, there are  * limits in the DMA and ESP chips on how much data can be moved  * in a single operation.  The ESP chip has a 16-bit counter, so  * it is limited to 65536 bytes.  More insidiously, while the DMA  * chip has a 32-bit address, this is composed of a 24-bit counter  * with an 8-bit latch, so it cannot cross a 16 MB boundary.  To  * handle these, we program a smaller count than our caller requests;  * when this shorter transfer is done, if the target is still up  * for data transfer, we simply keep going (updating the DMA address)  * as needed.  *  * Another state bit is used to recover from bus resets:  *  *	A single TEST UNIT READY is attempted on each target before any  *	real communication begins; this TEST UNIT READY is allowed to  *	fail in any way.  This is required for the Quantum ProDrive 100  *	MB disks, for instance, which respond to their first selection  *	with status phase, and for anything that insists on implementing  *	the broken SCSI-2 synch transfer initial message.  *  * This is done in espclear() (which calls espselect(); functions that  * call espselect() must check for clearing first).  *  * The state machines actually intermingle, as some SCSI sequences are  * only allowed during clearing.  */
 end_comment
 
 begin_comment
@@ -112,23 +99,23 @@ name|dma_softc
 block|{
 name|struct
 name|device
-name|sc_dev
+name|dc_dev
 decl_stmt|;
 comment|/* base device */
 specifier|volatile
 name|struct
 name|dmareg
 modifier|*
-name|sc_dma
+name|dc_dma
 decl_stmt|;
 comment|/* register virtual address */
 name|int
-name|sc_dmarev
+name|dc_dmarev
 decl_stmt|;
 comment|/* revision */
 name|char
 modifier|*
-name|sc_dmafmt
+name|dc_dmafmt
 decl_stmt|;
 comment|/* format for error messages */
 block|}
@@ -192,6 +179,10 @@ name|hba_softc
 name|sc_hba
 decl_stmt|;
 comment|/* base device + hba, must be first */
+define|#
+directive|define
+name|sc_dev
+value|sc_hba.hba_dev
 name|struct
 name|sbusdev
 name|sc_sd
@@ -210,7 +201,7 @@ comment|/* interrupt counter */
 name|struct
 name|dma_softc
 modifier|*
-name|sc_dsc
+name|sc_dc
 decl_stmt|;
 comment|/* pointer to corresponding dma sc */
 comment|/* 	 * Addresses mapped to hardware registers. 	 */
@@ -226,7 +217,7 @@ name|dmareg
 modifier|*
 name|sc_dma
 decl_stmt|;
-comment|/* 	 * Copies of registers cleared/unlatched by reading. 	 */
+comment|/* 	 * Copies of registers cleared/unlatched by reading. 	 * (FIFO flags is not cleared, but we want it for debugging.) 	 */
 name|u_long
 name|sc_dmacsr
 decl_stmt|;
@@ -238,6 +229,9 @@ name|sc_espstep
 decl_stmt|;
 name|u_char
 name|sc_espintr
+decl_stmt|;
+name|u_char
+name|sc_espfflags
 decl_stmt|;
 comment|/* miscellaneous */
 name|int
@@ -333,26 +327,37 @@ comment|/* control to load into dma csr */
 name|u_long
 name|sc_dmaaddr
 decl_stmt|;
-comment|/* addr to load into dma addr */
+comment|/* address for next xfer */
+name|int
+name|sc_dmasize
+decl_stmt|;
+comment|/* size of current xfer */
+name|int
+name|sc_resid
+decl_stmt|;
+comment|/* count of bytes not yet xferred */
 name|int
 name|sc_targ
 decl_stmt|;
 comment|/* the target involved */
-name|int
-name|sc_resid
-decl_stmt|;
-comment|/* count of bytes not xferred */
 name|struct
 name|scsi_cdb
-name|sc_cdb
+modifier|*
+name|sc_curcdb
 decl_stmt|;
-comment|/* current command (not in dvma) */
+comment|/* ptr to current command */
+comment|/* might cdbspace eventually be per-target? */
+name|struct
+name|scsi_cdb
+name|sc_cdbspace
+decl_stmt|;
+comment|/* space for one command */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * Values for sc_esptype (used to control configuration reset).  * The order is important; see espreset().  */
+comment|/*  * Values for sc_esptype (used to control configuration reset, and for  * workarounds for chip bugs).  The order is important; see espreset().  */
 end_comment
 
 begin_define
@@ -395,7 +400,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * States in sc_state.  *  * Note that S_CMDSVC is rare: normally we load the SCSI command into the  * ESP fifo and get interrupted only when the device has gone to data  * or status phase.  If the device wants to play games, though, we end  * up doing things differently.  */
+comment|/*  * States in sc_state.  *  * Note that S_SVC is rare: normally we load the SCSI command into the  * ESP fifo and get interrupted only when the device has gone to data  * or status phase.  If the device wants to play games, though, we end  * up doing things differently.  */
 end_comment
 
 begin_decl_stmt
@@ -421,55 +426,69 @@ literal|"selecting"
 block|,
 define|#
 directive|define
-name|S_CMDSVC
+name|S_SVC
 value|2
 comment|/* expecting service req interrupt */
-literal|"waiting for service request after command"
-block|,
-define|#
-directive|define
-name|S_IOSVC
-value|3
-comment|/* expecting service req interrupt */
-literal|"waiting for service request after io"
+literal|"waiting for svc req"
 block|,
 define|#
 directive|define
 name|S_DI
-value|4
+value|3
 comment|/* expecting data-in done interrupt */
 literal|"receiving data"
 block|,
 define|#
 directive|define
 name|S_DO
-value|5
+value|4
 comment|/* expecting data-out done interrupt */
 literal|"sending data"
 block|,
 define|#
 directive|define
 name|S_STAT
-value|6
+value|5
 comment|/* expecting status done interrupt */
 literal|"receiving status"
 block|,
 define|#
 directive|define
 name|S_MI
-value|7
+value|6
 comment|/* expecting message-in done interrupt */
 literal|"receiving message"
 block|,
 define|#
 directive|define
 name|S_FI
-value|8
+value|7
 comment|/* expecting final disconnect interrupt */
 literal|"waiting for disconnect"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Hardware limits on transfer sizes (see comments at top).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESPMAX
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAMAX
+parameter_list|(
+name|a
+parameter_list|)
+value|(0x01000000 - ((a)& 0x00ffffff))
+end_define
 
 begin_comment
 comment|/*  * Return values from espact().  */
@@ -489,30 +508,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACT_READ
+name|ACT_IO
 value|1
 end_define
 
 begin_comment
-comment|/* target said it is sending us data */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACT_WRITE
-value|2
-end_define
-
-begin_comment
-comment|/* target said it is expecting data */
+comment|/* espact() is xferring data */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACT_DONE
-value|3
+value|2
 end_define
 
 begin_comment
@@ -523,7 +531,7 @@ begin_define
 define|#
 directive|define
 name|ACT_ERROR
-value|4
+value|3
 end_define
 
 begin_comment
@@ -534,7 +542,7 @@ begin_define
 define|#
 directive|define
 name|ACT_RESET
-value|5
+value|4
 end_define
 
 begin_comment
@@ -545,7 +553,7 @@ begin_define
 define|#
 directive|define
 name|ACT_QUICKINTR
-value|6
+value|5
 end_define
 
 begin_comment
@@ -775,7 +783,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* forward declarations */
+comment|/* other prototypes */
 end_comment
 
 begin_function_decl
@@ -784,7 +792,18 @@ name|void
 name|espdoattach
 parameter_list|(
 name|int
-name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|dmareset
+parameter_list|(
+name|struct
+name|esp_softc
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -797,36 +816,80 @@ parameter_list|(
 name|struct
 name|esp_softc
 modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|esperror
+parameter_list|(
+name|struct
+name|esp_softc
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|espact
+parameter_list|(
+name|struct
+name|esp_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|espselect
+parameter_list|(
+name|struct
+name|esp_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|scsi_cdb
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * The transfer size is limited to 16 bits since the scsi ctrl transfer  * counter is only 2 bytes.  A 0 value means the biggest transfer size  * (2 ** 16) == 64k.  */
+comment|/* second arg to espreset() */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_TRANSFER_SIZE
-value|(64 * 1024)
+name|RESET_ESPCHIP
+value|0x1
 end_define
 
-begin_comment
-comment|/* Return true if this transfer will cross a dma boundary */
-end_comment
+begin_define
+define|#
+directive|define
+name|RESET_SCSIBUS
+value|0x2
+end_define
 
 begin_define
 define|#
 directive|define
-name|CROSS_DMA
-parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|)
-define|\
-value|(((int)(addr)& 0xff000000) != (((int)(addr) + (len) - 1)& 0xff000000))
+name|RESET_BOTH
+value|(RESET_ESPCHIP | RESET_SCSIBUS)
 end_define
 
 begin_comment
@@ -862,7 +925,7 @@ specifier|register
 name|struct
 name|dma_softc
 modifier|*
-name|dsc
+name|dc
 init|=
 operator|(
 expr|struct
@@ -941,9 +1004,9 @@ name|dmareg
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|dsc
+name|dc
 operator|->
-name|sc_dma
+name|dc_dma
 operator|=
 name|dma
 expr_stmt|;
@@ -967,9 +1030,9 @@ argument_list|(
 literal|": rev 1\n"
 argument_list|)
 expr_stmt|;
-name|dsc
+name|dc
 operator|->
-name|sc_dmafmt
+name|dc_dmafmt
 operator|=
 name|DMA_REV1_BITS
 expr_stmt|;
@@ -982,9 +1045,9 @@ argument_list|(
 literal|": rev 2\n"
 argument_list|)
 expr_stmt|;
-name|dsc
+name|dc
 operator|->
-name|sc_dmafmt
+name|dc_dmafmt
 operator|=
 name|DMA_REV2_BITS
 expr_stmt|;
@@ -1002,9 +1065,9 @@ argument_list|(
 literal|"WARNING: esp.c not yet updated for rev 3\n"
 argument_list|)
 expr_stmt|;
-name|dsc
+name|dc
 operator|->
-name|sc_dmafmt
+name|dc_dmafmt
 operator|=
 name|DMA_REV3_BITS
 expr_stmt|;
@@ -1017,26 +1080,26 @@ argument_list|,
 name|rev
 argument_list|)
 expr_stmt|;
-name|dsc
+name|dc
 operator|->
-name|sc_dmafmt
+name|dc_dmafmt
 operator|=
 name|DMA_REV3_BITS
 expr_stmt|;
 comment|/* cross fingers */
 break|break;
 block|}
-name|dsc
+name|dc
 operator|->
-name|sc_dmarev
+name|dc_dmarev
 operator|=
 name|rev
 expr_stmt|;
 name|espdoattach
 argument_list|(
-name|dsc
+name|dc
 operator|->
-name|sc_dev
+name|dc_dev
 operator|.
 name|dv_unit
 argument_list|)
@@ -1106,11 +1169,6 @@ name|struct
 name|bootpath
 modifier|*
 name|bp
-decl_stmt|;
-name|struct
-name|dma_softc
-modifier|*
-name|dsc
 decl_stmt|;
 name|int
 name|node
@@ -1266,9 +1324,7 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_parent
 operator|)
@@ -1507,9 +1563,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1543,9 +1597,7 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 argument_list|,
 literal|"intr"
 argument_list|,
@@ -1564,7 +1616,7 @@ parameter_list|,
 name|sa
 parameter_list|)
 define|\
-value|((bp->val[0] == sa->sa_slot&& bp->val[1] == sa->sa_offset) || \ 	 (bp->val[0] == -1&& bp->val[1] == sc->sc_hba.hba_dev.dv_unit))
+value|((bp->val[0] == sa->sa_slot&& bp->val[1] == sa->sa_offset) || \ 	 (bp->val[0] == -1&& bp->val[1] == sc->sc_dev.dv_unit))
 name|bp
 operator|=
 name|sa
@@ -1609,9 +1661,7 @@ name|espdoattach
 argument_list|(
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_unit
 argument_list|)
@@ -1644,7 +1694,7 @@ specifier|register
 name|struct
 name|dma_softc
 modifier|*
-name|dsc
+name|dc
 decl_stmt|;
 specifier|register
 name|struct
@@ -1693,7 +1743,7 @@ operator|==
 name|NULL
 operator|||
 operator|(
-name|dsc
+name|dc
 operator|=
 name|dmacd
 operator|.
@@ -1708,17 +1758,17 @@ condition|)
 return|return;
 name|sc
 operator|->
-name|sc_dsc
+name|sc_dc
 operator|=
-name|dsc
+name|dc
 expr_stmt|;
 name|sc
 operator|->
 name|sc_dma
 operator|=
-name|dsc
+name|dc
 operator|->
-name|sc_dma
+name|dc_dma
 expr_stmt|;
 name|sc
 operator|->
@@ -1729,9 +1779,20 @@ operator|=
 operator|&
 name|esphbadriver
 expr_stmt|;
+name|sc
+operator|->
+name|sc_dma
+operator|->
+name|dma_csr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ??? */
 name|espreset
 argument_list|(
 name|sc
+argument_list|,
+name|RESET_ESPCHIP
 argument_list|)
 expr_stmt|;
 comment|/* MAYBE THIS SHOULD BE MOVED TO scsi_subr.c? */
@@ -1830,6 +1891,7 @@ name|sc_clearing
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * See if we booted from a unit on this target.  We could 	 * compare bp->name against the unit's name but there's no 	 * real need since a target and unit uniquely specify a 	 * scsi device. 	 */
 if|if
 condition|(
 operator|(
@@ -1839,9 +1901,9 @@ name|sc
 operator|->
 name|sc_bp
 operator|)
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 call|(
 name|u_int
 call|)
@@ -1855,9 +1917,9 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|>=
+operator|<
 literal|8
-operator|||
+operator|&&
 call|(
 name|u_int
 call|)
@@ -1871,13 +1933,9 @@ index|[
 literal|1
 index|]
 argument_list|)
-operator|>=
+operator|<
 literal|8
-condition|)
-return|return;
-comment|/* 	 * Did we find it? We could compare bp->name against the unit's 	 * name but there's no real need since a target and unit 	 * uniquely specify a scsi device. 	 */
-if|if
-condition|(
+operator|&&
 operator|(
 name|t
 operator|=
@@ -1917,7 +1975,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Internal DMA reset.  */
+comment|/*  * We are not allowed to touch the DMA "flush" and "drain" bits  * while it is still thinking about a request (DMA_RP).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAWAIT
+parameter_list|(
+name|dma
+parameter_list|)
+value|while ((dma)->dma_csr& DMA_RP) DELAY(1)
+end_define
+
+begin_comment
+comment|/*  * Reset the DMA chip.  */
 end_comment
 
 begin_function
@@ -1944,7 +2016,11 @@ name|sc
 operator|->
 name|sc_dma
 decl_stmt|;
-comment|/* reset DMA chip */
+name|DMAWAIT
+argument_list|(
+name|dma
+argument_list|)
+expr_stmt|;
 name|dma
 operator|->
 name|dma_csr
@@ -1980,9 +2056,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_dsc
+name|sc_dc
 operator|->
-name|sc_dmarev
+name|dc_dmarev
 operator|==
 name|DMAREV_2
 operator|&&
@@ -2014,7 +2090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the chip.  N.B.: this causes a SCSI bus reset!  */
+comment|/*  * Reset the chip and/or SCSI bus (always resets DMA).  */
 end_comment
 
 begin_function
@@ -2023,12 +2099,17 @@ name|void
 name|espreset
 parameter_list|(
 name|sc
+parameter_list|,
+name|how
 parameter_list|)
 specifier|register
 name|struct
 name|esp_softc
 modifier|*
 name|sc
+decl_stmt|;
+name|int
+name|how
 decl_stmt|;
 block|{
 specifier|register
@@ -2047,16 +2128,18 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|how
+operator|&
+name|RESET_ESPCHIP
+condition|)
+block|{
 name|esp
 operator|->
 name|esp_cmd
 operator|=
 name|ESPCMD_RESET_CHIP
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
 expr_stmt|;
 name|esp
 operator|->
@@ -2064,12 +2147,7 @@ name|esp_cmd
 operator|=
 name|ESPCMD_NOP
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Reload configuration registers (cleared by RESET_CHIP command). 	 * Reloading conf2 on an ESP100 goofs it up, so out of paranoia 	 * we load only the registers that exist. 	 */
+comment|/* 		 * Reload configuration registers (cleared by 		 * RESET_CHIP command).  Reloading conf2 on an 		 * ESP100 goofs it up, so out of paranoia we load 		 * only the registers that exist. 		 */
 name|esp
 operator|->
 name|esp_conf1
@@ -2131,6 +2209,60 @@ operator|->
 name|sc_sel_timeout
 expr_stmt|;
 comment|/* We set synch offset later. */
+block|}
+if|if
+condition|(
+name|how
+operator|&
+name|RESET_SCSIBUS
+condition|)
+block|{
+comment|/* 		 * The chip should retain most of its parameters 		 * (including esp_ccf) across this kind of reset 		 * (see section 3.5 of Emulex documentation). 		 */
+comment|/* turn off scsi bus reset interrupts and reset scsi bus */
+name|esp
+operator|->
+name|esp_conf1
+operator|=
+name|sc
+operator|->
+name|sc_conf1
+operator||
+name|ESPCONF1_REPORT
+expr_stmt|;
+name|esp
+operator|->
+name|esp_cmd
+operator|=
+name|ESPCMD_RESET_BUS
+expr_stmt|;
+name|esp
+operator|->
+name|esp_cmd
+operator|=
+name|ESPCMD_NOP
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|100000
+argument_list|)
+expr_stmt|;
+comment|/* ??? */
+operator|(
+name|void
+operator|)
+name|esp
+operator|->
+name|esp_intr
+expr_stmt|;
+name|esp
+operator|->
+name|esp_conf1
+operator|=
+name|sc
+operator|->
+name|sc_conf1
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_needclear
@@ -2141,7 +2273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reset the SCSI bus and, optionally, all attached targets.  * The chip should retain most of its parameters (including esp_ccf)  * across this kind of reset (see section 3.5 of Emulex documentation).  */
+comment|/*  * Reset the SCSI bus and, optionally, all attached targets.  */
 end_comment
 
 begin_function
@@ -2174,75 +2306,12 @@ operator|*
 operator|)
 name|hba
 decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|espreg
-modifier|*
-name|esp
-init|=
-name|sc
-operator|->
-name|sc_esp
-decl_stmt|;
-name|dmareset
+name|espreset
 argument_list|(
 name|sc
+argument_list|,
+name|RESET_SCSIBUS
 argument_list|)
-expr_stmt|;
-comment|/* BEGIN ??? */
-comment|/* turn off scsi bus reset interrupts and reset scsi bus */
-name|esp
-operator|->
-name|esp_conf1
-operator|=
-name|sc
-operator|->
-name|sc_conf1
-operator||
-name|ESPCONF1_REPORT
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_RESET_BUS
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|800
-argument_list|)
-expr_stmt|;
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_NOP
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|200
-argument_list|)
-expr_stmt|;
-name|esp
-operator|->
-name|esp_conf1
-operator|=
-name|sc
-operator|->
-name|sc_conf1
-expr_stmt|;
-comment|/* END ??? */
-name|sc
-operator|->
-name|sc_needclear
-operator|=
-literal|0xff
 expr_stmt|;
 if|if
 condition|(
@@ -2291,7 +2360,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_dsc
+name|sc_dc
 condition|)
 block|{
 name|printf
@@ -2300,17 +2369,15 @@ literal|" %s %s"
 argument_list|,
 name|sc
 operator|->
-name|sc_dsc
+name|sc_dc
 operator|->
-name|sc_dev
+name|dc_dev
 operator|.
 name|dv_xname
 argument_list|,
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_xname
 argument_list|)
@@ -2329,6 +2396,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Log an error.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2338,30 +2409,36 @@ name|sc
 parameter_list|,
 name|err
 parameter_list|)
-name|char
-modifier|*
-name|err
-decl_stmt|;
 specifier|register
 name|struct
 name|esp_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err
+decl_stmt|;
 block|{
+name|int
+name|stat
+decl_stmt|;
+name|stat
+operator|=
+name|sc
+operator|->
+name|sc_espstat
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s (target=%d): stat=%b step=%x dmacsr=%b intr=%b\n"
+literal|"%s target %d cmd 0x%x (%s): %s:\n\ \tstat=%b (%s) step=%x dmacsr=%b fflags=%x intr=%b\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_xname
-argument_list|,
-name|err
 argument_list|,
 name|sc
 operator|->
@@ -2369,9 +2446,32 @@ name|sc_targ
 argument_list|,
 name|sc
 operator|->
-name|sc_espstat
+name|sc_curcdb
+operator|->
+name|cdb_bytes
+index|[
+literal|0
+index|]
+argument_list|,
+name|espstates
+index|[
+name|sc
+operator|->
+name|sc_state
+index|]
+argument_list|,
+name|err
+argument_list|,
+name|stat
 argument_list|,
 name|ESPSTAT_BITS
+argument_list|,
+name|espphases
+index|[
+name|stat
+operator|&
+name|ESPSTAT_PHASE
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -2383,9 +2483,13 @@ name|sc_dmacsr
 argument_list|,
 name|sc
 operator|->
-name|sc_dsc
+name|sc_dc
 operator|->
-name|sc_dmafmt
+name|dc_dmafmt
+argument_list|,
+name|sc
+operator|->
+name|sc_espfflags
 argument_list|,
 name|sc
 operator|->
@@ -2398,19 +2502,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * An interrupt has occurred.  Sequence through the SCSI state machine.  * Return the action to take.  *  * Most of the work happens here.  *  * There are three interrupt sources:  *   -- ESP interrupt request (typically, some device wants something).  *   -- DMA memory error.  *   -- DMA byte count has reached 0 (we do not often want this one but  *	can only turn it off in rev 2 DMA chips, it seems).  *	DOES THIS OCCUR AT ALL HERE?  THERE IS NOTHING TO HANDLE IT!  */
+comment|/*  * Issue a select, loading command into the FIFO.  * Return nonzero on error, 0 if OK.  * Sets state to `selecting'; espact() will sequence state FSM.  */
 end_comment
 
 begin_function
-specifier|static
-name|int
-name|espact
+name|void
+name|espselect
 parameter_list|(
 name|sc
 parameter_list|,
-name|esp
-parameter_list|,
-name|dma
+name|targ
 parameter_list|,
 name|cdb
 parameter_list|)
@@ -2420,6 +2521,158 @@ name|esp_softc
 modifier|*
 name|sc
 decl_stmt|;
+specifier|register
+name|int
+name|targ
+decl_stmt|;
+specifier|register
+name|struct
+name|scsi_cdb
+modifier|*
+name|cdb
+decl_stmt|;
+block|{
+specifier|register
+specifier|volatile
+name|struct
+name|espreg
+modifier|*
+name|esp
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|,
+name|cmdlen
+decl_stmt|;
+name|sc
+operator|->
+name|sc_targ
+operator|=
+name|targ
+expr_stmt|;
+name|sc
+operator|->
+name|sc_state
+operator|=
+name|S_SEL
+expr_stmt|;
+name|sc
+operator|->
+name|sc_curcdb
+operator|=
+name|cdb
+expr_stmt|;
+name|sc
+operator|->
+name|sc_sentcmd
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_stat
+index|[
+literal|0
+index|]
+operator|=
+literal|0xff
+expr_stmt|;
+comment|/* ??? */
+name|sc
+operator|->
+name|sc_msg
+index|[
+literal|0
+index|]
+operator|=
+literal|0xff
+expr_stmt|;
+comment|/* ??? */
+comment|/* 	 * Try to talk to target. 	 * Synch offset 0 => asynchronous transfer. 	 */
+name|esp
+operator|=
+name|sc
+operator|->
+name|sc_esp
+expr_stmt|;
+name|esp
+operator|->
+name|esp_id
+operator|=
+name|targ
+expr_stmt|;
+name|esp
+operator|->
+name|esp_syncoff
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Stuff the command bytes into the fifo. 	 * Select without attention since we do not do disconnect yet. 	 */
+name|cmdlen
+operator|=
+name|SCSICMDLEN
+argument_list|(
+name|cdb
+operator|->
+name|cdb_bytes
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|cmdlen
+condition|;
+name|i
+operator|++
+control|)
+name|esp
+operator|->
+name|esp_fifo
+operator|=
+name|cdb
+operator|->
+name|cdb_bytes
+index|[
+name|i
+index|]
+expr_stmt|;
+name|esp
+operator|->
+name|esp_cmd
+operator|=
+name|ESPCMD_SEL_NATN
+expr_stmt|;
+comment|/* the rest is done elsewhere */
+block|}
+end_function
+
+begin_comment
+comment|/*  * Sequence through the SCSI state machine.  Return the action to take.  *  * Most of the work happens here.  *  * There are three interrupt sources:  *   -- ESP interrupt request (typically, some device wants something).  *   -- DMA memory error.  *   -- DMA byte count has reached 0 (we do not often want this one but  *	can only turn it off in rev 2 DMA chips, it seems).  *	DOES THIS OCCUR AT ALL HERE?  THERE IS NOTHING TO HANDLE IT!  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|espact
+parameter_list|(
+name|sc
+parameter_list|)
+specifier|register
+name|struct
+name|esp_softc
+modifier|*
+name|sc
+decl_stmt|;
+block|{
 specifier|register
 specifier|volatile
 name|struct
@@ -2435,33 +2688,27 @@ modifier|*
 name|dma
 decl_stmt|;
 specifier|register
+name|int
+name|reg
+decl_stmt|,
+name|i
+decl_stmt|,
+name|resid
+decl_stmt|,
+name|newstate
+decl_stmt|;
+specifier|register
 name|struct
 name|scsi_cdb
 modifier|*
 name|cdb
 decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|xname
-init|=
+name|dma
+operator|=
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
-operator|.
-name|dv_xname
-decl_stmt|;
-specifier|register
-name|int
-name|reg
-decl_stmt|,
-name|phase
-decl_stmt|,
-name|i
-decl_stmt|;
+name|sc_dma
+expr_stmt|;
 comment|/* check various error conditions, using as little code as possible */
 if|if
 condition|(
@@ -2477,6 +2724,11 @@ argument_list|(
 name|sc
 argument_list|,
 literal|"DMA error"
+argument_list|)
+expr_stmt|;
+name|DMAWAIT
+argument_list|(
+name|dma
 argument_list|)
 expr_stmt|;
 name|dma
@@ -2540,7 +2792,7 @@ name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: gross error (ignored)"
+literal|"DIAG: gross error (ignored)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2614,7 +2866,11 @@ name|printf
 argument_list|(
 literal|"%s: target %d"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -2669,6 +2925,12 @@ block|}
 undef|#
 directive|undef
 name|ERR
+name|esp
+operator|=
+name|sc
+operator|->
+name|sc_esp
+expr_stmt|;
 comment|/* 	 * Disconnect currently only allowed in `final interrupt' states. 	 */
 if|if
 condition|(
@@ -2727,11 +2989,20 @@ name|esp_cmd
 operator|=
 name|ESPCMD_FLUSH_FIFO
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: target %d not responding\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -2745,14 +3016,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Okay, things are moving along. 	 * What were we doing the last time we did something, 	 * and did it complete normally? 	 */
-name|phase
-operator|=
-name|sc
-operator|->
-name|sc_espstat
-operator|&
-name|ESPSTAT_PHASE
-expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -2827,7 +3090,7 @@ name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: esp step 2"
+literal|"DIAG: esp step 2"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2846,7 +3109,7 @@ name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: esp step 3"
+literal|"DIAG: esp step 3"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2868,7 +3131,11 @@ name|printf
 argument_list|(
 literal|"%s: mysterious esp step %d\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -2882,41 +3149,48 @@ operator|)
 return|;
 block|}
 comment|/* 		 * Part of the command may still be lodged in the FIFO. 		 */
+if|if
+condition|(
+name|ESP_NFIFO
+argument_list|(
+name|sc
+operator|->
+name|sc_espfflags
+argument_list|)
+condition|)
+block|{
 name|esp
 operator|->
 name|esp_cmd
 operator|=
 name|ESPCMD_FLUSH_FIFO
 expr_stmt|;
-break|break;
-case|case
-name|S_CMDSVC
-case|:
-comment|/* 		 * We were waiting for phase change after stuffing the command 		 * into the FIFO.  Make sure it got out. 		 */
-name|reg
-operator|=
-name|ESP_NFIFO
+name|DELAY
 argument_list|(
-name|esp
+literal|1
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
+case|case
+name|S_SVC
+case|:
+comment|/* 		 * We were waiting for phase change after stuffing the command 		 * into the FIFO.  Make sure it got out. 		 */
 if|if
 condition|(
-name|reg
+name|ESP_NFIFO
+argument_list|(
+name|sc
+operator|->
+name|sc_espfflags
+argument_list|)
 condition|)
 block|{
 name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: CMDSVC, fifo not empty"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\tfifo count = %x\n"
-argument_list|,
-name|reg
+literal|"DIAG: CMDSVC, fifo not empty"
 argument_list|)
 expr_stmt|;
 name|esp
@@ -2924,6 +3198,11 @@ operator|->
 name|esp_cmd
 operator|=
 name|ESPCMD_FLUSH_FIFO
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2935,51 +3214,64 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-name|S_IOSVC
-case|:
-comment|/* 		 * We were waiting for phase change after I/O. 		 */
-break|break;
-case|case
 name|S_DI
 case|:
-comment|/* 		 * We were doing DMA data in, and expecting a 		 * transfer-count-zero interrupt or a phase change. 		 * We got that; drain the pack register and 		 * handle as for data out. 		 */
+comment|/* 		 * We were doing DMA data in, and expecting a 		 * transfer-count-zero interrupt or a phase change. 		 * We got that; drain the pack register and handle 		 * as for data out -- but ignore FIFO (it should be 		 * empty, except for sync mode which we are not 		 * using anyway). 		 */
+name|DMAWAIT
+argument_list|(
+name|dma
+argument_list|)
+expr_stmt|;
 name|dma
 operator|->
 name|dma_csr
 operator||=
 name|DMA_DRAIN
 expr_stmt|;
-name|reg
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|resid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* FIFO auto flushed? */
 goto|goto
 name|dma_data_done
 goto|;
 case|case
 name|S_DO
 case|:
-comment|/* 		 * We were doing DMA data out.  If there is data in the 		 * FIFO, it is stuff that got DMAed out but never made 		 * it to the device, so it counts as residual. 		 * 		 * XXX	handle DMA IO with large count or address 		 *	boundary condition by resuming here, or below? 		 */
+comment|/* 		 * We were doing DMA data out.  If there is data in the 		 * FIFO, it is stuff that got DMAed out but never made 		 * it to the device, so it counts as residual. 		 */
 if|if
 condition|(
 operator|(
-name|reg
+name|resid
 operator|=
 name|ESP_NFIFO
 argument_list|(
-name|esp
+name|sc
+operator|->
+name|sc_espfflags
 argument_list|)
 operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|esp
 operator|->
 name|esp_cmd
 operator|=
 name|ESPCMD_FLUSH_FIFO
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|dma_data_done
 label|:
 if|if
@@ -2991,18 +3283,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|esperror
 argument_list|(
-literal|"%s: dma done while %s, dmaactive==0\n"
-argument_list|,
-name|xname
-argument_list|,
-name|espstates
-index|[
 name|sc
-operator|->
-name|sc_state
-index|]
+argument_list|,
+literal|"dma done w/o dmaactive"
 argument_list|)
 expr_stmt|;
 name|panic
@@ -3017,8 +3302,9 @@ name|sc_dmaactive
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Finish computing residual count. */
 name|reg
-operator|+=
+operator|=
 name|esp
 operator|->
 name|esp_tcl
@@ -3051,36 +3337,52 @@ name|reg
 operator|=
 literal|65536
 expr_stmt|;
-if|if
-condition|(
+name|resid
+operator|+=
 name|reg
-operator|>
+expr_stmt|;
+comment|/* Compute xfer count (requested - resid). */
+name|i
+operator|=
 name|sc
 operator|->
-name|sc_resid
+name|sc_dmasize
+operator|-
+name|resid
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"%s: xfer resid (%d)> xfer req (%d)\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
-name|reg
+name|resid
 argument_list|,
 name|sc
 operator|->
-name|sc_resid
+name|sc_dmasize
 argument_list|)
 expr_stmt|;
-name|reg
+name|i
 operator|=
 name|sc
 operator|->
-name|sc_resid
+name|sc_dmasize
 expr_stmt|;
+comment|/* forgiving... */
 block|}
-comment|/* 		 * If data came in we must flush cache. 		 */
+comment|/* If data came in we must flush cache. */
 if|if
 condition|(
 name|sc
@@ -3095,18 +3397,20 @@ name|sc
 operator|->
 name|sc_dmaaddr
 argument_list|,
-name|sc
-operator|->
-name|sc_resid
-operator|-
-name|reg
+name|i
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|sc_dmaaddr
+operator|+=
+name|i
+expr_stmt|;
+name|sc
+operator|->
 name|sc_resid
-operator|=
-name|reg
+operator|-=
+name|i
 expr_stmt|;
 if|if
 condition|(
@@ -3121,11 +3425,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|esperror
 argument_list|(
-literal|"%s: no bus service req\n"
+name|sc
 argument_list|,
-name|xname
+literal|"no bus service req"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3171,7 +3475,9 @@ name|reg
 operator|=
 name|ESP_NFIFO
 argument_list|(
-name|esp
+name|sc
+operator|->
+name|sc_espfflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -3185,7 +3491,11 @@ name|printf
 argument_list|(
 literal|"%s: command done but fifo count = %d; must be>= 2\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|reg
 argument_list|)
@@ -3260,7 +3570,11 @@ name|printf
 argument_list|(
 literal|"%s: target %d is naughty\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -3277,7 +3591,11 @@ name|printf
 argument_list|(
 literal|"%s: warning: target %d returned msg 0x%x\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -3328,7 +3646,9 @@ name|reg
 operator|=
 name|ESP_NFIFO
 argument_list|(
-name|esp
+name|sc
+operator|->
+name|sc_espfflags
 argument_list|)
 expr_stmt|;
 for|for
@@ -3375,7 +3695,11 @@ block|}
 comment|/* 	 * Things are still moving along.  The phase tells us 	 * what the device wants next.  Do it. 	 */
 switch|switch
 condition|(
-name|phase
+name|sc
+operator|->
+name|sc_espstat
+operator|&
+name|ESPSTAT_PHASE
 condition|)
 block|{
 case|case
@@ -3392,20 +3716,38 @@ name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: data out without command"
+literal|"DIAG: data out without command"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|sc
 operator|->
-name|sc_state
-operator|=
-name|S_DO
+name|sc_dmactl
+operator|&
+name|DMA_READ
+condition|)
+block|{
+name|esperror
+argument_list|(
+name|sc
+argument_list|,
+literal|"wrong phase (want to read)"
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ACT_WRITE
+name|ACT_RESET
 operator|)
 return|;
+block|}
+name|newstate
+operator|=
+name|S_DO
+expr_stmt|;
+goto|goto
+name|do_data_xfer
+goto|;
 case|case
 name|ESPPHASE_DATA_IN
 case|:
@@ -3420,30 +3762,177 @@ name|esperror
 argument_list|(
 name|sc
 argument_list|,
-literal|"DIAGNOSTIC: data in without command"
+literal|"DIAG: data in without command"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_dmactl
+operator|&
+name|DMA_READ
+operator|)
+condition|)
+block|{
+name|esperror
+argument_list|(
+name|sc
+argument_list|,
+literal|"wrong phase (want to write)"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ACT_RESET
+operator|)
+return|;
+block|}
+name|newstate
+operator|=
+name|S_DI
+expr_stmt|;
+name|do_data_xfer
+label|:
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_resid
+operator|==
+literal|0
+condition|)
+block|{
+name|esperror
+argument_list|(
+name|sc
+argument_list|,
+literal|"data count error"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ACT_RESET
+operator|)
+return|;
+block|}
+comment|/* 		 * Compute DMA count based on chip limits. 		 * Set DMA address and load transfer count into 		 * ESP via DMA NOP, then set DMA control, and 		 * then we can start the DMA. 		 */
 name|sc
 operator|->
 name|sc_state
 operator|=
-name|S_DI
+name|newstate
+expr_stmt|;
+name|i
+operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|sc_resid
+argument_list|,
+name|ESPMAX
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
+name|min
+argument_list|(
+name|i
+argument_list|,
+name|DMAMAX
+argument_list|(
+name|sc
+operator|->
+name|sc_dmaaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dmasize
+operator|=
+name|i
+expr_stmt|;
+name|dma
+operator|->
+name|dma_addr
+operator|=
+name|sc
+operator|->
+name|sc_dmaaddr
+expr_stmt|;
+name|esp
+operator|->
+name|esp_tch
+operator|=
+name|i
+operator|>>
+literal|8
+expr_stmt|;
+name|esp
+operator|->
+name|esp_tcl
+operator|=
+name|i
+expr_stmt|;
+name|esp
+operator|->
+name|esp_cmd
+operator|=
+name|ESPCMD_DMA
+operator||
+name|ESPCMD_NOP
+expr_stmt|;
+name|dma
+operator|->
+name|dma_csr
+operator|=
+name|sc
+operator|->
+name|sc_dmactl
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dmaactive
+operator|=
+literal|1
+expr_stmt|;
+name|esp
+operator|->
+name|esp_cmd
+operator|=
+name|ESPCMD_DMA
+operator||
+name|ESPCMD_XFER_INFO
 expr_stmt|;
 return|return
 operator|(
-name|ACT_READ
+name|ACT_IO
 operator|)
 return|;
 case|case
 name|ESPPHASE_CMD
 case|:
-comment|/* 		 * Silly thing wants the command again. 		 * Load it into the FIFO and go to CMDSVC state. 		 */
+comment|/* 		 * Silly thing wants the command again. 		 * Load it into the FIFO and go to SVC state. 		 */
 name|printf
 argument_list|(
 literal|"%s: redoing command\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|)
+expr_stmt|;
+name|cdb
+operator|=
+name|sc
+operator|->
+name|sc_curcdb
 expr_stmt|;
 name|reg
 operator|=
@@ -3485,7 +3974,7 @@ name|sc
 operator|->
 name|sc_state
 operator|=
-name|S_CMDSVC
+name|S_SVC
 expr_stmt|;
 name|esp
 operator|->
@@ -3525,7 +4014,11 @@ name|printf
 argument_list|(
 literal|"%s: accepting (& ignoring) msg from target %d\n"
 argument_list|,
-name|xname
+name|sc
+operator|->
+name|sc_dev
+operator|.
+name|dv_xname
 argument_list|,
 name|sc
 operator|->
@@ -3550,20 +4043,11 @@ name|ACT_CONT
 operator|)
 return|;
 default|default:
-name|printf
+name|esperror
 argument_list|(
-literal|"%s: target %d asked for strange phase (%s)\n"
-argument_list|,
-name|xname
-argument_list|,
 name|sc
-operator|->
-name|sc_targ
 argument_list|,
-name|espphases
-index|[
-name|phase
-index|]
+literal|"bad phase"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3573,686 +4057,6 @@ operator|)
 return|;
 block|}
 comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Issue a select, loading command into the FIFO.  * Return nonzero on error, 0 if OK.  * Sets state to `selecting'; espact() will sequence state FSM.  */
-end_comment
-
-begin_function
-name|void
-name|espselect
-parameter_list|(
-name|sc
-parameter_list|,
-name|esp
-parameter_list|,
-name|targ
-parameter_list|,
-name|cdb
-parameter_list|)
-specifier|register
-name|struct
-name|esp_softc
-modifier|*
-name|sc
-decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|espreg
-modifier|*
-name|esp
-decl_stmt|;
-specifier|register
-name|int
-name|targ
-decl_stmt|;
-specifier|register
-name|struct
-name|scsi_cdb
-modifier|*
-name|cdb
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|i
-decl_stmt|,
-name|cmdlen
-init|=
-name|SCSICMDLEN
-argument_list|(
-name|cdb
-operator|->
-name|cdb_bytes
-index|[
-literal|0
-index|]
-argument_list|)
-decl_stmt|;
-name|sc
-operator|->
-name|sc_targ
-operator|=
-name|targ
-expr_stmt|;
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|S_SEL
-expr_stmt|;
-name|sc
-operator|->
-name|sc_sentcmd
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|sc_stat
-index|[
-literal|0
-index|]
-operator|=
-literal|0xff
-expr_stmt|;
-comment|/* ??? */
-name|sc
-operator|->
-name|sc_msg
-index|[
-literal|0
-index|]
-operator|=
-literal|0xff
-expr_stmt|;
-comment|/* ??? */
-comment|/* 	 * Try to talk to target. 	 * Synch offset 0 => asynchronous transfer. 	 */
-name|esp
-operator|->
-name|esp_id
-operator|=
-name|targ
-expr_stmt|;
-name|esp
-operator|->
-name|esp_syncoff
-operator|=
-literal|0
-expr_stmt|;
-comment|/* 	 * Stuff the command bytes into the fifo. 	 * Select without attention since we do not do disconnect yet. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|cmdlen
-condition|;
-name|i
-operator|++
-control|)
-name|esp
-operator|->
-name|esp_fifo
-operator|=
-name|cdb
-operator|->
-name|cdb_bytes
-index|[
-name|i
-index|]
-expr_stmt|;
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_SEL_NATN
-expr_stmt|;
-comment|/* the rest is done elsewhere */
-block|}
-end_function
-
-begin_comment
-comment|/*  * THIS SHOULD BE ADJUSTABLE  */
-end_comment
-
-begin_comment
-comment|/* name		howlong		purpose */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SELECT_WAIT
-value|300000
-end_define
-
-begin_comment
-comment|/* wait for select to complete */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMD_WAIT
-value|1000
-end_define
-
-begin_comment
-comment|/* wait for next phase, generic */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IO_WAIT
-value|1000000
-end_define
-
-begin_comment
-comment|/* time to xfer data in/out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POSTDATA_WAIT
-value|10000000
-end_define
-
-begin_comment
-comment|/* wait for next phase, after dataio */
-end_comment
-
-begin_comment
-comment|/*  * Transfer data out via polling.  Return success (0) iff all  * the bytes were sent and we got an interrupt.  *  * This returns -1 on timeout, resid count on early interrupt,  * but no one really cares....  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|espixfer_out
-parameter_list|(
-name|sc
-parameter_list|,
-name|esp
-parameter_list|,
-name|dma
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
-name|struct
-name|esp_softc
-modifier|*
-name|sc
-decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|espreg
-modifier|*
-name|esp
-decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|dmareg
-modifier|*
-name|dma
-decl_stmt|;
-specifier|register
-name|caddr_t
-name|buf
-decl_stmt|;
-specifier|register
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|wait
-decl_stmt|,
-name|n
-decl_stmt|;
-if|if
-condition|(
-name|CROSS_DMA
-argument_list|(
-name|buf
-argument_list|,
-name|len
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"espixfer_out: 16MB boundary"
-argument_list|)
-expr_stmt|;
-comment|/* set dma address and transfer count */
-name|dma
-operator|->
-name|dma_addr
-operator|=
-operator|(
-name|int
-operator|)
-name|buf
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tch
-operator|=
-name|len
-operator|>>
-literal|8
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tcl
-operator|=
-name|len
-expr_stmt|;
-comment|/* load count into counter via DMA NOP */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_NOP
-expr_stmt|;
-comment|/* enable dma (but not interrupts) */
-name|dma
-operator|->
-name|dma_csr
-operator|=
-name|DMA_ENA
-expr_stmt|;
-comment|/* and go */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_XFER_INFO
-expr_stmt|;
-comment|/* wait for completion */
-for|for
-control|(
-name|wait
-operator|=
-name|IO_WAIT
-init|;
-name|wait
-operator|>
-literal|0
-condition|;
-operator|--
-name|wait
-control|)
-block|{
-name|n
-operator|=
-name|dma
-operator|->
-name|dma_csr
-expr_stmt|;
-if|if
-condition|(
-name|DMA_INTR
-argument_list|(
-name|n
-argument_list|)
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_espstat
-operator|=
-name|esp
-operator|->
-name|esp_stat
-expr_stmt|;
-name|sc
-operator|->
-name|sc_espstep
-operator|=
-name|esp
-operator|->
-name|esp_step
-operator|&
-name|ESPSTEP_MASK
-expr_stmt|;
-name|sc
-operator|->
-name|sc_espintr
-operator|=
-name|esp
-operator|->
-name|esp_intr
-expr_stmt|;
-name|sc
-operator|->
-name|sc_dmacsr
-operator|=
-name|n
-expr_stmt|;
-name|n
-operator|=
-name|esp
-operator|->
-name|esp_tcl
-operator||
-operator|(
-name|esp
-operator|->
-name|esp_tch
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-operator|&&
-operator|(
-name|sc
-operator|->
-name|sc_espstat
-operator|&
-name|ESPSTAT_TC
-operator|)
-operator|==
-literal|0
-condition|)
-name|n
-operator|=
-literal|65536
-expr_stmt|;
-return|return
-operator|(
-name|n
-operator|)
-return|;
-block|}
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Transfer data in via polling.  * Return resid count on interrupt, -1 if timed out.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|espixfer_in
-parameter_list|(
-name|sc
-parameter_list|,
-name|esp
-parameter_list|,
-name|dma
-parameter_list|,
-name|buf
-parameter_list|,
-name|len
-parameter_list|)
-specifier|register
-name|struct
-name|esp_softc
-modifier|*
-name|sc
-decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|espreg
-modifier|*
-name|esp
-decl_stmt|;
-specifier|register
-specifier|volatile
-name|struct
-name|dmareg
-modifier|*
-name|dma
-decl_stmt|;
-specifier|register
-name|caddr_t
-name|buf
-decl_stmt|;
-specifier|register
-name|int
-name|len
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|wait
-decl_stmt|,
-name|n
-decl_stmt|;
-if|if
-condition|(
-name|CROSS_DMA
-argument_list|(
-name|buf
-argument_list|,
-name|len
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"espixfer_in: 16MB boundary"
-argument_list|)
-expr_stmt|;
-comment|/* set dma address and transfer count */
-name|dma
-operator|->
-name|dma_addr
-operator|=
-operator|(
-name|int
-operator|)
-name|buf
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tch
-operator|=
-name|len
-operator|>>
-literal|8
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tcl
-operator|=
-name|len
-expr_stmt|;
-comment|/* load count into counter via DMA NOP */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_NOP
-expr_stmt|;
-comment|/* enable dma (but not interrupts) */
-name|dma
-operator|->
-name|dma_csr
-operator|=
-name|DMA_ENA
-operator||
-name|DMA_READ
-expr_stmt|;
-comment|/* and go */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_XFER_INFO
-expr_stmt|;
-comment|/* wait for completion */
-for|for
-control|(
-name|wait
-operator|=
-name|IO_WAIT
-init|;
-name|wait
-operator|>
-literal|0
-condition|;
-operator|--
-name|wait
-control|)
-block|{
-name|n
-operator|=
-name|dma
-operator|->
-name|dma_csr
-expr_stmt|;
-if|if
-condition|(
-name|DMA_INTR
-argument_list|(
-name|n
-argument_list|)
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_espstat
-operator|=
-name|esp
-operator|->
-name|esp_stat
-expr_stmt|;
-name|sc
-operator|->
-name|sc_espstep
-operator|=
-name|esp
-operator|->
-name|esp_step
-operator|&
-name|ESPSTEP_MASK
-expr_stmt|;
-name|sc
-operator|->
-name|sc_espintr
-operator|=
-name|esp
-operator|->
-name|esp_intr
-expr_stmt|;
-name|dma
-operator|->
-name|dma_csr
-operator||=
-name|DMA_DRAIN
-expr_stmt|;
-name|sc
-operator|->
-name|sc_dmacsr
-operator|=
-name|n
-expr_stmt|;
-name|n
-operator|=
-name|esp
-operator|->
-name|esp_tcl
-operator||
-operator|(
-name|esp
-operator|->
-name|esp_tch
-operator|<<
-literal|8
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-operator|&&
-operator|(
-name|sc
-operator|->
-name|sc_espstat
-operator|&
-name|ESPSTAT_TC
-operator|)
-operator|==
-literal|0
-condition|)
-name|n
-operator|=
-literal|65536
-expr_stmt|;
-name|cache_flush
-argument_list|(
-name|buf
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|len
-operator|-
-name|n
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|n
-operator|)
-return|;
-block|}
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
@@ -4322,7 +4126,48 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send an `immediate' command, i.e., poll until the whole thing is done.  * Return the status byte from the device, or -1 if we timed out.  */
+comment|/*  * THIS SHOULD BE ADJUSTABLE  */
+end_comment
+
+begin_comment
+comment|/* name		howlong		purpose */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SELECT_WAIT
+value|300000
+end_define
+
+begin_comment
+comment|/* wait for select to complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CMD_WAIT
+value|100000
+end_define
+
+begin_comment
+comment|/* wait for next phase, generic */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATA_WAIT
+value|100000
+end_define
+
+begin_comment
+comment|/* time to xfer data in/out */
+end_comment
+
+begin_comment
+comment|/*  * Send an `immediate' command, i.e., poll until the whole thing is done.  * Return the status byte from the device, or -1 if we timed out.  We use  * DMA to transfer the data as the fifo only moves one byte at a time.  */
 end_comment
 
 begin_function
@@ -4341,7 +4186,6 @@ name|len
 parameter_list|,
 name|rw
 parameter_list|)
-specifier|register
 name|struct
 name|hba_softc
 modifier|*
@@ -4350,7 +4194,6 @@ decl_stmt|;
 name|int
 name|targ
 decl_stmt|;
-specifier|register
 name|struct
 name|scsi_cdb
 modifier|*
@@ -4359,11 +4202,9 @@ decl_stmt|;
 name|caddr_t
 name|buf
 decl_stmt|;
-specifier|register
 name|int
 name|len
-decl_stmt|;
-name|int
+decl_stmt|,
 name|rw
 decl_stmt|;
 block|{
@@ -4408,41 +4249,6 @@ name|r
 decl_stmt|,
 name|wait
 decl_stmt|;
-name|char
-modifier|*
-name|msg
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|len
-operator|>
-name|MAX_TRANSFER_SIZE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: bad length %d\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_hba
-operator|.
-name|hba_dev
-operator|.
-name|dv_xname
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"espicmd"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Clear the target if necessary. 	 */
 if|if
 condition|(
@@ -4468,19 +4274,52 @@ argument_list|,
 name|targ
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable hardware interrupts, start select sequence. 	 * Wait for interrupt-pending bit, then call espact() to 	 * sequence the state machine.  When it tells us to do 	 * data transfer, we do programmed I/O. 	 * In any case, we loop calling espact() until done. 	 */
+comment|/* 	 * Set up DMA transfer control (leaving interrupts disabled). 	 */
+name|sc
+operator|->
+name|sc_dmactl
+operator|=
+name|rw
+operator|&
+name|B_READ
+condition|?
+name|DMA_ENA
+operator||
+name|DMA_READ
+else|:
+name|DMA_ENA
+expr_stmt|;
+name|sc
+operator|->
+name|sc_dmaaddr
+operator|=
+operator|(
+name|u_long
+operator|)
+name|buf
+expr_stmt|;
+name|sc
+operator|->
+name|sc_resid
+operator|=
+name|len
+expr_stmt|;
+comment|/* 	 * Disable hardware interrupts and start select sequence, 	 * then loop, calling espact() after each ``interrupt''. 	 */
+name|DMAWAIT
+argument_list|(
+name|dma
+argument_list|)
+expr_stmt|;
+comment|/* ??? */
 name|dma
 operator|->
 name|dma_csr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* disable hardware interrupts */
 name|espselect
 argument_list|(
 name|sc
-argument_list|,
-name|esp
 argument_list|,
 name|targ
 argument_list|,
@@ -4491,8 +4330,6 @@ name|wait
 operator|=
 name|SELECT_WAIT
 expr_stmt|;
-name|loop
-label|:
 for|for
 control|(
 init|;
@@ -4522,12 +4359,15 @@ operator|<
 literal|0
 condition|)
 block|{
-name|msg
-operator|=
-literal|"timeout waiting for phase change"
+name|esperror
+argument_list|(
+name|sc
+argument_list|,
+literal|"timeout"
+argument_list|)
 expr_stmt|;
 goto|goto
-name|err
+name|reset
 goto|;
 block|}
 name|DELAY
@@ -4536,8 +4376,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
-break|break;
 block|}
 name|sc
 operator|->
@@ -4567,21 +4405,18 @@ name|esp_intr
 expr_stmt|;
 name|sc
 operator|->
+name|sc_espfflags
+operator|=
+name|esp
+operator|->
+name|esp_fflags
+expr_stmt|;
+name|sc
+operator|->
 name|sc_dmacsr
 operator|=
 name|r
 expr_stmt|;
-comment|/* 	 * The action happens `twice around' for read and write. 	 * All the rest `goto loop' or return or some such. 	 */
-name|wait
-operator|=
-name|CMD_WAIT
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 switch|switch
 condition|(
 name|r
@@ -4589,12 +4424,6 @@ operator|=
 name|espact
 argument_list|(
 name|sc
-argument_list|,
-name|esp
-argument_list|,
-name|dma
-argument_list|,
-name|cdb
 argument_list|)
 condition|)
 block|{
@@ -4604,142 +4433,17 @@ case|:
 case|case
 name|ACT_QUICKINTR
 case|:
-goto|goto
-name|loop
-goto|;
-case|case
-name|ACT_READ
-case|:
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-operator|||
-operator|(
-name|rw
-operator|&
-name|B_READ
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|msg
-operator|=
-literal|"wrong phase"
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-name|r
-operator|=
-name|espixfer_in
-argument_list|(
-name|sc
-argument_list|,
-name|esp
-argument_list|,
-name|dma
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|<
-literal|0
-condition|)
-block|{
-name|msg
-operator|=
-literal|"timeout reading from device"
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-name|buf
-operator|+=
-name|len
-operator|-
-name|r
-expr_stmt|;
-name|len
-operator|=
-name|r
-expr_stmt|;
-comment|/* we did the io, expecting `generic service' */
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|S_IOSVC
-expr_stmt|;
 name|wait
 operator|=
-name|POSTDATA_WAIT
+name|CMD_WAIT
 expr_stmt|;
 break|break;
 case|case
-name|ACT_WRITE
+name|ACT_IO
 case|:
-if|if
-condition|(
-name|len
-operator|==
-literal|0
-operator|||
-name|rw
-operator|&
-name|B_READ
-condition|)
-block|{
-name|msg
-operator|=
-literal|"wrong phase"
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-if|if
-condition|(
-name|espixfer_out
-argument_list|(
-name|sc
-argument_list|,
-name|esp
-argument_list|,
-name|dma
-argument_list|,
-name|buf
-argument_list|,
-name|len
-argument_list|)
-condition|)
-block|{
-name|msg
-operator|=
-literal|"timeout writing to device"
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-block|}
-name|sc
-operator|->
-name|sc_state
-operator|=
-name|S_IOSVC
-expr_stmt|;
 name|wait
 operator|=
-name|POSTDATA_WAIT
+name|DATA_WAIT
 expr_stmt|;
 break|break;
 case|case
@@ -4796,39 +4500,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|err
-label|:
-name|printf
-argument_list|(
-literal|"%s: target %d: %s (phase = %s)\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_hba
-operator|.
-name|hba_dev
-operator|.
-name|dv_xname
-argument_list|,
-name|targ
-argument_list|,
-name|msg
-argument_list|,
-name|espphases
-index|[
-name|sc
-operator|->
-name|sc_espstat
-operator|&
-name|ESPSTAT_PHASE
-index|]
-argument_list|)
-expr_stmt|;
 name|reset
 label|:
 name|espreset
 argument_list|(
 name|sc
+argument_list|,
+name|RESET_ESPCHIP
 argument_list|)
 expr_stmt|;
 comment|/* ??? */
@@ -4868,7 +4546,6 @@ decl_stmt|;
 name|int
 name|targ
 decl_stmt|;
-specifier|register
 name|struct
 name|scsi_cdb
 modifier|*
@@ -4989,7 +4666,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_cdb
+name|sc_cdbspace
 argument_list|)
 expr_stmt|;
 block|}
@@ -5056,7 +4733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send a `dma' command, i.e., send the cdb and use DMA to send the data.  * Return 0 on success, 1 on failure.  */
+comment|/*  * Start buffered I/O.  * Return 0 on success, 1 on failure.  */
 end_comment
 
 begin_function
@@ -5114,55 +4791,6 @@ operator|*
 operator|)
 name|self
 decl_stmt|;
-specifier|register
-name|int
-name|len
-init|=
-name|bp
-operator|->
-name|b_bcount
-decl_stmt|;
-specifier|register
-name|u_long
-name|addr
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|len
-operator|>
-name|MAX_TRANSFER_SIZE
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: %s\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_hba
-operator|.
-name|hba_dev
-operator|.
-name|dv_xname
-argument_list|,
-name|len
-operator|<
-literal|0
-condition|?
-literal|"negative length"
-else|:
-literal|"transfer too big"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|sc
@@ -5182,7 +4810,7 @@ argument_list|,
 name|targ
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set dma registers later, on data transfer, 	 * but compute the contents now. 	 * COULD JUST REMEMBER bp HERE...? 	 * 	 * The DMA chip cannot cross a 16 MB address boundary. 	 * We should do this as multiple DMA transactions on a 	 * single SCSI command, but I have not written that yet. 	 */
+comment|/* Set up dma control for espact(). */
 name|sc
 operator|->
 name|sc_dmactl
@@ -5203,7 +4831,9 @@ name|DMA_ENA
 operator||
 name|DMA_IE
 expr_stmt|;
-name|addr
+name|sc
+operator|->
+name|sc_dmaaddr
 operator|=
 operator|(
 name|u_long
@@ -5214,34 +4844,15 @@ name|b_un
 operator|.
 name|b_addr
 expr_stmt|;
-comment|/* dma chip cannot cross 16MB boundary  XXX */
-if|if
-condition|(
-name|CROSS_DMA
-argument_list|(
-name|addr
-argument_list|,
-name|len
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"dma crosses 16MB boundary: fix esp.c"
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_dmaaddr
-operator|=
-name|addr
-expr_stmt|;
 name|sc
 operator|->
 name|sc_resid
 operator|=
-name|len
+name|bp
+operator|->
+name|b_bcount
 expr_stmt|;
-comment|/* 	 * Enable interrupts and start selection. 	 * The rest is done in our interrupt handler. 	 */
+comment|/* 	 * Enable interrupts and start selection. 	 * The rest is done in espintr() and espact(). 	 */
 name|sc
 operator|->
 name|sc_hba
@@ -5272,16 +4883,12 @@ name|espselect
 argument_list|(
 name|sc
 argument_list|,
-name|sc
-operator|->
-name|sc_esp
-argument_list|,
 name|targ
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_cdb
+name|sc_cdbspace
 argument_list|)
 expr_stmt|;
 return|return
@@ -5411,6 +5018,14 @@ name|esp_intr
 expr_stmt|;
 name|sc
 operator|->
+name|sc_espfflags
+operator|=
+name|esp
+operator|->
+name|esp_fflags
+expr_stmt|;
+name|sc
+operator|->
 name|sc_dmacsr
 operator|=
 name|r
@@ -5430,9 +5045,7 @@ literal|"%s: stray interrupt\n"
 argument_list|,
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_xname
 argument_list|)
@@ -5458,15 +5071,6 @@ operator|=
 name|espact
 argument_list|(
 name|sc
-argument_list|,
-name|esp
-argument_list|,
-name|dma
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_cdb
 argument_list|)
 condition|)
 block|{
@@ -5474,103 +5078,9 @@ case|case
 name|ACT_CONT
 case|:
 comment|/* just return */
-break|break;
 case|case
-name|ACT_READ
+name|ACT_IO
 case|:
-case|case
-name|ACT_WRITE
-case|:
-comment|/* 		 * We have to do this ourselves since another 		 * user of espact() wants to do programmed I/O. 		 * If we already did dma, and are done, stop. 		 */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_resid
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: target %d sent too much data\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_hba
-operator|.
-name|hba_dev
-operator|.
-name|dv_xname
-argument_list|,
-name|sc
-operator|->
-name|sc_targ
-argument_list|)
-expr_stmt|;
-goto|goto
-name|reset
-goto|;
-block|}
-name|sc
-operator|->
-name|sc_dmaactive
-operator|=
-literal|1
-expr_stmt|;
-name|dma
-operator|->
-name|dma_addr
-operator|=
-name|sc
-operator|->
-name|sc_dmaaddr
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tch
-operator|=
-name|sc
-operator|->
-name|sc_resid
-operator|>>
-literal|8
-expr_stmt|;
-name|esp
-operator|->
-name|esp_tcl
-operator|=
-name|sc
-operator|->
-name|sc_resid
-expr_stmt|;
-comment|/* load count into counter via DMA NOP */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_NOP
-expr_stmt|;
-comment|/* enable dma */
-name|dma
-operator|->
-name|dma_csr
-operator|=
-name|sc
-operator|->
-name|sc_dmactl
-expr_stmt|;
-comment|/* and go */
-name|esp
-operator|->
-name|esp_cmd
-operator|=
-name|ESPCMD_DMA
-operator||
-name|ESPCMD_XFER_INFO
-expr_stmt|;
 break|break;
 case|case
 name|ACT_RESET
@@ -5581,6 +5091,8 @@ label|:
 name|espreset
 argument_list|(
 name|sc
+argument_list|,
+name|RESET_ESPCHIP
 argument_list|)
 expr_stmt|;
 comment|/* ??? */
@@ -5687,7 +5199,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_cdb
+name|sc_cdbspace
 argument_list|)
 expr_stmt|;
 block|}
@@ -5711,9 +5223,7 @@ literal|"%s: quickintr: "
 argument_list|,
 name|sc
 operator|->
-name|sc_hba
-operator|.
-name|hba_dev
+name|sc_dev
 operator|.
 name|dv_xname
 argument_list|)
@@ -5843,7 +5353,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_cdb
+name|sc_cdbspace
 argument_list|)
 expr_stmt|;
 else|else
