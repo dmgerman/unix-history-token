@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  CONF.H -- All user-configurable parameters ** **	@(#)conf.h	3.1		%G% */
+comment|/* **  CONF.H -- All user-configurable parameters for sendmail ** **	@(#)conf.h	3.2		%G% */
 end_comment
 
 begin_comment
@@ -196,21 +196,6 @@ end_define
 
 begin_comment
 comment|/* include the daemon (requires IPC) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VMUNIX
-value|1
-end_define
-
-begin_comment
-comment|/* VMUNIX options (4.1bsd) */
-end_comment
-
-begin_comment
-comment|/* #define NVMUNIX	1	/* new VMUNIX options (4.2bsd, requires VMUNIX) */
 end_comment
 
 end_unit
