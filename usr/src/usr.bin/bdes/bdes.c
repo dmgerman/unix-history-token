@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bdes.c	5.2 (Berkeley) %G%"
+literal|"@(#)bdes.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * BDES -- DES encryption package for Berkeley Software Distribution 4.4  * options:  *	-a	key is in ASCII  *	-e	use ECB (electronic code book) mode  *	-f b	use b-bit CFB (cipher feedback) mode  *	-F b	use b-bit CFB (cipher feedback) alternative mode  *	-i	invert (decrypt) input  *	-m b	generate a MAC of length b  *	-o b	use b-bit OFB (output feedback) mode  *	-p	don't reset the parity bit  *	-v v	use v as the initialization vector (ignored for ECB)  * note: the last character of the last block is the integer indicating  * how many characters of that block are to be output  *  * Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  */
+comment|/*  * BDES -- DES encryption package for Berkeley Software Distribution 4.4  * options:  *	-a	key is in ASCII  *	-b	use ECB (electronic code book) mode  *	-d	invert (decrypt) input  *	-f b	use b-bit CFB (cipher feedback) mode  *	-F b	use b-bit CFB (cipher feedback) alternative mode  *	-k key	use key as the cryptographic key  *	-m b	generate a MAC of length b  *	-o b	use b-bit OFB (output feedback) mode  *	-p	don't reset the parity bit  *	-v v	use v as the initialization vector (ignored for ECB)  * note: the last character of the last block is the integer indicating  * how many characters of that block are to be output  *  * Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  */
 end_comment
 
 begin_include
@@ -278,6 +278,7 @@ end_comment
 begin_enum
 enum|enum
 block|{
+comment|/* encrypt, decrypt, authenticate */
 name|MODE_ENCRYPT
 block|,
 name|MODE_DECRYPT
@@ -293,6 +294,7 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* ecb, cbc, cfb, cfba, ofb? */
 name|ALG_ECB
 block|,
 name|ALG_CBC
@@ -401,11 +403,13 @@ parameter_list|)
 name|int
 name|ac
 decl_stmt|;
+comment|/* arg count */
 name|char
 modifier|*
 modifier|*
 name|av
 decl_stmt|;
+comment|/* arg vector */
 block|{
 specifier|extern
 name|int
@@ -434,16 +438,20 @@ name|msgbuf
 decl_stmt|;
 comment|/* I/O buffer */
 name|int
-name|argc
-decl_stmt|,
 name|kflag
 decl_stmt|;
+comment|/* command-line encryptiooon key */
+name|int
+name|argc
+decl_stmt|;
+comment|/* the real arg count */
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-comment|/* hide the arguments from ps(1) */
+comment|/* the real argument vector */
+comment|/* 	 * Hide the arguments from ps(1) by making private copies of them 	 * and clobbering the global (visible to ps(1)) ones. 	 */
 name|argc
 operator|=
 name|ac
@@ -839,7 +847,7 @@ literal|"Enter key: "
 argument_list|)
 expr_stmt|;
 comment|/* 		 * copy it, nul-padded, into the key area 		 */
-name|strncpy
+name|cvtkey
 argument_list|(
 name|BUFFER
 argument_list|(
@@ -847,8 +855,6 @@ name|msgbuf
 argument_list|)
 argument_list|,
 name|p
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1183,11 +1189,19 @@ name|c
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* char to be converted */
+end_comment
+
 begin_decl_stmt
 name|int
 name|radix
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* base (2 to 16) */
+end_comment
 
 begin_block
 block|{
@@ -1468,11 +1482,23 @@ begin_decl_stmt
 name|char
 modifier|*
 name|obuf
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bit pattern */
+end_comment
+
+begin_decl_stmt
+name|char
 modifier|*
 name|ibuf
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* the key itself */
+end_comment
 
 begin_block
 block|{
@@ -1859,11 +1885,19 @@ name|s
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* the ASCII string */
+end_comment
+
 begin_decl_stmt
 name|int
 name|mult
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* what it must be a multiple of */
+end_comment
 
 begin_block
 block|{
@@ -1872,12 +1906,14 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* pointer in a for loop */
 specifier|register
 name|int
 name|n
 init|=
 literal|0
 decl_stmt|;
+comment|/* the integer collected */
 comment|/* 	 * skip white space 	 */
 while|while
 condition|(
@@ -5005,10 +5041,8 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|to
-index|[
-literal|64
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -5051,14 +5085,9 @@ condition|;
 name|j
 operator|++
 control|)
-name|to
-index|[
-name|i
 operator|*
-literal|8
-operator|+
-name|j
-index|]
+name|to
+operator|++
 operator|=
 operator|(
 name|CHAR
@@ -5095,10 +5124,8 @@ end_macro
 
 begin_decl_stmt
 name|char
+modifier|*
 name|from
-index|[
-literal|64
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -5169,14 +5196,11 @@ name|i
 argument_list|)
 operator|=
 operator|(
-name|from
-index|[
-name|i
+operator|(
 operator|*
-literal|8
-operator|+
-name|j
-index|]
+name|from
+operator|++
+operator|)
 operator|<<
 operator|(
 literal|7
@@ -5196,6 +5220,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * message about usage  */
+end_comment
+
 begin_macro
 name|usage
 argument_list|()
@@ -5210,7 +5238,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: bdes [-aceip] [-F bit] [-f bit] [-m bit] [-o bit] [-v vector] [key]\n"
+literal|"%s\n"
+argument_list|,
+literal|"usage: bdes [-abdp] [-F bit] [-f bit] [-k key] [-m bit] [-o bit] [-v vector]"
 argument_list|)
 expr_stmt|;
 name|exit
