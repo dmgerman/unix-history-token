@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: passwd.c,v 1.4 1993/08/01 18:10:20 mycroft Exp $"
+literal|"$Id: passwd.c,v 1.2 1994/01/11 19:01:15 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ name|strcmp
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|uname

@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: local_passwd.c,v 1.5 1993/08/01 18:10:19 mycroft Exp $"
+literal|"$Id: local_passwd.c,v 1.4 1994/01/11 19:01:13 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,6 +229,29 @@ argument_list|,
 name|pw
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PW_COMPACT
+comment|/* 	 * Attempt a recovery if the incremental database update failed by 	 * handing off to the real password hashing program to remake the 	 * whole mess. Even though this costs lots of time it's better than 	 * having the password databases out of sync with the master pw file. 	 */
+if|if
+condition|(
+name|pw_fastmkdb
+argument_list|(
+name|pw
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: WARNING!! Password database mangled, recreating it from scratch\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -248,6 +271,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PW_COMPACT
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
