@@ -323,7 +323,7 @@ name|rflag
 condition|)
 name|printf
 argument_list|(
-literal|"MD5 %s  %s\n"
+literal|"%s %s\n"
 argument_list|,
 name|p
 argument_list|,
@@ -401,7 +401,7 @@ name|rflag
 condition|)
 name|printf
 argument_list|(
-literal|"MD5 %s (\"%s\")\n"
+literal|"%s (\"%s\")\n"
 argument_list|,
 name|MD5Data
 argument_list|(
