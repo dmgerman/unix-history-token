@@ -28,7 +28,7 @@ file|<sys/time.h>
 end_include
 
 begin_comment
-comment|/* for struct timeval */
+comment|/* for struct timespec */
 end_comment
 
 begin_include
