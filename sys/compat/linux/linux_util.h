@@ -22,12 +22,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"opt_linux.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
