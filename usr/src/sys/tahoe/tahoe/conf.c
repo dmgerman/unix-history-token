@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -593,19 +593,19 @@ end_endif
 
 begin_decl_stmt
 name|int
-name|syopen
+name|cttyopen
 argument_list|()
 decl_stmt|,
-name|syread
+name|cttyread
 argument_list|()
 decl_stmt|,
-name|sywrite
+name|cttywrite
 argument_list|()
 decl_stmt|,
-name|syioctl
+name|cttyioctl
 argument_list|()
 decl_stmt|,
-name|syselect
+name|cttyselect
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -1272,6 +1272,7 @@ name|cdevsw
 index|[]
 init|=
 block|{
+block|{
 name|cnopen
 block|,
 name|cnclose
@@ -1295,7 +1296,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|vxopen
 block|,
 name|vxclose
@@ -1318,17 +1321,19 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
-name|syopen
+block|{
+name|cttyopen
 block|,
 name|nullop
 block|,
-name|syread
+name|cttyread
 block|,
-name|sywrite
+name|cttywrite
 block|,
 comment|/*2*/
-name|syioctl
+name|cttyioctl
 block|,
 name|nullop
 block|,
@@ -1336,12 +1341,14 @@ name|nullop
 block|,
 name|NULL
 block|,
-name|syselect
+name|cttyselect
 block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|nullop
 block|,
 name|nullop
@@ -1364,7 +1371,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|enodev
 block|,
 name|nullop
@@ -1387,7 +1396,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|vdopen
 block|,
 name|vdclose
@@ -1410,7 +1421,9 @@ block|,
 name|enodev
 block|,
 name|vdstrategy
+block|}
 block|,
+block|{
 name|hdopen
 block|,
 name|hdclose
@@ -1433,7 +1446,9 @@ block|,
 name|enodev
 block|,
 name|hdstrategy
+block|}
 block|,
+block|{
 name|cyopen
 block|,
 name|cyclose
@@ -1456,7 +1471,9 @@ block|,
 name|enodev
 block|,
 name|cystrategy
+block|}
 block|,
+block|{
 name|nullop
 block|,
 name|nullop
@@ -1479,7 +1496,9 @@ block|,
 name|enodev
 block|,
 name|swstrategy
+block|}
 block|,
+block|{
 name|ptsopen
 block|,
 name|ptsclose
@@ -1502,7 +1521,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|ptcopen
 block|,
 name|ptcclose
@@ -1525,7 +1546,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|mpdlopen
 block|,
 name|mpdlclose
@@ -1548,7 +1571,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|mpopen
 block|,
 name|mpclose
@@ -1571,7 +1596,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|enodev
 block|,
 name|enodev
@@ -1594,7 +1621,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|iiopen
 block|,
 name|iiclose
@@ -1617,7 +1646,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|logopen
 block|,
 name|logclose
@@ -1640,7 +1671,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|enpr_open
 block|,
 name|enpr_close
@@ -1663,7 +1696,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|enodev
 block|,
 name|enodev
@@ -1686,7 +1721,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|dropen
 block|,
 name|drclose
@@ -1709,8 +1746,10 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
-name|enodev
+block|{
+name|fdopen
 block|,
 name|enodev
 block|,
@@ -1723,7 +1762,7 @@ name|enodev
 block|,
 name|enodev
 block|,
-name|nullop
+name|enodev
 block|,
 name|NULL
 block|,
@@ -1732,8 +1771,10 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
 comment|/* 20-30 are reserved for local use */
+block|{
 name|ikopen
 block|,
 name|ikclose
@@ -1756,7 +1797,9 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|,
+block|{
 name|fdopen
 block|,
 name|enodev
@@ -1779,6 +1822,7 @@ block|,
 name|enodev
 block|,
 name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
