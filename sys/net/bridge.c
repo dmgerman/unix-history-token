@@ -466,8 +466,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|bdg_ipf
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -479,8 +477,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|bdg_ipfw
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1333,12 +1329,12 @@ name|bridge_cfg
 index|[
 literal|1024
 index|]
-init|=
-block|{
-literal|""
-block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* in BSS so initialized to all NULs */
+end_comment
 
 begin_comment
 comment|/*  * parse the config string, set IFF_USED, name and cluster_id  * for all interfaces found.  * The config string is a list of "if[:cluster]" with  * a number of possible separators (see "sep"). In particular the  * use of the space lets you set bridge_cfg with the output from  * "ifconfig -l"  */
@@ -2214,9 +2210,8 @@ block|{
 specifier|static
 name|int
 name|slowtimer
-init|=
-literal|0
 decl_stmt|;
+comment|/* in BSS so initialized to 0 */
 if|if
 condition|(
 name|do_bridge
