@@ -3453,6 +3453,19 @@ define|#
 directive|define
 name|PROCTITLEPAD
 value|'\0'
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+undef|#
+directive|undef
+name|PS_STRINGS
+comment|/* XXX This is broken due to needing<machine/pmap.h> */
+define|#
+directive|define
+name|PROCTITLEPAD
+value|'\0'
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
