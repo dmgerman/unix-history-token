@@ -2016,6 +2016,15 @@ operator|=
 name|n
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|res
+condition|)
+name|freeaddrinfo
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 endif|#
