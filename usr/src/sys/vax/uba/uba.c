@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.16	%G%	*/
+comment|/*	uba.c	4.17	%G%	*/
 end_comment
 
 begin_define
@@ -1789,7 +1789,7 @@ name|uh_hangcnt
 operator|>
 literal|5
 operator|*
-name|HZ
+name|hz
 condition|)
 block|{
 name|uh

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.15	81/02/25	*/
+comment|/*	hp.c	4.16	81/02/27	*/
 end_comment
 
 begin_include
@@ -617,7 +617,7 @@ index|]
 operator|=
 literal|1.0
 operator|/
-name|HZ
+literal|60
 operator|/
 operator|(
 name|st

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.6	81/02/16	*/
+comment|/*	lp.c	4.7	81/02/27	*/
 end_comment
 
 begin_include
@@ -355,7 +355,7 @@ literal|0
 argument_list|,
 literal|10
 operator|*
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -1097,7 +1097,7 @@ literal|0
 argument_list|,
 literal|2
 operator|*
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* so don't sweat */
@@ -1174,7 +1174,7 @@ literal|0
 argument_list|,
 literal|10
 operator|*
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 block|}

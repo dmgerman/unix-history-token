@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.25	81/02/26	*/
+comment|/*	up.c	4.26	81/02/27	*/
 end_comment
 
 begin_include
@@ -780,7 +780,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 name|upwstart
@@ -3858,7 +3858,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.15	%G%	*/
+comment|/*	rk.c	4.16	%G%	*/
 end_comment
 
 begin_include
@@ -659,7 +659,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 name|rkwstart
@@ -684,7 +684,7 @@ operator|=
 literal|1.0
 operator|/
 operator|(
-name|HZ
+literal|60
 operator|*
 name|NRKSECT
 operator|*
@@ -3465,7 +3465,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|HZ
+name|hz
 argument_list|)
 expr_stmt|;
 for|for

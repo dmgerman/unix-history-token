@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.5	%G%	*/
+comment|/*	va.c	4.6	%G%	*/
 end_comment
 
 begin_include
@@ -1061,7 +1061,7 @@ name|caddr_t
 operator|)
 literal|0
 argument_list|,
-name|HZ
+name|hz
 operator|/
 literal|10
 argument_list|)
