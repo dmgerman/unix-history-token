@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|UPDATEA
-value|11
+value|100
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ begin_define
 define|#
 directive|define
 name|UPDATED
-value|12
+value|101
 end_define
 
 begin_comment
@@ -162,7 +162,7 @@ begin_define
 define|#
 directive|define
 name|UPDATEM
-value|13
+value|102
 end_define
 
 begin_comment
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|ZONEINIT
-value|14
+value|103
 end_define
 
 begin_comment
@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|ZONEREF
-value|15
+value|104
 end_define
 
 begin_comment
@@ -269,7 +269,7 @@ begin_define
 define|#
 directive|define
 name|NOCHANGE
-value|15
+value|100
 end_define
 
 begin_comment
@@ -442,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|T_UINFO
-value|15
+value|100
 end_define
 
 begin_comment
@@ -453,7 +453,7 @@ begin_define
 define|#
 directive|define
 name|T_UID
-value|16
+value|101
 end_define
 
 begin_comment
@@ -464,7 +464,7 @@ begin_define
 define|#
 directive|define
 name|T_GID
-value|17
+value|102
 end_define
 
 begin_comment
