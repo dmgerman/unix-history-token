@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.6 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5071,7 +5071,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check user requesting login priviledges.  * Disallow anyone mentioned in the file FTPUSERS  * to allow people such as uucp to be avoided.  */
+comment|/*  * Check user requesting login priviledges.  * Disallow anyone who does not have a standard  * shell returned by getusershell() (/etc/shells).  * Disallow anyone mentioned in the file FTPUSERS  * to allow people such as uucp to be avoided.  */
 end_comment
 
 begin_expr_stmt
@@ -5088,6 +5088,11 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 name|char
 name|line
 index|[
@@ -5097,16 +5102,85 @@ decl_stmt|,
 modifier|*
 name|index
 argument_list|()
+decl_stmt|,
+modifier|*
+name|getusershell
+argument_list|()
 decl_stmt|;
 name|FILE
 modifier|*
 name|fd
+decl_stmt|;
+name|struct
+name|passwd
+modifier|*
+name|pw
 decl_stmt|;
 name|int
 name|found
 init|=
 literal|0
 decl_stmt|;
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+while|while
+condition|(
+operator|(
+name|cp
+operator|=
+name|getusershell
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+name|pw
+operator|->
+name|pw_shell
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+name|endpwent
+argument_list|()
+expr_stmt|;
+name|endusershell
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|fd
 operator|=
 name|fopen
@@ -5144,18 +5218,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-specifier|register
-name|char
-modifier|*
 name|cp
-init|=
+operator|=
 name|index
 argument_list|(
 name|line
 argument_list|,
 literal|'\n'
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|cp
