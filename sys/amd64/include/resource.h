@@ -27,12 +27,20 @@ name|SYS_RES_IRQ
 value|1
 end_define
 
+begin_comment
+comment|/* interrupt lines */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SYS_RES_DRQ
 value|2
 end_define
+
+begin_comment
+comment|/* isa dma lines */
+end_comment
 
 begin_define
 define|#
@@ -41,11 +49,33 @@ name|SYS_RES_MEMORY
 value|3
 end_define
 
+begin_comment
+comment|/* i/o memory */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SYS_RES_IOPORT
 value|4
+end_define
+
+begin_comment
+comment|/* i/o ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_RES_DENSE
+value|SYS_RES_MEMORY
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_RES_BWX
+value|SYS_RES_MEMORY
 end_define
 
 begin_endif

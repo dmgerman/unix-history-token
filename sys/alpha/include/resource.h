@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: resource.h,v 1.1 1998/11/17 10:40:33 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -31,12 +31,20 @@ name|SYS_RES_IRQ
 value|1
 end_define
 
+begin_comment
+comment|/* interrupt lines */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SYS_RES_DRQ
 value|2
 end_define
+
+begin_comment
+comment|/* isa dma lines */
+end_comment
 
 begin_define
 define|#
@@ -45,12 +53,42 @@ name|SYS_RES_MEMORY
 value|3
 end_define
 
+begin_comment
+comment|/* i/o memory */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SYS_RES_IOPORT
 value|4
 end_define
+
+begin_comment
+comment|/* i/o ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_RES_DENSE
+value|5
+end_define
+
+begin_comment
+comment|/* i/o memory in dense space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_RES_BWX
+value|6
+end_define
+
+begin_comment
+comment|/* i/i memory in bwx space */
+end_comment
 
 begin_endif
 endif|#
