@@ -456,6 +456,10 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/*  * The order of mutex lock (from the first to the last)  *  * 1. sequencer flags, queues, timer and devlice list  * 2. midi synth voice and channel  * 3. midi synth status  * 4. generic midi flags and queues  * 5. midi device  */
+end_comment
+
+begin_comment
 comment|/* This is a midi synthesizer interface and state. */
 end_comment
 
@@ -535,6 +539,12 @@ name|mdsy_writeraw_t
 modifier|*
 name|writeraw
 decl_stmt|;
+comment|/* Voice and channel */
+name|struct
+name|mtx
+name|vc_mtx
+decl_stmt|;
+comment|/* Mutex to protect voice and channel. */
 name|struct
 name|voice_alloc_info
 name|alloc
@@ -548,10 +558,12 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* Channel information. */
-name|u_char
-name|prev_out_status
+comment|/* Status */
+name|struct
+name|mtx
+name|status_mtx
 decl_stmt|;
-comment|/* Previous status. */
+comment|/* Mutex to protect status. */
 name|int
 name|sysex_state
 decl_stmt|;

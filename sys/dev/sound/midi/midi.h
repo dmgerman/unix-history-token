@@ -196,6 +196,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/midi/miditypes.h>
 end_include
 
@@ -217,6 +223,93 @@ directive|define
 name|MIDI_CDEV_MAJOR
 value|30
 end_define
+
+begin_comment
+comment|/*#define MIDI_OUTOFGIANT*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MIDI_OUTOFGIANT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MIDI_DROP_GIANT
+value|DROP_GIANT
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_DROP_GIANT_NOSWITCH
+value|DROP_GIANT_NOSWITCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_PICKUP_GIANT
+value|PICKUP_GIANT
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_PARTIAL_PICKUP_GIANT
+value|PARTIAL_PICKUP_GIANT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIDI_DROP_GIANT
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_DROP_GIANT_NOSWITCH
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_PICKUP_GIANT
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIDI_PARTIAL_PICKUP_GIANT
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* MIDI_OUTOFGIANT */
+end_comment
+
+begin_comment
+comment|/*  * The order of mutex lock (from the first to the last)  *  * 1. sequencer flags, queues, timer and device list  * 2. midi synth voice and channel  * 3. midi synth status  * 4. generic midi flags and queues  * 5. midi device  */
+end_comment
 
 begin_comment
 comment|/*  * descriptor of midi operations ...  *  */
@@ -244,21 +337,9 @@ name|d_close_t
 modifier|*
 name|close
 decl_stmt|;
-name|d_read_t
-modifier|*
-name|read
-decl_stmt|;
-name|d_write_t
-modifier|*
-name|write
-decl_stmt|;
 name|d_ioctl_t
 modifier|*
 name|ioctl
-decl_stmt|;
-name|d_poll_t
-modifier|*
-name|poll
 decl_stmt|;
 name|midi_callback_t
 modifier|*
@@ -331,6 +412,12 @@ name|int
 name|bd_id
 decl_stmt|;
 comment|/* used to hold board-id info, eg. sb version, 			 * mss codec type, etc. etc. 			 */
+name|struct
+name|mtx
+name|flagqueue_mtx
+decl_stmt|;
+comment|/* Mutex to protect flags and queues */
+comment|/* Queues */
 name|midi_dbuf
 name|midi_dbuf_in
 decl_stmt|;
@@ -344,6 +431,7 @@ name|midi_dbuf_passthru
 decl_stmt|;
 comment|/* midi passthru event/message queue */
 comment|/*          * these parameters describe the operation of the board.          * Generic things like busy flag, speed, etc are here.          */
+comment|/* Flags */
 specifier|volatile
 name|u_long
 name|flags
@@ -465,6 +553,20 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+comment|/* The tailq entry of the next midi device. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|_mididev_info
+argument_list|)
+name|md_link
+expr_stmt|;
+comment|/* The tailq entry of the next midi device opened by a sequencer. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|_mididev_info
+argument_list|)
+name|md_linkseq
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -584,7 +686,7 @@ begin_define
 define|#
 directive|define
 name|MIDI_BUFFSIZE
-value|(4 * 1024)
+value|(1024)
 end_define
 
 begin_comment
@@ -693,11 +795,15 @@ modifier|*
 name|create_mididev_info_unit
 parameter_list|(
 name|int
-modifier|*
-name|unit
-parameter_list|,
-name|int
 name|type
+parameter_list|,
+name|mididev_info
+modifier|*
+name|mdinf
+parameter_list|,
+name|synthdev_info
+modifier|*
+name|syninf
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -780,16 +886,18 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * library functions (in midi.c)  */
+comment|/* Sync output */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|splmidi
-parameter_list|()
-value|spltty()
-end_define
+begin_function_decl
+name|int
+name|midi_sync
+parameter_list|(
+name|mididev_info
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Minor numbers for the midi driver.  */

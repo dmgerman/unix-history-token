@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/condvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -177,6 +183,10 @@ name|reason
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/*  * The order of mutex lock (from the first to the last)  *  * 1. sequencer flags, queues, timer and device list  * 2. midi synth voice and channel  * 3. midi synth status  * 4. generic midi flags and queues  * 5. midi device  */
+end_comment
 
 begin_comment
 comment|/*  * descriptor of sequencer operations ...  *  */
@@ -287,6 +297,17 @@ name|int
 name|bd_id
 decl_stmt|;
 comment|/* used to hold board-id info, eg. sb version, 			 * mss codec type, etc. etc. 			 */
+name|struct
+name|mtx
+name|flagqueue_mtx
+decl_stmt|;
+comment|/* Mutex to protect flags and queues */
+name|struct
+name|cv
+name|insync_cv
+decl_stmt|;
+comment|/* Conditional variable for sync */
+comment|/* Queues */
 name|midi_dbuf
 name|midi_dbuf_in
 decl_stmt|;
@@ -296,6 +317,7 @@ name|midi_dbuf_out
 decl_stmt|;
 comment|/* midi output event/message queue */
 comment|/*          * these parameters describe the operation of the board.          * Generic things like busy flag, speed, etc are here.          */
+comment|/* Flags */
 specifier|volatile
 name|u_long
 name|flags
@@ -354,6 +376,11 @@ directive|define
 name|SEQ_F_INIT
 value|0x4000
 comment|/* changed parameters. need init */
+define|#
+directive|define
+name|SEQ_F_INSYNC
+value|0x8000
+comment|/* a pending sync */
 name|int
 name|play_blocksize
 decl_stmt|,
@@ -387,6 +414,13 @@ modifier|*
 name|device_data
 decl_stmt|;
 comment|/* just in case it is needed...*/
+comment|/* The tailq entry of the next sequencer device. */
+name|TAILQ_ENTRY
+argument_list|(
+argument|_seqdev_info
+argument_list|)
+name|sd_link
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -486,16 +520,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|extern
-name|seqdev_info
-name|seq_info
-index|[
-name|NSEQ_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
