@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.5 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.6 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -66,19 +66,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/dev/device.h>
+file|<pmax/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/scsi.h>
+file|<pmax/dev/scsi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/siireg.h>
+file|<pmax/dev/siireg.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.6 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
+comment|/*   * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pm.c	7.7 (Berkeley) %G%  *  *  devGraphics.c --  *  *     	This file contains machine-dependent routines for the graphics device.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.    *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devGraphics.c,  *	v 9.2 90/02/13 22:16:24 shirriff Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -98,19 +98,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/dev/device.h>
+file|<pmax/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/pmreg.h>
+file|<pmax/dev/pmreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/font.c>
+file|<pmax/dev/font.c>
 end_include
 
 begin_define

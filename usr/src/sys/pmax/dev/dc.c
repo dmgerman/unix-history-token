@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.9 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
+comment|/*  *  devDC7085.c --  *  * %sccs.include.redist.c%  *  *	@(#)dc.c	7.10 (Berkeley) %G%  *  * devDC7085.c --  *  *     	This file contains machine-dependent routines that handle the  *	output queue for the serial lines.  *  *	Copyright (C) 1989 Digital Equipment Corporation.  *	Permission to use, copy, modify, and distribute this software and  *	its documentation for any purpose and without fee is hereby granted,  *	provided that the above copyright notice appears in all copies.  *	Digital Equipment Corporation makes no representations about the  *	suitability of this software for any purpose.  It is provided "as is"  *	without express or implied warranty.  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devDC7085.c,  *	v 1.4 89/08/29 11:55:30 nelson Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/dev/device.h>
+file|<pmax/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/pdma.h>
+file|<pmax/dev/pdma.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -195,13 +195,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/dev/device.h>
+file|<pmax/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/dev/if_lereg.h>
+file|<pmax/dev/if_lereg.h>
 end_include
 
 begin_if
