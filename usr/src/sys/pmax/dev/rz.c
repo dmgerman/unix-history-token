@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)rz.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -206,6 +206,7 @@ comment|/*  * Since the SCSI standard tends to hide the disk structure, we defin
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|size
 name|rzdefaultpart
@@ -1225,7 +1226,7 @@ name|sc
 operator|->
 name|sc_buf
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 operator|(
 expr|struct
@@ -1239,12 +1240,6 @@ operator|->
 name|sc_tab
 operator|.
 name|b_actf
-operator|=
-name|sc
-operator|->
-name|sc_tab
-operator|.
-name|b_actl
 operator|=
 operator|&
 name|sc
@@ -1407,7 +1402,7 @@ name|sc
 operator|->
 name|sc_buf
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 operator|(
 expr|struct
@@ -1421,12 +1416,6 @@ operator|->
 name|sc_tab
 operator|.
 name|b_actf
-operator|=
-name|sc
-operator|->
-name|sc_tab
-operator|.
-name|b_actl
 operator|=
 operator|&
 name|sc
@@ -1743,7 +1732,7 @@ name|sc
 operator|->
 name|sc_buf
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 operator|(
 expr|struct
@@ -1757,12 +1746,6 @@ operator|->
 name|sc_tab
 operator|.
 name|b_actf
-operator|=
-name|sc
-operator|->
-name|sc_tab
-operator|.
-name|b_actl
 operator|=
 operator|&
 name|sc
@@ -1874,7 +1857,7 @@ name|sc
 operator|->
 name|sc_buf
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 operator|(
 expr|struct
@@ -1888,12 +1871,6 @@ operator|->
 name|sc_tab
 operator|.
 name|b_actf
-operator|=
-name|sc
-operator|->
-name|sc_tab
-operator|.
-name|b_actl
 operator|=
 operator|&
 name|sc
@@ -2953,12 +2930,6 @@ name|b_dev
 argument_list|)
 decl_stmt|;
 specifier|register
-name|u_long
-name|bn
-decl_stmt|,
-name|sz
-decl_stmt|;
-specifier|register
 name|struct
 name|rz_softc
 modifier|*
@@ -2987,7 +2958,13 @@ name|part
 index|]
 decl_stmt|;
 specifier|register
-name|int
+name|daddr_t
+name|bn
+decl_stmt|;
+specifier|register
+name|long
+name|sz
+decl_stmt|,
 name|s
 decl_stmt|;
 if|if
@@ -3035,20 +3012,20 @@ name|b_blkno
 expr_stmt|;
 name|sz
 operator|=
-operator|(
+name|howmany
+argument_list|(
 name|bp
 operator|->
 name|b_bcount
-operator|+
+argument_list|,
 name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-operator|>>
-name|DEV_BSHIFT
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|bn
 operator|+
 name|sz
@@ -3058,14 +3035,20 @@ operator|->
 name|p_size
 condition|)
 block|{
-comment|/* if exactly at end of disk, return an EOF */
-if|if
-condition|(
-name|bn
-operator|==
+name|sz
+operator|=
 name|pp
 operator|->
 name|p_size
+operator|-
+name|bn
+expr_stmt|;
+comment|/* if exactly at end of disk, return an EOF */
+if|if
+condition|(
+name|sz
+operator|==
+literal|0
 condition|)
 block|{
 name|bp
@@ -3083,11 +3066,9 @@ block|}
 comment|/* if none of it fits, error */
 if|if
 condition|(
-name|bn
-operator|>=
-name|pp
-operator|->
-name|p_size
+name|sz
+operator|<
+literal|0
 condition|)
 block|{
 name|bp
@@ -3101,21 +3082,14 @@ name|bad
 goto|;
 block|}
 comment|/* otherwise, truncate */
-name|sz
-operator|=
-name|pp
-operator|->
-name|p_size
-operator|-
-name|bn
-expr_stmt|;
 name|bp
 operator|->
 name|b_bcount
 operator|=
+name|dbtob
+argument_list|(
 name|sz
-operator|<<
-name|DEV_BSHIFT
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* check for write to write protected label */
@@ -3822,7 +3796,7 @@ name|bp
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 comment|/* remove sc_errbuf */
 if|if
@@ -4091,7 +4065,7 @@ name|sc
 operator|->
 name|sc_errbuf
 operator|.
-name|av_forw
+name|b_actf
 operator|=
 name|bp
 expr_stmt|;
@@ -4139,7 +4113,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -5400,9 +5374,9 @@ operator|)
 return|;
 end_if
 
-begin_return
-return|return
-operator|(
+begin_expr_stmt
+name|error
+operator|=
 name|setdisklabel
 argument_list|(
 operator|&
@@ -5431,26 +5405,80 @@ name|sc
 operator|->
 name|sc_openpart
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+name|error
 operator|)
 return|;
 end_return
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_case
+case|case
+name|DIOCGPART
+case|:
+end_case
 
 begin_comment
-unit|case DIOCGPART:
 comment|/* return the disk partition data */
 end_comment
 
-begin_endif
-unit|((struct partinfo *)data)->disklab =&sc->sc_label; 		((struct partinfo *)data)->part =&sc->sc_label.d_partitions[rzpart(dev)]; 		return (0);
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+operator|(
+operator|(
+expr|struct
+name|partinfo
+operator|*
+operator|)
+name|data
+operator|)
+operator|->
+name|disklab
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_label
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+operator|(
+expr|struct
+name|partinfo
+operator|*
+operator|)
+name|data
+operator|)
+operator|->
+name|part
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_label
+operator|.
+name|d_partitions
+index|[
+name|rzpart
+argument_list|(
+name|dev
+argument_list|)
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+end_return
 
 begin_case
 case|case
