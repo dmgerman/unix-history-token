@@ -53,6 +53,16 @@ directive|include
 file|<machine/sigframe.h>
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__signalcontext
+argument_list|,
+name|signalcontext
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function_decl
 specifier|extern
 name|void
@@ -71,7 +81,7 @@ end_function_decl
 
 begin_function
 name|int
-name|signalcontext
+name|__signalcontext
 parameter_list|(
 name|ucontext_t
 modifier|*
