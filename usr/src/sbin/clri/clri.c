@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 2.5 %G%"
+literal|"@(#)clri.c 2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,19 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ufs/inode.h>
+file|<ufs/dinode.h>
 end_include
 
 begin_include

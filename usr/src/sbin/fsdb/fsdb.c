@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fsdb.c	5.6 (Berkeley) %G%"
+literal|"@(#)fsdb.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,25 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/dinode.h>
 end_include
 
 begin_include
