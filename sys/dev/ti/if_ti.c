@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu
 end_comment
 
 begin_comment
-comment|/*  * Alteon Networks Tigon PCI gigabit ethernet driver for FreeBSD.  * Manuals, sample driver and firmware source kits are available  * from http://www.alteon.com/support/openkits.  *   * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * Alteon Networks Tigon PCI gigabit ethernet driver for FreeBSD.  * Manuals, sample driver and firmware source kits are available  * from http://www.alteon.com/support/openkits.  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -2921,7 +2921,7 @@ argument_list|(
 name|tmpval2
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Note:  I've used this debugging interface 			 * extensively with Alteon's 12.3.15 firmware, 			 * compiled with GCC 2.7.2.1 and binutils 2.9.1. 			 * 			 * When you compile the firmware without 			 * optimization, which is necessary sometimes in 			 * order to properly step through it, you sometimes 			 * read out a bogus value of 0xc0017c instead of  			 * whatever was supposed to be in that scratchpad 			 * location.  That value is on the stack somewhere, 			 * but I've never been able to figure out what was 			 * causing the problem. 			 * 			 * The address seems to pop up in random places, 			 * often not in the same place on two subsequent 			 * reads. 			 * 			 * In any case, the underlying data doesn't seem 			 * to be affected, just the value read out. 			 * 			 * KDM, 3/7/2000 			 */
+comment|/* 			 * Note:  I've used this debugging interface 			 * extensively with Alteon's 12.3.15 firmware, 			 * compiled with GCC 2.7.2.1 and binutils 2.9.1. 			 * 			 * When you compile the firmware without 			 * optimization, which is necessary sometimes in 			 * order to properly step through it, you sometimes 			 * read out a bogus value of 0xc0017c instead of 			 * whatever was supposed to be in that scratchpad 			 * location.  That value is on the stack somewhere, 			 * but I've never been able to figure out what was 			 * causing the problem. 			 * 			 * The address seems to pop up in random places, 			 * often not in the same place on two subsequent 			 * reads. 			 * 			 * In any case, the underlying data doesn't seem 			 * to be affected, just the value read out. 			 * 			 * KDM, 3/7/2000 			 */
 if|if
 condition|(
 name|tmpval2
@@ -5943,7 +5943,7 @@ operator|)
 return|;
 name|nobufs
 label|:
-comment|/* 	 * Warning! : 	 * This can only be called before the mbufs are strung together. 	 * If the mbufs are strung together, m_freem() will free the chain,  	 * so that the later mbufs will be freed multiple times. 	 */
+comment|/* 	 * Warning! : 	 * This can only be called before the mbufs are strung together. 	 * If the mbufs are strung together, m_freem() will free the chain, 	 * so that the later mbufs will be freed multiple times. 	 */
 if|if
 condition|(
 name|m_new
@@ -7839,7 +7839,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|__brokenalpha__
-comment|/* 	 * From the Alteon sample driver: 	 * Must insure that we do not cross an 8K (bytes) boundary 	 * for DMA reads.  Our highest limit is 1K bytes.  This is a  	 * restriction on some ALPHA platforms with early revision  	 * 21174 PCI chipsets, such as the AlphaPC 164lx  	 */
+comment|/* 	 * From the Alteon sample driver: 	 * Must insure that we do not cross an 8K (bytes) boundary 	 * for DMA reads.  Our highest limit is 1K bytes.  This is a 	 * restriction on some ALPHA platforms with early revision 	 * 21174 PCI chipsets, such as the AlphaPC 164lx 	 */
 name|TI_SETBIT
 argument_list|(
 name|sc
@@ -10169,7 +10169,7 @@ name|TI_JUMBO_HDRSPLIT
 end_ifdef
 
 begin_comment
-comment|/*  * If hdr_len is 0, that means that header splitting wasn't done on  * this packet for some reason.  The two most likely reasons are that  * the protocol isn't a supported protocol for splitting, or this  * packet had a fragment offset that wasn't 0.  *  * The header length, if it is non-zero, will always be the length of  * the headers on the packet, but that length could be longer than the  * first mbuf.  So we take the minimum of the two as the actual  * length.    */
+comment|/*  * If hdr_len is 0, that means that header splitting wasn't done on  * this packet for some reason.  The two most likely reasons are that  * the protocol isn't a supported protocol for splitting, or this  * packet had a fragment offset that wasn't 0.  *  * The header length, if it is non-zero, will always be the length of  * the headers on the packet, but that length could be longer than the  * first mbuf.  So we take the minimum of the two as the actual  * length.  */
 end_comment
 
 begin_function
@@ -10323,7 +10323,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (hdr_len != 0) 		printf("got split packet: "); 	else 		printf("got non-split packet: "); 	 	printf("%d,%d,%d,%d = %d\n", lengths[0], 	    lengths[1], lengths[2], lengths[3], 	    lengths[0] + lengths[1] + lengths[2] + 	    lengths[3]);
+block|if (hdr_len != 0) 		printf("got split packet: "); 	else 		printf("got non-split packet: ");  	printf("%d,%d,%d,%d = %d\n", lengths[0], 	    lengths[1], lengths[2], lengths[3], 	    lengths[0] + lengths[1] + lengths[2] + 	    lengths[3]);
 endif|#
 directive|endif
 if|if
@@ -11671,7 +11671,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out  	 * of fragments or hit the end of the mbuf chain. 	 */
+comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment pointers. Stop when we run out 	 * of fragments or hit the end of the mbuf chain. 	 */
 for|for
 control|(
 name|m
@@ -14263,7 +14263,7 @@ comment|/* 	 * For debugging, five ioctls are needed: 	 * ALT_ATTACH 	 * ALT_REA
 case|case
 name|ALT_ATTACH
 case|:
-comment|/* 		 * From what I can tell, Alteon's Solaris Tigon driver  		 * only has one character device, so you have to attach 		 * to the Tigon board you're interested in.  This seems 		 * like a not-so-good way to do things, since unless you 		 * subsequently specify the unit number of the device 		 * you're interested in in every ioctl, you'll only be 		 * able to debug one board at a time. 		 */
+comment|/* 		 * From what I can tell, Alteon's Solaris Tigon driver 		 * only has one character device, so you have to attach 		 * to the Tigon board you're interested in.  This seems 		 * like a not-so-good way to do things, since unless you 		 * subsequently specify the unit number of the device 		 * you're interested in in every ioctl, you'll only be 		 * able to debug one board at a time. 		 */
 name|error
 operator|=
 literal|0
