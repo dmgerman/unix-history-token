@@ -3089,6 +3089,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
+specifier|const
 name|uint8_t
 modifier|*
 name|a
@@ -3182,6 +3183,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
+specifier|const
 name|uint32_t
 modifier|*
 name|a
@@ -3228,6 +3230,7 @@ parameter_list|,
 name|bus_size_t
 name|o
 parameter_list|,
+specifier|const
 name|uint64_t
 modifier|*
 name|a
