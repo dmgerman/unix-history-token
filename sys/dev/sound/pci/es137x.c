@@ -4923,6 +4923,8 @@ name|dev
 argument_list|,
 name|es
 argument_list|,
+name|NULL
+argument_list|,
 name|es1371_rdcodec
 argument_list|,
 name|es1371_wrcodec
