@@ -213,6 +213,9 @@ name|kldload
 argument_list|(
 literal|"nfs"
 argument_list|)
+operator|==
+operator|-
+literal|1
 condition|)
 name|err
 argument_list|(
