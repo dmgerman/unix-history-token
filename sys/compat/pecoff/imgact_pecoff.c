@@ -2666,7 +2666,11 @@ index|]
 operator|.
 name|s_flags
 operator|&
+operator|(
 name|COFF_STYP_DATA
+operator||
+name|COFF_STYP_BSS
+operator|)
 operator|)
 operator|!=
 literal|0
