@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/smp.h>
 end_include
 
@@ -1579,7 +1573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like _bus_dmamap_load(), but for mbufs.  */
+comment|/*  * Like nexus_dmamap_load(), but for mbufs.  */
 end_comment
 
 begin_function
@@ -1810,7 +1804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Like _bus_dmamap_load(), but for uios.  */
+comment|/*  * Like nexus_dmamap_load(), but for uios.  */
 end_comment
 
 begin_function
@@ -2705,7 +2699,7 @@ literal|"memory"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* note: preserve page offset */
+comment|/* Preserve page offset. */
 operator|*
 name|hp
 operator|=
