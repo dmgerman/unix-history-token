@@ -152,11 +152,6 @@ value|2
 comment|/* this chunk is in the BSD-compatibility, and has a 		 * short name too, ie wd0s4f -> wd0f 		*/
 define|#
 directive|define
-name|CHUNK_BAD144
-value|4
-comment|/* this chunk has bad144 mapping */
-define|#
-directive|define
 name|CHUNK_ALIGN
 value|8
 comment|/* This chunk should be aligned */
