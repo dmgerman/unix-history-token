@@ -562,6 +562,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DRAWUBPOLY
+value|'P'
+end_define
+
+begin_comment
+comment|/* polygon, stipples, no border */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LEFT
 value|020
 end_define

@@ -2151,6 +2151,10 @@ case|case
 name|DRAWPOLY
 case|:
 comment|/* polygon with stipple */
+case|case
+name|DRAWUBPOLY
+case|:
+comment|/* polygon, stipple, no border */
 if|if
 condition|(
 name|xstip
@@ -2166,7 +2170,13 @@ name|ptid
 argument_list|,
 literal|"D%c %d"
 argument_list|,
-name|DRAWPOLY
+name|cbits
+argument_list|(
+name|pi
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|,
 name|dx
 argument_list|)

@@ -1384,9 +1384,15 @@ name|i
 operator|==
 literal|0
 operator|&&
+operator|(
 name|type
 operator|==
 name|DRAWPOLY
+operator|||
+name|type
+operator|==
+name|DRAWUBPOLY
+operator|)
 condition|)
 block|{
 name|dfact
