@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)dumprestore.h 2.2 %G%" */
+comment|/* "@(#)dumprestore.h 2.3 %G%" */
 end_comment
 
 begin_comment
@@ -169,26 +169,6 @@ directive|define
 name|spcl
 value|u_spcl.s_spcl
 end_define
-
-begin_struct
-struct|struct
-name|idates
-block|{
-name|char
-name|id_name
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|char
-name|id_incno
-decl_stmt|;
-name|time_t
-name|id_ddate
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_define
 define|#
