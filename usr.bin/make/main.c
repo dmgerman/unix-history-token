@@ -4351,11 +4351,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: make [-Beiknqrstv] [-D variable] [-d flags] [-E variable] [-f makefile]"
+literal|"usage: make [-BPSXeiknqrstv] [-C directory] [-D variable] [-d flags]"
 argument_list|,
-literal|"            [-I directory] [-j max_jobs] [-m directory] [-V variable]"
+literal|"            [-E variable] [-f makefile] [-I directory] [-j max_jobs]"
 argument_list|,
-literal|"            [variable=value] [target ...]"
+literal|"            [-m directory] [-V variable] [variable=value] [target ...]"
 argument_list|)
 expr_stmt|;
 name|exit
