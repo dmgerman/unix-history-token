@@ -651,6 +651,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGTERM
+argument_list|,
+operator|&
+name|act
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
