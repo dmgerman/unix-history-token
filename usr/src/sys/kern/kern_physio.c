@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.27 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_physio.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -38,23 +38,6 @@ include|#
 directive|include
 file|<sys/vnode.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HPUXCOMPAT
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -685,17 +668,6 @@ name|uio_iovcnt
 operator|--
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|hp300
-argument_list|)
-name|DCIU
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|allocbuf
