@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.1 (Berkeley) %G%  *  * from: $Header: if_lereg.h,v 1.5 92/07/10 06:45:26 torek Exp $  */
+comment|/*-  * Copyright (c) 1982, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_lereg.h	7.2 (Berkeley) %G%  *  * from: $Header: if_lereg.h,v 1.6 92/11/26 02:28:12 torek Exp $  */
 end_comment
 
 begin_define
