@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: srt0.c 1.8 88/12/03$  *  *	@(#)srt0.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: srt0.c 1.8 88/12/03$  *  *	@(#)srt0.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,7 +25,10 @@ name|globl
 name|_configure
 operator|.
 name|globl
-name|_openfirst
+name|_bootdev
+operator|.
+name|globl
+name|_firstopen
 operator|.
 name|globl
 name|__rtt
@@ -92,7 +95,12 @@ operator|=
 literal|4096
 operator|.
 name|data
-name|_lowram
+name|_bootdev
+operator|:
+operator|.
+name|long
+literal|0
+name|_devtype
 operator|:
 operator|.
 name|long
@@ -102,7 +110,7 @@ operator|:
 operator|.
 name|long
 literal|0
-name|_devtype
+name|_lowram
 operator|:
 operator|.
 name|long
@@ -533,7 +541,7 @@ name|movl
 operator|#
 literal|1
 operator|,
-name|_openfirst
+name|_firstopen
 operator||
 name|mark
 name|this
