@@ -523,6 +523,15 @@ continue|continue;
 comment|/* 	 * if we find a single character !, we must re-set the ignore list 	 * (saving it if necessary).  We also catch * as a special case in a 	 * global ignore file as an optimization 	 */
 if|if
 condition|(
+operator|(
+operator|!
+operator|*
+operator|(
+name|ign
+operator|+
+literal|1
+operator|)
+operator|||
 name|isspace
 argument_list|(
 operator|*
@@ -532,6 +541,7 @@ operator|+
 literal|1
 operator|)
 argument_list|)
+operator|)
 operator|&&
 operator|(
 operator|*
