@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -654,7 +660,7 @@ index|]
 decl_stmt|,
 name|errbuf
 index|[
-literal|256
+name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
 operator|(
