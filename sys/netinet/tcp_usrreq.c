@@ -2653,7 +2653,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * OOPS! we lost a race, the TCP session got reset after 		 * we checked SS_CANTSENDMORE, eg: while doing uiomove or a 		 * network interrupt in the non-splnet() section of sosend(). 		 */
+comment|/* 		 * OOPS! we lost a race, the TCP session got reset after 		 * we checked SBS_CANTSENDMORE, eg: while doing uiomove or a 		 * network interrupt in the non-splnet() section of sosend(). 		 */
 if|if
 condition|(
 name|m
@@ -3204,9 +3204,11 @@ operator|&&
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_RCVATMARK
+name|SBS_RCVATMARK
 operator|)
 operator|==
 literal|0

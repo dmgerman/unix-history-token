@@ -712,9 +712,11 @@ operator|=
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_RCVATMARK
+name|SBS_RCVATMARK
 operator|)
 operator|!=
 literal|0
@@ -921,15 +923,17 @@ name|st_mode
 operator|=
 name|S_IFSOCK
 expr_stmt|;
-comment|/* 	 * If SS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
+comment|/* 	 * If SBS_CANTRCVMORE is set, but there's still data left in the 	 * receive buffer, the socket is still readable. 	 */
 if|if
 condition|(
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 operator|)
 operator|==
 literal|0
@@ -957,9 +961,11 @@ condition|(
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_snd
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTSENDMORE
+name|SBS_CANTSENDMORE
 operator|)
 operator|==
 literal|0

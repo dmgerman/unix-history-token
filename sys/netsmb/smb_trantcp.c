@@ -2107,6 +2107,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|so
 operator|->
 name|so_state
@@ -2115,8 +2116,17 @@ operator|(
 name|SS_ISDISCONNECTING
 operator||
 name|SS_ISDISCONNECTED
-operator||
-name|SS_CANTRCVMORE
+operator|)
+operator|)
+operator|||
+operator|(
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_state
+operator|&
+name|SBS_CANTRCVMORE
 operator|)
 condition|)
 block|{

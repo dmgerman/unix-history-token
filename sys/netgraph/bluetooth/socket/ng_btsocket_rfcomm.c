@@ -4518,9 +4518,11 @@ name|s
 operator|->
 name|l2so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 condition|)
 block|{
 name|NG_BTSOCKET_RFCOMM_INFO
@@ -5888,9 +5890,11 @@ name|s0
 operator|->
 name|l2so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 condition|)
 return|return
 operator|(

@@ -1851,9 +1851,11 @@ operator|||
 operator|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 operator|)
 operator|||
 operator|(

@@ -237,6 +237,10 @@ name|short
 name|sb_flags
 decl_stmt|;
 comment|/* flags, see below */
+name|short
+name|sb_state
+decl_stmt|;
+comment|/* (c/d) socket state on sockbuf */
 block|}
 name|so_rcv
 struct|,
@@ -538,7 +542,7 @@ value|SOCKBUF_LOCK_ASSERT(&(_so)->so_rcv)
 end_define
 
 begin_comment
-comment|/*  * Socket state bits.  */
+comment|/*-  * Socket state bits.  *  * Historically, this bits were all kept in the so_state field.  For  * locking reasons, they are now in multiple fields, as they are  * locked differently.  so_state maintains basic socket state protected  * by the socket lock.  so_qstate holds information about the socket  * accept queues.  Each socket buffer also has a state field holding  * information relevant to that socket buffer (can't send, rcv).  Many  * fields will be read without locks to improve performance and avoid  * lock order issues.  However, this approach must be used with caution.  */
 end_comment
 
 begin_define
@@ -588,39 +592,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_CANTSENDMORE
-value|0x0010
-end_define
-
-begin_comment
-comment|/* can't send more data to peer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SS_CANTRCVMORE
-value|0x0020
-end_define
-
-begin_comment
-comment|/* can't receive more data from peer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SS_RCVATMARK
-value|0x0040
-end_define
-
-begin_comment
-comment|/* at mark on input */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SS_NBIO
 value|0x0100
 end_define
@@ -660,6 +631,43 @@ end_define
 
 begin_comment
 comment|/* socket disconnected from peer */
+end_comment
+
+begin_comment
+comment|/*  * Socket state bits now stored in the socket buffer state field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBS_CANTSENDMORE
+value|0x0010
+end_define
+
+begin_comment
+comment|/* can't send more data to peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBS_CANTRCVMORE
+value|0x0020
+end_define
+
+begin_comment
+comment|/* can't receive more data from peer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBS_RCVATMARK
+value|0x0040
+end_define
+
+begin_comment
+comment|/* at mark on input */
 end_comment
 
 begin_comment
@@ -852,7 +860,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_state& SS_CANTRCVMORE) || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
+value|((so)->so_rcv.sb_cc>= (so)->so_rcv.sb_lowat || \ 	((so)->so_rcv.sb_state& SBS_CANTRCVMORE) || \ 	!TAILQ_EMPTY(&(so)->so_comp) || (so)->so_error)
 end_define
 
 begin_comment
@@ -867,7 +875,7 @@ parameter_list|(
 name|so
 parameter_list|)
 define|\
-value|((sbspace(&(so)->so_snd)>= (so)->so_snd.sb_lowat&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0)) || \      ((so)->so_state& SS_CANTSENDMORE) || \      (so)->so_error)
+value|((sbspace(&(so)->so_snd)>= (so)->so_snd.sb_lowat&& \ 	(((so)->so_state&SS_ISCONNECTED) || \ 	  ((so)->so_proto->pr_flags&PR_CONNREQUIRED)==0)) || \      ((so)->so_snd.sb_state& SBS_CANTSENDMORE) || \      (so)->so_error)
 end_define
 
 begin_comment

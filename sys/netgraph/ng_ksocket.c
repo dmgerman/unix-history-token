@@ -5091,9 +5091,11 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 operator|&&
 operator|!
 operator|(
@@ -5225,9 +5227,11 @@ if|if
 condition|(
 name|head
 operator|->
-name|so_state
+name|so_rcv
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTRCVMORE
+name|SBS_CANTRCVMORE
 condition|)
 return|return
 name|ECONNABORTED

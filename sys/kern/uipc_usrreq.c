@@ -1756,9 +1756,11 @@ if|if
 condition|(
 name|so
 operator|->
-name|so_state
+name|so_snd
+operator|.
+name|sb_state
 operator|&
-name|SS_CANTSENDMORE
+name|SBS_CANTSENDMORE
 condition|)
 block|{
 name|error
