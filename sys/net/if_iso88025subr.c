@@ -234,7 +234,7 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_function_decl
 specifier|static
 name|int
 name|iso88025_resolvemulti
@@ -252,12 +252,8 @@ name|struct
 name|sockaddr
 modifier|*
 parameter_list|)
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2085,9 +2081,16 @@ index|]
 operator|!=
 literal|0
 condition|)
+block|{
+name|ifp
+operator|->
+name|if_noproto
+operator|++
+expr_stmt|;
 goto|goto
 name|dropanyway
 goto|;
+block|}
 name|type
 operator|=
 name|ntohs
@@ -2548,6 +2551,7 @@ expr_stmt|;
 goto|goto
 name|dropanyway
 goto|;
+break|break;
 block|}
 break|break;
 default|default:
@@ -2568,6 +2572,7 @@ expr_stmt|;
 goto|goto
 name|dropanyway
 goto|;
+break|break;
 block|}
 end_switch
 
