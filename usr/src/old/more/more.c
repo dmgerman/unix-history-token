@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.4 (Berkeley) %G%"
+literal|"@(#)more.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3543,8 +3543,9 @@ literal|'\t'
 condition|)
 if|if
 condition|(
+operator|!
 name|hardtabs
-operator|&&
+operator|||
 name|column
 operator|<
 name|promptlen
@@ -3555,6 +3556,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|hardtabs
+operator|&&
 name|eraseln
 operator|&&
 operator|!
@@ -3592,10 +3595,6 @@ control|(
 operator|--
 name|p
 init|;
-name|column
-operator|&
-literal|7
-operator|&&
 name|p
 operator|<
 operator|&
@@ -3606,8 +3605,6 @@ operator|-
 literal|1
 index|]
 condition|;
-name|column
-operator|++
 control|)
 block|{
 operator|*
@@ -3616,6 +3613,18 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|++
+name|column
+operator|&
+literal|7
+operator|)
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 if|if
 condition|(
