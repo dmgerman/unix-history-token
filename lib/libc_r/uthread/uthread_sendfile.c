@@ -449,9 +449,25 @@ condition|(
 operator|!
 name|blocking
 condition|)
+block|{
+name|_FD_UNLOCK
+argument_list|(
+name|s
+argument_list|,
+name|FD_WRITE
+argument_list|)
+expr_stmt|;
+name|_FD_UNLOCK
+argument_list|(
+name|fd
+argument_list|,
+name|FD_READ
+argument_list|)
+expr_stmt|;
 goto|goto
 name|SHORT_WRITE
 goto|;
+block|}
 comment|/* 			 * Otherwise wait on the fd. 			 */
 name|curthread
 operator|->
