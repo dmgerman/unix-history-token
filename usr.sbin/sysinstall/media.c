@@ -2644,13 +2644,15 @@ condition|)
 block|{
 name|char
 modifier|*
-name|gunzip
+name|unzipper
 init|=
 name|RunningAsInit
 condition|?
-literal|"/stand/gunzip"
+literal|"/stand/"
+name|UNZIPPER
 else|:
-literal|"/usr/bin/gunzip"
+literal|"/usr/bin/"
+name|UNZIPPER
 decl_stmt|;
 name|dup2
 argument_list|(
@@ -2737,9 +2739,9 @@ name|i
 operator|=
 name|execl
 argument_list|(
-name|gunzip
+name|unzipper
 argument_list|,
-name|gunzip
+name|unzipper
 argument_list|,
 operator|(
 name|char
@@ -2757,7 +2759,7 @@ name|msgDebug
 argument_list|(
 literal|"%s command returns %d status\n"
 argument_list|,
-name|gunzip
+name|unzipper
 argument_list|,
 name|i
 argument_list|)
@@ -3027,7 +3029,13 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"wait for gunzip returned status of %d!\n"
+literal|"wait for %s returned status of %d!\n"
+argument_list|,
+name|USE_GZIP
+condition|?
+literal|"gunzip"
+else|:
+literal|"bunzip2"
 argument_list|,
 name|i
 argument_list|)
@@ -3187,13 +3195,15 @@ condition|)
 block|{
 name|char
 modifier|*
-name|gunzip
+name|unzipper
 init|=
 name|RunningAsInit
 condition|?
-literal|"/stand/gunzip"
+literal|"/stand/"
+name|UNZIPPER
 else|:
-literal|"/usr/bin/gunzip"
+literal|"/usr/bin/"
+name|UNZIPPER
 decl_stmt|;
 name|fclose
 argument_list|(
@@ -3285,9 +3295,9 @@ name|i
 operator|=
 name|execl
 argument_list|(
-name|gunzip
+name|unzipper
 argument_list|,
-name|gunzip
+name|unzipper
 argument_list|,
 operator|(
 name|char
@@ -3305,7 +3315,7 @@ name|msgDebug
 argument_list|(
 literal|"%s command returns %d status\n"
 argument_list|,
-name|gunzip
+name|unzipper
 argument_list|,
 name|i
 argument_list|)
@@ -3796,7 +3806,13 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"wait for gunzip returned status of %d!\n"
+literal|"wait for %s returned status of %d!\n"
+argument_list|,
+name|USE_GZIP
+condition|?
+literal|"gunzip"
+else|:
+literal|"bunzip2"
 argument_list|,
 name|i
 argument_list|)
