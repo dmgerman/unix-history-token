@@ -1307,6 +1307,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|buttons
 argument_list|,
 name|choice
@@ -1365,6 +1368,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|buttons
 argument_list|)
 expr_stmt|;
@@ -1418,6 +1424,9 @@ argument_list|,
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|buttons
 argument_list|)
