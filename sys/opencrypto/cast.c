@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*      $OpenBSD: cast.c,v 1.2 2000/06/06 06:49:47 deraadt Exp $       */
 end_comment
 
 begin_comment
 comment|/*  *	CAST-128 in C  *	Written by Steve Reid<sreid@sea-to-sky.net>  *	100% Public Domain - no warranty  *	Released 1997.10.11  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -1,15 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/*	$OpenBSD: skipjack.c,v 1.3 2001/05/05 00:31:34 angelos Exp $	*/
 end_comment
 
 begin_comment
 comment|/*   * Further optimized test implementation of SKIPJACK algorithm   * Mark Tillotson<markt@chaos.org.uk>, 25 June 98  * Optimizations suit RISC (lots of registers) machine best.  *  * based on unoptimized implementation of  * Panu Rissanen<bande@lut.fi> 960624  *  * SKIPJACK and KEA Algorithm Specifications   * Version 2.0   * 29 May 1998 */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

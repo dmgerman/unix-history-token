@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
 comment|/* $OpenBSD: deflate.c,v 1.3 2001/08/20 02:45:22 hugh Exp $ */
 end_comment
 
@@ -14,6 +10,20 @@ end_comment
 begin_comment
 comment|/*  * This file contains a wrapper around the deflate algo compression  * functions using the zlib library (see net/zlib.{c,h})  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
