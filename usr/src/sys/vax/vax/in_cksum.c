@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.2 81/10/16 */
+comment|/* in_cksum.c 1.3 81/10/18 */
 end_comment
 
 begin_include
@@ -300,11 +300,16 @@ name|m
 operator|==
 literal|0
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
 literal|"cksum: out of data"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 if|if
 condition|(
 name|m
@@ -320,6 +325,8 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
+name|done
+label|:
 return|return
 operator|(
 operator|~
