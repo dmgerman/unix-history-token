@@ -5513,6 +5513,20 @@ name|dblfault_stack
 argument_list|)
 index|]
 expr_stmt|;
+comment|/* Set the IO permission bitmap (empty due to tss seg limit) */
+name|common_tss
+index|[
+literal|0
+index|]
+operator|.
+name|tss_iobase
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|amd64tss
+argument_list|)
+expr_stmt|;
 name|gsel_tss
 operator|=
 name|GSEL
