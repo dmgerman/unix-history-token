@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)more.c	4.14 (Berkeley) 83/07/02"
+literal|"@(#)more.c	4.15 (Berkeley) 83/07/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +210,8 @@ begin_decl_stmt
 name|struct
 name|sgttyb
 name|otty
+decl_stmt|,
+name|savetty
 decl_stmt|;
 end_decl_stmt
 
@@ -6189,6 +6191,8 @@ argument_list|(
 literal|"TERM"
 argument_list|)
 operator|)
+operator|==
+literal|0
 operator|||
 name|tgetent
 argument_list|(
@@ -6577,6 +6581,10 @@ argument_list|,
 operator|&
 name|otty
 argument_list|)
+expr_stmt|;
+name|savetty
+operator|=
+name|otty
 expr_stmt|;
 name|ospeed
 operator|=
@@ -7558,7 +7566,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|&
-name|otty
+name|savetty
 argument_list|)
 expr_stmt|;
 block|}
