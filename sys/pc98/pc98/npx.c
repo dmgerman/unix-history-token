@@ -2759,7 +2759,7 @@ block|{
 comment|/* 		 * Nested interrupt.  These losers occur when: 		 *	o an IRQ13 is bogusly generated at a bogus time, e.g.: 		 *		o immediately after an fnsave or frstor of an 		 *		  error state. 		 *		o a couple of 386 instructions after 		 *		  "fstpl _memvar" causes a stack overflow. 		 *	  These are especially nasty when combined with a 		 *	  trace trap. 		 *	o an IRQ13 occurs at the same time as another higher- 		 *	  priority interrupt. 		 * 		 * Treat them like a true async interrupt. 		 */
 name|PROC_LOCK
 argument_list|(
-name|p
+name|curproc
 argument_list|)
 expr_stmt|;
 name|psignal
@@ -2771,7 +2771,7 @@ argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
