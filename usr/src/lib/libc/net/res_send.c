@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.13 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +222,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|int
+name|terrno
+init|=
+name|ETIMEDOUT
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -396,6 +401,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -443,6 +452,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -551,6 +564,10 @@ operator|+
 name|buflen
 condition|)
 block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -642,6 +659,10 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -739,6 +760,10 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1284,6 +1309,13 @@ return|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|s
+operator|>=
+literal|0
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1297,12 +1329,15 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|v_circuit
 operator|==
 literal|0
-operator|&&
+condition|)
+if|if
+condition|(
 name|gotsomewhere
 operator|==
 literal|0
@@ -1315,6 +1350,11 @@ else|else
 name|errno
 operator|=
 name|ETIMEDOUT
+expr_stmt|;
+else|else
+name|errno
+operator|=
+name|terrno
 expr_stmt|;
 return|return
 operator|(
