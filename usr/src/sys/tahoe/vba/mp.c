@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mp.c	1.3	88/03/05	*/
+comment|/*	mp.c	1.4	88/04/14	*/
 end_comment
 
 begin_include
@@ -2108,33 +2108,31 @@ operator|->
 name|ap_xena
 operator|=
 operator|(
+operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
-operator|(
 name|RAW
-operator||
-name|TANDEM
 operator|)
-operator|)
-operator|==
-name|TANDEM
 condition|?
-name|MPA_ENA
-else|:
 name|MPA_DIS
+else|:
+name|MPA_ENA
+operator|)
 expr_stmt|;
 name|asp
 operator|->
 name|ap_xany
 operator|=
 operator|(
+operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|DECCTQ
+operator|)
 condition|?
 name|MPA_DIS
 else|:
