@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_de.c	6.4	84/03/27	*/
+comment|/*	if_de.c	6.5	84/04/04	*/
 end_comment
 
 begin_include
@@ -204,7 +204,7 @@ begin_decl_stmt
 name|int
 name|dedebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
