@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exec.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exec.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"exec.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ktrace.h"
 end_include
 
 begin_include
@@ -3510,6 +3516,7 @@ name|cred
 operator|->
 name|cr_gid
 condition|)
+block|{
 name|u
 operator|.
 name|u_cred
@@ -3521,6 +3528,44 @@ argument_list|(
 name|cred
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If process is being ktraced, turn off - unless 			 * root set it. 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_tracep
+operator|&&
+operator|!
+operator|(
+name|p
+operator|->
+name|p_traceflag
+operator|&
+name|KTRFAC_ROOT
+operator|)
+condition|)
+block|{
+name|vrele
+argument_list|(
+name|p
+operator|->
+name|p_tracep
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_tracep
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_traceflag
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 name|cred
 operator|->
 name|cr_uid
