@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* vsort.c	1.1	83/07/12  *  *	sort troff output into troff output that only goes one  *	direction down the page.  */
+comment|/* vsort.c	1.2	83/07/29  *  *	sort troff output into troff output that only goes one  *	direction down the page.  */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) 	b = space before line, a = after p	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
+comment|/*******************************************************************************  output language from troff: all numbers are character strings  sn	size in points fn	font as number from 1-n cx	ascii character x Cxyz	funny char xyz. terminated by white space Hn	go to absolute horizontal position n Vn	go to absolute vertical position n (down is positive) hn	go n units horizontally (relative) vn	ditto vertically nnc	move right nn, then print c (exactly 2 digits!) 		(this wart is an optimization that shrinks output file size 		 about 35% and run-time about 15% while preserving ascii-ness) Dt ...\n	draw operation 't': 	Dt x		line thickness setting 	Ds x		line style (bit mask) setting 	Dl x y		line from here by x,y 	Dc d		circle of diameter d with left side here 	De x y		ellipse of axes x,y with left side here 	Da x y r	arc counter-clockwise by x,y of radius r 	D~ (or Dg) x y x y ...	wiggly line by x,y then x,y ... nb a	end of line (information only -- no action needed) 	b = space before line, a = after p	new page begins -- set v to 0 #...\n	comment x ...\n	device control functions: 	x i	init 	x T s	name of device is s 	x r n h v	resolution is n/inch 		h = min horizontal motion, v = min vert 	x p	pause (can restart) 	x s	stop -- done for ever 	x t	generate trailer 	x f n s	font position n contains font s 	x H n	set character height to n 	x S n	set slant to N  	Subcommands like "i" are often spelled out like "init".  *******************************************************************************/
 end_comment
 
 begin_include
@@ -115,6 +115,30 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|thick
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line thickness */
+end_comment
+
+begin_decl_stmt
+name|int
+name|style
+init|=
+literal|255
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line style bit-mask */
+end_comment
+
+begin_decl_stmt
+name|int
 name|hpos
 init|=
 literal|0
@@ -144,19 +168,32 @@ block|{
 name|int
 name|v
 decl_stmt|;
+comment|/* vertical position of this spread */
 name|int
 name|h
 decl_stmt|;
+comment|/* horizontal position */
 name|int
 name|s
 decl_stmt|;
+comment|/* point size */
 name|int
+name|t
+decl_stmt|;
+comment|/* line thickness */
+name|char
 name|f
 decl_stmt|;
+comment|/* font number */
+name|char
+name|st
+decl_stmt|;
+comment|/* style mask */
 name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* text pointer to this spread */
 block|}
 struct|;
 end_struct
@@ -846,6 +883,58 @@ index|]
 condition|)
 block|{
 case|case
+literal|'s'
+case|:
+comment|/* "style" */
+name|sscanf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|style
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|op
+argument_list|,
+literal|"D%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+comment|/* thickness */
+name|sscanf
+argument_list|(
+name|buf
+operator|+
+literal|1
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|thick
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|op
+argument_list|,
+literal|"D%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 comment|/* draw a line */
@@ -1100,6 +1189,10 @@ case|case
 literal|'~'
 case|:
 comment|/* wiggly line */
+case|case
+literal|'g'
+case|:
+comment|/* gremlin curve */
 block|{
 specifier|register
 name|char
@@ -1553,6 +1646,14 @@ name|vlist
 modifier|*
 name|vp
 decl_stmt|;
+specifier|register
+name|int
+name|lastv
+init|=
+operator|-
+literal|1
+decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -1627,13 +1728,6 @@ operator|++
 control|)
 block|{
 specifier|register
-name|int
-name|lastv
-init|=
-operator|-
-literal|1
-decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1659,7 +1753,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"H%ds%df%d "
+literal|"H%ds%df%d Ds %d\nDt %d\n"
 argument_list|,
 name|vp
 operator|->
@@ -1672,6 +1766,14 @@ argument_list|,
 name|vp
 operator|->
 name|f
+argument_list|,
+name|vp
+operator|->
+name|st
+argument_list|,
+name|vp
+operator|->
+name|t
 argument_list|)
 expr_stmt|;
 for|for
@@ -1737,6 +1839,18 @@ operator|->
 name|f
 operator|=
 name|font
+expr_stmt|;
+name|vlp
+operator|->
+name|st
+operator|=
+name|style
+expr_stmt|;
+name|vlp
+operator|->
+name|t
+operator|=
+name|thick
 expr_stmt|;
 operator|*
 name|op
@@ -2136,6 +2250,18 @@ operator|->
 name|f
 operator|=
 name|font
+expr_stmt|;
+name|vlp
+operator|->
+name|st
+operator|=
+name|style
+expr_stmt|;
+name|vlp
+operator|->
+name|t
+operator|=
+name|thick
 expr_stmt|;
 name|vlp
 operator|++
