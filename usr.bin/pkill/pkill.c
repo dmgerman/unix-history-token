@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -309,6 +315,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|newest
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|oldest
 decl_stmt|;
 end_decl_stmt
 
@@ -821,7 +833,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"DF:G:M:N:P:SU:d:fg:ij:lns:t:u:vx"
+literal|"DF:G:M:N:P:SU:d:fg:ij:lnos:t:u:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -1038,6 +1050,18 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|oldest
+operator|=
+literal|1
+expr_stmt|;
+name|criteria
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 name|makelist
@@ -1138,6 +1162,19 @@ name|criteria
 condition|)
 name|usage
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|newest
+operator|&&
+name|oldest
+condition|)
+name|errx
+argument_list|(
+name|STATUS_ERROR
+argument_list|,
+literal|"-n and -o are mutually exclusive"
+argument_list|)
 expr_stmt|;
 name|mypid
 operator|=
@@ -2065,6 +2102,8 @@ block|}
 if|if
 condition|(
 name|newest
+operator|||
+name|oldest
 condition|)
 block|{
 name|best_tval
@@ -2116,39 +2155,51 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|kp
-operator|->
-name|ki_start
-operator|.
-name|tv_sec
-operator|>
-name|best_tval
-operator|.
-name|tv_sec
-operator|||
-operator|(
-name|kp
-operator|->
-name|ki_start
-operator|.
-name|tv_sec
+name|bestidx
 operator|==
-name|best_tval
-operator|.
-name|tv_sec
-operator|&&
-name|kp
-operator|->
-name|ki_start
-operator|.
-name|tv_usec
-operator|>
-name|best_tval
-operator|.
-name|tv_usec
-operator|)
+operator|-
+literal|1
 condition|)
 block|{
+comment|/* The first entry of the list which matched. */
+empty_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|timercmp
+argument_list|(
+operator|&
+name|kp
+operator|->
+name|ki_start
+argument_list|,
+operator|&
+name|best_tval
+argument_list|,
+operator|>
+argument_list|)
+condition|)
+block|{
+comment|/* This entry is newer than previous "best". */
+if|if
+condition|(
+name|oldest
+condition|)
+comment|/* but we want the oldest */
+continue|continue;
+block|}
+else|else
+block|{
+comment|/* This entry is older than previous "best". */
+if|if
+condition|(
+name|newest
+condition|)
+comment|/* but we want the newest */
+continue|continue;
+block|}
+comment|/* This entry is better than previous "best" entry. */
 name|best_tval
 operator|.
 name|tv_sec
@@ -2173,7 +2224,6 @@ name|bestidx
 operator|=
 name|i
 expr_stmt|;
-block|}
 block|}
 name|memset
 argument_list|(
@@ -2297,12 +2347,12 @@ name|pgrep
 condition|)
 name|ustr
 operator|=
-literal|"[-Sfilnvx] [-d delim]"
+literal|"[-Sfilnovx] [-d delim]"
 expr_stmt|;
 else|else
 name|ustr
 operator|=
-literal|"[-signal] [-finvx]"
+literal|"[-signal] [-finovx]"
 expr_stmt|;
 name|fprintf
 argument_list|(
