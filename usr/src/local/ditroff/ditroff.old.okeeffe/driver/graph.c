@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.7	83/07/09  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.8	83/11/22  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
@@ -70,6 +70,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|vpos
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|output
 decl_stmt|;
 end_decl_stmt
 
@@ -213,6 +220,10 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|output
+condition|)
 name|HGtline
 argument_list|(
 name|hpos
@@ -261,6 +272,10 @@ end_expr_stmt
 begin_block
 block|{
 comment|/* 0.0 is the angle to sweep the arc: = full circle */
+if|if
+condition|(
+name|output
+condition|)
 name|HGArc
 argument_list|(
 name|hpos
@@ -421,6 +436,10 @@ name|hd
 argument_list|)
 expr_stmt|;
 comment|/* end position is the right-hand side of the ellipse */
+if|if
+condition|(
+name|output
+condition|)
 do|do
 block|{
 name|yk
@@ -608,6 +627,10 @@ literal|360.5
 else|:
 literal|0.5
 expr_stmt|;
+if|if
+condition|(
+name|output
+condition|)
 name|HGArc
 argument_list|(
 name|hpos
@@ -916,6 +939,11 @@ comment|/* npts must point to the last coordinate in x and y */
 comment|/* now, actually DO the curve */
 if|if
 condition|(
+name|output
+condition|)
+block|{
+if|if
+condition|(
 name|pic
 condition|)
 name|picurve
@@ -937,6 +965,7 @@ argument_list|,
 name|npts
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
