@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.37 1999/10/19 15:18:29 itojun Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  * @(#) $Header: /tcpdump/master/libpcap/gencode.h,v 1.47 2000/11/04 10:09:55 guy Exp $ (LBL)  */
 end_comment
-
-begin_comment
-comment|/*XXX*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
-end_include
 
 begin_comment
 comment|/* Address qualifiers. */
@@ -206,22 +196,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|Q_ISO
+name|Q_AARP
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ESIS
+name|Q_ISO
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|Q_ISIS
+name|Q_ESIS
 value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_ISIS
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|Q_CLNP
+value|25
 end_define
 
 begin_comment
@@ -868,6 +872,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|block
+modifier|*
+name|gen_vlan
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|bpf_optimize
 parameter_list|(
@@ -879,14 +894,7 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_function_decl
-name|__dead
 name|void
 name|bpf_error
 parameter_list|(
@@ -896,9 +904,12 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
+if|#
+directive|if
+name|HAVE___ATTRIBUTE__
 function_decl|__attribute__
 parameter_list|(
-function_decl|(volatile
+function_decl|(noreturn
 operator|,
 function_decl|format
 parameter_list|(
@@ -909,15 +920,15 @@ operator|,
 function_decl|2
 end_function_decl
 
-begin_empty_stmt
-unit|)))
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
+unit|)))
 endif|#
 directive|endif
 end_endif
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -973,6 +984,15 @@ name|lex_init
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|lex_cleanup
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

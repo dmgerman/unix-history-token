@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.51 1999/11/25 08:25:35 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.57.2.1 2001/01/17 18:21:56 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -53,12 +70,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -71,11 +82,6 @@ name|rtentry
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -85,14 +91,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
+file|<netinet/in.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IF_ETHER_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<netinet/if_ether.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -181,12 +198,6 @@ directive|include
 file|<pcap-namedb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -249,12 +260,6 @@ end_function_decl
 begin_comment
 comment|/*  *  Convert host name to internet address.  *  Return 0 upon failure.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6
-end_ifndef
 
 begin_function
 name|bpf_u_int32
@@ -379,16 +384,17 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
 
 begin_function
 name|struct
 name|addrinfo
 modifier|*
-name|pcap_nametoaddr
+name|pcap_nametoaddrinfo
 parameter_list|(
 specifier|const
 name|char
@@ -1353,10 +1359,11 @@ init|=
 name|NULL
 decl_stmt|;
 specifier|static
+name|int
 name|init
-operator|=
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1483,6 +1490,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/*  * XXX - perhaps this should, instead, be declared in "lbl/os-XXX.h" files,  * for those OS versions that don't declare it, rather than being declared  * here?  That way, for example, we could declare it on FreeBSD 2.x (which  * doesn't declare it), but not on FreeBSD 3.x (which declares it like  * this) or FreeBSD 4.x (which declares it with its first argument as  * "const char *", so no matter how we declare it here, it'll fail to  * compile on one of 3.x or 4.x).  */
+end_comment
 
 begin_if
 if|#
