@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.59	82/12/14	*/
+comment|/*	ip_input.c	1.60	83/01/03	*/
 end_comment
 
 begin_include
@@ -495,16 +495,6 @@ name|hlen
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"ip_sum %x\n"
-argument_list|,
-name|ip
-operator|->
-name|ip_sum
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|ipstat
 operator|.
 name|ips_badsum
