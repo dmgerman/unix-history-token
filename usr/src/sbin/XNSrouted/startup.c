@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	5.6 (Berkeley) %G%"
+literal|"@(#)startup.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,11 +257,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|ifr
 operator|=
@@ -669,10 +669,11 @@ argument_list|,
 literal|"XNSrouted: out of memory\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
-comment|/* ??? */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|strcpy
 argument_list|(
@@ -729,36 +730,6 @@ expr_stmt|;
 name|close
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-return|return;
-name|bad
-label|:
-name|sleep
-argument_list|(
-literal|60
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|60
-argument_list|)
-expr_stmt|;
-name|execv
-argument_list|(
-literal|"/etc/XNSrouted"
-argument_list|,
-name|argv0
-argument_list|)
-expr_stmt|;
-name|_exit
-argument_list|(
-literal|0177
 argument_list|)
 expr_stmt|;
 block|}
