@@ -507,7 +507,7 @@ decl_stmt|;
 block|}
 name|softc
 index|[
-name|NFLA
+literal|8
 index|]
 struct|;
 end_struct
@@ -1180,6 +1180,17 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+literal|8
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|sc
 operator|=
 operator|&
