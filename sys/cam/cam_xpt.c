@@ -11519,6 +11519,9 @@ literal|0
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
+name|XPT_RESET_DEV
+case|:
+case|case
 name|XPT_ENG_EXEC
 case|:
 block|{
@@ -11955,9 +11958,6 @@ block|}
 comment|/* 		 * If we weren't able to take care of the abort request 		 * in the XPT, pass the request down to the SIM for processing. 		 */
 comment|/* FALLTHROUGH */
 block|}
-case|case
-name|XPT_RESET_DEV
-case|:
 case|case
 name|XPT_ACCEPT_TARGET_IO
 case|:
