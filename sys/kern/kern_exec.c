@@ -1699,6 +1699,8 @@ operator|->
 name|p_sysent
 operator|->
 name|sv_fixup
+operator|!=
+name|NULL
 condition|)
 call|(
 modifier|*
@@ -2665,6 +2667,8 @@ condition|(
 name|imgp
 operator|->
 name|firstpage
+operator|!=
+name|NULL
 condition|)
 name|exec_unmap_first_page
 argument_list|(
@@ -2676,6 +2680,8 @@ condition|(
 name|imgp
 operator|->
 name|vp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|NDFREE
@@ -2722,6 +2728,8 @@ condition|(
 name|imgp
 operator|->
 name|object
+operator|!=
+name|NULL
 condition|)
 name|vm_object_deallocate
 argument_list|(
@@ -2891,14 +2899,14 @@ condition|(
 name|imgp
 operator|->
 name|firstpage
+operator|!=
+name|NULL
 condition|)
-block|{
 name|exec_unmap_first_page
 argument_list|(
 name|imgp
 argument_list|)
 expr_stmt|;
-block|}
 name|VOP_GETVOBJECT
 argument_list|(
 name|imgp
@@ -3252,6 +3260,8 @@ condition|(
 name|imgp
 operator|->
 name|firstpage
+operator|!=
+name|NULL
 condition|)
 block|{
 name|pmap_qremove
@@ -3362,6 +3372,8 @@ condition|(
 name|sv
 operator|->
 name|sv_fixlimits
+operator|!=
+name|NULL
 condition|)
 name|sv
 operator|->
