@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -459,14 +459,6 @@ block|,
 comment|/* blkatoff */
 block|{
 operator|&
-name|vop_vget_desc
-block|,
-name|spec_vget
-block|}
-block|,
-comment|/* vget */
-block|{
-operator|&
 name|vop_valloc_desc
 block|,
 name|spec_valloc
@@ -598,10 +590,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -811,10 +799,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1326,10 +1310,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
