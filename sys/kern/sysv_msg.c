@@ -1119,6 +1119,16 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCALL_MODULE_HELPER
 argument_list|(
+name|msgsys
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCALL_MODULE_HELPER
+argument_list|(
 name|msgctl
 argument_list|,
 literal|3
