@@ -109,6 +109,12 @@ directive|include
 file|<netinet/igmp_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE

@@ -170,6 +170,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<machine/in_cksum.h>
+end_include
+
 begin_comment
 comment|/*  * ICMP routines: error generation, receive packet processing, and  * routines to turnaround packets back to the originator, and  * host table maintenance routines.  */
 end_comment
