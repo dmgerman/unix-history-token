@@ -527,23 +527,6 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|domain
-name|inetdomain
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|protosw
-name|inetsw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 name|struct
 name|in_addr
