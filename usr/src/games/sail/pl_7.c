@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_7.c	2.5 83/12/17"
+literal|"@(#)pl_7.c	2.6 84/02/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -1699,11 +1699,11 @@ literal|"Carr %2d %2d\n"
 argument_list|,
 name|mc
 operator|->
-name|carR
+name|carL
 argument_list|,
 name|mc
 operator|->
-name|carL
+name|carR
 argument_list|)
 expr_stmt|;
 operator|(
