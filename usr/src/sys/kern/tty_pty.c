@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.7	81/03/11	*/
+comment|/*	tty_pty.c	4.8	81/08/14	*/
 end_comment
 
 begin_comment
@@ -1047,14 +1047,24 @@ name|TTOPRI
 argument_list|)
 expr_stmt|;
 block|}
-name|ttyinput
-argument_list|(
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
 operator|*
 name|cp
 operator|++
-argument_list|,
+operator|,
 name|tp
-argument_list|)
+operator|)
 expr_stmt|;
 block|}
 block|}
