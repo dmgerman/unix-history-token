@@ -3167,7 +3167,7 @@ argument_list|)
 condition|)
 name|write_root_xprofile
 argument_list|(
-literal|"xterm&\nexec afterstep\n"
+literal|"exec afterstep\n"
 argument_list|)
 expr_stmt|;
 block|}
