@@ -433,8 +433,6 @@ block|}
 block|,
 comment|/* 20 = getpid */
 block|{
-name|SYF_MPSAFE
-operator||
 name|AS
 argument_list|(
 name|mount_args
@@ -449,8 +447,6 @@ block|}
 block|,
 comment|/* 21 = mount */
 block|{
-name|SYF_MPSAFE
-operator||
 name|AS
 argument_list|(
 name|unmount_args
@@ -5349,8 +5345,6 @@ block|}
 block|,
 comment|/* 377 = afs_syscall */
 block|{
-name|SYF_MPSAFE
-operator||
 name|AS
 argument_list|(
 name|nmount_args
