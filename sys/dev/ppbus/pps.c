@@ -1417,6 +1417,14 @@ literal|1
 operator|)
 condition|)
 return|return;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|timeout
@@ -1523,6 +1531,14 @@ name|lastdata
 operator|=
 name|i
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1561,7 +1577,7 @@ name|sc
 operator|->
 name|ppbus
 decl_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sc
@@ -1593,7 +1609,7 @@ name|nACK
 operator|)
 condition|)
 block|{
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sc
@@ -1662,7 +1678,7 @@ argument_list|,
 name|IRQENABLE
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sc
@@ -1720,7 +1736,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|mtx_lock
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sc
@@ -1745,7 +1761,7 @@ name|subdev
 index|]
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sc
