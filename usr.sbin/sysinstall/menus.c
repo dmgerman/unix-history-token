@@ -10228,10 +10228,10 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Console Terminal Type"
 block|,
-literal|"For various console encodings corresponding terminal type\n"
-literal|"must be choosed in /etc/ttys.\n"
-literal|"WARNING: due to compatibility reasons, only entries started with\n"
-literal|"ttyv and with terminal type started with cons[0-9] can be changed\n"
+literal|"For various console encodings, a corresponding terminal type\n"
+literal|"must be chosen in /etc/ttys.\n\n"
+literal|"WARNING: For compatibility reasons, only entries starting with\n"
+literal|"ttyv and terminal types starting with cons[0-9] can be changed\n"
 literal|"via this menu.\n"
 block|,
 literal|"Choose a terminal type"
