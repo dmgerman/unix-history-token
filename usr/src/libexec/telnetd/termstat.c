@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termstat.c	5.6 (Berkeley) %G%"
+literal|"@(#)termstat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -327,10 +327,13 @@ block|}
 comment|/* 	 * Do echo mode handling as soon as we know what the 	 * linemode is going to be. 	 * If the pty has echo turned off, then tell the client that 	 * the server will echo.  If echo is on, then the server 	 * will echo if in character mode, but in linemode the 	 * client should do local echoing.  The state machine will 	 * not send anything if it is unnecessary, so don't worry 	 * about that here. 	 */
 if|if
 condition|(
+name|uselinemode
+condition|)
+block|{
+if|if
+condition|(
 name|tty_isecho
 argument_list|()
-operator|&&
-name|uselinemode
 condition|)
 name|send_wont
 argument_list|(
@@ -347,6 +350,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If linemode is being turned off, send appropriate 	 * command and then we're all done. 	 */
 if|if
 condition|(
@@ -607,6 +611,11 @@ comment|/* KLUDGELINEMODE */
 if|if
 condition|(
 name|linemode
+operator|&&
+name|his_state_is_will
+argument_list|(
+name|TELOPT_LINEMODE
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * If edit mode changed, send edit mode. 		 */
