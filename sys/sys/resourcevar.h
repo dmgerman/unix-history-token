@@ -191,7 +191,7 @@ value|mtx_assert((lim)->pl_mtx, (f))
 end_define
 
 begin_comment
-comment|/*  * Per uid resource consumption  */
+comment|/*-  * Per uid resource consumption  *  * Locking guide:  * (a) Constant from inception  * (b) Locked by ui_mtxp  * (c) Locked by global uihashtbl_mtx  */
 end_comment
 
 begin_struct
@@ -204,22 +204,23 @@ argument|uidinfo
 argument_list|)
 name|ui_hash
 expr_stmt|;
+comment|/* (c) hash chain of uidinfos */
 name|rlim_t
 name|ui_sbsize
 decl_stmt|;
-comment|/* socket buffer space consumed */
+comment|/* (b) socket buffer space consumed */
 name|long
 name|ui_proccnt
 decl_stmt|;
-comment|/* number of processes */
+comment|/* (b) number of processes */
 name|uid_t
 name|ui_uid
 decl_stmt|;
-comment|/* uid */
+comment|/* (a) uid */
 name|u_int
 name|ui_ref
 decl_stmt|;
-comment|/* reference count */
+comment|/* (b) reference count */
 name|struct
 name|mtx
 modifier|*
