@@ -3763,9 +3763,9 @@ block|}
 if|if
 condition|(
 name|tinfo
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|tinfo
 operator|->
@@ -4201,13 +4201,6 @@ operator|(
 name|tp
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"Code %d not found\n"
-argument_list|,
-name|code
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
