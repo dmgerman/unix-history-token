@@ -2111,6 +2111,8 @@ argument_list|(
 literal|'V'
 argument_list|,
 name|cur_mode
+operator|-
+name|M_VESA_BASE
 argument_list|)
 argument_list|,
 name|NULL
