@@ -86,6 +86,19 @@ define|\
 value|__builtin_va_arg((ap), type)
 end_define
 
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|__builtin_va_copy((dest), (src))
+end_define
+
 begin_if
 if|#
 directive|if
@@ -104,7 +117,7 @@ parameter_list|,
 name|src
 parameter_list|)
 define|\
-value|__builtin_va_copy((dest), (src))
+value|__va_copy(dest, src)
 end_define
 
 begin_endif
