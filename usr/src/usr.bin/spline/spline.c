@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)spline.c	4.1 (Berkeley) %G%"
+literal|"@(#)spline.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_define
@@ -26,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|INF
-value|1.e37
+value|HUGE
 end_define
 
 begin_struct
