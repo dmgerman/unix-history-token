@@ -182,7 +182,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/globaldata.h>
+file|<sys/pcpu.h>
 end_include
 
 begin_undef
@@ -712,7 +712,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|offsetof(struct globaldata, gd_ ## name)
+value|offsetof(struct pcpu, pc_ ## name)
 end_define
 
 begin_comment
@@ -3637,18 +3637,18 @@ block|{
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|globaldata
+argument|pcpu
 argument_list|)
 name|pcpu_head
 expr_stmt|;
 name|struct
-name|globaldata
-name|lgd
+name|pcpu
+name|lpc
 decl_stmt|;
 name|struct
-name|globaldata
+name|pcpu
 modifier|*
-name|gd
+name|pc
 decl_stmt|;
 name|physrd
 argument_list|(
@@ -3672,7 +3672,7 @@ sizeof|sizeof
 name|pcpu_head
 argument_list|)
 expr_stmt|;
-name|gd
+name|pc
 operator|=
 name|SLIST_FIRST
 argument_list|(
@@ -3683,18 +3683,18 @@ expr_stmt|;
 for|for
 control|(
 init|;
-name|gd
+name|pc
 operator|!=
 name|NULL
 condition|;
-name|gd
+name|pc
 operator|=
 name|SLIST_NEXT
 argument_list|(
 operator|&
-name|lgd
+name|lpc
 argument_list|,
-name|gd_allcpu
+name|pc_allcpu
 argument_list|)
 control|)
 block|{
@@ -3705,24 +3705,24 @@ argument_list|,
 operator|(
 name|CORE_ADDR
 operator|)
-name|gd
+name|pc
 argument_list|,
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|lgd
+name|lpc
 argument_list|,
 sizeof|sizeof
-name|lgd
+name|lpc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|lgd
+name|lpc
 operator|.
-name|gd_cpuid
+name|pc_cpuid
 operator|==
 name|cpuid
 condition|)
@@ -3733,7 +3733,7 @@ operator|(
 operator|(
 name|CORE_ADDR
 operator|)
-name|gd
+name|pc
 operator|)
 return|;
 block|}
