@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.1.2.3 1999/05/04 07:59:09 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.1.2.4 1999/05/04 18:24:50 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -1041,12 +1041,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * finally, if some queue has data, restart the timer.      */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|dn_idle
 operator|=
 literal|1
 expr_stmt|;
 name|dn_restart
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1504,17 +1514,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dn_idle
 condition|)
 name|dn_restart
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
