@@ -103,6 +103,41 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_MPPC
+argument_list|,
+literal|"netgraph_mppc"
+argument_list|,
+literal|"netgraph mppc node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_MPPC
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NETGRAPH_MPPC_COMPRESSION
 end_ifdef
 
@@ -658,7 +693,7 @@ operator|*
 name|priv
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -1060,7 +1095,7 @@ name|d
 operator|->
 name|history
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 name|d
@@ -1100,7 +1135,7 @@ else|:
 name|MPPC_SizeOfDecompressionHistory
 argument_list|()
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1677,7 +1712,7 @@ name|xmit
 operator|.
 name|history
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 if|if
@@ -1698,7 +1733,7 @@ name|recv
 operator|.
 name|history
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1718,7 +1753,7 @@ name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE
@@ -1951,7 +1986,7 @@ operator|*
 argument_list|,
 name|inlen
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2018,7 +2053,7 @@ operator|*
 argument_list|,
 name|outlen
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -2034,7 +2069,7 @@ name|FREE
 argument_list|(
 name|inbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 return|return
@@ -2260,7 +2295,7 @@ name|FREE
 argument_list|(
 name|inbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 comment|/* Always set the flushed bit in stateless mode */
@@ -2457,7 +2492,7 @@ name|FREE
 argument_list|(
 name|outbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 return|return
@@ -2597,7 +2632,7 @@ operator|*
 argument_list|,
 name|len
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3046,7 +3081,7 @@ name|FREE
 argument_list|(
 name|buf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 return|return
@@ -3107,7 +3142,7 @@ name|MPPC_DECOMP_BUFSIZE
 operator|+
 name|MPPC_DECOMP_SAFETY
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3123,7 +3158,7 @@ name|FREE
 argument_list|(
 name|buf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 return|return
@@ -3239,7 +3274,7 @@ name|FREE
 argument_list|(
 name|decompbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3251,7 +3286,7 @@ name|FREE
 argument_list|(
 name|buf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 name|buf
@@ -3291,7 +3326,7 @@ name|FREE
 argument_list|(
 name|buf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_MPPC
 argument_list|)
 expr_stmt|;
 return|return

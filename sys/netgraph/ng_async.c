@@ -73,6 +73,41 @@ directive|include
 file|<net/ppp_defs.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_ASYNC
+argument_list|,
+literal|"netgraph_async"
+argument_list|,
+literal|"netgraph async node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_ASYNC
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Async decode state */
 end_comment
@@ -511,7 +546,7 @@ operator|*
 name|sc
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -578,7 +613,7 @@ operator|.
 name|smru
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -612,7 +647,7 @@ operator|.
 name|amru
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -632,7 +667,7 @@ name|sc
 operator|->
 name|abuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|fail
@@ -641,7 +676,7 @@ name|FREE
 argument_list|(
 name|sc
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 return|return
@@ -1111,7 +1146,7 @@ operator|->
 name|smru
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1132,7 +1167,7 @@ name|sc
 operator|->
 name|abuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1170,7 +1205,7 @@ operator|->
 name|amru
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1191,7 +1226,7 @@ name|sc
 operator|->
 name|sbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|sc
@@ -1358,7 +1393,7 @@ name|sc
 operator|->
 name|abuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -1367,7 +1402,7 @@ name|sc
 operator|->
 name|sbuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1385,7 +1420,7 @@ name|FREE
 argument_list|(
 name|sc
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_ASYNC
 argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE

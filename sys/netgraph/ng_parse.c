@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -62,6 +68,41 @@ include|#
 directive|include
 file|<netgraph/ng_parse.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_PARSE
+argument_list|,
+literal|"netgraph_parse"
+argument_list|,
+literal|"netgraph parse info"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_PARSE
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Compute alignment for primitive integral types */
@@ -3205,7 +3246,7 @@ name|FREE
 argument_list|(
 name|sval
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3314,7 +3355,7 @@ name|FREE
 argument_list|(
 name|s
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -3530,7 +3571,7 @@ name|FREE
 argument_list|(
 name|sval
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4020,7 +4061,7 @@ name|FREE
 argument_list|(
 name|sval
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4137,7 +4178,7 @@ name|FREE
 argument_list|(
 name|s
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4787,7 +4828,7 @@ name|FREE
 argument_list|(
 name|str
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -4807,7 +4848,7 @@ name|FREE
 argument_list|(
 name|str
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -4840,7 +4881,7 @@ name|FREE
 argument_list|(
 name|str
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5283,7 +5324,7 @@ operator|*
 name|foff
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -6019,7 +6060,7 @@ name|FREE
 argument_list|(
 name|foff
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -6122,7 +6163,7 @@ operator|*
 argument_list|,
 name|workSize
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -6372,7 +6413,7 @@ name|FREE
 argument_list|(
 name|workBuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -6404,7 +6445,7 @@ name|FREE
 argument_list|(
 name|workBuf
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 comment|/* Closing brace/bracket */
@@ -7364,7 +7405,7 @@ name|FREE
 argument_list|(
 name|t
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|)
 expr_stmt|;
 return|return
@@ -7550,7 +7591,7 @@ operator|+
 name|start
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -7984,7 +8025,7 @@ literal|4
 operator|+
 literal|3
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PARSE
 argument_list|,
 name|M_NOWAIT
 argument_list|)

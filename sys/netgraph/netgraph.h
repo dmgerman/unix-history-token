@@ -57,11 +57,25 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_comment
+comment|/* debugging options */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|NETGRAPH_DEBUG
 end_define
+
+begin_define
+define|#
+directive|define
+name|NG_SEPARATE_MALLOC
+end_define
+
+begin_comment
+comment|/* make modules use their own malloc types */
+end_comment
 
 begin_comment
 comment|/*  * This defines the in-kernel binary interface version.  * It is possible to change this but leave the external message  * API the same. Each type also has it's own cookies for versioning as well.  * Change it for NETGRAPH_DEBUG version so we cannot mix debug and non debug  * modules.  */

@@ -76,6 +76,49 @@ file|<netgraph/netgraph.h>
 end_include
 
 begin_comment
+comment|/* If you do complicated mallocs you may want to do this */
+end_comment
+
+begin_comment
+comment|/* and use it for your mallocs */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_XXX
+argument_list|,
+literal|"netgraph_xxx"
+argument_list|,
+literal|"netgraph xxx node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_XXX
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * This section contains the netgraph method declarations for the  * sample node. These methods define the netgraph 'type'.  */
 end_comment
 

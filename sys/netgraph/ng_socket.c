@@ -126,6 +126,60 @@ directive|include
 file|<netgraph/ng_socket.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_PATH
+argument_list|,
+literal|"netgraph_path"
+argument_list|,
+literal|"netgraph path info "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_SOCK
+argument_list|,
+literal|"netgraph_sock"
+argument_list|,
+literal|"netgraph socket info "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_PATH
+value|M_NETGRAPH
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_SOCK
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * It's Ascii-art time!  *   +-------------+   +-------------+  *   |socket  (ctl)|   |socket (data)|  *   +-------------+   +-------------+  *          ^                 ^  *          |                 |  *          v                 v  *    +-----------+     +-----------+  *    |pcb   (ctl)|     |pcb  (data)|  *    +-----------+     +-----------+  *          ^                 ^  *          |                 |  *          v                 v  *      +--------------------------+  *      |   Socket type private    |  *      |       data               |  *      +--------------------------+  *                   ^  *                   |  *                   v  *           +----------------+  *           | struct ng_node |  *           +----------------+  */
 end_comment
@@ -750,7 +804,7 @@ name|len
 operator|+
 literal|1
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PATH
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1064,7 +1118,7 @@ name|FREE
 argument_list|(
 name|path
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PATH
 argument_list|)
 expr_stmt|;
 if|if
@@ -1929,7 +1983,7 @@ operator|*
 name|privdata
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_SOCK
 argument_list|,
 name|M_WAITOK
 operator||
@@ -1981,7 +2035,7 @@ name|FREE
 argument_list|(
 name|privdata
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_SOCK
 argument_list|)
 expr_stmt|;
 name|ng_detach_common
@@ -3346,7 +3400,7 @@ name|addrlen
 operator|+
 literal|4
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PATH
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -3416,7 +3470,7 @@ name|FREE
 argument_list|(
 name|addr
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PATH
 argument_list|)
 expr_stmt|;
 return|return
@@ -3843,7 +3897,7 @@ name|FREE
 argument_list|(
 name|sockdata
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_SOCK
 argument_list|)
 expr_stmt|;
 return|return

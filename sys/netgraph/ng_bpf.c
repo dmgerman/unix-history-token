@@ -73,6 +73,41 @@ directive|include
 file|<netgraph/ng_bpf.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_BPF
+argument_list|,
+literal|"netgraph_bpf"
+argument_list|,
+literal|"netgraph bpf node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_BPF
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -672,7 +707,7 @@ operator|*
 name|hip
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -731,7 +766,7 @@ name|FREE
 argument_list|(
 name|hip
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|)
 expr_stmt|;
 name|NG_HOOK_SET_PRIVATE
@@ -1427,7 +1462,7 @@ operator|*
 argument_list|,
 name|totlen
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1512,7 +1547,7 @@ name|FREE
 argument_list|(
 name|data
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|)
 expr_stmt|;
 comment|/* See if we got a match and find destination hook */
@@ -1723,7 +1758,7 @@ name|hip
 operator|->
 name|prog
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1741,7 +1776,7 @@ name|FREE
 argument_list|(
 name|hip
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|)
 expr_stmt|;
 name|NG_HOOK_SET_PRIVATE
@@ -1874,7 +1909,7 @@ operator|*
 argument_list|,
 name|size
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1914,7 +1949,7 @@ name|hip
 operator|->
 name|prog
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_BPF
 argument_list|)
 expr_stmt|;
 name|hip

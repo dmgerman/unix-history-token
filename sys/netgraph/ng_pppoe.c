@@ -111,6 +111,41 @@ directive|include
 file|<netgraph/ng_pppoe.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_PPPOE
+argument_list|,
+literal|"netgraph_pppoe"
+argument_list|,
+literal|"netgraph pppoe node"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_PPPOE
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1937,7 +1972,7 @@ operator|*
 name|privdata
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2085,7 +2120,7 @@ operator|*
 name|sp
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2497,7 +2532,7 @@ operator|*
 name|neg
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2551,7 +2586,7 @@ name|FREE
 argument_list|(
 name|neg
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -2610,7 +2645,7 @@ name|FREE
 argument_list|(
 name|neg
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 name|LEAVE
@@ -4560,7 +4595,7 @@ name|sp
 operator|->
 name|neg
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 name|sp
@@ -4775,7 +4810,7 @@ name|sp
 operator|->
 name|neg
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 name|sp
@@ -5439,7 +5474,7 @@ name|FREE
 argument_list|(
 name|privdata
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 return|return
@@ -5886,7 +5921,7 @@ name|sp
 operator|->
 name|neg
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5894,7 +5929,7 @@ name|FREE
 argument_list|(
 name|sp
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_PPPOE
 argument_list|)
 expr_stmt|;
 name|NG_HOOK_SET_PRIVATE

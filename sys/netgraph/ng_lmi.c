@@ -1377,7 +1377,6 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Allocate a meta struct (and leave some slop for options to be 	 * added by other modules). */
-comment|/* MALLOC(meta, meta_p, sizeof( struct ng_meta) + META_PAD, 	 * M_NETGRAPH, M_NOWAIT); */
 name|MALLOC
 argument_list|(
 name|meta
@@ -1392,7 +1391,7 @@ argument_list|)
 operator|+
 name|META_PAD
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_META
 argument_list|,
 name|M_NOWAIT
 argument_list|)

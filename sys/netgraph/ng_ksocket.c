@@ -121,6 +121,41 @@ directive|include
 file|<netatalk/at.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_KSOCKET
+argument_list|,
+literal|"netgraph_ksock"
+argument_list|,
+literal|"netgraph ksock node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_KSOCKET
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1026,7 +1061,7 @@ name|FREE
 argument_list|(
 name|path
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|)
 expr_stmt|;
 return|return
@@ -1049,7 +1084,7 @@ name|FREE
 argument_list|(
 name|path
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|)
 expr_stmt|;
 return|return
@@ -1086,7 +1121,7 @@ name|FREE
 argument_list|(
 name|path
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1534,7 +1569,7 @@ name|FREE
 argument_list|(
 name|pathtoken
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|)
 expr_stmt|;
 if|if
@@ -2164,7 +2199,7 @@ operator|*
 name|priv
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3646,7 +3681,7 @@ name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_KSOCKET
 argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE

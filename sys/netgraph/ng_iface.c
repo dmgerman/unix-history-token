@@ -133,6 +133,41 @@ directive|include
 file|<netgraph/ng_cisco.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NG_SEPARATE_MALLOC
+end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_NETGRAPH_IFACE
+argument_list|,
+literal|"netgraph_iface"
+argument_list|,
+literal|"netgraph iface node "
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|M_NETGRAPH_IFACE
+value|M_NETGRAPH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* This struct describes one address family */
 end_comment
@@ -700,6 +735,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ng_units_in_use
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1022,7 +1066,7 @@ operator|*
 name|ng_iface_units
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1084,7 +1128,7 @@ name|FREE
 argument_list|(
 name|ng_iface_units
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|)
 expr_stmt|;
 name|ng_iface_units
@@ -1156,6 +1200,9 @@ name|UNITS_BITSPERWORD
 operator|)
 operator|+
 name|bit
+expr_stmt|;
+name|ng_units_in_use
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -1250,7 +1297,34 @@ operator|<<
 name|bit
 operator|)
 expr_stmt|;
-comment|/* 	 * XXX We could think about reducing the size of ng_iface_units[] 	 * XXX here if the last portion is all ones 	 */
+comment|/* 	 * XXX We could think about reducing the size of ng_iface_units[] 	 * XXX here if the last portion is all ones 	 * XXX At least free it if no more units. 	 * Needed if we are to eventually be able to unload. 	 */
+name|ng_units_in_use
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|ng_units_in_use
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* XXX make SMP safe */
+name|FREE
+argument_list|(
+name|ng_iface_units
+argument_list|,
+name|M_NETGRAPH_IFACE
+argument_list|)
+expr_stmt|;
+name|ng_iface_units_len
+operator|=
+literal|0
+expr_stmt|;
+name|ng_iface_units
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2079,7 +2153,7 @@ operator|*
 name|priv
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2111,7 +2185,7 @@ operator|*
 name|ifp
 argument_list|)
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -2129,7 +2203,7 @@ name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|)
 expr_stmt|;
 return|return
@@ -2173,14 +2247,14 @@ name|FREE
 argument_list|(
 name|ifp
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|)
 expr_stmt|;
 name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|)
 expr_stmt|;
 return|return
@@ -3094,6 +3168,15 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|,
+name|M_NETGRAPH_IFACE
+argument_list|)
+expr_stmt|;
 name|priv
 operator|->
 name|ifp
@@ -3111,7 +3194,7 @@ name|FREE
 argument_list|(
 name|priv
 argument_list|,
-name|M_NETGRAPH
+name|M_NETGRAPH_IFACE
 argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE
