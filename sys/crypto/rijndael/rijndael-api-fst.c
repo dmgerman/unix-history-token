@@ -823,6 +823,15 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|input
+argument_list|,
+name|iv
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 operator|(
 operator|(
 name|word32
