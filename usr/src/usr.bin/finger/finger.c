@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.4 (Berkeley) %G%"
+literal|"@(#)finger.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5516,6 +5516,13 @@ name|struct
 name|in_addr
 name|defaddr
 decl_stmt|;
+name|char
+modifier|*
+name|alist
+index|[
+literal|1
+index|]
+decl_stmt|;
 specifier|static
 name|char
 name|namebuf
@@ -5572,6 +5579,12 @@ name|h_name
 operator|=
 name|namebuf
 expr_stmt|;
+name|def
+operator|.
+name|h_addr_list
+operator|=
+name|alist
+operator|,
 name|def
 operator|.
 name|h_addr
