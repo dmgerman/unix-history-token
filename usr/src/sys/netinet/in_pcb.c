@@ -409,8 +409,20 @@ operator|(
 name|EACCES
 operator|)
 return|;
+comment|/* even GROSSER, but this is the Internet */
 if|if
 condition|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_REUSEADDR
+operator|)
+operator|==
+literal|0
+operator|&&
+operator|(
 operator|(
 name|so
 operator|->
@@ -432,6 +444,7 @@ name|SO_ACCEPTCONN
 operator|)
 operator|==
 literal|0
+operator|)
 condition|)
 name|wild
 operator|=
