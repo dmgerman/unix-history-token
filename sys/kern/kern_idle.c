@@ -305,6 +305,12 @@ name|td_flags
 operator||=
 name|TDF_IDLETD
 expr_stmt|;
+name|td
+operator|->
+name|td_priority
+operator|=
+name|PRI_MAX_IDLE
+expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(
 operator|&
