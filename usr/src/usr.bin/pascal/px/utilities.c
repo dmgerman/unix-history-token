@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.7 %G%"
+literal|"@(#)utilities.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,18 @@ directive|include
 file|"objfmt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
 begin_macro
 name|stats
 argument_list|()
@@ -44,23 +56,10 @@ end_macro
 
 begin_block
 block|{
-struct|struct
-block|{
-name|long
-name|usr_time
+name|struct
+name|rusage
+name|ru
 decl_stmt|;
-name|long
-name|sys_time
-decl_stmt|;
-name|long
-name|child_usr_time
-decl_stmt|;
-name|long
-name|child_sys_time
-decl_stmt|;
-block|}
-name|tbuf
-struct|;
 specifier|register
 name|double
 name|l
@@ -125,10 +124,12 @@ operator|(
 literal|0
 operator|)
 return|;
-name|times
+name|getrusage
 argument_list|(
+name|RUSAGE_SELF
+argument_list|,
 operator|&
-name|tbuf
+name|ru
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -222,17 +223,21 @@ name|profdata
 operator|.
 name|usrtime
 operator|+=
-name|tbuf
+name|ru
 operator|.
-name|usr_time
+name|ru_utime
+operator|.
+name|tv_sec
 expr_stmt|;
 name|profdata
 operator|.
 name|systime
 operator|+=
-name|tbuf
+name|ru
 operator|.
-name|sys_time
+name|ru_stime
+operator|.
+name|tv_sec
 expr_stmt|;
 name|datafile
 operator|=
@@ -293,27 +298,27 @@ label|:
 endif|#
 directive|endif
 endif|PROFILE
-name|l
-operator|=
-name|tbuf
-operator|.
-name|usr_time
-expr_stmt|;
-name|l
-operator|=
-name|l
-operator|/
-name|HZ
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n%1ld statements executed in %04.2f seconds cpu time.\n"
+literal|"\n%1ld statements executed in %04d.%02d seconds cpu time.\n"
 argument_list|,
 name|_stcnt
 argument_list|,
-name|l
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_sec
+argument_list|,
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_usec
+operator|/
+literal|1000
 argument_list|)
 expr_stmt|;
 block|}
