@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uulog.c	5.5	(Berkeley) %G%"
+literal|"@(#)uulog.c	5.6	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"uucp.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|timeb
+name|Now
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
