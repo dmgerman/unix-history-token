@@ -276,7 +276,7 @@ argument_list|()
 decl_stmt|;
 name|DBG_MSG
 argument_list|(
-literal|"signal daemon started"
+literal|"signal daemon started\n"
 argument_list|)
 expr_stmt|;
 name|curthread
