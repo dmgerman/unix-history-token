@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	1.3 (Berkeley) %G%"
+literal|"@(#)test.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -2449,6 +2455,37 @@ index|[
 literal|2
 index|]
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|v
+index|[
+literal|0
+index|]
+operator|.
+name|u
+operator|.
+name|string
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|v
+index|[
+literal|1
+index|]
+operator|.
+name|u
+operator|.
+name|string
+operator|=
+name|argv
+index|[
+literal|2
+index|]
 expr_stmt|;
 block|}
 name|expr_operator
