@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.15 1995/08/17 00:36:06 jkh Exp $"
+literal|"$Id: pen.c,v 1.16 1995/08/26 10:15:18 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,44 @@ argument_list|(
 name|Pen
 argument_list|,
 literal|"/tmp/instmp.XXXXXX"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|stat
+argument_list|(
+literal|"/usr/tmp"
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+name|SUCCESS
+operator||
+name|mkdir
+argument_list|(
+literal|"/usr/tmp"
+argument_list|,
+literal|01777
+argument_list|)
+operator|==
+name|SUCCESS
+operator|)
+operator|&&
+name|min_free
+argument_list|(
+literal|"/usr/tmp"
+argument_list|)
+operator|>=
+name|sz
+condition|)
+name|strcpy
+argument_list|(
+name|Pen
+argument_list|,
+literal|"/usr/tmp/instmp.XXXXXX"
 argument_list|)
 expr_stmt|;
 else|else
