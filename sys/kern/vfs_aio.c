@@ -11681,6 +11681,12 @@ operator|->
 name|jobstate
 operator|!=
 name|JOBST_JOBFINISHED
+operator|&&
+name|aiocbe
+operator|->
+name|jobstate
+operator|!=
+name|JOBST_JOBBFINISHED
 condition|)
 return|return
 operator|(
