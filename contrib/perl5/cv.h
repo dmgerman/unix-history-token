@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    cv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    cv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
-comment|/* This structure much match the beginning of XPVFM */
+comment|/* This structure much match XPVCV in B/C.pm and the beginning of XPVFM  * in sv.h  */
 end_comment
 
 begin_struct
@@ -28,7 +28,7 @@ name|IV
 name|xof_off
 decl_stmt|;
 comment|/* integer value */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -55,18 +55,16 @@ modifier|*
 name|xcv_root
 decl_stmt|;
 name|void
-argument_list|(
-argument|*xcv_xsub
-argument_list|)
-name|_
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|xcv_xsub
+function_decl|)
+parameter_list|(
+name|pTHXo_
 name|CV
-operator|*
-name|_CPERLproto
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|ANY
 name|xcv_xsubany
 decl_stmt|;
@@ -74,9 +72,9 @@ name|GV
 modifier|*
 name|xcv_gv
 decl_stmt|;
-name|GV
+name|char
 modifier|*
-name|xcv_filegv
+name|xcv_file
 decl_stmt|;
 name|long
 name|xcv_depth
@@ -112,6 +110,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* =for apidoc AmU||Nullcv Null CV pointer.  =for apidoc Am|HV*|CvSTASH|CV* cv Returns the stash of the CV.  =cut */
+end_comment
 
 begin_define
 define|#
@@ -183,11 +185,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|CvFILE
+parameter_list|(
+name|sv
+parameter_list|)
+value|((XPVCV*)SvANY(sv))->xcv_file
+end_define
+
+begin_define
+define|#
+directive|define
 name|CvFILEGV
 parameter_list|(
 name|sv
 parameter_list|)
-value|((XPVCV*)SvANY(sv))->xcv_filegv
+value|(gv_fetchfile(CvFILE(sv))
 end_define
 
 begin_define
@@ -352,6 +364,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CVf_LVALUE
+value|0x0100
+end_define
+
+begin_comment
+comment|/* CV return value can be used as lvalue */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CvCLONE
 parameter_list|(
 name|cv
@@ -439,6 +462,12 @@ parameter_list|)
 value|(CvFLAGS(cv)&= ~CVf_ANON)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_XSUB_OLDSTYLE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -468,6 +497,11 @@ name|cv
 parameter_list|)
 value|(CvFLAGS(cv)&= ~CVf_OLDSTYLE)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -587,6 +621,36 @@ parameter_list|(
 name|cv
 parameter_list|)
 value|(CvFLAGS(cv)&= ~CVf_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvLVALUE
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvFLAGS(cv)& CVf_LVALUE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvLVALUE_on
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvFLAGS(cv) |= CVf_LVALUE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CvLVALUE_off
+parameter_list|(
+name|cv
+parameter_list|)
+value|(CvFLAGS(cv)&= ~CVf_LVALUE)
 end_define
 
 begin_define

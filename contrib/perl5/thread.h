@@ -1,9 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|USE_THREADS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USE_ITHREADS
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
@@ -22,21 +30,154 @@ else|#
 directive|else
 end_else
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DJGPP
-end_ifndef
-
-begin_comment
-comment|/* POSIXish threads */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|OLD_PTHREADS_API
 end_ifdef
+
+begin_comment
+comment|/* Here be dragons. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DETACH
+parameter_list|(
+name|t
+parameter_list|)
+define|\
+value|STMT_START {						\ 	if (pthread_detach(&(t)->self)) {			\ 	    MUTEX_UNLOCK(&(t)->mutex);				\ 	    Perl_croak_nocontext("panic: DETACH");		\ 	}							\     } STMT_END
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERL_GET_CONTEXT
+value|Perl_get_context()
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERL_SET_CONTEXT
+parameter_list|(
+name|t
+parameter_list|)
+value|Perl_set_context((void*)t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_GETSPECIFIC_INT
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DJGPP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|pthread_addr_t
+value|any_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEED_PTHREAD_INIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE_JOINABLE
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__OPEN_VM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|pthread_addr_t
+value|void *
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|pthread_attr_init
+parameter_list|(
+name|a
+parameter_list|)
+value|pthread_attr_create(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ATTR_SETDETACHSTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|)
+value|pthread_setdetach_np(a,s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_create(t,a,s,d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_key_create
+parameter_list|(
+name|k
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_keycreate(k,(pthread_destructor_t)(d))
+end_define
 
 begin_define
 define|#
@@ -60,40 +201,53 @@ parameter_list|)
 value|pthread_mutexattr_setkind_np(a,t)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DJGPP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OPEN_VM
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
-name|pthread_key_create
+name|PTHREAD_ATTR_SETDETACHSTATE
 parameter_list|(
-name|k
+name|a
 parameter_list|,
-name|d
+name|s
 parameter_list|)
-value|pthread_keycreate(k,(pthread_destructor_t)(d))
+value|pthread_attr_setdetachstate(a,&(s))
 end_define
 
 begin_define
 define|#
 directive|define
 name|YIELD
-value|pthread_yield()
+value|pthread_yield(NULL)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DETACH
-parameter_list|(
-name|t
-parameter_list|)
-define|\
-value|STMT_START {				\ 	if (pthread_detach(&(t)->self)) {	\ 	    MUTEX_UNLOCK(&(t)->mutex);		\ 	    croak("panic: DETACH");		\ 	}					\     } STMT_END
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -114,31 +268,77 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_CREATE
+end_ifndef
+
 begin_comment
-comment|/* OLD_PTHREADS_API */
+comment|/* You are not supposed to pass NULL as the 2nd arg of PTHREAD_CREATE(). */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|PTHREAD_CREATE
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+value|pthread_create(t,&(a),s,d)
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_ATTR_SETDETACHSTATE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_ATTR_SETDETACHSTATE
+parameter_list|(
+name|a
+parameter_list|,
+name|s
+parameter_list|)
+value|pthread_attr_setdetachstate(a,s)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_CREATE_JOINABLE
+end_ifndef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PTHREADS_CREATED_JOINABLE
+name|OLD_PTHREAD_CREATE_JOINABLE
 end_ifdef
 
 begin_define
 define|#
 directive|define
-name|ATTR_JOINABLE
-value|PTHREAD_CREATE_JOINABLE
+name|PTHREAD_CREATE_JOINABLE
+value|OLD_PTHREAD_CREATE_JOINABLE
 end_define
 
 begin_else
@@ -146,30 +346,16 @@ else|#
 directive|else
 end_else
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PTHREAD_CREATE_UNDETACHED
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|ATTR_JOINABLE
-value|PTHREAD_CREATE_UNDETACHED
+name|PTHREAD_CREATE_JOINABLE
+value|0
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ATTR_JOINABLE
-value|PTHREAD_CREATE_JOINABLE
-end_define
+begin_comment
+comment|/* Panic?  No, guess. */
+end_comment
 
 begin_endif
 endif|#
@@ -203,7 +389,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {					\ 		*m = mutex_alloc();			\ 		if (*m) {				\ 			mutex_init(*m);			\ 		} else {				\ 			croak("panic: MUTEX_INIT");	\ 		}					\ 	} STMT_END
+value|STMT_START {						\ 	*m = mutex_alloc();					\ 	if (*m) {						\ 	    mutex_init(*m);					\ 	} else {						\ 	    Perl_croak_nocontext("panic: MUTEX_INIT");		\ 	}							\     } STMT_END
 end_define
 
 begin_define
@@ -234,7 +420,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {					\ 		mutex_free(*m);				\ 		*m = 0;					\ 	} STMT_END
+value|STMT_START {						\ 	mutex_free(*m);						\ 	*m = 0;							\     } STMT_END
 end_define
 
 begin_define
@@ -245,7 +431,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {					\ 		*c = condition_alloc();			\ 		if (*c) {				\ 			condition_init(*c);		\ 		} else {				\ 			croak("panic: COND_INIT");	\ 		}					\ 	} STMT_END
+value|STMT_START {						\ 	*c = condition_alloc();					\ 	if (*c) {						\ 	    condition_init(*c);					\ 	}							\ 	else {							\ 	    Perl_croak_nocontext("panic: COND_INIT");		\ 	}							\     } STMT_END
 end_define
 
 begin_define
@@ -288,7 +474,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {				\ 		condition_free(*c);		\ 		*c = 0;				\ 	} STMT_END
+value|STMT_START {						\ 	condition_free(*c);					\ 	*c = 0;							\     } STMT_END
 end_define
 
 begin_define
@@ -354,17 +540,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|SET_THR
+name|PERL_SET_CONTEXT
 parameter_list|(
-name|thr
+name|t
 parameter_list|)
-value|cthread_set_data(cthread_self(), thr)
+value|cthread_set_data(cthread_self(), t)
 end_define
 
 begin_define
 define|#
 directive|define
-name|THR
+name|PERL_GET_CONTEXT
 value|cthread_data(cthread_self())
 end_define
 
@@ -386,6 +572,7 @@ begin_define
 define|#
 directive|define
 name|ALLOC_THREAD_KEY
+value|NOOP
 end_define
 
 begin_define
@@ -416,6 +603,24 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|SCHED_YIELD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|YIELD
+value|SCHED_YIELD
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAS_SCHED_YIELD
 end_ifdef
 
@@ -437,12 +642,21 @@ directive|ifdef
 name|HAS_PTHREAD_YIELD
 end_ifdef
 
+begin_comment
+comment|/* pthread_yield(NULL) platforms are expected      * to have #defined YIELD for themselves. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|YIELD
 value|pthread_yield()
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -500,7 +714,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {						\ 	Zero((m), 1, perl_mutex);                               \  	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    croak("panic: MUTEX_INIT");				\     } STMT_END
+value|STMT_START {						\ 	Zero((m), 1, perl_mutex);                               \  	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    Perl_croak_nocontext("panic: MUTEX_INIT");		\     } STMT_END
 end_define
 
 begin_else
@@ -516,7 +730,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {						\ 	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    croak("panic: MUTEX_INIT");				\     } STMT_END
+value|STMT_START {						\ 	if (pthread_mutex_init((m), pthread_mutexattr_default))	\ 	    Perl_croak_nocontext("panic: MUTEX_INIT");		\     } STMT_END
 end_define
 
 begin_endif
@@ -532,7 +746,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_mutex_lock((m)))		\ 	    croak("panic: MUTEX_LOCK");		\     } STMT_END
+value|STMT_START {						\ 	if (pthread_mutex_lock((m)))				\ 	    Perl_croak_nocontext("panic: MUTEX_LOCK");		\     } STMT_END
 end_define
 
 begin_define
@@ -543,7 +757,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_mutex_unlock((m)))		\ 	    croak("panic: MUTEX_UNLOCK");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_mutex_unlock((m)))				\ 	    Perl_croak_nocontext("panic: MUTEX_UNLOCK");	\     } STMT_END
 end_define
 
 begin_define
@@ -554,7 +768,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_mutex_destroy((m)))		\ 	    croak("panic: MUTEX_DESTROY");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_mutex_destroy((m)))				\ 	    Perl_croak_nocontext("panic: MUTEX_DESTROY");	\     } STMT_END
 end_define
 
 begin_endif
@@ -580,7 +794,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {						\ 	if (pthread_cond_init((c), pthread_condattr_default))	\ 	    croak("panic: COND_INIT");				\     } STMT_END
+value|STMT_START {						\ 	if (pthread_cond_init((c), pthread_condattr_default))	\ 	    Perl_croak_nocontext("panic: COND_INIT");		\     } STMT_END
 end_define
 
 begin_define
@@ -591,7 +805,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_cond_signal((c)))		\ 	    croak("panic: COND_SIGNAL");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_cond_signal((c)))				\ 	    Perl_croak_nocontext("panic: COND_SIGNAL");		\     } STMT_END
 end_define
 
 begin_define
@@ -602,7 +816,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_cond_broadcast((c)))	\ 	    croak("panic: COND_BROADCAST");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_cond_broadcast((c)))			\ 	    Perl_croak_nocontext("panic: COND_BROADCAST");	\     } STMT_END
 end_define
 
 begin_define
@@ -615,7 +829,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_cond_wait((c), (m)))	\ 	    croak("panic: COND_WAIT");		\     } STMT_END
+value|STMT_START {						\ 	if (pthread_cond_wait((c), (m)))			\ 	    Perl_croak_nocontext("panic: COND_WAIT");		\     } STMT_END
 end_define
 
 begin_define
@@ -626,7 +840,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_cond_destroy((c)))		\ 	    croak("panic: COND_DESTROY");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_cond_destroy((c)))				\ 	    Perl_croak_nocontext("panic: COND_DESTROY");	\     } STMT_END
 end_define
 
 begin_endif
@@ -656,7 +870,7 @@ parameter_list|(
 name|t
 parameter_list|)
 define|\
-value|STMT_START {				\ 	if (pthread_detach((t)->self)) {	\ 	    MUTEX_UNLOCK(&(t)->mutex);		\ 	    croak("panic: DETACH");		\ 	}					\     } STMT_END
+value|STMT_START {						\ 	if (pthread_detach((t)->self)) {			\ 	    MUTEX_UNLOCK(&(t)->mutex);				\ 	    Perl_croak_nocontext("panic: DETACH");		\ 	}							\     } STMT_END
 end_define
 
 begin_endif
@@ -684,7 +898,7 @@ parameter_list|,
 name|avp
 parameter_list|)
 define|\
-value|STMT_START {					\ 	if (pthread_join((t)->self, (void**)(avp)))	\ 	    croak("panic: pthread_join");		\     } STMT_END
+value|STMT_START {						\ 	if (pthread_join((t)->self, (void**)(avp)))		\ 	    Perl_croak_nocontext("panic: pthread_join");	\     } STMT_END
 end_define
 
 begin_endif
@@ -699,18 +913,36 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SET_THR
+name|PERL_GET_CONTEXT
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SET_THR
+name|PERL_GET_CONTEXT
+value|pthread_getspecific(PL_thr_key)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PERL_SET_CONTEXT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PERL_SET_CONTEXT
 parameter_list|(
 name|t
 parameter_list|)
 define|\
-value|STMT_START {					\ 	if (pthread_setspecific(PL_thr_key, (void *) (t)))	\ 	    croak("panic: pthread_setspecific");	\     } STMT_END
+value|STMT_START {						\ 	if (pthread_setspecific(PL_thr_key, (void *)(t)))	\ 	    Perl_croak_nocontext("panic: pthread_setspecific");	\     } STMT_END
 end_define
 
 begin_endif
@@ -719,97 +951,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SET_THR */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|THR
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OLD_PTHREADS_API
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|perl_thread
-modifier|*
-name|getTHR
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|THR
-value|getTHR()
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|THR
-value|((struct perl_thread *) pthread_getspecific(PL_thr_key))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OLD_PTHREADS_API */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* THR */
-end_comment
-
-begin_comment
-comment|/*  * dTHR is performance-critical. Here, we only do the pthread_get_specific  * if there may be more than one thread in existence, otherwise we get thr  * from thrsv which is cached in the per-interpreter structure.  * Systems with very fast pthread_get_specific (which should be all systems  * but unfortunately isn't) may wish to simplify to "...*thr = THR".  *  * The use of PL_threadnum should be safe here.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|dTHR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|dTHR
-define|\
-value|struct perl_thread *thr = PL_threadnum? THR : (struct perl_thread*)SvPVX(PL_thrsv)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* dTHR */
+comment|/* PERL_SET_CONTEXT */
 end_comment
 
 begin_ifndef
@@ -831,18 +973,6 @@ name|INIT_THREADS
 value|pthread_init()
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INIT_THREADS
-value|NOOP
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -853,59 +983,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Accessor for per-thread SVs */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ALLOC_THREAD_KEY
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THREADSV
-parameter_list|(
-name|i
-parameter_list|)
-value|(thr->threadsvp[i])
-end_define
-
-begin_comment
-comment|/*  * LOCK_SV_MUTEX and UNLOCK_SV_MUTEX are performance-critical. Here, we  * try only locking them if there may be more than one thread in existence.  * Systems with very fast mutexes (and/or slow conditionals) may wish to  * remove the "if (threadnum) ..." test.  * XXX do NOT use C<if (PL_threadnum) ...> -- it sets up race conditions!  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_SV_MUTEX
+name|ALLOC_THREAD_KEY
 define|\
-value|STMT_START {				\ 	MUTEX_LOCK(&PL_sv_mutex);		\     } STMT_END
+value|STMT_START {						\ 	if (pthread_key_create(&PL_thr_key, 0))	{		\ 	    fprintf(stderr, "panic: pthread_key_create");	\ 	    exit(1);						\ 	}							\     } STMT_END
 end_define
 
-begin_define
-define|#
-directive|define
-name|UNLOCK_SV_MUTEX
-define|\
-value|STMT_START {				\ 	MUTEX_UNLOCK(&PL_sv_mutex);		\     } STMT_END
-end_define
-
-begin_comment
-comment|/* Likewise for strtab_mutex */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_STRTAB_MUTEX
-define|\
-value|STMT_START {				\ 	MUTEX_LOCK(&PL_strtab_mutex);	\     } STMT_END
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNLOCK_STRTAB_MUTEX
-define|\
-value|STMT_START {				\ 	MUTEX_UNLOCK(&PL_strtab_mutex);	\     } STMT_END
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -938,6 +1033,75 @@ end_endif
 begin_comment
 comment|/* THREAD_RET */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_THREADS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Accessor for per-thread SVs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THREADSV
+parameter_list|(
+name|i
+parameter_list|)
+value|(thr->threadsvp[i])
+end_define
+
+begin_comment
+comment|/*  * LOCK_SV_MUTEX and UNLOCK_SV_MUTEX are performance-critical. Here, we  * try only locking them if there may be more than one thread in existence.  * Systems with very fast mutexes (and/or slow conditionals) may wish to  * remove the "if (threadnum) ..." test.  * XXX do NOT use C<if (PL_threadnum) ...> -- it sets up race conditions!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCK_SV_MUTEX
+value|MUTEX_LOCK(&PL_sv_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_SV_MUTEX
+value|MUTEX_UNLOCK(&PL_sv_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_STRTAB_MUTEX
+value|MUTEX_LOCK(&PL_strtab_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_STRTAB_MUTEX
+value|MUTEX_UNLOCK(&PL_strtab_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCK_CRED_MUTEX
+value|MUTEX_LOCK(&PL_cred_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_CRED_MUTEX
+value|MUTEX_UNLOCK(&PL_cred_mutex)
+end_define
 
 begin_comment
 comment|/* Values and macros for thr->flags */
@@ -1015,7 +1179,7 @@ name|t
 parameter_list|,
 name|s
 parameter_list|)
-value|STMT_START {		\ 	(t)->flags&= ~THRf_STATE_MASK;		\ 	(t)->flags |= (s);			\ 	DEBUG_S(PerlIO_printf(PerlIO_stderr(),	\ 			      "thread %p set to state %d\n", (t), (s))); \     } STMT_END
+value|STMT_START {		\ 	(t)->flags&= ~THRf_STATE_MASK;		\ 	(t)->flags |= (s);			\ 	DEBUG_S(PerlIO_printf(Perl_debug_log,	\ 			      "thread %p set to state %d\n", (t), (s))); \     } STMT_END
 end_define
 
 begin_typedef
@@ -1084,14 +1248,29 @@ parameter_list|)
 value|((condpair_t *)(mg->mg_ptr))->owner
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
-comment|/* USE_THREADS is not defined */
+comment|/* USE_THREADS */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_THREADS || USE_ITHREADS */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUTEX_LOCK
+end_ifndef
 
 begin_define
 define|#
@@ -1102,6 +1281,17 @@ name|m
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUTEX_UNLOCK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1110,6 +1300,17 @@ parameter_list|(
 name|m
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUTEX_INIT
+end_ifndef
 
 begin_define
 define|#
@@ -1120,6 +1321,17 @@ name|m
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUTEX_DESTROY
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1128,6 +1340,17 @@ parameter_list|(
 name|m
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COND_INIT
+end_ifndef
 
 begin_define
 define|#
@@ -1138,6 +1361,17 @@ name|c
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COND_SIGNAL
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1147,6 +1381,17 @@ name|c
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COND_BROADCAST
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1155,6 +1400,17 @@ parameter_list|(
 name|c
 parameter_list|)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COND_WAIT
+end_ifndef
 
 begin_define
 define|#
@@ -1167,6 +1423,17 @@ name|m
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COND_DESTROY
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1176,11 +1443,33 @@ name|c
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_SV_MUTEX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LOCK_SV_MUTEX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UNLOCK_SV_MUTEX
+end_ifndef
 
 begin_define
 define|#
@@ -1188,11 +1477,33 @@ directive|define
 name|UNLOCK_SV_MUTEX
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_STRTAB_MUTEX
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LOCK_STRTAB_MUTEX
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UNLOCK_STRTAB_MUTEX
+end_ifndef
 
 begin_define
 define|#
@@ -1200,39 +1511,60 @@ directive|define
 name|UNLOCK_STRTAB_MUTEX
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCK_CRED_MUTEX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOCK_CRED_MUTEX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|UNLOCK_CRED_MUTEX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_CRED_MUTEX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* THR, SET_THR, and dTHR are there for compatibility with old versions */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|THR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|THR
-end_define
-
-begin_comment
-comment|/* Rats: if dTHR is just blank then the subsequent ";" throws an error */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIN32
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|dTHR
-value|extern int Perl___notused
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|dTHR
-value|extern int errno
+value|PERL_GET_THX
 end_define
 
 begin_endif
@@ -1240,14 +1572,62 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SET_THR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SET_THR
+parameter_list|(
+name|t
+parameter_list|)
+value|PERL_SET_THX(t)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* USE_THREADS */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|dTHR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|dTHR
+value|dNOOP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INIT_THREADS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INIT_THREADS
+value|NOOP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

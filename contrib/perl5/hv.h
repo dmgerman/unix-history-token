@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    hv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    hv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_typedef
@@ -84,7 +84,7 @@ name|IV
 name|xhv_keys
 decl_stmt|;
 comment|/* how many elements in the array */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -133,8 +133,12 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|STMT_START	{ \ 	register char *s_PeRlHaSh = str; \ 	register I32 i_PeRlHaSh = len; \ 	register U32 hash_PeRlHaSh = 0; \ 	while (i_PeRlHaSh--) \ 	    hash_PeRlHaSh = hash_PeRlHaSh * 33 + *s_PeRlHaSh++; \ 	(hash) = hash_PeRlHaSh; \     } STMT_END
+value|STMT_START	{ \ 	register const char *s_PeRlHaSh = str; \ 	register I32 i_PeRlHaSh = len; \ 	register U32 hash_PeRlHaSh = 0; \ 	while (i_PeRlHaSh--) \ 	    hash_PeRlHaSh = hash_PeRlHaSh * 33 + *s_PeRlHaSh++; \ 	(hash) = hash_PeRlHaSh + (hash_PeRlHaSh>>5); \     } STMT_END
 end_define
+
+begin_comment
+comment|/* =for apidoc AmU||HEf_SVKEY This flag, used in the length slot of hash entries and magic structures, specifies the structure contains a C<SV*> pointer where a C<char*> pointer is to be expected. (For information only--not to be used).  =for apidoc AmU||Nullhv Null HV pointer.  =for apidoc Am|char*|HvNAME|HV* stash Returns the package name of a stash.  See C<SvSTASH>, C<CvSTASH>.  =for apidoc Am|void*|HeKEY|HE* he Returns the actual pointer stored in the key slot of the hash entry. The pointer may be either C<char*> or C<SV*>, depending on the value of C<HeKLEN()>.  Can be assigned to.  The C<HePV()> or C<HeSVKEY()> macros are usually preferable for finding the value of a key.  =for apidoc Am|STRLEN|HeKLEN|HE* he If this is negative, and amounts to C<HEf_SVKEY>, it indicates the entry holds an C<SV*> key.  Otherwise, holds the actual length of the key.  Can be assigned to. The C<HePV()> macro is usually preferable for finding key lengths.  =for apidoc Am|SV*|HeVAL|HE* he Returns the value slot (type C<SV*>) stored in the hash entry.  =for apidoc Am|U32|HeHASH|HE* he Returns the computed hash stored in the hash entry.  =for apidoc Am|char*|HePV|HE* he|STRLEN len Returns the key slot of the hash entry as a C<char*> value, doing any necessary dereferencing of possibly C<SV*> keys.  The length of the string is placed in C<len> (this is a macro, so do I<not> use C<&len>).  If you do not care about what the length of the key is, you may use the global variable C<PL_na>, though this is rather less efficient than using a local variable.  Remember though, that hash keys in perl are free to contain embedded nulls, so using C<strlen()> or similar is not a good way to find the length of hash keys. This is very similar to the C<SvPV()> macro described elsewhere in this document.  =for apidoc Am|SV*|HeSVKEY|HE* he Returns the key as an C<SV*>, or C<Nullsv> if the hash entry does not contain an C<SV*> key.  =for apidoc Am|SV*|HeSVKEY_force|HE* he Returns the key as an C<SV*>.  Will create and return a temporary mortal C<SV*> if the hash entry contains only a C<char*> key.  =for apidoc Am|SV*|HeSVKEY_set|HE* he|SV* sv Sets the key to a given C<SV*>, taking care to set the appropriate flags to indicate the presence of an C<SV*> key, and returns the same C<SV*>.  =cut */
+end_comment
 
 begin_comment
 comment|/* these hash entry flags ride on hent_klen (for use only in magic/tied HVs) */
@@ -298,12 +302,6 @@ parameter_list|)
 value|(SvFLAGS(hv)&= ~SVphv_LAZYDEL)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OVERLOAD
-end_ifdef
-
 begin_comment
 comment|/* Maybe amagical: */
 end_comment
@@ -344,15 +342,6 @@ end_define
 
 begin_comment
 comment|/* #define HV_AMAGICbad(hv)     (SvFLAGS(hv)& SVpgv_badAM) #define HV_badAMAGIC_on(hv)  (SvFLAGS(hv) |= SVpgv_badAM) #define HV_badAMAGIC_off(hv) (SvFLAGS(hv)&= ~SVpgv_badAM) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OVERLOAD */
 end_comment
 
 begin_define
@@ -461,7 +450,7 @@ name|HeSVKEY_force
 parameter_list|(
 name|he
 parameter_list|)
-value|(HeKEY(he) ?				\ 				 ((HeKLEN(he) == HEf_SVKEY) ?		\ 				  HeKEY_sv(he) :			\ 				  sv_2mortal(newSVpv(HeKEY(he),		\ 						     HeKLEN(he)))) :	\&PL_sv_undef)
+value|(HeKEY(he) ?				\ 				 ((HeKLEN(he) == HEf_SVKEY) ?		\ 				  HeKEY_sv(he) :			\ 				  sv_2mortal(newSVpvn(HeKEY(he),	\ 						     HeKLEN(he)))) :	\&PL_sv_undef)
 end_define
 
 begin_define
@@ -519,6 +508,58 @@ name|hek
 parameter_list|)
 value|(hek)->hek_key
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STRANGE_MALLOC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MYMALLOC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PERL_HV_ARRAY_ALLOC_BYTES
+parameter_list|(
+name|size
+parameter_list|)
+value|((size) * sizeof(HE*))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MALLOC_OVERHEAD
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERL_HV_ARRAY_ALLOC_BYTES
+parameter_list|(
+name|size
+parameter_list|)
+define|\
+value|(((size)< 64)					\ 			 ? (size) * sizeof(HE*)				\ 			 : (size) * sizeof(HE*) * 2 - MALLOC_OVERHEAD)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

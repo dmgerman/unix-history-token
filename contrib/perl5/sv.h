@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    sv.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    sv.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_ifdef
@@ -23,6 +23,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* =for apidoc AmU||svtype An enum of flags for Perl types.  These are found in the file B<sv.h>  in the C<svtype> enum.  Test these flags with the C<SvTYPE> macro.  =for apidoc AmU||SVt_PV Pointer type flag for scalars.  See C<svtype>.  =for apidoc AmU||SVt_IV Integer type flag for scalars.  See C<svtype>.  =for apidoc AmU||SVt_NV Double type flag for scalars.  See C<svtype>.  =for apidoc AmU||SVt_PVMG Type flag for blessed scalars.  See C<svtype>.  =for apidoc AmU||SVt_PVAV Type flag for arrays.  See C<svtype>.  =for apidoc AmU||SVt_PVHV Type flag for hashes.  See C<svtype>.  =for apidoc AmU||SVt_PVCV Type flag for code refs.  See C<svtype>.  =cut */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -209,6 +213,10 @@ comment|/* what we are */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* =for apidoc Am|U32|SvREFCNT|SV* sv Returns the value of the object's reference count.  =for apidoc Am|SV*|SvREFCNT_inc|SV* sv Increments the reference count of the given SV.  =for apidoc Am|void|SvREFCNT_dec|SV* sv Decrements the reference count of the given SV.  =for apidoc Am|svtype|SvTYPE|SV* sv Returns the type of the SV.  See C<svtype>.  =for apidoc Am|void|SvUPGRADE|SV* sv|svtype type Used to upgrade an SV to a more complex form.  Uses C<sv_upgrade> to perform the upgrade if necessary.  See C<svtype>.  =cut */
+end_comment
 
 begin_define
 define|#
@@ -636,13 +644,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SVf_THINKFIRST
-value|(SVf_READONLY|SVf_ROK)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SVp_IOK
 value|0x01000000
 end_define
@@ -687,15 +688,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SVf_UTF8
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* SvPVX is UTF-8 encoded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVf_THINKFIRST
+value|(SVf_READONLY|SVf_ROK|SVf_FAKE|SVf_UTF8)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SVf_OK
 value|(SVf_IOK|SVf_NOK|SVf_POK|SVf_ROK| \ 			 SVp_IOK|SVp_NOK|SVp_POK)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OVERLOAD
-end_ifdef
 
 begin_define
 define|#
@@ -706,31 +719,6 @@ end_define
 
 begin_comment
 comment|/* has magical overloaded methods */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SVf_AMAGIC
-value|0
-end_define
-
-begin_comment
-comment|/* can be or-ed without effect */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* OVERLOAD */
 end_comment
 
 begin_define
@@ -744,12 +732,42 @@ begin_comment
 comment|/* Some private flags. */
 end_comment
 
+begin_comment
+comment|/* SVpad_OUR may be set on SVt_PV{NV,MG,GV} types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVpad_OUR
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* pad name is "our" instead of "my" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVf_IVisUV
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* use XPVUV instead of XPVIV */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SVpfm_COMPILED
 value|0x80000000
 end_define
+
+begin_comment
+comment|/* FORMLINE is compiled */
+end_comment
 
 begin_define
 define|#
@@ -764,6 +782,17 @@ directive|define
 name|SVpbm_TAIL
 value|0x40000000
 end_define
+
+begin_define
+define|#
+directive|define
+name|SVrepl_EVAL
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* Replacement part of s///e */
+end_comment
 
 begin_define
 define|#
@@ -785,6 +814,17 @@ end_define
 
 begin_comment
 comment|/* entry in xhv_eiter must be deleted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SVprv_WEAKREF
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Weak reference */
 end_comment
 
 begin_struct
@@ -892,7 +932,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -925,7 +965,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -964,7 +1004,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -1016,7 +1056,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -1073,7 +1113,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -1104,7 +1144,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This structure much match XPVCV */
+comment|/* This structure much match XPVCV in cv.h */
 end_comment
 
 begin_typedef
@@ -1135,7 +1175,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -1162,18 +1202,16 @@ modifier|*
 name|xcv_root
 decl_stmt|;
 name|void
-argument_list|(
-argument|*xcv_xsub
-argument_list|)
-name|_
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|xcv_xsub
+function_decl|)
+parameter_list|(
+name|pTHXo_
 name|CV
-operator|*
-name|_CPERLproto
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|ANY
 name|xcv_xsubany
 decl_stmt|;
@@ -1181,9 +1219,9 @@ name|GV
 modifier|*
 name|xcv_gv
 decl_stmt|;
-name|GV
+name|char
 modifier|*
-name|xcv_filegv
+name|xcv_file
 decl_stmt|;
 name|long
 name|xcv_depth
@@ -1245,7 +1283,7 @@ name|IV
 name|xiv_iv
 decl_stmt|;
 comment|/* integer value or pv offset */
-name|double
+name|NV
 name|xnv_nv
 decl_stmt|;
 comment|/* numeric value, if any */
@@ -1400,8 +1438,23 @@ begin_comment
 comment|/* slurped a pseudo-line from empty file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IOf_FAKE_DIRP
+value|64
+end_define
+
+begin_comment
+comment|/* xio_dirp is fake (source filters kludge) */
+end_comment
+
 begin_comment
 comment|/* The following macros define implementation-independent predicates on SVs. */
+end_comment
+
+begin_comment
+comment|/* =for apidoc Am|bool|SvNIOK|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  =for apidoc Am|bool|SvNIOKp|SV* sv Returns a boolean indicating whether the SV contains a number, integer or double.  Checks the B<private> setting.  Use C<SvNIOK>.  =for apidoc Am|void|SvNIOK_off|SV* sv Unsets the NV/IV status of an SV.  =for apidoc Am|bool|SvOK|SV* sv Returns a boolean indicating whether the value is an SV.  =for apidoc Am|bool|SvIOKp|SV* sv Returns a boolean indicating whether the SV contains an integer.  Checks the B<private> setting.  Use C<SvIOK>.  =for apidoc Am|bool|SvNOKp|SV* sv Returns a boolean indicating whether the SV contains a double.  Checks the B<private> setting.  Use C<SvNOK>.  =for apidoc Am|bool|SvPOKp|SV* sv Returns a boolean indicating whether the SV contains a character string. Checks the B<private> setting.  Use C<SvPOK>.  =for apidoc Am|bool|SvIOK|SV* sv Returns a boolean indicating whether the SV contains an integer.  =for apidoc Am|void|SvIOK_on|SV* sv Tells an SV that it is an integer.  =for apidoc Am|void|SvIOK_off|SV* sv Unsets the IV status of an SV.  =for apidoc Am|void|SvIOK_only|SV* sv Tells an SV that it is an integer and disables all other OK bits.  =for apidoc Am|bool|SvNOK|SV* sv Returns a boolean indicating whether the SV contains a double.  =for apidoc Am|void|SvNOK_on|SV* sv Tells an SV that it is a double.  =for apidoc Am|void|SvNOK_off|SV* sv Unsets the NV status of an SV.  =for apidoc Am|void|SvNOK_only|SV* sv Tells an SV that it is a double and disables all other OK bits.  =for apidoc Am|bool|SvPOK|SV* sv Returns a boolean indicating whether the SV contains a character string.  =for apidoc Am|void|SvPOK_on|SV* sv Tells an SV that it is a string.  =for apidoc Am|void|SvPOK_off|SV* sv Unsets the PV status of an SV.  =for apidoc Am|void|SvPOK_only|SV* sv Tells an SV that it is a string and disables all other OK bits.  =for apidoc Am|bool|SvOOK|SV* sv Returns a boolean indicating whether the SvIVX is a valid offset value for the SvPVX.  This hack is used internally to speed up removal of characters from the beginning of a SvPV.  When SvOOK is true, then the start of the allocated string buffer is really (SvPVX - SvIVX).  =for apidoc Am|bool|SvROK|SV* sv Tests if the SV is an RV.  =for apidoc Am|void|SvROK_on|SV* sv Tells an SV that it is an RV.  =for apidoc Am|void|SvROK_off|SV* sv Unsets the RV status of an SV.  =for apidoc Am|SV*|SvRV|SV* sv Dereferences an RV to return the SV.  =for apidoc Am|IV|SvIVX|SV* sv Returns the integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|UV|SvUVX|SV* sv Returns the unsigned integer which is stored in the SV, assuming SvIOK is true.  =for apidoc Am|NV|SvNVX|SV* sv Returns the double which is stored in the SV, assuming SvNOK is true.  =for apidoc Am|char*|SvPVX|SV* sv Returns a pointer to the string in the SV.  The SV must contain a string.  =for apidoc Am|STRLEN|SvCUR|SV* sv Returns the length of the string which is in the SV.  See C<SvLEN>.  =for apidoc Am|STRLEN|SvLEN|SV* sv Returns the size of the string buffer in the SV.  See C<SvCUR>.  =for apidoc Am|char*|SvEND|SV* sv Returns a pointer to the last character in the string which is in the SV. See C<SvCUR>.  Access the character as *(SvEND(sv)).  =for apidoc Am|HV*|SvSTASH|SV* sv Returns the stash of the SV.  =for apidoc Am|void|SvCUR_set|SV* sv|STRLEN len Set the length of the string which is in the SV.  See C<SvCUR>.  =cut */
 end_comment
 
 begin_define
@@ -1431,7 +1484,7 @@ name|SvNIOK_off
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvFLAGS(sv)&= ~(SVf_IOK|SVf_NOK| \ 						  SVp_IOK|SVp_NOK))
+value|(SvFLAGS(sv)&= ~(SVf_IOK|SVf_NOK| \ 						  SVp_IOK|SVp_NOK|SVf_IVisUV))
 end_define
 
 begin_define
@@ -1451,7 +1504,17 @@ name|SvOK_off
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvFLAGS(sv)&=	~(SVf_OK|SVf_AMAGIC),	\ 							SvOOK_off(sv))
+value|(SvFLAGS(sv)&=	~(SVf_OK|SVf_AMAGIC|	\ 						  SVf_IVisUV|SVf_UTF8),	\ 							SvOOK_off(sv))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvOK_off_exc_UV
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&=	~(SVf_OK|SVf_AMAGIC|	\ 						  SVf_UTF8),		\ 							SvOOK_off(sv))
 end_define
 
 begin_define
@@ -1481,7 +1544,7 @@ name|SvIOKp_on
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvOOK_off(sv), SvFLAGS(sv) |= SVp_IOK)
+value|((void)SvOOK_off(sv), SvFLAGS(sv) |= SVp_IOK)
 end_define
 
 begin_define
@@ -1541,7 +1604,7 @@ name|SvIOK_on
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvOOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
+value|((void)SvOOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
 end_define
 
 begin_define
@@ -1551,7 +1614,7 @@ name|SvIOK_off
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvFLAGS(sv)&= ~(SVf_IOK|SVp_IOK))
+value|(SvFLAGS(sv)&= ~(SVf_IOK|SVp_IOK|SVf_IVisUV))
 end_define
 
 begin_define
@@ -1561,7 +1624,67 @@ name|SvIOK_only
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
+value|((void)SvOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIOK_only_UV
+parameter_list|(
+name|sv
+parameter_list|)
+value|((void)SvOK_off_exc_UV(sv), \ 				    SvFLAGS(sv) |= (SVf_IOK|SVp_IOK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIOK_UV
+parameter_list|(
+name|sv
+parameter_list|)
+value|((SvFLAGS(sv)& (SVf_IOK|SVf_IVisUV))	\ 				 == (SVf_IOK|SVf_IVisUV))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIOK_notUV
+parameter_list|(
+name|sv
+parameter_list|)
+value|((SvFLAGS(sv)& (SVf_IOK|SVf_IVisUV))	\ 				 == SVf_IOK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIsUV
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)& SVf_IVisUV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIsUV_on
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv) |= SVf_IVisUV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvIsUV_off
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&= ~SVf_IVisUV)
 end_define
 
 begin_define
@@ -1601,7 +1724,37 @@ name|SvNOK_only
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
+value|((void)SvOK_off(sv), \ 				    SvFLAGS(sv) |= (SVf_NOK|SVp_NOK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvUTF8
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)& SVf_UTF8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvUTF8_on
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv) |= (SVf_UTF8))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvUTF8_off
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&= ~(SVf_UTF8))
 end_define
 
 begin_define
@@ -1641,7 +1794,17 @@ name|SvPOK_only
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvFLAGS(sv)&= ~(SVf_OK|SVf_AMAGIC),	\ 				    SvFLAGS(sv) |= (SVf_POK|SVp_POK))
+value|(SvFLAGS(sv)&= ~(SVf_OK|SVf_AMAGIC|	\ 						  SVf_IVisUV|SVf_UTF8),	\ 				    SvFLAGS(sv) |= (SVf_POK|SVp_POK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPOK_only_UTF8
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&= ~(SVf_OK|SVf_AMAGIC|	\ 						  SVf_IVisUV),		\ 				    SvFLAGS(sv) |= (SVf_POK|SVp_POK))
 end_define
 
 begin_define
@@ -1661,7 +1824,7 @@ name|SvOOK_on
 parameter_list|(
 name|sv
 parameter_list|)
-value|(SvIOK_off(sv), SvFLAGS(sv) |= SVf_OOK)
+value|((void)SvIOK_off(sv), SvFLAGS(sv) |= SVf_OOK)
 end_define
 
 begin_define
@@ -1854,12 +2017,6 @@ parameter_list|)
 value|(SvFLAGS(sv)&= ~SVs_RMG)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OVERLOAD
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1904,14 +2061,35 @@ parameter_list|)
 value|(PL_amagic_generation&& Gv_AMupdate(stash))
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SvWEAKREF
+parameter_list|(
+name|sv
+parameter_list|)
+value|((SvFLAGS(sv)& (SVf_ROK|SVprv_WEAKREF)) \ 				  == (SVf_ROK|SVprv_WEAKREF))
+end_define
 
-begin_comment
-comment|/* OVERLOAD */
-end_comment
+begin_define
+define|#
+directive|define
+name|SvWEAKREF_on
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv) |=  (SVf_ROK|SVprv_WEAKREF))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvWEAKREF_off
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&= ~(SVf_ROK|SVprv_WEAKREF))
+end_define
 
 begin_define
 define|#
@@ -2131,6 +2309,36 @@ parameter_list|(
 name|sv
 parameter_list|)
 value|(SvFLAGS(sv)&= ~SVpfm_COMPILED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvEVALED
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)& SVrepl_EVAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvEVALED_on
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv) |= SVrepl_EVAL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvEVALED_off
+parameter_list|(
+name|sv
+parameter_list|)
+value|(SvFLAGS(sv)&= ~SVrepl_EVAL)
 end_define
 
 begin_define
@@ -2681,6 +2889,10 @@ parameter_list|)
 value|((XPVIO*)  SvANY(sv))->xio_flags
 end_define
 
+begin_comment
+comment|/* =for apidoc Am|bool|SvTAINTED|SV* sv Checks to see if an SV is tainted. Returns TRUE if it is, FALSE if not.  =for apidoc Am|void|SvTAINTED_on|SV* sv Marks an SV as tainted.  =for apidoc Am|void|SvTAINTED_off|SV* sv Untaints an SV. Be I<very> careful with this routine, as it short-circuits some of Perl's fundamental security features. XS module authors should not use this function unless they fully understand all the implications of unconditionally untainting the value. Untainting should be done in the standard perl fashion, via a carefully crafted regexp, rather than directly untainting variables.  =for apidoc Am|void|SvTAINT|SV* sv Taints an SV if tainting is enabled  =cut */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2722,6 +2934,10 @@ define|\
 value|STMT_START {			\ 	if (PL_tainting) {		\ 	    dTHR;			\ 	    if (PL_tainted)		\ 		SvTAINTED_on(sv);	\ 	}				\     } STMT_END
 end_define
 
+begin_comment
+comment|/* =for apidoc Am|char*|SvPV_force|SV* sv|STRLEN len Like<SvPV> but will force the SV into becoming a string (SvPOK).  You want force if you are going to update the SvPVX directly.  =for apidoc Am|char*|SvPV|SV* sv|STRLEN len Returns a pointer to the string in the SV, or a stringified form of the SV if the SV does not contain a string.  Handles 'get' magic.  =for apidoc Am|char*|SvPV_nolen|SV* sv Returns a pointer to the string in the SV, or a stringified form of the SV if the SV does not contain a string.  Handles 'get' magic.  =for apidoc Am|IV|SvIV|SV* sv Coerces the given SV to an integer and returns it.  =for apidoc Am|NV|SvNV|SV* sv Coerce the given SV to a double and return it.  =for apidoc Am|UV|SvUV|SV* sv Coerces the given SV to an unsigned integer and returns it.  =for apidoc Am|bool|SvTRUE|SV* sv Returns a boolean indicating whether Perl would evaluate the SV as true or false, defined or undefined.  Does not handle 'get' magic.  =cut */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2744,6 +2960,156 @@ parameter_list|,
 name|lp
 parameter_list|)
 value|sv_pvn(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPV_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+value|sv_pv(sv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvutf8n_force(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvutf8n(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+value|sv_pvutf8(sv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvbyte_force(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvbyten(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+value|sv_pvbyte(sv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVx
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvn(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVx_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvn_force(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8x
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvutf8n(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8x_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvutf8n_force(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbytex
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvbyten(sv,&lp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbytex_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|sv_pvbyten_force(sv,&lp)
 end_define
 
 begin_define
@@ -2774,30 +3140,6 @@ parameter_list|(
 name|sv
 parameter_list|)
 value|sv_nv(sv)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SvPVx
-parameter_list|(
-name|sv
-parameter_list|,
-name|lp
-parameter_list|)
-value|sv_pvn(sv,&lp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SvPVx_force
-parameter_list|(
-name|sv
-parameter_list|,
-name|lp
-parameter_list|)
-value|sv_pvn_force(sv,&lp)
 end_define
 
 begin_define
@@ -2837,7 +3179,7 @@ name|SvUV
 parameter_list|(
 name|sv
 parameter_list|)
-value|SvIVx(sv)
+value|SvUVx(sv)
 end_define
 
 begin_define
@@ -2858,6 +3200,10 @@ end_ifndef
 
 begin_comment
 comment|/* redefine some things to more efficient inlined versions */
+end_comment
+
+begin_comment
+comment|/* Let us hope that bitmaps for UV and IV are the same */
 end_comment
 
 begin_undef
@@ -2924,7 +3270,7 @@ parameter_list|,
 name|lp
 parameter_list|)
 define|\
-value|(SvPOK(sv) ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_2pv(sv,&lp))
+value|((SvFLAGS(sv)& (SVf_POK)) == SVf_POK \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_2pv(sv,&lp))
 end_define
 
 begin_undef
@@ -2944,6 +3290,188 @@ name|lp
 parameter_list|)
 define|\
 value|((SvFLAGS(sv)& (SVf_POK|SVf_THINKFIRST)) == SVf_POK \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_pvn_force(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPV_nolen
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPV_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK)) == SVf_POK \      ? SvPVX(sv) : sv_2pv_nolen(sv))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK|SVf_UTF8) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_2pvutf8(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8_force
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_THINKFIRST)) == (SVf_POK|SVf_UTF8) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_pvutf8n_force(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8_nolen
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK|SVf_UTF8)\      ? SvPVX(sv) : sv_2pvutf8_nolen(sv))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK|SVf_UTF8) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_2pvutf8(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8_force
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_THINKFIRST)) == (SVf_POK|SVf_UTF8) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_pvutf8n_force(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8_nolen
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVutf8_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK|SVf_UTF8)\      ? SvPVX(sv) : sv_2pvutf8_nolen(sv))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVbyte
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_2pvbyte(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVbyte_force
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte_force
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8|SVf_THINKFIRST)) == (SVf_POK) \      ? ((lp = SvCUR(sv)), SvPVX(sv)) : sv_pvbyte_force(sv,&lp))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVbyte_nolen
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SvPVbyte_nolen
+parameter_list|(
+name|sv
+parameter_list|)
+define|\
+value|((SvFLAGS(sv)& (SVf_POK|SVf_UTF8)) == (SVf_POK)\      ? SvPVX(sv) : sv_2pvbyte_nolen(sv))
 end_define
 
 begin_ifdef
@@ -2974,6 +3502,18 @@ begin_undef
 undef|#
 directive|undef
 name|SvPVx
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8x
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVbytex
 end_undef
 
 begin_undef
@@ -3033,11 +3573,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|SvPVutf8x
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|({SV *nsv = (sv); SvPVutf8(nsv, lp); })
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbytex
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|({SV *nsv = (sv); SvPVbyte(nsv, lp); })
+end_define
+
+begin_define
+define|#
+directive|define
 name|SvTRUE
 parameter_list|(
 name|sv
 parameter_list|)
-value|(						\     !sv								\     ? 0								\     :    SvPOK(sv)						\ 	?   (({XPV *nxpv = (XPV*)SvANY(sv);			\ 	     nxpv&&						\ 	     (*nxpv->xpv_pv> '0' ||				\ 	      nxpv->xpv_cur> 1 ||				\ 	      (nxpv->xpv_cur&& *nxpv->xpv_pv != '0')); })	\ 	     ? 1						\ 	     : 0)						\ 	:							\ 	    SvIOK(sv)						\ 	    ? SvIVX(sv) != 0					\ 	    :   SvNOK(sv)					\ 		? SvNVX(sv) != 0.0				\ 		: sv_2bool(sv) )
+value|(						\     !sv								\     ? 0								\     :    SvPOK(sv)						\ 	?   (({XPV *nxpv = (XPV*)SvANY(sv);			\ 	     nxpv&&						\ 	     (nxpv->xpv_cur> 1 ||				\ 	      (nxpv->xpv_cur&& *nxpv->xpv_pv != '0')); })	\ 	     ? 1						\ 	     : 0)						\ 	:							\ 	    SvIOK(sv)						\ 	    ? SvIVX(sv) != 0					\ 	    :   SvNOK(sv)					\ 		? SvNVX(sv) != 0.0				\ 		: sv_2bool(sv) )
 end_define
 
 begin_define
@@ -3091,6 +3655,18 @@ begin_undef
 undef|#
 directive|undef
 name|SvPVx
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVutf8x
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|SvPVbytex
 end_undef
 
 begin_undef
@@ -3150,11 +3726,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|SvPVutf8x
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|((PL_Sv = (sv)), SvPVutf8(PL_Sv, lp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SvPVbytex
+parameter_list|(
+name|sv
+parameter_list|,
+name|lp
+parameter_list|)
+value|((PL_Sv = (sv)), SvPVbyte(PL_Sv, lp))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SvTRUE
 parameter_list|(
 name|sv
 parameter_list|)
-value|(						\     !sv								\     ? 0								\     :    SvPOK(sv)						\ 	?   ((PL_Xpv = (XPV*)SvANY(sv))&&			\ 	     (*PL_Xpv->xpv_pv> '0' ||				\ 	      PL_Xpv->xpv_cur> 1 ||				\ 	      (PL_Xpv->xpv_cur&& *PL_Xpv->xpv_pv != '0'))	\ 	     ? 1						\ 	     : 0)						\ 	:							\ 	    SvIOK(sv)						\ 	    ? SvIVX(sv) != 0					\ 	    :   SvNOK(sv)					\ 		? SvNVX(sv) != 0.0				\ 		: sv_2bool(sv) )
+value|(						\     !sv								\     ? 0								\     :    SvPOK(sv)						\ 	?   ((PL_Xpv = (XPV*)SvANY(sv))&&			\ 	     (PL_Xpv->xpv_cur> 1 ||				\ 	      (PL_Xpv->xpv_cur&& *PL_Xpv->xpv_pv != '0'))	\ 	     ? 1						\ 	     : 0)						\ 	:							\ 	    SvIOK(sv)						\ 	    ? SvIVX(sv) != 0					\ 	    :   SvNOK(sv)					\ 		? SvNVX(sv) != 0.0				\ 		: sv_2bool(sv) )
 end_define
 
 begin_define
@@ -3194,6 +3794,10 @@ begin_comment
 comment|/* !CRIPPLED_CC */
 end_comment
 
+begin_comment
+comment|/* =for apidoc Am|SV*|newRV_inc|SV* sv  Creates an RV wrapper for an SV.  The reference count for the original SV is incremented.  =cut */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3206,6 +3810,10 @@ end_define
 
 begin_comment
 comment|/* the following macros update any magic values this sv is associated with */
+end_comment
+
+begin_comment
+comment|/* =for apidoc Am|void|SvGETMAGIC|SV* sv Invokes C<mg_get> on an SV if it has 'get' magic.  This macro evaluates its argument more than once.  =for apidoc Am|void|SvSETMAGIC|SV* sv Invokes C<mg_set> on an SV if it has 'set' magic.  This macro evaluates its argument more than once.  =for apidoc Am|void|SvSetSV|SV* dsb|SV* ssv Calls C<sv_setsv> if dsv is not the same as ssv.  May evaluate arguments more than once.  =for apidoc Am|void|SvSetSV_nosteal|SV* dsv|SV* ssv Calls a non-destructive version of C<sv_setsv> if dsv is not the same as ssv. May evaluate arguments more than once.  =for apidoc Am|void|SvGROW|SV* sv|STRLEN len Expands the character buffer in the SV so that it has room for the indicated number of bytes (remember to reserve space for an extra trailing NUL character).  Calls C<sv_grow> to perform the expansion if necessary.  Returns a pointer to the character buffer.  =cut */
 end_comment
 
 begin_define
@@ -3314,6 +3922,12 @@ define|\
 value|SvSetSV_nosteal_and(dst,src,SvSETMAGIC(dst))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUGGING
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -3323,6 +3937,26 @@ name|sv
 parameter_list|)
 value|sv_peek(sv)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SvPEEK
+parameter_list|(
+name|sv
+parameter_list|)
+value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -3354,12 +3988,6 @@ parameter_list|)
 value|(SvTYPE(sv) == SVt_PVGV)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DOSISH
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -3378,48 +4006,6 @@ directive|define
 name|Sv_Grow
 value|sv_grow
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* extra parentheses intentionally NOT placed around "len"! */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SvGROW
-parameter_list|(
-name|sv
-parameter_list|,
-name|len
-parameter_list|)
-value|((SvLEN(sv)< (unsigned long)len) \ 		? sv_grow(sv,(unsigned long)len) : SvPVX(sv))
-end_define
-
-begin_define
-define|#
-directive|define
-name|Sv_Grow
-parameter_list|(
-name|sv
-parameter_list|,
-name|len
-parameter_list|)
-value|sv_grow(sv,(unsigned long)(len))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DOSISH */
-end_comment
 
 end_unit
 

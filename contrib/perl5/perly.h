@@ -1,4 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_CORE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -282,128 +288,158 @@ end_define
 begin_define
 define|#
 directive|define
-name|OROP
+name|MYSUB
 value|297
 end_define
 
 begin_define
 define|#
 directive|define
-name|ANDOP
+name|COLONATTR
 value|298
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOTOP
+name|PREC_LOW
 value|299
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASSIGNOP
+name|OROP
 value|300
 end_define
 
 begin_define
 define|#
 directive|define
-name|OROR
+name|ANDOP
 value|301
 end_define
 
 begin_define
 define|#
 directive|define
-name|ANDAND
+name|NOTOP
 value|302
 end_define
 
 begin_define
 define|#
 directive|define
-name|BITOROP
+name|ASSIGNOP
 value|303
 end_define
 
 begin_define
 define|#
 directive|define
-name|BITANDOP
+name|OROR
 value|304
 end_define
 
 begin_define
 define|#
 directive|define
-name|SHIFTOP
+name|ANDAND
 value|305
 end_define
 
 begin_define
 define|#
 directive|define
-name|MATCHOP
+name|BITOROP
 value|306
 end_define
 
 begin_define
 define|#
 directive|define
-name|UMINUS
+name|BITANDOP
 value|307
 end_define
 
 begin_define
 define|#
 directive|define
-name|REFGEN
+name|SHIFTOP
 value|308
 end_define
 
 begin_define
 define|#
 directive|define
-name|POWOP
+name|MATCHOP
 value|309
 end_define
 
 begin_define
 define|#
 directive|define
-name|PREINC
+name|UMINUS
 value|310
 end_define
 
 begin_define
 define|#
 directive|define
-name|PREDEC
+name|REFGEN
 value|311
 end_define
 
 begin_define
 define|#
 directive|define
-name|POSTINC
+name|POWOP
 value|312
 end_define
 
 begin_define
 define|#
 directive|define
-name|POSTDEC
+name|PREINC
 value|313
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARROW
+name|PREDEC
 value|314
 end_define
+
+begin_define
+define|#
+directive|define
+name|POSTINC
+value|315
+end_define
+
+begin_define
+define|#
+directive|define
+name|POSTDEC
+value|316
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARROW
+value|317
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PERL_CORE */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -428,13 +464,6 @@ block|}
 name|YYSTYPE
 typedef|;
 end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|YYSTYPE
-name|yylval
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

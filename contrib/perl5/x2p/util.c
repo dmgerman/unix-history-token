@@ -916,7 +916,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE_CC__
+argument_list|)
+end_if
+
 begin_function
+name|__private_extern__
+comment|/* warn() conflicts with libc */
+endif|#
+directive|endif
 name|void
 name|warn
 parameter_list|(

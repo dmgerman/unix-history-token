@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    perl.c  *  *    Copyright (c) 1987-1999 Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    perl.c  *  *    Copyright (c) 1987-2000 Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -13,6 +13,12 @@ directive|include
 file|"EXTERN.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|PERL_IN_PERL_C
+end_define
+
 begin_include
 include|#
 directive|include
@@ -24,6 +30,10 @@ include|#
 directive|include
 file|"patchlevel.h"
 end_include
+
+begin_comment
+comment|/* for local_patches */
+end_comment
 
 begin_comment
 comment|/* XXX If this causes problems, set i_unistd=undef in the hint file.  */
@@ -62,19 +72,16 @@ name|HAS_GETENV_PROTOTYPE
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|getenv
-name|_
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Usually in<stdlib.h> */
@@ -85,39 +92,24 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_FCNTL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|I_SYS_FILE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function_decl
+specifier|static
+name|I32
+name|read_e_script
+parameter_list|(
+name|pTHXo_
+name|int
+name|idx
+parameter_list|,
+name|SV
+modifier|*
+name|buf_sv
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -181,353 +173,102 @@ directive|ifdef
 name|PERL_OBJECT
 end_ifdef
 
-begin_decl_stmt
-specifier|static
-name|I32
-name|read_e_script
-name|_
+begin_define
+define|#
+directive|define
+name|perl_construct
+value|Perl_construct
+end_define
+
+begin_define
+define|#
+directive|define
+name|perl_parse
+value|Perl_parse
+end_define
+
+begin_define
+define|#
+directive|define
+name|perl_run
+value|Perl_run
+end_define
+
+begin_define
+define|#
+directive|define
+name|perl_destruct
+value|Perl_destruct
+end_define
+
+begin_define
+define|#
+directive|define
+name|perl_free
+value|Perl_free
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|(
-name|CPerlObj
-operator|*
-name|pPerl
-operator|,
-name|int
-name|idx
-operator|,
-name|SV
-operator|*
-name|buf_sv
-operator|,
-name|int
-name|maxlen
-operator|)
+name|USE_THREADS
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+end_if
+
+begin_define
+define|#
+directive|define
+name|INIT_TLS_AND_INTERP
+define|\
+value|STMT_START {				\ 	if (!PL_curinterp) {			\ 	    PERL_SET_INTERP(my_perl);		\ 	    INIT_THREADS;			\ 	    ALLOC_THREAD_KEY;			\ 	}					\     } STMT_END
+end_define
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|void
-name|find_beginning
-name|_
+begin_if
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|(
-name|void
-operator|)
+name|USE_ITHREADS
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+end_if
 
-begin_decl_stmt
-specifier|static
-name|void
-name|forbid_setid
-name|_
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|INIT_TLS_AND_INTERP
+define|\
+value|STMT_START {				\ 	if (!PL_curinterp) {			\ 	    PERL_SET_INTERP(my_perl);		\ 	    INIT_THREADS;			\ 	    ALLOC_THREAD_KEY;			\ 	    PERL_SET_THX(my_perl);		\ 	    OP_REFCNT_INIT;			\ 	}					\ 	else {					\ 	    PERL_SET_THX(my_perl);		\ 	}					\     } STMT_END
+end_define
 
-begin_decl_stmt
-specifier|static
-name|void
-name|incpush
-name|_
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_else
+else|#
+directive|else
+end_else
 
-begin_decl_stmt
-specifier|static
-name|void
-name|init_interp
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_ids
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_debugger
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_lexer
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_main_stash
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_THREADS
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|perl_thread
-modifier|*
-name|init_main_thread
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|INIT_TLS_AND_INTERP
+define|\
+value|STMT_START {				\ 	if (!PL_curinterp) {			\ 	    PERL_SET_INTERP(my_perl);		\ 	}					\ 	PERL_SET_THX(my_perl);			\     } STMT_END
+end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* USE_THREADS */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_perllib
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_postdump_symbols
-name|_
-argument_list|(
-operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
-operator|,
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_predump_symbols
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|my_exit_jump
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|noreturn
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|nuke_stacks
-name|_
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|open_script
-name|_
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|bool
-operator|,
-name|SV
-operator|*
-operator|,
-name|int
-operator|*
-name|fd
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|usage
-name|_
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IAMSUID
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|fd_on_nosuid_fs
-name|_
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|validate_suid
-name|_
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|I32
-name|read_e_script
-name|_
-argument_list|(
-operator|(
-name|int
-name|idx
-operator|,
-name|SV
-operator|*
-name|buf_sv
-operator|,
-name|int
-name|maxlen
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -537,47 +278,73 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PERL_OBJECT
+name|PERL_IMPLICIT_SYS
 end_ifdef
 
 begin_function
-name|CPerlObj
+name|PerlInterpreter
 modifier|*
-name|perl_alloc
+name|perl_alloc_using
 parameter_list|(
+name|struct
 name|IPerlMem
 modifier|*
 name|ipM
 parameter_list|,
+name|struct
+name|IPerlMem
+modifier|*
+name|ipMS
+parameter_list|,
+name|struct
+name|IPerlMem
+modifier|*
+name|ipMP
+parameter_list|,
+name|struct
 name|IPerlEnv
 modifier|*
 name|ipE
 parameter_list|,
+name|struct
 name|IPerlStdIO
 modifier|*
 name|ipStd
 parameter_list|,
+name|struct
 name|IPerlLIO
 modifier|*
 name|ipLIO
 parameter_list|,
+name|struct
 name|IPerlDir
 modifier|*
 name|ipD
 parameter_list|,
+name|struct
 name|IPerlSock
 modifier|*
 name|ipS
 parameter_list|,
+name|struct
 name|IPerlProc
 modifier|*
 name|ipP
 parameter_list|)
 block|{
-name|CPerlObj
+name|PerlInterpreter
 modifier|*
-name|pPerl
-init|=
+name|my_perl
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PERL_OBJECT
+name|my_perl
+operator|=
+operator|(
+name|PerlInterpreter
+operator|*
+operator|)
 name|new
 argument_list|(
 argument|ipM
@@ -586,6 +353,10 @@ name|CPerlObj
 argument_list|(
 name|ipM
 argument_list|,
+name|ipMS
+argument_list|,
+name|ipMP
+argument_list|,
 name|ipE
 argument_list|,
 name|ipStd
@@ -598,20 +369,84 @@ name|ipS
 argument_list|,
 name|ipP
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|pPerl
-operator|!=
-name|NULL
-condition|)
-name|pPerl
-operator|->
-name|Init
-argument_list|()
 expr_stmt|;
+name|INIT_TLS_AND_INTERP
+expr_stmt|;
+else|#
+directive|else
+comment|/* New() needs interpreter, so call malloc() instead */
+name|my_perl
+operator|=
+operator|(
+name|PerlInterpreter
+operator|*
+operator|)
+call|(
+modifier|*
+name|ipM
+operator|->
+name|pMalloc
+call|)
+argument_list|(
+name|ipM
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|PerlInterpreter
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|INIT_TLS_AND_INTERP
+expr_stmt|;
+name|Zero
+argument_list|(
+name|my_perl
+argument_list|,
+literal|1
+argument_list|,
+name|PerlInterpreter
+argument_list|)
+expr_stmt|;
+name|PL_Mem
+operator|=
+name|ipM
+expr_stmt|;
+name|PL_MemShared
+operator|=
+name|ipMS
+expr_stmt|;
+name|PL_MemParse
+operator|=
+name|ipMP
+expr_stmt|;
+name|PL_Env
+operator|=
+name|ipE
+expr_stmt|;
+name|PL_StdIO
+operator|=
+name|ipStd
+expr_stmt|;
+name|PL_LIO
+operator|=
+name|ipLIO
+expr_stmt|;
+name|PL_Dir
+operator|=
+name|ipD
+expr_stmt|;
+name|PL_Sock
+operator|=
+name|ipS
+expr_stmt|;
+name|PL_Proc
+operator|=
+name|ipP
+expr_stmt|;
+endif|#
+directive|endif
 return|return
-name|pPerl
+name|my_perl
 return|;
 block|}
 end_function
@@ -620,6 +455,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* =for apidoc perl_alloc  Allocates a new Perl interpreter.  See L<perlembed>.  =cut */
+end_comment
 
 begin_function
 name|PerlInterpreter
@@ -631,17 +470,28 @@ parameter_list|)
 block|{
 name|PerlInterpreter
 modifier|*
-name|sv_interp
+name|my_perl
 decl_stmt|;
-name|PL_curinterp
+comment|/* New() needs interpreter, so call malloc() instead */
+name|my_perl
 operator|=
-literal|0
-expr_stmt|;
-name|New
+operator|(
+name|PerlInterpreter
+operator|*
+operator|)
+name|PerlMem_malloc
 argument_list|(
-literal|53
-argument_list|,
-name|sv_interp
+sizeof|sizeof
+argument_list|(
+name|PerlInterpreter
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|INIT_TLS_AND_INTERP
+expr_stmt|;
+name|Zero
+argument_list|(
+name|my_perl
 argument_list|,
 literal|1
 argument_list|,
@@ -649,7 +499,7 @@ name|PerlInterpreter
 argument_list|)
 expr_stmt|;
 return|return
-name|sv_interp
+name|my_perl
 return|;
 block|}
 end_function
@@ -660,94 +510,66 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* PERL_OBJECT */
+comment|/* PERL_IMPLICIT_SYS */
 end_comment
 
-begin_expr_stmt
+begin_comment
+comment|/* =for apidoc perl_construct  Initializes a new Perl interpreter.  See L<perlembed>.  =cut */
+end_comment
+
+begin_function
 name|void
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-name|CPerlObj
-operator|::
 name|perl_construct
-argument_list|(
-argument|void
-argument_list|)
-else|#
-directive|else
-name|perl_construct
-argument_list|(
-argument|register PerlInterpreter *sv_interp
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|pTHXx
+parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
 name|USE_THREADS
 name|int
 name|i
-block|;
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|FAKE_THREADS
-block|struct
+name|struct
 name|perl_thread
-operator|*
+modifier|*
 name|thr
-block|;
+init|=
+name|NULL
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* FAKE_THREADS */
 endif|#
 directive|endif
 comment|/* USE_THREADS */
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-if|if
-condition|(
-operator|!
-operator|(
-name|PL_curinterp
-operator|=
-name|sv_interp
-operator|)
-condition|)
-return|return;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|MULTIPLICITY
-operator|++
-name|PL_ninterps
+name|init_interp
+argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Zero
-argument_list|(
-name|sv_interp
-argument_list|,
+name|PL_perl_destruct_level
+operator|=
 literal|1
-argument_list|,
-name|PerlInterpreter
-argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
+else|#
+directive|else
+if|if
+condition|(
+name|PL_perl_destruct_level
+operator|>
+literal|0
+condition|)
+name|init_interp
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* Init the real globals (and main thread)? */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -757,42 +579,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-name|INIT_THREADS
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ALLOC_THREAD_KEY
-name|ALLOC_THREAD_KEY
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|pthread_key_create
-argument_list|(
-operator|&
-name|PL_thr_key
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-name|croak
-argument_list|(
-literal|"panic: pthread_key_create"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|MUTEX_INIT
 argument_list|(
 operator|&
 name|PL_sv_mutex
-argument_list|)
-expr_stmt|;
-name|MUTEX_INIT
-argument_list|(
-operator|&
-name|PL_cred_mutex
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Safe to use basic SV functions from now on (though 	 * not things like mortals or tainting yet). 	 */
@@ -832,6 +622,12 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EMULATE_ATOMIC_REFCOUNTS */
+name|MUTEX_INIT
+argument_list|(
+operator|&
+name|PL_cred_mutex
+argument_list|)
+expr_stmt|;
 name|thr
 operator|=
 name|init_main_thread
@@ -840,6 +636,25 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_THREADS */
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|PL_protect
+operator|=
+name|MEMBER_TO_FPTR
+argument_list|(
+name|Perl_default_protect
+argument_list|)
+expr_stmt|;
+comment|/* for exceptions */
+endif|#
+directive|endif
+name|PL_curcop
+operator|=
+operator|&
+name|PL_compiling
+expr_stmt|;
+comment|/* needed by ckWARN, right away */
 name|PL_linestr
 operator|=
 name|NEWSV
@@ -971,7 +786,7 @@ else|#
 directive|else
 name|PL_sighandlerp
 operator|=
-name|sighandler
+name|Perl_sighandler
 expr_stmt|;
 endif|#
 directive|endif
@@ -1003,21 +818,15 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_if
-
-begin_expr_stmt
 name|PL_nrs
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|"\n"
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_rs
 operator|=
 name|SvREFCNT_inc
@@ -1025,345 +834,285 @@ argument_list|(
 name|PL_nrs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|init_stacks
-argument_list|(
-name|ARGS
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIPLICITY
-end_ifdef
-
-begin_expr_stmt
-name|init_interp
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_perl_destruct_level
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|if
-condition|(
-name|PL_perl_destruct_level
-operator|>
-literal|0
-condition|)
-name|init_interp
-argument_list|()
-expr_stmt|;
-end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_expr_stmt
 name|init_ids
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_lex_state
 operator|=
 name|LEX_NOTPARSING
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_start_env
-operator|.
-name|je_prev
-operator|=
-name|NULL
+name|JMPENV_BOOTSTRAP
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_start_env
-operator|.
-name|je_ret
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_start_env
-operator|.
-name|je_mustcatch
-operator|=
-name|TRUE
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_top_env
-operator|=
-operator|&
-name|PL_start_env
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|STATUS_ALL_SUCCESS
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|init_i18nl10n
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|SET_NUMERIC_STANDARD
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+block|{
+name|U8
+modifier|*
+name|s
+decl_stmt|;
+name|PL_patchlevel
+operator|=
+name|NEWSV
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|SvUPGRADE
+argument_list|(
+name|PL_patchlevel
+argument_list|,
+name|SVt_PVNV
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PERL_REVISION
+operator|>
+literal|127
+operator|||
+name|PERL_VERSION
+operator|>
+literal|127
+operator|||
+name|PERL_SUBVERSION
+operator|>
+literal|127
+condition|)
+name|SvGROW
+argument_list|(
+name|PL_patchlevel
+argument_list|,
+name|UTF8_MAXLEN
+operator|*
+literal|3
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+operator|(
+name|U8
+operator|*
+operator|)
+name|SvPVX
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|UV
+operator|)
+name|PERL_REVISION
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|UV
+operator|)
+name|PERL_VERSION
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|uv_to_utf8
+argument_list|(
+name|s
+argument_list|,
+operator|(
+name|UV
+operator|)
+name|PERL_SUBVERSION
+argument_list|)
+expr_stmt|;
+operator|*
+name|s
+operator|=
+literal|'\0'
+expr_stmt|;
+name|SvCUR_set
+argument_list|(
+name|PL_patchlevel
+argument_list|,
+name|s
+operator|-
+operator|(
+name|U8
+operator|*
+operator|)
+name|SvPVX
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|SvPOK_on
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
+name|SvNVX
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+operator|=
+operator|(
+name|NV
+operator|)
+name|PERL_REVISION
+operator|+
+operator|(
+operator|(
+name|NV
+operator|)
+name|PERL_VERSION
+operator|/
+operator|(
+name|NV
+operator|)
+literal|1000
+operator|)
 if|#
 directive|if
 name|defined
 argument_list|(
-name|SUBVERSION
+name|PERL_SUBVERSION
 argument_list|)
 operator|&&
-name|SUBVERSION
+name|PERL_SUBVERSION
 operator|>
 literal|0
-end_if
-
-begin_expr_stmt
-name|sprintf
-argument_list|(
-name|PL_patchlevel
-argument_list|,
-literal|"%7.5f"
-argument_list|,
-operator|(
-name|double
-operator|)
-literal|5
 operator|+
 operator|(
 operator|(
-name|double
+name|NV
 operator|)
-name|PATCHLEVEL
+name|PERL_SUBVERSION
 operator|/
 operator|(
-name|double
+name|NV
 operator|)
-literal|1000
+literal|1000000
 operator|)
-operator|+
-operator|(
-operator|(
-name|double
-operator|)
-name|SUBVERSION
-operator|/
-operator|(
-name|double
-operator|)
-literal|100000
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|sprintf
-argument_list|(
-name|PL_patchlevel
-argument_list|,
-literal|"%5.3f"
-argument_list|,
-operator|(
-name|double
-operator|)
-literal|5
-operator|+
-operator|(
-operator|(
-name|double
-operator|)
-name|PATCHLEVEL
-operator|/
-operator|(
-name|double
-operator|)
-literal|1000
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+expr_stmt|;
+name|SvNOK_on
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
+comment|/* dual valued */
+name|SvUTF8_on
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
+name|SvREADONLY_on
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
 argument_list|(
 name|LOCAL_PATCH_COUNT
 argument_list|)
-end_if
-
-begin_expr_stmt
 name|PL_localpatches
 operator|=
 name|local_patches
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* For possible -v */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|PerlIO_init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Hook to IO system */
-end_comment
-
-begin_expr_stmt
 name|PL_fdpid
 operator|=
 name|newAV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* for remembering popen pids by fd */
-end_comment
-
-begin_expr_stmt
 name|PL_modglobal
 operator|=
 name|newHV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* pointers to per-interpreter module globals */
-end_comment
-
-begin_macro
-name|DEBUG
-argument_list|(
-argument|{ 	New(
-literal|51
-argument|,PL_debname,
-literal|128
-argument|,char); 	New(
-literal|52
-argument|,PL_debdelim,
-literal|128
-argument|,char);     }
-argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ENTER
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_ifdef
-unit|}  void
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-end_ifdef
+begin_comment
+comment|/* =for apidoc perl_destruct  Shuts down a Perl interpreter.  See L<perlembed>.  =cut */
+end_comment
 
-begin_expr_stmt
-name|CPerlObj
-operator|::
+begin_function
+name|void
 name|perl_destruct
-argument_list|(
-argument|void
-argument_list|)
-else|#
-directive|else
-name|perl_destruct
-argument_list|(
-argument|register PerlInterpreter *sv_interp
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|pTHXx
+parameter_list|)
 block|{
 name|dTHR
-block|;
+expr_stmt|;
 name|int
 name|destruct_level
-block|;
+decl_stmt|;
 comment|/* 0=none, 1=full, 2=full with checks */
 name|I32
 name|last_sv_count
-block|;
+decl_stmt|;
 name|HV
-operator|*
+modifier|*
 name|hv
-block|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_THREADS
 name|Thread
 name|t
-block|;
+decl_stmt|;
+name|dTHX
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_THREADS */
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-if|if
-condition|(
-operator|!
-operator|(
-name|PL_curinterp
-operator|=
-name|sv_interp
-operator|)
-condition|)
-return|return;
-endif|#
-directive|endif
+comment|/* wait for all pseudo-forked children to finish */
+name|PERL_WAIT_FOR_CHILDREN
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_THREADS
@@ -1372,22 +1121,18 @@ directive|ifndef
 name|FAKE_THREADS
 comment|/* Pass 1 on any remaining threads: detach joinables, join zombies */
 name|retry_cleanup
-operator|:
+label|:
 name|MUTEX_LOCK
 argument_list|(
 operator|&
 name|PL_threads_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: waiting for %d threads...\n"
 argument_list|,
@@ -1397,9 +1142,6 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|t
@@ -1446,8 +1188,7 @@ name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: joining zombie %p\n"
 argument_list|,
@@ -1501,8 +1242,7 @@ name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: joined zombie %p OK\n"
 argument_list|,
@@ -1520,8 +1260,7 @@ name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: detaching thread %p\n"
 argument_list|,
@@ -1564,8 +1303,7 @@ name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: ignoring %p (state %u)\n"
 argument_list|,
@@ -1589,17 +1327,8 @@ expr_stmt|;
 comment|/* fall through and out */
 block|}
 block|}
-end_for
-
-begin_comment
 comment|/* We leave the above "Pass 1" loop with threads_mutex still locked */
-end_comment
-
-begin_comment
 comment|/* Pass 2 on remaining threads: wait for the thread count to drop to one */
-end_comment
-
-begin_while
 while|while
 condition|(
 name|PL_nthreads
@@ -1611,8 +1340,7 @@ name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: final wait for %d threads\n"
 argument_list|,
@@ -1632,85 +1360,48 @@ name|PL_threads_mutex
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_comment
 comment|/* At this point, we're the last thread */
-end_comment
-
-begin_expr_stmt
 name|MUTEX_UNLOCK
 argument_list|(
 operator|&
 name|PL_threads_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|DEBUG_S
 argument_list|(
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"perl_destruct: armageddon has arrived\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|PL_threads_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|COND_DESTROY
 argument_list|(
 operator|&
 name|PL_nthreads_cond
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* !defined(FAKE_THREADS) */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* USE_THREADS */
-end_comment
-
-begin_expr_stmt
 name|destruct_level
 operator|=
 name|PL_perl_destruct_level
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-end_ifdef
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1718,12 +1409,14 @@ name|s
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|s
 operator|=
 name|PerlEnv_getenv
 argument_list|(
 literal|"PERL_DESTRUCT_LEVEL"
 argument_list|)
+operator|)
 condition|)
 block|{
 name|int
@@ -1746,49 +1439,14 @@ name|i
 expr_stmt|;
 block|}
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|LEAVE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|FREETMPS
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MULTIPLICITY
-end_ifdef
-
-begin_expr_stmt
-operator|--
-name|PL_ninterps
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* We must account for everything.  */
-end_comment
-
-begin_comment
 comment|/* Destroy the main CV and syntax tree */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|PL_main_root
@@ -1811,109 +1469,58 @@ operator|=
 name|Nullop
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|PL_curcop
 operator|=
 operator|&
 name|PL_compiling
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_main_start
 operator|=
 name|Nullop
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_main_cv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_main_cv
 operator|=
 name|Nullcv
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+name|PL_dirty
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|PL_sv_objcount
 condition|)
 block|{
 comment|/* 	 * Try to destruct global references.  We do this first so that the 	 * destructors and destructees still exist.  Some sv's might remain. 	 * Non-referenced objects are on their own. 	 */
-name|PL_dirty
-operator|=
-name|TRUE
-expr_stmt|;
 name|sv_clean_objs
 argument_list|()
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* unhook hooks which will soon be, or use, destroyed data */
-end_comment
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_warnhook
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_warnhook
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_diehook
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_diehook
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SvREFCNT_dec
-argument_list|(
-name|PL_parsehook
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_parsehook
-operator|=
-name|Nullsv
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* call exit list functions */
-end_comment
-
-begin_while
 while|while
 condition|(
 name|PL_exitlistlen
@@ -1928,20 +1535,14 @@ index|]
 operator|.
 name|fn
 argument_list|(
-argument|PERL_OBJECT_THIS_ PL_exitlist[PL_exitlistlen].ptr
+argument|aTHXo_ PL_exitlist[PL_exitlistlen].ptr
 argument_list|)
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_exitlist
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|destruct_level
@@ -1958,13 +1559,7 @@ expr_stmt|;
 comment|/* The exit() function will do everything that needs doing. */
 return|return;
 block|}
-end_if
-
-begin_comment
 comment|/* loosen bonds of global variables */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|PL_rsfp
@@ -1983,146 +1578,76 @@ operator|=
 name|Nullfp
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* Filters for program text */
-end_comment
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_rsfp_filters
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_rsfp_filters
 operator|=
 name|Nullav
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* switches */
-end_comment
-
-begin_expr_stmt
 name|PL_preprocess
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_minus_n
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_minus_p
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_minus_l
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_minus_a
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_minus_F
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_doswitches
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_dowarn
 operator|=
-name|FALSE
+name|G_WARN_OFF
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_doextract
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_sawampersand
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* must save all match strings */
-end_comment
-
-begin_expr_stmt
-name|PL_sawstudy
-operator|=
-name|FALSE
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* do fbm_instr on all strings */
-end_comment
-
-begin_expr_stmt
-name|PL_sawvec
-operator|=
-name|FALSE
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_unsafe
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_inplace
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_inplace
 operator|=
 name|Nullch
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+name|SvREFCNT_dec
+argument_list|(
+name|PL_patchlevel
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PL_e_script
@@ -2138,346 +1663,550 @@ operator|=
 name|Nullsv
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* magical thingies */
-end_comment
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_ofs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* $, */
-end_comment
-
-begin_expr_stmt
 name|PL_ofs
 operator|=
 name|Nullch
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_ors
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* $\ */
-end_comment
-
-begin_expr_stmt
 name|PL_ors
 operator|=
 name|Nullch
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_rs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* $/ */
-end_comment
-
-begin_expr_stmt
 name|PL_rs
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_nrs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* $/ helper */
-end_comment
-
-begin_expr_stmt
 name|PL_nrs
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_multiline
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* $* */
-end_comment
-
-begin_expr_stmt
+name|Safefree
+argument_list|(
+name|PL_osname
+argument_list|)
+expr_stmt|;
+comment|/* $^O */
+name|PL_osname
+operator|=
+name|Nullch
+expr_stmt|;
 name|SvREFCNT_dec
 argument_list|(
 name|PL_statname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_statname
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_statgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* defgv, aka *_ should be taken care of elsewhere */
-end_comment
-
-begin_comment
 comment|/* clean up after study() */
-end_comment
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_lastscream
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_lastscream
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_screamfirst
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_screamfirst
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_screamnext
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_screamnext
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+comment|/* float buffer */
+name|Safefree
+argument_list|(
+name|PL_efloatbuf
+argument_list|)
+expr_stmt|;
+name|PL_efloatbuf
+operator|=
+name|Nullch
+expr_stmt|;
+name|PL_efloatsize
+operator|=
+literal|0
+expr_stmt|;
 comment|/* startup and shutdown function lists */
-end_comment
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_beginav
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_endav
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|SvREFCNT_dec
+argument_list|(
+name|PL_checkav
+argument_list|)
+expr_stmt|;
 name|SvREFCNT_dec
 argument_list|(
 name|PL_initav
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_beginav
 operator|=
 name|Nullav
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_endav
 operator|=
 name|Nullav
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|PL_checkav
+operator|=
+name|Nullav
+expr_stmt|;
 name|PL_initav
 operator|=
 name|Nullav
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* shortcuts just get cleared */
-end_comment
-
-begin_expr_stmt
 name|PL_envgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_siggv
-operator|=
-name|Nullgv
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_incgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_hintgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_errgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_argvgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_argvoutgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_stdingv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|PL_stderrgv
+operator|=
+name|Nullgv
+expr_stmt|;
 name|PL_last_in_gv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_replgv
 operator|=
 name|Nullgv
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+name|PL_debstash
+operator|=
+name|Nullhv
+expr_stmt|;
 comment|/* reset so print() ends up where we expect */
-end_comment
-
-begin_expr_stmt
 name|setdefout
 argument_list|(
 name|Nullgv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+name|SvREFCNT_dec
+argument_list|(
+name|PL_argvout_stack
+argument_list|)
+expr_stmt|;
+name|PL_argvout_stack
+operator|=
+name|Nullav
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_modglobal
+argument_list|)
+expr_stmt|;
+name|PL_modglobal
+operator|=
+name|Nullhv
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_preambleav
+argument_list|)
+expr_stmt|;
+name|PL_preambleav
+operator|=
+name|Nullav
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_subname
+argument_list|)
+expr_stmt|;
+name|PL_subname
+operator|=
+name|Nullsv
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_linestr
+argument_list|)
+expr_stmt|;
+name|PL_linestr
+operator|=
+name|Nullsv
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_pidstatus
+argument_list|)
+expr_stmt|;
+name|PL_pidstatus
+operator|=
+name|Nullhv
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_toptarget
+argument_list|)
+expr_stmt|;
+name|PL_toptarget
+operator|=
+name|Nullsv
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_bodytarget
+argument_list|)
+expr_stmt|;
+name|PL_bodytarget
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_formtarget
+operator|=
+name|Nullsv
+expr_stmt|;
+comment|/* free locale stuff */
+ifdef|#
+directive|ifdef
+name|USE_LOCALE_COLLATE
+name|Safefree
+argument_list|(
+name|PL_collation_name
+argument_list|)
+expr_stmt|;
+name|PL_collation_name
+operator|=
+name|Nullch
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LOCALE_NUMERIC
+name|Safefree
+argument_list|(
+name|PL_numeric_name
+argument_list|)
+expr_stmt|;
+name|PL_numeric_name
+operator|=
+name|Nullch
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* clear utf8 character classes */
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_alnum
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_alnumc
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_ascii
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_alpha
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_space
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_cntrl
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_graph
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_digit
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_upper
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_lower
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_print
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_punct
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_xdigit
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_mark
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_toupper
+argument_list|)
+expr_stmt|;
+name|SvREFCNT_dec
+argument_list|(
+name|PL_utf8_tolower
+argument_list|)
+expr_stmt|;
+name|PL_utf8_alnum
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_alnumc
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_ascii
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_alpha
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_space
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_cntrl
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_graph
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_digit
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_upper
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_lower
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_print
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_punct
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_xdigit
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_mark
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_toupper
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_totitle
+operator|=
+name|Nullsv
+expr_stmt|;
+name|PL_utf8_tolower
+operator|=
+name|Nullsv
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|specialWARN
+argument_list|(
+name|PL_compiling
+operator|.
+name|cop_warnings
+argument_list|)
+condition|)
+name|SvREFCNT_dec
+argument_list|(
+name|PL_compiling
+operator|.
+name|cop_warnings
+argument_list|)
+expr_stmt|;
+name|PL_compiling
+operator|.
+name|cop_warnings
+operator|=
+name|Nullsv
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_ITHREADS
+name|SvREFCNT_dec
+argument_list|(
+name|CopFILEGV
+argument_list|(
+operator|&
+name|PL_compiling
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|CopFILEGV_set
+argument_list|(
+operator|&
+name|PL_compiling
+argument_list|,
+name|Nullgv
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Prepare to destruct main symbol table.  */
-end_comment
-
-begin_expr_stmt
 name|hv
 operator|=
 name|PL_defstash
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_defstash
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|hv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|SvREFCNT_dec
+argument_list|(
+name|PL_curstname
+argument_list|)
+expr_stmt|;
+name|PL_curstname
+operator|=
+name|Nullsv
+expr_stmt|;
+comment|/* clear queued errors */
+name|SvREFCNT_dec
+argument_list|(
+name|PL_errors
+argument_list|)
+expr_stmt|;
+name|PL_errors
+operator|=
+name|Nullsv
+expr_stmt|;
 name|FREETMPS
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|destruct_level
 operator|>=
 literal|2
+operator|&&
+name|ckWARN_d
+argument_list|(
+name|WARN_INTERNAL
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2486,32 +2215,30 @@ name|PL_scopestack_ix
 operator|!=
 literal|0
 condition|)
-name|warn
+name|Perl_warner
 argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Unbalanced scopes: %ld more ENTERs than LEAVEs\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|PL_scopestack_ix
+argument|(long)PL_scopestack_ix
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|PL_savestack_ix
 operator|!=
 literal|0
 condition|)
-name|warn
+name|Perl_warner
 argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Unbalanced saves: %ld more saves than restores\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|PL_savestack_ix
+argument|(long)PL_savestack_ix
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|PL_tmps_floor
@@ -2519,18 +2246,16 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|warn
+name|Perl_warner
 argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Unbalanced tmps: %ld more allocs than frees\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|PL_tmps_floor
-operator|+
+argument|(long)PL_tmps_floor +
 literal|1
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|cxstack_ix
@@ -2538,33 +2263,30 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|warn
+name|Perl_warner
 argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Unbalanced context: %ld more PUSHes than POPs\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|cxstack_ix
-operator|+
+argument|(long)cxstack_ix +
 literal|1
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* Now absolutely destruct everything, somehow or other, loops or no. */
-end_comment
-
-begin_expr_stmt
 name|last_sv_count
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|SvFLAGS
+argument_list|(
+name|PL_fdpid
+argument_list|)
+operator||=
+name|SVTYPEMASK
+expr_stmt|;
+comment|/* don't clean out pid table now */
 name|SvFLAGS
 argument_list|(
 name|PL_strtab
@@ -2572,13 +2294,7 @@ argument_list|)
 operator||=
 name|SVTYPEMASK
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* don't clean out strtab now */
-end_comment
-
-begin_while
 while|while
 condition|(
 name|PL_sv_count
@@ -2598,9 +2314,21 @@ name|sv_clean_all
 argument_list|()
 expr_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
+name|SvFLAGS
+argument_list|(
+name|PL_fdpid
+argument_list|)
+operator|&=
+operator|~
+name|SVTYPEMASK
+expr_stmt|;
+name|SvFLAGS
+argument_list|(
+name|PL_fdpid
+argument_list|)
+operator||=
+name|SVt_PVAV
+expr_stmt|;
 name|SvFLAGS
 argument_list|(
 name|PL_strtab
@@ -2609,9 +2337,6 @@ operator|&=
 operator|~
 name|SVTYPEMASK
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvFLAGS
 argument_list|(
 name|PL_strtab
@@ -2619,13 +2344,23 @@ argument_list|)
 operator||=
 name|SVt_PVHV
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
+name|AvREAL_off
+argument_list|(
+name|PL_fdpid
+argument_list|)
+expr_stmt|;
+comment|/* no surviving entries */
+name|SvREFCNT_dec
+argument_list|(
+name|PL_fdpid
+argument_list|)
+expr_stmt|;
+comment|/* needed in io_close() */
+name|PL_fdpid
+operator|=
+name|Nullav
+expr_stmt|;
 comment|/* Destruct the global string table. */
-end_comment
-
-begin_block
 block|{
 comment|/* Yell and reset the HeVAL() slots that are still holding refcounts, 	 * so that sv_free() won't fail on them. 	 */
 name|I32
@@ -2677,25 +2412,24 @@ block|{
 if|if
 condition|(
 name|hent
+operator|&&
+name|ckWARN_d
+argument_list|(
+name|WARN_INTERNAL
+argument_list|)
 condition|)
 block|{
-name|warn
+name|Perl_warner
 argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Unbalanced string table refcount: (%d) for \"%s\""
 argument_list|,
-name|HeVAL
-argument_list|(
-name|hent
-argument_list|)
-operator|-
-name|Nullsv
+argument|HeVAL(hent) - Nullsv
 argument_list|,
-name|HeKEY
-argument_list|(
-name|hent
+argument|HeKEY(hent)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|HeVAL
 argument_list|(
 name|hent
@@ -2735,84 +2469,134 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_strtab
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+comment|/* free special SVs */
+name|SvREFCNT
+argument_list|(
+operator|&
+name|PL_sv_yes
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|sv_clear
+argument_list|(
+operator|&
+name|PL_sv_yes
+argument_list|)
+expr_stmt|;
+name|SvANY
+argument_list|(
+operator|&
+name|PL_sv_yes
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+name|SvFLAGS
+argument_list|(
+operator|&
+name|PL_sv_yes
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|SvREFCNT
+argument_list|(
+operator|&
+name|PL_sv_no
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|sv_clear
+argument_list|(
+operator|&
+name|PL_sv_no
+argument_list|)
+expr_stmt|;
+name|SvANY
+argument_list|(
+operator|&
+name|PL_sv_no
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+name|SvFLAGS
+argument_list|(
+operator|&
+name|PL_sv_no
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|SvREFCNT
+argument_list|(
+operator|&
+name|PL_sv_undef
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|SvREADONLY_off
+argument_list|(
+operator|&
+name|PL_sv_undef
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PL_sv_count
 operator|!=
 literal|0
-condition|)
-name|warn
+operator|&&
+name|ckWARN_d
 argument_list|(
+name|WARN_INTERNAL
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Scalars leaked: %ld\n"
 argument_list|,
-operator|(
-name|long
-operator|)
-name|PL_sv_count
+argument|(long)PL_sv_count
 argument_list|)
-expr_stmt|;
-end_if
-
-begin_expr_stmt
+empty_stmt|;
 name|sv_free_arenas
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* No SVs have survived, need to clean out */
-end_comment
-
-begin_expr_stmt
-name|PL_linestr
-operator|=
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|PL_pidstatus
-operator|=
-name|Nullhv
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_origfilename
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|Safefree
-argument_list|(
-name|PL_archpat_auto
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_reg_start_tmp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+if|if
+condition|(
+name|PL_reg_curpm
+condition|)
+name|Safefree
+argument_list|(
+name|PL_reg_curpm
+argument_list|)
+expr_stmt|;
+name|Safefree
+argument_list|(
+name|PL_reg_poscache
+argument_list|)
+expr_stmt|;
 name|Safefree
 argument_list|(
 name|HeKEY_hek
@@ -2822,122 +2606,71 @@ name|PL_hv_fetch_ent_mh
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_op_mask
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|nuke_stacks
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_hints
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Reset hints. Should hints be per-interpreter ? */
-end_comment
-
-begin_expr_stmt
 name|DEBUG_P
 argument_list|(
 name|debprofdump
 argument_list|()
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-end_ifdef
-
-begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|PL_strtab_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|PL_sv_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MUTEX_DESTROY
-argument_list|(
-operator|&
-name|PL_cred_mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|PL_eval_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|MUTEX_DESTROY
+argument_list|(
+operator|&
+name|PL_cred_mutex
+argument_list|)
+expr_stmt|;
 name|COND_DESTROY
 argument_list|(
 operator|&
 name|PL_eval_cond
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|EMULATE_ATOMIC_REFCOUNTS
-end_ifdef
-
-begin_expr_stmt
 name|MUTEX_DESTROY
 argument_list|(
 operator|&
 name|PL_svref_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* EMULATE_ATOMIC_REFCOUNTS */
-end_comment
-
-begin_comment
 comment|/* As the penultimate thing, free the non-arena SV for thrsv */
-end_comment
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|SvPVX
@@ -2946,9 +2679,6 @@ name|PL_thrsv
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|SvANY
@@ -2957,37 +2687,19 @@ name|PL_thrsv
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Safefree
 argument_list|(
 name|PL_thrsv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_thrsv
 operator|=
 name|Nullsv
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* USE_THREADS */
-end_comment
-
-begin_comment
 comment|/* As the absolutely last thing, free the non-arena SV for mess() */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|PL_mess_sv
@@ -3067,6 +2779,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* we know that type>= SVt_PV */
+operator|(
+name|void
+operator|)
 name|SvOOK_off
 argument_list|(
 name|PL_mess_sv
@@ -3098,89 +2813,86 @@ operator|=
 name|Nullsv
 expr_stmt|;
 block|}
-end_if
+block|}
+end_function
 
-begin_ifdef
-unit|}  void
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-end_ifdef
+begin_comment
+comment|/* =for apidoc perl_free  Releases a Perl interpreter.  See L<perlembed>.  =cut */
+end_comment
 
-begin_expr_stmt
-name|CPerlObj
-operator|::
+begin_function
+name|void
 name|perl_free
-argument_list|(
-argument|void
-argument_list|)
-else|#
-directive|else
-name|perl_free
-argument_list|(
-argument|PerlInterpreter *sv_interp
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|pTHXx
+parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PERL_OBJECT
-name|Safefree
+argument_list|)
+name|PerlMem_free
 argument_list|(
 name|this
 argument_list|)
-block|;
+expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|!
-operator|(
-name|PL_curinterp
-operator|=
-name|sv_interp
-operator|)
-condition|)
-return|return;
-name|Safefree
+if|#
+directive|if
+name|defined
 argument_list|(
-name|sv_interp
+name|PERL_IMPLICIT_SYS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+name|void
+modifier|*
+name|host
+init|=
+name|w32_internal_host
+decl_stmt|;
+name|PerlMem_free
+argument_list|(
+name|aTHXx
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|}  void
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-end_ifdef
-
-begin_expr_stmt
-name|CPerlObj
-operator|::
-name|perl_atexit
+name|win32_delete_internal_host
 argument_list|(
-argument|void (*fn) (CPerlObj*,void *)
-argument_list|,
-argument|void *ptr
+name|host
 argument_list|)
+expr_stmt|;
 else|#
 directive|else
-name|perl_atexit
+name|PerlMem_free
 argument_list|(
-argument|void (*fn) (void *)
-argument_list|,
-argument|void *ptr
+name|aTHXx
 argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+block|}
+end_function
+
+begin_function
+name|void
+name|Perl_call_atexit
+parameter_list|(
+name|pTHX_
+name|ATEXIT_t
+name|fn
+parameter_list|,
+name|void
+modifier|*
+name|ptr
+parameter_list|)
 block|{
 name|Renew
 argument_list|(
@@ -3192,7 +2904,7 @@ literal|1
 argument_list|,
 name|PerlExitListEntry
 argument_list|)
-block|;
+expr_stmt|;
 name|PL_exitlist
 index|[
 name|PL_exitlistlen
@@ -3201,7 +2913,7 @@ operator|.
 name|fn
 operator|=
 name|fn
-block|;
+expr_stmt|;
 name|PL_exitlist
 index|[
 name|PL_exitlistlen
@@ -3210,91 +2922,56 @@ operator|.
 name|ptr
 operator|=
 name|ptr
-block|;
+expr_stmt|;
 operator|++
 name|PL_exitlistlen
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* =for apidoc perl_parse  Tells a Perl interpreter to parse a Perl script.  See L<perlembed>.  =cut */
+end_comment
+
+begin_function
 name|int
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-name|CPerlObj
-operator|::
 name|perl_parse
-argument_list|(
-argument|void (*xsinit) (CPerlObj*)
-argument_list|,
-argument|int argc
-argument_list|,
-argument|char **argv
-argument_list|,
-argument|char **env
-argument_list|)
-else|#
-directive|else
-name|perl_parse
-argument_list|(
-argument|PerlInterpreter *sv_interp
-argument_list|,
-argument|void (*xsinit) (void)
-argument_list|,
-argument|int argc
-argument_list|,
-argument|char **argv
-argument_list|,
-argument|char **env
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|pTHXx_
+name|XSINIT_t
+name|xsinit
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|env
+parameter_list|)
 block|{
 name|dTHR
-block|;
-specifier|register
-name|SV
-operator|*
-name|sv
-block|;
-specifier|register
-name|char
-operator|*
-name|s
-block|;
-name|char
-operator|*
-name|scriptname
-operator|=
-name|NULL
-block|;
-name|VOL
-name|bool
-name|dosearch
-operator|=
-name|FALSE
-block|;
-name|char
-operator|*
-name|validarg
-operator|=
-literal|""
-block|;
+expr_stmt|;
 name|I32
 name|oldscope
-block|;
-name|AV
-operator|*
-name|comppadlist
-block|;
-name|dJMPENV
-block|;
+decl_stmt|;
 name|int
 name|ret
-block|;
-name|int
-name|fdscript
-operator|=
-operator|-
-literal|1
-block|;
+decl_stmt|;
+name|dJMPENV
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+name|dTHX
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|SETUID_SCRIPTS_ARE_SECURE_NOW
@@ -3304,43 +2981,34 @@ name|IAMSUID
 undef|#
 directive|undef
 name|IAMSUID
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"suidperl is no longer needed since the kernel can now execute\n\ setuid perl scripts securely.\n"
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-if|if
-condition|(
-operator|!
-operator|(
-name|PL_curinterp
-operator|=
-name|sv_interp
-operator|)
-condition|)
-return|return
-literal|255
-return|;
 endif|#
 directive|endif
 if|#
 directive|if
 name|defined
 argument_list|(
-name|NeXT
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
 name|__DYNAMIC__
 argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|NeXT
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NeXT__
+argument_list|)
+operator|)
 name|_dyld_lookup_and_bind
 argument_list|(
 literal|"__environ"
@@ -3356,54 +3024,27 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* environ */
-end_comment
-
-begin_expr_stmt
 name|PL_origargv
 operator|=
 name|argv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_origargc
 operator|=
 name|argc
 expr_stmt|;
-end_expr_stmt
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|VMS
-end_ifndef
-
-begin_comment
 comment|/* VMS doesn't have environ array */
-end_comment
-
-begin_expr_stmt
 name|PL_origenviron
 operator|=
 name|environ
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
 if|if
 condition|(
 name|PL_do_undump
@@ -3446,9 +3087,6 @@ return|return
 literal|0
 return|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|PL_main_root
@@ -3471,60 +3109,94 @@ operator|=
 name|Nullop
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|PL_main_start
 operator|=
 name|Nullop
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_main_cv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_main_cv
 operator|=
 name|Nullcv
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|time
 argument_list|(
 operator|&
 name|PL_basetime
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|oldscope
 operator|=
 name|PL_scopestack_ix
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+name|PL_dowarn
+operator|=
+name|G_WARN_OFF
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|CALLPROTECT
+argument_list|(
+argument|aTHX_ pcur_env
+argument_list|,
+argument|&ret
+argument_list|,
+argument|MEMBER_TO_FPTR(S_vparse_body)
+argument_list|,
+argument|env
+argument_list|,
+argument|xsinit
+argument_list|)
+empty_stmt|;
+else|#
+directive|else
 name|JMPENV_PUSH
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_switch
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ret
 condition|)
 block|{
+case|case
+literal|0
+case|:
+ifndef|#
+directive|ifndef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|parse_body
+argument_list|(
+name|env
+argument_list|,
+name|xsinit
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|PL_checkav
+condition|)
+name|call_list
+argument_list|(
+name|oldscope
+argument_list|,
+name|PL_checkav
+argument_list|)
+expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+break|break;
 case|case
 literal|1
 case|:
@@ -3551,40 +3223,175 @@ name|PL_defstash
 expr_stmt|;
 if|if
 condition|(
-name|PL_endav
+name|PL_checkav
 condition|)
 name|call_list
 argument_list|(
 name|oldscope
 argument_list|,
-name|PL_endav
+name|PL_checkav
 argument_list|)
 expr_stmt|;
-name|JMPENV_POP
-expr_stmt|;
-return|return
+name|ret
+operator|=
 name|STATUS_NATIVE_EXPORT
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|3
 case|:
-name|JMPENV_POP
-expr_stmt|;
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_error_log
 argument_list|,
 literal|"panic: top_env\n"
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|1
+expr_stmt|;
+break|break;
+block|}
+name|JMPENV_POP
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
-end_switch
+end_function
 
-begin_expr_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+end_ifdef
+
+begin_function
+name|STATIC
+name|void
+modifier|*
+name|S_vparse_body
+parameter_list|(
+name|pTHX_
+name|va_list
+name|args
+parameter_list|)
+block|{
+name|char
+modifier|*
+modifier|*
+name|env
+init|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|char
+operator|*
+operator|*
+argument_list|)
+decl_stmt|;
+name|XSINIT_t
+name|xsinit
+init|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|XSINIT_t
+argument_list|)
+decl_stmt|;
+return|return
+name|parse_body
+argument_list|(
+name|env
+argument_list|,
+name|xsinit
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|STATIC
+name|void
+modifier|*
+name|S_parse_body
+parameter_list|(
+name|pTHX_
+name|char
+modifier|*
+modifier|*
+name|env
+parameter_list|,
+name|XSINIT_t
+name|xsinit
+parameter_list|)
+block|{
+name|dTHR
+expr_stmt|;
+name|int
+name|argc
+init|=
+name|PL_origargc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+init|=
+name|PL_origargv
+decl_stmt|;
+name|char
+modifier|*
+name|scriptname
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|fdscript
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|VOL
+name|bool
+name|dosearch
+init|=
+name|FALSE
+decl_stmt|;
+name|char
+modifier|*
+name|validarg
+init|=
+literal|""
+decl_stmt|;
+name|AV
+modifier|*
+name|comppadlist
+decl_stmt|;
+specifier|register
+name|SV
+modifier|*
+name|sv
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|char
+modifier|*
+name|cddir
+init|=
+name|Nullch
+decl_stmt|;
 name|sv_setpvn
 argument_list|(
 name|PL_linestr
@@ -3594,39 +3401,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sv
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|""
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* first used for -I flags */
-end_comment
-
-begin_expr_stmt
 name|SAVEFREESV
 argument_list|(
 name|sv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|init_main_stash
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|argc
@@ -3707,6 +3499,26 @@ operator|*
 name|s
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+ifdef|#
+directive|ifdef
+name|WIN32
+name|win32_argv2utf8
+argument_list|(
+name|argc
+operator|-
+literal|1
+argument_list|,
+name|argv
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* FALL THROUGH */
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|PERL_STRICT_CR
@@ -3770,16 +3582,24 @@ case|case
 literal|'v'
 case|:
 case|case
+literal|'W'
+case|:
+case|case
+literal|'X'
+case|:
+case|case
 literal|'w'
 case|:
 if|if
 condition|(
+operator|(
 name|s
 operator|=
 name|moreswitches
 argument_list|(
 name|s
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|reswitch
@@ -3811,8 +3631,9 @@ name|PL_egid
 operator|!=
 name|PL_gid
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"No -e allowed in setuid scripts"
 argument_list|)
 expr_stmt|;
@@ -3824,7 +3645,7 @@ condition|)
 block|{
 name|PL_e_script
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|""
 argument_list|,
@@ -3879,8 +3700,9 @@ operator|++
 expr_stmt|;
 block|}
 else|else
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"No code specified for -e"
 argument_list|)
 expr_stmt|;
@@ -3927,19 +3749,6 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
-while|while
-condition|(
-name|s
-operator|&&
-name|isSPACE
-argument_list|(
-operator|*
-name|s
-argument_list|)
-condition|)
-operator|++
-name|s
-expr_stmt|;
 if|if
 condition|(
 name|s
@@ -3950,40 +3759,23 @@ condition|)
 block|{
 name|char
 modifier|*
-name|e
-decl_stmt|,
-modifier|*
 name|p
 decl_stmt|;
-for|for
-control|(
-name|e
-operator|=
-name|s
-init|;
-operator|*
-name|e
-operator|&&
-operator|!
-name|isSPACE
+name|STRLEN
+name|len
+init|=
+name|strlen
 argument_list|(
-operator|*
-name|e
+name|s
 argument_list|)
-condition|;
-name|e
-operator|++
-control|)
-empty_stmt|;
+decl_stmt|;
 name|p
 operator|=
 name|savepvn
 argument_list|(
 name|s
 argument_list|,
-name|e
-operator|-
-name|s
+name|len
 argument_list|)
 expr_stmt|;
 name|incpush
@@ -3991,27 +3783,35 @@ argument_list|(
 name|p
 argument_list|,
 name|TRUE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
-name|sv_catpv
+name|sv_catpvn
 argument_list|(
 name|sv
 argument_list|,
 literal|"-I"
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
-name|sv_catpv
+name|sv_catpvn
 argument_list|(
 name|sv
 argument_list|,
 name|p
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
-name|sv_catpv
+name|sv_catpvn
 argument_list|(
 name|sv
 argument_list|,
 literal|" "
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|Safefree
@@ -4020,7 +3820,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX else croak? */
+else|else
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"No directory specified for -I"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
@@ -4122,22 +3928,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DEBUGGING
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|NO_EMBED
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|MULTIPLICITY
-argument_list|)
 name|sv_catpv
 argument_list|(
 name|PL_Sv
@@ -4159,24 +3949,132 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_EMBED
-name|sv_catpv
-argument_list|(
-name|PL_Sv
-argument_list|,
-literal|" NO_EMBED"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|MULTIPLICITY
 name|sv_catpv
 argument_list|(
 name|PL_Sv
 argument_list|,
 literal|" MULTIPLICITY"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_THREADS"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_ITHREADS"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_64_BIT_INT
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_64_BIT_INT"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_64_BIT_ALL
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_64_BIT_ALL"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LONG_DOUBLE
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_LONG_DOUBLE"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LARGE_FILES
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_LARGE_FILES"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_SOCKS
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" USE_SOCKS"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_OBJECT
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" PERL_OBJECT"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_IMPLICIT_CONTEXT
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" PERL_IMPLICIT_CONTEXT"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_IMPLICIT_SYS
+name|sv_catpv
+argument_list|(
+name|PL_Sv
+argument_list|,
+literal|" PERL_IMPLICIT_SYS"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4188,8 +4086,6 @@ argument_list|,
 literal|"\\n\","
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -4234,59 +4130,56 @@ index|[
 name|i
 index|]
 condition|)
-name|sv_catpvf
+name|Perl_sv_catpvf
 argument_list|(
-name|PL_Sv
+argument|aTHX_ PL_Sv
 argument_list|,
-literal|"\"  \\t%s\\n\","
+literal|"q\"  \t%s\n\","
 argument_list|,
-name|PL_localpatches
-index|[
-name|i
-index|]
+argument|PL_localpatches[i]
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 block|}
 endif|#
 directive|endif
-name|sv_catpvf
+name|Perl_sv_catpvf
 argument_list|(
-name|PL_Sv
+argument|aTHX_ PL_Sv
 argument_list|,
 literal|"\"  Built under %s\\n\""
 argument_list|,
-name|OSNAME
+argument|OSNAME
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 ifdef|#
 directive|ifdef
 name|__DATE__
 ifdef|#
 directive|ifdef
 name|__TIME__
-name|sv_catpvf
+name|Perl_sv_catpvf
 argument_list|(
-name|PL_Sv
+argument|aTHX_ PL_Sv
 argument_list|,
 literal|",\"  Compiled at %s %s\\n\""
 argument_list|,
-name|__DATE__
+argument|__DATE__
 argument_list|,
-name|__TIME__
+argument|__TIME__
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 else|#
 directive|else
-name|sv_catpvf
+name|Perl_sv_catpvf
 argument_list|(
-name|PL_Sv
+argument|aTHX_ PL_Sv
 argument_list|,
 literal|",\"  Compiled on %s\\n\""
 argument_list|,
-name|__DATE__
+argument|__DATE__
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 endif|#
 directive|endif
 endif|#
@@ -4363,12 +4256,9 @@ condition|(
 operator|*
 name|s
 condition|)
-name|PL_cddir
+name|cddir
 operator|=
-name|savepv
-argument_list|(
 name|s
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4444,8 +4334,9 @@ operator|--
 expr_stmt|;
 comment|/* FALL THROUGH */
 default|default:
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Unrecognized switch: -%s  (-h will show valid options)"
 argument_list|,
 name|s
@@ -4453,19 +4344,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_for
-
-begin_label
 name|switch_end
 label|:
-end_label
-
-begin_if
 if|if
 condition|(
+ifndef|#
+directive|ifndef
+name|SECURE_INTERNAL_GETENV
 operator|!
 name|PL_tainting
 operator|&&
+endif|#
+directive|endif
 operator|(
 name|s
 operator|=
@@ -4475,6 +4365,39 @@ literal|"PERL5OPT"
 argument_list|)
 operator|)
 condition|)
+block|{
+while|while
+condition|(
+name|isSPACE
+argument_list|(
+operator|*
+name|s
+argument_list|)
+condition|)
+name|s
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'-'
+operator|&&
+operator|*
+operator|(
+name|s
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'T'
+condition|)
+name|PL_tainting
+operator|=
+name|TRUE
+expr_stmt|;
+else|else
 block|{
 while|while
 condition|(
@@ -4534,8 +4457,9 @@ operator|*
 name|s
 argument_list|)
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Illegal switch in PERL5OPT: -%c"
 argument_list|,
 operator|*
@@ -4551,9 +4475,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_if
+block|}
 if|if
 condition|(
 operator|!
@@ -4566,9 +4488,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|PL_e_script
@@ -4620,15 +4539,9 @@ operator|=
 literal|"-"
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|init_perllib
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|open_script
 argument_list|(
 name|scriptname
@@ -4641,9 +4554,6 @@ operator|&
 name|fdscript
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|validate_suid
 argument_list|(
 name|validarg
@@ -4653,19 +4563,101 @@ argument_list|,
 name|fdscript
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGCHLD
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SIGCLD
+argument_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|SIGCHLD
+define|#
+directive|define
+name|SIGCHLD
+value|SIGCLD
+endif|#
+directive|endif
+name|Sighandler_t
+name|sigstate
+init|=
+name|rsignal_state
+argument_list|(
+name|SIGCHLD
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|sigstate
+operator|==
+name|SIG_IGN
+condition|)
+block|{
+if|if
+condition|(
+name|ckWARN
+argument_list|(
+name|WARN_SIGNAL
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_SIGNAL
+argument_list|,
+literal|"Can't ignore signal CHLD, forcing to default"
+argument_list|)
+empty_stmt|;
+operator|(
+name|void
+operator|)
+name|rsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+operator|(
+name|Sighandler_t
+operator|)
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|PL_doextract
 condition|)
+block|{
 name|find_beginning
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_expr_stmt
+if|if
+condition|(
+name|cddir
+operator|&&
+name|PerlDir_chdir
+argument_list|(
+name|cddir
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|Perl_croak
+argument_list|(
+name|aTHX_
+literal|"Can't chdir to %s"
+argument_list|,
+name|cddir
+argument_list|)
+expr_stmt|;
+block|}
 name|PL_main_cv
 operator|=
 name|PL_compcv
@@ -4681,9 +4673,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sv_upgrade
 argument_list|(
 operator|(
@@ -4695,25 +4684,16 @@ argument_list|,
 name|SVt_PVCV
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|CvUNIQUE_on
 argument_list|(
 name|PL_compcv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_comppad
 operator|=
 name|newAV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|av_push
 argument_list|(
 name|PL_comppad
@@ -4721,9 +4701,6 @@ argument_list|,
 name|Nullsv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_curpad
 operator|=
 name|AvARRAY
@@ -4731,51 +4708,33 @@ argument_list|(
 name|PL_comppad
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_comppad_name
 operator|=
 name|newAV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_comppad_name_fill
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_min_intro_pending
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_padix
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-end_ifdef
-
-begin_expr_stmt
 name|av_store
 argument_list|(
 name|PL_comppad_name
 argument_list|,
 literal|0
 argument_list|,
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|"@_"
 argument_list|,
@@ -4783,9 +4742,6 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_curpad
 index|[
 literal|0
@@ -4798,9 +4754,6 @@ operator|)
 name|newAV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SvPADMY_on
 argument_list|(
 name|PL_curpad
@@ -4809,13 +4762,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* XXX Needed? */
-end_comment
-
-begin_expr_stmt
 name|CvOWNER
 argument_list|(
 name|PL_compcv
@@ -4823,9 +4770,6 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|New
 argument_list|(
 literal|666
@@ -4840,9 +4784,6 @@ argument_list|,
 name|perl_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MUTEX_INIT
 argument_list|(
 name|CvMUTEXP
@@ -4851,34 +4792,19 @@ name|PL_compcv
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* USE_THREADS */
-end_comment
-
-begin_expr_stmt
 name|comppadlist
 operator|=
 name|newAV
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|AvREAL_off
 argument_list|(
 name|comppadlist
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|av_store
 argument_list|(
 name|comppadlist
@@ -4892,9 +4818,6 @@ operator|)
 name|PL_comppad_name
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|av_store
 argument_list|(
 name|comppadlist
@@ -4908,9 +4831,6 @@ operator|)
 name|PL_comppad
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|CvPADLIST
 argument_list|(
 name|PL_compcv
@@ -4918,15 +4838,17 @@ argument_list|)
 operator|=
 name|comppadlist
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|boot_core_UNIVERSAL
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_if
+ifndef|#
+directive|ifndef
+name|PERL_MICRO
+name|boot_core_xsutils
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|xsinit
@@ -4936,16 +4858,10 @@ modifier|*
 name|xsinit
 call|)
 argument_list|(
-name|PERL_OBJECT_THIS
+name|aTHXo
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* in case linked C routines want magical variables */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -4962,38 +4878,35 @@ name|defined
 argument_list|(
 name|DJGPP
 argument_list|)
-end_if
-
-begin_expr_stmt
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
 name|init_os_extras
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
+ifdef|#
+directive|ifdef
+name|USE_SOCKS
+name|SOCKSinit
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|init_predump_symbols
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* init_postdump_symbols not currently designed to be called */
-end_comment
-
-begin_comment
 comment|/* more than once (ENV isn't cleared first, for example)	 */
-end_comment
-
-begin_comment
 comment|/* But running with -u leaves %ENV& @ARGV undefined!    XXX */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -5008,19 +4921,10 @@ argument_list|,
 name|env
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|init_lexer
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* now parse the script */
-end_comment
-
-begin_expr_stmt
 name|SETERRNO
 argument_list|(
 literal|0
@@ -5028,16 +4932,10 @@ argument_list|,
 name|SS$_NORMAL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_error_count
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|yyparse
@@ -5050,8 +4948,9 @@ if|if
 condition|(
 name|PL_minus_c
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"%s had compilation errors.\n"
 argument_list|,
 name|PL_origfilename
@@ -5059,8 +4958,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Execution of %s aborted due to compilation errors.\n"
 argument_list|,
 name|PL_origfilename
@@ -5068,32 +4968,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
+name|CopLINE_set
+argument_list|(
 name|PL_curcop
-operator|->
-name|cop_line
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_curstash
 operator|=
 name|PL_defstash
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_preprocess
 operator|=
 name|FALSE
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|PL_e_script
@@ -5109,21 +4998,12 @@ operator|=
 name|Nullsv
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* now that script is parsed, we can modify record separator */
-end_comment
-
-begin_expr_stmt
 name|SvREFCNT_dec
 argument_list|(
 name|PL_rs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_rs
 operator|=
 name|SvREFCNT_inc
@@ -5131,12 +5011,9 @@ argument_list|(
 name|PL_nrs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sv_setsv
 argument_list|(
-name|perl_get_sv
+name|get_sv
 argument_list|(
 literal|"/"
 argument_list|,
@@ -5146,9 +5023,6 @@ argument_list|,
 name|PL_rs
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|PL_do_undump
@@ -5156,37 +5030,34 @@ condition|)
 name|my_unexec
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
-name|PL_dowarn
+name|isWARN_ONCE
 condition|)
+block|{
+name|SAVECOPFILE
+argument_list|(
+name|PL_curcop
+argument_list|)
+expr_stmt|;
+name|SAVECOPLINE
+argument_list|(
+name|PL_curcop
+argument_list|)
+expr_stmt|;
 name|gv_check
 argument_list|(
 name|PL_defstash
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
+block|}
 name|LEAVE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|FREETMPS
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|MYMALLOC
-end_ifdef
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -5210,101 +5081,79 @@ argument_list|(
 literal|"after compilation:"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_expr_stmt
 name|ENTER
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|PL_restartop
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|JMPENV_POP
-expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
-literal|0
+name|NULL
 return|;
-end_return
+block|}
+end_function
 
-begin_ifdef
-unit|}  int
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-end_ifdef
+begin_comment
+comment|/* =for apidoc perl_run  Tells a Perl interpreter to run.  See L<perlembed>.  =cut */
+end_comment
 
-begin_expr_stmt
-name|CPerlObj
-operator|::
+begin_function
+name|int
 name|perl_run
-argument_list|(
-argument|void
-argument_list|)
-else|#
-directive|else
-name|perl_run
-argument_list|(
-argument|PerlInterpreter *sv_interp
-argument_list|)
-endif|#
-directive|endif
+parameter_list|(
+name|pTHXx
+parameter_list|)
 block|{
-name|dSP
-block|;
+name|dTHR
+expr_stmt|;
 name|I32
 name|oldscope
-block|;
-name|dJMPENV
-block|;
+decl_stmt|;
 name|int
 name|ret
-block|;
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-if|if
-condition|(
-operator|!
-operator|(
-name|PL_curinterp
-operator|=
-name|sv_interp
-operator|)
-condition|)
-return|return
-literal|255
-return|;
+init|=
+literal|0
+decl_stmt|;
+name|dJMPENV
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+name|dTHX
+expr_stmt|;
 endif|#
 directive|endif
 name|oldscope
 operator|=
 name|PL_scopestack_ix
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|CALLPROTECT
+argument_list|(
+argument|aTHX_ pcur_env
+argument_list|,
+argument|&ret
+argument_list|,
+argument|MEMBER_TO_FPTR(S_vrun_body)
+argument_list|,
+argument|oldscope
+argument_list|)
+empty_stmt|;
+else|#
+directive|else
 name|JMPENV_PUSH
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_switch
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ret
@@ -5319,11 +5168,30 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* start context stack again */
-break|break;
+goto|goto
+name|redo_body
+goto|;
+case|case
+literal|0
+case|:
+comment|/* normal completion */
+ifndef|#
+directive|ifndef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|run_body
+argument_list|(
+name|oldscope
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FALL THROUGH */
 case|case
 literal|2
 case|:
-comment|/* my_exit() was called */
+comment|/* my_exit() */
 while|while
 condition|(
 name|PL_scopestack_ix
@@ -5341,6 +5209,9 @@ expr_stmt|;
 if|if
 condition|(
 name|PL_endav
+operator|&&
+operator|!
+name|PL_minus_c
 condition|)
 name|call_list
 argument_list|(
@@ -5366,46 +5237,105 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|JMPENV_POP
-expr_stmt|;
-return|return
+name|ret
+operator|=
 name|STATUS_NATIVE_EXPORT
-return|;
+expr_stmt|;
+break|break;
 case|case
 literal|3
 case|:
 if|if
 condition|(
-operator|!
 name|PL_restartop
 condition|)
 block|{
+name|POPSTACK_TO
+argument_list|(
+name|PL_mainstack
+argument_list|)
+expr_stmt|;
+goto|goto
+name|redo_body
+goto|;
+block|}
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_error_log
 argument_list|,
 literal|"panic: restartop\n"
 argument_list|)
 expr_stmt|;
 name|FREETMPS
 expr_stmt|;
-name|JMPENV_POP
-expr_stmt|;
-return|return
+name|ret
+operator|=
 literal|1
-return|;
-block|}
-name|POPSTACK_TO
-argument_list|(
-name|PL_mainstack
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
-end_switch
+name|JMPENV_POP
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
-begin_expr_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+end_ifdef
+
+begin_function
+name|STATIC
+name|void
+modifier|*
+name|S_vrun_body
+parameter_list|(
+name|pTHX_
+name|va_list
+name|args
+parameter_list|)
+block|{
+name|I32
+name|oldscope
+init|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|I32
+argument_list|)
+decl_stmt|;
+return|return
+name|run_body
+argument_list|(
+name|oldscope
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|STATIC
+name|void
+modifier|*
+name|S_run_body
+parameter_list|(
+name|pTHX_
+name|I32
+name|oldscope
+parameter_list|)
+block|{
+name|dTHR
+expr_stmt|;
 name|DEBUG_r
 argument_list|(
 name|PerlIO_printf
@@ -5422,9 +5352,6 @@ literal|"Omitting"
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -5453,13 +5380,14 @@ name|PerlIO_printf
 argument_list|(
 name|Perl_debug_log
 argument_list|,
-literal|"main thread is 0x%lx\n"
+literal|"main thread is 0x%"
+name|UVxf
+literal|"\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|PTR2UV
+argument_list|(
 name|thr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5470,8 +5398,7 @@ condition|)
 block|{
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_error_log
 argument_list|,
 literal|"%s syntax OK\n"
 argument_list|,
@@ -5509,13 +5436,7 @@ name|PL_initav
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* do it */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|PL_restartop
@@ -5530,7 +5451,9 @@ operator|=
 literal|0
 expr_stmt|;
 name|CALLRUNOPS
-argument_list|()
+argument_list|(
+name|aTHX
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -5551,43 +5474,46 @@ operator|=
 name|PL_main_start
 expr_stmt|;
 name|CALLRUNOPS
-argument_list|()
+argument_list|(
+name|aTHX
+argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|my_exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+comment|/* NOTREACHED */
+return|return
+name|NULL
+return|;
+block|}
+end_function
 
 begin_comment
-comment|/* NOTREACHED */
+comment|/* =for apidoc p||get_sv  Returns the SV of the specified Perl scalar.  If C<create> is set and the Perl variable does not exist then it will be created.  If C<create> is not set and the variable does not exist then NULL is returned.  =cut */
 end_comment
 
-begin_return
-return|return
-literal|0
-return|;
-end_return
-
-begin_expr_stmt
-unit|}  SV
-operator|*
-name|perl_get_sv
-argument_list|(
-argument|char *name
-argument_list|,
-argument|I32 create
-argument_list|)
+begin_function
+name|SV
+modifier|*
+name|Perl_get_sv
+parameter_list|(
+name|pTHX_
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|I32
+name|create
+parameter_list|)
 block|{
 name|GV
-operator|*
+modifier|*
 name|gv
-block|;
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_THREADS
@@ -5634,20 +5560,11 @@ name|tmp
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_endif
-unit|}
+block|}
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* USE_THREADS */
-end_comment
-
-begin_expr_stmt
-unit|gv
+name|gv
 operator|=
 name|gv_fetchpv
 argument_list|(
@@ -5658,9 +5575,6 @@ argument_list|,
 name|SVt_PV
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|gv
@@ -5671,28 +5585,35 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_if
-
-begin_return
 return|return
 name|Nullsv
 return|;
-end_return
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  AV
-operator|*
-name|perl_get_av
-argument_list|(
-argument|char *name
-argument_list|,
-argument|I32 create
-argument_list|)
+begin_comment
+comment|/* =for apidoc p||get_av  Returns the AV of the specified Perl array.  If C<create> is set and the Perl variable does not exist then it will be created.  If C<create> is not set and the variable does not exist then NULL is returned.  =cut */
+end_comment
+
+begin_function
+name|AV
+modifier|*
+name|Perl_get_av
+parameter_list|(
+name|pTHX_
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|I32
+name|create
+parameter_list|)
 block|{
 name|GV
-operator|*
+modifier|*
 name|gv
-operator|=
+init|=
 name|gv_fetchpv
 argument_list|(
 name|name
@@ -5701,7 +5622,7 @@ name|create
 argument_list|,
 name|SVt_PVAV
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|create
@@ -5712,9 +5633,6 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|gv
@@ -5725,28 +5643,35 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_if
-
-begin_return
 return|return
 name|Nullav
 return|;
-end_return
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  HV
-operator|*
-name|perl_get_hv
-argument_list|(
-argument|char *name
-argument_list|,
-argument|I32 create
-argument_list|)
+begin_comment
+comment|/* =for apidoc p||get_hv  Returns the HV of the specified Perl hash.  If C<create> is set and the Perl variable does not exist then it will be created.  If C<create> is not set and the variable does not exist then NULL is returned.  =cut */
+end_comment
+
+begin_function
+name|HV
+modifier|*
+name|Perl_get_hv
+parameter_list|(
+name|pTHX_
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|I32
+name|create
+parameter_list|)
 block|{
 name|GV
-operator|*
+modifier|*
 name|gv
-operator|=
+init|=
 name|gv_fetchpv
 argument_list|(
 name|name
@@ -5755,7 +5680,7 @@ name|create
 argument_list|,
 name|SVt_PVHV
 argument_list|)
-block|;
+decl_stmt|;
 if|if
 condition|(
 name|create
@@ -5766,9 +5691,6 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|gv
@@ -5779,28 +5701,35 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_if
-
-begin_return
 return|return
 name|Nullhv
 return|;
-end_return
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  CV
-operator|*
-name|perl_get_cv
-argument_list|(
-argument|char *name
-argument_list|,
-argument|I32 create
-argument_list|)
+begin_comment
+comment|/* =for apidoc p||get_cv  Returns the CV of the specified Perl subroutine.  If C<create> is set and the Perl subroutine does not exist then it will be declared (which has the same effect as saying C<sub name;>).  If C<create> is not set and the subroutine does not exist then NULL is returned.  =cut */
+end_comment
+
+begin_function
+name|CV
+modifier|*
+name|Perl_get_cv
+parameter_list|(
+name|pTHX_
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|I32
+name|create
+parameter_list|)
 block|{
 name|GV
-operator|*
+modifier|*
 name|gv
-operator|=
+init|=
 name|gv_fetchpv
 argument_list|(
 name|name
@@ -5809,8 +5738,9 @@ name|create
 argument_list|,
 name|SVt_PVCV
 argument_list|)
-block|;
+decl_stmt|;
 comment|/* XXX unsafe for threads if eval_owner isn't held */
+comment|/* XXX this is probably not what they think they're getting.      * It has the same effect as "sub name;", i.e. just a forward      * declaration! */
 if|if
 condition|(
 name|create
@@ -5850,9 +5780,6 @@ argument_list|,
 name|Nullop
 argument_list|)
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|gv
@@ -5863,40 +5790,41 @@ argument_list|(
 name|gv
 argument_list|)
 return|;
-end_if
-
-begin_return
 return|return
 name|Nullcv
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/* Be sure to refetch the stack pointer after calling these routines. */
 end_comment
 
-begin_macro
-unit|I32
-name|perl_call_argv
-argument_list|(
-argument|char *sub_name
-argument_list|,
-argument|I32 flags
-argument_list|,
-argument|register char **argv
-argument_list|)
-end_macro
-
 begin_comment
+comment|/* =for apidoc p||call_argv  Performs a callback to the specified Perl sub.  See L<perlcall>.  =cut */
+end_comment
+
+begin_function
+name|I32
+name|Perl_call_argv
+parameter_list|(
+name|pTHX_
+specifier|const
+name|char
+modifier|*
+name|sub_name
+parameter_list|,
+name|I32
+name|flags
+parameter_list|,
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
 comment|/* See G_* flags in cop.h */
-end_comment
-
-begin_comment
 comment|/* null terminated arg list */
-end_comment
-
-begin_block
 block|{
 name|dSP
 expr_stmt|;
@@ -5938,7 +5866,7 @@ name|PUTBACK
 expr_stmt|;
 block|}
 return|return
-name|perl_call_pv
+name|call_pv
 argument_list|(
 name|sub_name
 argument_list|,
@@ -5946,12 +5874,18 @@ name|flags
 argument_list|)
 return|;
 block|}
-end_block
+end_function
+
+begin_comment
+comment|/* =for apidoc p||call_pv  Performs a callback to the specified Perl sub.  See L<perlcall>.  =cut */
+end_comment
 
 begin_function
 name|I32
-name|perl_call_pv
+name|Perl_call_pv
 parameter_list|(
+name|pTHX_
+specifier|const
 name|char
 modifier|*
 name|sub_name
@@ -5963,13 +5897,13 @@ comment|/* name of the subroutine */
 comment|/* See G_* flags in cop.h */
 block|{
 return|return
-name|perl_call_sv
+name|call_sv
 argument_list|(
 operator|(
 name|SV
 operator|*
 operator|)
-name|perl_get_cv
+name|get_cv
 argument_list|(
 name|sub_name
 argument_list|,
@@ -5982,10 +5916,16 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* =for apidoc p||call_method  Performs a callback to the specified Perl method.  The blessed object must be on the stack.  See L<perlcall>.  =cut */
+end_comment
+
 begin_function
 name|I32
-name|perl_call_method
+name|Perl_call_method
 parameter_list|(
+name|pTHX_
+specifier|const
 name|char
 modifier|*
 name|methname
@@ -6006,11 +5946,23 @@ condition|(
 operator|!
 name|PL_op
 condition|)
+block|{
+name|Zero
+argument_list|(
+operator|&
+name|myop
+argument_list|,
+literal|1
+argument_list|,
+name|OP
+argument_list|)
+expr_stmt|;
 name|PL_op
 operator|=
 operator|&
 name|myop
 expr_stmt|;
+block|}
 name|XPUSHs
 argument_list|(
 name|sv_2mortal
@@ -6027,9 +5979,7 @@ expr_stmt|;
 name|PUTBACK
 expr_stmt|;
 name|pp_method
-argument_list|(
-name|ARGS
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6043,7 +5993,7 @@ operator|=
 name|Nullop
 expr_stmt|;
 return|return
-name|perl_call_sv
+name|call_sv
 argument_list|(
 operator|*
 name|PL_stack_sp
@@ -6059,10 +6009,15 @@ begin_comment
 comment|/* May be called with any of a CV, a GV, or an SV containing the name. */
 end_comment
 
+begin_comment
+comment|/* =for apidoc p||call_sv  Performs a callback to the Perl sub whose name is in the SV.  See L<perlcall>.  =cut */
+end_comment
+
 begin_function
 name|I32
-name|perl_call_sv
+name|Perl_call_sv
 parameter_list|(
+name|pTHX_
 name|SV
 modifier|*
 name|sv
@@ -6092,8 +6047,6 @@ name|oldcatch
 init|=
 name|CATCH_GET
 decl_stmt|;
-name|dJMPENV
-expr_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -6103,6 +6056,8 @@ name|oldop
 init|=
 name|PL_op
 decl_stmt|;
+name|dJMPENV
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -6261,10 +6216,48 @@ name|OPpENTERSUB_DB
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
 name|flags
 operator|&
 name|G_EVAL
+operator|)
 condition|)
+block|{
+name|CATCH_SET
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|call_body
+argument_list|(
+operator|(
+name|OP
+operator|*
+operator|)
+operator|&
+name|myop
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|PL_stack_sp
+operator|-
+operator|(
+name|PL_stack_base
+operator|+
+name|oldmark
+operator|)
+expr_stmt|;
+name|CATCH_SET
+argument_list|(
+name|oldcatch
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|cLOGOP
 operator|->
@@ -6302,7 +6295,11 @@ name|PUSHBLOCK
 argument_list|(
 name|cx
 argument_list|,
+operator|(
 name|CXt_EVAL
+operator||
+name|CXp_TRYBLOCK
+operator|)
 argument_list|,
 name|PL_stack_sp
 argument_list|)
@@ -6323,7 +6320,7 @@ expr_stmt|;
 comment|/* Only needed so that goto works right. */
 name|PL_in_eval
 operator|=
-literal|1
+name|EVAL_INEVAL
 expr_stmt|;
 if|if
 condition|(
@@ -6333,7 +6330,7 @@ name|G_KEEPERR
 condition|)
 name|PL_in_eval
 operator||=
-literal|4
+name|EVAL_KEEPERR
 expr_stmt|;
 else|else
 name|sv_setpv
@@ -6347,11 +6344,33 @@ block|}
 name|PL_markstack_ptr
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|CALLPROTECT
+argument_list|(
+argument|aTHX_ pcur_env
+argument_list|,
+argument|&ret
+argument_list|,
+argument|MEMBER_TO_FPTR(S_vcall_body)
+argument_list|,
+argument|(OP*)&myop
+argument_list|,
+argument|FALSE
+argument_list|)
+empty_stmt|;
+else|#
+directive|else
 name|JMPENV_PUSH
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ret
@@ -6360,6 +6379,51 @@ block|{
 case|case
 literal|0
 case|:
+ifndef|#
+directive|ifndef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|call_body
+argument_list|(
+operator|(
+name|OP
+operator|*
+operator|)
+operator|&
+name|myop
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|retval
+operator|=
+name|PL_stack_sp
+operator|-
+operator|(
+name|PL_stack_base
+operator|+
+name|oldmark
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|G_KEEPERR
+operator|)
+condition|)
+name|sv_setpv
+argument_list|(
+name|ERRSV
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -6382,9 +6446,17 @@ expr_stmt|;
 if|if
 condition|(
 name|PL_statusvalue
+operator|&&
+operator|!
+operator|(
+name|PL_exit_flags
+operator|&
+name|PERL_EXIT_EXPECTED
+operator|)
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Callback called exit"
 argument_list|)
 expr_stmt|;
@@ -6408,7 +6480,9 @@ name|PL_restartop
 operator|=
 literal|0
 expr_stmt|;
-break|break;
+goto|goto
+name|redo_body
+goto|;
 block|}
 name|PL_stack_sp
 operator|=
@@ -6440,83 +6514,8 @@ operator|&
 name|PL_sv_undef
 expr_stmt|;
 block|}
-goto|goto
-name|cleanup
-goto|;
+break|break;
 block|}
-block|}
-else|else
-name|CATCH_SET
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|PL_op
-operator|==
-operator|(
-name|OP
-operator|*
-operator|)
-operator|&
-name|myop
-condition|)
-name|PL_op
-operator|=
-name|pp_entersub
-argument_list|(
-name|ARGS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|PL_op
-condition|)
-name|CALLRUNOPS
-argument_list|()
-expr_stmt|;
-name|retval
-operator|=
-name|PL_stack_sp
-operator|-
-operator|(
-name|PL_stack_base
-operator|+
-name|oldmark
-operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|G_EVAL
-operator|)
-operator|&&
-operator|!
-operator|(
-name|flags
-operator|&
-name|G_KEEPERR
-operator|)
-condition|)
-name|sv_setpv
-argument_list|(
-name|ERRSV
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|cleanup
-label|:
-if|if
-condition|(
-name|flags
-operator|&
-name|G_EVAL
-condition|)
-block|{
 if|if
 condition|(
 name|PL_scopestack_ix
@@ -6569,12 +6568,6 @@ block|}
 name|JMPENV_POP
 expr_stmt|;
 block|}
-else|else
-name|CATCH_SET
-argument_list|(
-name|oldcatch
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -6607,14 +6600,131 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+end_ifdef
+
+begin_function
+name|STATIC
+name|void
+modifier|*
+name|S_vcall_body
+parameter_list|(
+name|pTHX_
+name|va_list
+name|args
+parameter_list|)
+block|{
+name|OP
+modifier|*
+name|myop
+init|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|OP
+operator|*
+argument_list|)
+decl_stmt|;
+name|int
+name|is_eval
+init|=
+name|va_arg
+argument_list|(
+name|args
+argument_list|,
+name|int
+argument_list|)
+decl_stmt|;
+name|call_body
+argument_list|(
+name|myop
+argument_list|,
+name|is_eval
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|STATIC
+name|void
+name|S_call_body
+parameter_list|(
+name|pTHX_
+name|OP
+modifier|*
+name|myop
+parameter_list|,
+name|int
+name|is_eval
+parameter_list|)
+block|{
+name|dTHR
+expr_stmt|;
+if|if
+condition|(
+name|PL_op
+operator|==
+name|myop
+condition|)
+block|{
+if|if
+condition|(
+name|is_eval
+condition|)
+name|PL_op
+operator|=
+name|Perl_pp_entereval
+argument_list|(
+name|aTHX
+argument_list|)
+expr_stmt|;
+else|else
+name|PL_op
+operator|=
+name|Perl_pp_entersub
+argument_list|(
+name|aTHX
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|PL_op
+condition|)
+name|CALLRUNOPS
+argument_list|(
+name|aTHX
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* Eval a string. The G_EVAL flag is always assumed. */
 end_comment
 
+begin_comment
+comment|/* =for apidoc p||eval_sv  Tells Perl to C<eval> the string in the SV.  =cut */
+end_comment
+
 begin_function
 name|I32
-name|perl_eval_sv
+name|Perl_eval_sv
 parameter_list|(
+name|pTHX_
 name|SV
 modifier|*
 name|sv
@@ -6643,8 +6753,6 @@ decl_stmt|;
 name|I32
 name|oldscope
 decl_stmt|;
-name|dJMPENV
-expr_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -6654,6 +6762,8 @@ name|oldop
 init|=
 name|PL_op
 decl_stmt|;
+name|dJMPENV
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -6767,11 +6877,33 @@ name|op_flags
 operator||=
 name|OPf_SPECIAL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|CALLPROTECT
+argument_list|(
+argument|aTHX_ pcur_env
+argument_list|,
+argument|&ret
+argument_list|,
+argument|MEMBER_TO_FPTR(S_vcall_body)
+argument_list|,
+argument|(OP*)&myop
+argument_list|,
+argument|TRUE
+argument_list|)
+empty_stmt|;
+else|#
+directive|else
 name|JMPENV_PUSH
 argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|ret
@@ -6780,6 +6912,51 @@ block|{
 case|case
 literal|0
 case|:
+ifndef|#
+directive|ifndef
+name|PERL_FLEXIBLE_EXCEPTIONS
+name|redo_body
+label|:
+name|call_body
+argument_list|(
+operator|(
+name|OP
+operator|*
+operator|)
+operator|&
+name|myop
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|retval
+operator|=
+name|PL_stack_sp
+operator|-
+operator|(
+name|PL_stack_base
+operator|+
+name|oldmark
+operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|G_KEEPERR
+operator|)
+condition|)
+name|sv_setpv
+argument_list|(
+name|ERRSV
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -6802,9 +6979,17 @@ expr_stmt|;
 if|if
 condition|(
 name|PL_statusvalue
+operator|&&
+operator|!
+operator|(
+name|PL_exit_flags
+operator|&
+name|PERL_EXIT_EXPECTED
+operator|)
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Callback called exit"
 argument_list|)
 expr_stmt|;
@@ -6828,7 +7013,9 @@ name|PL_restartop
 operator|=
 literal|0
 expr_stmt|;
-break|break;
+goto|goto
+name|redo_body
+goto|;
 block|}
 name|PL_stack_sp
 operator|=
@@ -6860,63 +7047,8 @@ operator|&
 name|PL_sv_undef
 expr_stmt|;
 block|}
-goto|goto
-name|cleanup
-goto|;
+break|break;
 block|}
-if|if
-condition|(
-name|PL_op
-operator|==
-operator|(
-name|OP
-operator|*
-operator|)
-operator|&
-name|myop
-condition|)
-name|PL_op
-operator|=
-name|pp_entereval
-argument_list|(
-name|ARGS
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|PL_op
-condition|)
-name|CALLRUNOPS
-argument_list|()
-expr_stmt|;
-name|retval
-operator|=
-name|PL_stack_sp
-operator|-
-operator|(
-name|PL_stack_base
-operator|+
-name|oldmark
-operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|G_KEEPERR
-operator|)
-condition|)
-name|sv_setpv
-argument_list|(
-name|ERRSV
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|cleanup
-label|:
 name|JMPENV_POP
 expr_stmt|;
 if|if
@@ -6951,11 +7083,17 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* =for apidoc p||eval_pv  Tells Perl to C<eval> the given string and return an SV* result.  =cut */
+end_comment
+
 begin_function
 name|SV
 modifier|*
-name|perl_eval_pv
+name|Perl_eval_pv
 parameter_list|(
+name|pTHX_
+specifier|const
 name|char
 modifier|*
 name|p
@@ -6982,7 +7120,7 @@ argument_list|(
 name|SP
 argument_list|)
 expr_stmt|;
-name|perl_eval_sv
+name|eval_sv
 argument_list|(
 name|sv
 argument_list|,
@@ -7015,16 +7153,11 @@ block|{
 name|STRLEN
 name|n_a
 decl_stmt|;
-name|croak
+name|Perl_croak
 argument_list|(
-name|SvPVx
-argument_list|(
-name|ERRSV
-argument_list|,
-name|n_a
+argument|aTHX_ SvPVx(ERRSV, n_a)
 argument_list|)
-argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 return|return
 name|sv
@@ -7036,10 +7169,16 @@ begin_comment
 comment|/* Require a module. */
 end_comment
 
+begin_comment
+comment|/* =for apidoc p||require_pv  Tells Perl to C<require> a module.  =cut */
+end_comment
+
 begin_function
 name|void
-name|perl_require_pv
+name|Perl_require_pv
 parameter_list|(
+name|pTHX_
+specifier|const
 name|char
 modifier|*
 name|pv
@@ -7084,7 +7223,7 @@ argument_list|,
 literal|"'"
 argument_list|)
 expr_stmt|;
-name|perl_eval_sv
+name|eval_sv
 argument_list|(
 name|sv
 argument_list|,
@@ -7100,8 +7239,9 @@ end_function
 
 begin_function
 name|void
-name|magicname
+name|Perl_magicname
 parameter_list|(
+name|pTHX_
 name|char
 modifier|*
 name|sym
@@ -7121,6 +7261,7 @@ name|gv
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|gv
 operator|=
 name|gv_fetchpv
@@ -7131,6 +7272,7 @@ name|TRUE
 argument_list|,
 name|SVt_PV
 argument_list|)
+operator|)
 condition|)
 name|sv_magic
 argument_list|(
@@ -7158,8 +7300,9 @@ end_function
 begin_function
 name|STATIC
 name|void
-name|usage
+name|S_usage
 parameter_list|(
+name|pTHX_
 name|char
 modifier|*
 name|name
@@ -7178,45 +7321,51 @@ literal|"-0[octal]       specify record separator (\\0, if no argument)"
 block|,
 literal|"-a              autosplit mode with -n or -p (splits $_ into @F)"
 block|,
+literal|"-C              enable native wide character system interfaces"
+block|,
 literal|"-c              check syntax only (runs BEGIN and END blocks)"
 block|,
-literal|"-d[:debugger]   run scripts under debugger"
+literal|"-d[:debugger]   run program under debugger"
 block|,
-literal|"-D[number/list] set debugging flags (argument is a bit mask or flags)"
+literal|"-D[number/list] set debugging flags (argument is a bit mask or alphabets)"
 block|,
-literal|"-e 'command'    one line of script. Several -e's allowed. Omit [programfile]."
+literal|"-e 'command'    one line of program (several -e's allowed, omit programfile)"
 block|,
-literal|"-F/pattern/     split() pattern for autosplit (-a). The //'s are optional."
+literal|"-F/pattern/     split() pattern for -a switch (//'s are optional)"
 block|,
-literal|"-i[extension]   edit<> files in place (make backup if extension supplied)"
+literal|"-i[extension]   edit<> files in place (makes backup if extension supplied)"
 block|,
-literal|"-Idirectory     specify @INC/#include directory (may be used more than once)"
+literal|"-Idirectory     specify @INC/#include directory (several -I's allowed)"
 block|,
 literal|"-l[octal]       enable line ending processing, specifies line terminator"
 block|,
-literal|"-[mM][-]module.. executes `use/no module...' before executing your script."
+literal|"-[mM][-]module  execute `use/no module...' before executing program"
 block|,
-literal|"-n              assume 'while (<>) { ... }' loop around your script"
+literal|"-n              assume 'while (<>) { ... }' loop around program"
 block|,
-literal|"-p              assume loop like -n but print line also like sed"
+literal|"-p              assume loop like -n but print line also, like sed"
 block|,
-literal|"-P              run script through C preprocessor before compilation"
+literal|"-P              run program through C preprocessor before compilation"
 block|,
-literal|"-s              enable some switch parsing for switches after script name"
+literal|"-s              enable rudimentary parsing for switches after programfile"
 block|,
-literal|"-S              look for the script using PATH environment variable"
+literal|"-S              look for programfile using PATH environment variable"
 block|,
-literal|"-T              turn on tainting checks"
+literal|"-T              enable tainting checks"
 block|,
-literal|"-u              dump core after parsing script"
+literal|"-u              dump core after parsing program"
 block|,
 literal|"-U              allow unsafe operations"
 block|,
-literal|"-v              print version number, patchlevel plus VERY IMPORTANT perl info"
+literal|"-v              print version, subversion (includes VERY IMPORTANT perl info)"
 block|,
-literal|"-V[:variable]   print perl configuration information"
+literal|"-V[:variable]   print configuration summary (or a single Config.pm variable)"
 block|,
-literal|"-w              TURN WARNINGS ON FOR COMPILATION OF YOUR SCRIPT. Recommended."
+literal|"-w              enable many useful warnings (RECOMMENDED)"
+block|,
+literal|"-W              enable all warnings"
+block|,
+literal|"-X              disable all warnings"
 block|,
 literal|"-x[directory]   strip off text before #!perl line and perhaps cd to directory"
 block|,
@@ -7263,8 +7412,9 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|moreswitches
+name|Perl_moreswitches
 parameter_list|(
+name|pTHX_
 name|char
 modifier|*
 name|s
@@ -7290,6 +7440,9 @@ name|dTHR
 expr_stmt|;
 name|rschar
 operator|=
+operator|(
+name|U32
+operator|)
 name|scan_oct
 argument_list|(
 name|s
@@ -7335,7 +7488,7 @@ literal|2
 condition|)
 name|PL_nrs
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|""
 argument_list|,
@@ -7351,7 +7504,7 @@ name|rschar
 decl_stmt|;
 name|PL_nrs
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 operator|&
 name|ch
@@ -7366,6 +7519,19 @@ operator|+
 name|numlen
 return|;
 block|}
+case|case
+literal|'C'
+case|:
+name|PL_widesyscalls
+operator|=
+name|TRUE
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+return|return
+name|s
+return|;
 case|case
 literal|'F'
 case|:
@@ -7446,8 +7612,9 @@ name|my_setenv
 argument_list|(
 literal|"PERL5DB"
 argument_list|,
-name|form
+name|Perl_form
 argument_list|(
+name|aTHX_
 literal|"use Devel::%s;"
 argument_list|,
 operator|++
@@ -7483,6 +7650,7 @@ return|;
 case|case
 literal|'D'
 case|:
+block|{
 ifdef|#
 directive|ifdef
 name|DEBUGGING
@@ -7580,11 +7748,22 @@ literal|0x80000000
 expr_stmt|;
 else|#
 directive|else
-name|warn
+name|dTHR
+expr_stmt|;
+if|if
+condition|(
+name|ckWARN_d
 argument_list|(
+name|WARN_DEBUGGING
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_DEBUGGING
+argument_list|,
 literal|"Recompile perl with -DDEBUGGING to use -D switch\n"
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 for|for
 control|(
 name|s
@@ -7606,6 +7785,7 @@ comment|/*SUPPRESS 530*/
 return|return
 name|s
 return|;
+block|}
 case|case
 literal|'h'
 case|:
@@ -7730,11 +7910,18 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|p
+operator|=
+name|s
+expr_stmt|;
+comment|/* ignore trailing spaces (possibly followed by other switches) */
+do|do
+block|{
 for|for
 control|(
 name|e
 operator|=
-name|s
+name|p
 init|;
 operator|*
 name|e
@@ -7752,6 +7939,33 @@ control|)
 empty_stmt|;
 name|p
 operator|=
+name|e
+expr_stmt|;
+while|while
+condition|(
+name|isSPACE
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|*
+name|p
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'-'
+condition|)
+do|;
+name|e
+operator|=
 name|savepvn
 argument_list|(
 name|s
@@ -7763,25 +7977,38 @@ argument_list|)
 expr_stmt|;
 name|incpush
 argument_list|(
-name|p
+name|e
+argument_list|,
+name|TRUE
 argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
 name|Safefree
 argument_list|(
-name|p
+name|e
 argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|e
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|s
+operator|==
+literal|'-'
+condition|)
+name|s
+operator|++
 expr_stmt|;
 block|}
 else|else
-name|croak
+name|Perl_croak
 argument_list|(
-literal|"No space allowed after -I"
+name|aTHX_
+literal|"No directory specified for -I"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7829,6 +8056,9 @@ expr_stmt|;
 operator|*
 name|PL_ors
 operator|=
+operator|(
+name|char
+operator|)
 name|scan_oct
 argument_list|(
 name|s
@@ -8016,8 +8246,9 @@ name|s
 operator|!=
 literal|'\0'
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Can't use '%c' after -mname"
 argument_list|,
 operator|*
@@ -8078,9 +8309,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PL_preambleav
-operator|==
-name|NULL
 condition|)
 name|PL_preambleav
 operator|=
@@ -8096,8 +8326,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"No space allowed after -%c"
 argument_list|,
 operator|*
@@ -8163,8 +8394,9 @@ condition|(
 operator|!
 name|PL_tainting
 condition|)
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Too late for \"-T\" option"
 argument_list|)
 expr_stmt|;
@@ -8203,40 +8435,19 @@ return|;
 case|case
 literal|'v'
 case|:
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SUBVERSION
-argument_list|)
-operator|&&
-name|SUBVERSION
-operator|>
-literal|0
 name|printf
 argument_list|(
-literal|"\nThis is perl, version 5.%03d_%02d built for %s"
-argument_list|,
-name|PATCHLEVEL
-argument_list|,
-name|SUBVERSION
-argument_list|,
-name|ARCHNAME
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printf
+name|Perl_form
 argument_list|(
-literal|"\nThis is perl, version %s built for %s"
+name|aTHX_
+literal|"\nThis is perl, v%vd built for %s"
 argument_list|,
 name|PL_patchlevel
 argument_list|,
 name|ARCHNAME
 argument_list|)
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -8253,6 +8464,9 @@ name|printf
 argument_list|(
 literal|"\n(with %d registered patch%s, see perl -V for more detail)"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|LOCAL_PATCH_COUNT
 argument_list|,
 operator|(
@@ -8270,7 +8484,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"\n\nCopyright 1987-1999, Larry Wall\n"
+literal|"\n\nCopyright 1987-2000, Larry Wall\n"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8293,7 +8507,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"djgpp v2 port (perl5004+) by Laszlo Molnar, 1997-1998\n"
+literal|"djgpp v2 port (perl5004+) by Laszlo Molnar, 1997-1999\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8304,7 +8518,7 @@ name|OS2
 name|printf
 argument_list|(
 literal|"\n\nOS/2 port Copyright (c) 1990, 1991, Raymond Chen, Kai Uwe Rommel\n"
-literal|"Version 5 port Copyright (c) 1994-1998, Andreas Kaiser, Ilya Zakharevich\n"
+literal|"Version 5 port Copyright (c) 1994-1999, Andreas Kaiser, Ilya Zakharevich\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8324,7 +8538,7 @@ directive|ifdef
 name|__BEOS__
 name|printf
 argument_list|(
-literal|"BeOS port Copyright Tom Spindler, 1997-1998\n"
+literal|"BeOS port Copyright Tom Spindler, 1997-1999\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8334,7 +8548,7 @@ directive|ifdef
 name|MPE
 name|printf
 argument_list|(
-literal|"MPE/iX port Copyright by Mark Klein and Mark Bixby, 1996-1998\n"
+literal|"MPE/iX port Copyright by Mark Klein and Mark Bixby, 1996-1999\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8344,7 +8558,7 @@ directive|ifdef
 name|OEMVS
 name|printf
 argument_list|(
-literal|"MVS (OS390) port by Mortice Kern Systems, 1997-1998\n"
+literal|"MVS (OS390) port by Mortice Kern Systems, 1997-1999\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8361,10 +8575,40 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|__OPEN_VM
+name|printf
+argument_list|(
+literal|"VM/ESA port by Neale Ferguson, 1998-1999\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|POSIX_BC
+name|printf
+argument_list|(
+literal|"BS2000 (POSIX) port by Start Amadeus GmbH, 1998-1999\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__MINT__
 name|printf
 argument_list|(
-literal|"MiNT port by Guido Flohr, 1997\n"
+literal|"MiNT port by Guido Flohr, 1997-1999\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|EPOC
+name|printf
+argument_list|(
+literal|"EPOC port by Olaf Flebbe, 1999-2000\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8389,9 +8633,58 @@ expr_stmt|;
 case|case
 literal|'w'
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|PL_dowarn
+operator|&
+name|G_WARN_ALL_MASK
+operator|)
+condition|)
+name|PL_dowarn
+operator||=
+name|G_WARN_ON
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+return|return
+name|s
+return|;
+case|case
+literal|'W'
+case|:
 name|PL_dowarn
 operator|=
-name|TRUE
+name|G_WARN_ALL_ON
+operator||
+name|G_WARN_ON
+expr_stmt|;
+name|PL_compiling
+operator|.
+name|cop_warnings
+operator|=
+name|pWARN_ALL
+expr_stmt|;
+name|s
+operator|++
+expr_stmt|;
+return|return
+name|s
+return|;
+case|case
+literal|'X'
+case|:
+name|PL_dowarn
+operator|=
+name|G_WARN_ALL_OFF
+expr_stmt|;
+name|PL_compiling
+operator|.
+name|cop_warnings
+operator|=
+name|pWARN_NONE
 expr_stmt|;
 name|s
 operator|++
@@ -8475,8 +8768,9 @@ literal|1
 return|;
 comment|/* FALL THROUGH */
 default|default:
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Can't emulate -%.1s on #! line"
 argument_list|,
 name|s
@@ -8503,9 +8797,9 @@ end_comment
 
 begin_function
 name|void
-name|my_unexec
+name|Perl_my_unexec
 parameter_list|(
-name|void
+name|pTHX
 parameter_list|)
 block|{
 ifdef|#
@@ -8623,9 +8917,9 @@ end_comment
 begin_function
 name|STATIC
 name|void
-name|init_interp
+name|S_init_interp
 parameter_list|(
-name|void
+name|pTHX
 parameter_list|)
 block|{
 ifdef|#
@@ -8636,7 +8930,7 @@ define|#
 directive|define
 name|I_REINIT
 define|\
-value|STMT_START {				\     PL_chopset		= " \n-";	\     PL_copline		= NOLINE;	\     PL_curcop		=&PL_compiling;\     PL_curcopdb		= NULL;		\     PL_dbargs		= 0;		\     PL_dlmax		= 128;		\     PL_laststatval	= -1;		\     PL_laststype	= OP_STAT;	\     PL_maxscream	= -1;		\     PL_maxsysfd		= MAXSYSFD;	\     PL_statname		= Nullsv;	\     PL_tmps_floor	= -1;		\     PL_tmps_ix		= -1;		\     PL_op_mask		= NULL;		\     PL_dlmax		= 128;		\     PL_laststatval	= -1;		\     PL_laststype	= OP_STAT;	\     PL_mess_sv		= Nullsv;	\     PL_splitstr		= " ";		\     PL_generation	= 100;		\     PL_exitlist		= NULL;		\     PL_exitlistlen	= 0;		\     PL_regindent	= 0;		\     PL_in_clean_objs	= FALSE;	\     PL_in_clean_all	= FALSE;	\     PL_profiledata	= NULL;		\     PL_rsfp		= Nullfp;	\     PL_rsfp_filters	= Nullav;	\   } STMT_END
+value|STMT_START {				\     PL_chopset		= " \n-";	\     PL_copline		= NOLINE;	\     PL_curcop		=&PL_compiling;\     PL_curcopdb		= NULL;		\     PL_dbargs		= 0;		\     PL_dumpindent	= 4;		\     PL_laststatval	= -1;		\     PL_laststype	= OP_STAT;	\     PL_maxscream	= -1;		\     PL_maxsysfd		= MAXSYSFD;	\     PL_statname		= Nullsv;	\     PL_tmps_floor	= -1;		\     PL_tmps_ix		= -1;		\     PL_op_mask		= NULL;		\     PL_laststatval	= -1;		\     PL_laststype	= OP_STAT;	\     PL_mess_sv		= Nullsv;	\     PL_splitstr		= " ";		\     PL_generation	= 100;		\     PL_exitlist		= NULL;		\     PL_exitlistlen	= 0;		\     PL_regindent	= 0;		\     PL_in_clean_objs	= FALSE;	\     PL_in_clean_all	= FALSE;	\     PL_profiledata	= NULL;		\     PL_rsfp		= Nullfp;	\     PL_rsfp_filters	= Nullav;	\     PL_dirty		= FALSE;	\   } STMT_END
 name|I_REINIT
 expr_stmt|;
 else|#
@@ -8654,6 +8948,28 @@ name|type
 parameter_list|)
 define|#
 directive|define
+name|PERLVARA
+parameter_list|(
+name|var
+parameter_list|,
+name|n
+parameter_list|,
+name|type
+parameter_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_CONTEXT
+argument_list|)
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_THREADS
+argument_list|)
+define|#
+directive|define
 name|PERLVARI
 parameter_list|(
 name|var
@@ -8662,7 +8978,7 @@ name|type
 parameter_list|,
 name|init
 parameter_list|)
-value|PL_curinterp->var = init;
+value|PERL_GET_INTERP->var = init;
 define|#
 directive|define
 name|PERLVARIC
@@ -8673,7 +8989,61 @@ name|type
 parameter_list|,
 name|init
 parameter_list|)
-value|PL_curinterp->var = init;
+value|PERL_GET_INTERP->var = init;
+else|#
+directive|else
+comment|/* !USE_THREADS */
+define|#
+directive|define
+name|PERLVARI
+parameter_list|(
+name|var
+parameter_list|,
+name|type
+parameter_list|,
+name|init
+parameter_list|)
+value|aTHX->var = init;
+define|#
+directive|define
+name|PERLVARIC
+parameter_list|(
+name|var
+parameter_list|,
+name|type
+parameter_list|,
+name|init
+parameter_list|)
+value|aTHX->var = init;
+endif|#
+directive|endif
+comment|/* USE_THREADS */
+else|#
+directive|else
+define|#
+directive|define
+name|PERLVARI
+parameter_list|(
+name|var
+parameter_list|,
+name|type
+parameter_list|,
+name|init
+parameter_list|)
+value|PERL_GET_INTERP->var = init;
+define|#
+directive|define
+name|PERLVARIC
+parameter_list|(
+name|var
+parameter_list|,
+name|type
+parameter_list|,
+name|init
+parameter_list|)
+value|PERL_GET_INTERP->var = init;
+endif|#
+directive|endif
 include|#
 directive|include
 file|"intrpvar.h"
@@ -8688,6 +9058,9 @@ directive|endif
 undef|#
 directive|undef
 name|PERLVAR
+undef|#
+directive|undef
+name|PERLVARA
 undef|#
 directive|undef
 name|PERLVARI
@@ -8706,6 +9079,16 @@ name|type
 parameter_list|)
 define|#
 directive|define
+name|PERLVARA
+parameter_list|(
+name|var
+parameter_list|,
+name|n
+parameter_list|,
+name|type
+parameter_list|)
+define|#
+directive|define
 name|PERLVARI
 parameter_list|(
 name|var
@@ -8742,6 +9125,9 @@ directive|undef
 name|PERLVAR
 undef|#
 directive|undef
+name|PERLVARA
+undef|#
+directive|undef
 name|PERLVARI
 undef|#
 directive|undef
@@ -8756,9 +9142,9 @@ end_function
 begin_function
 name|STATIC
 name|void
-name|init_main_stash
+name|S_init_main_stash
 parameter_list|(
-name|void
+name|pTHX
 parameter_list|)
 block|{
 name|dTHR
@@ -8806,7 +9192,7 @@ argument_list|()
 expr_stmt|;
 name|PL_curstname
 operator|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|"main"
 argument_list|,
@@ -8950,8 +9336,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|form
+name|Perl_form
 argument_list|(
+name|aTHX_
 literal|"%240s"
 argument_list|,
 literal|""
@@ -8979,11 +9366,13 @@ name|PL_curstash
 operator|=
 name|PL_defstash
 expr_stmt|;
+name|CopSTASH_set
+argument_list|(
+operator|&
 name|PL_compiling
-operator|.
-name|cop_stash
-operator|=
+argument_list|,
 name|PL_defstash
+argument_list|)
 expr_stmt|;
 name|PL_debstash
 operator|=
@@ -9016,7 +9405,7 @@ expr_stmt|;
 comment|/* We must init $/ before switches are processed. */
 name|sv_setpvn
 argument_list|(
-name|perl_get_sv
+name|get_sv
 argument_list|(
 literal|"/"
 argument_list|,
@@ -9034,8 +9423,9 @@ end_function
 begin_function
 name|STATIC
 name|void
-name|open_script
+name|S_open_script
 parameter_list|(
+name|pTHX_
 name|char
 modifier|*
 name|scriptname
@@ -9054,11 +9444,6 @@ parameter_list|)
 block|{
 name|dTHR
 expr_stmt|;
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
 operator|*
 name|fdscript
 operator|=
@@ -9170,12 +9555,10 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|PL_curcop
-operator|->
-name|cop_filegv
-operator|=
-name|gv_fetchfile
+name|CopFILE_set
 argument_list|(
+name|PL_curcop
+argument_list|,
 name|PL_origfilename
 argument_list|)
 expr_stmt|;
@@ -9257,7 +9640,7 @@ name|SV
 modifier|*
 name|cpp
 init|=
-name|newSVpv
+name|newSVpvn
 argument_list|(
 literal|""
 argument_list|,
@@ -9284,15 +9667,15 @@ argument_list|,
 literal|"cppstdin"
 argument_list|)
 condition|)
-name|sv_catpvf
+name|Perl_sv_catpvf
 argument_list|(
-name|cpp
+argument|aTHX_ cpp
 argument_list|,
 literal|"%s/"
 argument_list|,
-name|BIN_EXP
+argument|BIN_EXP
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|sv_catpv
 argument_list|(
 name|cpp
@@ -9300,11 +9683,13 @@ argument_list|,
 name|cpp_cfg
 argument_list|)
 expr_stmt|;
-name|sv_catpv
+name|sv_catpvn
 argument_list|(
 name|sv
 argument_list|,
 literal|"-I"
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 name|sv_catpv
@@ -9317,11 +9702,15 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MSDOS
-name|sv_setpvf
+name|Perl_sv_setpvf
 argument_list|(
-argument|cmd
+argument|aTHX_ cmd
 argument_list|,
-literal|"\ sed %s -e \"/^[^#]/b\" \  -e \"/^#[ 	]*include[ 	]/b\" \  -e \"/^#[ 	]*define[ 	]/b\" \  -e \"/^#[ 	]*if[ 	]/b\" \  -e \"/^#[ 	]*ifdef[ 	]/b\" \  -e \"/^#[ 	]*ifndef[ 	]/b\" \  -e \"/^#[ 	]*else/b\" \  -e \"/^#[ 	]*elif[ 	]/b\" \  -e \"/^#[ 	]*undef[ 	]/b\" \  -e \"/^#[ 	]*endif/b\" \  -e \"s/^#.*//\" \  %s | %_ -C %_ %s"
+literal|"\ sed %s -e \"/^[^#]/b\" \  -e \"/^#[ 	]*include[ 	]/b\" \  -e \"/^#[ 	]*define[ 	]/b\" \  -e \"/^#[ 	]*if[ 	]/b\" \  -e \"/^#[ 	]*ifdef[ 	]/b\" \  -e \"/^#[ 	]*ifndef[ 	]/b\" \  -e \"/^#[ 	]*else/b\" \  -e \"/^#[ 	]*elif[ 	]/b\" \  -e \"/^#[ 	]*undef[ 	]/b\" \  -e \"/^#[ 	]*endif/b\" \  -e \"s/^#.*//\" \  %s | %"
+argument|SVf
+literal|" -C %"
+argument|SVf
+literal|" %s"
 argument_list|,
 argument|(PL_doextract ?
 literal|"-e \"1,/^#/d\n\""
@@ -9331,9 +9720,27 @@ argument|)
 argument_list|,
 else|#
 directive|else
-argument|sv_setpvf(cmd,
-literal|"\ %s %s -e '/^[^#]/b' \  -e '/^#[ 	]*include[ 	]/b' \  -e '/^#[ 	]*define[ 	]/b' \  -e '/^#[ 	]*if[ 	]/b' \  -e '/^#[ 	]*ifdef[ 	]/b' \  -e '/^#[ 	]*ifndef[ 	]/b' \  -e '/^#[ 	]*else/b' \  -e '/^#[ 	]*elif[ 	]/b' \  -e '/^#[ 	]*undef[ 	]/b' \  -e '/^#[ 	]*endif/b' \  -e 's/^[ 	]*#.*//' \  %s | %_ -C %_ %s"
+ifdef|#
+directive|ifdef
+name|__OPEN_VM
+argument|Perl_sv_setpvf(aTHX_ cmd,
+literal|"\ %s %s -e '/^[^#]/b' \  -e '/^#[ 	]*include[ 	]/b' \  -e '/^#[ 	]*define[ 	]/b' \  -e '/^#[ 	]*if[ 	]/b' \  -e '/^#[ 	]*ifdef[ 	]/b' \  -e '/^#[ 	]*ifndef[ 	]/b' \  -e '/^#[ 	]*else/b' \  -e '/^#[ 	]*elif[ 	]/b' \  -e '/^#[ 	]*undef[ 	]/b' \  -e '/^#[ 	]*endif/b' \  -e 's/^[ 	]*#.*//' \  %s | %"
+argument|SVf
+literal|" %"
+argument|SVf
+literal|" %s"
 argument|,
+else|#
+directive|else
+argument|Perl_sv_setpvf(aTHX_ cmd,
+literal|"\ %s %s -e '/^[^#]/b' \  -e '/^#[ 	]*include[ 	]/b' \  -e '/^#[ 	]*define[ 	]/b' \  -e '/^#[ 	]*if[ 	]/b' \  -e '/^#[ 	]*ifdef[ 	]/b' \  -e '/^#[ 	]*ifndef[ 	]/b' \  -e '/^#[ 	]*else/b' \  -e '/^#[ 	]*elif[ 	]/b' \  -e '/^#[ 	]*undef[ 	]/b' \  -e '/^#[ 	]*endif/b' \  -e 's/^[ 	]*#.*//' \  %s | %"
+argument|SVf
+literal|" -C %"
+argument|SVf
+literal|" %s"
+argument|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LOC_SED
@@ -9390,7 +9797,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument|if (PerlProc_geteuid() != PL_uid) 		croak(
+argument|if (PerlProc_geteuid() != PL_uid) 		Perl_croak(aTHX_
 literal|"Can't do seteuid!\n"
 argument|); 	}
 endif|#
@@ -9426,31 +9833,35 @@ ifndef|#
 directive|ifndef
 name|IAMSUID
 comment|/* in case script is not readable before setuid */
-argument|if (PL_euid&& 	    PerlLIO_stat(SvPVX(GvSV(PL_curcop->cop_filegv)),&PL_statbuf)>=
+argument|if (PL_euid&& 	    PerlLIO_stat(CopFILE(PL_curcop),&PL_statbuf)>=
 literal|0
 argument|&& 	    PL_statbuf.st_mode& (S_ISUID|S_ISGID)) 	{
 comment|/* try again */
-argument|PerlProc_execv(form(
-literal|"%s/sperl%s"
-argument|, BIN_EXP, PL_patchlevel), PL_origargv); 	    croak(
+argument|PerlProc_execv(Perl_form(aTHX_
+literal|"%s/sperl"
+argument|PERL_FS_VER_FMT, BIN_EXP, 				     (int)PERL_REVISION, (int)PERL_VERSION, 				     (int)PERL_SUBVERSION), PL_origargv); 	    Perl_croak(aTHX_
 literal|"Can't do setuid\n"
 argument|); 	}
 endif|#
 directive|endif
 endif|#
 directive|endif
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Can't open perl script \"%s\": %s\n"
-argument|, 	  SvPVX(GvSV(PL_curcop->cop_filegv)), Strerror(errno));     } }
+argument|, 		   CopFILE(PL_curcop), Strerror(errno));     } }
+comment|/* Mention  * I_SYSSTATVFS	HAS_FSTATVFS  * I_SYSMOUNT  * I_STATFS	HAS_FSTATFS	HAS_GETFSSTAT  * I_MNTENT	HAS_GETMNTENT	HAS_HASMNTOPT  * here so that metaconfig picks them up. */
 ifdef|#
 directive|ifdef
 name|IAMSUID
-argument|static int fd_on_nosuid_fs(int fd) {     int on_nosuid  =
-literal|0
-argument|;     int check_okay =
+argument|STATIC int S_fd_on_nosuid_fs(pTHX_ int fd) {     int check_okay =
 literal|0
 argument|;
-comment|/*  * Preferred order: fstatvfs(), fstatfs(), getmntent().  * fstatvfs() is UNIX98.  * fstatfs() is BSD.  * getmntent() is O(number-of-mounted-filesystems) and can hang.  */
+comment|/* able to do all the required sys/libcalls */
+argument|int on_nosuid  =
+literal|0
+argument|;
+comment|/* the fd is on a nosuid fs */
+comment|/*  * Preferred order: fstatvfs(), fstatfs(), ustat()+getmnt(), getmntent().  * fstatvfs() is UNIX98.  * fstatfs() is 4.3 BSD.  * ustat()+getmnt() is pre-4.3 BSD.  * getmntent() is O(number-of-mounted-filesystems) and can hang on  * an irrelevant filesystem while trying to reach the right one.  */
 ifdef|#
 directive|ifdef
 name|HAS_FSTATVFS
@@ -9459,6 +9870,9 @@ literal|0
 argument|;     on_nosuid  = check_okay&& (stfs.f_flag& ST_NOSUID);
 else|#
 directive|else
+ifdef|#
+directive|ifdef
+name|PERL_MOUNT_NOSUID
 if|#
 directive|if
 name|defined
@@ -9466,76 +9880,73 @@ argument_list|(
 name|HAS_FSTATFS
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
-name|HAS_STRUCT_STATFS_FLAGS
+name|HAS_STRUCT_STATFS
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|HAS_STRUCT_STATFS_F_FLAGS
 argument_list|)
 argument|struct statfs  stfs;     check_okay = fstatfs(fd,&stfs)  ==
 literal|0
-argument|;
-undef|#
-directive|undef
-name|PERL_MOUNT_NOSUID
+argument|;     on_nosuid  = check_okay&& (stfs.f_flags& PERL_MOUNT_NOSUID);
+else|#
+directive|else
 if|#
 directive|if
-operator|!
 name|defined
 argument_list|(
-name|PERL_MOUNT_NOSUID
+name|HAS_FSTAT
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
-name|MNT_NOSUID
-argument_list|)
-define|#
-directive|define
-name|PERL_MOUNT_NOSUID
-value|MNT_NOSUID
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PERL_MOUNT_NOSUID
+name|HAS_USTAT
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
-name|MS_NOSUID
-argument_list|)
-define|#
-directive|define
-name|PERL_MOUNT_NOSUID
-value|MS_NOSUID
-endif|#
-directive|endif
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PERL_MOUNT_NOSUID
+name|HAS_GETMNT
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
-name|M_NOSUID
+name|HAS_STRUCT_FS_DATA
 argument_list|)
-define|#
-directive|define
-name|PERL_MOUNT_NOSUID
-value|M_NOSUID
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|NOSTAT_ONE
+argument_list|)
+argument|struct stat fdst;     if (fstat(fd,&fdst) ==
+literal|0
+argument|) { 	struct ustat us; 	if (ustat(fdst.st_dev,&us) ==
+literal|0
+argument|) { 	    struct fs_data fsd;
+comment|/* NOSTAT_ONE here because we're not examining fields which 	     * vary between that case and STAT_ONE. */
+argument|if (getmnt((int*)
+literal|0
+argument|,&fsd, (int)
+literal|0
+argument|, NOSTAT_ONE, us.f_fname) ==
+literal|0
+argument|) { 		size_t cmplen = sizeof(us.f_fname); 		if (sizeof(fsd.fd_req.path)< cmplen) 		    cmplen = sizeof(fsd.fd_req.path); 		if (strnEQ(fsd.fd_req.path, us.f_fname, cmplen)&& 		    fdst.st_dev == fsd.fd_req.dev) { 			check_okay =
+literal|1
+argument|; 			on_nosuid = fsd.fd_req.flags& PERL_MOUNT_NOSUID; 		    } 		} 	    } 	}     }
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|PERL_MOUNT_NOSUID
-argument|on_nosuid  = check_okay&& (stfs.f_flags& PERL_MOUNT_NOSUID);
+comment|/* fstat+ustat+getmnt */
 endif|#
 directive|endif
+comment|/* fstatfs */
 else|#
 directive|else
 if|#
@@ -9545,11 +9956,13 @@ argument_list|(
 name|HAS_GETMNTENT
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|HAS_HASMNTOPT
 argument_list|)
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|MNTOPT_NOSUID
@@ -9558,9 +9971,7 @@ argument|FILE		*mtab = fopen(
 literal|"/etc/mtab"
 argument|,
 literal|"r"
-argument|);     struct mntent	*entry;     struct stat		stb
-argument_list|,
-argument|fsb;      if (mtab&& (fstat(fd,&stb) ==
+argument|);     struct mntent	*entry;     struct stat		stb, fsb;      if (mtab&& (fstat(fd,&stb) ==
 literal|0
 argument|)) { 	while (entry = getmntent(mtab)) { 	    if (stat(entry->mnt_dir,&fsb) ==
 literal|0
@@ -9575,32 +9986,36 @@ comment|/* A single fs may well fail its stat(). */
 argument|}     }     if (mtab) 	fclose(mtab);
 endif|#
 directive|endif
-comment|/* mntent */
+comment|/* getmntent+hasmntopt */
 endif|#
 directive|endif
-comment|/* statfs */
+comment|/* PERL_MOUNT_NOSUID: fstatfs or fstat+ustat+statfs */
 endif|#
 directive|endif
 comment|/* statvfs */
-argument|if (!check_okay)  	croak(
+argument|if (!check_okay)  	Perl_croak(aTHX_
 literal|"Can't check filesystem of script \"%s\" for nosuid"
-argument|, 	      PL_origfilename);     return on_nosuid; }
+argument|, PL_origfilename);     return on_nosuid; }
 endif|#
 directive|endif
 comment|/* IAMSUID */
-argument|STATIC void validate_suid(char *validarg, char *scriptname, int fdscript) {     int which;
+argument|STATIC void S_validate_suid(pTHX_ char *validarg, char *scriptname, int fdscript) {
+ifdef|#
+directive|ifdef
+name|IAMSUID
+argument|int which;
+endif|#
+directive|endif
 comment|/* do we need to emulate setuid on scripts? */
 comment|/* This code is for those BSD systems that have setuid #! scripts disabled      * in the kernel because of a security problem.  Merely defining DOSUID      * in perl will not fix that problem, but if you have disabled setuid      * scripts in the kernel, this will attempt to emulate setuid and setgid      * on scripts that have those now-otherwise-useless bits set.  The setuid      * root version must be called suidperl or sperlN.NNN.  If regular perl      * discovers that it has opened a setuid script, it calls suidperl with      * the same argv that it had.  If suidperl finds that the script it has      * just opened is NOT setuid root, it sets the effective uid back to the      * uid.  We don't just make perl setuid root because that loses the      * effective uid we had before invoking perl, if it was different from the      * uid.      *      * DOSUID must be defined in both perl and suidperl, and IAMSUID must      * be defined in suidperl only.  suidperl must be setuid root.  The      * Configure script will set this up for you if you want it.      */
 ifdef|#
 directive|ifdef
 name|DOSUID
-argument|dTHR;     char *s
-argument_list|,
-argument|*s2;      if (PerlLIO_fstat(PerlIO_fileno(PL_rsfp),&PL_statbuf)<
+argument|dTHR;     char *s, *s2;      if (PerlLIO_fstat(PerlIO_fileno(PL_rsfp),&PL_statbuf)<
 literal|0
 argument|)
 comment|/* normal stat is insecure */
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Can't stat script \"%s\""
 argument|,PL_origfilename);     if (fdscript<
 literal|0
@@ -9612,11 +10027,11 @@ ifndef|#
 directive|ifndef
 name|HAS_SETREUID
 comment|/* On this access check to make sure the directories are readable, 	 * there is actually a small window that the user could use to make 	 * filename point to an accessible directory.  So there is a faint 	 * chance that someone could execute a setuid script down in a 	 * non-accessible directory.  I don't know what to do about that. 	 * But I don't think it's too important.  The manual lies when 	 * it says access() is useful in setuid programs. 	 */
-argument|if (PerlLIO_access(SvPVX(GvSV(PL_curcop->cop_filegv)),
+argument|if (PerlLIO_access(CopFILE(PL_curcop),
 literal|1
 argument|))
 comment|/*double check*/
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Permission denied"
 argument|);
 else|#
@@ -9641,13 +10056,13 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument||| PerlProc_getuid() != PL_euid || PerlProc_geteuid() != PL_uid) 		croak(
+argument||| PerlProc_getuid() != PL_euid || PerlProc_geteuid() != PL_uid) 		Perl_croak(aTHX_
 literal|"Can't swap uid and euid"
 argument|);
 comment|/* really paranoid */
-argument|if (PerlLIO_stat(SvPVX(GvSV(PL_curcop->cop_filegv)),&tmpstatbuf)<
+argument|if (PerlLIO_stat(CopFILE(PL_curcop),&tmpstatbuf)<
 literal|0
-argument|) 		croak(
+argument|) 		Perl_croak(aTHX_
 literal|"Permission denied"
 argument|);
 comment|/* testing full pathname here */
@@ -9663,7 +10078,7 @@ name|defined
 argument_list|(
 name|NO_NOSUID_CHECK
 argument_list|)
-argument|if (fd_on_nosuid_fs(PerlIO_fileno(PL_rsfp))) 		croak(
+argument|if (fd_on_nosuid_fs(PerlIO_fileno(PL_rsfp))) 		Perl_croak(aTHX_
 literal|"Permission denied"
 argument|);
 endif|#
@@ -9675,8 +10090,14 @@ literal|"w"
 argument|)) {
 comment|/* heh, heh */
 argument|PerlIO_printf(PL_rsfp,
-literal|"User %ld tried to run dev %ld ino %ld in place of dev %ld ino %ld!\n\ (Filename of set-id script was %s, uid %ld gid %ld.)\n\nSincerely,\nperl\n"
-argument|, 			(long)PL_uid,(long)tmpstatbuf.st_dev, (long)tmpstatbuf.st_ino, 			(long)PL_statbuf.st_dev, (long)PL_statbuf.st_ino, 			SvPVX(GvSV(PL_curcop->cop_filegv)), 			(long)PL_statbuf.st_uid, (long)PL_statbuf.st_gid); 		    (void)PerlProc_pclose(PL_rsfp); 		} 		croak(
+literal|"User %"
+argument|Uid_t_f
+literal|" tried to run dev %ld ino %ld in place of dev %ld ino %ld!\n\ (Filename of set-id script was %s, uid %"
+argument|Uid_t_f
+literal|" gid %"
+argument|Gid_t_f
+literal|".)\n\nSincerely,\nperl\n"
+argument|, 			PL_uid,(long)tmpstatbuf.st_dev, (long)tmpstatbuf.st_ino, 			(long)PL_statbuf.st_dev, (long)PL_statbuf.st_ino, 			CopFILE(PL_curcop), 			PL_statbuf.st_uid, PL_statbuf.st_gid); 		    (void)PerlProc_pclose(PL_rsfp); 		} 		Perl_croak(aTHX_
 literal|"Permission denied\n"
 argument|); 	    } 	    if (
 ifdef|#
@@ -9700,11 +10121,11 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument||| PerlProc_getuid() != PL_uid || PerlProc_geteuid() != PL_euid) 		croak(
+argument||| PerlProc_getuid() != PL_uid || PerlProc_geteuid() != PL_euid) 		Perl_croak(aTHX_
 literal|"Can't reswap uid and euid"
 argument|); 	    if (!cando(S_IXUSR,FALSE,&PL_statbuf))
 comment|/* can real uid exec? */
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Permission denied\n"
 argument|); 	}
 endif|#
@@ -9713,13 +10134,13 @@ comment|/* HAS_SETREUID */
 endif|#
 directive|endif
 comment|/* IAMSUID */
-argument|if (!S_ISREG(PL_statbuf.st_mode)) 	    croak(
+argument|if (!S_ISREG(PL_statbuf.st_mode)) 	    Perl_croak(aTHX_
 literal|"Permission denied"
-argument|); 	if (PL_statbuf.st_mode& S_IWOTH) 	    croak(
+argument|); 	if (PL_statbuf.st_mode& S_IWOTH) 	    Perl_croak(aTHX_
 literal|"Setuid/gid script is writable by world"
 argument|); 	PL_doswitches = FALSE;
 comment|/* -s is insecure in suid */
-argument|PL_curcop->cop_line++; 	if (sv_gets(PL_linestr, PL_rsfp,
+argument|CopLINE_inc(PL_curcop); 	if (sv_gets(PL_linestr, PL_rsfp,
 literal|0
 argument|) == Nullch || 	  strnNE(SvPV(PL_linestr,n_a),
 literal|"#!"
@@ -9727,7 +10148,7 @@ argument|,
 literal|2
 argument|) )
 comment|/* required even on Sys V */
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"No #! line"
 argument|); 	s = SvPV(PL_linestr,n_a)+
 literal|2
@@ -9755,7 +10176,7 @@ argument|,
 literal|4
 argument|))
 comment|/* sanity check */
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Not a perl script"
 argument|); 	while (*s ==
 literal|' '
@@ -9765,13 +10186,13 @@ argument|) s++;
 comment|/* 	 * #! arg must be what we saw above.  They can invoke it by 	 * mentioning suidperl explicitly, but they may not add any strange 	 * arguments beyond what #! says if they do invoke suidperl that way. 	 */
 argument|len = strlen(validarg); 	if (strEQ(validarg,
 literal|" PHOOEY "
-argument|) || 	    strnNE(s,validarg,len) || !isSPACE(s[len])) 	    croak(
+argument|) || 	    strnNE(s,validarg,len) || !isSPACE(s[len])) 	    Perl_croak(aTHX_
 literal|"Args must match #! line"
 argument|);
 ifndef|#
 directive|ifndef
 name|IAMSUID
-argument|if (PL_euid != PL_uid&& (PL_statbuf.st_mode& S_ISUID)&& 	    PL_euid == PL_statbuf.st_uid) 	    if (!PL_do_undump) 		croak(
+argument|if (PL_euid != PL_uid&& (PL_statbuf.st_mode& S_ISUID)&& 	    PL_euid == PL_statbuf.st_uid) 	    if (!PL_do_undump) 		Perl_croak(aTHX_
 literal|"YOU HAVEN'T DISABLED SET-ID SCRIPTS IN THE KERNEL YET!\n\ FIX YOUR KERNEL, PUT A C WRAPPER AROUND THIS SCRIPT, OR USE -u AND UNDUMP!\n"
 argument|);
 endif|#
@@ -9784,12 +10205,12 @@ ifndef|#
 directive|ifndef
 name|IAMSUID
 comment|/* try again */
-argument|PerlProc_execv(form(
-literal|"%s/sperl%s"
-argument|, BIN_EXP, PL_patchlevel), PL_origargv);
+argument|PerlProc_execv(Perl_form(aTHX_
+literal|"%s/sperl"
+argument|PERL_FS_VER_FMT, BIN_EXP, 				     (int)PERL_REVISION, (int)PERL_VERSION, 				     (int)PERL_SUBVERSION), PL_origargv);
 endif|#
 directive|endif
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Can't do setuid\n"
 argument|); 	}  	if (PL_statbuf.st_mode& S_ISGID&& PL_statbuf.st_gid != PL_egid) {
 ifdef|#
@@ -9823,7 +10244,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument|if (PerlProc_getegid() != PL_statbuf.st_gid) 		croak(
+argument|if (PerlProc_getegid() != PL_statbuf.st_gid) 		Perl_croak(aTHX_
 literal|"Can't do setegid!\n"
 argument|); 	} 	if (PL_statbuf.st_mode& S_ISUID) { 	    if (PL_statbuf.st_uid != PL_euid)
 ifdef|#
@@ -9858,7 +10279,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument|if (PerlProc_geteuid() != PL_statbuf.st_uid) 		croak(
+argument|if (PerlProc_geteuid() != PL_statbuf.st_uid) 		Perl_croak(aTHX_
 literal|"Can't do seteuid!\n"
 argument|); 	} 	else if (PL_uid) {
 comment|/* oops, mustn't run as root */
@@ -9893,9 +10314,9 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-argument|if (PerlProc_geteuid() != PL_uid) 		croak(
+argument|if (PerlProc_geteuid() != PL_uid) 		Perl_croak(aTHX_
 literal|"Can't do seteuid!\n"
-argument|); 	} 	init_ids(); 	if (!cando(S_IXUSR,TRUE,&PL_statbuf)) 	    croak(
+argument|); 	} 	init_ids(); 	if (!cando(S_IXUSR,TRUE,&PL_statbuf)) 	    Perl_croak(aTHX_
 literal|"Permission denied\n"
 argument|);
 comment|/* they can't do this */
@@ -9903,13 +10324,13 @@ argument|}
 ifdef|#
 directive|ifdef
 name|IAMSUID
-argument|else if (PL_preprocess) 	croak(
+argument|else if (PL_preprocess) 	Perl_croak(aTHX_
 literal|"-P not allowed for setuid/setgid script\n"
 argument|);     else if (fdscript>=
 literal|0
-argument|) 	croak(
+argument|) 	Perl_croak(aTHX_
 literal|"fd script not allowed in suidperl\n"
-argument|);     else 	croak(
+argument|);     else 	Perl_croak(aTHX_
 literal|"Script is not setuid/setgid in suidperl\n"
 argument|);
 comment|/* We absolutely must clear out any saved ids here, so we */
@@ -9923,9 +10344,9 @@ argument|);
 comment|/* just in case rewind didn't */
 argument|for (which =
 literal|1
-argument|; PL_origargv[which]&& PL_origargv[which] != scriptname; which++) ;     if (!PL_origargv[which]) 	croak(
+argument|; PL_origargv[which]&& PL_origargv[which] != scriptname; which++) ;     if (!PL_origargv[which]) 	Perl_croak(aTHX_
 literal|"Permission denied"
-argument|);     PL_origargv[which] = savepv(form(
+argument|);     PL_origargv[which] = savepv(Perl_form(aTHX_
 literal|"/dev/fd/%d/%s"
 argument|, 				  PerlIO_fileno(PL_rsfp), PL_origargv[which]));
 if|#
@@ -9945,11 +10366,11 @@ argument|);
 comment|/* ensure no close-on-exec */
 endif|#
 directive|endif
-argument|PerlProc_execv(form(
-literal|"%s/perl%s"
-argument|, BIN_EXP, PL_patchlevel), PL_origargv);
+argument|PerlProc_execv(Perl_form(aTHX_
+literal|"%s/perl"
+argument|PERL_FS_VER_FMT, BIN_EXP, 			     (int)PERL_REVISION, (int)PERL_VERSION, 			     (int)PERL_SUBVERSION), PL_origargv);
 comment|/* try again */
-argument|croak(
+argument|Perl_croak(aTHX_
 literal|"Can't do setuid\n"
 argument|);
 endif|#
@@ -9965,7 +10386,7 @@ directive|ifndef
 name|SETUID_SCRIPTS_ARE_SECURE_NOW
 argument|dTHR; 	PerlLIO_fstat(PerlIO_fileno(PL_rsfp),&PL_statbuf);
 comment|/* may be either wrapped or real suid */
-argument|if ((PL_euid != PL_uid&& PL_euid == PL_statbuf.st_uid&& PL_statbuf.st_mode& S_ISUID) 	    || 	    (PL_egid != PL_gid&& PL_egid == PL_statbuf.st_gid&& PL_statbuf.st_mode& S_ISGID) 	   ) 	    if (!PL_do_undump) 		croak(
+argument|if ((PL_euid != PL_uid&& PL_euid == PL_statbuf.st_uid&& PL_statbuf.st_mode& S_ISUID) 	    || 	    (PL_egid != PL_gid&& PL_egid == PL_statbuf.st_gid&& PL_statbuf.st_mode& S_ISGID) 	   ) 	    if (!PL_do_undump) 		Perl_croak(aTHX_
 literal|"YOU HAVEN'T DISABLED SET-ID SCRIPTS IN THE KERNEL YET!\n\ FIX YOUR KERNEL, PUT A C WRAPPER AROUND THIS SCRIPT, OR USE -u AND UNDUMP!\n"
 argument|);
 endif|#
@@ -9976,15 +10397,13 @@ argument|}
 endif|#
 directive|endif
 comment|/* DOSUID */
-argument|}  STATIC void find_beginning(void) {     register char *s
-argument_list|,
-argument|*s2;
+argument|}  STATIC void S_find_beginning(pTHX) {     register char *s, *s2;
 comment|/* skip forward in input to the real script? */
 argument|forbid_setid(
 literal|"-x"
 argument|);     while (PL_doextract) { 	if ((s = sv_gets(PL_linestr, PL_rsfp,
 literal|0
-argument|)) == Nullch) 	    croak(
+argument|)) == Nullch) 	    Perl_croak(aTHX_
 literal|"No Perl script found in input\n"
 argument|); 	if (*s ==
 literal|'#'
@@ -10020,11 +10439,7 @@ argument|,
 literal|4
 argument|))
 comment|/*SUPPRESS 530*/
-argument|while (s = moreswitches(s)) ; 	    } 	    if (PL_cddir&& PerlDir_chdir(PL_cddir)<
-literal|0
-argument|) 		croak(
-literal|"Can't chdir to %s"
-argument|,PL_cddir); 	}     } }   STATIC void init_ids(void) {     PL_uid = (int)PerlProc_getuid();     PL_euid = (int)PerlProc_geteuid();     PL_gid = (int)PerlProc_getgid();     PL_egid = (int)PerlProc_getegid();
+argument|while ((s = moreswitches(s))) 			; 	    } 	}     } }   STATIC void S_init_ids(pTHX) {     PL_uid = PerlProc_getuid();     PL_euid = PerlProc_geteuid();     PL_gid = PerlProc_getgid();     PL_egid = PerlProc_getegid();
 ifdef|#
 directive|ifdef
 name|VMS
@@ -10035,11 +10450,11 @@ literal|16
 argument|;
 endif|#
 directive|endif
-argument|PL_tainting |= (PL_uid&& (PL_euid != PL_uid || PL_egid != PL_gid)); }  STATIC void forbid_setid(char *s) {     if (PL_euid != PL_uid)         croak(
+argument|PL_tainting |= (PL_uid&& (PL_euid != PL_uid || PL_egid != PL_gid)); }  STATIC void S_forbid_setid(pTHX_ char *s) {     if (PL_euid != PL_uid)         Perl_croak(aTHX_
 literal|"No %s allowed while running setuid"
-argument|, s);     if (PL_egid != PL_gid)         croak(
+argument|, s);     if (PL_egid != PL_gid)         Perl_croak(aTHX_
 literal|"No %s allowed while running setgid"
-argument|, s); }  STATIC void init_debugger(void) {     dTHR;     PL_curstash = PL_debstash;     PL_dbargs = GvAV(gv_AVadd((gv_fetchpv(
+argument|, s); }  void Perl_init_debugger(pTHX) {     dTHR;     HV *ostash = PL_curstash;      PL_curstash = PL_debstash;     PL_dbargs = GvAV(gv_AVadd((gv_fetchpv(
 literal|"args"
 argument|, GV_ADDMULTI, SVt_PVAV))));     AvREAL_off(PL_dbargs);     PL_DBgv = gv_fetchpv(
 literal|"DB"
@@ -10047,7 +10462,9 @@ argument|, GV_ADDMULTI, SVt_PVGV);     PL_DBline = gv_fetchpv(
 literal|"dbline"
 argument|, GV_ADDMULTI, SVt_PVAV);     PL_DBsub = gv_HVadd(gv_fetchpv(
 literal|"sub"
-argument|, GV_ADDMULTI, SVt_PVHV));     PL_DBsingle = GvSV((gv_fetchpv(
+argument|, GV_ADDMULTI, SVt_PVHV));     sv_upgrade(GvSV(PL_DBsub), SVt_IV);
+comment|/* IVX accessed if PERLDB_SUB_NN */
+argument|PL_DBsingle = GvSV((gv_fetchpv(
 literal|"single"
 argument|, GV_ADDMULTI, SVt_PV)));     sv_setiv(PL_DBsingle,
 literal|0
@@ -10059,7 +10476,7 @@ argument|);      PL_DBsignal = GvSV((gv_fetchpv(
 literal|"signal"
 argument|, GV_ADDMULTI, SVt_PV)));     sv_setiv(PL_DBsignal,
 literal|0
-argument|);      PL_curstash = PL_defstash; }
+argument|);      PL_curstash = ostash; }
 ifndef|#
 directive|ifndef
 name|STRESS_REALLOC
@@ -10082,7 +10499,7 @@ value|(1)
 comment|/* unreasonable */
 endif|#
 directive|endif
-argument|void init_stacks(ARGSproto) {
+argument|void Perl_init_stacks(pTHX) {
 comment|/* start with 128-item stack and 8K cxstack */
 argument|PL_curstackinfo = new_stackinfo(REASONABLE(
 literal|128
@@ -10108,7 +10525,7 @@ argument|,PL_markstack,REASONABLE(
 literal|32
 argument|),I32);     PL_markstack_ptr = PL_markstack;     PL_markstack_max = PL_markstack + REASONABLE(
 literal|32
-argument|);      SET_MARKBASE;      New(
+argument|);      SET_MARK_OFFSET;      New(
 literal|54
 argument|,PL_scopestack,REASONABLE(
 literal|32
@@ -10136,9 +10553,9 @@ argument|); }
 undef|#
 directive|undef
 name|REASONABLE
-argument|STATIC void nuke_stacks(void) {     dTHR;     while (PL_curstackinfo->si_next) 	PL_curstackinfo = PL_curstackinfo->si_next;     while (PL_curstackinfo) { 	PERL_SI *p = PL_curstackinfo->si_prev;
+argument|STATIC void S_nuke_stacks(pTHX) {     dTHR;     while (PL_curstackinfo->si_next) 	PL_curstackinfo = PL_curstackinfo->si_next;     while (PL_curstackinfo) { 	PERL_SI *p = PL_curstackinfo->si_prev;
 comment|/* curstackinfo->si_stack got nuked by sv_free_arenas() */
-argument|Safefree(PL_curstackinfo->si_cxstack); 	Safefree(PL_curstackinfo); 	PL_curstackinfo = p;     }     Safefree(PL_tmps_stack);     Safefree(PL_markstack);     Safefree(PL_scopestack);     Safefree(PL_savestack);     Safefree(PL_retstack);     DEBUG( { 	Safefree(PL_debname); 	Safefree(PL_debdelim);     } ) }
+argument|Safefree(PL_curstackinfo->si_cxstack); 	Safefree(PL_curstackinfo); 	PL_curstackinfo = p;     }     Safefree(PL_tmps_stack);     Safefree(PL_markstack);     Safefree(PL_scopestack);     Safefree(PL_savestack);     Safefree(PL_retstack); }
 ifndef|#
 directive|ifndef
 name|PERL_OBJECT
@@ -10146,18 +10563,18 @@ argument|static PerlIO *tmpfp;
 comment|/* moved outside init_lexer() because of UNICOS bug */
 endif|#
 directive|endif
-argument|STATIC void init_lexer(void) {
+argument|STATIC void S_init_lexer(pTHX) {
 ifdef|#
 directive|ifdef
 name|PERL_OBJECT
 argument|PerlIO *tmpfp;
 endif|#
 directive|endif
-argument|tmpfp = PL_rsfp;     PL_rsfp = Nullfp;     lex_start(PL_linestr);     PL_rsfp = tmpfp;     PL_subname = newSVpv(
+argument|tmpfp = PL_rsfp;     PL_rsfp = Nullfp;     lex_start(PL_linestr);     PL_rsfp = tmpfp;     PL_subname = newSVpvn(
 literal|"main"
 argument|,
 literal|4
-argument|); }  STATIC void init_predump_symbols(void) {     dTHR;     GV *tmpgv;     GV *othergv;      sv_setpvn(perl_get_sv(
+argument|); }  STATIC void S_init_predump_symbols(pTHX) {     dTHR;     GV *tmpgv;     IO *io;      sv_setpvn(get_sv(
 literal|"\""
 argument|, TRUE),
 literal|" "
@@ -10165,25 +10582,23 @@ argument|,
 literal|1
 argument|);     PL_stdingv = gv_fetchpv(
 literal|"STDIN"
-argument|,TRUE, SVt_PVIO);     GvMULTI_on(PL_stdingv);     IoIFP(GvIOp(PL_stdingv)) = PerlIO_stdin();     tmpgv = gv_fetchpv(
+argument|,TRUE, SVt_PVIO);     GvMULTI_on(PL_stdingv);     io = GvIOp(PL_stdingv);     IoIFP(io) = PerlIO_stdin();     tmpgv = gv_fetchpv(
 literal|"stdin"
-argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(GvIOp(PL_stdingv));      tmpgv = gv_fetchpv(
+argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(io);      tmpgv = gv_fetchpv(
 literal|"STDOUT"
-argument|,TRUE, SVt_PVIO);     GvMULTI_on(tmpgv);     IoOFP(GvIOp(tmpgv)) = IoIFP(GvIOp(tmpgv)) = PerlIO_stdout();     setdefout(tmpgv);     tmpgv = gv_fetchpv(
+argument|,TRUE, SVt_PVIO);     GvMULTI_on(tmpgv);     io = GvIOp(tmpgv);     IoOFP(io) = IoIFP(io) = PerlIO_stdout();     setdefout(tmpgv);     tmpgv = gv_fetchpv(
 literal|"stdout"
-argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(GvIOp(PL_defoutgv));      othergv = gv_fetchpv(
+argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(io);      PL_stderrgv = gv_fetchpv(
 literal|"STDERR"
-argument|,TRUE, SVt_PVIO);     GvMULTI_on(othergv);     IoOFP(GvIOp(othergv)) = IoIFP(GvIOp(othergv)) = PerlIO_stderr();     tmpgv = gv_fetchpv(
+argument|,TRUE, SVt_PVIO);     GvMULTI_on(PL_stderrgv);     io = GvIOp(PL_stderrgv);     IoOFP(io) = IoIFP(io) = PerlIO_stderr();     tmpgv = gv_fetchpv(
 literal|"stderr"
-argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(GvIOp(othergv));      PL_statname = NEWSV(
+argument|,TRUE, SVt_PV);     GvMULTI_on(tmpgv);     GvIOp(tmpgv) = (IO*)SvREFCNT_inc(io);      PL_statname = NEWSV(
 literal|66
 argument|,
 literal|0
 argument|);
 comment|/* last filename we did stat on */
-argument|if (!PL_osname) 	PL_osname = savepv(OSNAME); }  STATIC void init_postdump_symbols(register int argc, register char **argv, register char **env) {     dTHR;     char *s;     SV *sv;     GV* tmpgv;      argc--
-argument_list|,
-argument|argv++;
+argument|if (!PL_osname) 	PL_osname = savepv(OSNAME); }  STATIC void S_init_postdump_symbols(pTHX_ register int argc, register char **argv, register char **env) {     dTHR;     char *s;     SV *sv;     GV* tmpgv;      argc--,argv++;
 comment|/* skip name of script */
 argument|if (PL_doswitches) { 	for (; argc>
 literal|0
@@ -10199,13 +10614,15 @@ argument|][
 literal|1
 argument|] ==
 literal|'-'
-argument|) { 		argc--
-argument_list|,
-argument|argv++; 		break; 	    } 	    if (s = strchr(argv[
+argument|&& !argv[
+literal|0
+argument|][
+literal|2
+argument|]) { 		argc--,argv++; 		break; 	    } 	    if ((s = strchr(argv[
 literal|0
 argument|],
 literal|'='
-argument|)) { 		*s++ =
+argument|))) { 		*s++ =
 literal|'\0'
 argument|; 		sv_setpv(GvSV(gv_fetchpv(argv[
 literal|0
@@ -10233,34 +10650,54 @@ argument|);     sv_upgrade(PL_bodytarget, SVt_PVFM);     sv_setpvn(PL_bodytarget
 literal|""
 argument|,
 literal|0
-argument|);     PL_formtarget = PL_bodytarget;      TAINT;     if (tmpgv = gv_fetchpv(
+argument|);     PL_formtarget = PL_bodytarget;      TAINT;     if ((tmpgv = gv_fetchpv(
 literal|"0"
-argument|,TRUE, SVt_PV)) { 	sv_setpv(GvSV(tmpgv),PL_origfilename); 	magicname(
+argument|,TRUE, SVt_PV))) { 	sv_setpv(GvSV(tmpgv),PL_origfilename); 	magicname(
 literal|"0"
 argument|,
 literal|"0"
 argument|,
 literal|1
-argument|);     }     if (tmpgv = gv_fetchpv(
+argument|);     }     if ((tmpgv = gv_fetchpv(
 literal|"\030"
-argument|,TRUE, SVt_PV)) 	sv_setpv(GvSV(tmpgv),PL_origargv[
+argument|,TRUE, SVt_PV)))
+ifdef|#
+directive|ifdef
+name|OS2
+argument|sv_setpv(GvSV(tmpgv), os2_execname());
+else|#
+directive|else
+argument|sv_setpv(GvSV(tmpgv),PL_origargv[
 literal|0
-argument|]);     if (PL_argvgv = gv_fetchpv(
+argument|]);
+endif|#
+directive|endif
+argument|if ((PL_argvgv = gv_fetchpv(
 literal|"ARGV"
-argument|,TRUE, SVt_PVAV)) { 	GvMULTI_on(PL_argvgv); 	(void)gv_AVadd(PL_argvgv); 	av_clear(GvAVn(PL_argvgv)); 	for (; argc>
+argument|,TRUE, SVt_PVAV))) { 	GvMULTI_on(PL_argvgv); 	(void)gv_AVadd(PL_argvgv); 	av_clear(GvAVn(PL_argvgv)); 	for (; argc>
 literal|0
-argument|; argc--,argv++) { 	    av_push(GvAVn(PL_argvgv),newSVpv(argv[
+argument|; argc--,argv++) { 	    SV *sv = newSVpv(argv[
 literal|0
 argument|],
 literal|0
-argument|)); 	}     }     if (PL_envgv = gv_fetchpv(
+argument|); 	    av_push(GvAVn(PL_argvgv),sv); 	    if (PL_widesyscalls) 		sv_utf8_upgrade(sv); 	}     }     if ((PL_envgv = gv_fetchpv(
 literal|"ENV"
-argument|,TRUE, SVt_PVHV)) { 	HV *hv; 	GvMULTI_on(PL_envgv); 	hv = GvHVn(PL_envgv); 	hv_magic(hv, PL_envgv,
+argument|,TRUE, SVt_PVHV))) { 	HV *hv; 	GvMULTI_on(PL_envgv); 	hv = GvHVn(PL_envgv); 	hv_magic(hv, PL_envgv,
 literal|'E'
 argument|);
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|VMS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|EPOC
+argument_list|)
 comment|/* VMS doesn't have environ array */
 comment|/* Note that if the supplied env parameter is actually a copy 	   of the global environ then it may now point to free'd memory 	   if the environment has been modified since. To avoid this 	   problem we treat env==NULL as meaning 'use the default' 	*/
 argument|if (!env) 	    env = environ; 	if (env != environ) 	    environ[
@@ -10310,17 +10747,17 @@ name|DYNAMIC_ENV_FETCH
 argument|HvNAME(hv) = savepv(ENV_HV_NAME);
 endif|#
 directive|endif
-argument|}     TAINT_NOT;     if (tmpgv = gv_fetchpv(
+argument|}     TAINT_NOT;     if ((tmpgv = gv_fetchpv(
 literal|"$"
-argument|,TRUE, SVt_PV)) 	sv_setiv(GvSV(tmpgv), (IV)getpid()); }  STATIC void init_perllib(void) {     char *s;     if (!PL_tainting) {
+argument|,TRUE, SVt_PV))) 	sv_setiv(GvSV(tmpgv), (IV)PerlProc_getpid()); }  STATIC void S_init_perllib(pTHX) {     char *s;     if (!PL_tainting) {
 ifndef|#
 directive|ifndef
 name|VMS
 argument|s = PerlEnv_getenv(
 literal|"PERL5LIB"
-argument|); 	if (s) 	    incpush(s, TRUE); 	else 	    incpush(PerlEnv_getenv(
+argument|); 	if (s) 	    incpush(s, TRUE, TRUE); 	else 	    incpush(PerlEnv_getenv(
 literal|"PERLLIB"
-argument|), FALSE);
+argument|), FALSE, FALSE);
 else|#
 directive|else
 comment|/* VMS */
@@ -10333,26 +10770,26 @@ argument|; 	if (my_trnlnm(
 literal|"PERL5LIB"
 argument|,buf,
 literal|0
-argument|)) 	    do { incpush(buf,TRUE); } while (my_trnlnm(
+argument|)) 	    do { incpush(buf,TRUE,TRUE); } while (my_trnlnm(
 literal|"PERL5LIB"
 argument|,buf,++idx)); 	else 	    while (my_trnlnm(
 literal|"PERLLIB"
-argument|,buf,idx++)) incpush(buf,FALSE);
+argument|,buf,idx++)) incpush(buf,FALSE,FALSE);
 endif|#
 directive|endif
 comment|/* VMS */
 argument|}
-comment|/* Use the ~-expanded versions of APPLLIB (undocumented),     ARCHLIB PRIVLIB SITEARCH and SITELIB  */
+comment|/* Use the ~-expanded versions of APPLLIB (undocumented),     ARCHLIB PRIVLIB SITEARCH SITELIB VENDORARCH and VENDORLIB */
 ifdef|#
 directive|ifdef
 name|APPLLIB_EXP
-argument|incpush(APPLLIB_EXP, TRUE);
+argument|incpush(APPLLIB_EXP, TRUE, TRUE);
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|ARCHLIB_EXP
-argument|incpush(ARCHLIB_EXP, FALSE);
+argument|incpush(ARCHLIB_EXP, FALSE, FALSE);
 endif|#
 directive|endif
 ifndef|#
@@ -10370,16 +10807,26 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
-argument|incpush(PRIVLIB_EXP, TRUE);
+argument|incpush(PRIVLIB_EXP, TRUE, FALSE);
 else|#
 directive|else
-argument|incpush(PRIVLIB_EXP, FALSE);
+argument|incpush(PRIVLIB_EXP, FALSE, FALSE);
 endif|#
 directive|endif
 ifdef|#
 directive|ifdef
 name|SITEARCH_EXP
-argument|incpush(SITEARCH_EXP, FALSE);
+comment|/* sitearch is always relative to sitelib on Windows for      * DLL-based path intuition to work correctly */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+argument|incpush(SITEARCH_EXP, FALSE, FALSE);
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -10391,17 +10838,66 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
-argument|incpush(SITELIB_EXP, TRUE);
+argument|incpush(SITELIB_EXP, TRUE, FALSE);
+comment|/* this picks up sitearch as well */
 else|#
 directive|else
-argument|incpush(SITELIB_EXP, FALSE);
+argument|incpush(SITELIB_EXP, FALSE, FALSE);
 endif|#
 directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SITELIB_STEM
+comment|/* Search for version-specific dirs below here */
+argument|incpush(SITELIB_STEM, FALSE, TRUE);
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_VENDORARCH_EXP
+comment|/* vendorarch is always relative to vendorlib on Windows for      * DLL-based path intuition to work correctly */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+argument|incpush(PERL_VENDORARCH_EXP, FALSE, FALSE);
+endif|#
+directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_VENDORLIB_EXP
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+argument|incpush(PERL_VENDORLIB_EXP, TRUE, FALSE);
+comment|/* this picks up vendorarch as well */
+else|#
+directive|else
+argument|incpush(PERL_VENDORLIB_EXP, FALSE, FALSE);
+endif|#
+directive|endif
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PERL_VENDORLIB_STEM
+comment|/* Search for version-specific dirs below here */
+argument|incpush(PERL_VENDORLIB_STEM, FALSE, TRUE);
 endif|#
 directive|endif
 argument|if (!PL_tainting) 	incpush(
 literal|"."
-argument|, FALSE); }
+argument|, FALSE, FALSE); }
 if|#
 directive|if
 name|defined
@@ -10448,30 +10944,7 @@ parameter_list|)
 value|(s)
 endif|#
 directive|endif
-argument|STATIC void incpush(char *p, int addsubdirs) {     SV *subdir = Nullsv;      if (!p) 	return;      if (addsubdirs) { 	subdir = sv_newmortal(); 	if (!PL_archpat_auto) { 	    STRLEN len = (sizeof(ARCHNAME) + strlen(PL_patchlevel) 			  + sizeof(
-literal|"//auto"
-argument|)); 	    New(
-literal|55
-argument|, PL_archpat_auto, len, char); 	    sprintf(PL_archpat_auto,
-literal|"/%s/%s/auto"
-argument|, ARCHNAME, PL_patchlevel);
-ifdef|#
-directive|ifdef
-name|VMS
-argument|for (len = sizeof(ARCHNAME) +
-literal|2
-argument|; 	     PL_archpat_auto[len] !=
-literal|'\0'
-argument|&& PL_archpat_auto[len] !=
-literal|'/'
-argument|; len++) 		if (PL_archpat_auto[len] ==
-literal|'.'
-argument|) PL_archpat_auto[len] =
-literal|'_'
-argument|;
-endif|#
-directive|endif
-argument|}     }
+argument|STATIC void S_incpush(pTHX_ char *p, int addsubdirs, int addoldvers) {     SV *subdir = Nullsv;      if (!p || !*p) 	return;      if (addsubdirs || addoldvers) { 	subdir = sv_newmortal();     }
 comment|/* Break at all separators */
 argument|while (p&& *p) { 	SV *libdir = NEWSV(
 literal|55
@@ -10481,7 +10954,7 @@ argument|); 	char *s;
 comment|/* skip any consecutive separators */
 argument|while ( *p == PERLLIB_SEP ) {
 comment|/* Uncomment the next line for PATH semantics */
-comment|/* av_push(GvAVn(PL_incgv), newSVpv(".", 1)); */
+comment|/* av_push(GvAVn(PL_incgv), newSVpvn(".", 1)); */
 argument|p++; 	}  	if ( (s = strchr(p, PERLLIB_SEP)) != Nullch ) { 	    sv_setpvn(libdir, PERLLIB_MANGLE(p, (STRLEN)(s - p)), 		      (STRLEN)(s - p)); 	    p = s +
 literal|1
 argument|; 	} 	else { 	    sv_setpv(libdir, PERLLIB_MANGLE(p,
@@ -10490,7 +10963,15 @@ argument|)); 	    p = Nullch;
 comment|/* break out */
 argument|}
 comment|/* 	 * BEFORE pushing libdir onto @INC we may first push version- and 	 * archname-specific sub-directories. 	 */
-argument|if (addsubdirs) { 	    struct stat tmpstatbuf;
+argument|if (addsubdirs || addoldvers) {
+ifdef|#
+directive|ifdef
+name|PERL_INC_VERSION_LIST
+comment|/* Configure terminates PERL_INC_VERSION_LIST with a NULL */
+argument|const char *incverlist[] = { PERL_INC_VERSION_LIST }; 	    const char **incver;
+endif|#
+directive|endif
+argument|struct stat tmpstatbuf;
 ifdef|#
 directive|ifdef
 name|VMS
@@ -10500,41 +10981,76 @@ argument|] ==
 literal|'/'
 argument|) len--;
 comment|/* Cosmetic */
-argument|sv_usepvn(libdir,unix,len); 	    } 	    else 		PerlIO_printf(PerlIO_stderr(),
+argument|sv_usepvn(libdir,unix,len); 	    } 	    else 		PerlIO_printf(Perl_error_log,
 literal|"Failed to unixify @INC element \"%s\"\n"
 argument|, 			      SvPV(libdir,len));
 endif|#
 directive|endif
-comment|/* .../archname/version if -d .../archname/version/auto */
-argument|sv_setsv(subdir, libdir); 	    sv_catpv(subdir, PL_archpat_auto); 	    if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
+argument|if (addsubdirs) {
+comment|/* .../version/archname if -d .../version/archname */
+argument|Perl_sv_setpvf(aTHX_ subdir,
+literal|"%"
+argument|SVf
+literal|"/"
+argument|PERL_FS_VER_FMT
+literal|"/%s"
+argument|,  				libdir, 			       (int)PERL_REVISION, (int)PERL_VERSION, 			       (int)PERL_SUBVERSION, ARCHNAME); 		if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
 literal|0
-argument|&& 		  S_ISDIR(tmpstatbuf.st_mode)) 		av_push(GvAVn(PL_incgv), 			newSVpv(SvPVX(subdir), SvCUR(subdir) - sizeof
-literal|"auto"
-argument|));
-comment|/* .../archname if -d .../archname/auto */
-argument|sv_insert(subdir, SvCUR(libdir) + sizeof(ARCHNAME), 		      strlen(PL_patchlevel) +
-literal|1
-argument|,
-literal|""
-argument|,
+argument|&& 		      S_ISDIR(tmpstatbuf.st_mode)) 		    av_push(GvAVn(PL_incgv), newSVsv(subdir));
+comment|/* .../version if -d .../version */
+argument|Perl_sv_setpvf(aTHX_ subdir,
+literal|"%"
+argument|SVf
+literal|"/"
+argument|PERL_FS_VER_FMT, libdir, 			       (int)PERL_REVISION, (int)PERL_VERSION, 			       (int)PERL_SUBVERSION); 		if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
 literal|0
-argument|); 	    if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
+argument|&& 		      S_ISDIR(tmpstatbuf.st_mode)) 		    av_push(GvAVn(PL_incgv), newSVsv(subdir));
+comment|/* .../archname if -d .../archname */
+argument|Perl_sv_setpvf(aTHX_ subdir,
+literal|"%"
+argument|SVf
+literal|"/%s"
+argument|, libdir, ARCHNAME); 		if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
 literal|0
-argument|&& 		  S_ISDIR(tmpstatbuf.st_mode)) 		av_push(GvAVn(PL_incgv), 			newSVpv(SvPVX(subdir), SvCUR(subdir) - sizeof
-literal|"auto"
-argument|)); 	}
+argument|&& 		      S_ISDIR(tmpstatbuf.st_mode)) 		    av_push(GvAVn(PL_incgv), newSVsv(subdir)); 	    }
+ifdef|#
+directive|ifdef
+name|PERL_INC_VERSION_LIST
+argument|if (addoldvers) { 		for (incver = incverlist; *incver; incver++) {
+comment|/* .../xxx if -d .../xxx */
+argument|Perl_sv_setpvf(aTHX_ subdir,
+literal|"%"
+argument|SVf
+literal|"/%s"
+argument|, libdir, *incver); 		    if (PerlLIO_stat(SvPVX(subdir),&tmpstatbuf)>=
+literal|0
+argument|&& 			  S_ISDIR(tmpstatbuf.st_mode)) 			av_push(GvAVn(PL_incgv), newSVsv(subdir)); 		} 	    }
+endif|#
+directive|endif
+argument|}
 comment|/* finally push this lib directory on the end of @INC */
 argument|av_push(GvAVn(PL_incgv), libdir);     } }
 ifdef|#
 directive|ifdef
 name|USE_THREADS
-argument|STATIC struct perl_thread * init_main_thread() {     struct perl_thread *thr;     XPV *xpv;      Newz(
+argument|STATIC struct perl_thread * S_init_main_thread(pTHX) {
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_CONTEXT
+argument_list|)
+argument|struct perl_thread *thr;
+endif|#
+directive|endif
+argument|XPV *xpv;      Newz(
 literal|53
 argument|, thr,
 literal|1
-argument|, struct perl_thread);     PL_curcop =&PL_compiling;     thr->cvcache = newHV();     thr->threadsv = newAV();
+argument|, struct perl_thread);     PL_curcop =&PL_compiling;     thr->interp = PERL_GET_INTERP;     thr->cvcache = newHV();     thr->threadsv = newAV();
 comment|/* thr->threadsvp is set when find_threadsv is called */
-argument|thr->specific = newAV();     thr->errhv = newHV();     thr->flags = THRf_R_JOINABLE;     MUTEX_INIT(&thr->mutex);
+argument|thr->specific = newAV();     thr->flags = THRf_R_JOINABLE;     MUTEX_INIT(&thr->mutex);
 comment|/* Handcraft thrsv similarly to mess_sv */
 argument|New(
 literal|53
@@ -10556,13 +11072,15 @@ argument|;
 comment|/* in the trailing_nul field */
 argument|thr->oursv = PL_thrsv;     PL_chopset =
 literal|" \n-"
+argument|;     PL_dumpindent =
+literal|4
 argument|;      MUTEX_LOCK(&PL_threads_mutex);     PL_nthreads++;     thr->tid =
 literal|0
 argument|;     thr->next = thr;     thr->prev = thr;     MUTEX_UNLOCK(&PL_threads_mutex);
 ifdef|#
 directive|ifdef
 name|HAVE_THREAD_INTERN
-argument|init_thread_intern(thr);
+argument|Perl_init_thread_intern(thr);
 endif|#
 directive|endif
 ifdef|#
@@ -10575,7 +11093,7 @@ argument|thr->self = pthread_self();
 endif|#
 directive|endif
 comment|/* SET_THREAD_SELF */
-argument|SET_THR(thr);
+argument|PERL_SET_THX(thr);
 comment|/*      * These must come after the SET_THR because sv_setpvn does      * SvTAINT and the taint fields require dTHR.      */
 argument|PL_toptarget = NEWSV(
 literal|0
@@ -10593,7 +11111,7 @@ argument|);     sv_upgrade(PL_bodytarget, SVt_PVFM);     sv_setpvn(PL_bodytarget
 literal|""
 argument|,
 literal|0
-argument|);     PL_formtarget = PL_bodytarget;     thr->errsv = newSVpv(
+argument|);     PL_formtarget = PL_bodytarget;     thr->errsv = newSVpvn(
 literal|""
 argument|,
 literal|0
@@ -10603,7 +11121,7 @@ argument|);
 comment|/* Ensure $@ is initialised early */
 argument|PL_maxscream = -
 literal|1
-argument|;     PL_regcompp = FUNC_NAME_TO_PTR(pregcomp);     PL_regexecp = FUNC_NAME_TO_PTR(regexec_flags);     PL_regindent =
+argument|;     PL_regcompp = MEMBER_TO_FPTR(Perl_pregcomp);     PL_regexecp = MEMBER_TO_FPTR(Perl_regexec_flags);     PL_regint_start = MEMBER_TO_FPTR(Perl_re_intuit_start);     PL_regint_string = MEMBER_TO_FPTR(Perl_re_intuit_string);     PL_regfree = MEMBER_TO_FPTR(Perl_pregfree);     PL_regindent =
 literal|0
 argument|;     PL_reginterp_cnt =
 literal|0
@@ -10611,17 +11129,40 @@ argument|;      return thr; }
 endif|#
 directive|endif
 comment|/* USE_THREADS */
-argument|void call_list(I32 oldscope, AV *paramList) {     dTHR;     line_t oldline = PL_curcop->cop_line;     STRLEN len;     dJMPENV;     int ret;      while (AvFILL(paramList)>=
+argument|void Perl_call_list(pTHX_ I32 oldscope, AV *paramList) {     dTHR;     SV *atsv;     line_t oldline = CopLINE(PL_curcop);     CV *cv;     STRLEN len;     int ret;     dJMPENV;      while (AvFILL(paramList)>=
 literal|0
-argument|) { 	CV *cv = (CV*)av_shift(paramList);  	SAVEFREESV(cv);  	JMPENV_PUSH(ret); 	switch (ret) { 	case
+argument|) { 	cv = (CV*)av_shift(paramList); 	SAVEFREESV(cv);
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+argument|CALLPROTECT(aTHX_ pcur_env,&ret, MEMBER_TO_FPTR(S_vcall_list_body), cv);
+else|#
+directive|else
+argument|JMPENV_PUSH(ret);
+endif|#
+directive|endif
+argument|switch (ret) { 	case
 literal|0
-argument|: { 		SV* atsv = ERRSV; 		PUSHMARK(PL_stack_sp); 		perl_call_sv((SV*)cv, G_EVAL|G_DISCARD); 		(void)SvPV(atsv, len); 		if (len) { 		    JMPENV_POP; 		    PL_curcop =&PL_compiling; 		    PL_curcop->cop_line = oldline; 		    if (paramList == PL_beginav) 			sv_catpv(atsv,
+argument|:
+ifndef|#
+directive|ifndef
+name|PERL_FLEXIBLE_EXCEPTIONS
+argument|call_list_body(cv);
+endif|#
+directive|endif
+argument|atsv = ERRSV; 	    (void)SvPV(atsv, len); 	    if (len) { 		STRLEN n_a; 		PL_curcop =&PL_compiling; 		CopLINE_set(PL_curcop, oldline); 		if (paramList == PL_beginav) 		    sv_catpv(atsv,
 literal|"BEGIN failed--compilation aborted"
-argument|); 		    else 			sv_catpv(atsv,
-literal|"END failed--cleanup aborted"
-argument|); 		    while (PL_scopestack_ix> oldscope) 			LEAVE; 		    croak(
+argument|); 		else 		    Perl_sv_catpvf(aTHX_ atsv,
+literal|"%s failed--call queue aborted"
+argument|, 				   paramList == PL_checkav ?
+literal|"CHECK"
+argument|: paramList == PL_initav ?
+literal|"INIT"
+argument|:
+literal|"END"
+argument|); 		while (PL_scopestack_ix> oldscope) 		    LEAVE; 		JMPENV_POP; 		Perl_croak(aTHX_
 literal|"%s"
-argument|, SvPVX(atsv)); 		} 	    } 	    break; 	case
+argument|, SvPVx(atsv, n_a)); 	    } 	    break; 	case
 literal|1
 argument|: 	    STATUS_ALL_FAILURE;
 comment|/* FALL THROUGH */
@@ -10629,25 +11170,38 @@ argument|case
 literal|2
 argument|:
 comment|/* my_exit() was called */
-argument|while (PL_scopestack_ix> oldscope) 		LEAVE; 	    FREETMPS; 	    PL_curstash = PL_defstash; 	    if (PL_endav) 		call_list(oldscope, PL_endav); 	    JMPENV_POP; 	    PL_curcop =&PL_compiling; 	    PL_curcop->cop_line = oldline; 	    if (PL_statusvalue) { 		if (paramList == PL_beginav) 		    croak(
+argument|while (PL_scopestack_ix> oldscope) 		LEAVE; 	    FREETMPS; 	    PL_curstash = PL_defstash; 	    PL_curcop =&PL_compiling; 	    CopLINE_set(PL_curcop, oldline); 	    JMPENV_POP; 	    if (PL_statusvalue&& !(PL_exit_flags& PERL_EXIT_EXPECTED)) { 		if (paramList == PL_beginav) 		    Perl_croak(aTHX_
 literal|"BEGIN failed--compilation aborted"
-argument|); 		else 		    croak(
-literal|"END failed--cleanup aborted"
+argument|); 		else 		    Perl_croak(aTHX_
+literal|"%s failed--call queue aborted"
+argument|, 			       paramList == PL_checkav ?
+literal|"CHECK"
+argument|: paramList == PL_initav ?
+literal|"INIT"
+argument|:
+literal|"END"
 argument|); 	    } 	    my_exit_jump();
 comment|/* NOTREACHED */
 argument|case
 literal|3
-argument|: 	    if (!PL_restartop) { 		PerlIO_printf(PerlIO_stderr(),
-literal|"panic: restartop\n"
-argument|); 		FREETMPS; 		break; 	    } 	    JMPENV_POP; 	    PL_curcop =&PL_compiling; 	    PL_curcop->cop_line = oldline; 	    JMPENV_JUMP(
+argument|: 	    if (PL_restartop) { 		PL_curcop =&PL_compiling; 		CopLINE_set(PL_curcop, oldline); 		JMPENV_JUMP(
 literal|3
-argument|); 	} 	JMPENV_POP;     } }  void my_exit(U32 status) {     dTHR;      DEBUG_S(PerlIO_printf(Perl_debug_log,
+argument|); 	    } 	    PerlIO_printf(Perl_error_log,
+literal|"panic: restartop\n"
+argument|); 	    FREETMPS; 	    break; 	} 	JMPENV_POP;     } }
+ifdef|#
+directive|ifdef
+name|PERL_FLEXIBLE_EXCEPTIONS
+argument|STATIC void * S_vcall_list_body(pTHX_ va_list args) {     CV *cv = va_arg(args, CV*);     return call_list_body(cv); }
+endif|#
+directive|endif
+argument|STATIC void * S_call_list_body(pTHX_ CV *cv) {     PUSHMARK(PL_stack_sp);     call_sv((SV*)cv, G_EVAL|G_DISCARD);     return NULL; }  void Perl_my_exit(pTHX_ U32 status) {     dTHR;      DEBUG_S(PerlIO_printf(Perl_debug_log,
 literal|"my_exit: thread %p, status %lu\n"
 argument|, 			  thr, (unsigned long) status));     switch (status) {     case
 literal|0
 argument|: 	STATUS_ALL_SUCCESS; 	break;     case
 literal|1
-argument|: 	STATUS_ALL_FAILURE; 	break;     default: 	STATUS_NATIVE_SET(status); 	break;     }     my_exit_jump(); }  void my_failure_exit(void) {
+argument|: 	STATUS_ALL_FAILURE; 	break;     default: 	STATUS_NATIVE_SET(status); 	break;     }     my_exit_jump(); }  void Perl_my_failure_exit(pTHX) {
 ifdef|#
 directive|ifdef
 name|VMS
@@ -10677,7 +11231,7 @@ literal|255
 argument|);     }
 endif|#
 directive|endif
-argument|my_exit_jump(); }  STATIC void my_exit_jump(void) {     dSP;     register PERL_CONTEXT *cx;     I32 gimme;     SV **newsp;      if (PL_e_script) { 	SvREFCNT_dec(PL_e_script); 	PL_e_script = Nullsv;     }      POPSTACK_TO(PL_mainstack);     if (cxstack_ix>=
+argument|my_exit_jump(); }  STATIC void S_my_exit_jump(pTHX) {     dTHR;     register PERL_CONTEXT *cx;     I32 gimme;     SV **newsp;      if (PL_e_script) { 	SvREFCNT_dec(PL_e_script); 	PL_e_script = Nullsv;     }      POPSTACK_TO(PL_mainstack);     if (cxstack_ix>=
 literal|0
 argument|) { 	if (cxstack_ix>
 literal|0
@@ -10689,28 +11243,12 @@ argument|); }
 ifdef|#
 directive|ifdef
 name|PERL_OBJECT
-define|#
-directive|define
-name|NO_XSLOCKS
-endif|#
-directive|endif
-comment|/* PERL_OBJECT */
 include|#
 directive|include
 file|"XSUB.h"
-argument|static I32
-ifdef|#
-directive|ifdef
-name|PERL_OBJECT
-argument|read_e_script(CPerlObj *pPerl, int idx, SV *buf_sv, int maxlen)
-else|#
-directive|else
-argument|read_e_script(int idx, SV *buf_sv, int maxlen)
 endif|#
 directive|endif
-argument|{     char *p
-argument_list|,
-argument|*nl;     p  = SvPVX(PL_e_script);     nl = strchr(p,
+argument|static I32 read_e_script(pTHXo_ int idx, SV *buf_sv, int maxlen) {     char *p, *nl;     p  = SvPVX(PL_e_script);     nl = strchr(p,
 literal|'\n'
 argument|);     nl = (nl) ? nl+
 literal|1

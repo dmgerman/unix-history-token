@@ -57,6 +57,13 @@ parameter_list|)
 value|Perl_DJGPP_init(c,v)
 end_define
 
+begin_define
+define|#
+directive|define
+name|init_os_extras
+value|Perl_init_os_extras
+end_define
+
 begin_include
 include|#
 directive|include
@@ -121,65 +128,20 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|NEED_PTHREAD_INIT
-end_define
-
-begin_define
-define|#
-directive|define
 name|OLD_PTHREADS_API
-end_define
-
-begin_define
-define|#
-directive|define
-name|YIELD
-value|pthread_yield(NULL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DETACH
-parameter_list|(
-name|t
-parameter_list|)
-define|\
-value|STMT_START {				\          if (pthread_detach(&(t)->self)) {	\              MUTEX_UNLOCK(&(t)->mutex);		\              croak("panic: DETACH");		\          }					\        } STMT_END
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_mutexattr_default
-value|NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_condattr_default
-value|NULL
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_addr_t
-value|any_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_CREATE_JOINABLE
-value|(&err)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PERL_FS_VER_FMT
+value|"%d_%d_%d"
+end_define
 
 begin_else
 else|#
@@ -261,20 +223,13 @@ define|#
 directive|define
 name|PERL_SYS_TERM
 parameter_list|()
-value|MALLOC_TERM
+value|OP_REFCNT_TERM; MALLOC_TERM
 end_define
 
 begin_define
 define|#
 directive|define
 name|dXSUB_SYS
-end_define
-
-begin_define
-define|#
-directive|define
-name|TMPPATH
-value|"plXXXXXX"
 end_define
 
 begin_comment
@@ -310,7 +265,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USEMYBINMODE  *	This symbol, if defined, indicates that the program should  *	use the routine my_binmode(FILE *fp, char iotype) to insure  *	that a file is in "binary" mode -- that is, that no translation  *	of bytes occurs on read or write operations.  */
+comment|/* USEMYBINMODE  *	This symbol, if defined, indicates that the program should  *	use the routine my_binmode(FILE *fp, char iotype, int mode) to insure  *	that a file is in "binary" mode -- that is, that no translation  *	of bytes occurs on read or write operations.  */
 end_comment
 
 begin_undef
@@ -463,38 +418,6 @@ define|#
 directive|define
 name|HAS_CHOWN
 end_define
-
-begin_comment
-comment|/*  * This provides a layer of functions and macros to ensure extensions will  * get to use the same RTL functions as the core.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASATTRIBUTE
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PERL_OBJECT
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<win32iop.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    perlio.c  *  *    Copyright (c) 1996, Nick Ing-Simmons  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    perlio.c  *  *    Copyright (c) 1996-2000, Nick Ing-Simmons  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_define
@@ -61,11 +61,27 @@ directive|include
 file|"EXTERN.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|PERL_IN_PERLIO_C
+end_define
+
 begin_include
 include|#
 directive|include
 file|"perl.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_SYS
+argument_list|)
+end_if
 
 begin_ifdef
 ifdef|#
@@ -400,20 +416,29 @@ name|int
 name|cnt
 parameter_list|)
 block|{
+name|dTHX
+expr_stmt|;
 if|if
 condition|(
 name|cnt
 operator|<
 operator|-
 literal|1
-condition|)
-name|warn
+operator|&&
+name|ckWARN_d
 argument_list|(
+name|WARN_INTERNAL
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Setting cnt to %d\n"
 argument_list|,
-name|cnt
+argument|cnt
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|#
 directive|if
 name|defined
@@ -434,8 +459,9 @@ name|cnt
 expr_stmt|;
 else|#
 directive|else
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot set 'cnt' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -466,6 +492,8 @@ name|int
 name|cnt
 parameter_list|)
 block|{
+name|dTHX
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FILE_bufsiz
@@ -497,33 +525,46 @@ operator|>
 name|e
 operator|+
 literal|1
-condition|)
-name|warn
+operator|&&
+name|ckWARN_d
 argument_list|(
+name|WARN_INTERNAL
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Setting ptr %p> end+1 %p\n"
 argument_list|,
-name|ptr
+argument|ptr
 argument_list|,
-name|e
-operator|+
+argument|e +
 literal|1
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 if|if
 condition|(
 name|cnt
 operator|!=
 name|ec
-condition|)
-name|warn
+operator|&&
+name|ckWARN_d
 argument_list|(
+name|WARN_INTERNAL
+argument_list|)
+condition|)
+name|Perl_warner
+argument_list|(
+argument|aTHX_ WARN_INTERNAL
+argument_list|,
 literal|"Setting cnt to %d, ptr implies %d\n"
 argument_list|,
-name|cnt
+argument|cnt
 argument_list|,
-name|ec
+argument|ec
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 endif|#
 directive|endif
 if|#
@@ -546,8 +587,9 @@ name|ptr
 expr_stmt|;
 else|#
 directive|else
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot set 'ptr' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -573,8 +615,9 @@ name|cnt
 expr_stmt|;
 else|#
 directive|else
-name|croak
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot set 'cnt' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -609,8 +652,11 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|croak
+name|dTHX
+expr_stmt|;
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot get 'cnt' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -649,8 +695,11 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|croak
+name|dTHX
+expr_stmt|;
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot get 'bufsiz' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -690,8 +739,11 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|croak
+name|dTHX
+expr_stmt|;
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot get 'ptr' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -730,8 +782,11 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|croak
+name|dTHX
+expr_stmt|;
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Cannot get 'base' of FILE * on this system"
 argument_list|)
 expr_stmt|;
@@ -989,8 +1044,11 @@ argument_list|)
 return|;
 else|#
 directive|else
-name|croak
+name|dTHX
+expr_stmt|;
+name|Perl_croak
 argument_list|(
+name|aTHX_
 literal|"Don't know how to get file name"
 argument_list|)
 expr_stmt|;
@@ -1365,12 +1423,39 @@ modifier|*
 name|f
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_64_BIT_STDIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAS_FTELLO
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_FTELL64
+argument_list|)
+return|return
+name|ftello
+argument_list|(
+name|f
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|ftell
 argument_list|(
 name|f
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1395,6 +1480,35 @@ name|int
 name|whence
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_64_BIT_STDIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HAS_FSEEKO
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_FSEEK64
+argument_list|)
+return|return
+name|fseeko
+argument_list|(
+name|f
+argument_list|,
+name|offset
+argument_list|,
+name|whence
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|fseek
 argument_list|(
@@ -1405,6 +1519,8 @@ argument_list|,
 name|whence
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1756,6 +1872,27 @@ modifier|*
 name|pos
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_64_BIT_STDIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USE_FSETPOS64
+argument_list|)
+return|return
+name|fsetpos64
+argument_list|(
+name|f
+argument_list|,
+name|pos
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|fsetpos
 argument_list|(
@@ -1764,6 +1901,8 @@ argument_list|,
 name|pos
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1846,6 +1985,27 @@ modifier|*
 name|pos
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_64_BIT_STDIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|USE_FSETPOS64
+argument_list|)
+return|return
+name|fgetpos64
+argument_list|(
+name|f
+argument_list|,
+name|pos
+argument_list|)
+return|;
+else|#
+directive|else
 return|return
 name|fgetpos
 argument_list|(
@@ -1854,6 +2014,8 @@ argument_list|,
 name|pos
 argument_list|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2015,10 +2177,11 @@ operator|)
 name|n
 condition|)
 block|{
+name|dTHX
+expr_stmt|;
 name|PerlIO_puts
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_error_log
 argument_list|,
 literal|"panic: sprintf overflow - memory corrupted!\n"
 argument_list|)
@@ -2107,6 +2270,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !PERL_IMPLICIT_SYS */
+end_comment
 
 end_unit
 

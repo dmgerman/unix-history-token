@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dlutils.c - handy functions and definitions for dl_*.xs files  *  * Currently this file is simply #included into dl_*.xs/.c files.  * It should really be split into a dlutils.h and dlutils.c  *  */
+comment|/* dlutils.c - handy functions and definitions for dl_*.xs files  *  * Currently this file is simply #included into dl_*.xs/.c files.  * It should really be split into a dlutils.h and dlutils.c  *  * Modified:  * 29th Feburary 2000 - Alan Burlison: Added functionality to close dlopen'd  *                      files when the interpreter exits  */
 end_comment
 
 begin_comment
@@ -75,7 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* value copied from $DynaLoader::dl_error */
+comment|/* value copied from $DynaLoader::dl_debug */
 end_comment
 
 begin_define
@@ -111,12 +111,122 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Close all dlopen'd files */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|dl_unload_all_files
+parameter_list|(
+name|pTHXo_
+name|void
+modifier|*
+name|unused
+parameter_list|)
+block|{
+name|CV
+modifier|*
+name|sub
+decl_stmt|;
+name|AV
+modifier|*
+name|dl_librefs
+decl_stmt|;
+name|SV
+modifier|*
+name|dl_libref
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|sub
+operator|=
+name|get_cv
+argument_list|(
+literal|"DynaLoader::dl_unload_file"
+argument_list|,
+name|FALSE
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|dl_librefs
+operator|=
+name|get_av
+argument_list|(
+literal|"DynaLoader::dl_librefs"
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|dl_libref
+operator|=
+name|av_pop
+argument_list|(
+name|dl_librefs
+argument_list|)
+operator|)
+operator|!=
+operator|&
+name|PL_sv_undef
+condition|)
+block|{
+name|dSP
+expr_stmt|;
+name|ENTER
+expr_stmt|;
+name|SAVETMPS
+expr_stmt|;
+name|PUSHMARK
+argument_list|(
+name|SP
+argument_list|)
+expr_stmt|;
+name|XPUSHs
+argument_list|(
+name|sv_2mortal
+argument_list|(
+name|dl_libref
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PUTBACK
+expr_stmt|;
+name|call_sv
+argument_list|(
+operator|(
+name|SV
+operator|*
+operator|)
+name|sub
+argument_list|,
+name|G_DISCARD
+operator||
+name|G_NODEBUG
+argument_list|)
+expr_stmt|;
+name|FREETMPS
+expr_stmt|;
+name|LEAVE
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
 name|dl_generic_private_init
 parameter_list|(
-name|CPERLarg
+name|pTHXo
 parameter_list|)
 comment|/* called by dl_*.xs dl_private_init() */
 block|{
@@ -127,17 +237,27 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUGGING
-name|dl_debug
-operator|=
-name|SvIV
-argument_list|(
-name|perl_get_sv
+name|SV
+modifier|*
+name|sv
+init|=
+name|get_sv
 argument_list|(
 literal|"DynaLoader::dl_debug"
 argument_list|,
-literal|0x04
+literal|0
 argument_list|)
+decl_stmt|;
+name|dl_debug
+operator|=
+name|sv
+condition|?
+name|SvIV
+argument_list|(
+name|sv
 argument_list|)
+else|:
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -171,8 +291,7 @@ literal|1
 argument_list|,
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"DynaLoader bind mode is 'non-lazy'\n"
 argument_list|)
@@ -194,6 +313,23 @@ expr_stmt|;
 comment|/* provide cache for dl_*.xs if needed */
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|DL_UNLOAD_ALL_AT_EXIT
+name|call_atexit
+argument_list|(
+operator|&
+name|dl_unload_all_files
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -206,7 +342,7 @@ specifier|static
 name|void
 name|SaveError
 parameter_list|(
-name|CPERLarg_
+name|pTHXo_
 name|char
 modifier|*
 name|pat
@@ -217,11 +353,15 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
+name|SV
+modifier|*
+name|msv
+decl_stmt|;
 name|char
 modifier|*
 name|message
 decl_stmt|;
-name|int
+name|STRLEN
 name|len
 decl_stmt|;
 comment|/* This code is based on croak/warn, see mess() in util.c */
@@ -232,9 +372,9 @@ argument_list|,
 name|pat
 argument_list|)
 expr_stmt|;
-name|message
+name|msv
 operator|=
-name|mess
+name|vmess
 argument_list|(
 name|pat
 argument_list|,
@@ -247,14 +387,17 @@ argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
 name|message
+operator|=
+name|SvPV
+argument_list|(
+name|msv
+argument_list|,
+name|len
 argument_list|)
-operator|+
-literal|1
+expr_stmt|;
+name|len
+operator|++
 expr_stmt|;
 comment|/* include terminating null char */
 comment|/* Allocate some memory for the error message */
@@ -303,8 +446,7 @@ literal|2
 argument_list|,
 name|PerlIO_printf
 argument_list|(
-name|PerlIO_stderr
-argument_list|()
+name|Perl_debug_log
 argument_list|,
 literal|"DynaLoader: stored error msg '%s'\n"
 argument_list|,

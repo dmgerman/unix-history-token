@@ -16,7 +16,7 @@ comment|/* Don't forget to re-run embed.pl to propagate changes! */
 end_comment
 
 begin_comment
-comment|/* The 'I' prefix is only needed for vars that need appropriate #defines  * generated when built with or without MULTIPLICITY.  It is also used  * to generate the appropriate export list for win32.  *  * When building without MULTIPLICITY, these variables will be truly global.  *  * Avoid build-specific #ifdefs here, like DEBUGGING.  That way,  * we can keep binary compatibility of the curinterp structure */
+comment|/* The 'I' prefix is only needed for vars that need appropriate #defines  * generated when built with or without MULTIPLICITY.  It is also used  * to generate the appropriate export list for win32.  *  * When building without MULTIPLICITY, these variables will be truly global. */
 end_comment
 
 begin_comment
@@ -45,15 +45,6 @@ begin_macro
 name|PERLVAR
 argument_list|(
 argument|Ienvgv
-argument_list|,
-argument|GV *
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Isiggv
 argument_list|,
 argument|GV *
 argument_list|)
@@ -104,24 +95,6 @@ argument|SV *
 argument_list|)
 end_macro
 
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Iparsehook
-argument_list|,
-argument|SV *
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Icddir
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
-
 begin_comment
 comment|/* switches */
 end_comment
@@ -138,11 +111,9 @@ end_macro
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Ipatchlevel[
-literal|10
-argument|]
+argument|Ipatchlevel
 argument_list|,
-argument|char
+argument|SV *
 argument_list|)
 end_macro
 
@@ -229,14 +200,31 @@ argument|bool
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* =for apidoc Amn|bool|PL_dowarn  The C variable which corresponds to Perl's $^W warning variable.  =cut */
+end_comment
+
 begin_macro
 name|PERLVAR
 argument_list|(
 argument|Idowarn
 argument_list|,
+argument|U8
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iwidesyscalls
+argument_list|,
 argument|bool
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* wide system calls */
+end_comment
 
 begin_macro
 name|PERLVAR
@@ -259,28 +247,6 @@ end_macro
 begin_comment
 comment|/* must save all match strings */
 end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Isawstudy
-argument_list|,
-argument|bool
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* do fbm_instr on all strings */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Isawvec
-argument_list|,
-argument|bool
-argument_list|)
-end_macro
 
 begin_macro
 name|PERLVAR
@@ -319,7 +285,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* This value may be raised by extensions for testing purposes */
+comment|/* This value may be set when embedding for full cleanup  */
 end_comment
 
 begin_comment
@@ -408,6 +374,19 @@ begin_comment
 comment|/* $? */
 end_comment
 
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iexit_flags
+argument_list|,
+argument|U8
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* was exit() unexpected, etc. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -444,6 +423,15 @@ end_macro
 begin_macro
 name|PERLVAR
 argument_list|(
+argument|Istderrgv
+argument_list|,
+argument|GV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
 argument|Idefgv
 argument_list|,
 argument|GV *
@@ -468,40 +456,18 @@ argument|GV *
 argument_list|)
 end_macro
 
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iargvout_stack
+argument_list|,
+argument|AV *
+argument_list|)
+end_macro
+
 begin_comment
 comment|/* shortcuts to regexp stuff */
 end_comment
-
-begin_comment
-comment|/* XXX these three aren't used anywhere */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Ileftgv
-argument_list|,
-argument|GV *
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Iampergv
-argument_list|,
-argument|GV *
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Irightgv
-argument_list|,
-argument|GV *
-argument_list|)
-end_macro
 
 begin_comment
 comment|/* this one needs to be moved to thrdvar.h and accessed via  * find_threadsv() when USE_THREADS */
@@ -550,6 +516,10 @@ argument_list|,
 argument|GV *
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* =for apidoc Amn|GV *|PL_DBsub When Perl is run in debugging mode, with the B<-d> switch, this GV contains the SV which holds the name of the sub being debugged.  This is the C variable which corresponds to Perl's $DB::sub variable.  See C<PL_DBsingle>.  =for apidoc Amn|SV *|PL_DBsingle When Perl is run in debugging mode, with the B<-d> switch, this SV is a boolean which indicates whether subs are being single-stepped.  Single-stepping is automatically turned on after every step.  This is the C variable which corresponds to Perl's $DB::single variable.  See C<PL_DBsub>.  =for apidoc Amn|SV *|PL_DBtrace Trace variable used when Perl is run in debugging mode, with the B<-d> switch.  This is the C variable which corresponds to Perl's $DB::trace variable.  See C<PL_DBsingle>.  =cut */
+end_comment
 
 begin_macro
 name|PERLVAR
@@ -685,6 +655,19 @@ end_comment
 begin_macro
 name|PERLVAR
 argument_list|(
+argument|Icheckav
+argument_list|,
+argument|AV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* names of CHECK subroutines */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
 argument|Iinitav
 argument_list|,
 argument|AV *
@@ -786,24 +769,6 @@ end_comment
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Ilastspbase
-argument_list|,
-argument|I32
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Ilastsize
-argument_list|,
-argument|I32
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
 argument|Iforkprocess
 argument_list|,
 argument|int
@@ -862,61 +827,6 @@ end_macro
 begin_comment
 comment|/* masked operations for safe evals */
 end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Ilast_proto
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* Prototype of last sub seen. */
-end_comment
-
-begin_comment
-comment|/* trace state */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Idlevel
-argument_list|,
-argument|I32
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVARI
-argument_list|(
-argument|Idlmax
-argument_list|,
-argument|I32
-argument_list|,
-literal|128
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Idebname
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Idebdelim
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
 
 begin_comment
 comment|/* current interpreter roots */
@@ -1000,19 +910,6 @@ end_comment
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Istrchop
-argument_list|,
-argument|SV
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* return value from chop */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
 argument|Ifilemode
 argument_list|,
 argument|int
@@ -1073,45 +970,6 @@ end_macro
 
 begin_comment
 comment|/* stuff to free from do_aexec, vfork safe */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Imystrk
-argument_list|,
-argument|SV *
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* temp key string for do_each() */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Idumplvl
-argument_list|,
-argument|I32
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* indentation level on syntax tree dump */
-end_comment
-
-begin_macro
-name|PERLVAR
-argument_list|(
-argument|Ioldlastpm
-argument_list|,
-argument|PMOP *
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* for saving regexp context in debugger */
 end_comment
 
 begin_macro
@@ -1248,6 +1106,10 @@ end_macro
 
 begin_comment
 comment|/* length of same */
+end_comment
+
+begin_comment
+comment|/* =for apidoc Amn|HV*|PL_modglobal  C<PL_modglobal> is a general purpose, interpreter global HV for use by  extensions that need to keep information on a per-interpreter basis. In a pinch, it can also be used as a symbol table for extensions  to share data among each other.  It is a good idea to use keys  prefixed by the package name of the extension that owns the data.  =cut */
 end_comment
 
 begin_macro
@@ -1447,19 +1309,6 @@ comment|/* from perl.c */
 end_comment
 
 begin_macro
-name|PERLVAR
-argument_list|(
-argument|Iarchpat_auto
-argument_list|,
-argument|char*
-argument_list|)
-end_macro
-
-begin_comment
-comment|/* from perl.c */
-end_comment
-
-begin_macro
 name|PERLVARI
 argument_list|(
 argument|Iin_clean_objs
@@ -1585,24 +1434,739 @@ comment|/* USE_THREADS */
 end_comment
 
 begin_macro
-name|PERLVARI
+name|PERLVAR
 argument_list|(
-argument|Ibytecode_iv_overflows
+argument|Iuid
 argument_list|,
-argument|int
-argument_list|,
-literal|0
+argument|Uid_t
 argument_list|)
 end_macro
 
 begin_comment
-comment|/* from bytecode.h */
+comment|/* current real user id */
 end_comment
 
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Ibytecode_sv
+argument|Ieuid
+argument_list|,
+argument|Uid_t
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* current effective user id */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Igid
+argument_list|,
+argument|Gid_t
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* current real group id */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iegid
+argument_list|,
+argument|Gid_t
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* current effective group id */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inomemok
+argument_list|,
+argument|bool
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* let malloc context handle nomem */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ian
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* malloc sequence number */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icop_seqmax
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* statement sequence number */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iop_seqmax
+argument_list|,
+argument|U16
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* op sequence number */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ievalseq
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* eval sequence number */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iorigenviron
+argument_list|,
+argument|char **
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iorigalen
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipidstatus
+argument_list|,
+argument|HV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* pid-to-status mappings for waitpid */
+end_comment
+
+begin_macro
+name|PERLVARI
+argument_list|(
+argument|Imaxo
+argument_list|,
+argument|int
+argument_list|,
+argument|MAXO
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* maximum number of ops */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iosname
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* operating system */
+end_comment
+
+begin_macro
+name|PERLVARI
+argument_list|(
+argument|Ish_path
+argument_list|,
+argument|char *
+argument_list|,
+argument|SH_PATH
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* full path of shell */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isighandlerp
+argument_list|,
+argument|Sighandler_t
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixiv_arenaroot
+argument_list|,
+argument|XPV*
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* list of allocated xiv areas */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixiv_root
+argument_list|,
+argument|IV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xiv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixnv_root
+argument_list|,
+argument|NV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xnv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixrv_root
+argument_list|,
+argument|XRV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xrv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpv_root
+argument_list|,
+argument|XPV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpviv_root
+argument_list|,
+argument|XPVIV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpviv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvnv_root
+argument_list|,
+argument|XPVNV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvnv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvcv_root
+argument_list|,
+argument|XPVCV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvcv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvav_root
+argument_list|,
+argument|XPVAV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvav list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvhv_root
+argument_list|,
+argument|XPVHV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvhv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvmg_root
+argument_list|,
+argument|XPVMG *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvmg list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvlv_root
+argument_list|,
+argument|XPVLV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvlv list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ixpvbm_root
+argument_list|,
+argument|XPVBM *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free xpvbm list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ihe_root
+argument_list|,
+argument|HE *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* free he list--shared by interpreters */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inice_chunk
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* a nice chunk of memory to reuse */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inice_chunk_size
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* how nice the chunk of memory is */
+end_comment
+
+begin_macro
+name|PERLVARI
+argument_list|(
+argument|Irunops
+argument_list|,
+argument|runops_proc_t
+argument_list|,
+argument|MEMBER_TO_FPTR(RUNOPS_DEFAULT)
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVARA
+argument_list|(
+argument|Itokenbuf
+argument_list|,
+literal|256
+argument_list|,
+argument|char
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* =for apidoc Amn|SV|PL_sv_undef This is the C<undef> SV.  Always refer to this as C<&PL_sv_undef>.  =for apidoc Amn|SV|PL_sv_no This is the C<false> SV.  See C<PL_sv_yes>.  Always refer to this as C<&PL_sv_no>.  =for apidoc Amn|SV|PL_sv_yes This is the C<true> SV.  See C<PL_sv_no>.  Always refer to this as C<&PL_sv_yes>.  =cut */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isv_undef
+argument_list|,
+argument|SV
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isv_no
+argument_list|,
+argument|SV
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isv_yes
+argument_list|,
+argument|SV
+argument_list|)
+end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CSH
+end_ifdef
+
+begin_macro
+name|PERLVARI
+argument_list|(
+argument|Icshname
+argument_list|,
+argument|char *
+argument_list|,
+argument|CSH
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icshlen
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_state
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* next token is determined */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_defer
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* state after determined token */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_expect
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* expect after determined token */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_brackets
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* bracket count */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_formbrack
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* bracket count at outer format level */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_casemods
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* casemod count */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_dojoin
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* doing an array interpolation */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_starts
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* how many interps done on level */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_stuff
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* runtime pattern from m// or s/// */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_repl
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* runtime replacement from s/// */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_op
+argument_list|,
+argument|OP *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* extra info to pass back on op */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_inpat
+argument_list|,
+argument|OP *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* in pattern $) and $| are special */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_inwhat
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* what kind of quoting are we in */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_brackstack
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* what kind of brackets to pop */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilex_casestack
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* what kind of case mods in effect */
+end_comment
+
+begin_comment
+comment|/* What we know when we're in LEX_KNOWNEXT state. */
+end_comment
+
+begin_macro
+name|PERLVARA
+argument_list|(
+argument|Inextval
+argument_list|,
+literal|5
+argument_list|,
+argument|YYSTYPE
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* value of next token, if any */
+end_comment
+
+begin_macro
+name|PERLVARA
+argument_list|(
+argument|Inexttype
+argument_list|,
+literal|5
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* type of next token */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inexttoke
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilinestr
 argument_list|,
 argument|SV *
 argument_list|)
@@ -1611,113 +2175,1084 @@ end_macro
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Ibytecode_pv
+argument|Ibufptr
 argument_list|,
-argument|XPV
+argument|char *
 argument_list|)
 end_macro
 
 begin_macro
 name|PERLVAR
 argument_list|(
-argument|Ibytecode_obj_list
+argument|Ioldbufptr
 argument_list|,
-argument|void **
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ioldoldbufptr
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ibufend
+argument_list|,
+argument|char *
 argument_list|)
 end_macro
 
 begin_macro
 name|PERLVARI
 argument_list|(
-argument|Ibytecode_obj_list_fill
+argument|Iexpect
+argument_list|,
+argument|int
+argument_list|,
+argument|XSTATE
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* how to interpret ambiguous tokens */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imulti_start
 argument_list|,
 argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* 1st line of multi-line string */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imulti_end
 argument_list|,
-argument|-
-literal|1
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* last line of multi-line string */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imulti_open
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* delimiter of said string */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imulti_close
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* delimiter of said string */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ierror_count
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* how many errors so far, max 10 */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isubline
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* line this subroutine began on */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isubname
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* name of current subroutine */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imin_intro_pending
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* start of vars to introduce */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Imax_intro_pending
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* end of vars to introduce */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipadix
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* max used index in current "register" pad */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipadix_floor
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* how low may inner block reset padix */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipad_reset_pending
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* reset pad on next attempted alloc */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_uni
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* position of last named-unary op */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_lop
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* position of last list operator */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_lop_op
+argument_list|,
+argument|OPCODE
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* last list operator */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iin_my
+argument_list|,
+argument|I32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* we're compiling a "my" (or "our") declaration */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iin_my_stash
+argument_list|,
+argument|HV *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* declared class of this "my" declaration */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FCRYPT
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icryptseen
+argument_list|,
+argument|bool
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* has fast crypt() been initialized? */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ihints
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* pragma-tic compile-time flags */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Idebug
+argument_list|,
+argument|VOL U32
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* flags given to -D switch */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iamagic_generation
+argument_list|,
+argument|long
 argument_list|)
 end_macro
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PERL_OBJECT
+name|USE_LOCALE_COLLATE
 end_ifdef
 
 begin_macro
-name|PERLVARI
+name|PERLVAR
 argument_list|(
-argument|piMem
+argument|Icollation_ix
 argument_list|,
-argument|IPerlMem*
-argument_list|,
-argument|NULL
+argument|U32
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Collation generation index */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icollation_name
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Name of current collation */
+end_comment
 
 begin_macro
 name|PERLVARI
 argument_list|(
-argument|piENV
+argument|Icollation_standard
 argument_list|,
-argument|IPerlEnv*
+argument|bool
 argument_list|,
-argument|NULL
+argument|TRUE
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Assume simple collation */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icollxfrm_base
+argument_list|,
+argument|Size_t
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Basic overhead in *xfrm() */
+end_comment
 
 begin_macro
 name|PERLVARI
 argument_list|(
-argument|piStdIO
+argument|Icollxfrm_mult
 argument_list|,
-argument|IPerlStdIO*
+argument|Size_t
 argument_list|,
-argument|NULL
+literal|2
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Expansion factor in *xfrm() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_LOCALE_COLLATE */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LOCALE_NUMERIC
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inumeric_name
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Name of current numeric locale */
+end_comment
 
 begin_macro
 name|PERLVARI
 argument_list|(
-argument|piLIO
+argument|Inumeric_standard
 argument_list|,
-argument|IPerlLIO*
+argument|bool
 argument_list|,
-argument|NULL
+argument|TRUE
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* Assume simple numerics */
+end_comment
 
 begin_macro
 name|PERLVARI
 argument_list|(
-argument|piDir
+argument|Inumeric_local
 argument_list|,
-argument|IPerlDir*
+argument|bool
 argument_list|,
-argument|NULL
+argument|TRUE
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Assume local numerics */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inumeric_radix
+argument_list|,
+argument|char
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* The radix character if not '.' */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_LOCALE_NUMERIC */
+end_comment
+
+begin_comment
+comment|/* utf8 character classes */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_alnum
+argument_list|,
+argument|SV *
 argument_list|)
 end_macro
 
 begin_macro
-name|PERLVARI
+name|PERLVAR
 argument_list|(
-argument|piSock
+argument|Iutf8_alnumc
 argument_list|,
-argument|IPerlSock*
-argument_list|,
-argument|NULL
+argument|SV *
 argument_list|)
 end_macro
 
 begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_ascii
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_alpha
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_space
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_cntrl
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_graph
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_digit
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_upper
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_lower
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_print
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_punct
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_xdigit
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_mark
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_toupper
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_totitle
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iutf8_tolower
+argument_list|,
+argument|SV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_swash_hv
+argument_list|,
+argument|HV *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_swash_klen
+argument_list|,
+argument|U32
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVARA
+argument_list|(
+argument|Ilast_swash_key
+argument_list|,
+literal|10
+argument_list|,
+argument|U8
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_swash_tmps
+argument_list|,
+argument|U8 *
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ilast_swash_slen
+argument_list|,
+argument|STRLEN
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* perly.c globals */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyydebug
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyynerrs
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyyerrflag
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyychar
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyyval
+argument_list|,
+argument|YYSTYPE
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iyylval
+argument_list|,
+argument|YYSTYPE
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iglob_index
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isrand_called
+argument_list|,
+argument|bool
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVARA
+argument_list|(
+argument|Iuudmap
+argument_list|,
+literal|256
+argument_list|,
+argument|char
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ibitcount
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_THREADS
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isv_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Mutex for allocating SVs in sv.c */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ieval_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Mutex for doeval */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ieval_cond
+argument_list|,
+argument|perl_cond
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Condition variable for doeval */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ieval_owner
+argument_list|,
+argument|struct perl_thread *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Owner thread for doeval */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inthreads
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Number of threads currently */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ithreads_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Mutex for nthreads and thread list */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Inthreads_cond
+argument_list|,
+argument|perl_cond
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Condition variable for nthreads */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Isvref_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Mutex for SvREFCNT_{inc,dec} */
+end_comment
+
+begin_macro
 name|PERLVARI
 argument_list|(
-argument|piProc
+argument|Ithreadsv_names
 argument_list|,
-argument|IPerlProc*
+argument|char *
 argument_list|,
-argument|NULL
+argument|THREADSV_NAMES
+argument_list|)
+end_macro
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FAKE_THREADS
+end_ifdef
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icurthr
+argument_list|,
+argument|struct perl_thread *
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* Currently executing (fake) thread */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Icred_mutex
+argument_list|,
+argument|perl_mutex
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* altered credentials in effect */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* USE_THREADS */
+end_comment
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipsig_ptr
+argument_list|,
+argument|SV**
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Ipsig_name
+argument_list|,
+argument|SV**
+argument_list|)
+end_macro
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PERL_IMPLICIT_SYS
+argument_list|)
+end_if
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IMem
+argument_list|,
+argument|struct IPerlMem*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IMemShared
+argument_list|,
+argument|struct IPerlMem*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IMemParse
+argument_list|,
+argument|struct IPerlMem*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IEnv
+argument_list|,
+argument|struct IPerlEnv*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IStdIO
+argument_list|,
+argument|struct IPerlStdIO*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|ILIO
+argument_list|,
+argument|struct IPerlLIO*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IDir
+argument_list|,
+argument|struct IPerlDir*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|ISock
+argument_list|,
+argument|struct IPerlSock*
+argument_list|)
+end_macro
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|IProc
+argument_list|,
+argument|struct IPerlProc*
+argument_list|)
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_ITHREADS
+argument_list|)
+end_if
+
+begin_macro
+name|PERLVAR
+argument_list|(
+argument|Iptr_table
+argument_list|,
+argument|PTR_TBL_t*
 argument_list|)
 end_macro
 

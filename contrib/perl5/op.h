@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*    op.h  *  *    Copyright (c) 1991-1999, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
+comment|/*    op.h  *  *    Copyright (c) 1991-2000, Larry Wall  *  *    You may distribute under the terms of either the GNU General Public  *    License or the Artistic License, as specified in the README file.  *  */
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ define|#
 directive|define
 name|BASEOP
 define|\
-value|OP*		op_next;		\     OP*		op_sibling;		\     OP*		(CPERLscope(*op_ppaddr))_((ARGSproto));		\     PADOFFSET	op_targ;		\     OPCODE	op_type;		\     U16		op_seq;			\     U8		op_flags;		\     U8		op_private;
+value|OP*		op_next;		\     OP*		op_sibling;		\     OP*		(CPERLscope(*op_ppaddr))(pTHX);		\     PADOFFSET	op_targ;		\     OPCODE	op_type;		\     U16		op_seq;			\     U8		op_flags;		\     U8		op_private;
 end_define
 
 begin_endif
@@ -94,6 +94,10 @@ parameter_list|)
 define|\
 value|(((op)->op_flags& OPf_WANT) == OPf_WANT_VOID   ? G_VOID   : \ 	 ((op)->op_flags& OPf_WANT) == OPf_WANT_SCALAR ? G_SCALAR : \ 	 ((op)->op_flags& OPf_WANT) == OPf_WANT_LIST   ? G_ARRAY   : \ 	 dfl)
 end_define
+
+begin_comment
+comment|/* =for apidoc Amn|U32|GIMME_V The XSUB-writer's equivalent to Perl's C<wantarray>.  Returns C<G_VOID>, C<G_SCALAR> or C<G_ARRAY> for void, scalar or array context, respectively.  =for apidoc Amn|U32|GIMME A backward-compatible version of C<GIMME_V> which can only return C<G_SCALAR> or C<G_ARRAY>; in a void context, it returns C<G_SCALAR>. Deprecated.  Use C<GIMME_V> instead.  =cut */
+end_comment
 
 begin_define
 define|#
@@ -261,11 +265,19 @@ comment|/*  On OP_ENTERSUB || OP_NULL, saw a "do". */
 end_comment
 
 begin_comment
+comment|/*  On OP_EXISTS, treat av as av, not avhv.  */
+end_comment
+
+begin_comment
 comment|/*  On OP_(ENTER|LEAVE)EVAL, don't clear $@ */
 end_comment
 
 begin_comment
 comment|/*  On OP_ENTERITER, loop var is per-thread */
+end_comment
+
+begin_comment
+comment|/*  On pushre, re is /\s+/ imp. by split " " */
 end_comment
 
 begin_comment
@@ -295,6 +307,10 @@ value|(PL_op->op_flags& OPf_WANT					\ 	   ? ((PL_op->op_flags& OPf_WANT) == OPf
 end_define
 
 begin_comment
+comment|/* NOTE: OP_NEXTSTATE, OP_DBSTATE, and OP_SETSTATE (i.e. COPs) carry lower  * bits of PL_hints in op_private */
+end_comment
+
+begin_comment
 comment|/* Private for lvalues */
 end_comment
 
@@ -306,7 +322,22 @@ value|128
 end_define
 
 begin_comment
-comment|/* Lvalue must be localized */
+comment|/* Lvalue must be localized or lvalue sub */
+end_comment
+
+begin_comment
+comment|/* Private for OP_LEAVE, OP_LEAVESUB, OP_LEAVESUBLV and OP_LEAVEWRITE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpREFCOUNTED
+value|64
+end_define
+
+begin_comment
+comment|/* op_targ carries a refcount */
 end_comment
 
 begin_comment
@@ -322,6 +353,17 @@ end_define
 
 begin_comment
 comment|/* Left& right have syms in common. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpASSIGN_HASH
+value|32
+end_define
+
+begin_comment
+comment|/* Assigning to possible pseudohash. */
 end_comment
 
 begin_comment
@@ -361,28 +403,57 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OPpTRANS_COUNTONLY
+name|OPpTRANS_FROM_UTF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPpTRANS_TO_UTF
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPpTRANS_IDENTICAL
+value|4
+end_define
+
+begin_comment
+comment|/* When CU or UC, means straight latin-1 to utf-8 or vice versa */
+end_comment
+
+begin_comment
+comment|/* Otherwise, IDENTICAL means the right side is the same as the left */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpTRANS_SQUASH
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPpTRANS_SQUASH
+name|OPpTRANS_DELETE
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPpTRANS_DELETE
+name|OPpTRANS_COMPLEMENT
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPpTRANS_COMPLEMENT
+name|OPpTRANS_GROWS
 value|64
 end_define
 
@@ -402,7 +473,22 @@ comment|/* List replication. */
 end_comment
 
 begin_comment
-comment|/* Private for OP_ENTERSUB, OP_RV2?V, OP_?ELEM */
+comment|/* Private for OP_LEAVELOOP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpLOOP_CONTINUE
+value|64
+end_define
+
+begin_comment
+comment|/* a continue block is present */
+end_comment
+
+begin_comment
+comment|/* Private for OP_RV2?V, OP_?ELEM */
 end_comment
 
 begin_define
@@ -467,12 +553,64 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OPpENTERSUB_HASTARG
+value|32
+end_define
+
+begin_comment
+comment|/* Called from OP tree. */
+end_comment
+
+begin_comment
+comment|/* OP_RV2CV only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|OPpENTERSUB_AMPER
 value|8
 end_define
 
 begin_comment
 comment|/* Used& form to call. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpENTERSUB_NOPAREN
+value|128
+end_define
+
+begin_comment
+comment|/* bare sub call (without parens) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpENTERSUB_INARGS
+value|4
+end_define
+
+begin_comment
+comment|/* Lval used as arg to a sub. */
+end_comment
+
+begin_comment
+comment|/* OP_GV only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpEARLY_CV
+value|32
+end_define
+
+begin_comment
+comment|/* foo() called before sub foo was parsed */
 end_comment
 
 begin_comment
@@ -491,11 +629,56 @@ comment|/* Defer creation of array/hash elem */
 end_comment
 
 begin_comment
-comment|/* for OP_RV2?V, lower bits carry hints */
+comment|/* OP_RV2?V, OP_GVSV only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpOUR_INTRO
+value|16
+end_define
+
+begin_comment
+comment|/* Defer creation of array/hash elem */
+end_comment
+
+begin_comment
+comment|/* for OP_RV2?V, lower bits carry hints (currently only HINT_STRICT_REFS) */
+end_comment
+
+begin_comment
+comment|/* Private for OPs with TARGLEX */
+end_comment
+
+begin_comment
+comment|/* (lower bits may carry MAXARG) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpTARGET_MY
+value|16
+end_define
+
+begin_comment
+comment|/* Target is PADMY. */
 end_comment
 
 begin_comment
 comment|/* Private for OP_CONST */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpCONST_STRICT
+value|8
+end_define
+
+begin_comment
+comment|/* bearword subject to strict 'subs' */
 end_comment
 
 begin_define
@@ -529,6 +712,17 @@ end_define
 
 begin_comment
 comment|/* Was a bare word (filehandle?). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpCONST_WARNING
+value|128
+end_define
+
+begin_comment
+comment|/* Was a $^W translated to constant. */
 end_comment
 
 begin_comment
@@ -577,7 +771,26 @@ comment|/* Operating on a list of keys */
 end_comment
 
 begin_comment
-comment|/* Private for OP_SORT, OP_PRTF, OP_SPRINTF, string cmp'n, and case changers */
+comment|/* Private for OP_EXISTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpEXISTS_SUB
+value|64
+end_define
+
+begin_comment
+comment|/* Checking for&sub, not {} or [].  */
+end_comment
+
+begin_comment
+comment|/* Private for OP_SORT, OP_PRTF, OP_SPRINTF, OP_FTTEXT, OP_FTBINARY, */
+end_comment
+
+begin_comment
+comment|/*             string comparisons, and case changers. */
 end_comment
 
 begin_define
@@ -589,6 +802,43 @@ end_define
 
 begin_comment
 comment|/* Use locale */
+end_comment
+
+begin_comment
+comment|/* Private for OP_SORT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpSORT_NUMERIC
+value|1
+end_define
+
+begin_comment
+comment|/* Optimized away { $a<=> $b } */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpSORT_INTEGER
+value|2
+end_define
+
+begin_comment
+comment|/* Ditto while under "use integer" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpSORT_REVERSE
+value|4
+end_define
+
+begin_comment
+comment|/* Descending sort */
 end_comment
 
 begin_comment
@@ -604,6 +854,69 @@ end_define
 
 begin_comment
 comment|/* Been through newSVREF once */
+end_comment
+
+begin_comment
+comment|/* Private for OP_OPEN and OP_BACKTICK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpOPEN_IN_RAW
+value|16
+end_define
+
+begin_comment
+comment|/* binmode(F,":raw") on input fh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpOPEN_IN_CRLF
+value|32
+end_define
+
+begin_comment
+comment|/* binmode(F,":crlf") on input fh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpOPEN_OUT_RAW
+value|64
+end_define
+
+begin_comment
+comment|/* binmode(F,":raw") on output fh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpOPEN_OUT_CRLF
+value|128
+end_define
+
+begin_comment
+comment|/* binmode(F,":crlf") on output fh */
+end_comment
+
+begin_comment
+comment|/* Private for OP_EXIT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPpEXIT_VMSISH
+value|128
+end_define
+
+begin_comment
+comment|/* exit(0) vs. exit(1) vmsish mode*/
 end_comment
 
 begin_struct
@@ -657,27 +970,6 @@ decl_stmt|;
 name|OP
 modifier|*
 name|op_other
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|condop
-block|{
-name|BASEOP
-name|OP
-modifier|*
-name|op_first
-decl_stmt|;
-name|OP
-modifier|*
-name|op_true
-decl_stmt|;
-name|OP
-modifier|*
-name|op_false
 decl_stmt|;
 block|}
 struct|;
@@ -770,6 +1062,17 @@ end_define
 
 begin_comment
 comment|/* pm compiled from tainted pattern */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMdf_UTF8
+value|0x04
+end_define
+
+begin_comment
+comment|/* pm compiled from utf8 data */
 end_comment
 
 begin_define
@@ -974,12 +1277,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|gvop
+name|padop
 block|{
 name|BASEOP
-name|GV
-modifier|*
-name|op_gv
+name|PADOFFSET
+name|op_padix
 decl_stmt|;
 block|}
 struct|;
@@ -1033,239 +1335,469 @@ end_struct
 begin_define
 define|#
 directive|define
-name|cUNOP
-value|((UNOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cBINOP
-value|((BINOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cLISTOP
-value|((LISTOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cLOGOP
-value|((LOGOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cCONDOP
-value|((CONDOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cPMOP
-value|((PMOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cSVOP
-value|((SVOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cGVOP
-value|((GVOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cPVOP
-value|((PVOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cCOP
-value|((COP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cLOOP
-value|((LOOP*)PL_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cUNOPo
+name|cUNOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((UNOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cBINOPo
+name|cBINOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((BINOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cLISTOPo
+name|cLISTOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((LISTOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cLOGOPo
+name|cLOGOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((LOGOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cCONDOPo
-value|((CONDOP*)o)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cPMOPo
+name|cPMOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((PMOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cSVOPo
+name|cSVOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((SVOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cGVOPo
-value|((GVOP*)o)
+name|cPADOPx
+parameter_list|(
+name|o
+parameter_list|)
+value|((PADOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cPVOPo
+name|cPVOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((PVOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cCVOPo
-value|((CVOP*)o)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cCOPo
+name|cCOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((COP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
-name|cLOOPo
+name|cLOOPx
+parameter_list|(
+name|o
+parameter_list|)
 value|((LOOP*)o)
 end_define
 
 begin_define
 define|#
 directive|define
+name|cUNOP
+value|cUNOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cBINOP
+value|cBINOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLISTOP
+value|cLISTOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLOGOP
+value|cLOGOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPMOP
+value|cPMOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOP
+value|cSVOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPADOP
+value|cPADOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPVOP
+value|cPVOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cCOP
+value|cCOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLOOP
+value|cLOOPx(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cUNOPo
+value|cUNOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cBINOPo
+value|cBINOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLISTOPo
+value|cLISTOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLOGOPo
+value|cLOGOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPMOPo
+value|cPMOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPo
+value|cSVOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPADOPo
+value|cPADOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cPVOPo
+value|cPVOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cCOPo
+value|cCOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cLOOPo
+value|cLOOPx(o)
+end_define
+
+begin_define
+define|#
+directive|define
 name|kUNOP
-value|((UNOP*)kid)
+value|cUNOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kBINOP
-value|((BINOP*)kid)
+value|cBINOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kLISTOP
-value|((LISTOP*)kid)
+value|cLISTOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kLOGOP
-value|((LOGOP*)kid)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kCONDOP
-value|((CONDOP*)kid)
+value|cLOGOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kPMOP
-value|((PMOP*)kid)
+value|cPMOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kSVOP
-value|((SVOP*)kid)
+value|cSVOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
-name|kGVOP
-value|((GVOP*)kid)
+name|kPADOP
+value|cPADOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kPVOP
-value|((PVOP*)kid)
+value|cPVOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kCOP
-value|((COP*)kid)
+value|cCOPx(kid)
 end_define
 
 begin_define
 define|#
 directive|define
 name|kLOOP
-value|((LOOP*)kid)
+value|cLOOPx(kid)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|cGVOPx_gv
+parameter_list|(
+name|o
+parameter_list|)
+value|((GV*)PL_curpad[cPADOPx(o)->op_padix])
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PADGV
+parameter_list|(
+name|v
+parameter_list|)
+value|(v&& SvTYPE(v) == SVt_PVGV&& GvIN_PAD(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PADCONST
+parameter_list|(
+name|v
+parameter_list|)
+value|(v&& SvREADONLY(v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPx_sv
+parameter_list|(
+name|v
+parameter_list|)
+value|(cSVOPx(v)->op_sv \ 				 ? cSVOPx(v)->op_sv : PL_curpad[(v)->op_targ])
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPx_svp
+parameter_list|(
+name|v
+parameter_list|)
+value|(cSVOPx(v)->op_sv \ 				 ?&cSVOPx(v)->op_sv :&PL_curpad[(v)->op_targ])
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|cGVOPx_gv
+parameter_list|(
+name|o
+parameter_list|)
+value|((GV*)cSVOPx(o)->op_sv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PADGV
+parameter_list|(
+name|v
+parameter_list|)
+value|FALSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_PADCONST
+parameter_list|(
+name|v
+parameter_list|)
+value|FALSE
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPx_sv
+parameter_list|(
+name|v
+parameter_list|)
+value|(cSVOPx(v)->op_sv)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPx_svp
+parameter_list|(
+name|v
+parameter_list|)
+value|(&cSVOPx(v)->op_sv)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|cGVOP_gv
+value|cGVOPx_gv(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cGVOPo_gv
+value|cGVOPx_gv(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kGVOP_gv
+value|cGVOPx_gv(kid)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOP_sv
+value|cSVOPx_sv(PL_op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cSVOPo_sv
+value|cSVOPx_sv(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|kSVOP_sv
+value|cSVOPx_sv(kid)
 end_define
 
 begin_define
@@ -1276,7 +1808,7 @@ value|Null(OP*)
 end_define
 
 begin_comment
-comment|/* Lowest byte of opargs */
+comment|/* Lowest byte of PL_opargs */
 end_comment
 
 begin_define
@@ -1335,6 +1867,13 @@ name|OA_DEFGV
 value|128
 end_define
 
+begin_define
+define|#
+directive|define
+name|OA_TARGLEX
+value|256
+end_define
+
 begin_comment
 comment|/* The next 4 bits encode op class information */
 end_comment
@@ -1342,124 +1881,124 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OCSHIFT
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|OA_CLASS_MASK
-value|(15<< 8)
+value|(15<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_BASEOP
-value|(0<< 8)
+value|(0<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_UNOP
-value|(1<< 8)
+value|(1<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_BINOP
-value|(2<< 8)
+value|(2<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_LOGOP
-value|(3<< 8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OA_CONDOP
-value|(4<< 8)
+value|(3<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_LISTOP
-value|(5<< 8)
+value|(4<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_PMOP
-value|(6<< 8)
+value|(5<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_SVOP
-value|(7<< 8)
+value|(6<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|OA_GVOP
-value|(8<< 8)
+name|OA_PADOP
+value|(7<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|OA_PVOP
-value|(9<< 8)
+name|OA_PVOP_OR_SVOP
+value|(8<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_LOOP
-value|(10<< 8)
+value|(9<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_COP
-value|(11<< 8)
+value|(10<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_BASEOP_OR_UNOP
-value|(12<< 8)
+value|(11<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_FILESTATOP
-value|(13<< 8)
+value|(12<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OA_LOOPEXOP
-value|(14<< 8)
+value|(13<< OCSHIFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|OASHIFT
-value|12
+value|13
 end_define
 
 begin_comment
-comment|/* Remaining nybbles of opargs */
+comment|/* Remaining nybbles of PL_opargs */
 end_comment
 
 begin_define
@@ -1516,6 +2055,167 @@ define|#
 directive|define
 name|OA_OPTIONAL
 value|8
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_ITHREADS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_INIT
+value|MUTEX_INIT(&PL_op_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_LOCK
+value|MUTEX_LOCK(&PL_op_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_UNLOCK
+value|MUTEX_UNLOCK(&PL_op_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_TERM
+value|MUTEX_DESTROY(&PL_op_mutex)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_set
+parameter_list|(
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+value|((o)->op_targ = (n))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_inc
+parameter_list|(
+name|o
+parameter_list|)
+value|((o) ? (++(o)->op_targ, (o)) : Nullop)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_dec
+parameter_list|(
+name|o
+parameter_list|)
+value|(--(o)->op_targ)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_INIT
+value|NOOP
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_LOCK
+value|NOOP
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_UNLOCK
+value|NOOP
+end_define
+
+begin_define
+define|#
+directive|define
+name|OP_REFCNT_TERM
+value|NOOP
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_set
+parameter_list|(
+name|o
+parameter_list|,
+name|n
+parameter_list|)
+value|NOOP
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_inc
+parameter_list|(
+name|o
+parameter_list|)
+value|(o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OpREFCNT_dec
+parameter_list|(
+name|o
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* flags used by Perl_load_module() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PERL_LOADMOD_DENY
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERL_LOADMOD_NOIMPORT
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PERL_LOADMOD_IMPORT_OPS
+value|0x4
 end_define
 
 end_unit

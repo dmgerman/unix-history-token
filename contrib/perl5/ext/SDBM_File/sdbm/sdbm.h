@@ -445,6 +445,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sdbm_exists
+name|proto
+argument_list|(
+operator|(
+name|DBM
+operator|*
+operator|,
+name|datum
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * other  */
 end_comment
@@ -562,7 +578,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Most of the following is stolen from perl.h. */
+comment|/* Most of the following is stolen from perl.h.  We don't include    perl.h here because we just want the portability parts of perl.h,    not everything else. */
 end_comment
 
 begin_ifndef
@@ -573,6 +589,16 @@ end_ifndef
 
 begin_comment
 comment|/* Include guard */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"embed.h"
+end_include
+
+begin_comment
+comment|/* Follow all the global renamings. */
 end_comment
 
 begin_comment
@@ -910,63 +936,12 @@ argument_list|(
 name|MYMALLOC
 argument_list|)
 operator|&&
-operator|(
+operator|!
 name|defined
 argument_list|(
-name|HIDEMYMALLOC
+name|PERL_POLLUTE_MALLOC
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|EMBEDMYMALLOC
-argument_list|)
-operator|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HIDEMYMALLOC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|malloc
-value|Mymalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|calloc
-value|Mycalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|realloc
-value|Myremalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|free
-value|Myfree
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|EMBEDMYMALLOC
-end_ifdef
 
 begin_define
 define|#
@@ -993,17 +968,12 @@ begin_define
 define|#
 directive|define
 name|free
-value|Perl_free
+value|Perl_mfree
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|Malloc_t
-name|malloc
+name|Perl_malloc
 name|proto
 argument_list|(
 operator|(
@@ -1016,7 +986,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Malloc_t
-name|calloc
+name|Perl_calloc
 name|proto
 argument_list|(
 operator|(
@@ -1032,7 +1002,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Malloc_t
-name|realloc
+name|Perl_realloc
 name|proto
 argument_list|(
 operator|(
@@ -1048,7 +1018,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Free_t
-name|free
+name|Perl_mfree
 name|proto
 argument_list|(
 operator|(
@@ -1065,7 +1035,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MYMALLOC&& (HIDEMYMALLOC || EMBEDMYMALLOC) */
+comment|/* MYMALLOC */
 end_comment
 
 begin_ifdef

@@ -210,7 +210,7 @@ define|#
 directive|define
 name|ABORT
 parameter_list|()
-value|kill(getpid(),SIGABRT);
+value|kill(PerlProc_getpid(),SIGABRT);
 end_define
 
 begin_comment
@@ -270,21 +270,46 @@ parameter_list|)
 value|mkdir((path),(mode))
 end_define
 
+begin_comment
+comment|/* these should be set in a hint file, not here */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|PERL_SYS_INIT
 end_ifndef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|PERL_SCO5
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PERL_SCO5
+name|__FreeBSD__
 end_ifdef
 
-begin_comment
-comment|/* this should be set in a hint file, not here */
-end_comment
+begin_include
+include|#
+directive|include
+file|<floatingpoint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -296,6 +321,52 @@ parameter_list|,
 name|v
 parameter_list|)
 value|fpsetmask(0); MALLOC_INIT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIX_BC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PERL_SYS_INIT
+parameter_list|(
+name|c
+parameter_list|,
+name|v
+parameter_list|)
+value|sigignore(SIGFPE); MALLOC_INIT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__CYGWIN__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PERL_SYS_INIT
+parameter_list|(
+name|c
+parameter_list|,
+name|v
+parameter_list|)
+value|Perl_my_setenv_init(&environ); MALLOC_INIT
 end_define
 
 begin_else
@@ -325,6 +396,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -336,7 +417,7 @@ define|#
 directive|define
 name|PERL_SYS_TERM
 parameter_list|()
-value|MALLOC_TERM
+value|OP_REFCNT_TERM; MALLOC_TERM
 end_define
 
 begin_endif
