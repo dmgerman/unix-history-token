@@ -3474,6 +3474,12 @@ operator|->
 name|ip_id
 condition|)
 block|{
+if|if
+condition|(
+name|ids
+operator|->
+name|ip_desc
+condition|)
 name|device_set_desc
 argument_list|(
 name|child
