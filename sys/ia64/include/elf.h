@@ -1131,6 +1131,193 @@ begin_comment
 comment|/* immediate22	special */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|R_IA64_TPREL14
+value|0x91
+end_define
+
+begin_comment
+comment|/* imm14	@tprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_TPREL22
+value|0x92
+end_define
+
+begin_comment
+comment|/* imm22	@tprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_TPREL64I
+value|0x93
+end_define
+
+begin_comment
+comment|/* imm64	@tprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_TPREL64MSB
+value|0x96
+end_define
+
+begin_comment
+comment|/* word64 MSB	@tprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_TPREL64LSB
+value|0x97
+end_define
+
+begin_comment
+comment|/* word64 LSB	@tprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_LTOFF_TPREL22
+value|0x9a
+end_define
+
+begin_comment
+comment|/* imm22	@ltoff(@tprel(S+A)) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPMOD64MSB
+value|0xa6
+end_define
+
+begin_comment
+comment|/* word64 MSB	@dtpmod(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPMOD64LSB
+value|0xa7
+end_define
+
+begin_comment
+comment|/* word64 LSB	@dtpmod(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_LTOFF_DTPMOD22
+value|0xaa
+end_define
+
+begin_comment
+comment|/* imm22	@ltoff(@dtpmod(S+A)) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL14
+value|0xb1
+end_define
+
+begin_comment
+comment|/* imm14	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL22
+value|0xb2
+end_define
+
+begin_comment
+comment|/* imm22	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL64I
+value|0xb3
+end_define
+
+begin_comment
+comment|/* imm64	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL32MSB
+value|0xb4
+end_define
+
+begin_comment
+comment|/* word32 MSB	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL32LSB
+value|0xb5
+end_define
+
+begin_comment
+comment|/* word32 LSB	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL64MSB
+value|0xb6
+end_define
+
+begin_comment
+comment|/* word64 MSB	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_DTPREL64LSB
+value|0xb7
+end_define
+
+begin_comment
+comment|/* word64 LSB	@dtprel(S + A) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_IA64_LTOFF_DTPREL22
+value|0xba
+end_define
+
+begin_comment
+comment|/* imm22	@ltoff(@dtprel(S+A)) */
+end_comment
+
 begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
