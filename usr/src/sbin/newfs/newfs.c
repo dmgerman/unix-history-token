@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.2 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1342,13 +1342,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-s file system size (sectors)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"\t-b block size\n"
 argument_list|)
 expr_stmt|;
@@ -1357,27 +1350,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-f frag size\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-d sectors/track\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-t tracks/cylinder\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-c cylinders/group\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1400,14 +1372,28 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-r revolutions/minute\n"
+literal|"\t-i number of bytes per inode\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-i number of bytes per inode\n"
+literal|"\t-c cylinders/group\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-s file system size (sectors)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-r revolutions/minute\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1421,14 +1407,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-l hardware sector interleave\n"
+literal|"\t-d sectors/track\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-k sector 0 skew, per track\n"
+literal|"\t-t tracks/cylinder\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1443,6 +1429,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-a spare sectors per cylinder\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-l hardware sector interleave\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-k sector 0 skew, per track\n"
 argument_list|)
 expr_stmt|;
 name|exit
