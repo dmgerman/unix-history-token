@@ -382,8 +382,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;
@@ -1443,7 +1445,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %D %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}"
+literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %D %o %{!nostdlib:%L libgcc.a%s %L %{!A:%E}}\n }}}}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -1468,7 +1470,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %o %{!nostdlib:libgcc.a%s %L libgcc.a%s %{!A:%E}}\n }}}}}"
+literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %o %{!nostdlib:%L libgcc.a%s %L %{!A:%E}}\n }}}}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -1487,7 +1489,7 @@ name|char
 modifier|*
 name|link_command_spec
 init|=
-literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %D %o %{!nostdlib:-lgcc %L -lgcc %{!A:%E}}\n }}}}}"
+literal|"\ %{!c:%{!M:%{!MM:%{!E:%{!S:ld %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} \ 			%{r} %{s} %{T*} %{t} %{u*} %{x} %{z}\ 			%{!A:%{!nostdlib:%S}} %{static:}\ 			%{L*} %D %o %{!nostdlib:%L -lgcc %L %{!A:%E}}\n }}}}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -2973,7 +2975,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_EXEC_PREFIX
-value|"/usr/local/lib/gcc-lib/"
+value|"/usr/libexec/gcc2/"
 end_define
 
 begin_endif
@@ -6837,8 +6839,13 @@ comment|/* Set up the default search paths.  */
 if|if
 condition|(
 name|gcc_exec_prefix
+operator|==
+literal|0
 condition|)
-block|{
+name|gcc_exec_prefix
+operator|=
+name|standard_exec_prefix
+expr_stmt|;
 name|add_prefix
 argument_list|(
 operator|&
@@ -6867,7 +6874,6 @@ argument_list|,
 name|NULL_PTR
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* COMPILER_PATH and LIBRARY_PATH have values      that are lists of directory names with colons.  */
 name|temp
 operator|=
