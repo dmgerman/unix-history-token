@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.74 1998/05/11 01:06:06 dyson Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.75 1998/05/17 18:53:17 tegge Exp $  */
 end_comment
 
 begin_include
@@ -1320,6 +1320,16 @@ specifier|extern
 name|pd_entry_t
 modifier|*
 name|my_idlePTD
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pcb
+name|stoppcbs
+index|[
+name|NCPU
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -7996,11 +8006,6 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* send IPI to all CPUs in map */
-name|stopped_cpus
-operator|=
-literal|0
-expr_stmt|;
 comment|/* send the Xcpustop IPI to all CPUs in map */
 name|selected_apic_ipi
 argument_list|(
@@ -8013,7 +8018,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|stopped_cpus
+operator|&
+name|map
+operator|)
 operator|!=
 name|map
 condition|)
@@ -8046,15 +8055,17 @@ expr_stmt|;
 comment|/* signal other cpus to restart */
 while|while
 condition|(
-name|started_cpus
+operator|(
+name|stopped_cpus
+operator|&
+name|map
+operator|)
+operator|!=
+literal|0
 condition|)
 comment|/* wait for each to clear its bit */
 comment|/* spin */
 empty_stmt|;
-name|stopped_cpus
-operator|=
-literal|0
-expr_stmt|;
 return|return
 literal|1
 return|;
@@ -8200,6 +8211,30 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|forward_signal_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* Enable forwarding of roundrobin to all other cpus */
+name|int
+name|forward_roundrobin_enabled
+init|=
+literal|1
+decl_stmt|;
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|forward_roundrobin_enabled
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|forward_roundrobin_enabled
 argument_list|,
 literal|0
 argument_list|,
@@ -9084,9 +9119,12 @@ if|if
 condition|(
 name|i
 operator|==
-literal|1000000
+literal|100000
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BETTER_CLOCK_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_statclock: checkstate %x\n"
@@ -9094,6 +9132,8 @@ argument_list|,
 name|checkstate_probed_cpus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -9300,9 +9340,12 @@ if|if
 condition|(
 name|i
 operator|==
-literal|1000000
+literal|100000
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BETTER_CLOCK_DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"forward_hardclock: checkstate %x\n"
@@ -9310,6 +9353,8 @@ argument_list|,
 name|checkstate_probed_cpus
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 block|}
@@ -9697,6 +9742,108 @@ operator|->
 name|p_oncpu
 condition|)
 return|return;
+block|}
+block|}
+name|void
+name|forward_roundrobin
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int
+name|map
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|smp_started
+operator|||
+operator|!
+name|invltlb_ok
+operator|||
+name|cold
+operator|||
+name|panicstr
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|forward_roundrobin_enabled
+condition|)
+return|return;
+name|resched_cpus
+operator||=
+name|other_cpus
+expr_stmt|;
+name|map
+operator|=
+name|other_cpus
+operator|&
+operator|~
+name|stopped_cpus
+expr_stmt|;
+if|#
+directive|if
+literal|1
+name|selected_apic_ipi
+argument_list|(
+name|map
+argument_list|,
+name|XCPUAST_OFFSET
+argument_list|,
+name|APIC_DELMODE_FIXED
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|all_but_self_ipi
+argument_list|(
+name|XCPUAST_OFFSET
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|i
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|checkstate_need_ast
+operator|&
+name|map
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* spin */
+name|i
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|100000
+condition|)
+block|{
+if|#
+directive|if
+literal|0
+block|printf("forward_roundrobin: dropped ast 0x%x\n", 			       checkstate_need_ast& map);
+endif|#
+directive|endif
+break|break;
+block|}
 block|}
 block|}
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.41 1998/04/01 20:38:28 tegge Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: smp.h,v 1.42 1998/04/01 21:07:36 tegge Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -386,6 +386,29 @@ name|checkstate_need_ast
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|u_int
+name|resched_cpus
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern void (*cpustop_restartfunc
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* functions in apic_ipl.s */
 end_comment
@@ -551,6 +574,15 @@ begin_decl_stmt
 specifier|extern
 name|u_char
 name|SMP_ioapic
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pcb
+name|stoppcbs
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -875,6 +907,18 @@ operator|(
 expr|struct
 name|proc
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|forward_roundrobin
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
