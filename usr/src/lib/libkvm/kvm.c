@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm.c	8.1 (Berkeley) %G%"
+literal|"@(#)kvm.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2507,6 +2507,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * If kvm_kvatop returns a bogus value or our core 			 * file is truncated, we might wind up seeking beyond 			 * the end of the core file in which case the read will 			 * return 0 (EOF). 			 */
+if|if
+condition|(
+name|cc
+operator|==
+literal|0
+condition|)
+break|break;
 operator|(
 name|char
 operator|*
