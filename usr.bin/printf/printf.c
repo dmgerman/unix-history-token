@@ -143,6 +143,53 @@ directive|include
 file|"bltin/bltin.h"
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|warnx1
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|warnx(a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|warnx2
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|warnx(a, b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|warnx3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|warnx(a, b, c)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -489,7 +536,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|warnx
+name|warnx1
 argument_list|(
 literal|"missing format character"
 argument_list|,
@@ -719,7 +766,7 @@ operator|*
 name|fmt
 condition|)
 block|{
-name|warnx
+name|warnx1
 argument_list|(
 literal|"missing format character"
 argument_list|,
@@ -900,7 +947,7 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|warnx
+name|warnx2
 argument_list|(
 literal|"illegal format character %c"
 argument_list|,
@@ -1369,7 +1416,7 @@ operator|>
 name|INT_MAX
 condition|)
 block|{
-name|warnx
+name|warnx3
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -1475,7 +1522,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|warnx
+name|warnx2
 argument_list|(
 literal|"%s: illegal number"
 argument_list|,
@@ -1504,7 +1551,7 @@ operator|==
 name|LONG_MAX
 condition|)
 block|{
-name|warnx
+name|warnx3
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -1530,7 +1577,7 @@ operator|==
 name|LONG_MIN
 condition|)
 block|{
-name|warnx
+name|warnx3
 argument_list|(
 literal|"%s: %s"
 argument_list|,
