@@ -2617,6 +2617,11 @@ name|rtm
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
