@@ -393,7 +393,7 @@ literal|0
 comment|/* ASL revision. */
 block|}
 block|,
-name|NULL
+literal|0UL
 comment|/* XXX APIC table address. */
 block|}
 struct|;
@@ -414,7 +414,7 @@ block|,
 literal|2
 block|,
 comment|/* ACPI Rev 2.0. */
-name|NULL
+literal|0UL
 block|,
 sizeof|sizeof
 argument_list|(
@@ -422,7 +422,7 @@ name|xsdt
 argument_list|)
 block|,
 comment|/* XSDT length. */
-name|NULL
+literal|0UL
 block|,
 comment|/* XXX PA of XSDT. */
 literal|0
