@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.17 1998/11/26 12:59:21 bde Exp $  */
+comment|/*  * top - a top users display for Unix  *  * SYNOPSIS:  For FreeBSD-2.x system  *  * DESCRIPTION:  * Originally written for BSD4.4 system by Christos Zoulas.  * Ported to FreeBSD 2.x by Steven Wallace&& Wolfram Schneider  * Order support hacked in from top-3.5beta6/machine/m_aix41.c  *   by Monte Mitzelfelt (for latest top see http://www.groupsys.com/topinfo/)  *  * This is the machine-dependent module for FreeBSD 2.2  * Works for:  *	FreeBSD 2.2, and probably FreeBSD 2.1.x  *  * LIBS: -lkvm  *  * AUTHOR:  Christos Zoulas<christos@ee.cornell.edu>  *          Steven Wallace<swallace@freebsd.org>  *          Wolfram Schneider<wosch@FreeBSD.org>  *  * $Id: machine.c,v 1.18 1999/01/09 20:25:02 obrien Exp $  */
 end_comment
 
 begin_include
@@ -2946,6 +2946,8 @@ operator|-
 name|NZERO
 else|:
 operator|(
+name|RTP_PRIO_IS_REALTIME
+argument_list|(
 name|PP
 argument_list|(
 name|pp
@@ -2954,8 +2956,7 @@ name|p_rtprio
 operator|.
 name|type
 argument_list|)
-operator|==
-name|RTP_PRIO_REALTIME
+argument_list|)
 condition|?
 operator|(
 name|PRIO_MIN
