@@ -135,7 +135,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAC_MLS_MAX_COMPARTMMENTS
+name|MAC_MLS_MAX_COMPARTMENTS
 value|256
 end_define
 
