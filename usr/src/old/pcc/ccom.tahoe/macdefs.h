@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	1.1	86/01/11	*/
+comment|/*	macdefs.h	1.2	86/01/23	*/
 end_comment
 
 begin_define
@@ -154,6 +154,13 @@ define|#
 directive|define
 name|CONSZ
 value|long
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACONFMT
+value|"$0x%lx"
 end_define
 
 begin_define
