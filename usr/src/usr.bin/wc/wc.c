@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wc.c	4.4 (Berkeley) %G%"
+literal|"@(#)wc.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,12 +413,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"wc: can't open %s\n"
-argument_list|,
 name|argv
 index|[
 name|i

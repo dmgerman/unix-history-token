@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)at.c	4.4 (Berkeley) %G%"
+literal|"@(#)at.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,12 +563,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"at: cannot open input: %s\n"
-argument_list|,
 name|argv
 index|[
 name|larg
