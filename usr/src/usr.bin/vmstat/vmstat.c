@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.34 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1346,8 +1346,16 @@ name|long
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|read_names
 argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
