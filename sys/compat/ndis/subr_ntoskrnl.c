@@ -2191,8 +2191,9 @@ name|slist_entry
 modifier|*
 name|oldhead
 decl_stmt|;
-asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
-asm|__asm__("movl %%edx, %%edx" : "=d" (entry));
+asm|__asm__
+specifier|__volatile__
+asm|("" : "=c" (head), "=d" (entry));
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2258,7 +2259,9 @@ name|slist_entry
 modifier|*
 name|first
 decl_stmt|;
-asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
+asm|__asm__
+specifier|__volatile__
+asm|("" : "=c" (head));
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2330,8 +2333,9 @@ name|slist_entry
 modifier|*
 name|oldhead
 decl_stmt|;
-asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
-asm|__asm__("movl %%edx, %%edx" : "=d" (entry));
+asm|__asm__
+specifier|__volatile__
+asm|("" : "=c" (head), "=d" (entry));
 name|mtx_lock
 argument_list|(
 operator|(
@@ -2411,8 +2415,9 @@ name|slist_entry
 modifier|*
 name|first
 decl_stmt|;
-asm|__asm__("movl %%ecx, %%ecx" : "=c" (head));
-asm|__asm__("movl %%edx, %%edx" : "=d" (lock));
+asm|__asm__
+specifier|__volatile__
+asm|("" : "=c" (head), "=d" (lock));
 name|mtx_lock
 argument_list|(
 operator|(
