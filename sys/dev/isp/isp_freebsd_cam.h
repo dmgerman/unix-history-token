@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.12 1999/01/10 11:15:23 mjacob Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.13 1999/01/30 07:29:00 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_01_29_99 */
+comment|/* release_02_05_99 */
 end_comment
 
 begin_comment
@@ -753,6 +753,20 @@ name|f
 parameter_list|,
 name|s
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_NO_FASTPOST_SCSI
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_NO_FASTPOST_FC
+value|1
 end_define
 
 begin_decl_stmt
