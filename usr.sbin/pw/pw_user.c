@@ -2833,9 +2833,7 @@ name|pwd
 operator|->
 name|pw_gid
 operator|=
-name|pwd
-operator|->
-name|pw_gid
+name|newgid
 expr_stmt|;
 block|}
 block|}
