@@ -142,11 +142,9 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
 name|status
-argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
