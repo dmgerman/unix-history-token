@@ -219,15 +219,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * flags:  *  * BSD_COMPAT	-	This chunk is in the BSD-compatibility, and has  *			a short name too, ie wd0s4f -> wd0f  * ALIGN	-	This chunk should be aligned  * IS_ROOT	-	This 'part' is a rootfs, allocate 'a'  * ACTIVE	-	This is the active slice in the MBR  * FORCE_ALL	-	Force a dedicated disk for FreeBSD, bypassing  *			all BIOS geometry considerations  * AUTO_SIZE	-	This chunk was auto-sized and can fill-out a  *			following chunk if the following chunk is deleted.  * NEWFS	-	newfs pending, used to enable auto-resizing on  *			delete (along with AUTO_SIZE).  */
+comment|/*  * flags:  *  * ALIGN	-	This chunk should be aligned  * IS_ROOT	-	This 'part' is a rootfs, allocate 'a'  * ACTIVE	-	This is the active slice in the MBR  * FORCE_ALL	-	Force a dedicated disk for FreeBSD, bypassing  *			all BIOS geometry considerations  * AUTO_SIZE	-	This chunk was auto-sized and can fill-out a  *			following chunk if the following chunk is deleted.  * NEWFS	-	newfs pending, used to enable auto-resizing on  *			delete (along with AUTO_SIZE).  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|CHUNK_BSD_COMPAT
-value|0x0002
-end_define
 
 begin_define
 define|#

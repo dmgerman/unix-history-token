@@ -532,23 +532,9 @@ name|fd
 operator|<
 literal|0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|warn
-argument_list|(
-literal|"open(%s) failed"
-argument_list|,
-name|device
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
-block|}
 name|memset
 argument_list|(
 name|s
