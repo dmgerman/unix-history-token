@@ -391,7 +391,7 @@ name|mld6_sendpkt
 argument_list|(
 name|in6m
 argument_list|,
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 argument_list|,
 name|NULL
 argument_list|)
@@ -508,7 +508,7 @@ name|mld6_sendpkt
 argument_list|(
 name|in6m
 argument_list|,
-name|MLD6_LISTENER_DONE
+name|MLD_LISTENER_DONE
 argument_list|,
 operator|&
 name|mld6_all_routers_linklocal
@@ -549,7 +549,7 @@ operator|*
 argument_list|)
 decl_stmt|;
 name|struct
-name|mld6_hdr
+name|mld_hdr
 modifier|*
 name|mldh
 decl_stmt|;
@@ -603,7 +603,7 @@ name|mldh
 operator|=
 operator|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 operator|*
 operator|)
 operator|(
@@ -624,7 +624,7 @@ argument_list|(
 name|mldh
 argument_list|,
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 operator|*
 argument_list|,
 name|m
@@ -698,7 +698,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -715,11 +715,11 @@ switch|switch
 condition|(
 name|mldh
 operator|->
-name|mld6_type
+name|mld_type
 condition|)
 block|{
 case|case
-name|MLD6_LISTENER_QUERY
+name|MLD_LISTENER_QUERY
 case|:
 if|if
 condition|(
@@ -738,7 +738,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 operator|&&
 operator|!
@@ -747,7 +747,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 break|break;
@@ -759,12 +759,12 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|.
 name|s6_addr16
 index|[
@@ -801,7 +801,7 @@ name|ntohs
 argument_list|(
 name|mldh
 operator|->
-name|mld6_maxdelay
+name|mld_maxdelay
 argument_list|)
 operator|*
 name|PR_FASTHZ
@@ -816,7 +816,7 @@ literal|0
 operator|&&
 name|mldh
 operator|->
-name|mld6_maxdelay
+name|mld_maxdelay
 condition|)
 name|timer
 operator|=
@@ -899,7 +899,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 operator|||
 name|IN6_ARE_ADDR_EQUAL
@@ -907,7 +907,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|,
 operator|&
 name|in6m
@@ -928,7 +928,7 @@ name|mld6_sendpkt
 argument_list|(
 name|in6m
 argument_list|,
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 argument_list|,
 name|NULL
 argument_list|)
@@ -987,12 +987,12 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|.
 name|s6_addr16
 index|[
@@ -1004,7 +1004,7 @@ expr_stmt|;
 comment|/* XXX */
 break|break;
 case|case
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 case|:
 comment|/* 		 * For fast leave to work, we have to know that we are the 		 * last person to send a report for this group.  Reports 		 * can potentially get looped back if we are a multicast 		 * router, so discard reports sourced by me. 		 * Note that it is impossible to check IFF_LOOPBACK flag of 		 * ifp for this purpose, since ip6_mloopback pass the physical 		 * interface to looutput. 		 */
 if|if
@@ -1025,7 +1025,7 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 break|break;
@@ -1036,12 +1036,12 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|.
 name|s6_addr16
 index|[
@@ -1061,7 +1061,7 @@ name|IN6_LOOKUP_MULTI
 argument_list|(
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|,
 name|ifp
 argument_list|,
@@ -1095,12 +1095,12 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|.
 name|s6_addr16
 index|[
@@ -1121,7 +1121,7 @@ literal|"mld6_input: illegal type(%d)"
 argument_list|,
 name|mldh
 operator|->
-name|mld6_type
+name|mld_type
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1207,7 +1207,7 @@ name|mld6_sendpkt
 argument_list|(
 name|in6m
 argument_list|,
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 argument_list|,
 name|NULL
 argument_list|)
@@ -1277,7 +1277,7 @@ modifier|*
 name|md
 decl_stmt|;
 name|struct
-name|mld6_hdr
+name|mld_hdr
 modifier|*
 name|mldh
 decl_stmt|;
@@ -1399,7 +1399,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 argument_list|)
 expr_stmt|;
 name|mh
@@ -1493,7 +1493,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 argument_list|)
 expr_stmt|;
 name|mldh
@@ -1503,44 +1503,44 @@ argument_list|(
 name|md
 argument_list|,
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 operator|*
 argument_list|)
 expr_stmt|;
 name|mldh
 operator|->
-name|mld6_type
+name|mld_type
 operator|=
 name|type
 expr_stmt|;
 name|mldh
 operator|->
-name|mld6_code
+name|mld_code
 operator|=
 literal|0
 expr_stmt|;
 name|mldh
 operator|->
-name|mld6_cksum
+name|mld_cksum
 operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX: we assume the function will not be called for query messages */
 name|mldh
 operator|->
-name|mld6_maxdelay
+name|mld_maxdelay
 operator|=
 literal|0
 expr_stmt|;
 name|mldh
 operator|->
-name|mld6_reserved
+name|mld_reserved
 operator|=
 literal|0
 expr_stmt|;
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|=
 name|in6m
 operator|->
@@ -1553,12 +1553,12 @@ argument_list|(
 operator|&
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 argument_list|)
 condition|)
 name|mldh
 operator|->
-name|mld6_addr
+name|mld_addr
 operator|.
 name|s6_addr16
 index|[
@@ -1570,7 +1570,7 @@ expr_stmt|;
 comment|/* XXX */
 name|mldh
 operator|->
-name|mld6_cksum
+name|mld_cksum
 operator|=
 name|in6_cksum
 argument_list|(
@@ -1587,7 +1587,7 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1671,7 +1671,7 @@ name|type
 condition|)
 block|{
 case|case
-name|MLD6_LISTENER_QUERY
+name|MLD_LISTENER_QUERY
 case|:
 name|icmp6_ifstat_inc
 argument_list|(
@@ -1682,7 +1682,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 case|:
 name|icmp6_ifstat_inc
 argument_list|(
@@ -1693,7 +1693,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MLD6_LISTENER_DONE
+name|MLD_LISTENER_DONE
 case|:
 name|icmp6_ifstat_inc
 argument_list|(

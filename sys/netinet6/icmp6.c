@@ -2480,10 +2480,10 @@ name|badcode
 goto|;
 break|break;
 case|case
-name|MLD6_LISTENER_QUERY
+name|MLD_LISTENER_QUERY
 case|:
 case|case
-name|MLD6_LISTENER_REPORT
+name|MLD_LISTENER_REPORT
 case|:
 if|if
 condition|(
@@ -2492,7 +2492,7 @@ operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 argument_list|)
 condition|)
 goto|goto
@@ -2504,7 +2504,7 @@ name|icmp6
 operator|->
 name|icmp6_type
 operator|==
-name|MLD6_LISTENER_QUERY
+name|MLD_LISTENER_QUERY
 condition|)
 comment|/* XXX: ugly... */
 name|icmp6_ifstat_inc
@@ -2576,7 +2576,7 @@ expr_stmt|;
 comment|/* m stays. */
 break|break;
 case|case
-name|MLD6_LISTENER_DONE
+name|MLD_LISTENER_DONE
 case|:
 name|icmp6_ifstat_inc
 argument_list|(
@@ -2596,7 +2596,7 @@ operator|<
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld6_hdr
+name|mld_hdr
 argument_list|)
 condition|)
 comment|/* necessary? */
@@ -2606,10 +2606,10 @@ goto|;
 break|break;
 comment|/* nothing to be done in kernel */
 case|case
-name|MLD6_MTRACE_RESP
+name|MLD_MTRACE_RESP
 case|:
 case|case
-name|MLD6_MTRACE
+name|MLD_MTRACE
 case|:
 comment|/* XXX: these two are experimental.  not officially defind. */
 comment|/* XXX: per-interface statistics? */
