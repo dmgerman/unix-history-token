@@ -1787,6 +1787,12 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|isprint
+argument_list|(
+name|ch
+argument_list|)
+operator|&&
+operator|!
 name|isascii
 argument_list|(
 name|ch
