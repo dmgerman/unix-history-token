@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mloop.c	3.8 %G%"
+literal|"@(#)mloop.c	3.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,18 @@ operator|!=
 name|WWS_HASPROC
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|wwcurwin
+operator|->
+name|ww_keepopen
+condition|)
+name|closewin
+argument_list|(
+name|wwcurwin
+argument_list|)
+expr_stmt|;
 name|setcmd
 argument_list|(
 literal|1

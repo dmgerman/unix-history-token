@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.24 %G%"
+literal|"@(#)lcmd.c	3.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,13 @@ end_function_decl
 begin_function_decl
 name|int
 name|l_shell
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|l_smooth
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -273,6 +280,14 @@ begin_decl_stmt
 name|struct
 name|lcmd_arg
 name|arg_shell
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|lcmd_arg
+name|arg_smooth
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -453,6 +468,14 @@ block|,
 name|l_shell
 block|,
 name|arg_shell
+block|,
+literal|"smooth"
+block|,
+literal|2
+block|,
+name|l_smooth
+block|,
+name|arg_smooth
 block|,
 literal|"source"
 block|,

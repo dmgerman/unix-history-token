@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd.c	3.33 %G%"
+literal|"@(#)cmd.c	3.34 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,12 +97,9 @@ default|default:
 if|if
 condition|(
 name|c
-operator|==
+operator|!=
 name|escapec
 condition|)
-goto|goto
-name|foo
-goto|;
 break|break;
 case|case
 literal|'h'
@@ -169,8 +166,6 @@ name|ctrl
 argument_list|(
 index|[
 argument_list|)
-operator|:
-name|foo
 operator|:
 expr|if
 operator|(
@@ -336,7 +331,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|c_close
+name|closewin
 argument_list|(
 name|w
 argument_list|)
@@ -945,6 +940,28 @@ name|c
 operator|-
 literal|'1'
 index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'+'
+condition|)
+name|w
+operator|=
+name|selwin
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'-'
+condition|)
+name|w
+operator|=
+name|lastselwin
 expr_stmt|;
 if|if
 condition|(

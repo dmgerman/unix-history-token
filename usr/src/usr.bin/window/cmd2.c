@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	3.33 %G%"
+literal|"@(#)cmd2.c	3.34 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,8 @@ literal|":select #               Select window #"
 block|,
 literal|":shell string ...       Set default shell program to `string ...'"
 block|,
+literal|":smooth # flag          Set window # to smooth scroll mode"
+block|,
 literal|":source filename        Execute commands in `filename'"
 block|,
 literal|":terse flag             Set terse mode"
@@ -137,7 +139,7 @@ literal|":unset variable         Deallocate `variable'"
 block|,
 literal|":variable               List all variables"
 block|,
-literal|":window row col nrow ncol [nline label pty frame shell]"
+literal|":window [row col nrow ncol nline label pty frame mapnl keepopen smooth shell]"
 block|,
 literal|"                        Open a window at `row', `col' of size `nrow', `ncol',"
 block|,

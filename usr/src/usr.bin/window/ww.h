@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ww.h	3.38 %G%	  */
+comment|/*  * @(#)ww.h	3.39 %G%	  */
 end_comment
 
 begin_comment
@@ -259,6 +259,10 @@ name|char
 name|ww_hasframe
 decl_stmt|;
 comment|/* frame it */
+name|char
+name|ww_keepopen
+decl_stmt|;
+comment|/* keep it open after the process dies */
 name|char
 modifier|*
 name|ww_label

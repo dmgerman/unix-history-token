@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd2.c	3.11 %G%"
+literal|"@(#)lcmd2.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -906,9 +906,17 @@ name|wp
 operator|==
 name|selwin
 condition|?
-literal|'*'
+literal|'+'
+else|:
+operator|(
+name|wp
+operator|==
+name|lastselwin
+condition|?
+literal|'-'
 else|:
 literal|' '
+operator|)
 argument_list|,
 name|i
 operator|+
