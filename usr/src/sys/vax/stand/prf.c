@@ -284,11 +284,6 @@ condition|(
 name|b
 condition|)
 block|{
-name|putchar
-argument_list|(
-literal|'<'
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|i
@@ -313,13 +308,13 @@ operator|)
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|any
-condition|)
 name|putchar
 argument_list|(
+name|any
+condition|?
 literal|','
+else|:
+literal|'<'
 argument_list|)
 expr_stmt|;
 name|any
@@ -361,6 +356,10 @@ operator|++
 control|)
 empty_stmt|;
 block|}
+if|if
+condition|(
+name|any
+condition|)
 name|putchar
 argument_list|(
 literal|'>'
@@ -515,7 +514,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Print a character on console.  * Attempts to save and restore device  * status.  *  * Whether or not printing is inhibited,  * the last MSGBUFS characters  * are saved in msgbuf for inspection later.  */
+comment|/*  * Print a character on console.  */
 end_comment
 
 begin_expr_stmt
@@ -714,8 +713,6 @@ argument_list|()
 operator|&
 literal|0177
 expr_stmt|;
-name|store
-label|:
 switch|switch
 condition|(
 name|c
@@ -741,6 +738,28 @@ return|return;
 case|case
 literal|'\b'
 case|:
+if|if
+condition|(
+name|lp
+operator|>
+name|buf
+condition|)
+block|{
+name|lp
+operator|--
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\b'
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
 case|case
 literal|'#'
 case|:
