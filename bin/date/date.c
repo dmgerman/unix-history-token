@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)date.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,8 @@ literal|"d:nr:ut:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -425,7 +426,7 @@ argument_list|)
 expr_stmt|;
 name|format
 operator|=
-literal|"%a %b %e %H:%M:%S %Z %Y\n"
+literal|"%a %b %e %H:%M:%S %Z %Y"
 expr_stmt|;
 comment|/* allow the operands in any order */
 if|if
@@ -511,7 +512,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s"
+literal|"%s\n"
 argument_list|,
 name|buf
 argument_list|)

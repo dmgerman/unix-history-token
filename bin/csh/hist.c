@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hist.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)hist.c	8.2 (Berkeley) 3/22/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -509,6 +509,9 @@ name|hflg
 init|=
 literal|0
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|;
 if|if
 condition|(
 name|getn
@@ -526,26 +529,32 @@ if|if
 condition|(
 name|setintr
 condition|)
-operator|(
-name|void
-operator|)
-name|sigsetmask
+block|{
+name|sigemptyset
 argument_list|(
-name|sigblock
-argument_list|(
-operator|(
-name|sigset_t
-operator|)
-literal|0
-argument_list|)
 operator|&
-operator|~
-name|sigmask
-argument_list|(
-name|SIGINT
-argument_list|)
+name|sigset
 argument_list|)
 expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|sigset
+argument_list|,
+name|SIGINT
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|sigset
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|*

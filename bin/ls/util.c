@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)util.c	8.5 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ls [-1ACFLRTacdfiklqrstu] [file ...]\n"
+literal|"usage: ls [-1ACFLRTWacdfikloqrstu] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)exec.c	8.3 (Berkeley) 5/23/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -432,6 +432,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|sigset_t
+name|sigset
+decl_stmt|;
 comment|/*      * Glob the command name. We will search $path even if this does something,      * as in sh but not in csh.  One special case: if there is no PATH, then we      * execute only commands which start with '/'.      */
 name|blk
 index|[
@@ -735,15 +738,20 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*      * We must do this AFTER any possible forking (like `foo` in glob) so that      * this shell can still do subprocesses.      */
-operator|(
-name|void
-operator|)
-name|sigsetmask
+name|sigemptyset
 argument_list|(
-operator|(
-name|sigset_t
-operator|)
-literal|0
+operator|&
+name|sigset
+argument_list|)
+expr_stmt|;
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|sigset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/*      * If no path, no words in path, or a / in the filename then restrict the      * command search.      */
@@ -3022,6 +3030,9 @@ name|s1
 decl_stmt|,
 modifier|*
 name|s2
+decl_stmt|,
+modifier|*
+name|cmd
 decl_stmt|;
 name|Char
 name|qc
@@ -3258,6 +3269,21 @@ comment|/* we save and then restore this */
 return|return;
 block|}
 block|}
+name|sp
+operator|->
+name|word
+operator|=
+name|cmd
+operator|=
+name|globone
+argument_list|(
+name|sp
+operator|->
+name|word
+argument_list|,
+name|G_IGNORE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3370,6 +3396,12 @@ name|STRdot
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|slash
+condition|)
+block|{
 name|sp
 operator|->
 name|word
@@ -3400,6 +3432,15 @@ operator|->
 name|word
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|prlex
+argument_list|(
+name|cshout
+argument_list|,
+name|lex
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|word
@@ -3407,6 +3448,14 @@ operator|=
 name|s0
 expr_stmt|;
 comment|/* we save and then restore this */
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|cmd
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|s1
@@ -3496,6 +3545,14 @@ operator|=
 name|s0
 expr_stmt|;
 comment|/* we save and then restore this */
+name|xfree
+argument_list|(
+operator|(
+name|ptr_t
+operator|)
+name|cmd
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cat.c	8.1 (Berkeley) 7/19/93"
+literal|"@(#)cat.c	8.2 (Berkeley) 4/27/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,8 @@ literal|"benstuv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -315,6 +316,7 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
 case|case
 literal|'?'
 case|:
@@ -1055,7 +1057,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)dir.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -279,12 +279,13 @@ decl_stmt|;
 comment|/* Don't believe the login shell home, because it may be a symlink */
 name|tcp
 operator|=
-name|getwd
+name|getcwd
 argument_list|(
 name|path
+argument_list|,
+name|MAXPATHLEN
 argument_list|)
 expr_stmt|;
-comment|/* see ngetwd.c for System V version */
 if|if
 condition|(
 name|tcp
@@ -306,7 +307,10 @@ name|csherr
 argument_list|,
 literal|"csh: %s\n"
 argument_list|,
-name|path
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

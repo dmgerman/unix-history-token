@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)netdate.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)netdate.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,6 +224,19 @@ literal|2
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|dest
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dest
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|dest
 operator|.
 name|sin_port

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	8.1 (Berkeley) 5/31/93"
+literal|"@(#)lex.c	8.2 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -7080,16 +7080,16 @@ name|c
 operator|>
 literal|0
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|ttyline
-argument_list|,
 name|fbuf
 index|[
 name|buf
 index|]
 operator|+
 name|off
+argument_list|,
+name|ttyline
 argument_list|,
 name|c
 operator|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)key.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)key.c	8.4 (Berkeley) 2/20/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1011,31 +1011,8 @@ if|if
 condition|(
 name|ip
 operator|->
-name|set
+name|off
 condition|)
-block|{
-name|int
-name|tmp
-init|=
-literal|1
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|ioctl
-argument_list|(
-name|ip
-operator|->
-name|fd
-argument_list|,
-name|TIOCEXT
-argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 block|{
 name|int
 name|tmp
@@ -1058,6 +1035,35 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|int
+name|tmp
+init|=
+literal|1
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|ip
+operator|->
+name|fd
+argument_list|,
+name|TIOCEXT
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+block|}
+name|ip
+operator|->
+name|set
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
