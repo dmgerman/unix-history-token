@@ -63,16 +63,6 @@ struct|struct
 name|iso_node
 block|{
 name|struct
-name|iso_node
-modifier|*
-name|i_next
-decl_stmt|,
-modifier|*
-modifier|*
-name|i_prev
-decl_stmt|;
-comment|/* hash chain */
-name|struct
 name|vnode
 modifier|*
 name|i_vnode

@@ -75,13 +75,6 @@ begin_struct
 struct|struct
 name|inode
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|inode
-argument_list|)
-name|i_hash
-expr_stmt|;
-comment|/* Hash chain. */
 name|struct
 name|vnode
 modifier|*

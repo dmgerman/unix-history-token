@@ -14,12 +14,6 @@ begin_struct
 struct|struct
 name|udf_node
 block|{
-name|LIST_ENTRY
-argument_list|(
-argument|udf_node
-argument_list|)
-name|le
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
