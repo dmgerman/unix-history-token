@@ -22,6 +22,31 @@ file|<sys/_posix.h>
 end_include
 
 begin_comment
+comment|/*  * Inheritance for minherit()  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INHERIT_SHARE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|INHERIT_COPY
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INHERIT_NONE
+value|2
+end_define
+
+begin_comment
 comment|/*  * Protections are chosen from these bits, or-ed together  */
 end_comment
 
@@ -146,12 +171,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAP_INHERIT
+name|MAP_RESERVED0080
 value|0x0080
 end_define
 
 begin_comment
-comment|/* region is retained after exec */
+comment|/* previously misimplemented MAP_INHERIT */
 end_comment
 
 begin_define
