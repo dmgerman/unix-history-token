@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.7 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.8 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -954,6 +954,10 @@ name|DELAYTEN
 value|1000
 end_define
 
+begin_comment
+comment|/*  * Unfortunately qbgetpri can't be used because the TK50 doesn't flip the  * TMSCP_STEP2 flag in the tmscpsa register until after the pending interrupt  * has been acknowledged by the cpu. If you are at spl6(), the TMSCP_STEP2  * flag never gets set and you return (0).  */
+end_comment
+
 begin_macro
 name|tmscpprobe
 argument_list|(
@@ -1013,8 +1017,6 @@ decl_stmt|;
 comment|/* ptr to tmscpdevice struct (IP& SA) */
 name|int
 name|count
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* for probe delay time out */
 ifdef|#
@@ -1058,16 +1060,6 @@ operator|)
 name|reg
 expr_stmt|;
 comment|/*  	 * Set host-settable interrupt vector. 	 * Assign 0 to the ip register to start the tmscp-device initialization. 	 * The device is not really initialized at this point, this is just to 	 * find out if the device exists. 	 */
-ifdef|#
-directive|ifdef
-name|QBA
-name|s
-operator|=
-name|spl6
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_ivec
@@ -1132,18 +1124,11 @@ name|count
 operator|==
 name|DELAYTEN
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|tmscpaddr
 operator|->
 name|tmscpsa
@@ -1214,18 +1199,11 @@ name|count
 operator|==
 name|DELAYTEN
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 ifdef|#
 directive|ifdef
 name|QBA
@@ -1235,8 +1213,7 @@ name|sc_ipl
 operator|=
 name|br
 operator|=
-name|qbgetpri
-argument_list|()
+literal|0x15
 expr_stmt|;
 endif|#
 directive|endif
