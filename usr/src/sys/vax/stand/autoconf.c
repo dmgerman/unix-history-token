@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.4	81/04/03	*/
+comment|/*	autoconf.c	4.5	82/07/15	*/
 end_comment
 
 begin_include
@@ -316,21 +316,21 @@ name|UTR
 parameter_list|(
 name|i
 parameter_list|)
-value|((struct uba_regs *)(NEX7ZZ+(i)))
+value|((struct uba_regs *)(NEX730+(i)))
 end_define
 
 begin_define
 define|#
 directive|define
 name|UMA
-value|((caddr_t)UMEM7ZZ)
+value|((caddr_t)UMEM730)
 end_define
 
 begin_decl_stmt
 name|struct
 name|uba_regs
 modifier|*
-name|ubaddr7ZZ
+name|ubaddr730
 index|[]
 init|=
 block|{
@@ -344,7 +344,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|caddr_t
-name|umaddr7ZZ
+name|umaddr730
 index|[]
 init|=
 block|{
@@ -487,15 +487,15 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|VAX_7ZZ
+name|VAX_730
 case|:
 name|ubaddr
 operator|=
-name|ubaddr7ZZ
+name|ubaddr730
 expr_stmt|;
 name|umaddr
 operator|=
-name|umaddr7ZZ
+name|umaddr730
 expr_stmt|;
 name|nmba
 operator|=
@@ -506,39 +506,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	 * Forward into the past... 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nmba
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-operator|!
-name|badloc
-argument_list|(
-name|mbaddr
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-name|mbaddr
-index|[
-name|i
-index|]
-operator|->
-name|mba_cr
-operator|=
-name|MBCR_INIT
-expr_stmt|;
+comment|/* 	for (i = 0; i< nmba; i++) 		if (!badloc(mbaddr[i])) 			mbaddr[i]->mba_cr = MBCR_INIT; */
 for|for
 control|(
 name|i
@@ -571,6 +539,19 @@ operator|->
 name|uba_cr
 operator|=
 name|UBACR_ADINIT
+expr_stmt|;
+if|if
+condition|(
+name|cpu
+operator|!=
+name|VAX_780
+condition|)
+name|mtpr
+argument_list|(
+name|IUR
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* give unibus devices a chance to recover... */
 if|if

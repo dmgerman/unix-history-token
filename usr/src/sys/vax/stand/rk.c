@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.4	81/07/25	*/
+comment|/*	rk.c	4.5	82/07/15	*/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fs.h"
 end_include
 
 begin_include

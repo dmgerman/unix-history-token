@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.4	81/12/01	*/
+comment|/*	ts.c	4.5	82/07/15	*/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"../h/ubareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fs.h"
 end_include
 
 begin_include
@@ -142,6 +148,11 @@ literal|0
 condition|)
 name|tsaddr
 operator|=
+operator|(
+expr|struct
+name|tsdevice
+operator|*
+operator|)
 name|ubamem
 argument_list|(
 name|io
@@ -173,6 +184,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -644,7 +660,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ts tape error: er=%b, xs0=%b"
+literal|"ts tape error: er=%b, xs0=%b\n"
 argument_list|,
 name|tsaddr
 operator|->

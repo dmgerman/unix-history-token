@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.5	81/11/12	*/
+comment|/*	uba.c	4.6	82/07/15	*/
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/fs.h"
 end_include
 
 begin_include
@@ -349,7 +355,7 @@ name|UBADPR_UCE
 expr_stmt|;
 break|break;
 case|case
-name|VAX_7ZZ
+name|VAX_730
 case|:
 break|break;
 block|}
