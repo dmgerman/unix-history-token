@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/pnpvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acpi.h"
 end_include
 
@@ -4621,19 +4627,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle ISA-like devices probing for a PnP ID to match.  */
+comment|/* Probe _HID and _CID for compatible ISA PNP ids. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|PNP_EISAID
-parameter_list|(
-name|s
-parameter_list|)
-define|\
-value|((((s[0] - '@')& 0x1f)<< 2)		\ 	 | (((s[1] - '@')& 0x18)>> 3)		\ 	 | (((s[1] - '@')& 0x07)<< 13)	\ 	 | (((s[2] - '@')& 0x1f)<< 8)		\ 	 | (PNP_HEXTONUM(s[4])<< 16)		\ 	 | (PNP_HEXTONUM(s[3])<< 20)		\ 	 | (PNP_HEXTONUM(s[6])<< 24)		\ 	 | (PNP_HEXTONUM(s[5])<< 28))
-end_define
 
 begin_function
 specifier|static
