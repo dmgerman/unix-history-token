@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smptests.h,v 1.16 1997/07/20 18:10:28 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: smptests.h,v 1.15 1997/07/22 18:46:41 fsmp Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,15 +16,21 @@ name|_MACHINE_SMPTESTS_H_
 end_define
 
 begin_comment
-comment|/*  * various 'tests in progress'  */
+comment|/*  * Various 'tests in progress' and configuration parameters.  */
 end_comment
 
 begin_comment
-comment|/*  * Address of POST hardware port.  * Defining this enables POSTCODE macros.  * #define POST_ADDR		0x80  */
+comment|/*  * Use the new INT passoff algorithm:  *  *	int_is_already_active = iactive& (1<< INT_NUMBER);  *	iactive |= (1<< INT_NUMBER);  *	if ( int_is_already_active || (try_mplock() == FAIL ) {  *		mask_apic_int( INT_NUMBER );  *		ipending |= (1<< INT_NUMBER);  *		do_eoi();  *		cleanup_and_iret();  *	}  *  * This algorithm seems to speed up kernel compiles a little,  *  my previous times were about 100s - 101s.  * Also of note is the "point of diminishing returns" for the '-j'  *  arg to make seems to have increased from 8 to 12, AND the numbers  *  don't fall off as rapidly as before.  *  *  98.17s real  129.24s user   50.82s system	# time make -j8  *  98.67s real  128.44s user   52.55s system	# time make -j10  *  97.70s real  128.54s user   51.86s system	# time make -j12  *  98.57s real  130.14s user   50.46s system	# time make -j14  *  99.12s real  130.04s user   51.82s system	# time make -j16  *  97.75s real  129.91s user   51.62s system	# time make -j18  * 100.51s real  132.67s user   50.91s system	# time make -j20  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PEND_INTS
+end_define
+
 begin_comment
-comment|/*  * 1st attempt to use ExtInt connected 8259 to attach 8254 timer.  * failing that, attempt to attach 8254 timer via direct APIC pin.  * failing that, panic!  * This overrides both APIC_PIN0_TIMER& TEST_ALTTIMER  */
+comment|/*  * 1st attempt to use the 'ExtInt' connected 8259 to attach 8254 timer.  * failing that, attempt to attach 8254 timer via direct APIC pin.  * failing that, panic!  *  */
 end_comment
 
 begin_define
@@ -34,34 +40,8 @@ name|NEW_STRATEGY
 end_define
 
 begin_comment
-comment|/*  * Use 'regular Int' method to connect external 8254 timer via IO APIC pin 0.  * See "Intel I486 Microprocessors and Related Products", page 4-292:  *       82489DX/8259A DUAL MODE CONNECTION  *  */
+comment|/*  * For emergency fallback, define ONLY if 'NEW_STRATEGY' fails to work.  * Formerly needed by Tyan Tomcat II and SuperMicro P6DNxxx motherboards.  * #define SMP_TIMER_NC  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|APIC_PIN0_TIMER
-end_define
-
-begin_comment
-comment|/*  * Use non 'ExtInt' method of external (non-conected) 8254 timer  * See "Intel I486 Microprocessors and Related Products", page 4-292:  *       82489DX/8259A DUAL MODE CONNECTION  *  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TEST_ALTTIMER
-end_define
-
-begin_comment
-comment|/*  * Send 8254 timer INTs to all CPUs in LOPRIO mode.  * */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMER_ALL
-end_define
 
 begin_comment
 comment|/*  * Send CPUSTOP IPI for stop/restart of other CPUs on DDB break.  *  */
@@ -119,6 +99,10 @@ end_comment
 
 begin_comment
 comment|/*  * simple test code for IPI interaction, save for future...  * #define TEST_TEST1 #define IPI_TARGET_TEST1	1  */
+end_comment
+
+begin_comment
+comment|/*  * Address of POST hardware port.  * Defining this enables POSTCODE macros.  * #define POST_ADDR		0x80  */
 end_comment
 
 begin_comment
