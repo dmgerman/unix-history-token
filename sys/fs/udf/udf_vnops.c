@@ -3903,6 +3903,9 @@ decl_stmt|;
 name|uint32_t
 name|max_size
 decl_stmt|;
+name|daddr64_t
+name|lsector
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3974,9 +3977,8 @@ name|udfmp
 operator|->
 name|bsize
 argument_list|,
-name|a
-operator|->
-name|a_bnp
+operator|&
+name|lsector
 argument_list|,
 operator|&
 name|max_size
@@ -3993,6 +3995,24 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* Translate logical to physical sector number */
+operator|*
+name|a
+operator|->
+name|a_bnp
+operator|=
+name|lsector
+operator|<<
+operator|(
+name|node
+operator|->
+name|udfmp
+operator|->
+name|bshift
+operator|-
+name|DEV_BSHIFT
+operator|)
+expr_stmt|;
 comment|/* Punt on read-ahead for now */
 if|if
 condition|(
