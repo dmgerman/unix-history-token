@@ -902,7 +902,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_fork
+name|vm_forkproc
 argument_list|(
 name|p1
 argument_list|,
@@ -1582,7 +1582,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_fork. 	 */
+comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_forkproc. 	 */
 name|p2
 operator|->
 name|p_flag
@@ -1831,7 +1831,7 @@ name|p_sigacts
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* finished in vm_fork() */
+comment|/* finished in vm_forkproc() */
 block|}
 if|if
 condition|(
@@ -2250,7 +2250,7 @@ name|p2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Finish creating the child process.  It will return via a different 	 * execution path later.  (ie: directly into user mode) 	 */
-name|vm_fork
+name|vm_forkproc
 argument_list|(
 name|p1
 argument_list|,

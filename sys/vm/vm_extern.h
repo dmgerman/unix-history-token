@@ -607,7 +607,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|vm_fork
+name|vm_forkproc
 name|__P
 argument_list|(
 operator|(
@@ -620,6 +620,20 @@ name|proc
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vm_waitproc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

@@ -614,7 +614,7 @@ end_comment
 
 begin_function
 name|void
-name|vm_fork
+name|vm_forkproc
 parameter_list|(
 name|p1
 parameter_list|,
@@ -933,6 +933,46 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Called after process has been wait(2)'ed apon and is being reaped.  * The idea is to reclaim resources that we could not reclaim while  * the process was still executing.  */
+end_comment
+
+begin_function
+name|void
+name|vm_waitproc
+parameter_list|(
+name|p
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+block|{
+name|GIANT_REQUIRED
+expr_stmt|;
+name|cpu_wait
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|pmap_dispose_proc
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* drop per-process resources */
+name|vmspace_free
+argument_list|(
+name|p
+operator|->
+name|p_vmspace
+argument_list|)
+expr_stmt|;
+comment|/* and clean-out the vmspace */
+block|}
+end_function
 
 begin_comment
 comment|/*  * Set default limits for VM system.  * Called for proc 0, and then inherited by all others.  *  * XXX should probably act directly on proc0.  */

@@ -2559,7 +2559,6 @@ name|proc
 operator|*
 operator|)
 argument_list|)
-name|__dead2
 decl_stmt|;
 end_decl_stmt
 

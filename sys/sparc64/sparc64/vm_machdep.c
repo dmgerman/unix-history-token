@@ -99,10 +99,6 @@ directive|include
 file|<machine/tstate.h>
 end_include
 
-begin_comment
-comment|/* XXX: it seems that all that is in here should really be MI... */
-end_comment
-
 begin_function
 name|void
 name|cpu_exit
@@ -112,67 +108,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock_flags
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MTX_NOSWITCH
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
-name|p
-operator|->
-name|p_stat
-operator|=
-name|SZOMB
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK_NOSWITCH
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|cnt
-operator|.
-name|v_swtch
-operator|++
-expr_stmt|;
-name|cpu_throw
-argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"cpu_exit"
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
@@ -615,24 +551,7 @@ name|proc
 modifier|*
 name|p
 parameter_list|)
-block|{
-name|GIANT_REQUIRED
-expr_stmt|;
-comment|/* drop per-process resources */
-name|pmap_dispose_proc
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* and clean-out the vmspace */
-name|vmspace_free
-argument_list|(
-name|p
-operator|->
-name|p_vmspace
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function

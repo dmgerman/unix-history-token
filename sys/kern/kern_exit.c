@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -161,6 +167,12 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -1347,10 +1359,69 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)"; 	 * This is machine-dependent, as we may have to change stacks 	 * or ensure that the current one isn't reallocated before we 	 * finish.  cpu_exit will end with a call to cpu_switch(), finishing 	 * our execution (pun intended). 	 */
+comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_free(p->p_vmspace)" 	 * in vm_waitproc(); 	 */
 name|cpu_exit
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+condition|)
+name|mtx_unlock_flags
+argument_list|(
+operator|&
+name|Giant
+argument_list|,
+name|MTX_NOSWITCH
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
+name|p
+operator|->
+name|p_stat
+operator|=
+name|SZOMB
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK_NOSWITCH
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|.
+name|v_swtch
+operator|++
+expr_stmt|;
+name|cpu_throw
+argument_list|()
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"exit1"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2141,8 +2212,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
-name|cpu_wait
+comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
+name|vm_waitproc
 argument_list|(
 name|p
 argument_list|)

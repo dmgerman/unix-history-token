@@ -322,67 +322,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-block|{
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|mtx_owned
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-condition|)
-name|mtx_unlock_flags
-argument_list|(
-operator|&
-name|Giant
-argument_list|,
-name|MTX_NOSWITCH
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We have to wait until after releasing all locks before 	 * changing p_stat.  If we block on a mutex then we will be 	 * back at SRUN when we resume and our parent will never 	 * harvest us. 	 */
-name|p
-operator|->
-name|p_stat
-operator|=
-name|SZOMB
-expr_stmt|;
-name|wakeup
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK_NOSWITCH
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|cnt
-operator|.
-name|v_swtch
-operator|++
-expr_stmt|;
-name|cpu_switch
-argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"cpu_exit"
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -396,21 +336,26 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|/* Temporary helper */
+end_comment
+
+begin_function
+name|void
+name|cpu_throw
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-name|GIANT_REQUIRED
+name|cpu_switch
+argument_list|()
 expr_stmt|;
-comment|/* drop per-process resources */
-name|pmap_dispose_proc
+name|panic
 argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* and clean-out the vmspace */
-name|vmspace_free
-argument_list|(
-name|p
-operator|->
-name|p_vmspace
+literal|"cpu_throw() didn't"
 argument_list|)
 expr_stmt|;
 block|}
