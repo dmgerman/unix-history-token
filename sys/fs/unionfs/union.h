@@ -36,13 +36,6 @@ begin_comment
 comment|/* Target replaces mount point */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UNMNT_OPMASK
-value|0x0003
-end_define
-
 begin_struct
 struct|struct
 name|union_mount
