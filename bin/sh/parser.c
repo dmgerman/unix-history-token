@@ -4327,6 +4327,9 @@ modifier|*
 name|prevsyntax
 decl_stmt|;
 comment|/* syntax before arithmetic */
+name|int
+name|synentry
+decl_stmt|;
 if|#
 directive|if
 name|__GNUC__
@@ -4384,6 +4387,12 @@ name|void
 operator|)
 operator|&
 name|syntax
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|synentry
 expr_stmt|;
 endif|#
 directive|endif
@@ -4501,12 +4510,31 @@ name|out
 argument_list|)
 expr_stmt|;
 comment|/* permit 3 calls to USTPUTC */
-switch|switch
+if|if
 condition|(
+name|c
+operator|<
+literal|0
+operator|&&
+name|c
+operator|!=
+name|PEOF
+condition|)
+name|synentry
+operator|=
+name|CWORD
+expr_stmt|;
+else|else
+name|synentry
+operator|=
 name|syntax
 index|[
 name|c
 index|]
+expr_stmt|;
+switch|switch
+condition|(
+name|synentry
 condition|)
 block|{
 case|case
