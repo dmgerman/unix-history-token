@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umoddi3.c	5.3 (Berkeley) %G%"
+literal|"@(#)umoddi3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,7 +64,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|__qdivmod
+name|__qdivrem
 argument_list|(
 name|a
 argument_list|,
