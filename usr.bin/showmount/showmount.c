@@ -366,6 +366,7 @@ name|tcp_callrpc
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|host
@@ -443,6 +444,7 @@ decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|host
@@ -866,6 +868,7 @@ name|outproc
 parameter_list|,
 name|out
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|host
