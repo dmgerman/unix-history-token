@@ -15,6 +15,12 @@ directive|define
 name|_SYS_QUEUE_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<struct.h>
+end_include
+
 begin_comment
 comment|/*  * This file defines five types of data structures: singly-linked lists,  * singly-linked tail queues, lists, tail queues, and circular queues.  *  * A singly-linked list is headed by a single forward pointer. The elements  * are singly linked for minimum space and pointer manipulation overhead at  * the expense of O(n) removal for arbitrary elements. New elements can be  * added to the list after an existing element or at the head of the list.  * Elements being removed from the head of the list should use the explicit  * macro for this purpose for optimum efficiency. A singly-linked list may  * only be traversed in the forward direction.  Singly-linked lists are ideal  * for applications with large datasets and few or no removals or for  * implementing a LIFO queue.  *  * A singly-linked tail queue is headed by a pair of pointers, one to the  * head of the list and the other to the tail of the list. The elements are  * singly linked for minimum space and pointer manipulation overhead at the  * expense of O(n) removal for arbitrary elements. New elements can be added  * to the list after an existing element, at the head of the list, or at the  * end of the list. Elements being removed from the head of the tail queue  * should use the explicit macro for this purpose for optimum efficiency.  * A singly-linked tail queue may only be traversed in the forward direction.  * Singly-linked tail queues are ideal for applications with large datasets  * and few or no removals or for implementing a FIFO queue.  *  * A list is headed by a single forward pointer (or an array of forward  * pointers for a hash table header). The elements are doubly linked  * so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before  * or after an existing element or at the head of the list. A list  * may only be traversed in the forward direction.  *  * A tail queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or  * after an existing element, at the head of the list, or at the end of  * the list. A tail queue may be traversed in either direction.  *  * A circle queue is headed by a pair of pointers, one to the head of the  * list and the other to the tail of the list. The elements are doubly  * linked so that an arbitrary element can be removed without a need to  * traverse the list. New elements can be added to the list before or after  * an existing element, at the head of the list, or at the end of the list.  * A circle queue may be traversed in either direction, but has a more  * complex end of list detection.  *  * For details on the use of these macros, see the queue(3) manual page.  *  *  *			SLIST	LIST	STAILQ	TAILQ	CIRCLEQ  * _HEAD		+	+	+	+	+  * _HEAD_INITIALIZER	+	+	+	+	+  * _ENTRY		+	+	+	+	+  * _INIT		+	+	+	+	+  * _EMPTY		+	+	+	+	+  * _FIRST		+	+	+	+	+  * _NEXT		+	+	+	+	+  * _PREV		-	-	-	+	+  * _LAST		-	-	+	+	+  * _FOREACH		+	+	+	+	+  * _FOREACH_REVERSE	-	-	-	+	+  * _INSERT_HEAD		+	+	+	+	+  * _INSERT_BEFORE	-	+	-	+	+  * _INSERT_AFTER	+	+	+	+	+  * _INSERT_TAIL		-	-	+	+	+  * _REMOVE_HEAD		+	-	+	-	-  * _REMOVE		+	+	+	+	+  *  */
 end_comment
@@ -314,7 +320,7 @@ name|elm
 parameter_list|,
 name|field
 parameter_list|)
-value|do {			\ 	STAILQ_NEXT((elm), field) = NULL;				\ 	STAILQ_LAST((head)) = (elm);					\ 	(head)->stqh_last =&STAILQ_NEXT((elm), field);			\ } while (0)
+value|do {			\ 	STAILQ_NEXT((elm), field) = NULL;				\ 	*(head)->stqh_last = (elm);					\ 	(head)->stqh_last =&STAILQ_NEXT((elm), field);			\ } while (0)
 end_define
 
 begin_define
@@ -323,8 +329,13 @@ directive|define
 name|STAILQ_LAST
 parameter_list|(
 name|head
+parameter_list|,
+name|type
+parameter_list|,
+name|field
 parameter_list|)
-value|(*(head)->stqh_last)
+define|\
+value|(((head)->stqh_last ==&(head)->stqh_first) ?			\ 		NULL :							\ 		strbase(type, (head)->stqh_last, field))
 end_define
 
 begin_define
