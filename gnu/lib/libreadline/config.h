@@ -8,7 +8,7 @@ comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
 begin_comment
-comment|/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+comment|/* config.h.in.  Maintained by hand. */
 end_comment
 
 begin_comment
@@ -31,6 +31,33 @@ value|void
 end_define
 
 begin_comment
+comment|/* Characteristics of the compiler. */
+end_comment
+
+begin_comment
+comment|/* #undef const */
+end_comment
+
+begin_comment
+comment|/* #undef size_t */
+end_comment
+
+begin_comment
+comment|/* #undef ssize_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTOTYPES
+value|1
+end_define
+
+begin_comment
+comment|/* #undef __CHAR_UNSIGNED__ */
+end_comment
+
+begin_comment
 comment|/* Define if the `S_IS*' macros in<sys/stat.h> do not work properly.  */
 end_comment
 
@@ -46,6 +73,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the isascii function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISASCII
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the isxdigit function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ISXDIGIT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the lstat function. */
 end_comment
 
@@ -53,6 +102,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_LSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the mbsrtowcs function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MBSRTOWCS
 value|1
 end_define
 
@@ -101,17 +161,6 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the strcasecmp function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_STRCASECMP
-value|1
-end_define
-
-begin_comment
 comment|/* Define if you have the setlocale function. */
 end_comment
 
@@ -123,13 +172,13 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the tcgetattr function.  */
+comment|/* Define if you have the strcasecmp function.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_TCGETATTR
+name|HAVE_STRCASECMP
 value|1
 end_define
 
@@ -149,6 +198,50 @@ comment|/* #undef STRCOLL_BROKEN */
 end_comment
 
 begin_comment
+comment|/* Define if you have the strpbrk function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRPBRK
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the tcgetattr function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TCGETATTR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the vsnprintf function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_VSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the wcwidth function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCWIDTH
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<dirent.h> header file.  */
 end_comment
 
@@ -160,12 +253,67 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<langinfo.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LANGINFO_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<limits.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LIMITS_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<locale.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LOCALE_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<memory.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MEMORY_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<ndir.h> header file.  */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_NDIR_H */
 end_comment
+
+begin_comment
+comment|/* Define if you have the<stdarg.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDARG_H
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the<stdlib.h> header file.  */
@@ -186,6 +334,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRING_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<strings.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRINGS_H
 value|1
 end_define
 
@@ -304,20 +463,42 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define if you have the<stdarg.h> header file.  */
+comment|/* Define if you have the<wchar.h> header file.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HAVE_STDARG_H
+name|HAVE_WCHAR_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<varargs.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCTYPE_H
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HAVE_LOCALE_H
+name|HAVE_MBSTATE_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have<langinfo.h> and nl_langinfo(CODESET). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LANGINFO_CODESET
 value|1
 end_define
 
@@ -332,12 +513,9 @@ name|VOID_SIGHANDLER
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|GWINSZ_IN_SYS_IOCTL
-value|1
-end_define
+begin_comment
+comment|/* #undef GWINSZ_IN_SYS_IOCTL */
+end_comment
 
 begin_define
 define|#
@@ -414,10 +592,6 @@ directive|define
 name|HAVE_POSIX_SIGSETJMP
 value|1
 end_define
-
-begin_comment
-comment|/* config.h.bot */
-end_comment
 
 begin_comment
 comment|/* modify settings or make new ones based on what autoconf tells us. */
