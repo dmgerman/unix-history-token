@@ -547,6 +547,12 @@ name|v_page_count
 argument_list|)
 operator|/
 literal|8
+operator|+
+name|maxproc
+operator|*
+literal|2
+operator|+
+name|maxfiles
 argument_list|,
 name|ZONE_INTERRUPT
 argument_list|,
