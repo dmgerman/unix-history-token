@@ -1661,7 +1661,14 @@ name|debug
 argument_list|(
 literal|1
 argument_list|,
-literal|"AMR_IO_COMMAND"
+literal|"AMR_IO_COMMAND  0x%x"
+argument_list|,
+name|au
+operator|->
+name|au_cmd
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* handle inbound data buffer */
@@ -1722,6 +1729,23 @@ operator|!=
 literal|0
 condition|)
 break|break;
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"copyin %ld bytes from %p -> %p"
+argument_list|,
+name|au
+operator|->
+name|au_length
+argument_list|,
+name|au
+operator|->
+name|au_buffer
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2137,6 +2161,37 @@ name|ac_flags
 operator||=
 name|AMR_CMD_DATAOUT
 expr_stmt|;
+comment|/* XXX debugging */
+if|if
+condition|(
+operator|(
+name|au
+operator|->
+name|au_direction
+operator|&
+name|AMR_IO_READ
+operator|)
+operator|&&
+operator|!
+operator|(
+name|au
+operator|->
+name|au_direction
+operator|&
+name|AMR_IO_WRITE
+operator|)
+condition|)
+name|memset
+argument_list|(
+name|dp
+argument_list|,
+literal|0xa5
+argument_list|,
+name|au
+operator|->
+name|au_length
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* run the command */
 if|if
@@ -2175,6 +2230,40 @@ argument_list|,
 name|au
 operator|->
 name|au_length
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"copyout %ld bytes from %p -> %p"
+argument_list|,
+name|au
+operator|->
+name|au_length
+argument_list|,
+name|dp
+argument_list|,
+name|au
+operator|->
+name|au_buffer
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|!=
+name|NULL
+condition|)
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"%16D"
+argument_list|,
+name|dp
+argument_list|,
+literal|" "
 argument_list|)
 expr_stmt|;
 name|au
@@ -3676,15 +3765,6 @@ modifier|*
 name|ac
 parameter_list|)
 block|{
-name|struct
-name|amr_softc
-modifier|*
-name|sc
-init|=
-name|ac
-operator|->
-name|ac_sc
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -4122,6 +4202,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|u_int8_t
+modifier|*
+name|sgc
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|3
@@ -4154,6 +4238,50 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
+comment|/* for AMR_CMD_CONFIG the s/g count goes elsewhere */
+if|if
+condition|(
+name|ac
+operator|->
+name|ac_mailbox
+operator|.
+name|mb_command
+operator|==
+name|AMR_CMD_CONFIG
+condition|)
+block|{
+name|sgc
+operator|=
+operator|&
+operator|(
+operator|(
+operator|(
+expr|struct
+name|amr_mailbox_ioctl
+operator|*
+operator|)
+operator|&
+name|ac
+operator|->
+name|ac_mailbox
+operator|)
+operator|->
+name|mb_param
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sgc
+operator|=
+operator|&
+name|ac
+operator|->
+name|ac_mailbox
+operator|.
+name|mb_nsgelem
+expr_stmt|;
+block|}
 comment|/* decide whether we need to populate the s/g table */
 if|if
 condition|(
@@ -4162,11 +4290,8 @@ operator|<
 literal|2
 condition|)
 block|{
-name|ac
-operator|->
-name|ac_mailbox
-operator|.
-name|mb_nsgelem
+operator|*
+name|sgc
 operator|=
 literal|0
 expr_stmt|;
@@ -4183,11 +4308,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ac
-operator|->
-name|ac_mailbox
-operator|.
-name|mb_nsgelem
+operator|*
+name|sgc
 operator|=
 name|nsegments
 expr_stmt|;
@@ -4379,7 +4501,7 @@ name|ac_dataphys
 expr_stmt|;
 name|debug
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|"slot %d  %d segments at 0x%x, passthrough at 0x%x"
 argument_list|,
@@ -4442,7 +4564,7 @@ name|ds_len
 expr_stmt|;
 name|debug
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|" %d: 0x%x/%d"
 argument_list|,
@@ -4483,7 +4605,7 @@ name|ac_sc
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* if the command involves data at all, and hasn't been mapped */
@@ -4686,7 +4808,7 @@ name|ac_sc
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* if the command involved data at all and was mapped */
@@ -4869,7 +4991,7 @@ name|i
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* mark command as busy so that polling consumer can tell */
@@ -4940,7 +5062,7 @@ expr_stmt|;
 comment|/*       * Spin waiting for the mailbox, give up after ~1 second.  We expect the      * controller to be able to handle our I/O.      *      * XXX perhaps we should wait for less time, and count on the deferred command      * handling to deal with retries?      */
 name|debug
 argument_list|(
-literal|2
+literal|4
 argument_list|,
 literal|"wait for mailbox"
 argument_list|)
@@ -4987,7 +5109,7 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|2
+literal|4
 argument_list|,
 literal|"got mailbox"
 argument_list|)
@@ -5036,7 +5158,7 @@ else|else
 block|{
 name|debug
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 literal|"busy flag %x\n"
 argument_list|,
@@ -5094,7 +5216,7 @@ return|;
 block|}
 name|debug
 argument_list|(
-literal|2
+literal|3
 argument_list|,
 literal|"posted command"
 argument_list|)
@@ -5146,7 +5268,7 @@ name|result
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* See if there's anything for us to do */
@@ -5376,7 +5498,7 @@ name|ac
 decl_stmt|;
 name|debug_called
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 expr_stmt|;
 comment|/* pull completed commands off the queue */
