@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -461,7 +461,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get effective group ID.  * The "egid" is groups[0], and thus could be obtained via getgroups;  * this is somewhat painful to do correctly in a library function,  * this the existence of this syscall.  */
+comment|/*  * Get effective group ID.  The "egid" is groups[0], and could be obtained  * via getgroups.  This syscall exists because it is somewhat painful to do  * correctly in a library function.  */
 end_comment
 
 begin_comment
@@ -979,7 +979,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
 name|uap
 operator|->
 name|pgid
@@ -987,10 +986,9 @@ operator|!=
 name|p
 operator|->
 name|p_pid
-operator|)
-operator|&&
-operator|(
-operator|(
+condition|)
+if|if
+condition|(
 operator|(
 name|pgrp
 operator|=
@@ -1003,7 +1001,6 @@ argument_list|)
 operator|)
 operator|==
 literal|0
-operator|)
 operator|||
 name|pgrp
 operator|->
@@ -1015,19 +1012,15 @@ name|pgrp
 operator|->
 name|pg_session
 operator|!=
-name|u
-operator|.
-name|u_procp
+name|cp
 operator|->
 name|p_session
-operator|)
 condition|)
 return|return
 operator|(
 name|EPERM
 operator|)
 return|;
-comment|/* 	 * done checking, now do it 	 */
 name|pgmv
 argument_list|(
 name|p
@@ -1132,17 +1125,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
+comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
 name|u
 operator|.
 name|u_cred
@@ -1279,17 +1262,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
+comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
 name|u
 operator|.
 name|u_cred
@@ -1410,16 +1383,6 @@ operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
 name|u
 operator|.
 name|u_cred
@@ -1556,16 +1519,6 @@ operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
 name|u
 operator|.
 name|u_cred
@@ -1735,20 +1688,10 @@ return|;
 end_return
 
 begin_comment
-comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
+comment|/* 	 * Everything's okay, do it.  Copy credentials so other references do 	 * not see our changes. 	 */
 end_comment
 
-begin_if
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
+begin_expr_stmt
 name|u
 operator|.
 name|u_cred
@@ -1760,7 +1703,7 @@ operator|.
 name|u_cred
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
 name|u
@@ -1931,17 +1874,7 @@ operator|)
 return|;
 end_return
 
-begin_if
-if|if
-condition|(
-name|u
-operator|.
-name|u_cred
-operator|->
-name|cr_ref
-operator|>
-literal|1
-condition|)
+begin_expr_stmt
 name|u
 operator|.
 name|u_cred
@@ -1953,7 +1886,7 @@ operator|.
 name|u_cred
 argument_list|)
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_expr_stmt
 name|p
@@ -2132,6 +2065,17 @@ operator|(
 name|error
 operator|)
 return|;
+name|u
+operator|.
+name|u_cred
+operator|=
+name|crcopy
+argument_list|(
+name|u
+operator|.
+name|u_cred
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_cred
@@ -2480,6 +2424,19 @@ name|ucred
 modifier|*
 name|newcr
 decl_stmt|;
+if|if
+condition|(
+name|cr
+operator|->
+name|cr_ref
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+name|cr
+operator|)
+return|;
 name|newcr
 operator|=
 name|crget
@@ -2764,7 +2721,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-name|int
+name|u_int
 operator|*
 operator|)
 literal|0
