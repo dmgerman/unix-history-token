@@ -116,6 +116,39 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Hash releted definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ID_HASH_SIZE
+value|32
+end_define
+
+begin_comment
+comment|/* most systems wont need even this many */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ng_node
+argument_list|)
+name|ID_hash
+index|[
+name|ID_HASH_SIZE
+index|]
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Don't nead to initialise them because it's a LIST */
+end_comment
+
+begin_comment
 comment|/* Internal functions */
 end_comment
 
@@ -193,7 +226,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|node_p
+name|ng_ID_t
 name|ng_decodeidname
 parameter_list|(
 specifier|const
@@ -268,6 +301,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|ng_ID_t
+name|nextID
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/************************************************************************ 			Node routines ************************************************************************/
@@ -590,6 +632,32 @@ operator|->
 name|hooks
 argument_list|)
 expr_stmt|;
+comment|/* get an ID and put us in the hash chain */
+name|node
+operator|->
+name|ID
+operator|=
+name|nextID
+operator|++
+expr_stmt|;
+comment|/* 137 per second for 1 year before wrap */
+name|LIST_INSERT_HEAD
+argument_list|(
+operator|&
+name|ID_hash
+index|[
+name|node
+operator|->
+name|ID
+operator|%
+name|ID_HASH_SIZE
+index|]
+argument_list|,
+name|node
+argument_list|,
+name|idnodes
+argument_list|)
+expr_stmt|;
 comment|/* Done */
 operator|*
 name|nodepp
@@ -789,6 +857,13 @@ argument_list|(
 name|node
 argument_list|,
 name|nodes
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|node
+argument_list|,
+name|idnodes
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -1005,6 +1080,67 @@ block|}
 end_function
 
 begin_comment
+comment|/************************************************************************ 			Node ID handling ************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|node_p
+name|ng_ID2node
+parameter_list|(
+name|ng_ID_t
+name|ID
+parameter_list|)
+block|{
+name|node_p
+name|np
+decl_stmt|;
+name|LIST_FOREACH
+argument_list|(
+argument|np
+argument_list|,
+argument|&ID_hash[ID % ID_HASH_SIZE]
+argument_list|,
+argument|idnodes
+argument_list|)
+block|{
+if|if
+condition|(
+name|np
+operator|->
+name|ID
+operator|==
+name|ID
+condition|)
+break|break;
+block|}
+return|return
+operator|(
+name|np
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|ng_ID_t
+name|ng_node2ID
+parameter_list|(
+name|node_p
+name|node
+parameter_list|)
+block|{
+return|return
+operator|(
+name|node
+operator|->
+name|ID
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/************************************************************************ 			Node name handling ************************************************************************/
 end_comment
 
@@ -1099,9 +1235,10 @@ argument_list|(
 name|name
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
+comment|/* valid IDs not allowed here */
 name|TRAP_ERROR
 expr_stmt|;
 return|return
@@ -1230,7 +1367,8 @@ parameter_list|)
 block|{
 name|node_p
 name|node
-decl_stmt|,
+decl_stmt|;
+name|ng_ID_t
 name|temp
 decl_stmt|;
 comment|/* "." means "this node" */
@@ -1262,30 +1400,15 @@ name|name
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
-comment|/* Make sure the ID really points to a node */
-name|LIST_FOREACH
-argument_list|(
-argument|node
-argument_list|,
-argument|&nodelist
-argument_list|,
-argument|nodes
-argument_list|)
-block|{
-if|if
-condition|(
-name|node
-operator|==
-name|temp
-condition|)
-break|break;
-block|}
 return|return
 operator|(
-name|node
+name|ng_ID2node
+argument_list|(
+name|temp
+argument_list|)
 operator|)
 return|;
 block|}
@@ -1329,12 +1452,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decode a ID name, eg. "[f03034de]". Returns NULL if the  * string is not valid, otherwise returns the ID cast to a  * node pointer.  *  * NOTE: the returned pointer is not necessarily valid!  */
+comment|/*  * Decode a ID name, eg. "[f03034de]". Returns 0 if the  * string is not valid, otherwise returns the value.  */
 end_comment
 
 begin_function
 specifier|static
-name|node_p
+name|ng_ID_t
 name|ng_decodeidname
 parameter_list|(
 specifier|const
@@ -1343,7 +1466,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-name|u_int32_t
+name|ng_ID_t
 name|val
 decl_stmt|;
 name|int
@@ -1577,9 +1700,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|(
-name|node_p
-operator|)
 name|val
 operator|)
 return|;
@@ -3496,12 +3616,12 @@ argument_list|(
 operator|*
 name|rtnp
 argument_list|,
-literal|"[%lx]:"
+literal|"[%x]:"
 argument_list|,
-operator|(
-name|u_long
-operator|)
+name|ng_node2ID
+argument_list|(
 name|start
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4289,10 +4409,10 @@ name|ni
 operator|->
 name|id
 operator|=
-operator|(
-name|u_int32_t
-operator|)
+name|ng_node2ID
+argument_list|(
 name|here
+argument_list|)
 expr_stmt|;
 name|ni
 operator|->
@@ -4448,10 +4568,10 @@ name|ni
 operator|->
 name|id
 operator|=
-operator|(
-name|u_int32_t
-operator|)
+name|ng_node2ID
+argument_list|(
 name|here
+argument_list|)
 expr_stmt|;
 comment|/* Cycle through the linked list of hooks */
 name|ni
@@ -4606,14 +4726,14 @@ name|nodeinfo
 operator|.
 name|id
 operator|=
-operator|(
-name|u_int32_t
-operator|)
+name|ng_node2ID
+argument_list|(
 name|hook
 operator|->
 name|peer
 operator|->
 name|node
+argument_list|)
 expr_stmt|;
 name|link
 operator|->
@@ -4900,10 +5020,10 @@ name|np
 operator|->
 name|id
 operator|=
-operator|(
-name|u_int32_t
-operator|)
+name|ng_node2ID
+argument_list|(
 name|node
+argument_list|)
 expr_stmt|;
 name|np
 operator|->
@@ -6354,7 +6474,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* Find the target node. Note that this trashes address */
+comment|/* Find the target node. */
 name|error
 operator|=
 name|ng_path2node

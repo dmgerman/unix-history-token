@@ -168,6 +168,10 @@ modifier|*
 name|private
 decl_stmt|;
 comment|/* node type dependant node ID */
+name|ng_ID_t
+name|ID
+decl_stmt|;
+comment|/* Unique per node */
 name|LIST_HEAD
 argument_list|(
 argument|hooks
@@ -184,6 +188,13 @@ argument_list|)
 name|nodes
 expr_stmt|;
 comment|/* linked list of all nodes */
+name|LIST_ENTRY
+argument_list|(
+argument|ng_node
+argument_list|)
+name|idnodes
+expr_stmt|;
+comment|/* ID hash collision list */
 block|}
 struct|;
 end_struct
@@ -695,6 +706,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function_decl
+name|int
+name|ng_bypass
+parameter_list|(
+name|hook_p
+name|hook1
+parameter_list|,
+name|hook_p
+name|hook2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ng_cutlinks
 parameter_list|(
@@ -862,6 +886,16 @@ name|struct
 name|ng_type
 modifier|*
 name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ng_ID_t
+name|ng_node2ID
+parameter_list|(
+name|node_p
+name|node
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1055,19 +1089,6 @@ name|ng_unref
 parameter_list|(
 name|node_p
 name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ng_bypass
-parameter_list|(
-name|hook_p
-name|hook1
-parameter_list|,
-name|hook_p
-name|hook2
 parameter_list|)
 function_decl|;
 end_function_decl

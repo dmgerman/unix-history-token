@@ -138,15 +138,6 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* which card are we? */
-name|char
-name|nodename
-index|[
-name|NG_NODELEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* store our node name */
 name|int
 name|datahooks
 decl_stmt|;

@@ -176,11 +176,11 @@ block|{
 name|u_int
 name|packets_in
 decl_stmt|;
-comment|/* packets in from downstream */
+comment|/* packets in from ethernet */
 name|u_int
 name|packets_out
 decl_stmt|;
-comment|/* packets out towards downstream */
+comment|/* packets out towards ethernet */
 block|}
 struct|;
 end_struct

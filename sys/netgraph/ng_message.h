@@ -409,6 +409,13 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|ng_ID_t
+value|unsigned int
+end_define
+
 begin_comment
 comment|/* Structures used in response to NGM_NODEINFO and NGM_LISTHOOKS */
 end_comment
@@ -435,7 +442,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* peer type */
-name|u_int32_t
+name|ng_ID_t
 name|id
 decl_stmt|;
 comment|/* unique identifier */
