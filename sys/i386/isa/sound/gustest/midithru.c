@@ -8,7 +8,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/soundcard.h>
+file|<machine/soundcard.h>
 end_include
 
 begin_include
