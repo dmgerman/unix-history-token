@@ -2899,6 +2899,7 @@ goto|goto
 name|end
 goto|;
 block|}
+elseif|else
 if|if
 condition|(
 name|X509_verify
