@@ -7,84 +7,84 @@ begin_define
 define|#
 directive|define
 name|F_UP
-value|keymap[0]
+value|f_keymap[0]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_DOWN
-value|keymap[1]
+value|f_keymap[1]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_RIGHT
-value|keymap[2]
+value|f_keymap[2]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_LEFT
-value|keymap[3]
+value|f_keymap[3]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_NEXT
-value|keymap[4]
+value|f_keymap[4]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CLEFT
-value|keymap[5]
+value|f_keymap[5]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CRIGHT
-value|keymap[6]
+value|f_keymap[6]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CHOME
-value|keymap[7]
+value|f_keymap[7]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CEND
-value|keymap[8]
+value|f_keymap[8]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CBS
-value|keymap[9]
+value|f_keymap[9]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_CDEL
-value|keymap[10]
+value|f_keymap[10]
 end_define
 
 begin_define
 define|#
 directive|define
 name|F_ACCEPT
-value|F_NEXT
+value|f_keymap[11]
 end_define
 
 begin_comment
