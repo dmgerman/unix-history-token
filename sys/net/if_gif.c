@@ -1919,6 +1919,9 @@ operator|->
 name|sa_len
 condition|)
 continue|continue;
+ifndef|#
+directive|ifndef
+name|XBONEHACK
 comment|/* can't configure same pair of address onto two gifs */
 if|if
 condition|(
@@ -1961,6 +1964,8 @@ goto|goto
 name|bad
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* can't configure multiple multi-dest interfaces */
 define|#
 directive|define
