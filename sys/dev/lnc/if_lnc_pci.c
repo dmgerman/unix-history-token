@@ -36,18 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus_memio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bus_pio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
 end_include
 
@@ -432,17 +420,6 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Cannot setup irq handler\n"
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|iobase
-operator|=
-name|rman_get_start
-argument_list|(
-name|sc
-operator|->
-name|portres
 argument_list|)
 expr_stmt|;
 name|sc

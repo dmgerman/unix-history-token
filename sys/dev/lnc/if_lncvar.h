@@ -234,21 +234,26 @@ name|DEPCA_ADDR_ROM_SIZE
 value|32
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
 begin_comment
 comment|/* C-NET(98)S port addresses */
+end_comment
+
+begin_comment
+comment|/* Notice, we can ignore fragmantation by using isa_alloc_resourcev(). */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|CNET98S_IOSIZE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
 name|CNET98S_RDP
-value|0x400
+value|0x10
 end_define
 
 begin_comment
@@ -259,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|CNET98S_RAP
-value|0x402
+value|0x12
 end_define
 
 begin_comment
@@ -270,42 +275,22 @@ begin_define
 define|#
 directive|define
 name|CNET98S_RESET
-value|0x404
+value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
 name|CNET98S_IDP
-value|0x406
+value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
 name|CNET98S_EEPROM
-value|0x40e
+value|0x1e
 end_define
-
-begin_comment
-comment|/*  * XXX - The I/O address range is fragmented in the C-NET(98)S.  *       This is the number of regs at iobase.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CNET98S_IOSIZE
-value|16
-end_define
-
-begin_comment
-comment|/* # of i/o addresses used. */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Chip types */
@@ -740,9 +725,6 @@ decl_stmt|;
 name|int
 name|portrid
 decl_stmt|;
-name|int
-name|iobase
-decl_stmt|;
 name|bus_space_tag_t
 name|lnc_btag
 decl_stmt|;
@@ -916,9 +898,72 @@ name|TRANS_NEXT
 value|(sc->trans_ring->base + sc->trans_next)
 end_define
 
+begin_define
+define|#
+directive|define
+name|lnc_inb
+parameter_list|(
+name|port
+parameter_list|)
+define|\
+value|bus_space_read_1(sc->lnc_btag, sc->lnc_bhandle, (port))
+end_define
+
+begin_define
+define|#
+directive|define
+name|lnc_inw
+parameter_list|(
+name|port
+parameter_list|)
+define|\
+value|bus_space_read_2(sc->lnc_btag, sc->lnc_bhandle, (port))
+end_define
+
+begin_define
+define|#
+directive|define
+name|lnc_outw
+parameter_list|(
+name|port
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_2(sc->lnc_btag, sc->lnc_bhandle, (port), (val))
+end_define
+
 begin_comment
 comment|/* Functional declarations */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lance_probe
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lnc_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|lnc_release_resources
+name|__P
+argument_list|(
+operator|(
+name|device_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -943,6 +988,42 @@ operator|(
 expr|struct
 name|lnc_softc
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|write_csr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lnc_softc
+operator|*
+operator|,
+name|u_short
+operator|,
+name|u_short
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_short
+name|read_csr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lnc_softc
+operator|*
+operator|,
+name|u_short
 operator|)
 argument_list|)
 decl_stmt|;
