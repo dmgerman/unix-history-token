@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.4 (Berkeley) %G%"
+literal|"@(#)df.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,7 +260,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Filesystem  Mounted on  blocks\t  used\t  free"
+literal|"Filesystem  Mounted on  kbytes\t  used\t  free"
 argument_list|)
 expr_stmt|;
 if|if
