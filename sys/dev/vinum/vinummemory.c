@@ -683,7 +683,7 @@ name|size
 operator|)
 condition|)
 comment|/* overlap */
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"Malloc overlap"
 argument_list|)
@@ -1066,7 +1066,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"Free"
 argument_list|)

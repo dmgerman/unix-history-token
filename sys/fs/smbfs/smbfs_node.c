@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -547,7 +553,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"ditto"
 argument_list|)
@@ -596,7 +602,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"ditto"
 argument_list|)
@@ -619,7 +625,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"ditto"
 argument_list|)

@@ -637,7 +637,7 @@ operator|~
 name|RB_GDB
 expr_stmt|;
 comment|/* local ddb */
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"vinum debug"
 argument_list|)

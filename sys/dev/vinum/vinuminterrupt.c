@@ -1118,7 +1118,7 @@ operator|!=
 literal|0
 condition|)
 comment|/* still something to transfer? */
-name|Debugger
+name|kdb_enter
 argument_list|(
 literal|"resid"
 argument_list|)
