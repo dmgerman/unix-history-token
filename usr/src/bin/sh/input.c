@@ -620,7 +620,7 @@ condition|)
 block|{
 name|out2str
 argument_list|(
-literal|"sh: turning off NDELAY  mode\n"
+literal|"sh: turning off NDELAY mode\n"
 argument_list|)
 expr_stmt|;
 goto|goto
