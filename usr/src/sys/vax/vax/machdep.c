@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.51	82/02/08	*/
+comment|/*	machdep.c	4.52	82/03/15	*/
 end_comment
 
 begin_include
@@ -2302,21 +2302,6 @@ operator|.
 name|b_forw
 condition|)
 block|{
-specifier|register
-name|int
-name|cnt
-decl_stmt|;
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|iter
-decl_stmt|,
-name|nbusy
-decl_stmt|;
 name|waittime
 operator|=
 literal|0
@@ -2331,6 +2316,21 @@ argument_list|(
 literal|"syncing disks... "
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+block|{
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|iter
+decl_stmt|,
+name|nbusy
+decl_stmt|;
 for|for
 control|(
 name|iter
@@ -2391,6 +2391,16 @@ name|nbusy
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|#
+directive|else
+name|DELAY
+argument_list|(
+literal|10000000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"done\n"

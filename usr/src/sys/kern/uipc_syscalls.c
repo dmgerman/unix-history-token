@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.14	82/02/25	*/
+comment|/*	uipc_syscalls.c	4.15	82/03/15	*/
 end_comment
 
 begin_include
@@ -951,9 +951,9 @@ condition|(
 operator|(
 name|so
 operator|->
-name|so_options
+name|so_state
 operator|&
-name|SO_NONBLOCKING
+name|SS_NBIO
 operator|)
 operator|&&
 operator|(
@@ -1265,9 +1265,9 @@ condition|(
 operator|(
 name|so
 operator|->
-name|so_options
+name|so_state
 operator|&
-name|SO_NONBLOCKING
+name|SS_NBIO
 operator|)
 operator|&&
 operator|(
@@ -1519,9 +1519,9 @@ condition|(
 operator|(
 name|so
 operator|->
-name|so_options
+name|so_state
 operator|&
-name|SO_NONBLOCKING
+name|SS_NBIO
 operator|)
 operator|&&
 operator|(
