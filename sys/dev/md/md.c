@@ -2606,6 +2606,9 @@ operator|(
 name|u_char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|mdio
 operator|->
 name|md_base
