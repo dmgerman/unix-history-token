@@ -5762,7 +5762,7 @@ goto|goto
 name|again
 goto|;
 else|else
-name|DDB
+name|BVDDB
 argument_list|(
 argument|printf(
 literal|"intr, but mc11 not set\n"
