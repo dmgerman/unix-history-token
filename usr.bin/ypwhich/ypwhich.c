@@ -6,16 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"ypwhich.c,v 1.2 1993/05/16 02:49:10 deraadt Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -45,19 +50,43 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -227,32 +256,21 @@ block|, }
 struct|;
 end_struct
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"%s\n%s\n"
 argument_list|,
-literal|"\typwhich [-d domain] [[-t] -m [mname] | host]\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: ypwhich [-d domain] [[-t] -m [mname] | host]"
 argument_list|,
-literal|"\typwhich -x\n"
+literal|"       ypwhich -x"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -261,37 +279,29 @@ name|ERR_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Like yp_bind except can query a specific host  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bind_host
-argument_list|(
-argument|dom
-argument_list|,
-argument|sin
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dom
+parameter_list|,
+name|sin
+parameter_list|)
 name|char
 modifier|*
 name|dom
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -303,11 +313,6 @@ decl_stmt|;
 name|struct
 name|ypbind_resp
 name|ypbr
-decl_stmt|;
-name|struct
-name|dom_binding
-modifier|*
-name|ysd
 decl_stmt|;
 name|struct
 name|timeval
@@ -364,11 +369,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't clntudp_create: %s\n"
+literal|"can't clntudp_create: %s"
 argument_list|,
 name|yperr_string
 argument_list|(
@@ -420,11 +423,9 @@ operator|!=
 name|RPC_SUCCESS
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't clnt_call: %s\n"
+literal|"can't clnt_call: %s"
 argument_list|,
 name|yperr_string
 argument_list|(
@@ -452,11 +453,9 @@ operator|!=
 name|YPBIND_SUCC_VAL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't yp_bind: Reason: %s\n"
+literal|"can't yp_bind: reason: %s"
 argument_list|,
 name|ypbinderr_string
 argument_list|(
@@ -546,7 +545,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
@@ -565,12 +564,16 @@ block|{
 name|char
 modifier|*
 name|domainname
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|master
 decl_stmt|,
 modifier|*
 name|map
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ypmaplist
@@ -579,15 +582,6 @@ name|ypml
 decl_stmt|,
 modifier|*
 name|y
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|struct
 name|hostent
@@ -612,16 +606,6 @@ name|r
 decl_stmt|,
 name|i
 decl_stmt|;
-name|yp_get_default_domain
-argument_list|(
-operator|&
-name|domainname
-argument_list|)
-expr_stmt|;
-name|map
-operator|=
-name|NULL
-expr_stmt|;
 name|getmap
 operator|=
 name|notrans
@@ -727,6 +711,17 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|domainname
+condition|)
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|domainname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -841,12 +836,11 @@ condition|(
 operator|!
 name|hent
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERR_NOSUCHHOST
 argument_list|,
-literal|"ypwhich: host %s unknown\n"
+literal|"host %s unknown"
 argument_list|,
 name|argv
 index|[
@@ -854,12 +848,6 @@ name|optind
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERR_NOSUCHHOST
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|(
@@ -1028,24 +1016,19 @@ break|break;
 case|case
 name|YPERR_YPBIND
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ypwhich: not running ypbind\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERR_NOYPBIND
+argument_list|,
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERR_NOMASTER
 argument_list|,
-literal|"Can't find master for map %s. Reason: %s\n"
+literal|"can't find master for map %s. reason: %s"
 argument_list|,
 name|map
 argument_list|,
@@ -1053,11 +1036,6 @@ name|yperr_string
 argument_list|(
 name|r
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ERR_NOMASTER
 argument_list|)
 expr_stmt|;
 block|}
@@ -1143,11 +1121,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"YP: can't find the master of %s: Reason: %s\n"
+literal|"can't find the master of %s: reason: %s"
 argument_list|,
 name|ypml
 operator|->
@@ -1177,24 +1153,19 @@ break|break;
 case|case
 name|YPERR_YPBIND
 case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"ypwhich: not running ypbind\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERR_NOYPBIND
+argument_list|,
+literal|"not running ypbind"
 argument_list|)
 expr_stmt|;
 default|default:
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERR_NOMASTER
 argument_list|,
-literal|"Can't get map list for domain %s. Reason: %s\n"
+literal|"can't get map list for domain %s. reason: %s"
 argument_list|,
 name|domainname
 argument_list|,
@@ -1202,11 +1173,6 @@ name|yperr_string
 argument_list|(
 name|r
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|ERR_NOMASTER
 argument_list|)
 expr_stmt|;
 block|}
