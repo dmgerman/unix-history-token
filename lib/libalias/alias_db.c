@@ -7054,6 +7054,8 @@ argument_list|)
 expr_stmt|;
 name|rule
 operator|.
+name|fw_uar
+operator|.
 name|fw_pts
 index|[
 literal|0
@@ -7068,6 +7070,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|rule
+operator|.
+name|fw_uar
 operator|.
 name|fw_pts
 index|[
@@ -7087,6 +7091,8 @@ if|if
 condition|(
 name|rule
 operator|.
+name|fw_uar
+operator|.
 name|fw_pts
 index|[
 literal|0
@@ -7095,6 +7101,8 @@ operator|!=
 literal|0
 operator|&&
 name|rule
+operator|.
+name|fw_uar
 operator|.
 name|fw_pts
 index|[
@@ -7152,6 +7160,8 @@ argument_list|)
 expr_stmt|;
 name|rule
 operator|.
+name|fw_uar
+operator|.
 name|fw_pts
 index|[
 literal|0
@@ -7166,6 +7176,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|rule
+operator|.
+name|fw_uar
 operator|.
 name|fw_pts
 index|[
