@@ -424,6 +424,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MID_ARM6
+value|143
+end_define
+
+begin_comment
+comment|/* ARM6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MID_HP200
 value|200
 end_define
