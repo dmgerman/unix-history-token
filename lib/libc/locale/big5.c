@@ -265,8 +265,8 @@ return|;
 block|}
 while|while
 condition|(
-name|len
 operator|--
+name|len
 operator|>=
 literal|0
 condition|)
@@ -299,8 +299,6 @@ operator|*
 name|result
 operator|=
 name|string
-operator|+
-name|len
 expr_stmt|;
 return|return
 name|rune
