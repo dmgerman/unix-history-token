@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|NAPIC
-value|1
+value|2
 end_define
 
 begin_endif
