@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trap.c,v 1.17.2.1 1999/04/12 15:46:02 cracauer Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
