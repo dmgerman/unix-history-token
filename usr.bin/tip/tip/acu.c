@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: acu.c,v 1.3 1997/08/18 07:15:58 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,7 +166,7 @@ name|CM
 operator|!=
 name|NOSTR
 condition|)
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -382,7 +382,7 @@ name|CM
 operator|!=
 name|NOSTR
 condition|)
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,
@@ -639,7 +639,7 @@ name|CM
 operator|!=
 name|NOSTR
 condition|)
-name|pwrite
+name|xpwrite
 argument_list|(
 name|FD
 argument_list|,

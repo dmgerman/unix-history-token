@@ -1869,7 +1869,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|pwrite
+name|xpwrite
 name|__P
 argument_list|(
 operator|(
