@@ -197,7 +197,7 @@ comment|/* i writes in progress */
 name|struct
 name|thread
 modifier|*
-name|v_vxproc
+name|v_vxthread
 decl_stmt|;
 comment|/* i thread owning VXLOCK */
 name|int

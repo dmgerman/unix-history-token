@@ -9242,7 +9242,7 @@ name|VI_XLOCK
 operator|&&
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 operator|!=
 name|curthread
 condition|)
@@ -10728,7 +10728,7 @@ name|VI_XLOCK
 expr_stmt|;
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 operator|=
 name|curthread
 expr_stmt|;
@@ -10762,7 +10762,7 @@ name|VI_XLOCK
 expr_stmt|;
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 operator|=
 name|NULL
 expr_stmt|;

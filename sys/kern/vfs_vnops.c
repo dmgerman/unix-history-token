@@ -3982,7 +3982,7 @@ operator|)
 operator|&&
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 operator|!=
 name|curthread
 condition|)

@@ -1939,7 +1939,7 @@ name|td
 operator|!=
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 condition|)
 block|{
 name|lockmgr
@@ -2029,7 +2029,7 @@ literal|0
 operator|&&
 name|vp
 operator|->
-name|v_vxproc
+name|v_vxthread
 operator|!=
 name|curthread
 condition|)
