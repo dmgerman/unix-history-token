@@ -411,7 +411,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|doclusterread
+name|ext2_doclusterread
 condition|)
 name|error
 operator|=
@@ -1240,7 +1240,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|doclusterwrite
+name|ext2_doclusterwrite
 condition|)
 block|{
 if|#
