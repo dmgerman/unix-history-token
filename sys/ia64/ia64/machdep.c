@@ -325,7 +325,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|bootinfo_kernel
+name|bootinfo
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
@@ -345,10 +345,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|user
-modifier|*
+name|char
 name|proc0paddr
+index|[
+name|UPAGES
+operator|*
+name|PAGE_SIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,7 +1177,7 @@ operator|*
 operator|)
 name|bootinfo
 operator|.
-name|ssym
+name|bi_symtab
 expr_stmt|;
 name|ksym_end
 operator|=
@@ -1184,7 +1187,7 @@ operator|*
 operator|)
 name|bootinfo
 operator|.
-name|esym
+name|bi_esymtab
 expr_stmt|;
 name|kernend
 operator|=
@@ -1215,7 +1218,7 @@ if|if
 condition|(
 name|bootinfo
 operator|.
-name|kernend
+name|bi_kernend
 condition|)
 name|kernend
 operator|=
@@ -1223,7 +1226,7 @@ name|round_page
 argument_list|(
 name|bootinfo
 operator|.
-name|kernend
+name|bi_kernend
 argument_list|)
 expr_stmt|;
 name|preload_metadata
@@ -1233,7 +1236,7 @@ name|caddr_t
 operator|)
 name|bootinfo
 operator|.
-name|modptr
+name|bi_modulep
 expr_stmt|;
 if|if
 condition|(
@@ -1248,9 +1251,12 @@ expr_stmt|;
 else|else
 name|kern_envp
 operator|=
+operator|(
+name|caddr_t
+operator|)
 name|bootinfo
 operator|.
-name|envp
+name|bi_envp
 expr_stmt|;
 comment|/* Init basic tunables, including hz */
 name|init_param
@@ -1841,25 +1847,6 @@ name|sz
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Init mapping for u page(s) for proc 0 	 */
-name|proc0paddr
-operator|=
-name|proc0
-operator|.
-name|p_addr
-operator|=
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-name|pmap_steal_memory
-argument_list|(
-name|UPAGES
-operator|*
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Setup the global data for the bootstrap cpu. 	 */
 block|{
 name|size_t
@@ -2068,7 +2055,7 @@ name|p
 operator|=
 name|bootinfo
 operator|.
-name|boot_flags
+name|bi_flags
 init|;
 name|p
 operator|&&
