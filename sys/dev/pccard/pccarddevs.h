@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.21 2001/11/19 05:11:35 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.22 2001/11/19 05:22:28 imp Exp   */
 end_comment
 
 begin_comment
@@ -672,14 +672,16 @@ begin_comment
 comment|/* EMTAC Technology Corporation */
 end_comment
 
-begin_expr_stmt
-name|vector
-name|LINKSYS2
-literal|0x0274
-name|The
-name|Linksys
-name|Group
-end_expr_stmt
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_LINKSYS2
+value|0x0274
+end_define
+
+begin_comment
+comment|/* The Linksys Group */
+end_comment
 
 begin_define
 define|#
