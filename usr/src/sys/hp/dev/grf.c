@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.31 91/01/21$  *  *	@(#)grf.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf.c 1.31 91/01/21$  *  *	@(#)grf.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -119,13 +119,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"specdev.h"
+file|"vnode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|"specdev.h"
 end_include
 
 begin_include
