@@ -461,7 +461,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<pci/brktree_reg.h>
+file|<dev/bktr/bktr_reg.h>
 end_include
 
 begin_if
@@ -477,7 +477,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<pci/bt848_i2c.h>
+file|<dev/bktr/bktr_i2c.h>
 end_include
 
 begin_include
