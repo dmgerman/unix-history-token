@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.14 1997/08/22 15:50:09 peter Exp $"
+literal|"$Id: options.c,v 1.15 1997/10/10 06:02:56 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,6 +491,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Script to run after phys link estab. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|max_con_attempts
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Maximum connect tries in non-demand mode */
 end_comment
 
 begin_decl_stmt
@@ -1315,6 +1327,21 @@ begin_decl_stmt
 specifier|static
 name|int
 name|setwelcomer
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|setmaxcon
 name|__P
 argument_list|(
 operator|(
@@ -2938,6 +2965,15 @@ name|setwelcomer
 block|}
 block|,
 comment|/* Script to welcome client */
+block|{
+literal|"connect-max-attempts"
+block|,
+literal|1
+block|,
+name|setmaxcon
+block|}
+block|,
+comment|/* maximum # connect attempts */
 block|{
 literal|"maxconnect"
 block|,
@@ -7964,6 +8000,32 @@ return|return
 operator|(
 literal|1
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|setmaxcon
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+return|return
+name|int_option
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+operator|&
+name|max_con_attempts
+argument_list|)
 return|;
 block|}
 end_function

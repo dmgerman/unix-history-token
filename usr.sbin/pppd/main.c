@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.13 1997/08/19 17:52:43 peter Exp $"
+literal|"$Id: main.c,v 1.14 1997/08/22 12:03:55 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1029,6 +1029,11 @@ decl_stmt|;
 name|struct
 name|stat
 name|statbuf
+decl_stmt|;
+name|int
+name|connect_attempts
+init|=
+literal|0
 decl_stmt|;
 name|phase
 operator|=
@@ -2208,6 +2213,9 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+name|connect_attempts
+operator|++
+expr_stmt|;
 goto|goto
 name|fail
 goto|;
@@ -2226,6 +2234,11 @@ argument_list|)
 expr_stmt|;
 comment|/* give it time to set up its terminal */
 block|}
+name|connect_attempts
+operator|=
+literal|0
+expr_stmt|;
+comment|/* we made it through ok */
 comment|/* set line speed, flow control, etc.; clear CLOCAL if modem option */
 name|set_up_tty
 argument_list|(
@@ -2806,6 +2819,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* limit to retries? */
+if|if
+condition|(
+name|max_con_attempts
+condition|)
+if|if
+condition|(
+name|connect_attempts
+operator|>=
+name|max_con_attempts
+condition|)
+break|break;
 if|if
 condition|(
 operator|!
