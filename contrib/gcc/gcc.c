@@ -1653,14 +1653,14 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* The Specs Language  Specs are strings containing lines, each of which (if not blank) is made up of a program name, and arguments separated by spaces. The program name must be exact and start from root, since no path is searched and it is unreliable to depend on the current working directory. Redirection of input or output is not supported; the subprograms must accept filenames saying what files to read and write.  In addition, the specs can contain %-sequences to substitute variable text or for conditional text.  Here is a table of all defined %-sequences. Note that spaces are not generated automatically around the results of expanding these sequences; therefore, you can concatenate them together or with constant text in a single argument.   %%	substitute one % into the program name or argument.  %i     substitute the name of the input file being processed.  %b     substitute the basename of the input file being processed. 	This is the substring up to (and not including) the last period 	and not including the directory.  %B	same as %b, but include the file suffix (text after the last period).  %gSUFFIX 	substitute a file name that has suffix SUFFIX and is chosen 	once per compilation, and mark the argument a la %d.  To reduce 	exposure to denial-of-service attacks, the file name is now 	chosen in a way that is hard to predict even when previously 	chosen file names are known.  For example, `%g.s ... %g.o ... %g.s' 	might turn into `ccUVUUAU.s ccXYAXZ12.o ccUVUUAU.s'.  SUFFIX matches 	the regexp "[.A-Za-z]*%O"; "%O" is treated exactly as if it 	had been pre-processed.  Previously, %g was simply substituted 	with a file name chosen once per compilation, without regard 	to any appended suffix (which was therefore treated just like 	ordinary text), making such attacks more likely to succeed.  %uSUFFIX 	like %g, but generates a new temporary file name even if %uSUFFIX 	was already seen.  %USUFFIX 	substitutes the last file name generated with %uSUFFIX, generating a 	new one if there is no such last file name.  In the absence of any 	%uSUFFIX, this is just like %gSUFFIX, except they don't share 	the same suffix "space", so `%g.s ... %U.s ... %g.s ... %U.s' 	would involve the generation of two distinct file names, one 	for each `%g.s' and another for each `%U.s'.  Previously, %U was 	simply substituted with a file name chosen for the previous %u, 	without regard to any appended suffix.  %jSUFFIX         substitutes the name of the HOST_BIT_BUCKET, if any, and if it is         writable, and if save-temps is off; otherwise, substitute the name         of a temporary file, just like %u.  This temporary file is not         meant for communication between processes, but rather as a junk         disposal mechanism.  %.SUFFIX         substitutes .SUFFIX for the suffixes of a matched switch's args when         it is subsequently output with %*. SUFFIX is terminated by the next         space or %.  %d	marks the argument containing or following the %d as a 	temporary file name, so that that file will be deleted if CC exits 	successfully.  Unlike %g, this contributes no text to the argument.  %w	marks the argument containing or following the %w as the 	"output file" of this compilation.  This puts the argument 	into the sequence of arguments that %o will substitute later.  %W{...} 	like %{...} but mark last argument supplied within 	as a file to be deleted on failure.  %o	substitutes the names of all the output files, with spaces 	automatically placed around them.  You should write spaces 	around the %o as well or the results are undefined. 	%o is for use in the specs for running the linker. 	Input files whose names have no recognized suffix are not compiled 	at all, but they are included among the output files, so they will 	be linked.  %O	substitutes the suffix for object files.  Note that this is         handled specially when it immediately follows %g, %u, or %U 	(with or without a suffix argument) because of the need for 	those to form complete file names.  The handling is such that 	%O is treated exactly as if it had already been substituted, 	except that %g, %u, and %U do not currently support additional 	SUFFIX characters following %O as they would following, for 	example, `.o'.  %p	substitutes the standard macro predefinitions for the 	current target machine.  Use this when running cpp.  %P	like %p, but puts `__' before and after the name of each macro. 	(Except macros that already have __.) 	This is for ANSI C.  %I	Substitute a -iprefix option made from GCC_EXEC_PREFIX.  %s     current argument is the name of a library or startup file of some sort.         Search for that file in a standard list of directories 	and substitute the full name found.  %eSTR  Print STR as an error message.  STR is terminated by a newline.         Use this when inconsistent options are detected.  %nSTR  Print STR as an notice.  STR is terminated by a newline.  %x{OPTION}	Accumulate an option for %X.  %X	Output the accumulated linker options specified by compilations.  %Y	Output the accumulated assembler options specified by compilations.  %Z	Output the accumulated preprocessor options specified by compilations.  %v1	Substitute the major version number of GCC. 	(For version 2.5.3, this is 2.)  %v2	Substitute the minor version number of GCC. 	(For version 2.5.3, this is 5.)  %v3	Substitute the patch level number of GCC. 	(For version 2.5.3, this is 3.)  %a     process ASM_SPEC as a spec.         This allows config.h to specify part of the spec for running as.  %A	process ASM_FINAL_SPEC as a spec.  A capital A is actually 	used here.  This can be used to run a post-processor after the 	assembler has done its job.  %D	Dump out a -L option for each directory in startfile_prefixes. 	If multilib_dir is set, extra entries are generated with it affixed.  %l     process LINK_SPEC as a spec.  %L     process LIB_SPEC as a spec.  %G     process LIBGCC_SPEC as a spec.  %M     output multilib_dir with directory separators replaced with "_"; 	if multilib_dir is not set or is ".", output "".  %S     process STARTFILE_SPEC as a spec.  A capital S is actually used here.  %E     process ENDFILE_SPEC as a spec.  A capital E is actually used here.  %c	process SIGNED_CHAR_SPEC as a spec.  %C     process CPP_SPEC as a spec.  %1	process CC1_SPEC as a spec.  %2	process CC1PLUS_SPEC as a spec.  %|	output "-" if the input for the current command is coming from a pipe.  %*	substitute the variable part of a matched option.  (See below.) 	Note that each comma in the substituted string is replaced by 	a single space.  %{S}   substitutes the -S switch, if that switch was given to CC. 	If that switch was not specified, this substitutes nothing. 	Here S is a metasyntactic variable.  %{S*}  substitutes all the switches specified to CC whose names start 	with -S.  This is used for -o, -I, etc; switches that take 	arguments.  CC considers `-o foo' as being one switch whose 	name starts with `o'.  %{o*} would substitute this text, 	including the space; thus, two arguments would be generated.  %{^S*} likewise, but don't put a blank between a switch and any args.  %{S*&T*} likewise, but preserve order of S and T options (the order  	of S and T in the spec is not significant).  Can be any number  	of ampersand-separated variables; for each the wild card is  	optional.  Useful for CPP as %{D*&U*&A*}.  %{S*:X} substitutes X if one or more switches whose names start with -S are 	specified to CC.  Note that the tail part of the -S option 	(i.e. the part matched by the `*') will be substituted for each 	occurrence of %* within X.  %{<S}  remove all occurrences of -S from the command line.         Note - this option is position dependent.  % commands in the         spec string before this option will see -S, % commands in the         spec string after this option will not.  %{S:X} substitutes X, but only if the -S switch was given to CC.  %{!S:X} substitutes X, but only if the -S switch was NOT given to CC.  %{|S:X} like %{S:X}, but if no S switch, substitute `-'.  %{|!S:X} like %{!S:X}, but if there is an S switch, substitute `-'.  %{.S:X} substitutes X, but only if processing a file with suffix S.  %{!.S:X} substitutes X, but only if NOT processing a file with suffix S.  %{S|P:X} substitutes X if either -S or -P was given to CC.  This may be 	  combined with ! and . as above binding stronger than the OR.  %(Spec) processes a specification defined in a specs file as *Spec:  %[Spec] as above, but put __ around -D arguments  The conditional text X in a %{S:X} or %{!S:X} construct may contain other nested % constructs or spaces, or even newlines.  They are processed as usual, as described above.  The -O, -f, -m, and -W switches are handled specifically in these constructs.  If another value of -O or the negated form of a -f, -m, or -W switch is found later in the command line, the earlier switch value is ignored, except with {S*} where S is just one letter; this passes all matching options.  The character | at the beginning of the predicate text is used to indicate that a command should be piped to the following command, but only if -pipe is specified.  Note that it is built into CC which switches take arguments and which do not.  You might think it would be useful to generalize this to allow each compiler's spec to say which switches take arguments.  But this cannot be done in a consistent fashion.  CC cannot even decide which input files have been specified without knowing which switches take arguments, and it must know which input files to compile in order to tell which compilers to run.  CC also knows implicitly that arguments starting in `-l' are to be treated as compiler output files, and passed to the linker in their proper position among the other output files.  */
+comment|/* The Specs Language  Specs are strings containing lines, each of which (if not blank) is made up of a program name, and arguments separated by spaces. The program name must be exact and start from root, since no path is searched and it is unreliable to depend on the current working directory. Redirection of input or output is not supported; the subprograms must accept filenames saying what files to read and write.  In addition, the specs can contain %-sequences to substitute variable text or for conditional text.  Here is a table of all defined %-sequences. Note that spaces are not generated automatically around the results of expanding these sequences; therefore, you can concatenate them together or with constant text in a single argument.   %%	substitute one % into the program name or argument.  %i     substitute the name of the input file being processed.  %b     substitute the basename of the input file being processed. 	This is the substring up to (and not including) the last period 	and not including the directory.  %B	same as %b, but include the file suffix (text after the last period).  %gSUFFIX 	substitute a file name that has suffix SUFFIX and is chosen 	once per compilation, and mark the argument a la %d.  To reduce 	exposure to denial-of-service attacks, the file name is now 	chosen in a way that is hard to predict even when previously 	chosen file names are known.  For example, `%g.s ... %g.o ... %g.s' 	might turn into `ccUVUUAU.s ccXYAXZ12.o ccUVUUAU.s'.  SUFFIX matches 	the regexp "[.A-Za-z]*%O"; "%O" is treated exactly as if it 	had been pre-processed.  Previously, %g was simply substituted 	with a file name chosen once per compilation, without regard 	to any appended suffix (which was therefore treated just like 	ordinary text), making such attacks more likely to succeed.  %uSUFFIX 	like %g, but generates a new temporary file name even if %uSUFFIX 	was already seen.  %USUFFIX 	substitutes the last file name generated with %uSUFFIX, generating a 	new one if there is no such last file name.  In the absence of any 	%uSUFFIX, this is just like %gSUFFIX, except they don't share 	the same suffix "space", so `%g.s ... %U.s ... %g.s ... %U.s' 	would involve the generation of two distinct file names, one 	for each `%g.s' and another for each `%U.s'.  Previously, %U was 	simply substituted with a file name chosen for the previous %u, 	without regard to any appended suffix.  %jSUFFIX         substitutes the name of the HOST_BIT_BUCKET, if any, and if it is         writable, and if save-temps is off; otherwise, substitute the name         of a temporary file, just like %u.  This temporary file is not         meant for communication between processes, but rather as a junk         disposal mechanism.  %.SUFFIX         substitutes .SUFFIX for the suffixes of a matched switch's args when         it is subsequently output with %*. SUFFIX is terminated by the next         space or %.  %d	marks the argument containing or following the %d as a 	temporary file name, so that that file will be deleted if CC exits 	successfully.  Unlike %g, this contributes no text to the argument.  %w	marks the argument containing or following the %w as the 	"output file" of this compilation.  This puts the argument 	into the sequence of arguments that %o will substitute later.  %W{...} 	like %{...} but mark last argument supplied within 	as a file to be deleted on failure.  %o	substitutes the names of all the output files, with spaces 	automatically placed around them.  You should write spaces 	around the %o as well or the results are undefined. 	%o is for use in the specs for running the linker. 	Input files whose names have no recognized suffix are not compiled 	at all, but they are included among the output files, so they will 	be linked.  %O	substitutes the suffix for object files.  Note that this is         handled specially when it immediately follows %g, %u, or %U 	(with or without a suffix argument) because of the need for 	those to form complete file names.  The handling is such that 	%O is treated exactly as if it had already been substituted, 	except that %g, %u, and %U do not currently support additional 	SUFFIX characters following %O as they would following, for 	example, `.o'.  %p	substitutes the standard macro predefinitions for the 	current target machine.  Use this when running cpp.  %P	like %p, but puts `__' before and after the name of each macro. 	(Except macros that already have __.) 	This is for ANSI C.  %I	Substitute a -iprefix option made from GCC_EXEC_PREFIX.  %s     current argument is the name of a library or startup file of some sort.         Search for that file in a standard list of directories 	and substitute the full name found.  %eSTR  Print STR as an error message.  STR is terminated by a newline.         Use this when inconsistent options are detected.  %nSTR  Print STR as an notice.  STR is terminated by a newline.  %x{OPTION}	Accumulate an option for %X.  %X	Output the accumulated linker options specified by compilations.  %Y	Output the accumulated assembler options specified by compilations.  %Z	Output the accumulated preprocessor options specified by compilations.  %v1	Substitute the major version number of GCC. 	(For version 2.5.3, this is 2.)  %v2	Substitute the minor version number of GCC. 	(For version 2.5.3, this is 5.)  %v3	Substitute the patch level number of GCC. 	(For version 2.5.3, this is 3.)  %a     process ASM_SPEC as a spec.         This allows config.h to specify part of the spec for running as.  %A	process ASM_FINAL_SPEC as a spec.  A capital A is actually 	used here.  This can be used to run a post-processor after the 	assembler has done its job.  %D	Dump out a -L option for each directory in startfile_prefixes. 	If multilib_dir is set, extra entries are generated with it affixed.  %l     process LINK_SPEC as a spec.  %L     process LIB_SPEC as a spec.  %G     process LIBGCC_SPEC as a spec.  %M     output multilib_dir with directory separators replaced with "_"; 	if multilib_dir is not set or is ".", output "".  %S     process STARTFILE_SPEC as a spec.  A capital S is actually used here.  %E     process ENDFILE_SPEC as a spec.  A capital E is actually used here.  %C     process CPP_SPEC as a spec.  %1	process CC1_SPEC as a spec.  %2	process CC1PLUS_SPEC as a spec.  %|	output "-" if the input for the current command is coming from a pipe.  %*	substitute the variable part of a matched option.  (See below.) 	Note that each comma in the substituted string is replaced by 	a single space.  %{S}   substitutes the -S switch, if that switch was given to CC. 	If that switch was not specified, this substitutes nothing. 	Here S is a metasyntactic variable.  %{S*}  substitutes all the switches specified to CC whose names start 	with -S.  This is used for -o, -I, etc; switches that take 	arguments.  CC considers `-o foo' as being one switch whose 	name starts with `o'.  %{o*} would substitute this text, 	including the space; thus, two arguments would be generated.  %{^S*} likewise, but don't put a blank between a switch and any args.  %{S*&T*} likewise, but preserve order of S and T options (the order  	of S and T in the spec is not significant).  Can be any number  	of ampersand-separated variables; for each the wild card is  	optional.  Useful for CPP as %{D*&U*&A*}.  %{S*:X} substitutes X if one or more switches whose names start with -S are 	specified to CC.  Note that the tail part of the -S option 	(i.e. the part matched by the `*') will be substituted for each 	occurrence of %* within X.  %{<S}  remove all occurrences of -S from the command line.         Note - this option is position dependent.  % commands in the         spec string before this option will see -S, % commands in the         spec string after this option will not.  %{S:X} substitutes X, but only if the -S switch was given to CC.  %{!S:X} substitutes X, but only if the -S switch was NOT given to CC.  %{|S:X} like %{S:X}, but if no S switch, substitute `-'.  %{|!S:X} like %{!S:X}, but if there is an S switch, substitute `-'.  %{.S:X} substitutes X, but only if processing a file with suffix S.  %{!.S:X} substitutes X, but only if NOT processing a file with suffix S.  %{S|P:X} substitutes X if either -S or -P was given to CC.  This may be 	  combined with ! and . as above binding stronger than the OR.  %(Spec) processes a specification defined in a specs file as *Spec:  %[Spec] as above, but put __ around -D arguments  The conditional text X in a %{S:X} or %{!S:X} construct may contain other nested % constructs or spaces, or even newlines.  They are processed as usual, as described above.  The -O, -f, -m, and -W switches are handled specifically in these constructs.  If another value of -O or the negated form of a -f, -m, or -W switch is found later in the command line, the earlier switch value is ignored, except with {S*} where S is just one letter; this passes all matching options.  The character | at the beginning of the predicate text is used to indicate that a command should be piped to the following command, but only if -pipe is specified.  Note that it is built into CC which switches take arguments and which do not.  You might think it would be useful to generalize this to allow each compiler's spec to say which switches take arguments.  But this cannot be done in a consistent fashion.  CC cannot even decide which input files have been specified without knowing which switches take arguments, and it must know which input files to compile in order to tell which compilers to run.  CC also knows implicitly that arguments starting in `-l' are to be treated as compiler output files, and passed to the linker in their proper position among the other output files.  */
 end_comment
 
 begin_escape
 end_escape
 
 begin_comment
-comment|/* Define the macros used for specs %a, %l, %L, %S, %c, %C, %1.  */
+comment|/* Define the macros used for specs %a, %l, %L, %S, %C, %1.  */
 end_comment
 
 begin_comment
@@ -1941,55 +1941,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* This spec is used for telling cpp whether char is signed or not.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SIGNED_CHAR_SPEC
-end_ifndef
-
-begin_comment
-comment|/* Use #if rather than ?:    because MIPS C compiler rejects like ?: in initializers.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|DEFAULT_SIGNED_CHAR
-end_if
-
-begin_define
-define|#
-directive|define
-name|SIGNED_CHAR_SPEC
-value|"%{funsigned-char:-D__CHAR_UNSIGNED__}"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGNED_CHAR_SPEC
-value|"%{!fsigned-char:-D__CHAR_UNSIGNED__}"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2141,6 +2092,28 @@ comment|/* Here is the spec for running the linker, after compiling all files.  
 end_comment
 
 begin_comment
+comment|/* This is overridable by the target in case they need to specify the    -lgcc and -lc order specially, yet not require them to override all    of LINK_COMMAND_SPEC.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LINK_GCC_C_SEQUENCE_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LINK_GCC_C_SEQUENCE_SPEC
+value|"%G %L %G"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* -u* was put back because both BSD and SysV seem to support it.  */
 end_comment
 
@@ -2162,7 +2135,7 @@ begin_define
 define|#
 directive|define
 name|LINK_COMMAND_SPEC
-value|"\ %{!fsyntax-only:%{!c:%{!M:%{!MM:%{!E:%{!S:\     %(linker) %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} %{r} %{s} %{t}\     %{u*} %{x} %{z} %{Z} %{!A:%{!nostdlib:%{!nostartfiles:%S}}}\     %{static:} %{L*} %(link_libgcc) %o %{!nostdlib:%{!nodefaultlibs:%G %L %G}}\     %{!A:%{!nostdlib:%{!nostartfiles:%E}}} %{T*} }}}}}}"
+value|"\ %{!fsyntax-only:%{!c:%{!M:%{!MM:%{!E:%{!S:\     %(linker) %l %X %{o*} %{A} %{d} %{e*} %{m} %{N} %{n} %{r} %{s} %{t}\     %{u*} %{x} %{z} %{Z} %{!A:%{!nostdlib:%{!nostartfiles:%S}}}\     %{static:} %{L*} %(link_libgcc) %o %{!nostdlib:%{!nodefaultlibs:%(link_gcc_c_sequence)}}\     %{!A:%{!nostdlib:%{!nostartfiles:%E}}} %{T*} }}}}}}"
 end_define
 
 begin_endif
@@ -2279,9 +2252,9 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|signed_char_spec
+name|link_gcc_c_sequence_spec
 init|=
-name|SIGNED_CHAR_SPEC
+name|LINK_GCC_C_SEQUENCE_SPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -2428,7 +2401,7 @@ name|char
 modifier|*
 name|cpp_unique_options
 init|=
-literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\  %{nostdinc*} %{C} %{v} %{I*} %{P} %{$} %I\  %{MD:-M -MF %W{!o: %b.d}%W{o*:%.d%*}}\  %{MMD:-MM -MF %W{!o: %b.d}%W{o*:%.d%*}}\  %{M} %{MM} %W{MF*} %{MG} %{MP} %{MQ*} %{MT*} %{M|MD|MM|MMD:%{o*:-MQ %*}}\  %{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2 -D__GNUC_PATCHLEVEL__=%v3}\  %{!undef:%{!ansi:%{!std=*:%p}%{std=gnu*:%p}} %P} %{trigraphs}\  %c %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\  %{fno-inline|O0|!O*:-D__NO_INLINE__} %{ffast-math:-D__FAST_MATH__}\  %{fshort-wchar:-U__WCHAR_TYPE__ -D__WCHAR_TYPE__=short\\ unsigned\\ int}\  %{ffreestanding:-D__STDC_HOSTED__=0} %{fno-hosted:-D__STDC_HOSTED__=0}\  %{!ffreestanding:%{!fno-hosted:-D__STDC_HOSTED__=1}} %{remap}\  %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E:%{!M*:%W{o*}}}"
+literal|"%{C:%{!E:%eGNU C does not support -C without using -E}}\  %{nostdinc*} %{C} %{v} %{I*} %{P} %{$} %I\  %{MD:-MD %W{!o: %b.d}%W{o*:%.d%*}}\  %{MMD:-MMD %W{!o: %b.d}%W{o*:%.d%*}}\  %{M} %{MM} %W{MF*} %{MG} %{MP} %{MQ*} %{MT*}\  %{!E:%{!M:%{!MM:%{MD|MMD:%{o*:-MQ %*}}}}}\  %{!no-gcc:-D__GNUC__=%v1 -D__GNUC_MINOR__=%v2 -D__GNUC_PATCHLEVEL__=%v3}\  %{!undef:%{!ansi:%{!std=*:%p}%{std=gnu*:%p}} %P} %{trigraphs}\  %{Os:-D__OPTIMIZE_SIZE__} %{O*:%{!O0:-D__OPTIMIZE__}}\  %{fno-inline|O0|!O*:-D__NO_INLINE__} %{ffast-math:-D__FAST_MATH__}\  %{fshort-wchar:-U__WCHAR_TYPE__ -D__WCHAR_TYPE__=short\\ unsigned\\ int}\  %{ffreestanding:-D__STDC_HOSTED__=0} %{fno-hosted:-D__STDC_HOSTED__=0}\  %{!ffreestanding:%{!fno-hosted:-D__STDC_HOSTED__=1}} %{remap}\  %{g3:-dD} %{H} %C %{D*&U*&A*} %{i*} %Z %i\  %{E|M|MM:%W{o*}}"
 decl_stmt|;
 end_decl_stmt
 
@@ -2443,7 +2416,7 @@ name|char
 modifier|*
 name|cpp_options
 init|=
-literal|"%(cpp_unique_options) %{std*} %{d*} %{W*} %{w} %{pedantic*}\  %{fshow-column} %{fno-show-column}\  %{fleading-underscore} %{fno-leading-underscore}\  %{fno-operator-names} %{ftabstop=*}"
+literal|"%(cpp_unique_options) %{std*} %{d*} %{W*} %{w} %{pedantic*}\  %{fshow-column} %{fno-show-column}\  %{fsigned-char&funsigned-char}\  %{fleading-underscore} %{fno-leading-underscore}\  %{fno-operator-names} %{ftabstop=*}"
 decl_stmt|;
 end_decl_stmt
 
@@ -2955,22 +2928,6 @@ literal|0
 block|}
 block|,
 block|{
-literal|".ch"
-block|,
-literal|"#Chill"
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|".chi"
-block|,
-literal|"#Chill"
-block|,
-literal|0
-block|}
-block|,
-block|{
 literal|".java"
 block|,
 literal|"#Java"
@@ -3015,7 +2972,7 @@ block|{
 literal|"@c"
 block|,
 comment|/* cc1 has an integrated ISO C preprocessor.  We should invoke the       external preprocessor if -save-temps or -traditional is given.  */
-literal|"%{E|M|MM:%(trad_capable_cpp) -lang-c %{ansi:-std=c89} %(cpp_options)}\       %{!E:%{!M:%{!MM:\ 	  %{save-temps:%(trad_capable_cpp) -lang-c %{ansi:-std=c89}\ 		%(cpp_options) %b.i \n\ 		    cc1 -fpreprocessed %b.i %(cc1_options)}\ 	  %{!save-temps:\ 	    %{traditional|ftraditional|traditional-cpp:\ 		tradcpp0 -lang-c %{ansi:-std=c89} %(cpp_options) %{!pipe:%g.i} |\n\ 		    cc1 -fpreprocessed %{!pipe:%g.i} %(cc1_options)}\ 	    %{!traditional:%{!ftraditional:%{!traditional-cpp:\ 		cc1 -lang-c %{ansi:-std=c89} %(cpp_unique_options) %(cc1_options)}}}}\         %{!fsyntax-only:%(invoke_as)}}}}"
+literal|"%{E|M|MM:%(trad_capable_cpp) -lang-c %{ansi:-std=c89} %(cpp_options)}\       %{!E:%{!M:%{!MM:\ 	  %{save-temps|no-integrated-cpp:%(trad_capable_cpp) -lang-c %{ansi:-std=c89}\ 		%(cpp_options) %{save-temps:%b.i} %{!save-temps:%g.i} \n\ 		    cc1 -fpreprocessed %{save-temps:%b.i} %{!save-temps:%g.i} %(cc1_options)}\ 	  %{!save-temps:%{!no-integrated-cpp:\ 	    %{traditional|ftraditional|traditional-cpp:\ 		tradcpp0 -lang-c %{ansi:-std=c89} %(cpp_options) %{!pipe:%g.i} |\n\ 		    cc1 -fpreprocessed %{!pipe:%g.i} %(cc1_options)}\ 	    %{!traditional:%{!ftraditional:%{!traditional-cpp:\ 		cc1 -lang-c %{ansi:-std=c89} %(cpp_unique_options) %(cc1_options)}}}}}\         %{!fsyntax-only:%(invoke_as)}}}}"
 block|,
 literal|0
 block|}
@@ -3285,9 +3242,17 @@ literal|"aj"
 block|}
 block|,
 block|{
+literal|"--bootclasspath"
+block|,
+literal|"-fbootclasspath="
+block|,
+literal|"aj"
+block|}
+block|,
+block|{
 literal|"--CLASSPATH"
 block|,
-literal|"-fCLASSPATH="
+literal|"-fclasspath="
 block|,
 literal|"aj"
 block|}
@@ -3493,6 +3458,14 @@ literal|"*j"
 block|}
 block|,
 block|{
+literal|"--no-integrated-cpp"
+block|,
+literal|"-no-integrated-cpp"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"--no-line-commands"
 block|,
 literal|"-P"
@@ -3682,6 +3655,14 @@ block|,
 literal|"-q"
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"--resource"
+block|,
+literal|"-fcompile-resource="
+block|,
+literal|"aj"
 block|}
 block|,
 block|{
@@ -5661,6 +5642,14 @@ argument_list|)
 block|,
 name|INIT_STATIC_SPEC
 argument_list|(
+literal|"link_gcc_c_sequence"
+argument_list|,
+operator|&
+name|link_gcc_c_sequence_spec
+argument_list|)
+block|,
+name|INIT_STATIC_SPEC
+argument_list|(
 literal|"endfile"
 argument_list|,
 operator|&
@@ -5705,14 +5694,6 @@ literal|"switches_need_spaces"
 argument_list|,
 operator|&
 name|switches_need_spaces
-argument_list|)
-block|,
-name|INIT_STATIC_SPEC
-argument_list|(
-literal|"signed_char"
-argument_list|,
-operator|&
-name|signed_char_spec
 argument_list|)
 block|,
 name|INIT_STATIC_SPEC
@@ -5959,140 +5940,80 @@ name|eh_name
 decl_stmt|;
 block|{
 name|char
-name|buffer
-index|[
-literal|128
-index|]
-decl_stmt|;
-specifier|const
-name|char
 modifier|*
-name|p
+name|buf
 decl_stmt|;
-comment|/* If we see -shared-libgcc, then use the shared version.  */
-name|sprintf
+name|buf
+operator|=
+name|concat
 argument_list|(
-name|buffer
+literal|"%{static|static-libgcc:"
 argument_list|,
-literal|"%%{shared-libgcc:%s %s}"
+name|static_name
+argument_list|,
+literal|" "
+argument_list|,
+name|eh_name
+argument_list|,
+literal|"}%{!static:%{!static-libgcc:"
+argument_list|,
+literal|"%{!shared:%{!shared-libgcc:"
+argument_list|,
+name|static_name
+argument_list|,
+literal|" "
+argument_list|,
+name|eh_name
+argument_list|,
+literal|"}%{shared-libgcc:"
 argument_list|,
 name|shared_name
 argument_list|,
-name|static_name
-argument_list|)
-expr_stmt|;
-name|obstack_grow
-argument_list|(
-name|obstack
-argument_list|,
-name|buffer
-argument_list|,
-name|strlen
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* If we see -static-libgcc, then use the static version.  */
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"%%{static-libgcc:%s %s}"
+literal|" "
 argument_list|,
 name|static_name
 argument_list|,
-name|eh_name
-argument_list|)
-expr_stmt|;
-name|obstack_grow
-argument_list|(
-name|obstack
+literal|"}}%{shared:"
 argument_list|,
-name|buffer
-argument_list|,
-name|strlen
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Otherwise, if we see -shared, then use the shared version      if using EH registration routines or static version without      exception handling routines otherwise.  */
-name|p
-operator|=
-literal|"%{!shared-libgcc:%{!static-libgcc:%{shared:"
-expr_stmt|;
-name|obstack_grow
-argument_list|(
-name|obstack
-argument_list|,
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LINK_EH_SPEC
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"%s}}}"
-argument_list|,
-name|static_name
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"%s}}}"
+literal|"%{shared-libgcc:"
 argument_list|,
 name|shared_name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|obstack_grow
-argument_list|(
-name|obstack
 argument_list|,
-name|buffer
-argument_list|,
-name|strlen
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* Otherwise, use the static version.  */
-name|sprintf
-argument_list|(
-name|buffer
-argument_list|,
-literal|"%%{!shared-libgcc:%%{!static-libgcc:%%{!shared:%s %s}}}"
+literal|"}%{!shared-libgcc:"
 argument_list|,
 name|static_name
 argument_list|,
-name|eh_name
+literal|"}"
+argument_list|,
+else|#
+directive|else
+name|shared_name
+argument_list|,
+endif|#
+directive|endif
+literal|"}}}"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|obstack_grow
 argument_list|(
 name|obstack
 argument_list|,
-name|buffer
+name|buf
 argument_list|,
 name|strlen
 argument_list|(
-name|buffer
+name|buf
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -7404,7 +7325,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read compilation specs from a file named FILENAME,    replacing the default ones.     A suffix which starts with `*' is a definition for    one of the machine-specific sub-specs.  The "suffix" should be    *asm, *cc1, *cpp, *link, *startfile, *signed_char, etc.    The corresponding spec is stored in asm_spec, etc.,    rather than in the `compilers' vector.     Anything invalid in the file is a fatal error.  */
+comment|/* Read compilation specs from a file named FILENAME,    replacing the default ones.     A suffix which starts with `*' is a definition for    one of the machine-specific sub-specs.  The "suffix" should be    *asm, *cc1, *cpp, *link, *startfile, etc.    The corresponding spec is stored in asm_spec, etc.,    rather than in the `compilers' vector.     Anything invalid in the file is a fatal error.  */
 end_comment
 
 begin_function
@@ -17028,7 +16949,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|NULL_PTR
+name|warn_std_ptr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -17049,7 +16970,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|NULL_PTR
+name|warn_std_ptr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -21877,30 +21798,6 @@ operator|=
 name|do_spec_1
 argument_list|(
 name|asm_final_spec
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|value
-operator|!=
-literal|0
-condition|)
-return|return
-name|value
-return|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|value
-operator|=
-name|do_spec_1
-argument_list|(
-name|signed_char_spec
 argument_list|,
 literal|0
 argument_list|,
@@ -26933,11 +26830,11 @@ name|CROSS_STARTFILE_PREFIX
 argument_list|,
 literal|"BINUTILS"
 argument_list|,
-literal|0
+name|PREFIX_PRIORITY_LAST
 argument_list|,
 literal|0
 argument_list|,
-name|NULL_PTR
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -28677,10 +28574,25 @@ name|c
 operator|==
 literal|'%'
 operator|&&
+operator|(
 operator|*
 name|p
 operator|==
 literal|'{'
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'W'
+operator|&&
+operator|*
+operator|++
+name|p
+operator|==
+literal|'{'
+operator|)
+operator|)
 condition|)
 comment|/* We have a switch spec.  */
 name|validate_switches
@@ -28732,10 +28644,25 @@ name|c
 operator|==
 literal|'%'
 operator|&&
+operator|(
 operator|*
 name|p
 operator|==
 literal|'{'
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'W'
+operator|&&
+operator|*
+operator|++
+name|p
+operator|==
+literal|'{'
+operator|)
+operator|)
 condition|)
 comment|/* We have a switch spec.  */
 name|validate_switches
@@ -28766,10 +28693,25 @@ name|c
 operator|==
 literal|'%'
 operator|&&
+operator|(
 operator|*
 name|p
 operator|==
 literal|'{'
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'W'
+operator|&&
+operator|*
+operator|++
+name|p
+operator|==
+literal|'{'
+operator|)
+operator|)
 condition|)
 comment|/* We have a switch spec.  */
 name|validate_switches
