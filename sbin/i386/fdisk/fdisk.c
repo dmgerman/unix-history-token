@@ -1452,7 +1452,7 @@ block|,
 block|{
 literal|0x04
 block|,
-literal|"Primary DOS with 16 bit FAT"
+literal|"Primary DOS with 16 bit FAT (<= 32MB)"
 block|}
 block|,
 block|{
@@ -1494,7 +1494,25 @@ block|,
 block|{
 literal|0x0B
 block|,
-literal|"Primary DOS or Windows 95 with 32 bit FAT"
+literal|"DOS or Windows 95 with 32 bit FAT"
+block|}
+block|,
+block|{
+literal|0x0C
+block|,
+literal|"DOS or Windows 95 with 32 bit FAT, LBA"
+block|}
+block|,
+block|{
+literal|0x0E
+block|,
+literal|"Primary 'big' DOS (> 32MB, LBA)"
+block|}
+block|,
+block|{
+literal|0x0F
+block|,
+literal|"Extended DOS, LBA"
 block|}
 block|,
 block|{
