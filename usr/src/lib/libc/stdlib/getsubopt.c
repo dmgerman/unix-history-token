@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getsubopt.c	5.1 (Berkeley) %G%"
+literal|"@(#)getsubopt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,8 +34,14 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
-comment|/*  * The SVID interface to getsubopt provides no way of figuring out which  * part of the suboptions list wasn't matched.  This makes error messages  * tricky...  The extern variable suboptarg is a pointer to the token which  * didn't match.  */
+comment|/*  * The SVID interface to getsubopt provides no way of figuring out which  * part of the suboptions list wasn't matched.  This makes error messages  * tricky...  The extern variable suboptarg is a pointer to the token  * which didn't match.  */
 end_comment
 
 begin_decl_stmt
@@ -62,13 +68,19 @@ name|optionp
 operator|,
 operator|*
 operator|*
-name|tokens
-operator|,
-operator|*
-operator|*
 name|valuep
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|tokens
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
