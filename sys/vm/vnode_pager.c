@@ -3929,7 +3929,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|int
+name|int64_t
 operator|)
 name|m
 index|[
