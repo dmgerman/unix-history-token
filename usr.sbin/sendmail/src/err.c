@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.27 (Berkeley) 4/18/94"
+literal|"@(#)err.c	8.42 (Berkeley) 11/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,20 +40,8 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
 begin_comment
-comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		f -- the format string **		a, b, c, d, e -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
+comment|/* **  SYSERR -- Print error message. ** **	Prints an error message via printf to the diagnostic **	output.  If LOG is defined, it logs it also. ** **	If the first character of the syserr message is `!' it will **	log this as an ALERT message and exit immediately.  This can **	leave queue files in an indeterminate state, so it should not **	be used lightly. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, either 554 or **			451 is assumed depending on whether errno **			is set. **		(others) -- parameters ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. **		sets ExitStat. */
 end_comment
 
 begin_decl_stmt
@@ -71,13 +59,81 @@ begin_comment
 comment|/* text of most recent message */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+name|char
+name|HeldMessageBuf
+index|[
+sizeof|sizeof
+name|MsgBuf
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for held messages */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|putoutmsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|bool
+operator|,
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|puterrmsg
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|fmtmsg
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|va_list
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -230,6 +286,40 @@ argument_list|(
 name|MsgBuf
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+if|if
+condition|(
+operator|!
+name|panic
+condition|)
+block|{
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* determine exit status if not already set */
 if|if
 condition|(
@@ -275,7 +365,7 @@ directive|ifdef
 name|LOG
 name|pw
 operator|=
-name|getpwuid
+name|sm_getpwuid
 argument_list|(
 name|getuid
 argument_list|()
@@ -324,7 +414,7 @@ name|LOG_ALERT
 else|:
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR(%s): %s"
+literal|"%s: SYSERR(%s): %.900s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -381,6 +471,18 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OSERR
@@ -409,7 +511,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt, a, b, c, d -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
+comment|/* **  USRERR -- Signal user error. ** **	This is much like syserr except it is for user errors. ** **	Parameters: **		fmt -- the format string.  If it does not begin with **			a three-digit SMTP reply code, 501 is assumed. **		(others) -- printf strings ** **	Returns: **		none **		Through TopFrame if QuickAbort is set. ** **	Side Effects: **		increments Errors. */
 end_comment
 
 begin_comment
@@ -477,6 +579,110 @@ argument_list|)
 expr_stmt|;
 name|VA_END
 expr_stmt|;
+comment|/* save this message for mailq printing */
+switch|switch
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'4'
+case|:
+case|case
+literal|'8'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+break|break;
+comment|/* fall through.... */
+case|case
+literal|'5'
+case|:
+case|case
+literal|'6'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+operator|==
+literal|'6'
+condition|)
+block|{
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"Postmaster warning: %.*s"
+argument_list|,
+sizeof|sizeof
+name|buf
+operator|-
+literal|22
+argument_list|,
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
 name|puterrmsg
 argument_list|(
 name|MsgBuf
@@ -497,7 +703,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"%s: %s"
+literal|"%s: %.900s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -539,7 +745,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  MESSAGE -- print message (not necessarily an error) ** **	Parameters: **		msg -- the message (printf fmt) -- it can begin with **			an SMTP reply code.  If not, 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -611,8 +817,66 @@ argument_list|(
 name|MsgBuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+switch|switch
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'4'
+case|:
+case|case
+literal|'8'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+break|break;
+comment|/* fall through.... */
+case|case
+literal|'5'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -620,7 +884,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		num -- the default ARPANET error number (in ascii) **		msg -- the message (printf fmt) -- if it begins **			with three digits, this number overrides num. **		a, b, c, d, e -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
+comment|/* **  NMESSAGE -- print message (not necessarily an error) ** **	Just like "message" except it never puts the to... tag on. ** **	Parameters: **		msg -- the message (printf fmt) -- if it begins **			with a three digit SMTP reply code, that is used, **			otherwise 050 is assumed. **		(others) -- printf arguments ** **	Returns: **		none ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -694,8 +958,66 @@ argument_list|(
 name|MsgBuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* save this message for mailq printing */
+switch|switch
+condition|(
+name|MsgBuf
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'4'
+case|:
+case|case
+literal|'8'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+break|break;
+comment|/* fall through.... */
+case|case
+literal|'5'
+case|:
+if|if
+condition|(
+name|CurEnv
+operator|->
+name|e_message
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|CurEnv
+operator|->
+name|e_message
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_message
+operator|=
+name|newstr
+argument_list|(
+name|MsgBuf
+operator|+
+literal|4
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
@@ -703,33 +1025,38 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
+comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. **		heldmsg -- if TRUE, this is a previously held message; **			don't log it to the transcript file. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|putoutmsg
-argument_list|(
-argument|msg
-argument_list|,
-argument|holdmsg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|,
+name|holdmsg
+parameter_list|,
+name|heldmsg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|holdmsg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|bool
+name|heldmsg
+decl_stmt|;
 block|{
+name|char
+name|msgcode
+init|=
+name|msg
+index|[
+literal|0
+index|]
+decl_stmt|;
 comment|/* display for debugging */
 if|if
 condition|(
@@ -742,20 +1069,57 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"--- %s%s\n"
+literal|"--- %s%s%s\n"
 argument_list|,
 name|msg
 argument_list|,
 name|holdmsg
+condition|?
+literal|" (hold)"
+else|:
+literal|""
+argument_list|,
+name|heldmsg
 condition|?
 literal|" (held)"
 else|:
 literal|""
 argument_list|)
 expr_stmt|;
+comment|/* map warnings to something SMTP can handle */
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'6'
+condition|)
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'5'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'8'
+condition|)
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'4'
+expr_stmt|;
 comment|/* output to transcript if serious */
 if|if
 condition|(
+operator|!
+name|heldmsg
+operator|&&
 name|CurEnv
 operator|->
 name|e_xfp
@@ -764,7 +1128,7 @@ name|NULL
 operator|&&
 name|strchr
 argument_list|(
-literal|"456"
+literal|"45"
 argument_list|,
 name|msg
 index|[
@@ -785,12 +1149,22 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'8'
+condition|)
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'0'
+expr_stmt|;
 comment|/* output to channel if appropriate */
 if|if
 condition|(
-name|holdmsg
-operator|||
-operator|(
 operator|!
 name|Verbose
 operator|&&
@@ -800,26 +1174,30 @@ literal|0
 index|]
 operator|==
 literal|'0'
-operator|)
 condition|)
 return|return;
-comment|/* map warnings to something SMTP can handle */
 if|if
 condition|(
-name|msg
-index|[
-literal|0
-index|]
-operator|==
-literal|'6'
+name|holdmsg
 condition|)
+block|{
+comment|/* save for possible future display */
 name|msg
 index|[
 literal|0
 index|]
 operator|=
-literal|'5'
+name|msgcode
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|HeldMessageBuf
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)
@@ -998,7 +1376,12 @@ literal|"NO-HOST"
 else|:
 name|CurHostName
 argument_list|,
+name|shortenstring
+argument_list|(
 name|msg
+argument_list|,
+literal|203
+argument_list|)
 argument_list|,
 name|errstring
 argument_list|(
@@ -1009,7 +1392,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1018,21 +1401,16 @@ begin_comment
 comment|/* **  PUTERRMSG -- like putoutmsg, but does special processing for error messages ** **	Parameters: **		msg -- the message to output. ** **	Returns: **		none. ** **	Side Effects: **		Sets the fatal error bit in the envelope as appropriate. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|puterrmsg
-argument_list|(
-argument|msg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|msg
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|msgcode
@@ -1048,6 +1426,8 @@ argument_list|(
 name|msg
 argument_list|,
 name|HoldErrs
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
@@ -1095,7 +1475,7 @@ name|EF_FATALERRS
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
@@ -1126,10 +1506,12 @@ name|char
 modifier|*
 name|eb
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|to
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|num
@@ -1137,6 +1519,7 @@ decl_stmt|;
 name|int
 name|eno
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1151,6 +1534,15 @@ decl_stmt|;
 name|char
 modifier|*
 name|meb
+decl_stmt|;
+name|int
+name|l
+decl_stmt|;
+name|int
+name|spaceleft
+init|=
+sizeof|sizeof
+name|MsgBuf
 decl_stmt|;
 comment|/* output the reply code */
 if|if
@@ -1225,6 +1617,10 @@ name|eb
 operator|+=
 literal|4
 expr_stmt|;
+name|spaceleft
+operator|-=
+literal|4
+expr_stmt|;
 comment|/* output the file name and line number */
 if|if
 condition|(
@@ -1236,23 +1632,38 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|eb
 argument_list|,
+name|spaceleft
+argument_list|,
 literal|"%s: line %d: "
 argument_list|,
+name|shortenstring
+argument_list|(
 name|FileName
+argument_list|,
+literal|83
+argument_list|)
 argument_list|,
 name|LineNumber
 argument_list|)
 expr_stmt|;
 name|eb
 operator|+=
+operator|(
+name|l
+operator|=
 name|strlen
 argument_list|(
 name|eb
 argument_list|)
+operator|)
+expr_stmt|;
+name|spaceleft
+operator|-=
+name|l
 expr_stmt|;
 block|}
 comment|/* output the "to" person */
@@ -1273,9 +1684,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|eb
+argument_list|,
+name|spaceleft
 argument_list|,
 literal|"%s... "
 argument_list|,
@@ -1285,6 +1698,13 @@ name|to
 argument_list|,
 literal|203
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|spaceleft
+operator|-=
+name|strlen
+argument_list|(
+name|eb
 argument_list|)
 expr_stmt|;
 while|while
@@ -1309,13 +1729,22 @@ comment|/* output the message */
 operator|(
 name|void
 operator|)
-name|vsprintf
+name|vsnprintf
 argument_list|(
 name|eb
+argument_list|,
+name|spaceleft
 argument_list|,
 name|fmt
 argument_list|,
 name|ap
+argument_list|)
+expr_stmt|;
+name|spaceleft
+operator|-=
+name|strlen
+argument_list|(
+name|eb
 argument_list|)
 expr_stmt|;
 while|while
@@ -1338,13 +1767,14 @@ name|eno
 operator|!=
 literal|0
 condition|)
-block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|eb
+argument_list|,
+name|spaceleft
 argument_list|,
 literal|": %s"
 argument_list|,
@@ -1354,64 +1784,83 @@ name|eno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|eb
-operator|+=
-name|strlen
-argument_list|(
-name|eb
-argument_list|)
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  BUFFER_ERRORS -- arrange to buffer future error messages ** **	Parameters: **		none ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|buffer_errors
+parameter_list|()
+block|{
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|HoldErrs
+operator|=
+name|TRUE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|num
-index|[
-literal|0
-index|]
-operator|==
-literal|'5'
-operator|||
-operator|(
-name|CurEnv
-operator|->
-name|e_message
-operator|==
-name|NULL
-operator|&&
-name|num
-index|[
-literal|0
-index|]
-operator|==
-literal|'4'
-operator|)
-condition|)
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  FLUSH_ERRORS -- flush the held error message buffer ** **	Parameters: **		print -- if set, print the message, otherwise just **			delete it. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|flush_errors
+parameter_list|(
+name|print
+parameter_list|)
+name|bool
+name|print
+decl_stmt|;
 block|{
 if|if
 condition|(
-name|CurEnv
-operator|->
-name|e_message
+name|print
+operator|&&
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
-name|free
+name|putoutmsg
 argument_list|(
-name|CurEnv
-operator|->
-name|e_message
+name|HeldMessageBuf
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
-name|CurEnv
-operator|->
-name|e_message
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
 operator|=
-name|newstr
-argument_list|(
-name|meb
-argument_list|)
+literal|'\0'
 expr_stmt|;
-block|}
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 end_function
 
@@ -1591,7 +2040,12 @@ name|buf
 argument_list|,
 literal|"Host %s is down"
 argument_list|,
+name|shortenstring
+argument_list|(
 name|CurHostName
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1618,7 +2072,12 @@ name|buf
 argument_list|,
 literal|"Connection refused by %s"
 argument_list|,
+name|shortenstring
+argument_list|(
 name|CurHostName
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
