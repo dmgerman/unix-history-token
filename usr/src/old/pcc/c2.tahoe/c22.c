@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c22.c	1.8 (Berkeley/CCI) %G%"
+literal|"@(#)c22.c	1.9 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4293,6 +4293,14 @@ operator|->
 name|ref
 operator|=
 name|p1
+expr_stmt|;
+name|p
+operator|->
+name|labno
+operator|=
+name|p1
+operator|->
+name|labno
 expr_stmt|;
 name|nrtst
 operator|++
