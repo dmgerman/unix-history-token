@@ -65,9 +65,6 @@ name|struct
 name|options
 name|options
 decl_stmt|;
-name|uid_t
-name|uid
-decl_stmt|;
 name|pam_std_option
 argument_list|(
 operator|&
@@ -85,14 +82,10 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 expr_stmt|;
-name|uid
-operator|=
-name|getuid
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
-name|uid
+name|getuid
+argument_list|()
 operator|==
 literal|0
 condition|)
@@ -101,9 +94,14 @@ argument_list|(
 name|PAM_SUCCESS
 argument_list|)
 expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Refused; not superuser"
+argument_list|)
+expr_stmt|;
 name|PAM_LOG
 argument_list|(
-literal|"User is not root"
+literal|"User is not superuser"
 argument_list|)
 expr_stmt|;
 name|PAM_RETURN
@@ -136,9 +134,32 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-return|return
+name|struct
+name|options
+name|options
+decl_stmt|;
+name|pam_std_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|NULL
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
+argument_list|)
+expr_stmt|;
+name|PAM_RETURN
+argument_list|(
 name|PAM_SUCCESS
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
