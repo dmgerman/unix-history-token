@@ -579,6 +579,9 @@ if|if
 condition|(
 name|wcount
 operator|>=
+operator|(
+name|ssize_t
+operator|)
 name|wresid
 operator|||
 name|wcount
@@ -591,6 +594,9 @@ if|if
 condition|(
 name|wcount
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|wresid
 condition|)
 block|{
@@ -696,6 +702,9 @@ if|if
 condition|(
 name|wcount
 operator|>=
+operator|(
+name|ssize_t
+operator|)
 name|wresid
 operator|||
 name|wcount
@@ -708,6 +717,9 @@ if|if
 condition|(
 name|wcount
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|wresid
 condition|)
 block|{

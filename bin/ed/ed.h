@@ -599,6 +599,7 @@ begin_function_decl
 name|int
 name|cbc_decode
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -612,6 +613,7 @@ begin_function_decl
 name|int
 name|cbc_encode
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 parameter_list|,

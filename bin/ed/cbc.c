@@ -104,7 +104,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_setkey(buf)) \ 		des_error("des_setkey");
+value|if (des_setkey(buf))						\ 		des_error("des_setkey");
 end_define
 
 begin_define
@@ -115,7 +115,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		des_error("des_cipher");
+value|if (des_cipher((char *)buf, (char *)buf, 0L, inverse ? -1 : 1))	\ 		des_error("des_cipher");
 end_define
 
 begin_comment
@@ -1501,6 +1501,7 @@ begin_function
 name|int
 name|cbc_encode
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|msgbuf
@@ -1684,6 +1685,7 @@ begin_function
 name|int
 name|cbc_decode
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|msgbuf
