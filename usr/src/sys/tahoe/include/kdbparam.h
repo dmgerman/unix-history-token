@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdbparam.h	7.1	86/11/20	*/
+comment|/*	kdbparam.h	7.2	86/11/20	*/
 end_comment
 
 begin_include
@@ -129,6 +129,16 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(((a)>> 24)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|btol
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)<< 24)
 end_define
 
 begin_comment
