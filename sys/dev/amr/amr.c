@@ -4877,7 +4877,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|10000
+literal|100000
 operator|,
 name|done
 operator|=
