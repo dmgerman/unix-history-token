@@ -456,10 +456,6 @@ parameter_list|)
 value|(var) = \ 	(((var)<(low))? (low) : ((var)>(high))? (high) : (var))
 end_define
 
-begin_comment
-comment|/* #define DSP_BUFFSIZE (65536 - 256) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -468,12 +464,15 @@ value|(8192)
 end_define
 
 begin_comment
-comment|/* the last 256 bytes are room for buggy soundcard to overflow. */
-end_comment
-
-begin_comment
 comment|/* make figuring out what a format is easier. got AFMT_STEREO already */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_32BIT
+value|(AFMT_S32_LE | AFMT_S32_BE | AFMT_U32_LE | AFMT_U32_BE)
+end_define
 
 begin_define
 define|#
