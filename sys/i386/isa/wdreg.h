@@ -1146,33 +1146,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * wd driver entry points  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|B_FORMAT
-end_ifdef
-
-begin_function_decl
-name|int
-name|wdformat
-parameter_list|(
-name|struct
-name|buf
-modifier|*
-name|bp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * IDE DMA support.  * This is based on what is needed for the IDE DMA function of the Intel  * Triton chipset; hopefully it's general enough to be used for other  * chipsets as well.  *  * To use this:  *	For each drive which you might want to do DMA on, call wdd_candma()  *	to get a cookie.  If it returns a null pointer, then the drive  *	can't do DMA.  Then call wdd_dmainit() to initialize the controller  *	and drive.  wdd_dmainit should leave PIO modes operational, though  *	perhaps with suboptimal performance.  *  *	Check the transfer by calling wdd_dmaverify().  The cookie is what  *	you got before; vaddr is the virtual address of the buffer to be  *	written; len is the length of the buffer; and direction is either  *	B_READ or B_WRITE. This function verifies that the DMA hardware is  *	capable of handling the request you've made.  *  *	Setup the transfer by calling wdd_dmaprep().  This takes the same  *	paramaters as wdd_dmaverify().  *  *	Send a read/write DMA command to the drive.  *  *	Call wdd_dmastart().  *  *	Wait for an interrupt.  Multi-sector transfers will only interrupt  *	at the end of the transfer.  *  *	Call wdd_dmadone().  It will return the status as defined by the  *	WDDS_* constants below.  */
 end_comment
 

@@ -3767,28 +3767,17 @@ argument|) | WDSD_LBA;  		} 		else { 			cylin = blknum / secpercyl; 			head = (b
 comment|/*  		 * XXX this looks like an attempt to skip bad sectors 		 * on write. 		 */
 argument|if (wdtab[ctrlr].b_errcnt&& (bp->b_flags& B_READ) ==
 literal|0
-argument|) 			du->dk_bc += DEV_BSIZE;  		count1 = howmany( du->dk_bc, DEV_BSIZE);  		du->dk_flags&= ~DKFL_MULTI;
-ifdef|#
-directive|ifdef
-name|B_FORMAT
-argument|if (bp->b_flags& B_FORMAT) { 			command = WDCC_FORMAT; 			count1 = lp->d_nsectors; 			sector = lp->d_gap3 -
+argument|) 			du->dk_bc += DEV_BSIZE;  		count1 = howmany( du->dk_bc, DEV_BSIZE);  		du->dk_flags&= ~DKFL_MULTI;  		if (du->dk_flags& DKFL_SINGLE) { 			command = (bp->b_flags& B_READ) 				  ? WDCC_READ : WDCC_WRITE; 			count1 =
 literal|1
-argument|;
-comment|/* + 1 later */
-argument|} else
-endif|#
-directive|endif
-argument|{ 			if (du->dk_flags& DKFL_SINGLE) { 				command = (bp->b_flags& B_READ) 					  ? WDCC_READ : WDCC_WRITE; 				count1 =
+argument|; 			du->dk_currentiosize =
 literal|1
-argument|; 				du->dk_currentiosize =
-literal|1
-argument|; 			} else { 				if((du->dk_flags& DKFL_USEDMA)&& 				   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				   	(void *)((int)bp->b_data +  					     du->dk_skip * DEV_BSIZE), 					du->dk_bc, 					bp->b_flags& B_READ)) { 					du->dk_flags |= DKFL_DMA; 					if( bp->b_flags& B_READ) 						command = WDCC_READ_DMA; 					else 						command = WDCC_WRITE_DMA; 					du->dk_currentiosize = count1; 				} else if( (count1>
+argument|; 		} else { 			if((du->dk_flags& DKFL_USEDMA)&& 			   wddma[du->dk_interface].wdd_dmaverify(du->dk_dmacookie, 				(void *)((int)bp->b_data +  				     du->dk_skip * DEV_BSIZE), 				du->dk_bc, 				bp->b_flags& B_READ)) { 				du->dk_flags |= DKFL_DMA; 				if( bp->b_flags& B_READ) 					command = WDCC_READ_DMA; 				else 					command = WDCC_WRITE_DMA; 				du->dk_currentiosize = count1; 			} else if( (count1>
 literal|1
 argument|)&& (du->dk_multi>
 literal|1
-argument|)) { 					du->dk_flags |= DKFL_MULTI; 					if( bp->b_flags& B_READ) { 						command = WDCC_READ_MULTI; 					} else { 						command = WDCC_WRITE_MULTI; 					} 					du->dk_currentiosize = du->dk_multi; 					if( du->dk_currentiosize> count1) 						du->dk_currentiosize = count1; 				} else { 					if( bp->b_flags& B_READ) { 						command = WDCC_READ; 					} else { 						command = WDCC_WRITE; 					} 					du->dk_currentiosize =
+argument|)) { 				du->dk_flags |= DKFL_MULTI; 				if( bp->b_flags& B_READ) { 					command = WDCC_READ_MULTI; 				} else { 					command = WDCC_WRITE_MULTI; 				} 				du->dk_currentiosize = du->dk_multi; 				if( du->dk_currentiosize> count1) 					du->dk_currentiosize = count1; 			} else { 				if( bp->b_flags& B_READ) { 					command = WDCC_READ; 				} else { 					command = WDCC_WRITE; 				} 				du->dk_currentiosize =
 literal|1
-argument|; 				} 			} 		}
+argument|; 			} 		}
 comment|/* 		 * XXX this loop may never terminate.  The code to handle 		 * counting down of retries and eventually failing the i/o 		 * is in wdintr() and we can't get there from here. 		 */
 argument|if (wdtest !=
 literal|0
@@ -3932,14 +3921,7 @@ endif|#
 directive|endif
 argument|if ((du->dk_flags& DKFL_SINGLE) ==
 literal|0
-argument|) { 			du->dk_flags |= DKFL_ERROR; 			goto outt; 		}
-ifdef|#
-directive|ifdef
-name|B_FORMAT
-argument|if (bp->b_flags& B_FORMAT) { 			bp->b_error = EIO; 			bp->b_flags |= B_ERROR; 			goto done; 		}
-endif|#
-directive|endif
-argument|if (du->dk_flags& DKFL_BADSCAN) { 			bp->b_error = EIO; 			bp->b_flags |= B_ERROR; 		} else if (du->dk_status& WDCS_ERR) { 			if (++wdtab[unit].b_errcnt< RETRIES) { 				wdtab[unit].b_active =
+argument|) { 			du->dk_flags |= DKFL_ERROR; 			goto outt; 		}  		if (du->dk_flags& DKFL_BADSCAN) { 			bp->b_error = EIO; 			bp->b_flags |= B_ERROR; 		} else if (du->dk_status& WDCS_ERR) { 			if (++wdtab[unit].b_errcnt< RETRIES) { 				wdtab[unit].b_active =
 literal|0
 argument|; 			} else { 				wderror(bp, du,
 literal|"hard error"
@@ -4113,7 +4095,7 @@ argument|);
 endif|#
 directive|endif
 argument|}
-comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens and formats.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
+comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
 argument|static int wdcontrol(register struct buf *bp) { 	register struct disk *du; 	int	ctrlr;  	du = wddrives[dkunit(bp->b_dev)]; 	ctrlr = du->dk_ctrlr_cmd640;
 ifdef|#
 directive|ifdef
@@ -4650,14 +4632,7 @@ argument|return (
 literal|0
 argument|); }  int wdclose(dev_t dev, int flags, int fmt, struct proc *p) { 	dsclose(dev, fmt, wddrives[dkunit(dev)]->dk_slices); 	return (
 literal|0
-argument|); }  int wdioctl(dev_t dev, u_long cmd, caddr_t addr, int flags, struct proc *p) { 	int	lunit = dkunit(dev); 	register struct disk *du; 	int	error;
-ifdef|#
-directive|ifdef
-name|notyet
-argument|struct uio auio; 	struct iovec aiov; 	struct format_op *fop;
-endif|#
-directive|endif
-argument|du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
+argument|); }  int wdioctl(dev_t dev, u_long cmd, caddr_t addr, int flags, struct proc *p) { 	int	lunit = dkunit(dev); 	register struct disk *du; 	int	error;  	du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
 literal|"wdioct"
 argument|); 	error = dsioctl(dev, cmd, addr, flags,&du->dk_slices); 	if (error != ENOIOCTL) 		return (error);
 ifdef|#
@@ -4672,41 +4647,7 @@ endif|#
 directive|endif
 argument|switch (cmd) { 	case DIOCSBADSCAN: 		if (*(int *)addr) 			du->dk_flags |= DKFL_BADSCAN; 		else 			du->dk_flags&= ~DKFL_BADSCAN; 		return (
 literal|0
-argument|);
-ifdef|#
-directive|ifdef
-name|notyet
-argument|case DIOCWFORMAT: 		if (!(flag& FWRITE)) 			return (EBADF); 		fop = (struct format_op *)addr; 		aiov.iov_base = fop->df_buf; 		aiov.iov_len = fop->df_count; 		auio.uio_iov =&aiov; 		auio.uio_iovcnt =
-literal|1
-argument|; 		auio.uio_resid = fop->df_count; 		auio.uio_segflg =
-literal|0
-argument|; 		auio.uio_offset = fop->df_startblk * du->dk_dd.d_secsize;
-error|#
-directive|error
-comment|/* XXX the 386BSD interface is different */
-argument|error = physio(wdformat,&rwdbuf[lunit],
-literal|0
-argument|, dev, B_WRITE, 			       minphys,&auio); 		fop->df_count -= auio.uio_resid; 		fop->df_reg[
-literal|0
-argument|] = du->dk_status; 		fop->df_reg[
-literal|1
-argument|] = du->dk_error; 		return (error);
-endif|#
-directive|endif
-argument|default: 		return (ENOTTY); 	} }
-ifdef|#
-directive|ifdef
-name|B_FORMAT
-argument|int wdformat(struct buf *bp) {  	bp->b_flags |= B_FORMAT; 	BUF_STRATEGY(bp,
-literal|0
-argument|);
-comment|/* 	 * phk put this here, better that return(wdstrategy(bp)); 	 * XXX 	 */
-argument|return -
-literal|1
-argument|; }
-endif|#
-directive|endif
-argument|int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
+argument|);  	default: 		return (ENOTTY); 	} }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
 argument|) 		return (-
 literal|1

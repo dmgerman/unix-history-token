@@ -1313,46 +1313,6 @@ begin_comment
 comment|/* get partition */
 end_comment
 
-begin_comment
-comment|/* do format operation, read or write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCRFORMAT
-value|_IOWR('d', 105, struct format_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCWFORMAT
-value|_IOWR('d', 106, struct format_op)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSSTEP
-value|_IOW('d', 107, int)
-end_define
-
-begin_comment
-comment|/* set step rate */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIOCSRETRIES
-value|_IOW('d', 108, int)
-end_define
-
-begin_comment
-comment|/* set # of retries */
-end_comment
-
 begin_define
 define|#
 directive|define
