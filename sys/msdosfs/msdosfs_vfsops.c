@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.46 1999/08/08 18:42:54 phk Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.47 1999/08/13 10:29:26 phk Exp $ */
 end_comment
 
 begin_comment
@@ -3750,10 +3750,10 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|long
-operator|)
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->

@@ -3772,10 +3772,10 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|long
-operator|)
+name|dev2udev
+argument_list|(
 name|dev
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->
