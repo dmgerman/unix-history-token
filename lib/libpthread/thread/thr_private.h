@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Private thread definitions for the uthread kernel.  *  * $Id: pthread_private.h,v 1.20 1999/06/20 08:28:08 jb Exp $  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Private thread definitions for the uthread kernel.  *  * $Id: pthread_private.h,v 1.21 1999/07/05 00:35:17 jasone Exp $  */
 end_comment
 
 begin_ifndef
@@ -821,12 +821,6 @@ name|PTHREAD_STACK_DEFAULT
 value|65536
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_PTHREAD_GSTACK
-end_ifdef
-
 begin_comment
 comment|/* Size of red zone at the end of each stack. */
 end_comment
@@ -839,7 +833,7 @@ value|4096
 end_define
 
 begin_comment
-comment|/* Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since legacy applications are likely to run  * almost entirely on this stack. */
+comment|/* Maximum size of initial thread's stack.  This perhaps deserves to be larger  * than the stacks of other threads, since many applications are likely to run  * almost entirely on this stack. */
 end_comment
 
 begin_define
@@ -867,9 +861,25 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__alpha__
+name|__i386__
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|PTHREAD_STACK_TOP
+value|0xbfbde000
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -883,12 +893,11 @@ else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|PTHREAD_STACK_TOP
-value|0xbfbde000
-end_define
+begin_error
+error|#
+directive|error
+literal|"Don't recognize this architecture!"
+end_error
 
 begin_endif
 endif|#
@@ -905,11 +914,6 @@ error|#
 directive|error
 literal|"Don't recognize this operating system!"
 end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1530,12 +1534,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_PTHREAD_GSTACK
-end_ifdef
-
 begin_comment
 comment|/* Spare thread stack. */
 end_comment
@@ -1554,11 +1552,6 @@ comment|/* Queue entry for this stack. */
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Global variables for the uthread kernel.  */
@@ -2336,12 +2329,6 @@ directive|endif
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_PTHREAD_GSTACK
-end_ifdef
-
 begin_comment
 comment|/* Spare stack queue.  Stacks of default size are cached in order to reduce  * thread creation time.  Spare stacks are used in LIFO order to increase cache  * locality. */
 end_comment
@@ -2389,11 +2376,6 @@ endif|#
 directive|endif
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Used for _PTHREADS_INVARIANTS checking. */
