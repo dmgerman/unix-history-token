@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * This version by William Jolitz for UUNET Technologies, Inc.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.4 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * This version by William Jolitz for UUNET Technologies, Inc.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,24 +15,6 @@ directive|define
 name|_PMAP_MACHINE_
 value|1
 end_define
-
-begin_include
-include|#
-directive|include
-file|"sys/lock.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/vmparam.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_statistics.h"
-end_include
 
 begin_comment
 comment|/*  * 386 page table entry and page table directory  * W.Jolitz, 8/89  */
@@ -649,13 +631,6 @@ begin_comment
 comment|/*  * Pmap stuff  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PMAP_NULL
-value|((pmap_t) 0)
-end_define
-
 begin_struct
 struct|struct
 name|pmap
@@ -665,7 +640,6 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-comment|/* caddr_t			*pm_ptobj;	/* page table object */
 name|boolean_t
 name|pm_pdchanged
 decl_stmt|;
@@ -727,7 +701,7 @@ parameter_list|)
 define|\
 value|if ((pmapp) != PMAP_NULL
 comment|/*&& (pmapp)->pm_pdchanged */
-value|) {  \ 		(pcbp)->pcb_cr3 = \ 		    pmap_extract(kernel_pmap, (pmapp)->pm_pdir); \ 		if ((pmapp) == u.u_procp->p_map->pmap) \ 			load_cr3((pcbp)->pcb_cr3); \ 		(pmapp)->pm_pdchanged = FALSE; \ 	}
+value|) {  \ 		(pcbp)->pcb_cr3 = \ 		    pmap_extract(kernel_pmap, (pmapp)->pm_pdir); \ 		if ((pmapp) ==&curproc->p_vmspace->vm_pmap) \ 			load_cr3((pcbp)->pcb_cr3); \ 		(pmapp)->pm_pdchanged = FALSE; \ 	}
 end_define
 
 begin_define

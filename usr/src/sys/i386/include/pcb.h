@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)pcb.h	5.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)pcb.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -25,16 +25,16 @@ name|pcb
 block|{
 name|struct
 name|i386tss
-name|pcbtss
+name|pcb_tss
 decl_stmt|;
 define|#
 directive|define
 name|pcb_ksp
-value|pcbtss.tss_esp0
+value|pcb_tss.tss_esp0
 define|#
 directive|define
 name|pcb_ptd
-value|pcbtss.tss_cr3
+value|pcb_tss.tss_cr3
 define|#
 directive|define
 name|pcb_cr3
@@ -42,19 +42,46 @@ value|pcb_ptd
 define|#
 directive|define
 name|pcb_pc
-value|pcbtss.tss_eip
+value|pcb_tss.tss_eip
 define|#
 directive|define
 name|pcb_psl
-value|pcbtss.tss_eflags
+value|pcb_tss.tss_eflags
 define|#
 directive|define
 name|pcb_usp
-value|pcbtss.tss_esp
+value|pcb_tss.tss_esp
 define|#
 directive|define
 name|pcb_fp
-value|pcbtss.tss_ebp
+value|pcb_tss.tss_ebp
+ifdef|#
+directive|ifdef
+name|notyet
+name|u_char
+name|pcb_iomap
+index|[
+name|NPORT
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_char
+argument_list|)
+index|]
+decl_stmt|;
+comment|/* i/o port bitmap */
+endif|#
+directive|endif
+name|struct
+name|save87
+name|pcb_savefpu
+decl_stmt|;
+comment|/* floating point state for 287/387 */
+name|struct
+name|emcsts
+name|pcb_saveemc
+decl_stmt|;
+comment|/* Cyrix EMC state */
 comment|/*  * Software pcb (extension)  */
 name|int
 name|pcb_flags
@@ -62,71 +89,62 @@ decl_stmt|;
 define|#
 directive|define
 name|FP_WASUSED
-value|0x1
+value|0x01
 comment|/* floating point has been used in this proc */
 define|#
 directive|define
 name|FP_NEEDSSAVE
-value|0x2
+value|0x02
 comment|/* needs save on next context switch */
 define|#
 directive|define
 name|FP_NEEDSRESTORE
-value|0x4
+value|0x04
 comment|/* need restore on next DNA fault */
 define|#
 directive|define
 name|FP_USESEMC
-value|0x8
+value|0x08
 comment|/* process uses EMC memory-mapped mode */
-name|struct
-name|save87
-name|pcb_savefpu
+define|#
+directive|define
+name|FM_TRAP
+value|0x10
+comment|/* process entered kernel on a trap frame */
+name|short
+name|pcb_iml
 decl_stmt|;
-name|struct
-name|emcsts
-name|pcb_saveemc
+comment|/* interrupt mask level */
+name|caddr_t
+name|pcb_onfault
 decl_stmt|;
-name|struct
-name|pte
-modifier|*
-name|pcb_p0br
-decl_stmt|;
-name|struct
-name|pte
-modifier|*
-name|pcb_p1br
-decl_stmt|;
-name|int
-name|pcb_p0lr
-decl_stmt|;
-name|int
-name|pcb_p1lr
-decl_stmt|;
-name|int
-name|pcb_szpt
-decl_stmt|;
-comment|/* number of pages of user page table */
-name|int
-name|pcb_cmap2
-decl_stmt|;
-name|int
-modifier|*
-name|pcb_sswap
-decl_stmt|;
+comment|/* copyin/out fault recovery */
 name|long
 name|pcb_sigc
 index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* XXX signal code trampoline */
 name|int
-name|pcb_iml
+name|pcb_cmap2
 decl_stmt|;
-comment|/* interrupt mask level */
+comment|/* XXX temporary PTE - will prefault instead */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|struct
+name|pcb
+modifier|*
+name|curpcb
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our current running pcb */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -475,6 +475,17 @@ end_define
 begin_comment
 comment|/* segment protection base */
 end_comment
+
+begin_comment
+comment|/* Trap's coming from user mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_USER
+value|0x100
+end_define
 
 end_unit
 

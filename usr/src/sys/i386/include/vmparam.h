@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vmparam.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vmparam.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Machine dependent constants for 386.  */
 end_comment
 
 begin_comment
-comment|/*  * Virtual address space arrangement. On 386, both user and kernel  * share the address space, not unlike the vax.  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack. Immediately above the user stack  * resides the user structure, which is UPAGES long and contains the  * kernel stack. As such, UPAGES is the number of pages from the beginning  * of the P1 region to the beginning of the user stack. Also, the P0  * region begins with user text and ends with user data.  * Immediately after the user structure is the kernal address space.  */
+comment|/*  * Virtual address space arrangement. On 386, both user and kernel  * share the address space, not unlike the vax.  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack. Immediately above the user stack  * resides the user structure, which is UPAGES long and contains the  * kernel stack.  *  * Immediately after the user structure is the page table map, and then  * kernal address space.  */
 end_comment
 
 begin_define
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|0xFDBFE000
+value|0xFDBFD000
 end_define
 
 begin_define
@@ -35,13 +35,6 @@ end_define
 begin_comment
 comment|/* btop(USRSTACK) */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|P1PAGES
-value|0xFDC00
-end_define
 
 begin_define
 define|#
@@ -449,6 +442,13 @@ define|#
 directive|define
 name|VM_MIN_ADDRESS
 value|((vm_offset_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|((vm_offset_t)0xFDBFD000)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|COPY_SIGCODE
 end_undef
 
 begin_comment
-comment|/* copy sigcode above user stack in exec */
+comment|/* don't copy sigcode above user stack in exec */
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ name|NEED_FFS
 end_define
 
 begin_comment
-comment|/* don't need ffs function */
+comment|/* need ffs function */
 end_comment
 
 begin_define
@@ -64,7 +64,7 @@ name|NEED_BCMP
 end_define
 
 begin_comment
-comment|/* don't need bcmp function */
+comment|/* need bcmp function */
 end_comment
 
 begin_define
@@ -74,7 +74,7 @@ name|NEED_STRLEN
 end_define
 
 begin_comment
-comment|/* don't need strlen function */
+comment|/* need strlen function */
 end_comment
 
 begin_define
