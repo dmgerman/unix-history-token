@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.19 1998/09/30 21:06:55 sos Exp $  */
+comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.19.2.1 1999/01/26 23:16:46 roger Exp $  */
 end_comment
 
 begin_comment
@@ -800,6 +800,106 @@ comment|/* get luma notch */
 end_comment
 
 begin_comment
+comment|/* Read/Write the BT848's I2C bus directly  * b7-b0:    data (read/write)  * b15-b8:   internal peripheral register (write)     * b23-b16:  i2c addr (write)  * b31-b24:  1 = write, 0 = read   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_I2CWR
+value|_IOWR('x', 57, u_long)
+end_define
+
+begin_comment
+comment|/* i2c read-write */
+end_comment
+
+begin_comment
+comment|/* Support for radio tuner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_SETMODE
+value|_IOW('x', 58, unsigned int)
+end_define
+
+begin_comment
+comment|/* set radio modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_GETMODE
+value|_IOR('x', 58, unsigned char)
+end_define
+
+begin_comment
+comment|/* get radio modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_AFC
+value|0x01
+end_define
+
+begin_comment
+comment|/* These modes will probably not */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_MONO
+value|0x02
+end_define
+
+begin_comment
+comment|/*  work on the FRxxxx. It does	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_MUTE
+value|0x08
+end_define
+
+begin_comment
+comment|/*  work on the FMxxxx.	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_SETFREQ
+value|_IOW('x', 59, unsigned int)
+end_define
+
+begin_comment
+comment|/* set frequency   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIO_GETFREQ
+value|_IOR('x', 59, unsigned int)
+end_define
+
+begin_comment
+comment|/* set frequency   */
+end_comment
+
+begin_comment
+comment|/*        Argument is frequency*100MHz  */
+end_comment
+
+begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
 end_comment
 
@@ -1081,103 +1181,127 @@ value|_IOR('x', 69, struct bktr_capture_area)
 end_define
 
 begin_comment
-comment|/* Read/Write the BT848's I2C bus directly  * b7-b0:    data (read/write)  * b15-b8:   internal peripheral register (write)     * b23-b16:  i2c addr (write)  * b31-b24:  1 = write, 0 = read   */
+comment|/* Get channel Set */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BT848_I2CWR
-value|_IOWR('x', 57, u_long)
+name|BT848_MAX_CHNLSET_NAME_LEN
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|bktr_chnlset
+block|{
+name|short
+name|index
+decl_stmt|;
+name|short
+name|max_channel
+decl_stmt|;
+name|char
+name|name
+index|[
+name|BT848_MAX_CHNLSET_NAME_LEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|TVTUNER_GETCHNLSET
+value|_IOWR('x', 70, struct bktr_chnlset)
 end_define
 
 begin_comment
-comment|/* i2c read-write */
+comment|/* Infra Red Remote Control */
+end_comment
+
+begin_struct
+struct|struct
+name|bktr_remote
+block|{
+name|unsigned
+name|char
+name|data
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|REMOTE_GETKEY
+value|_IOR('x', 71, struct bktr_remote)
+end_define
+
+begin_comment
+comment|/*read the remote */
 end_comment
 
 begin_comment
-comment|/* Support for radio tuner */
+comment|/*control receiver*/
+end_comment
+
+begin_comment
+comment|/*returns raw data*/
+end_comment
+
+begin_comment
+comment|/*  * Direct access to GPIO pins. You must add BKTR_GPIO_ACCESS to your kernel  * configuration file to use these   */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RADIO_SETMODE
-value|_IOW('x', 58, unsigned int)
+name|BT848_GPIO_SET_EN
+value|_IOW('x', 72, int)
 end_define
 
 begin_comment
-comment|/* set radio modes */
+comment|/* set gpio_out_en */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RADIO_GETMODE
-value|_IOR('x', 58, unsigned char)
+name|BT848_GPIO_GET_EN
+value|_IOR('x', 73, int)
 end_define
 
 begin_comment
-comment|/* get radio modes */
+comment|/* get gpio_out_en */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RADIO_AFC
-value|0x01
+name|BT848_GPIO_SET_DATA
+value|_IOW('x', 74, int)
 end_define
 
 begin_comment
-comment|/* These modes will probably not */
+comment|/* set gpio_data */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RADIO_MONO
-value|0x02
+name|BT848_GPIO_GET_DATA
+value|_IOR('x', 75, int)
 end_define
 
 begin_comment
-comment|/*  work on the FRxxxx. It does	 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RADIO_MUTE
-value|0x08
-end_define
-
-begin_comment
-comment|/*  work on the FMxxxx.	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RADIO_SETFREQ
-value|_IOW('x', 59, unsigned int)
-end_define
-
-begin_comment
-comment|/* set frequency   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RADIO_GETFREQ
-value|_IOR('x', 59, unsigned int)
-end_define
-
-begin_comment
-comment|/* set frequency   */
-end_comment
-
-begin_comment
-comment|/*        Argument is frequency*100MHz  */
+comment|/* get gpio_data */
 end_comment
 
 begin_comment
