@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	4.4 82/12/09"
+literal|"@(#)mbuf.c	4.5 82/12/18"
 decl_stmt|;
 end_decl_stmt
 
