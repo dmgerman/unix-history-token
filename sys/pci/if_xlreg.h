@@ -1243,7 +1243,7 @@ begin_define
 define|#
 directive|define
 name|XL_RESETOPT_FEATUREMASK
-value|0x0001|0x0002|0x004
+value|(0x0001 | 0x0002 | 0x004)
 end_define
 
 begin_define
@@ -1419,7 +1419,7 @@ begin_define
 define|#
 directive|define
 name|XL_ICFG_ROMSIZE_MASK
-value|(0x00000040|0x00000080)
+value|(0x00000040 | 0x00000080)
 end_define
 
 begin_define
@@ -1440,14 +1440,14 @@ begin_define
 define|#
 directive|define
 name|XL_ICFG_RAMPART
-value|(0x00010000|0x00020000)
+value|(0x00010000 | 0x00020000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|XL_ICFG_XCVRSEL
-value|(0x00100000|0x00200000|0x00400000)
+value|(0x00100000 | 0x00200000 | 0x00400000)
 end_define
 
 begin_define
@@ -1577,22 +1577,34 @@ begin_define
 define|#
 directive|define
 name|XL_MACCTRL_EXTEND_AFTER_COL
-value|0x0080 (3c905B only)
+value|0x0080
 end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|XL_MACCTRL_FLOW_CONTROL_ENB
-value|0x0100 (3c905B only)
+value|0x0100
 end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|XL_MACCTRL_VLT_END
-value|0x0200 (3c905B only)
+value|0x0200
 end_define
+
+begin_comment
+comment|/* 3c905B only */
+end_comment
 
 begin_comment
 comment|/*  * The 'reset options' register contains power-on reset values  * loaded from the EEPROM. This includes the supported media  * types on the card. It is also known as the media options register.  */
@@ -1922,7 +1934,8 @@ begin_define
 define|#
 directive|define
 name|XL_NETDIAG_ASIC_REVMASK
-value|(0x0002|0x0004|0x0008|0x0010|0x0020)
+define|\
+value|(0x0002 | 0x0004 | 0x0008 | 0x0010 | 0x0020)
 end_define
 
 begin_define
@@ -2300,14 +2313,16 @@ begin_define
 define|#
 directive|define
 name|XL_RX_LIST_SZ
-value|XL_RX_LIST_CNT * sizeof(struct xl_list_onefrag)
+define|\
+value|(XL_RX_LIST_CNT * sizeof(struct xl_list_onefrag))
 end_define
 
 begin_define
 define|#
 directive|define
 name|XL_TX_LIST_SZ
-value|XL_TX_LIST_CNT * sizeof(struct xl_list)
+define|\
+value|(XL_TX_LIST_CNT * sizeof(struct xl_list))
 end_define
 
 begin_define
@@ -3069,15 +3084,15 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * XXX: The driver still tries to sleep with locks held, so disable  *      locking for the time being.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 literal|0
 end_if
-
-begin_comment
-comment|/* These are a bit premature.  The driver still tries to sleep with locks. */
-end_comment
 
 begin_define
 define|#
