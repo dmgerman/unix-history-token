@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cronyx Tau-PCI DDK definitions.  *  * Copyright (C) 1999-2003 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 2000-2004 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * $Cronyx: cpddk.h,v 1.8.4.14 2004/01/13 13:35:27 rik Exp $  * $FreeBSD$  */
+comment|/*  * Cronyx Tau-PCI DDK definitions.  *  * Copyright (C) 1999-2003 Cronyx Engineering.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Copyright (C) 2000-2004 Cronyx Engineering.  * Author: Roman Kurakin,<rik@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations a permission to use,  * modify and redistribute this software in source and binary forms,  * as long as this message is kept with the software, all derivative  * works or modified versions.  *  * $Cronyx: cpddk.h,v 1.8.4.19 2004/08/10 13:37:20 rik Exp $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -801,6 +801,11 @@ directive|define
 name|E3STS_TXE
 value|0x00000004
 comment|/* Transmit error */
+define|#
+directive|define
+name|E3STS_AIS
+value|0x00000008
+comment|/* Transmit error */
 name|unsigned
 name|long
 name|e3csec_5
@@ -1164,6 +1169,10 @@ name|FW_TAUPCI_NONE
 value|0
 define|#
 directive|define
+name|FW_TAUPCI_E3_B
+value|1
+define|#
+directive|define
 name|FW_TAUPCI_2E1_B
 value|2
 define|#
@@ -1182,6 +1191,9 @@ name|unsigned
 name|char
 modifier|*
 name|firmware
+index|[
+literal|8
+index|]
 decl_stmt|;
 comment|/* external firmware */
 name|void
