@@ -18,48 +18,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|<limits.h>
 end_include
-
-begin_comment
-comment|/* will be removed ***************************/
-end_comment
 
 begin_include
 include|#
 directive|include
-file|"collate.h"
+file|<locale.h>
 end_include
-
-begin_function
-name|int
-name|__collcmp
-parameter_list|(
-name|c1
-parameter_list|,
-name|c2
-parameter_list|)
-name|unsigned
-name|char
-name|c1
-decl_stmt|,
-name|c2
-decl_stmt|;
-block|{
-return|return
-name|collate_range_cmp
-argument_list|(
-name|c1
-argument_list|,
-name|c2
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* will be removed ***************************/
-end_comment
 
 begin_function
 name|int
