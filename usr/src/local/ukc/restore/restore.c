@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.2 (Berkeley) 3/5/86"
+literal|"@(#)restore.c	5.3 (Berkeley) 6/18/87"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,9 +1395,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: not found on tape\n"
+literal|"%s: (inode %d) not found on tape\n"
 argument_list|,
 name|name
+argument_list|,
+name|ino
 argument_list|)
 expr_stmt|;
 break|break;
