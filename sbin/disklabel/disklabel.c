@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: disklabel.c,v 1.13 1998/06/04 06:49:13 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,10 +1221,6 @@ name|op
 condition|)
 block|{
 case|case
-name|UNSPEC
-case|:
-break|break;
-case|case
 name|EDIT
 case|:
 if|if
@@ -2276,10 +2272,16 @@ name|ESRCH
 case|:
 name|warnx
 argument_list|(
-literal|"%s: no disk label on disk;\n"
-literal|"use \"disklabel -r\" to install initial label"
+literal|"%s: no disk label on disk;"
 argument_list|,
 name|s
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"use \"disklabel -r\" to install initial label\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2288,10 +2290,16 @@ name|EINVAL
 case|:
 name|warnx
 argument_list|(
-literal|"%s: label magic number or checksum is wrong!\n"
-literal|"(disklabel or kernel is out of date?)"
+literal|"%s: label magic number or checksum is wrong!"
 argument_list|,
 name|s
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(disklabel or kernel is out of date?)\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2483,7 +2491,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
@@ -2491,7 +2498,6 @@ argument_list|,
 literal|"bad pack magic number (label is damaged, or pack is unlabeled)"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
