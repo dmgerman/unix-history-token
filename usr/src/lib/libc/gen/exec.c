@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.6 (Berkeley) %G%"
+literal|"@(#)exec.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,8 @@ name|char
 modifier|*
 modifier|*
 name|argv
+init|=
+name|NULL
 decl_stmt|;
 for|for
 control|(
