@@ -815,5 +815,12 @@ name|THR_EVENT
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|EJUSTRETURN
+value|(-2)
+end_define
+
 end_unit
 
