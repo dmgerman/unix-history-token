@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.12 1994/11/06 04:34:46 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.13 1994/11/08 18:44:14 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -92,6 +98,39 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|void
+name|handle_intr
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
+name|dialog_msgbox
+argument_list|(
+literal|"User Interrupt"
+argument_list|,
+literal|"User interrupted.  Aborting the installation"
+argument_list|,
+literal|10
+argument_list|,
+literal|72
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|ExitSysinstall
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -104,6 +143,13 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
 comment|/* Are we running as init? */
 if|if
 condition|(
@@ -223,6 +269,13 @@ comment|/* If we haven't crashed I guess dialog is running ! */
 name|dialog_active
 operator|=
 literal|1
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|handle_intr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
