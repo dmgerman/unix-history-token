@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fs.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fs.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -307,9 +307,13 @@ name|fs_nspf
 decl_stmt|;
 comment|/* value of NSPF */
 name|long
+name|fs_optim
+decl_stmt|;
+comment|/* optimization preference, see below */
+name|long
 name|fs_sparecon
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
@@ -430,6 +434,32 @@ comment|/* actually longer */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Preference for optimization.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_OPTTIME
+value|0
+end_define
+
+begin_comment
+comment|/* minimize allocation time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FS_OPTSPACE
+value|1
+end_define
+
+begin_comment
+comment|/* minimize disk fragmentation */
+end_comment
 
 begin_comment
 comment|/*  * Convert cylinder group to base address of its global summary info.  *  * N.B. This macro assumes that sizeof(struct csum) is a power of two.  */
