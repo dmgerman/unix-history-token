@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: clock.c,v 1.2 1998/06/14 13:44:38 dfr Exp $ */
+comment|/* $Id: clock.c,v 1.3 1998/07/22 08:16:34 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -152,6 +152,26 @@ name|int
 name|tickfixinterval
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|adjkerntz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* local offset	from GMT in seconds */
+end_comment
+
+begin_decl_stmt
+name|int
+name|disable_rtc_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* disable resettodr() if != 0 */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -950,6 +970,16 @@ name|ct
 operator|.
 name|sec
 expr_stmt|;
+if|if
+condition|(
+name|wall_cmos_clock
+condition|)
+name|ts
+operator|.
+name|tv_sec
+operator|+=
+name|adjkerntz
+expr_stmt|;
 name|ts
 operator|.
 name|tv_nsec
@@ -1057,6 +1087,11 @@ name|unsigned
 name|long
 name|tm
 decl_stmt|;
+if|if
+condition|(
+name|disable_rtc_set
+condition|)
+return|return;
 name|s
 operator|=
 name|splclock
@@ -1077,6 +1112,17 @@ operator|!
 name|clockinitted
 condition|)
 return|return;
+comment|/* Calculate local time	to put in RTC */
+name|tm
+operator|-=
+operator|(
+name|wall_cmos_clock
+condition|?
+name|adjkerntz
+else|:
+literal|0
+operator|)
+expr_stmt|;
 comment|/* compute the day of week. */
 name|t2
 operator|=
