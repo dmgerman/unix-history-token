@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.26
+literal|3.27
 operator|%
 name|G
 operator|%
@@ -213,7 +213,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -485,9 +490,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
-operator|>
-literal|0
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -690,6 +698,34 @@ argument_list|(
 name|cf
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+comment|/* save log info */
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s queueup: cf=%s, df=%s\n"
+argument_list|,
+name|MsgId
+argument_list|,
+name|buf
+argument_list|,
+name|e
+operator|->
+name|e_df
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 comment|/* disconnect this temp file from the job */
 name|e
 operator|->
@@ -1509,7 +1545,12 @@ end_ifdef
 begin_if
 if|if
 condition|(
-name|Debug
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 block|{
 for|for
@@ -1555,7 +1596,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **	WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		0 if a == b **		1 if a> b ** **	Side Effects: **		none. */
+comment|/* **  WORKCMPF -- compare function for ordering work. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		0 if a == b **		1 if a> b ** **	Side Effects: **		none. */
 end_comment
 
 begin_define
@@ -1668,7 +1709,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -1850,9 +1896,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
-operator|>
-literal|2
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|3
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -2306,9 +2355,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
-operator|>
-literal|0
+name|tTd
+argument_list|(
+literal|40
+argument_list|,
+literal|3
+argument_list|)
 condition|)
 name|printf
 argument_list|(

@@ -5,24 +5,6 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|LOG
-end_endif
-
 begin_expr_stmt
 name|SCCSID
 argument_list|(
@@ -33,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.25
+literal|3.26
 operator|%
 name|G
 operator|%
@@ -122,19 +104,15 @@ name|char
 name|Arpa_Syserr
 index|[]
 decl_stmt|;
-name|char
-modifier|*
-name|saveto
-init|=
-name|CurEnv
-operator|->
-name|e_to
-decl_stmt|;
 comment|/* format and output the error message */
 name|fmtmsg
 argument_list|(
 name|MsgBuf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 name|Arpa_Syserr
@@ -192,21 +170,19 @@ block|}
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
 name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s->%s: %s"
+literal|"%s: %s"
 argument_list|,
-name|CurEnv
-operator|->
-name|e_from
-operator|.
-name|q_paddr
-argument_list|,
-name|CurEnv
-operator|->
-name|e_to
+name|MsgId
 argument_list|,
 operator|&
 name|MsgBuf

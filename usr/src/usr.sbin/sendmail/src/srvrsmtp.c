@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.23
+literal|3.24
 operator|%
 name|G
 operator|%
@@ -1187,9 +1187,17 @@ case|case
 name|CMDDBGDEBUG
 case|:
 comment|/* set debug mode */
-name|Debug
-operator|=
-name|atoi
+name|tTsetup
+argument_list|(
+name|tTdvect
+argument_list|,
+sizeof|sizeof
+name|tTdvect
+argument_list|,
+literal|"0-99.1"
+argument_list|)
+expr_stmt|;
+name|tTflag
 argument_list|(
 name|p
 argument_list|)
@@ -1198,9 +1206,7 @@ name|message
 argument_list|(
 literal|"200"
 argument_list|,
-literal|"Debug = %d"
-argument_list|,
-name|Debug
+literal|"Debug set"
 argument_list|)
 expr_stmt|;
 break|break;

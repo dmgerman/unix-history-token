@@ -39,7 +39,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.14
+literal|3.15
 operator|%
 name|G
 operator|%
@@ -241,9 +241,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
-operator|>
-literal|0
+name|tTd
+argument_list|(
+literal|18
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -813,7 +816,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Debug
+name|tTd
+argument_list|(
+literal|18
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -843,6 +851,9 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* arrange to time out the read */
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|Xscript
@@ -1030,7 +1041,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|Debug
+name|tTd
+argument_list|(
+literal|18
+argument_list|,
+literal|1
+argument_list|)
 operator|||
 operator|(
 name|Verbose

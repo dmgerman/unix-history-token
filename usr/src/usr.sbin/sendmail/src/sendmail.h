@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.75		%G%"
+literal|"@(#)sendmail.h	3.76		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -85,6 +85,24 @@ include|#
 directive|include
 file|"useful.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|LOG
+end_endif
 
 begin_comment
 comment|/* **  Configuration constants. **	There shouldn't be much need to change these.... */
@@ -1927,17 +1945,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|Debug
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* debugging level */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
 name|Errors
 decl_stmt|;
 end_decl_stmt
@@ -2099,6 +2106,18 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|char
+modifier|*
+name|MsgId
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Message-Id: for this message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|time_t
 name|CurTime
 decl_stmt|;
@@ -2128,6 +2147,67 @@ end_decl_stmt
 
 begin_comment
 comment|/* timeout on reads before clock ticks */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|LogLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* level of logging to perform */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Trace information */
+end_comment
+
+begin_comment
+comment|/* trace vector and macros for debugging flags */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|u_char
+name|tTdvect
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|tTd
+parameter_list|(
+name|flag
+parameter_list|,
+name|level
+parameter_list|)
+value|(tTdvect[flag]>= level)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tTdlevel
+parameter_list|(
+name|flag
+parameter_list|)
+value|(tTdvect[flag])
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  Miscellaneous information. */
 end_comment
 
 begin_include

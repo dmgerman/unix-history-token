@@ -15,7 +15,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|3.1
+literal|3.2
 operator|%
 name|G
 operator|%
@@ -39,9 +39,12 @@ directive|ifdef
 name|DEBUG
 if|if
 condition|(
-name|Debug
-operator|>
-literal|0
+name|tTd
+argument_list|(
+literal|5
+argument_list|,
+literal|1
+argument_list|)
 condition|)
 name|printf
 argument_list|(
