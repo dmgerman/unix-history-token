@@ -373,6 +373,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|protected
+name|int
+name|c___isword
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|protected
 name|void
 name|cv_undo
 name|__P
