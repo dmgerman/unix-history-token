@@ -1125,9 +1125,15 @@ comment|/*  * Initialize the vnode management data structures.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vntblinit
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
 block|{
 name|desiredvnodes
 operator|=
@@ -1219,6 +1225,21 @@ literal|1
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|vfs
+argument_list|,
+argument|SI_SUB_VFS
+argument_list|,
+argument|SI_ORDER_FIRST
+argument_list|,
+argument|vntblinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Interlock is not released on failure.  */

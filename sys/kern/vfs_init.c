@@ -64,24 +64,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Zone for namei  */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|vm_zone
-modifier|*
-name|namei_zone
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * vfs_init() will set maxvfsconf  * to the highest defined type number.  */
+comment|/*  * The highest defined VFS number.  */
 end_comment
 
 begin_decl_stmt
 name|int
 name|maxvfsconf
+init|=
+name|VFS_GENERIC
+operator|+
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1388,41 +1380,11 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|namei_zone
-operator|=
-name|zinit
-argument_list|(
-literal|"NAMEI"
-argument_list|,
-name|MAXPATHLEN
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Initialize the vnode table 	 */
-name|vntblinit
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Initialize the vnode name cache 	 */
-name|nchinit
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Initialize each file system type. 	 * Vfs type numbers must be distinct from VFS_GENERIC (and VFS_VFSCONF). 	 */
 name|vattr_null
 argument_list|(
 operator|&
 name|va_null
 argument_list|)
-expr_stmt|;
-name|maxvfsconf
-operator|=
-name|VFS_GENERIC
-operator|+
-literal|1
 expr_stmt|;
 block|}
 end_function

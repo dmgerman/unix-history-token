@@ -1665,9 +1665,15 @@ comment|/*  * Name cache initialization, from vfs_init() when we are booting  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|nchinit
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+name|__unused
+parameter_list|)
 block|{
 name|TAILQ_INIT
 argument_list|(
@@ -1691,6 +1697,21 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|SYSINIT
+argument_list|(
+argument|vfs
+argument_list|,
+argument|SI_SUB_VFS
+argument_list|,
+argument|SI_ORDER_SECOND
+argument_list|,
+argument|nchinit
+argument_list|,
+argument|NULL
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Invalidate all entries to a particular vnode.  *  * Remove all entries in the namecache relating to this vnode and  * change the v_id.  We take the v_id from a global counter, since  * it becomes a handy sequence number in crash-dumps that way.  * No valid vnode will ever have (v_id == 0).  *  * XXX: Only time and the size of v_id prevents this from failing:  * XXX: In theory we should hunt down all (struct vnode*, v_id)  * XXX: soft references and nuke them, at least on the global  * XXX: v_id wraparound.  The period of resistance can be extended  * XXX: by incrementing each vnodes v_id individually instead of  * XXX: using the global v_id.  */
