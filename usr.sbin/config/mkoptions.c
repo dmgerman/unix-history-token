@@ -523,6 +523,17 @@ operator|!
 name|op
 operator|->
 name|op_ownfile
+operator|&&
+name|strncmp
+argument_list|(
+name|op
+operator|->
+name|op_name
+argument_list|,
+literal|"DEV_"
+argument_list|,
+literal|4
+argument_list|)
 condition|)
 block|{
 name|printf
