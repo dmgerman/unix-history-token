@@ -25138,14 +25138,23 @@ index|]
 operator||=
 literal|0xff
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|while (!(inb(crtc_addr+6)& 0x08))
-comment|/* wait for vertical retrace */
-block|;
-endif|#
-directive|endif
+comment|/* wait for vertical retrace to avoid jitter on some videocards */
+while|while
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|crtc_addr
+operator|+
+literal|6
+argument_list|)
+operator|&
+literal|0x08
+operator|)
+condition|)
+comment|/* idle */
+empty_stmt|;
 name|set_font_mode
 argument_list|()
 expr_stmt|;
@@ -26243,14 +26252,22 @@ operator|->
 name|mouse_pos
 expr_stmt|;
 comment|/* wait for vertical retrace to avoid jitter on some videocards */
-if|#
-directive|if
-literal|0
-block|while (!(inb(crtc_addr+6)& 0x08))
+while|while
+condition|(
+operator|!
+operator|(
+name|inb
+argument_list|(
+name|crtc_addr
+operator|+
+literal|6
+argument_list|)
+operator|&
+literal|0x08
+operator|)
+condition|)
 comment|/* idle */
-block|;
-endif|#
-directive|endif
+empty_stmt|;
 name|set_font_mode
 argument_list|()
 expr_stmt|;
