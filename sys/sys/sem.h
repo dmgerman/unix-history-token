@@ -114,17 +114,6 @@ name|SEM_UNDO
 value|010000
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_SOPS
-value|5
-end_define
-
-begin_comment
-comment|/* maximum # of sembuf's per semop call */
-end_comment
-
 begin_comment
 comment|/*  * semctl's arg parameter structure  */
 end_comment
@@ -263,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|SEM_A
-value|0200
+value|IPC_W
 end_define
 
 begin_comment
@@ -274,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|SEM_R
-value|0400
+value|IPC_R
 end_define
 
 begin_comment
