@@ -1028,6 +1028,13 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_listendrop
+argument_list|,
+literal|"\t%d listen queue overflow%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_connects
 argument_list|,
 literal|"\t%d connection%s established (including accepts)\n"
