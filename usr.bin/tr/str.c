@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)str.c	8.2 (Berkeley) 4/28/95";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)str.c	8.2 (Berkeley) 4/28/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -68,12 +87,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -877,8 +890,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown class %s"
 argument_list|,
 name|s
@@ -912,14 +927,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1097,8 +1109,10 @@ name|str
 operator|!=
 literal|'='
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"misplaced equivalence equals sign"
 argument_list|)
 expr_stmt|;
@@ -1130,8 +1144,10 @@ index|]
 operator|!=
 literal|'='
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"misplaced equivalence equals sign"
 argument_list|)
 expr_stmt|;
@@ -1293,8 +1309,10 @@ name|which
 operator|==
 name|STRING1
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"sequences only valid in string2"
 argument_list|)
 expr_stmt|;
@@ -1336,8 +1354,10 @@ name|str
 operator|!=
 literal|'*'
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"misplaced sequence asterisk"
 argument_list|)
 expr_stmt|;
@@ -1428,8 +1448,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal sequence count"
 argument_list|)
 expr_stmt|;
