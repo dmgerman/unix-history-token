@@ -2344,6 +2344,16 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+name|enable
+operator|=
+operator|(
+name|enable
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
 name|BDG_LOCK
 argument_list|()
 expr_stmt|;
