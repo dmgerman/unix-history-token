@@ -6893,6 +6893,13 @@ block|}
 block|,
 comment|/* CSC0000 */
 block|{
+literal|0x0001630e
+block|,
+literal|"CS423x-PCI"
+block|}
+block|,
+comment|/* CSC0100 */
+block|{
 literal|0x01000000
 block|,
 literal|"CMI8330"
@@ -7058,6 +7065,10 @@ case|case
 literal|0x0000630e
 case|:
 comment|/* CSC0000 */
+case|case
+literal|0x0001630e
+case|:
+comment|/* CSC0100 */
 name|mss
 operator|->
 name|bd_flags
