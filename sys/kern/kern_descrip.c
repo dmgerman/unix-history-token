@@ -6568,6 +6568,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -6646,6 +6652,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
