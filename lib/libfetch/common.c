@@ -1078,6 +1078,15 @@ operator|->
 name|ssl_meth
 argument_list|)
 expr_stmt|;
+name|SSL_CTX_set_mode
+argument_list|(
+name|conn
+operator|->
+name|ssl_ctx
+argument_list|,
+name|SSL_MODE_AUTO_RETRY
+argument_list|)
+expr_stmt|;
 name|conn
 operator|->
 name|ssl
