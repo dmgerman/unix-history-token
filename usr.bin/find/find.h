@@ -155,6 +155,11 @@ directive|define
 name|F_ATLEAST
 value|1
 comment|/* perm */
+define|#
+directive|define
+name|F_ANY
+value|2
+comment|/* perm */
 name|int
 name|flags
 decl_stmt|;
