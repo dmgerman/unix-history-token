@@ -1817,26 +1817,33 @@ index|[
 literal|20
 index|]
 decl_stmt|,
+name|name
+index|[
+literal|16
+index|]
+decl_stmt|,
 modifier|*
 name|cp
 decl_stmt|;
 name|int
 name|size
+decl_stmt|,
+name|subtype
+decl_stmt|;
+name|chunk_e
+name|partitiontype
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
-name|char
-name|name
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|snprintf
 argument_list|(
 name|name
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1862,17 +1869,21 @@ name|name
 argument_list|,
 name|val
 argument_list|,
-literal|16
+sizeof|sizeof
+argument_list|(
+name|name
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|int
-name|subtype
-decl_stmt|;
-name|chunk_e
-name|partitiontype
-decl_stmt|;
+name|name
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 endif|#
 directive|endif
 name|snprintf
@@ -1957,56 +1968,6 @@ name|size
 operator|*=
 name|ONE_GIG
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|Create_Chunk
-argument_list|(
-name|d
-argument_list|,
-name|chunk_info
-index|[
-name|current_chunk
-index|]
-operator|->
-name|offset
-argument_list|,
-name|size
-argument_list|,
-name|freebsd
-argument_list|,
-literal|3
-argument_list|,
-operator|(
-name|chunk_info
-index|[
-name|current_chunk
-index|]
-operator|->
-name|flags
-operator|&
-name|CHUNK_ALIGN
-operator|)
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-name|DISK_PARTITIONED
-argument_list|,
-literal|"yes"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|sprintf
 argument_list|(
 name|tmp
@@ -2016,6 +1977,27 @@ argument_list|,
 name|SUBTYPE_FREEBSD
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|val
+operator|=
+name|msgGetInput
+argument_list|(
+name|tmp
+argument_list|,
+literal|"Enter type of partition to create:\n\n"
+literal|"Pressing Enter will choose the default, a native FreeBSD\n"
+literal|"slice (type 50324).  You can choose other types, 37218 for a\n"
+literal|"DOS partition, for example.\n\n"
+literal|"Note:  If you choose a non-FreeBSD partition type, it will not\n"
+literal|"be formatted or otherwise prepared, it will simply reserve space\n"
+literal|"for you to use another tool, such as DOS FORMAT, to later format\n"
+literal|"and use the partition."
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|val
 operator|=
 name|msgGetInput
@@ -2032,6 +2014,9 @@ literal|"for you to use another tool, such as DOS FORMAT, to later format\n"
 literal|"and use the partition."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* PC98 */
 if|if
 condition|(
 name|val
@@ -2153,7 +2138,7 @@ operator|&
 name|CHUNK_ALIGN
 operator|)
 argument_list|,
-literal|""
+name|name
 argument_list|)
 expr_stmt|;
 name|variable_set2
@@ -2171,9 +2156,6 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* PC98 */
 block|}
 name|clear
 argument_list|()
