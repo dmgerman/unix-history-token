@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bufobj.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -116,16 +122,6 @@ begin_comment
 comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is freed in getnewvnode().  */
 end_comment
 
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|buflists
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_typedef
 typedef|typedef
 name|int
@@ -173,6 +169,20 @@ begin_comment
 comment|/*  * Reading or writing any of these items requires holding the appropriate lock.  *  * Lock reference:  *	c - namecache mutex  *	f - freelist mutex  *	G - Giant  *	i - interlock  *	m - mntvnodes mutex  *	p - pollinfo lock  *	s - spechash mutex  *	S - syncer mutex  *	u - Only a reference to the vnode is needed to read.  *	v - vnode lock  *  * Vnodes may be found on many lists.  The general way to deal with operating  * on a vnode that is on a list is:  *	1) Lock the list and find the vnode.  *	2) Lock interlock so that the vnode does not go away.  *	3) Unlock the list to avoid lock order reversals.  *	4) vget with LK_INTERLOCK and check for ENOENT, or  *	5) Check for XLOCK if the vnode lock is not required.  *	6) Perform your operation, then vput().  *  * XXX Not all fields are locked yet and some fields that are marked are not  * locked consistently.  This is a work in progress.  Requires Giant!  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KVM_VNODE
+argument_list|)
+end_if
+
 begin_struct
 struct|struct
 name|vnode
@@ -205,35 +215,10 @@ name|v_holdcnt
 decl_stmt|;
 comment|/* i page& buffer references */
 name|struct
-name|buflists
-name|v_cleanblkhd
+name|bufobj
+name|v_bufobj
 decl_stmt|;
-comment|/* i SORTED clean blocklist */
-name|struct
-name|buf
-modifier|*
-name|v_cleanblkroot
-decl_stmt|;
-comment|/* i clean buf splay tree  */
-name|int
-name|v_cleanbufcnt
-decl_stmt|;
-comment|/* i number of clean buffers */
-name|struct
-name|buflists
-name|v_dirtyblkhd
-decl_stmt|;
-comment|/* i SORTED dirty blocklist */
-name|struct
-name|buf
-modifier|*
-name|v_dirtyblkroot
-decl_stmt|;
-comment|/* i dirty buf splay tree */
-name|int
-name|v_dirtybufcnt
-decl_stmt|;
-comment|/* i number of dirty buffers */
+comment|/* * Buffer cache object */
 name|u_long
 name|v_vflag
 decl_stmt|;
@@ -438,6 +423,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(_KERNEL) || defined(_KVM_VNODE) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -471,6 +465,52 @@ define|#
 directive|define
 name|v_fifoinfo
 value|v_un.vu_fifoinfo
+end_define
+
+begin_comment
+comment|/* XXX: These are temporary to avoid a source sweep at this time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|v_cleanblkhd
+value|v_bufobj.bo_clean.bv_hd
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_cleanblkroot
+value|v_bufobj.bo_clean.bv_root
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_cleanbufcnt
+value|v_bufobj.bo_clean.bv_cnt
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_dirtyblkhd
+value|v_bufobj.bo_dirty.bv_hd
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_dirtyblkroot
+value|v_bufobj.bo_dirty.bv_root
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_dirtybufcnt
+value|v_bufobj.bo_dirty.bv_cnt
 end_define
 
 begin_comment

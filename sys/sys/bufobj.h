@@ -1,0 +1,122 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 2004 Poul-Henning Kamp  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+end_comment
+
+begin_comment
+comment|/*  * Architectural notes:  *  * bufobj is a new object which is what buffers hang from in the buffer  * cache.  *  * This used to be vnodes, but we need non-vnode code to be able  * to use the buffer cache as well, specifically geom classes like gbde,  * raid3 and raid5.  *  * All vnodes will contain a bufobj initially, but down the road we may  * want to only allocate bufobjs when they are needed.  There could be a  * large number of vnodes in the system which wouldn't need a bufobj during  * their lifetime.  *  * The exact relationship to the vmobject is not determined at this point,  * it may in fact bee that we find them to be two sides of the same object   * once things starts to crystalize.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_BUFOBJ_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_BUFOBJ_H_
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KVM_VNODE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|buflists
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* A Buffer splay list */
+end_comment
+
+begin_struct
+struct|struct
+name|bufv
+block|{
+name|struct
+name|buflists
+name|bv_hd
+decl_stmt|;
+comment|/* Sorted blocklist */
+name|struct
+name|buf
+modifier|*
+name|bv_root
+decl_stmt|;
+comment|/* Buf splay tree */
+name|int
+name|bv_cnt
+decl_stmt|;
+comment|/* Number of buffers */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|bufobj
+block|{
+name|struct
+name|mtx
+modifier|*
+name|bo_mtx
+decl_stmt|;
+comment|/* Mutex which protects "i" things */
+name|struct
+name|bufv
+name|bo_clean
+decl_stmt|;
+comment|/* i Clean buffers */
+name|struct
+name|bufv
+name|bo_dirty
+decl_stmt|;
+comment|/* i Dirty buffers */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(_KERNEL) || defined(_KVM_VNODE) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_BUFOBJ_H_ */
+end_comment
+
+end_unit
+
