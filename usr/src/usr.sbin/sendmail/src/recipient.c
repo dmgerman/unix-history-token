@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.35 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1720,6 +1720,17 @@ operator|=
 name|pw
 operator|->
 name|pw_gid
+expr_stmt|;
+name|a
+operator|->
+name|q_ruser
+operator|=
+name|newstr
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
 expr_stmt|;
 name|a
 operator|->
