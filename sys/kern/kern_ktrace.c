@@ -2928,8 +2928,6 @@ condition|(
 name|p_candebug
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)

@@ -1130,7 +1130,7 @@ name|error
 operator|=
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|p
 argument_list|)

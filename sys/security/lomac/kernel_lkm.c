@@ -239,11 +239,6 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|p
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
 name|targp
 decl_stmt|;
 name|struct
@@ -260,12 +255,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -301,7 +290,7 @@ if|if
 condition|(
 name|p_cansee
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|targp
 argument_list|)
@@ -614,7 +603,9 @@ literal|0
 expr_stmt|;
 name|set_subject_lattr
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|lattr
 argument_list|)

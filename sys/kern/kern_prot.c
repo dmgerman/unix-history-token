@@ -603,7 +603,7 @@ name|error
 operator|=
 name|p_cansee
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|pt
 argument_list|)
@@ -778,7 +778,7 @@ name|error
 operator|=
 name|p_cansee
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|pt
 argument_list|)
@@ -1765,7 +1765,7 @@ name|error
 operator|=
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|targp
 argument_list|)
@@ -6028,7 +6028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine if p1 "can see" the subject specified by p2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect p1->p_ucred and p2->p_ucred must  *        be held.  Normally, p1 will be curproc, and a lock must be held  *        for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+comment|/*-  * Determine if td "can see" the subject specified by p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect p->p_ucred must be held.  td really  *        should be curthread.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6036,26 +6036,46 @@ name|int
 name|p_cansee
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p1
+name|td
 parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|p2
+name|p
 parameter_list|)
 block|{
 comment|/* Wrap cr_cansee() for all functionality. */
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"%s: td not curthread"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|cr_cansee
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -6089,6 +6109,13 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|proc
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Jail semantics limit the scope of signalling to proc in the 	 * same jail as cred, if cred is in jail. 	 */
 name|error
 operator|=
@@ -6275,7 +6302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether p1 may deliver the specified signal to p2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+comment|/*-  * Determine whether td may deliver the specified signal to p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must be  *        held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6283,24 +6310,46 @@ name|int
 name|p_cansignal
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p1
+name|td
 parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|p2
+name|p
 parameter_list|,
 name|int
 name|signum
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"%s: td not curthread"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|p1
+name|td
+operator|->
+name|td_proc
 operator|==
-name|p2
+name|p
 condition|)
 return|return
 operator|(
@@ -6308,17 +6357,20 @@ literal|0
 operator|)
 return|;
 comment|/* 	 * UNIX signalling semantics require that processes in the same 	 * session always be able to deliver SIGCONT to one another, 	 * overriding the remaining protections. 	 */
+comment|/* XXX: This will require an additional lock of some sort. */
 if|if
 condition|(
 name|signum
 operator|==
 name|SIGCONT
 operator|&&
-name|p1
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_session
 operator|==
-name|p2
+name|p
 operator|->
 name|p_session
 condition|)
@@ -6331,11 +6383,11 @@ return|return
 operator|(
 name|cr_cansignal
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 argument_list|,
 name|signum
 argument_list|)
@@ -6345,7 +6397,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Determine whether p1 may reschedule p2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+comment|/*-  * Determine whether td may reschedule p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6353,24 +6405,46 @@ name|int
 name|p_cansched
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p1
+name|td
 parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|p2
+name|p
 parameter_list|)
 block|{
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"%s: td not curthread"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|p1
+name|td
+operator|->
+name|td_proc
 operator|==
-name|p2
+name|p
 condition|)
 return|return
 operator|(
@@ -6384,11 +6458,11 @@ name|error
 operator|=
 name|prison_check
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -6406,11 +6480,11 @@ name|error
 operator|=
 name|cr_seeotheruids
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -6423,13 +6497,13 @@ operator|)
 return|;
 if|if
 condition|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_ruid
 operator|==
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -6442,13 +6516,13 @@ operator|)
 return|;
 if|if
 condition|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 operator|==
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -6463,9 +6537,9 @@ if|if
 condition|(
 name|suser_cred
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -6487,7 +6561,7 @@ name|cap_check
 argument_list|(
 name|NULL
 argument_list|,
-name|p1
+name|td
 argument_list|,
 name|CAP_SYS_NICE
 argument_list|,
@@ -6544,7 +6618,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * Determine whether p1 may debug p2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of p1 and p2  *        must be held.  Normally, p1 will be curproc, and a lock must  *        be held for p2.  * References: p1 and p2 must be valid for the lifetime of the call  */
+comment|/*-  * Determine whether td may debug p.  * Returns: 0 for permitted, an errno value otherwise  * Locks: Sufficient locks to protect various components of td and p  *        must be held.  td must be curthread, and a lock must  *        be held for p.  * References: td and p must be valid for the lifetime of the call  */
 end_comment
 
 begin_function
@@ -6552,14 +6626,14 @@ name|int
 name|p_candebug
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p1
+name|td
 parameter_list|,
 name|struct
 name|proc
 modifier|*
-name|p2
+name|p
 parameter_list|)
 block|{
 name|int
@@ -6573,6 +6647,26 @@ name|i
 decl_stmt|,
 name|uidsubset
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|==
+name|curthread
+argument_list|,
+operator|(
+literal|"%s: td not curthread"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6583,9 +6677,9 @@ name|error
 operator|=
 name|suser_cred
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -6602,9 +6696,11 @@ return|;
 block|}
 if|if
 condition|(
-name|p1
+name|td
+operator|->
+name|td_proc
 operator|==
-name|p2
+name|p
 condition|)
 return|return
 operator|(
@@ -6618,11 +6714,11 @@ name|error
 operator|=
 name|prison_check
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -6640,11 +6736,11 @@ name|error
 operator|=
 name|cr_seeotheruids
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-name|p2
+name|p
 operator|->
 name|p_ucred
 argument_list|)
@@ -6655,7 +6751,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Is p2's group set a subset of p1's effective group set?  This 	 * includes p2's egid, group access list, rgid, and svgid. 	 */
+comment|/* 	 * Is p's group set a subset of td's effective group set?  This 	 * includes p's egid, group access list, rgid, and svgid. 	 */
 name|grpsubset
 operator|=
 literal|1
@@ -6668,7 +6764,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -6683,7 +6779,7 @@ condition|(
 operator|!
 name|groupmember
 argument_list|(
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -6692,9 +6788,9 @@ index|[
 name|i
 index|]
 argument_list|,
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 condition|)
 block|{
@@ -6711,65 +6807,65 @@ name|grpsubset
 operator|&&
 name|groupmember
 argument_list|(
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
 name|cr_rgid
 argument_list|,
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 operator|&&
 name|groupmember
 argument_list|(
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
 name|cr_svgid
 argument_list|,
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Are the uids present in p2's credential equal to p1's 	 * effective uid?  This includes p2's euid, svuid, and ruid. 	 */
+comment|/* 	 * Are the uids present in p's credential equal to td's 	 * effective uid?  This includes p's euid, svuid, and ruid. 	 */
 name|uidsubset
 operator|=
 operator|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 operator|==
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
 name|cr_uid
 operator|&&
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 operator|==
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
 name|cr_svuid
 operator|&&
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 operator|==
-name|p2
+name|p
 operator|->
 name|p_ucred
 operator|->
@@ -6780,14 +6876,14 @@ comment|/* 	 * Has the credential of the process changed since the last exec()? 
 name|credentialchanged
 operator|=
 operator|(
-name|p2
+name|p
 operator|->
 name|p_flag
 operator|&
 name|P_SUGID
 operator|)
 expr_stmt|;
-comment|/* 	 * If p2's gids aren't a subset, or the uids aren't a subset, 	 * or the credential has changed, require appropriate privilege 	 * for p1 to debug p2.  For POSIX.1e capabilities, this will 	 * require CAP_SYS_PTRACE. 	 */
+comment|/* 	 * If p's gids aren't a subset, or the uids aren't a subset, 	 * or the credential has changed, require appropriate privilege 	 * for td to debug p.  For POSIX.1e capabilities, this will 	 * require CAP_SYS_PTRACE. 	 */
 if|if
 condition|(
 operator|!
@@ -6803,9 +6899,9 @@ name|error
 operator|=
 name|suser_cred
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -6823,7 +6919,7 @@ block|}
 comment|/* Can't trace init when securelevel> 0. */
 if|if
 condition|(
-name|p2
+name|p
 operator|==
 name|initproc
 condition|)
@@ -6832,9 +6928,9 @@ name|error
 operator|=
 name|securelevel_gt
 argument_list|(
-name|p1
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 literal|0
 argument_list|)
@@ -6853,7 +6949,7 @@ comment|/* 	 * Can't trace a process that's currently exec'ing. 	 * XXX: Note, t
 if|if
 condition|(
 operator|(
-name|p2
+name|p
 operator|->
 name|p_flag
 operator|&

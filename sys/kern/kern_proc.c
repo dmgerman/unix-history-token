@@ -3955,7 +3955,7 @@ if|if
 condition|(
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|p
 argument_list|)
@@ -4126,7 +4126,7 @@ if|if
 condition|(
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|p
 argument_list|)
@@ -4648,7 +4648,7 @@ operator|)
 operator|&&
 name|p_cansee
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|p
 argument_list|)

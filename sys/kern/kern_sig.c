@@ -4955,8 +4955,6 @@ condition|(
 name|p_cansignal
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|p
 argument_list|,
@@ -5116,8 +5114,6 @@ condition|(
 name|p_cansignal
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|p
 argument_list|,
@@ -5293,8 +5289,6 @@ operator|=
 name|p_cansignal
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|p
 argument_list|,

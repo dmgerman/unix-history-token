@@ -414,8 +414,6 @@ operator|=
 name|p_cansched
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)
@@ -582,8 +580,6 @@ operator|=
 name|p_cansee
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)
@@ -792,8 +788,6 @@ operator|=
 name|p_cansched
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)
@@ -960,8 +954,6 @@ operator|=
 name|p_cansee
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)
@@ -1292,8 +1284,6 @@ operator|=
 name|p_cansee
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|targetp
 argument_list|)

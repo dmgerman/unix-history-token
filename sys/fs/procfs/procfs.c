@@ -334,6 +334,13 @@ operator|=
 literal|0600
 expr_stmt|;
 comment|/* p is locked by caller */
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 name|vap
 operator|->
 name|va_uid
@@ -400,6 +407,13 @@ parameter_list|(
 name|PFS_VIS_ARGS
 parameter_list|)
 block|{
+name|PROC_LOCK_ASSERT
+argument_list|(
+name|p
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -415,8 +429,6 @@ operator|&&
 name|p_candebug
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|p
 argument_list|)
