@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stat.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stat.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -207,6 +207,17 @@ end_define
 
 begin_comment
 comment|/* execute/search permission, owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|S_BLKSIZE
+value|512
+end_define
+
+begin_comment
+comment|/* block size used in the stat struct */
 end_comment
 
 end_unit
