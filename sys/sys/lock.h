@@ -426,6 +426,11 @@ name|defined
 argument_list|(
 name|KTR
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MUTEX_PROFILING
+argument_list|)
 end_if
 
 begin_define
