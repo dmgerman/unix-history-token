@@ -1425,6 +1425,15 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+while|while
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
 name|name
 operator|++
 expr_stmt|;
@@ -1496,6 +1505,12 @@ literal|0
 argument_list|,
 literal|"Skipping pathname containing .."
 argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1745,7 +1760,20 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* Last element is symlink; just remove it. */
+comment|/* 				 * Last element is symlink; remove it 				 * so we can overwrite it with the 				 * item being extracted. 				 */
+if|if
+condition|(
+operator|!
+name|S_ISLNK
+argument_list|(
+name|archive_entry_mode
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* 					 * Warn only if the symlink is being 					 * replaced with a non-symlink. 					 */
 name|bsdtar_warnc
 argument_list|(
 name|bsdtar
@@ -1761,6 +1789,7 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+block|}
 name|unlink
 argument_list|(
 name|bsdtar
@@ -1770,9 +1799,10 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+comment|/* Symlink gone.  No more problem! */
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -1813,6 +1843,12 @@ name|security
 operator|->
 name|path
 argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|return_value
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(
