@@ -141,7 +141,6 @@ block|,
 name|GBUS_DUART0_OFFSET
 block|}
 block|,
-comment|/* 	{ "zsc",	GBUS_DUART1_OFFSET },*/
 block|{
 literal|"mcclock"
 block|,
@@ -324,7 +323,7 @@ name|gbus_device
 modifier|*
 name|gdev
 decl_stmt|;
-comment|/* 	 * Make sure we're looking for a Gbus. 	 * Right now, only Gbus could be a 	 * child of a TLSB CPU Node. 	 */
+comment|/* 	 * Make sure we're looking for a Gbus. 	 * A Gbus can only be a child of a TLSB CPU Node. 	 */
 if|if
 condition|(
 operator|!
@@ -332,13 +331,18 @@ name|TLDEV_ISCPU
 argument_list|(
 name|tlsb_get_dtype
 argument_list|(
+name|device_get_parent
+argument_list|(
 name|dev
 argument_list|)
 argument_list|)
+argument_list|)
 condition|)
+block|{
 return|return
 name|ENXIO
 return|;
+block|}
 for|for
 control|(
 name|gdev
@@ -376,7 +380,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
