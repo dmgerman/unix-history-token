@@ -93,14 +93,14 @@ begin_define
 define|#
 directive|define
 name|SWI_CLOCK
-value|30
+value|(NHWI + 6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NSWI
-value|(32 - NHWI)
+value|7
 end_define
 
 begin_comment
