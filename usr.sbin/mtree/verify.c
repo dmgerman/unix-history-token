@@ -609,7 +609,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"extra: %s"
+literal|"%s extra"
 argument_list|,
 name|RP
 argument_list|(
@@ -840,7 +840,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"missing: %s"
+literal|"%s missing"
 argument_list|,
 name|path
 argument_list|)
