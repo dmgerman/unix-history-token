@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2132,10 +2132,6 @@ name|int
 name|f
 init|=
 literal|0
-decl_stmt|,
-name|error
-init|=
-name|ESRCH
 decl_stmt|;
 if|if
 condition|(
@@ -2309,7 +2305,7 @@ name|f
 condition|?
 literal|0
 else|:
-name|error
+name|ESRCH
 operator|)
 return|;
 block|}
@@ -4412,27 +4408,56 @@ begin_comment
 comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|nosys
-argument_list|()
+argument_list|(
+argument|p
+argument_list|,
+argument|args
+argument_list|,
+argument|retval
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+name|args
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|retval
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
 name|psignal
 argument_list|(
-name|u
-operator|.
-name|u_procp
+name|p
 argument_list|,
 name|SIGSYS
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
+name|RETURN
+argument_list|(
 name|EINVAL
+argument_list|)
 expr_stmt|;
 block|}
 end_block
