@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/rpb.h>
 end_include
 
@@ -295,9 +301,9 @@ name|dec_2100_a500_cons_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_map
+name|pci_intr_route
 operator|=
-name|t2_intr_map
+name|t2_intr_route
 expr_stmt|;
 name|platform
 operator|.

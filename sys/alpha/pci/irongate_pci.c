@@ -743,6 +743,13 @@ argument_list|,
 name|irongate_pcib_write_config
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_route_interrupt
+argument_list|,
+name|alpha_pci_route_interrupt
+argument_list|)
+block|,
 block|{
 literal|0
 block|,

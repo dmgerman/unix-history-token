@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/rpb.h>
 end_include
 
@@ -284,7 +290,7 @@ name|eb164_intr_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_map
+name|pci_intr_route
 operator|=
 name|NULL
 expr_stmt|;

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/rpb.h>
 end_include
 
@@ -349,7 +355,7 @@ expr_stmt|;
 comment|/* SRM handles PCI interrupt mapping */
 name|platform
 operator|.
-name|pci_intr_map
+name|pci_intr_route
 operator|=
 name|NULL
 expr_stmt|;

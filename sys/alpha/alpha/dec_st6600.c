@@ -172,13 +172,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|st6600_intr_map
+name|int
+name|st6600_intr_route
 name|__P
 argument_list|(
 operator|(
-name|void
-operator|*
+name|device_t
+operator|,
+name|device_t
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -295,9 +298,9 @@ name|st6600_intr_init
 expr_stmt|;
 name|platform
 operator|.
-name|pci_intr_map
+name|pci_intr_route
 operator|=
-name|st6600_intr_map
+name|st6600_intr_route
 expr_stmt|;
 block|}
 end_function
@@ -504,15 +507,24 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|st6600_intr_map
+name|int
+name|st6600_intr_route
 parameter_list|(
-name|void
-modifier|*
-name|arg
+name|device_t
+name|pcib
+parameter_list|,
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|pin
 parameter_list|)
 block|{
-return|return;
+return|return
+operator|(
+literal|255
+operator|)
+return|;
 block|}
 end_function
 

@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<alpha/pci/apecsreg.h>
 end_include
 
@@ -601,6 +607,13 @@ argument_list|(
 name|pcib_write_config
 argument_list|,
 name|apecs_pcib_write_config
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|pcib_route_interrupt
+argument_list|,
+name|alpha_pci_route_interrupt
 argument_list|)
 block|,
 block|{

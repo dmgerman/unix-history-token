@@ -21,11 +21,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|t2_intr_map
+specifier|extern
+name|int
+name|t2_intr_route
 parameter_list|(
-name|void
-modifier|*
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
