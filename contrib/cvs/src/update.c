@@ -10530,7 +10530,7 @@ name|n
 operator|->
 name|data
 argument_list|,
-literal|"%16s %lu"
+literal|"%15s %lu"
 argument_list|,
 name|ftype
 argument_list|,
@@ -10953,7 +10953,7 @@ name|n
 operator|->
 name|data
 argument_list|,
-literal|"%16s %lu"
+literal|"%15s %lu"
 argument_list|,
 name|ftype
 argument_list|,

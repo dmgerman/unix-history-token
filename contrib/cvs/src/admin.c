@@ -111,17 +111,17 @@ literal|"\t-I         Run interactively.\n"
 block|,
 literal|"\t-k subst   Set keyword substitution mode:\n"
 block|,
-literal|"\t   kv   (Default) Substitue keyword and value.\n"
+literal|"\t   kv   (Default) Substitute keyword and value.\n"
 block|,
-literal|"\t   kvl  Substitue keyword, value, and locker (if any).\n"
+literal|"\t   kvl  Substitute keyword, value, and locker (if any).\n"
 block|,
-literal|"\t   k    Substitue keyword only.\n"
+literal|"\t   k    Substitute keyword only.\n"
 block|,
 literal|"\t   o    Preserve original string.\n"
 block|,
 literal|"\t   b    Like o, but mark file as binary.\n"
 block|,
-literal|"\t   v    Substitue value only.\n"
+literal|"\t   v    Substitute value only.\n"
 block|,
 literal|"\t-l[rev]    Lock revision (latest revision on branch,\n"
 block|,
@@ -535,6 +535,10 @@ condition|(
 name|c
 operator|!=
 literal|'k'
+operator|&&
+name|c
+operator|!=
+literal|'q'
 condition|)
 name|only_k_option
 operator|=

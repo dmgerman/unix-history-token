@@ -824,13 +824,13 @@ literal|0
 argument_list|,
 name|errno
 argument_list|,
-literal|"failed to open %s for reading"
+literal|"warning: failed to open %s for reading"
 argument_list|,
 name|passfile
 argument_list|)
 expr_stmt|;
 goto|goto
-name|error_exit
+name|process
 goto|;
 block|}
 name|cvsroot_canonical
@@ -988,6 +988,8 @@ name|password
 argument_list|)
 expr_stmt|;
 block|}
+name|process
+label|:
 comment|/* might as well return now */
 if|if
 condition|(
@@ -1733,6 +1735,21 @@ argument_list|(
 literal|"CVS password: "
 argument_list|)
 expr_stmt|;
+comment|/* Must deal with a NULL return value here.  I haven't managed to 	 * disconnect the CVS process from the tty and force a NULL return 	 * in sanity.sh, but the Linux version of getpass is documented 	 * to return NULL when it can't open /dev/tty... 	 */
+if|if
+condition|(
+operator|!
+name|tmp
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"login: Failed to read password."
+argument_list|)
+expr_stmt|;
 name|typed_password
 operator|=
 name|scramble
@@ -1763,6 +1780,8 @@ argument_list|)
 expr_stmt|;
 name|connect_to_pserver
 argument_list|(
+name|current_parsed_root
+argument_list|,
 name|NULL
 argument_list|,
 name|NULL

@@ -547,14 +547,13 @@ literal|"# This file affects handling of files based on their names.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# The -t/-f options allow one to treat directories of files\n"
-block|,
-literal|"# as a single file, or to transform a file in other ways on\n"
-block|,
-literal|"# its way in and out of CVS.\n"
-block|,
-literal|"#\n"
-block|,
+if|#
+directive|if
+literal|0
+comment|/* see comments in wrap_add in wrapper.c */
+block|"# The -t/-f options allow one to treat directories of files\n",     "# as a single file, or to transform a file in other ways on\n",     "# its way in and out of CVS.\n",     "#\n",
+endif|#
+directive|endif
 literal|"# The -m option specifies whether CVS attempts to merge files.\n"
 block|,
 literal|"#\n"
@@ -626,7 +625,7 @@ literal|"#\n"
 block|,
 literal|"# For example:\n"
 block|,
-literal|"#ALL mail %s -s \"CVS notification\"\n"
+literal|"#ALL mail -s \"CVS notification\" %s\n"
 block|,
 name|NULL
 block|}
@@ -750,6 +749,22 @@ block|,
 literal|"# history file, or a subset as needed (ie `TMAR' logs all write operations)\n"
 block|,
 literal|"#LogHistory=TOFEWGCMAR\n"
+block|,
+literal|"\n"
+block|,
+literal|"# Set `RereadLogAfterVerify' to `always' (the default) to allow the verifymsg\n"
+block|,
+literal|"# script to change the log message.  Set it to `stat' to force CVS to verify"
+block|,
+literal|"# that the file has changed before reading it (this can take up to an extra\n"
+block|,
+literal|"# second per directory being committed, so it is not recommended for large\n"
+block|,
+literal|"# repositories.  Set it to `never' (the previous CVS behavior) to prevent\n"
+block|,
+literal|"# verifymsg scripts from changing the log message.\n"
+block|,
+literal|"#RereadLogAfterVerify=always\n"
 block|,
 name|NULL
 block|}

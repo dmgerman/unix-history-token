@@ -792,6 +792,15 @@ name|i
 index|]
 argument_list|)
 condition|)
+block|{
+name|strip_trailing_slashes
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 name|addlist
 argument_list|(
 operator|&
@@ -803,6 +812,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* otherwise, split argument into directory and component names. */

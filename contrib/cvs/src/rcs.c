@@ -27,6 +27,44 @@ directive|include
 file|"hardlink.h"
 end_include
 
+begin_comment
+comment|/* These need to be source after cvs.h or HAVE_MMAP won't be set... */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_GETPAGESIZE
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"getpagesize.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|preserve_perms
@@ -274,6 +312,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -303,6 +347,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -3934,11 +3983,13 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"mismatch in rcs file %s between deltas and deltatexts"
+literal|"mismatch in rcs file %s between deltas and deltatexts (%s)"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|key
 argument_list|)
 expr_stmt|;
 name|vnode
@@ -4240,11 +4291,15 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"space expected in %s"
+literal|"space expected in %s revision %s"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|vnode
+operator|->
+name|version
 argument_list|)
 expr_stmt|;
 name|count
@@ -4278,11 +4333,15 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"linefeed expected in %s"
+literal|"linefeed expected in %s revision %s"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|vnode
+operator|->
+name|version
 argument_list|)
 expr_stmt|;
 if|if
@@ -4340,11 +4399,15 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"\ invalid rcs file %s: premature end of value"
+literal|"\ premature end of value in %s revision %s"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|vnode
+operator|->
+name|version
 argument_list|)
 expr_stmt|;
 else|else
@@ -5171,6 +5234,156 @@ name|rcsbuf_inuse
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP
+block|{
+comment|/* When we have mmap, it is much more efficient to let the system do the 	 * buffering and caching for us 	 */
+name|struct
+name|stat
+name|fs
+decl_stmt|;
+name|size_t
+name|mmap_off
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+operator|&
+name|fs
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Could not stat RCS archive %s for mapping"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pos
+condition|)
+block|{
+name|size_t
+name|ps
+init|=
+name|getpagesize
+argument_list|()
+decl_stmt|;
+name|mmap_off
+operator|=
+operator|(
+name|pos
+operator|/
+name|ps
+operator|)
+operator|*
+name|ps
+expr_stmt|;
+block|}
+comment|/* Map private here since this particular buffer is read only */
+name|rcsbuf_buffer
+operator|=
+name|mmap
+argument_list|(
+name|NULL
+argument_list|,
+name|fs
+operator|.
+name|st_size
+operator|-
+name|mmap_off
+argument_list|,
+name|PROT_READ
+operator||
+name|PROT_WRITE
+argument_list|,
+name|MAP_PRIVATE
+argument_list|,
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+name|mmap_off
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rcsbuf_buffer
+operator|==
+name|NULL
+operator|||
+name|rcsbuf_buffer
+operator|==
+name|MAP_FAILED
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"Could not map memory to RCS archive %s"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|rcsbuf_buffer_size
+operator|=
+name|fs
+operator|.
+name|st_size
+operator|-
+name|mmap_off
+expr_stmt|;
+name|rcsbuf
+operator|->
+name|ptr
+operator|=
+name|rcsbuf_buffer
+operator|+
+name|pos
+operator|-
+name|mmap_off
+expr_stmt|;
+name|rcsbuf
+operator|->
+name|ptrend
+operator|=
+name|rcsbuf_buffer
+operator|+
+name|fs
+operator|.
+name|st_size
+operator|-
+name|mmap_off
+expr_stmt|;
+name|rcsbuf
+operator|->
+name|pos
+operator|=
+name|mmap_off
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* HAVE_MMAP */
 if|if
 condition|(
 name|rcsbuf_buffer_size
@@ -5202,6 +5415,15 @@ name|rcsbuf_buffer
 expr_stmt|;
 name|rcsbuf
 operator|->
+name|pos
+operator|=
+name|pos
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_MMAP */
+name|rcsbuf
+operator|->
 name|fp
 operator|=
 name|fp
@@ -5211,12 +5433,6 @@ operator|->
 name|filename
 operator|=
 name|filename
-expr_stmt|;
-name|rcsbuf
-operator|->
-name|pos
-operator|=
-name|pos
 expr_stmt|;
 name|rcsbuf
 operator|->
@@ -5270,6 +5486,18 @@ argument_list|,
 literal|"rcsbuf_close: internal error"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_MMAP
+name|munmap
+argument_list|(
+name|rcsbuf_buffer
+argument_list|,
+name|rcsbuf_buffer_size
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rcsbuf_inuse
 operator|=
 literal|0
@@ -5370,21 +5598,22 @@ operator|->
 name|ptrend
 expr_stmt|;
 comment|/* Sanity check.  */
-if|if
-condition|(
+name|assert
+argument_list|(
+name|ptr
+operator|>=
+name|rcsbuf_buffer
+operator|&&
 name|ptr
 operator|<
 name|rcsbuf_buffer
-operator|||
-name|ptr
-operator|>
-name|rcsbuf_buffer
 operator|+
 name|rcsbuf_buffer_size
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 comment|/* If the pointer is more than RCSBUF_BUFSIZE bytes into the        buffer, move back to the start of the buffer.  This keeps the        buffer from growing indefinitely.  */
 if|if
 condition|(
@@ -5405,14 +5634,12 @@ operator|-
 name|ptr
 expr_stmt|;
 comment|/* Sanity check: we don't read more than RCSBUF_BUFSIZE bytes            at a time, so we can't have more bytes than that past PTR.  */
-if|if
-condition|(
+name|assert
+argument_list|(
 name|len
-operator|>
+operator|<=
 name|RCSBUF_BUFSIZE
-condition|)
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* Update the POS field, which holds the file offset of the            first byte in the RCSBUF_BUFFER buffer.  */
 name|rcsbuf
@@ -5449,6 +5676,9 @@ operator|=
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* ndef HAVE_MMAP */
 comment|/* Skip leading whitespace.  */
 while|while
 condition|(
@@ -5461,6 +5691,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -5491,9 +5724,14 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -5501,6 +5739,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 operator|*
@@ -5546,6 +5786,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -5571,6 +5814,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -5584,6 +5829,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -5591,6 +5839,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 operator|*
@@ -5653,6 +5903,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -5678,6 +5931,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -5691,6 +5946,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -5698,6 +5956,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 operator|*
@@ -5800,6 +6060,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 comment|/* Note that we pass PTREND as the PTR value to                    rcsbuf_fill, so that we will wind up setting PTR to                    the location corresponding to the old PTREND, so                    that we don't search the same bytes again.  */
 name|ptr
@@ -5821,6 +6084,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -5834,6 +6099,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -5841,6 +6109,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Handle the special case of an '@' right at the end of                the known bytes.  */
 if|if
 condition|(
@@ -5850,6 +6120,9 @@ literal|1
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 comment|/* Note that we pass PAT, not PTR, here.  */
 name|pat
@@ -5872,6 +6145,8 @@ operator|==
 name|NULL
 condition|)
 block|{
+endif|#
+directive|endif
 comment|/* EOF here is OK; it just means that the last 		       character of the file was an '@' terminating a 		       value for a key type which does not require a 		       trailing ';'.  */
 name|pat
 operator|=
@@ -5881,6 +6156,9 @@ name|ptrend
 operator|-
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|}
 name|ptrend
 operator|=
@@ -5890,6 +6168,8 @@ name|ptrend
 expr_stmt|;
 comment|/* Note that the value of PTR is bogus here.  This is 		   OK, because we don't use it.  */
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pat
@@ -6035,6 +6315,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -6055,6 +6338,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -6068,6 +6353,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -6075,6 +6363,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|n
 operator|=
 operator|*
@@ -6171,6 +6461,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|int
 name|slen
@@ -6202,6 +6495,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -6215,6 +6510,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|start
 operator|=
 operator|*
@@ -6229,6 +6527,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* See if there are any '@' strings in the value.  */
 name|pat
 operator|=
@@ -6361,6 +6661,9 @@ operator|)
 operator|==
 name|NULL
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 comment|/* Note that we pass PTREND as the PTR value to                    rcsbuff_fill, so that we will wind up setting PTR                    to the location corresponding to the old PTREND, so                    that we don't search the same bytes again.  */
 name|ptr
@@ -6382,6 +6685,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -6395,6 +6700,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -6402,6 +6710,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Handle the special case of an '@' right at the end of                the known bytes.  */
 if|if
 condition|(
@@ -6411,6 +6721,9 @@ literal|1
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -6431,6 +6744,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -6444,6 +6759,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -6451,6 +6769,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|pat
@@ -6546,6 +6866,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -6576,9 +6899,14 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -6586,6 +6914,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 operator|*
@@ -6651,6 +6981,9 @@ name|ptr
 operator|>=
 name|ptrend
 condition|)
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|{
 name|ptr
 operator|=
@@ -6676,6 +7009,8 @@ name|ptr
 operator|==
 name|NULL
 condition|)
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|1
@@ -6689,6 +7024,9 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|ptrend
 operator|=
 name|rcsbuf
@@ -6696,6 +7034,8 @@ operator|->
 name|ptrend
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|c
 operator|=
 operator|*
@@ -6759,6 +7099,12 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
+end_ifndef
 
 begin_comment
 comment|/* Fill RCSBUF_BUFFER with bytes from the file associated with RCSBUF,    updating PTR and the PTREND field.  If KEYP and *KEYP are not NULL,    then *KEYP points into the buffer, and must be adjusted if the    buffer is changed.  Likewise for VALP.  Returns the new value of    PTR, or NULL on error.  */
@@ -7024,6 +7370,15 @@ name|ptr
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_MMAP */
+end_comment
 
 begin_comment
 comment|/* Test whether the last value returned by rcsbuf_getkey is a composite    value or not. */
@@ -7551,7 +7906,7 @@ block|{
 operator|++
 name|from
 expr_stmt|;
-comment|/* Sanity check.  */
+comment|/* Sanity check. 		 * 		 * FIXME: I restored this to an abort from an assert based on 		 * advice from Larry Jones that asserts should not be used to 		 * confirm the validity of an RCS file...  This leaves two 		 * issues here: 1) I am uncertain that the fact that we will 		 * only find double '@'s hasn't already been confirmed; and: 		 * 2) If this is the proper place to spot the error in the RCS 		 * file, then we should print a much clearer error here for the 		 * user!!!!!!! 		 * 		 *	- DRP 		 */
 if|if
 condition|(
 operator|*
@@ -7628,16 +7983,16 @@ block|}
 block|}
 block|}
 comment|/* Sanity check.  */
-if|if
-condition|(
+name|assert
+argument_list|(
 name|from
-operator|!=
+operator|==
 name|orig_from
 operator|+
 name|len
-operator|||
+operator|&&
 name|to
-operator|!=
+operator|==
 name|orig_to
 operator|+
 operator|(
@@ -7647,12 +8002,8 @@ name|rcsbuf
 operator|->
 name|embedded_at
 operator|)
-condition|)
-block|{
-name|abort
-argument_list|()
+argument_list|)
 expr_stmt|;
-block|}
 operator|*
 name|to
 operator|=
@@ -7993,7 +8344,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"illegal special character in RCS field in %s"
+literal|"invalid special character in RCS field in %s"
 argument_list|,
 name|rcsbuf
 operator|->
@@ -8070,7 +8421,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"illegal special character in RCS field in %s"
+literal|"invalid special character in RCS field in %s"
 argument_list|,
 name|rcsbuf
 operator|->
@@ -8136,13 +8487,11 @@ name|rcsbuf
 operator|->
 name|pos
 operator|+
-operator|(
 name|rcsbuf
 operator|->
 name|ptr
 operator|-
 name|rcsbuf_buffer
-operator|)
 return|;
 block|}
 end_function
@@ -8284,6 +8633,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|rcsbuf_close
+argument_list|(
+operator|&
+name|cached_rcsbuf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fclose
@@ -8306,12 +8661,6 @@ argument_list|,
 name|cached_rcsbuf
 operator|.
 name|filename
-argument_list|)
-expr_stmt|;
-name|rcsbuf_close
-argument_list|(
-operator|&
-name|cached_rcsbuf
 argument_list|)
 expr_stmt|;
 name|freercsnode
@@ -8363,6 +8712,9 @@ modifier|*
 name|prcsbuf
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 if|if
 condition|(
 name|cached_rcs
@@ -8479,6 +8831,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+endif|#
+directive|endif
+comment|/* ifndef HAVE_MMAP */
+comment|/* FIXME:  If these routines can be rewritten to not write to the 	 * rcs file buffer, there would be a considerably larger memory savings 	 * from using mmap since the shared file would never need be copied to 	 * process memory. 	 * 	 * If this happens, cached mmapped buffers would be usable, but don't 	 * forget to make sure rcs->pos< pos here... 	 */
 if|if
 condition|(
 name|cached_rcs
@@ -8520,6 +8876,9 @@ operator|->
 name|path
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 if|if
 condition|(
 name|pos
@@ -8555,6 +8914,9 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* ifndef HAVE_MMAP */
 name|rcsbuf_open
 argument_list|(
 name|prcsbuf
@@ -8569,7 +8931,13 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 block|}
+endif|#
+directive|endif
+comment|/* ifndef HAVE_MMAP */
 block|}
 end_function
 
@@ -9632,19 +10000,12 @@ if|if
 condition|(
 name|tag
 operator|&&
-operator|(
 name|STREQ
 argument_list|(
 name|tag
 argument_list|,
 name|TAG_HEAD
 argument_list|)
-operator|||
-operator|*
-name|tag
-operator|==
-literal|'\0'
-operator|)
 condition|)
 if|#
 directive|if
@@ -11934,6 +12295,7 @@ name|branch
 operator|!=
 name|NULL
 condition|)
+block|{
 name|retval
 operator|=
 name|RCS_getdatebranch
@@ -11947,7 +12309,6 @@ operator|->
 name|branch
 argument_list|)
 expr_stmt|;
-comment|/* if we found a match, we are done */
 if|if
 condition|(
 name|retval
@@ -11959,6 +12320,7 @@ operator|(
 name|retval
 operator|)
 return|;
+block|}
 comment|/* otherwise if we have a trunk, try it */
 if|if
 condition|(
@@ -11980,6 +12342,31 @@ operator|->
 name|head
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s: head revision %s doesn't exist"
+argument_list|,
+name|rcs
+operator|->
+name|path
+argument_list|,
+name|rcs
+operator|->
+name|head
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|p
@@ -12053,7 +12440,21 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/*      * at this point, either we have the revision we want, or we have the      * first revision on the trunk (1.1?) in our hands      */
+else|else
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"%s: no head revision"
+argument_list|,
+name|rcs
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+comment|/*      * at this point, either we have the revision we want, or we have the      * first revision on the trunk (1.1?) in our hands, or we've come up      * completely empty      */
 comment|/* if we found what we're looking for, and it's not 1.1 return it */
 if|if
 condition|(
@@ -12157,6 +12558,11 @@ condition|(
 operator|!
 name|force_tag_match
 operator|||
+operator|(
+name|vers
+operator|!=
+name|NULL
+operator|&&
 name|RCS_datecmp
 argument_list|(
 name|vers
@@ -12167,6 +12573,7 @@ name|date
 argument_list|)
 operator|<=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -13424,6 +13831,14 @@ condition|)
 operator|++
 name|cp
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+break|break;
 block|}
 block|}
 return|return
@@ -17648,7 +18063,7 @@ name|info
 operator|->
 name|data
 argument_list|,
-literal|"%16s %lu"
+literal|"%15s %lu"
 argument_list|,
 name|devtype
 argument_list|,
@@ -23737,7 +24152,7 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* If rev is NULL, unlock the latest revision (first in        rcs->locks) held by the caller. */
+comment|/* If rev is NULL, unlock the revision held by the caller; if more        than one, make the user specify the revision explicitly.  This        differs from RCS which unlocks the latest revision (first in        rcs->locks) held by the caller. */
 if|if
 condition|(
 name|rev
@@ -23834,6 +24249,18 @@ control|)
 block|{
 if|if
 condition|(
+name|STREQ
+argument_list|(
+name|p
+operator|->
+name|data
+argument_list|,
+name|user
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|lock
 operator|!=
 name|NULL
@@ -23868,16 +24295,35 @@ operator|=
 name|p
 expr_stmt|;
 block|}
+block|}
 if|if
 condition|(
 name|lock
 operator|==
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|unlock_quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"No locks are set for %s.\n"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
 comment|/* no lock found, ergo nothing to do */
+block|}
 name|xrev
 operator|=
 name|xstrdup
@@ -23984,6 +24430,30 @@ decl_stmt|,
 modifier|*
 name|workfile
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|unlock_quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"\ %s: revision %s locked by %s; breaking lock"
+argument_list|,
+name|rcs
+operator|->
+name|path
+argument_list|,
+name|xrev
+argument_list|,
+name|lock
+operator|->
+name|data
+argument_list|)
+expr_stmt|;
 name|repos
 operator|=
 name|xstrdup
@@ -29120,11 +29590,13 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"mismatch in rcs file %s between deltas and deltatexts"
+literal|"mismatch in rcs file %s between deltas and deltatexts (%s)"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|key
 argument_list|)
 expr_stmt|;
 comment|/* Stash the previous version.  */
@@ -31244,11 +31716,13 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"mismatch in rcs file %s between deltas and deltatexts"
+literal|"mismatch in rcs file %s between deltas and deltatexts (%s)"
 argument_list|,
 name|rcs
 operator|->
 name|path
+argument_list|,
+name|num
 argument_list|)
 expr_stmt|;
 name|d
@@ -32970,6 +33444,9 @@ decl_stmt|;
 name|size_t
 name|buflen
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
 name|char
 name|buf
 index|[
@@ -32979,6 +33456,8 @@ decl_stmt|;
 name|int
 name|got
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* Count the number of versions for which we have to do some        special operation.  */
 name|actions
 operator|=
@@ -33384,6 +33863,10 @@ name|fout
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|HAVE_MMAP
+comment|/* This bit isn't necessary when using mmap since the entire file      * will already be available via the RCS buffer.  Besides, the      * mmap code doesn't always keep the file pointer up to date, so      * this adds some data twice.      */
 while|while
 condition|(
 operator|(
@@ -33469,6 +33952,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* HAVE_MMAP */
 block|}
 end_function
 
@@ -34291,7 +34777,7 @@ operator|&
 name|rcsbufin
 argument_list|)
 expr_stmt|;
-comment|/* Update delta_pos to the current position in the output file.        Do NOT move these statements: they must be done after fin has        been positioned at the old delta_pos, but before any delta        texts have been written to fout. */
+comment|/* Update delta_pos to the current position in the output file.        Do NOT move these statements: they must be done after fin has        been positioned at the old delta_pos, but before any delta        texts have been written to fout.      */
 name|rcs
 operator|->
 name|delta_pos
@@ -34360,7 +34846,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"warning: when closing RCS file `%s'"
+literal|"warning: ferror set while rewriting RCS file `%s'"
 argument_list|,
 name|rcs
 operator|->

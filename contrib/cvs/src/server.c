@@ -230,6 +230,28 @@ directive|include
 file|<syslog.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOG_DAEMON
+end_ifndef
+
+begin_comment
+comment|/* for ancient syslogs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_DAEMON
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -669,7 +691,8 @@ name|fd_buffer_shutdown
 name|PROTO
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|buffer
 operator|*
 operator|)
 argument_list|)
@@ -1210,15 +1233,18 @@ specifier|static
 name|int
 name|fd_buffer_shutdown
 parameter_list|(
-name|closure
+name|buf
 parameter_list|)
-name|void
+name|struct
+name|buffer
 modifier|*
-name|closure
+name|buf
 decl_stmt|;
 block|{
 name|free
 argument_list|(
+name|buf
+operator|->
 name|closure
 argument_list|)
 expr_stmt|;
@@ -2810,21 +2836,11 @@ argument_list|,
 name|Pserver_Repos
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-name|current_parsed_root
-operator|!=
-name|NULL
-condition|)
-name|free_cvsroot_t
-argument_list|(
-name|current_parsed_root
-argument_list|)
-expr_stmt|;
 name|current_parsed_root
 operator|=
 name|local_cvsroot
@@ -13580,7 +13596,7 @@ decl_stmt|;
 block|{
 name|do_cvs_command
 argument_list|(
-literal|"cvstag"
+literal|"tag"
 argument_list|,
 name|cvstag
 argument_list|)
@@ -14041,6 +14057,10 @@ modifier|*
 name|arg
 decl_stmt|;
 block|{
+name|cvsroot_t
+modifier|*
+name|saved_parsed_root
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -14066,23 +14086,77 @@ name|sprintf
 argument_list|(
 name|pending_error_text
 argument_list|,
-literal|"E Root %s must be an absolute pathname"
+literal|"E init %s must be an absolute pathname"
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-comment|/* Fall through to do_cvs_command which will return the 	   actual error.  */
 block|}
+ifdef|#
+directive|ifdef
+name|AUTH_SERVER_SUPPORT
+elseif|else
 if|if
 condition|(
-name|current_parsed_root
+name|Pserver_Repos
 operator|!=
 name|NULL
 condition|)
-name|free_cvsroot_t
+block|{
+if|if
+condition|(
+name|strcmp
 argument_list|(
-name|current_parsed_root
+name|Pserver_Repos
+argument_list|,
+name|arg
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|alloc_pending
+argument_list|(
+literal|80
+operator|+
+name|strlen
+argument_list|(
+name|Pserver_Repos
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|arg
+argument_list|)
+argument_list|)
+condition|)
+comment|/* The explicitness is to aid people who are writing clients. 		   I don't see how this information could help an 		   attacker.  */
+name|sprintf
+argument_list|(
+name|pending_error_text
+argument_list|,
+literal|"\ E Protocol error: init says \"%s\" but pserver says \"%s\""
+argument_list|,
+name|arg
+argument_list|,
+name|Pserver_Repos
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+if|if
+condition|(
+name|print_pending_error
+argument_list|()
+condition|)
+return|return;
+name|saved_parsed_root
+operator|=
+name|current_parsed_root
 expr_stmt|;
 name|current_parsed_root
 operator|=
@@ -14097,6 +14171,15 @@ literal|"init"
 argument_list|,
 name|init
 argument_list|)
+expr_stmt|;
+name|free_cvsroot_t
+argument_list|(
+name|current_parsed_root
+argument_list|)
+expr_stmt|;
+name|current_parsed_root
+operator|=
+name|saved_parsed_root
 expr_stmt|;
 block|}
 end_function
@@ -17064,10 +17147,6 @@ name|err
 operator|=
 literal|0
 expr_stmt|;
-name|server_expanding
-operator|=
-literal|1
-expr_stmt|;
 name|db
 operator|=
 name|open_module
@@ -17124,10 +17203,6 @@ name|close_module
 argument_list|(
 name|db
 argument_list|)
-expr_stmt|;
-name|server_expanding
-operator|=
-literal|0
 expr_stmt|;
 block|{
 comment|/* argument_vector[0] is a dummy argument, we don't mess with it.  */
@@ -17229,7 +17304,7 @@ condition|)
 block|{
 name|buf_output0
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 literal|"E \ warning: this client does not support -i or -u flags in the modules file.\n"
 argument_list|)
@@ -17246,7 +17321,7 @@ name|PROG_CHECKIN
 case|:
 name|buf_output0
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 literal|"Set-checkin-prog "
 argument_list|)
@@ -17257,7 +17332,7 @@ name|PROG_UPDATE
 case|:
 name|buf_output0
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 literal|"Set-update-prog "
 argument_list|)
@@ -17266,30 +17341,35 @@ break|break;
 block|}
 name|buf_output0
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 name|dir
 argument_list|)
 expr_stmt|;
 name|buf_append_char
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 literal|'\n'
 argument_list|)
 expr_stmt|;
 name|buf_output0
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
 name|buf_append_char
 argument_list|(
-name|buf_to_net
+name|protocol
 argument_list|,
 literal|'\n'
+argument_list|)
+expr_stmt|;
+name|buf_send_counted
+argument_list|(
+name|protocol
 argument_list|)
 expr_stmt|;
 block|}
@@ -18488,7 +18568,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* FIXME: If this is not the final call from server, this 	   could deadlock, because the client might be blocked writing 	   to us.  This should not be a problem in practice, because 	   we do not generate much output when the client is not 	   waiting for it.  */
+comment|/* Since we're done, go ahead and put BUF_TO_NET back into blocking 	 * mode and send any pending output.  In the usual case there won't 	 * won't be any, but there might be if an error occured. 	 */
 name|set_block
 argument_list|(
 name|buf_to_net
@@ -18501,7 +18581,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* The calls to buf_shutdown are currently only meaningful 	   when we are using compression.  First we shut down 	   BUF_FROM_NET.  That will pick up the checksum generated 	   when the client shuts down its buffer.  Then, after we have 	   generated any final output, we shut down BUF_TO_NET.  */
+comment|/* Next we shut down BUF_FROM_NET.  That will pick up the checksum 	 * generated when the client shuts down its buffer.  Then, after we 	 * have generated any final output, we shut down BUF_TO_NET. 	 */
 name|status
 operator|=
 name|buf_shutdown
@@ -18525,13 +18605,6 @@ argument_list|,
 literal|"shutting down buffer from client"
 argument_list|)
 expr_stmt|;
-name|buf_flush
-argument_list|(
-name|buf_to_net
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -18545,6 +18618,17 @@ name|buf_to_net
 operator|!=
 name|NULL
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|buf_flush
+argument_list|(
+name|buf_to_net
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -18553,6 +18637,7 @@ argument_list|(
 name|buf_to_net
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 comment|/* What a bogus kludge.  This disgusting code makes all kinds of        assumptions about SunOS, and is only for a bug in that system.        So only enable it on Suns.  */
@@ -18835,6 +18920,17 @@ name|buf_to_net
 operator|!=
 name|NULL
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|buf_flush
+argument_list|(
+name|buf_to_net
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -18844,19 +18940,12 @@ name|buf_to_net
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_decl_stmt
 name|int
 name|server_active
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|server_expanding
 init|=
 literal|0
 decl_stmt|;
@@ -18926,6 +19015,8 @@ operator|=
 name|stdio_buffer_initialize
 argument_list|(
 name|stdin
+argument_list|,
+literal|0
 argument_list|,
 literal|1
 argument_list|,
@@ -19969,9 +20060,6 @@ block|{
 name|char
 modifier|*
 name|env
-decl_stmt|,
-modifier|*
-name|cvs_user
 decl_stmt|;
 name|env
 operator|=
@@ -20039,16 +20127,9 @@ argument_list|(
 name|env
 argument_list|)
 expr_stmt|;
-name|cvs_user
-operator|=
-name|NULL
-operator|!=
-name|CVS_Username
-condition|?
-name|CVS_Username
-else|:
-literal|""
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUTH_SERVER_SUPPORT
 name|env
 operator|=
 name|xmalloc
@@ -20058,7 +20139,7 @@ expr|"CVS_USER="
 operator|+
 name|strlen
 argument_list|(
-name|cvs_user
+name|CVS_Username
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -20071,7 +20152,7 @@ name|env
 argument_list|,
 literal|"CVS_USER=%s"
 argument_list|,
-name|cvs_user
+name|CVS_Username
 argument_list|)
 expr_stmt|;
 operator|(
@@ -20082,6 +20163,8 @@ argument_list|(
 name|env
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
@@ -20124,7 +20207,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*   * 0 means no entry found for this user.  * 1 means entry found and password matches (or found password is empty)  * 2 means entry found, but password does not match.  *  * If 1, host_user_ptr will be set to point at the system  * username (i.e., the "real" identity, which may or may not be the  * CVS username) of this user; caller may free this.  Global  * CVS_Username will point at an allocated copy of cvs username (i.e.,  * the username argument below).  * kff todo: FIXME: last sentence is not true, it applies to caller.  */
+comment|/*  * 0 means no entry found for this user.  * 1 means entry found and password matches (or found password is empty)  * 2 means entry found, but password does not match.  *  * If 1, host_user_ptr will be set to point at the system  * username (i.e., the "real" identity, which may or may not be the  * CVS username) of this user; caller may free this.  Global  * CVS_Username will point at an allocated copy of cvs username (i.e.,  * the username argument below).  * kff todo: FIXME: last sentence is not true, it applies to caller.  */
 end_comment
 
 begin_function
@@ -20381,7 +20464,7 @@ name|char
 modifier|*
 name|non_cvsuser_portion
 decl_stmt|;
-comment|/* We need to make sure lines such as           *          *    "username::sysuser\n"          *    "username:\n"          *    "username:  \n"          *          * all result in a found_password of NULL, but we also need to          * make sure that          *          *    "username:   :sysuser\n"          *    "username:<whatever>:sysuser\n"          *          * continues to result in an impossible password.  That way,          * an admin would be on safe ground by going in and tacking a          * space onto the front of a password to disable the account          * (a technique some people use to close accounts          * temporarily).          */
+comment|/* We need to make sure lines such as          *          *    "username::sysuser\n"          *    "username:\n"          *    "username:  \n"          *          * all result in a found_password of NULL, but we also need to          * make sure that          *          *    "username:   :sysuser\n"          *    "username:<whatever>:sysuser\n"          *          * continues to result in an impossible password.  That way,          * an admin would be on safe ground by going in and tacking a          * space onto the front of a password to disable the account          * (a technique some people use to close accounts          * temporarily).          */
 comment|/* Make `non_cvsuser_portion' contain everything after the CVS            username, but null out any final newline. */
 name|non_cvsuser_portion
 operator|=
@@ -20919,7 +21002,7 @@ condition|(
 name|host_user
 condition|)
 block|{
-comment|/* Set CVS_Username here, in allocated space.             It might or might not be the same as host_user. */
+comment|/* Set CVS_Username here, in allocated space.            It might or might not be the same as host_user. */
 name|CVS_Username
 operator|=
 name|xmalloc
@@ -21112,8 +21195,31 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-comment|/* FIXME: what?  We could try writing error/eof, but chances 	   are the network connection is dead bidirectionally.  log it 	   somewhere?  */
-empty_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|HAVE_SYSLOG_H
+name|syslog
+argument_list|(
+name|LOG_DAEMON
+operator||
+name|LOG_NOTICE
+argument_list|,
+literal|"bad auth protocol start: EOF"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"bad auth protocol start: EOF"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -21369,23 +21475,6 @@ argument_list|,
 name|repository
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-name|descrambled_password
-argument_list|,
-literal|0
-argument_list|,
-name|strlen
-argument_list|(
-name|descrambled_password
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|descrambled_password
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|host_user
@@ -21429,6 +21518,23 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+name|memset
+argument_list|(
+name|descrambled_password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|descrambled_password
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|descrambled_password
+argument_list|)
+expr_stmt|;
 name|i_hate_you
 label|:
 name|printf
@@ -21446,6 +21552,23 @@ name|error_exit
 argument_list|()
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+name|descrambled_password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|descrambled_password
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|descrambled_password
+argument_list|)
+expr_stmt|;
 comment|/* Don't go any farther if we're just responding to "cvs login". */
 if|if
 condition|(
@@ -24137,7 +24260,7 @@ condition|(
 name|server_active
 condition|)
 block|{
-comment|/* Just do nothing.  This is because the code which 	   cvs_flushout replaces, setting stdout to line buffering in 	   main.c, didn't get called in the server child process.  But 	   in the future it is quite plausible that we'll want to make 	   this case work analogously to cvs_flusherr. 	  	   FIXME - DRP - I tried to implement this and triggered the following 	   error: "Protocol error: uncounted data discarded".  I don't need 	   this feature right now, so I'm not going to bother with it yet. 	 */
+comment|/* Just do nothing.  This is because the code which 	   cvs_flushout replaces, setting stdout to line buffering in 	   main.c, didn't get called in the server child process.  But 	   in the future it is quite plausible that we'll want to make 	   this case work analogously to cvs_flusherr.  	   FIXME - DRP - I tried to implement this and triggered the following 	   error: "Protocol error: uncounted data discarded".  I don't need 	   this feature right now, so I'm not going to bother with it yet. 	 */
 name|buf_send_special_count
 argument_list|(
 name|protocol
