@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.19 1999/01/09 02:36:19 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: biosdisk.c,v 1.20 1999/01/10 18:22:23 steve Exp $  */
 end_comment
 
 begin_comment
@@ -3774,6 +3774,10 @@ name|int
 name|unitofs
 init|=
 literal|0
+decl_stmt|,
+name|i
+decl_stmt|,
+name|unit
 decl_stmt|;
 name|biosdev
 operator|=
@@ -3906,7 +3910,7 @@ name|major
 operator|=
 name|DAMAJOR
 expr_stmt|;
-comment|/* check for unit number correction hint */
+comment|/* check for unit number correction hint, now deprecated */
 if|if
 condition|(
 operator|(
@@ -3921,7 +3925,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|unitofs
+name|i
 operator|=
 name|strtol
 argument_list|(
@@ -3938,20 +3942,20 @@ if|if
 condition|(
 operator|(
 name|cp
-operator|==
+operator|!=
 name|nip
 operator|)
-operator|||
+operator|&&
 operator|(
 operator|*
 name|cp
-operator|!=
+operator|==
 literal|0
 operator|)
 condition|)
 name|unitofs
 operator|=
-literal|0
+name|i
 expr_stmt|;
 block|}
 block|}
@@ -3963,6 +3967,66 @@ operator|=
 name|WDMAJOR
 expr_stmt|;
 block|}
+block|}
+comment|/* XXX a better kludge to set the root disk unit number */
+if|if
+condition|(
+operator|(
+name|nip
+operator|=
+name|getenv
+argument_list|(
+literal|"root_disk_unit"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|i
+operator|=
+name|strtol
+argument_list|(
+name|nip
+argument_list|,
+operator|&
+name|cp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* check for parse error */
+if|if
+condition|(
+operator|(
+name|cp
+operator|!=
+name|nip
+operator|)
+operator|&&
+operator|(
+operator|*
+name|cp
+operator|==
+literal|0
+operator|)
+condition|)
+name|unit
+operator|=
+name|i
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|biosdev
+operator|&
+literal|0x7f
+operator|)
+operator|-
+name|unitofs
+expr_stmt|;
+comment|/* allow for #wd compenstation in da case */
 block|}
 name|rootdev
 operator|=
@@ -3999,15 +4063,8 @@ operator|)
 operator|&
 literal|0xf
 argument_list|,
-operator|(
-name|biosdev
-operator|&
-literal|0x7f
-operator|)
-operator|-
-name|unitofs
+name|unit
 argument_list|,
-comment|/* allow for #wd compenstation in da case */
 name|dev
 operator|->
 name|d_kind
