@@ -188,6 +188,42 @@ value|_get_curthread()
 end_define
 
 begin_comment
+comment|/*  * Locking macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|THR_LOCK
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|do {								\ 		if (umtx_lock((m), curthread->thr_id) != 0)		\ 			abort();					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_TRYLOCK
+parameter_list|(
+name|m
+parameter_list|)
+value|_umtxtrylock((m))
+end_define
+
+begin_define
+define|#
+directive|define
+name|THR_UNLOCK
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|do {								\ 		if (umtx_unlock((m), curthread->thr_id) != 0)		\ 			abort();					\ 	} while (0)
+end_define
+
+begin_comment
 comment|/*  * State change macro without scheduling queue change:  */
 end_comment
 
@@ -1055,7 +1091,8 @@ name|signest
 decl_stmt|;
 comment|/* blocked signal netsting level */
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
-name|spinlock_t
+name|struct
+name|umtx
 name|lock
 decl_stmt|;
 comment|/* Queue entry for list of all threads: */
@@ -2134,16 +2171,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_spintrylock
-parameter_list|(
-name|spinlock_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_thread_exit
 parameter_list|(
@@ -2338,6 +2365,18 @@ begin_function_decl
 name|void
 name|_thread_sigunblock
 parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_umtxtrylock
+parameter_list|(
+name|struct
+name|umtx
+modifier|*
+name|lck
+parameter_list|)
 function_decl|;
 end_function_decl
 

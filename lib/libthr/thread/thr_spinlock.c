@@ -119,9 +119,10 @@ end_function
 
 begin_function
 name|int
-name|_spintrylock
+name|_umtxtrylock
 parameter_list|(
-name|spinlock_t
+name|struct
+name|umtx
 modifier|*
 name|lck
 parameter_list|)
@@ -133,11 +134,6 @@ name|error
 operator|=
 name|umtx_trylock
 argument_list|(
-operator|(
-expr|struct
-name|umtx
-operator|*
-operator|)
 name|lck
 argument_list|,
 name|curthread
