@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chown.c,v 1.7 1997/08/24 02:10:29 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -466,7 +466,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -R and -h options may not be specified together."
+literal|"the -R and -h options may not be specified together"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1161,15 +1161,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-R [-H | -L | -P]] [-f] [-h] %s file ...\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-name|myname
+literal|"usage: chown [-R [-H | -L | -P]] [-f] [-h] owner[:group] file ..."
 argument_list|,
-name|ischown
-condition|?
-literal|"[owner][:group]"
-else|:
-literal|"group"
+literal|"       chown [-R [-H | -L | -P]] [-f] [-h] :group file ..."
+argument_list|,
+literal|"       chgrp [-R [-H | -L | -P]] [-f] [-h] group file ..."
 argument_list|)
 expr_stmt|;
 name|exit
