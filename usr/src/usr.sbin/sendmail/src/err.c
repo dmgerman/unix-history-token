@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.4 (Berkeley) %G%"
+literal|"@(#)err.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,33 @@ name|fmtmsg
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NAMED_BIND
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_DATA
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NO_DATA
+value|NO_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

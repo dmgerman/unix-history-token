@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.3 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.4 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.3 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.4 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,24 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((a)> (b) ? (a) : (b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_DATA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NO_DATA
+value|NO_ADDRESS
 end_define
 
 begin_endif

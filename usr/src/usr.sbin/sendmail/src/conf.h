@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -799,6 +799,97 @@ end_define
 begin_comment
 comment|/* don't declare sys_errlist */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  4.3 BSD -- this is for very old systems ** **	You'll also have to install a new resolver library. **	I don't guarantee that support for this environment is complete. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|oldBSD43
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NEEDVPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for vprintf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILFC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILFC
+value|"/usr/lib/sendmail.fc"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
