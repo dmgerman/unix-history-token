@@ -149,6 +149,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|mutex_lock_common
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 specifier|inline
 name|int
 name|mutex_self_trylock
@@ -4298,12 +4311,14 @@ name|m_owner
 operator|!=
 name|curthread
 condition|)
+block|{
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4313,6 +4328,7 @@ name|m_owner
 operator|==
 name|curthread
 condition|)
+block|{
 if|if
 condition|(
 name|nonblock
@@ -4334,6 +4350,7 @@ name|mutexp
 argument_list|)
 operator|)
 return|;
+block|}
 comment|/* 	 * The mutex belongs to this thread now. Mark it as 	 * such. Add it to the list of mutexes owned by this 	 * thread. 	 */
 name|mutexp
 operator|->

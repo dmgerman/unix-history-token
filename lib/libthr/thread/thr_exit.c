@@ -61,6 +61,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* thr_exit() */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|_thr_exit
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|_thread_exit

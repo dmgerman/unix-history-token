@@ -206,10 +206,6 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|struct
-name|itimerval
-name|itimer
-decl_stmt|;
 name|int
 name|f_gc
 init|=

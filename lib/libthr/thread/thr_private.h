@@ -2110,7 +2110,7 @@ name|siginfo_t
 modifier|*
 name|info
 parameter_list|,
-name|ucontext_t
+name|void
 modifier|*
 name|context
 parameter_list|)

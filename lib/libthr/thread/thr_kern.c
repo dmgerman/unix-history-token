@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -160,9 +166,6 @@ parameter_list|)
 block|{
 name|sigset_t
 name|set
-decl_stmt|;
-name|int
-name|error
 decl_stmt|;
 comment|/* 	 * restore is protected by giant.  We could restore our signal state 	 * incorrectly if someone else set restore between unlocking giant 	 * and restoring the signal mask.  To avoid this we cache a copy prior 	 * to the unlock. 	 */
 name|set

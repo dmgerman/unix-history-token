@@ -57,14 +57,16 @@ block|{
 name|int
 name|old_prio
 decl_stmt|,
-name|in_readyq
-init|=
-literal|0
-decl_stmt|,
 name|ret
 init|=
 literal|0
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int in_readyq = 0;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

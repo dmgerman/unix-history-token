@@ -432,9 +432,6 @@ name|int
 name|fd
 decl_stmt|;
 name|int
-name|flags
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|size_t
@@ -1168,7 +1165,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 name|_gc_cond

@@ -319,7 +319,7 @@ name|siginfo_t
 modifier|*
 name|info
 parameter_list|,
-name|ucontext_t
+name|void
 modifier|*
 name|context
 parameter_list|)
@@ -443,6 +443,10 @@ name|sig
 argument_list|,
 name|info
 argument_list|,
+operator|(
+name|ucontext_t
+operator|*
+operator|)
 name|context
 argument_list|)
 expr_stmt|;

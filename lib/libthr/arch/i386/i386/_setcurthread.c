@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/sysarch.h>
 end_include
 
@@ -106,6 +118,20 @@ name|void
 name|ldt_init
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* in _curthread.S */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|_set_gs
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
