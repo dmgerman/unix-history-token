@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local_passwd.c	5.3 (Berkeley) %G%"
+literal|"@(#)local_passwd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,7 @@ index|]
 decl_stmt|,
 name|salt
 index|[
-literal|2
+literal|9
 index|]
 decl_stmt|,
 modifier|*
@@ -554,9 +554,6 @@ index|[
 literal|5
 index|]
 argument_list|,
-operator|(
-name|long
-operator|)
 name|random
 argument_list|()
 argument_list|,
@@ -573,9 +570,6 @@ index|[
 literal|0
 index|]
 argument_list|,
-operator|(
-name|long
-operator|)
 name|random
 argument_list|()
 argument_list|,
@@ -604,7 +598,7 @@ name|char
 name|itoa64
 index|[]
 init|=
-comment|/* 0..63 => ascii-64 */
+comment|/* 0 ... 63 => ascii - 64 */
 literal|"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 decl_stmt|;
 end_decl_stmt
