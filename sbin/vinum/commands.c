@@ -4,11 +4,7 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.9 1999/10/13 02:33:26 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -539,7 +535,7 @@ expr_stmt|;
 comment|/* count the lines */
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -580,7 +576,7 @@ comment|/* error in config */
 if|if
 condition|(
 operator|!
-name|verbose
+name|vflag
 condition|)
 comment|/* print this line anyway */
 name|printf
@@ -1244,7 +1240,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|fprintf
 argument_list|(
@@ -1855,6 +1851,10 @@ comment|/* we've done our dash */
 block|}
 end_function
 
+begin_comment
+comment|/*  * Initialize a subdisk.  Currently (October 1999)  * there is something very funny with  * initialization, and it's a good idea to verify.  * We do this twice, once in the kernel and once  * after finishing the initialization.  One day  * this should be removed.  */
+end_comment
+
 begin_function
 name|void
 name|initsd
@@ -1893,31 +1893,32 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 comment|/* create a file name here */
+name|off_t
+name|pos
+decl_stmt|;
 comment|/* Variables for use by children */
 name|int
 name|sdfh
 decl_stmt|;
 comment|/* and for subdisk */
 name|char
-name|zeros
+name|buf
 index|[
-name|PLEXINITSIZE
+name|MAXPLEXINITSIZE
 index|]
 decl_stmt|;
 name|int
-name|count
+name|initsize
 decl_stmt|;
-comment|/* write count */
-name|long
-name|long
-name|offset
-decl_stmt|;
-comment|/* offset in subdisk */
+comment|/* actual size to write */
 name|long
 name|long
 name|sdsize
 decl_stmt|;
 comment|/* size of subdisk */
+name|int
+name|retval
+decl_stmt|;
 if|if
 condition|(
 name|dowait
@@ -1963,6 +1964,39 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|SSize
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* specified a size for init */
+if|if
+condition|(
+name|SSize
+operator|<
+literal|512
+condition|)
+name|SSize
+operator|<<=
+name|DEV_BSHIFT
+expr_stmt|;
+name|initsize
+operator|=
+name|min
+argument_list|(
+name|SSize
+argument_list|,
+name|MAXPLEXINITSIZE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|initsize
+operator|=
+name|PLEXINITSIZE
+expr_stmt|;
 name|openlog
 argument_list|(
 literal|"vinum"
@@ -1974,16 +2008,6 @@ operator||
 name|LOG_PID
 argument_list|,
 name|LOG_KERN
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|zeros
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|zeros
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|get_sd_info
@@ -2100,6 +2124,13 @@ name|object_initializing
 expr_stmt|;
 name|message
 operator|->
+name|verify
+operator|=
+name|vflag
+expr_stmt|;
+comment|/* verify what we write? */
+name|message
+operator|->
 name|force
 operator|=
 literal|1
@@ -2114,54 +2145,50 @@ argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|offset
-operator|=
-literal|0
-init|;
-name|offset
-operator|<
-name|sdsize
-condition|;
-name|offset
-operator|+=
-name|count
-control|)
-block|{
-name|count
-operator|=
-name|write
-argument_list|(
-name|sdfh
-argument_list|,
-name|zeros
-argument_list|,
-name|PLEXINITSIZE
-argument_list|)
-expr_stmt|;
-comment|/* write a block */
 if|if
 condition|(
-name|count
-operator|<
+operator|(
+name|SSize
+operator|>
 literal|0
+operator|)
+comment|/* specified a size for init */
+operator|&&
+operator|(
+name|SSize
+operator|<
+literal|512
+operator|)
+condition|)
+name|SSize
+operator|<<=
+name|DEV_BSHIFT
+expr_stmt|;
+if|if
+condition|(
+name|reply
+operator|.
+name|error
 condition|)
 block|{
-name|syslog
+name|fprintf
 argument_list|(
-name|LOG_ERR
-operator||
-name|LOG_KERN
+name|stderr
 argument_list|,
-literal|"can't write subdisk %s: %s"
+literal|"Can't initialize %s: %s (%d)\n"
 argument_list|,
 name|filename
 argument_list|,
 name|strerror
 argument_list|(
-name|errno
+name|reply
+operator|.
+name|error
 argument_list|)
+argument_list|,
+name|reply
+operator|.
+name|error
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2170,27 +2197,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|count
-operator|==
-literal|0
-condition|)
-break|break;
-block|}
-name|syslog
-argument_list|(
-name|LOG_INFO
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"subdisk %s initialized"
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-comment|/* Bring the subdisk up */
+else|else
+block|{
+do|do
+block|{
 name|message
 operator|->
 name|index
@@ -2211,15 +2221,21 @@ name|message
 operator|->
 name|state
 operator|=
-name|object_initialized
+name|object_up
 expr_stmt|;
 name|message
 operator|->
-name|force
+name|verify
 operator|=
-literal|0
+name|vflag
 expr_stmt|;
-comment|/* don't insist */
+comment|/* verify what we write? */
+name|message
+operator|->
+name|blocksize
+operator|=
+name|SSize
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|superdev
@@ -2229,6 +2245,198 @@ argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|reply
+operator|.
+name|error
+operator|==
+name|EAGAIN
+condition|)
+do|;
+comment|/* until we're done */
+block|}
+if|if
+condition|(
+name|vflag
+condition|)
+block|{
+comment|/* don't trust the thing, check again */
+name|close
+argument_list|(
+name|sdfh
+argument_list|)
+expr_stmt|;
+name|pos
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sdfh
+operator|=
+name|open
+argument_list|(
+name|filename
+argument_list|,
+name|O_RDWR
+argument_list|,
+name|S_IRWXU
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* no go */
+name|syslog
+argument_list|(
+name|LOG_ERR
+operator||
+name|LOG_KERN
+argument_list|,
+literal|"can't open subdisk %s: %s"
+argument_list|,
+name|filename
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* damn style(9) */
+name|retval
+operator|=
+name|read
+argument_list|(
+name|sdfh
+argument_list|,
+name|buf
+argument_list|,
+name|initsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|==
+literal|0
+condition|)
+comment|/* EOF */
+break|break;
+elseif|else
+if|if
+condition|(
+name|retval
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't read %s: %s (%d)\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dowait
+condition|)
+return|return;
+else|else
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|)
+comment|/* first word spammed */
+operator|||
+operator|(
+name|bcmp
+argument_list|(
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+name|initsize
+operator|-
+literal|1
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* or one of the others */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"init error on %s, offset 0x%llx sectors\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|,
+name|pos
+argument_list|)
+expr_stmt|;
+block|}
+name|pos
+operator|+=
+name|retval
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|dowait
+condition|)
 name|exit
 argument_list|(
 literal|0
@@ -2315,6 +2523,18 @@ name|int
 name|tokens
 decl_stmt|;
 comment|/* and their number */
+name|bzero
+argument_list|(
+operator|&
+name|statinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|statinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|statinfo
 operator|.
 name|dinfo
@@ -2826,6 +3046,39 @@ operator|=
 name|force
 expr_stmt|;
 comment|/* don't force it, use a larger hammer */
+comment|/* 				 * We don't do any checking here. 				 * The kernel module has a better 				 * understanding of these things, 				 * let it do it. 				 */
+if|if
+condition|(
+name|SSize
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* specified a size for init */
+if|if
+condition|(
+name|SSize
+operator|<
+literal|512
+condition|)
+name|SSize
+operator|<<=
+name|DEV_BSHIFT
+expr_stmt|;
+name|message
+operator|->
+name|blocksize
+operator|=
+name|SSize
+expr_stmt|;
+block|}
+else|else
+name|message
+operator|->
+name|blocksize
+operator|=
+literal|0
+expr_stmt|;
 name|ioctl
 argument_list|(
 name|superdev
@@ -6243,7 +6496,7 @@ expr_stmt|;
 comment|/* create a create command */
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -6481,7 +6734,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -6574,7 +6827,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -6716,7 +6969,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -6861,10 +7114,10 @@ expr_stmt|;
 comment|/* and create the devices */
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
-name|verbose
+name|vflag
 operator|--
 expr_stmt|;
 comment|/* XXX don't give too much detail */
@@ -7204,7 +7457,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -7297,7 +7550,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -7424,7 +7677,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -7571,10 +7824,10 @@ expr_stmt|;
 comment|/* and create the devices */
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
-name|verbose
+name|vflag
 operator|--
 expr_stmt|;
 comment|/* XXX don't give too much detail */
@@ -7987,7 +8240,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -8102,7 +8355,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -8130,7 +8383,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -8274,7 +8527,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|printf
 argument_list|(
@@ -8437,10 +8690,10 @@ expr_stmt|;
 comment|/* and create the devices */
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
-name|verbose
+name|vflag
 operator|--
 expr_stmt|;
 comment|/* XXX don't give too much detail */
@@ -8700,7 +8953,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|vinum_lpi
 argument_list|(
@@ -9302,7 +9555,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 block|{
 name|get_plex_info
@@ -9399,7 +9652,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|verbose
+name|vflag
 condition|)
 name|fprintf
 argument_list|(
