@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.13 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -387,10 +387,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|hisopts
-index|[
+name|should_he
+argument_list|(
 name|TELOPT_ECHO
-index|]
+argument_list|)
 condition|)
 block|{
 name|modeindex
@@ -400,10 +400,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|hisopts
-index|[
+name|should_he
+argument_list|(
 name|TELOPT_SGA
-index|]
+argument_list|)
 condition|)
 block|{
 name|modeindex

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)externs.h	1.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)externs.h	1.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -140,12 +140,10 @@ decl_stmt|,
 name|wont
 index|[]
 decl_stmt|,
-name|hisopts
+name|options
 index|[]
 decl_stmt|,
-name|myopts
-index|[]
-decl_stmt|,
+comment|/* All the little options */
 modifier|*
 name|hostname
 decl_stmt|,
@@ -158,6 +156,104 @@ end_decl_stmt
 begin_comment
 comment|/* Prompt for command. */
 end_comment
+
+begin_comment
+comment|/*  * We keep track of each side of the option negotiation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPT_HE_SAID_DO
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_HE_SAID_WILL
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_I_SAID_DO
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_I_SAID_WILL
+value|0x08
+end_define
+
+begin_comment
+comment|/*  * Macros to check out what has been said.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|did_he_say_do
+parameter_list|(
+name|opt
+parameter_list|)
+value|(options[opt]&OPT_HE_SAID_DO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|did_he_say_will
+parameter_list|(
+name|opt
+parameter_list|)
+value|(options[opt]&OPT_HE_SAID_WILL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|did_I_say_do
+parameter_list|(
+name|opt
+parameter_list|)
+value|(options[opt]&OPT_I_SAID_DO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|did_I_say_will
+parameter_list|(
+name|opt
+parameter_list|)
+value|(options[opt]&OPT_I_SAID_WILL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|should_he
+parameter_list|(
+name|opt
+parameter_list|)
+define|\
+value|(did_he_say_will(opt)&& did_I_say_do(opt))
+end_define
+
+begin_define
+define|#
+directive|define
+name|should_I
+parameter_list|(
+name|opt
+parameter_list|)
+define|\
+value|(did_I_say_will(opt)&& did_he_say_do(opt))
+end_define
 
 begin_decl_stmt
 specifier|extern

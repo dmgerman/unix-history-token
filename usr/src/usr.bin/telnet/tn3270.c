@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.16 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1065,15 +1065,15 @@ if|if
 condition|(
 name|Sent3270TerminalType
 operator|&&
-name|myopts
-index|[
+name|should_I
+argument_list|(
 name|TELOPT_BINARY
-index|]
+argument_list|)
 operator|&&
-name|hisopts
-index|[
+name|should_he
+argument_list|(
 name|TELOPT_BINARY
-index|]
+argument_list|)
 operator|&&
 operator|!
 name|donebinarytoggle

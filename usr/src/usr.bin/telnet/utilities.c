@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.11 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,6 +354,13 @@ name|pThis
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|NetTrace
+operator|==
+name|stdout
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|NetTrace
@@ -361,6 +368,17 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|NetTrace
+argument_list|,
+literal|"\r\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|length
 operator|-=
 name|BYTES_PER_LINE
@@ -393,10 +411,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*VARARGS*/
-end_comment
-
 begin_function
 name|void
 name|printoption
@@ -406,8 +420,6 @@ parameter_list|,
 name|fmt
 parameter_list|,
 name|option
-parameter_list|,
-name|what
 parameter_list|)
 name|char
 modifier|*
@@ -421,8 +433,6 @@ end_function
 begin_decl_stmt
 name|int
 name|option
-decl_stmt|,
-name|what
 decl_stmt|;
 end_decl_stmt
 
@@ -441,57 +451,7 @@ argument_list|,
 literal|"%s "
 argument_list|,
 name|direction
-operator|+
-literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fmt
-operator|==
-name|doopt
-condition|)
-name|fmt
-operator|=
-literal|"do"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-operator|==
-name|dont
-condition|)
-name|fmt
-operator|=
-literal|"dont"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-operator|==
-name|will
-condition|)
-name|fmt
-operator|=
-literal|"will"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|fmt
-operator|==
-name|wont
-condition|)
-name|fmt
-operator|=
-literal|"wont"
-expr_stmt|;
-else|else
-name|fmt
-operator|=
-literal|"???"
 expr_stmt|;
 if|if
 condition|(
@@ -536,10 +496,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|direction
+name|NetTrace
 operator|==
-literal|'<'
+name|stdout
 condition|)
 block|{
 name|fprintf
@@ -549,21 +508,18 @@ argument_list|,
 literal|"\r\n"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|" (%s)\r\n"
-argument_list|,
-name|what
-condition|?
-literal|"reply"
-else|:
-literal|"don't reply"
+literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+return|return;
 block|}
 end_block
 
