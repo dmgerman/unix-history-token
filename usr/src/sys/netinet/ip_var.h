@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_var.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_var.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -151,30 +151,77 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Structure stored in mbuf in inpcb.ip_options  * and passed to ip_output when ip options are in use.  * The actual length of the options (including ipopt_dst)  * is in m_len.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_IPOPTLEN
+value|40
+end_define
+
+begin_struct
+struct|struct
+name|ipoption
+block|{
+name|struct
+name|in_addr
+name|ipopt_dst
+decl_stmt|;
+comment|/* first-hop dst if source routed */
+name|char
+name|ipopt_list
+index|[
+name|MAX_IPOPTLEN
+index|]
+decl_stmt|;
+comment|/* options proper */
+block|}
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|ipstat
 block|{
-name|int
+name|long
+name|ips_total
+decl_stmt|;
+comment|/* total packets received */
+name|long
 name|ips_badsum
 decl_stmt|;
 comment|/* checksum bad */
-name|int
+name|long
 name|ips_tooshort
 decl_stmt|;
 comment|/* packet too short */
-name|int
+name|long
 name|ips_toosmall
 decl_stmt|;
 comment|/* not enough data */
-name|int
+name|long
 name|ips_badhlen
 decl_stmt|;
 comment|/* ip header length< data size */
-name|int
+name|long
 name|ips_badlen
 decl_stmt|;
 comment|/* ip length< ip header length */
+name|long
+name|ips_fragments
+decl_stmt|;
+comment|/* fragments received */
+name|long
+name|ips_fragdropped
+decl_stmt|;
+comment|/* frags dropped (dups, out of space) */
+name|long
+name|ips_fragtimeout
+decl_stmt|;
+comment|/* fragments timed out */
 name|long
 name|ips_forward
 decl_stmt|;
@@ -183,6 +230,10 @@ name|long
 name|ips_cantforward
 decl_stmt|;
 comment|/* packets rcvd for unreachable dest */
+name|long
+name|ips_redirectsent
+decl_stmt|;
+comment|/* packets forwarded on same net */
 block|}
 struct|;
 end_struct
@@ -257,6 +308,15 @@ end_decl_stmt
 begin_comment
 comment|/* ip packet ctr, for ids */
 end_comment
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|ip_srcroute
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
