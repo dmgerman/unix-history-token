@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.6 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.7 %G%"; */
 end_comment
 
 begin_include
@@ -554,20 +554,21 @@ name|formalrtn
 block|{
 name|char
 modifier|*
-name|entryaddr
+name|fentryaddr
 decl_stmt|;
+comment|/* formal entry point */
 name|long
-name|cbn
+name|fbn
 decl_stmt|;
+comment|/* block number of function */
 name|struct
 name|disp
-name|disp
+name|fdisp
 index|[
-literal|2
-operator|*
 name|MAXLVL
 index|]
 decl_stmt|;
+comment|/* saved at first passing */
 block|}
 struct|;
 end_struct

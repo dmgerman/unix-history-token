@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.11 %G%"
+literal|"@(#)interp.c 1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1199,6 +1199,12 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
+name|tcp
+operator|=
+name|popaddr
+argument_list|()
+expr_stmt|;
+comment|/* ptr to display save area */
 name|tfp
 operator|=
 operator|(
@@ -1259,7 +1265,7 @@ name|cp
 operator|=
 name|tfp
 operator|->
-name|entryaddr
+name|fentryaddr
 expr_stmt|;
 comment|/* calc new entry point */
 name|_dp
@@ -1271,7 +1277,7 @@ name|frame
 index|[
 name|tfp
 operator|->
-name|cbn
+name|fbn
 index|]
 expr_stmt|;
 comment|/* new display ptr */
@@ -1279,7 +1285,7 @@ name|blkcpy
 argument_list|(
 name|tfp
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1295,22 +1301,14 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|&
-name|tfp
-operator|->
-name|disp
-index|[
-name|tfp
-operator|->
-name|cbn
-index|]
+name|tcp
 argument_list|)
 expr_stmt|;
 name|blkcpy
 argument_list|(
 name|tfp
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1321,7 +1319,7 @@ argument_list|,
 operator|&
 name|tfp
 operator|->
-name|disp
+name|fdisp
 index|[
 literal|0
 index|]
@@ -1389,6 +1387,27 @@ operator|+
 name|tl
 operator|)
 expr_stmt|;
+name|tcp1
+operator|=
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|tcp
+operator|+
+name|tl
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|formalrtn
+operator|*
+argument_list|)
+operator|)
+expr_stmt|;
 name|blkcpy
 argument_list|(
 name|tl
@@ -1401,6 +1420,12 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|formalrtn
+operator|*
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
 operator|*
 argument_list|)
 argument_list|)
@@ -1417,6 +1442,12 @@ expr|struct
 name|formalrtn
 operator|*
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1424,7 +1455,7 @@ name|blkcpy
 argument_list|(
 name|tfp
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1432,15 +1463,7 @@ expr|struct
 name|disp
 argument_list|)
 argument_list|,
-operator|&
-name|tfp
-operator|->
-name|disp
-index|[
-name|tfp
-operator|->
-name|cbn
-index|]
+name|tcp1
 argument_list|,
 operator|&
 name|_display
@@ -1467,7 +1490,7 @@ argument_list|()
 expr_stmt|;
 name|tfp
 operator|->
-name|cbn
+name|fbn
 operator|=
 operator|*
 name|pc
@@ -1496,7 +1519,7 @@ argument_list|)
 expr_stmt|;
 name|tfp
 operator|->
-name|entryaddr
+name|fentryaddr
 operator|=
 name|base
 operator|+
@@ -1511,7 +1534,7 @@ name|blkcpy
 argument_list|(
 name|tfp
 operator|->
-name|cbn
+name|fbn
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1530,7 +1553,7 @@ argument_list|,
 operator|&
 name|tfp
 operator|->
-name|disp
+name|fdisp
 index|[
 literal|0
 index|]

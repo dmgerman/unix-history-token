@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.8 %G%"
+literal|"@(#)langpats.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,15 +102,15 @@ literal|"	cvtdl	(sp)+,r0\n"
 block|}
 block|,
 block|{
-literal|"1,_FCALL\n"
+literal|"2,_FCALL\n"
 block|,
-literal|"	movl	(sp),r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,__disply+8,8(r0)[r1]\n\ 	movl	(sp),r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,8(r0),__disply+8\n\ 	movl	*(sp)+,r0\n"
+literal|"	movl	4(sp),r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,__disply+8,*(sp)+\n\ 	movl	(sp)+,r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,8(r0),__disply+8\n"
 block|}
 block|,
 block|{
 literal|"2,_FRTN\n"
 block|,
-literal|"	popr	$0x1\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,8(r0)[r1],__disply+8\n\ 	popr	$0x1\n"
+literal|"	movl	(sp)+,r0\n\ 	ashl	$3,4(r0),r1\n\ 	movc3	r1,*(sp)+,__disply+8\n"
 block|}
 block|,
 block|{
