@@ -1008,6 +1008,12 @@ literal|0
 operator|)
 return|;
 block|}
+name|so
+operator|->
+name|so_state
+operator||=
+name|connstatus
+expr_stmt|;
 name|ACCEPT_LOCK
 argument_list|()
 expr_stmt|;
@@ -1146,12 +1152,6 @@ condition|(
 name|connstatus
 condition|)
 block|{
-name|so
-operator|->
-name|so_state
-operator||=
-name|connstatus
-expr_stmt|;
 name|sorwakeup
 argument_list|(
 name|head
