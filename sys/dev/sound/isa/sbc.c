@@ -545,6 +545,17 @@ if|if
 condition|(
 name|vend_id2
 operator|==
+literal|0x48008c0e
+condition|)
+name|s
+operator|=
+literal|"Creative SB32 (CTL0048)"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vend_id2
+operator|==
 literal|0x49008c0e
 condition|)
 name|s
