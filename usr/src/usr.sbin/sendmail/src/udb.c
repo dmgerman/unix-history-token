@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.18 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.19 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.18 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.19 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2237,9 +2237,14 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"dbopen(%s): %e"
+literal|"dbopen(%s): %s"
 argument_list|,
 name|spec
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.39 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,6 +1206,11 @@ argument_list|,
 name|a
 operator|->
 name|q_user
+argument_list|,
+name|errstring
+argument_list|(
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1509,11 +1514,16 @@ name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: deferred: udbexpand: %e"
+literal|"%s: deferred: udbexpand: %s"
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
