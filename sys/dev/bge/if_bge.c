@@ -374,6 +374,22 @@ literal|"Broadcom BCM5703X Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5704C
+block|,
+literal|"Broadcom BCM5704C Dual Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5704S
+block|,
+literal|"Broadcom BCM5704S Dual Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|SK_VENDORID
 block|,
 name|SK_DEVICEID_ALTIMA
@@ -2276,6 +2292,9 @@ name|BGE_ASICREV_BCM5701_B5
 case|:
 case|case
 name|BGE_ASICREV_BCM5703_A2
+case|:
+case|case
+name|BGE_ASICREV_BCM5704_A0
 case|:
 return|return
 operator|(

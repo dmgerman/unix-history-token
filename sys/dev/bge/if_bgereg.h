@@ -977,6 +977,27 @@ name|BGE_ASICREV_BCM5703_A2
 value|0x10020000
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5704_A0
+value|0x20000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5704_A1
+value|0x20010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5704_A2
+value|0x20020000
+end_define
+
 begin_comment
 comment|/* shorthand one */
 end_comment
@@ -9942,6 +9963,20 @@ define|#
 directive|define
 name|BCOM_DEVICEID_BCM5703X
 value|0x16A7
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5704C
+value|0x1648
+end_define
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5704S
+value|0x16A8
 end_define
 
 begin_comment
