@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.20 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,18 +86,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ufs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -108,6 +96,18 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
