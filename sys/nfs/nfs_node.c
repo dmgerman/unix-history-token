@@ -372,6 +372,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_SLEEPFAIL
 argument_list|,
 name|p
 argument_list|)
