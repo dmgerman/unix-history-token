@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.15	81/03/11	*/
+comment|/*	ht.c	4.16	81/04/03	*/
 end_comment
 
 begin_include
@@ -3104,6 +3104,12 @@ operator|=
 name|sc
 operator|->
 name|sc_resid
+expr_stmt|;
+name|mtget
+operator|.
+name|mt_type
+operator|=
+name|MT_ISHT
 expr_stmt|;
 if|if
 condition|(
