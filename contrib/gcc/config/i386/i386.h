@@ -1786,7 +1786,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_DEFAULT_SPEC
-value|"-D__tune_i686__ -D__tune_pentiumpro__\ -D__tune_pentium2__"
+value|"-D__tune_i686__ -D__tune_pentiumpro__ \ -D__tune_pentium2__"
 end_define
 
 begin_endif
@@ -1806,7 +1806,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_DEFAULT_SPEC
-value|"-D__tune_i686__ -D__tune_pentiumpro__\ -D__tune_pentium2__ -D__tune_pentium3__"
+value|"-D__tune_i686__ -D__tune_pentiumpro__ \ -D__tune_pentium2__ -D__tune_pentium3__"
 end_define
 
 begin_endif
