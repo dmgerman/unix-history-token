@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -366,7 +366,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|ufs_inactive
+name|lfs_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -746,7 +746,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|ufs_inactive
+name|lfs_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -1132,7 +1132,7 @@ block|{
 operator|&
 name|vop_inactive_desc
 block|,
-name|ufs_inactive
+name|lfs_inactive
 block|}
 block|,
 comment|/* inactive */
@@ -2275,6 +2275,51 @@ block|}
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Stub inactive routine that avoid calling ufs_inactive in some cases.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|lfs_no_inactive
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|lfs_inactive
+parameter_list|(
+name|ap
+parameter_list|)
+name|struct
+name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|lfs_no_inactive
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|ufs_inactive
+argument_list|(
+name|ap
+argument_list|)
 operator|)
 return|;
 block|}
