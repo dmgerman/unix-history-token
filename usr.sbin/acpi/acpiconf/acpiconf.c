@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -36,7 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpiio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpireg.h>
 end_include
 
 begin_define

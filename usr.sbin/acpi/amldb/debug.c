@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/acpi/aml/aml_name.h>
 end_include
 
