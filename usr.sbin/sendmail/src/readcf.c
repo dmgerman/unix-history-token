@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.23.1.2 (Berkeley) 2/10/95"
+literal|"@(#)readcf.c	8.23.1.3 (Berkeley) 3/5/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -5090,6 +5090,10 @@ operator|->
 name|pv_flag
 expr_stmt|;
 block|}
+name|sticky
+operator|=
+name|FALSE
+expr_stmt|;
 break|break;
 case|case
 literal|'P'
