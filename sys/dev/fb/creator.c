@@ -851,7 +851,7 @@ decl_stmt|;
 name|phandle_t
 name|chosen
 decl_stmt|;
-name|phandle_t
+name|ihandle_t
 name|stdout
 decl_stmt|;
 name|phandle_t
@@ -968,7 +968,10 @@ if|if
 condition|(
 name|child
 operator|==
+name|OF_instance_to_package
+argument_list|(
 name|stdout
+argument_list|)
 condition|)
 name|sc
 operator|->

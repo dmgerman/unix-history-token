@@ -705,7 +705,7 @@ decl_stmt|;
 name|phandle_t
 name|chosen
 decl_stmt|;
-name|phandle_t
+name|ihandle_t
 name|stdout
 decl_stmt|;
 name|bus_addr_t
