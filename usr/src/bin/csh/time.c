@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	5.6 (Berkeley) %G%"
+literal|"@(#)time.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,14 +235,14 @@ name|v
 operator|==
 literal|0
 operator|&&
-name|any
+name|index
 argument_list|(
+literal|"+-"
+argument_list|,
 name|cp
 index|[
 literal|0
 index|]
-argument_list|,
-literal|"+-"
 argument_list|)
 condition|)
 name|nval
