@@ -2446,6 +2446,14 @@ decl_stmt|;
 name|u_int8_t
 name|ste_one_phy
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+name|int
+name|rxcycles
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
