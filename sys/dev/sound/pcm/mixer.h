@@ -11,9 +11,8 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|snd_mixer
-modifier|*
-name|m
+name|kobj_class_t
+name|cls
 parameter_list|,
 name|void
 modifier|*
@@ -67,9 +66,9 @@ specifier|extern
 name|int
 name|mixer_busy
 parameter_list|(
-name|snddev_info
+name|snd_mixer
 modifier|*
-name|d
+name|m
 parameter_list|,
 name|int
 name|busy
@@ -82,9 +81,9 @@ specifier|extern
 name|int
 name|mixer_isbusy
 parameter_list|(
-name|snddev_info
+name|snd_mixer
 modifier|*
-name|d
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -175,6 +174,16 @@ name|m
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MIXER_DECLARE
+parameter_list|(
+name|name
+parameter_list|)
+value|DEFINE_CLASS(name, name ## _methods, sizeof(snd_mixer))
+end_define
 
 end_unit
 

@@ -513,6 +513,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|fkchan_kill
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
 end_comment
@@ -723,9 +734,8 @@ parameter_list|,
 name|int
 name|dir
 parameter_list|,
-name|pcm_channel
-modifier|*
-name|templ
+name|kobj_class_t
+name|cls
 parameter_list|,
 name|void
 modifier|*
@@ -808,20 +818,6 @@ name|pcm_getdevinfo
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pcm_setswap
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|pcm_swap_t
-modifier|*
-name|swap
 parameter_list|)
 function_decl|;
 end_function_decl
