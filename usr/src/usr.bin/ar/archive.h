@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -155,6 +155,11 @@ decl_stmt|;
 comment|/* write name */
 define|#
 directive|define
+name|NOPAD
+value|0x00
+comment|/* don't pad */
+define|#
+directive|define
 name|RPAD
 value|0x01
 comment|/* pad on reads */
@@ -180,22 +185,22 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|off_t
+name|size
+decl_stmt|;
+comment|/* size of the object in bytes */
 name|long
 name|date
 decl_stmt|;
 comment|/* date */
-name|long
-name|size
+name|int
+name|lname
 decl_stmt|;
-comment|/* size in bytes */
+comment|/* size of the long name in bytes */
 name|int
 name|gid
 decl_stmt|;
 comment|/* group */
-name|int
-name|lname
-decl_stmt|;
-comment|/* if long name */
 name|int
 name|uid
 decl_stmt|;
@@ -217,24 +222,6 @@ block|}
 name|CHDR
 typedef|;
 end_typedef
-
-begin_comment
-comment|/* Seek over the module contents; always rounds. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SKIP
-parameter_list|(
-name|fd
-parameter_list|,
-name|size
-parameter_list|,
-name|name
-parameter_list|)
-value|{ \ 	if (lseek((fd), ((size) + ((size)& 1)), SEEK_CUR) == (off_t)-1) \ 		error(name); \ }
-end_define
 
 begin_comment
 comment|/* Print out any files that weren't in the archive. */
