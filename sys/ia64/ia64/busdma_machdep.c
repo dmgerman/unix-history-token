@@ -2105,47 +2105,47 @@ begin_comment
 comment|/*  * Utility function to load a linear buffer.  lastaddrp holds state  * between invocations (for multiple-buffer loads).  segp contains  * the starting segment on entrace, and the ending segment on exit.  * first indicates if this is the first invocation of this function.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|_bus_dmamap_load_buffer
-argument_list|(
+parameter_list|(
 name|bus_dma_tag_t
 name|dmat
-argument_list|,
+parameter_list|,
 name|bus_dmamap_t
 name|map
-argument_list|,
+parameter_list|,
 name|void
-operator|*
+modifier|*
 name|buf
-argument_list|,
+parameter_list|,
 name|bus_size_t
 name|buflen
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|thread
-operator|*
+modifier|*
 name|td
-argument_list|,
+parameter_list|,
 name|int
 name|flags
-argument_list|,
+parameter_list|,
 name|bus_addr_t
-operator|*
+modifier|*
 name|lastaddrp
-argument_list|,
+parameter_list|,
 name|bus_dma_segment_t
-operator|*
+modifier|*
 name|segs
-argument_list|;
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|segp
-argument_list|,
+parameter_list|,
 name|int
 name|first
-argument_list|)
+parameter_list|)
 block|{
 name|bus_size_t
 name|sgsize
@@ -2741,7 +2741,7 @@ operator|)
 return|;
 comment|/* XXX better return value here? */
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
@@ -3145,8 +3145,6 @@ name|flags
 parameter_list|)
 block|{
 name|int
-name|nsegs
-decl_stmt|,
 name|error
 decl_stmt|;
 name|M_ASSERTPKTHDR
