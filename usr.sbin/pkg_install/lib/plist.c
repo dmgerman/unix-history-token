@@ -1130,6 +1130,12 @@ name|fmtver_mnr
 operator|=
 literal|0
 expr_stmt|;
+name|pkg
+operator|->
+name|origin
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 name|fgets
