@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#22 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#29 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -394,7 +394,7 @@ value|255
 end_define
 
 begin_comment
-comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  Although  * the space for SCBs on the host adapter varies by model, the driver will  * page the SCBs between host and controller memory as needed.  We are limited  * to 253 because:  * 	1) The 8bit nature of the RISC engine holds us to an 8bit value.  * 	2) We reserve one value, 255, to represent the invalid element.  *	3) Our input queue scheme requires one SCB to always be reserved  *	   in advance of queuing any SCBs.  This takes us down to 254.  *	4) To handle our output queue correctly on machines that only  * 	   support 32bit stores, we must clear the array 4 bytes at a  *	   time.  To avoid colliding with a DMA write from the sequencer,  *	   we must be sure that 4 slots are empty when we write to clear  *	   the queue.  This reduces us to 253 SCBs: 1 that just completed  *	   and the known three additional empty slots in the queue that  *	   preceed it.  */
+comment|/*  * The maximum number of concurrent transactions supported per driver instance.  * Sequencer Control Blocks (SCBs) store per-transaction information.  Although  * the space for SCBs on the host adapter varies by model, the driver will  * page the SCBs between host and controller memory as needed.  We are limited  * to 253 because:  * 	1) The 8bit nature of the RISC engine holds us to an 8bit value.  * 	2) We reserve one value, 255, to represent the invalid element.  *	3) Our input queue scheme requires one SCB to always be reserved  *	   in advance of queuing any SCBs.  This takes us down to 254.  *	4) To handle our output queue correctly on machines that only  * 	   support 32bit stores, we must clear the array 4 bytes at a  *	   time.  To avoid colliding with a DMA write from the sequencer,  *	   we must be sure that 4 slots are empty when we write to clear  *	   the queue.  This reduces us to 253 SCBs: 1 that just completed  *	   and the known three additional empty slots in the queue that  *	   precede it.  */
 end_comment
 
 begin_define
@@ -637,6 +637,7 @@ name|AHC_AIC7770_FE
 init|=
 name|AHC_FENONE
 block|,
+comment|/* 	 * The real 7850 does not support Ultra modes, but there are 	 * several cards that use the generic 7850 PCI ID even though 	 * they are using an Ultra capable chip (7859/7860).  We start 	 * out with the AHC_ULTRA feature set and then check the DEVSTATUS 	 * register to determine if the capability is really present. 	 */
 name|AHC_AIC7850_FE
 init|=
 name|AHC_SPIOCAP
@@ -644,16 +645,12 @@ operator||
 name|AHC_AUTOPAUSE
 operator||
 name|AHC_TARGETMODE
-block|,
-name|AHC_AIC7855_FE
-init|=
-name|AHC_AIC7850_FE
+operator||
+name|AHC_ULTRA
 block|,
 name|AHC_AIC7860_FE
 init|=
 name|AHC_AIC7850_FE
-operator||
-name|AHC_ULTRA
 block|,
 name|AHC_AIC7870_FE
 init|=
@@ -885,11 +882,6 @@ name|AHC_ALL_INTERRUPTS
 init|=
 literal|0x100000
 block|,
-name|AHC_ULTRA_DISABLED
-init|=
-literal|0x200000
-block|,
-comment|/* 					   * The precision resistor for 					   * ultra transmission speeds is 					   * missing, so we must limit 					   * ourselves to fast SCSI. 					   */
 name|AHC_PAGESCBS
 init|=
 literal|0x400000
@@ -898,46 +890,16 @@ comment|/* Enable SCB paging */
 name|AHC_EDGE_INTERRUPT
 init|=
 literal|0x800000
+block|,
 comment|/* Device uses edge triggered ints */
+name|AHC_39BIT_ADDRESSING
+init|=
+literal|0x1000000
+comment|/* Use 39 bit addressing scheme. */
 block|}
 name|ahc_flag
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * Controller  Information composed at probe time.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ahc_probe_config
-block|{
-specifier|const
-name|char
-modifier|*
-name|description
-decl_stmt|;
-name|char
-name|channel
-decl_stmt|;
-name|char
-name|channel_b
-decl_stmt|;
-name|ahc_chip
-name|chip
-decl_stmt|;
-name|ahc_feature
-name|features
-decl_stmt|;
-name|ahc_bug
-name|bugs
-decl_stmt|;
-name|ahc_flag
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/************************* Hardware  SCB Definition ***************************/
@@ -1133,6 +1095,31 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|sg_map_node
+block|{
+name|bus_dmamap_t
+name|sg_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|sg_physaddr
+decl_stmt|;
+name|struct
+name|ahc_dma_seg
+modifier|*
+name|sg_vaddr
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|sg_map_node
+argument_list|)
+name|links
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The current state of this SCB.  */
 end_comment
@@ -1164,12 +1151,18 @@ literal|0x0010
 block|,
 name|SCB_RECOVERY_SCB
 init|=
+literal|0x0020
+block|,
+name|SCB_AUTO_NEGOTIATE
+init|=
 literal|0x0040
 block|,
+comment|/* Negotiate to achieve goal. */
 name|SCB_NEGOTIATE
 init|=
 literal|0x0080
 block|,
+comment|/* Negotiation forced for command. */
 name|SCB_ABORT
 init|=
 literal|0x1000
@@ -1247,6 +1240,11 @@ modifier|*
 name|platform_data
 decl_stmt|;
 name|struct
+name|sg_map_node
+modifier|*
+name|sg_map
+decl_stmt|;
+name|struct
 name|ahc_dma_seg
 modifier|*
 name|sg_list
@@ -1258,31 +1256,6 @@ name|u_int
 name|sg_count
 decl_stmt|;
 comment|/* How full ahc_dma_seg is */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sg_map_node
-block|{
-name|bus_dmamap_t
-name|sg_dmamap
-decl_stmt|;
-name|bus_addr_t
-name|sg_physaddr
-decl_stmt|;
-name|struct
-name|ahc_dma_seg
-modifier|*
-name|sg_vaddr
-decl_stmt|;
-name|SLIST_ENTRY
-argument_list|(
-argument|sg_map_node
-argument_list|)
-name|links
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -1460,7 +1433,7 @@ end_ifdef
 
 begin_struct
 struct|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 block|{
 name|struct
 name|cam_path
@@ -1499,7 +1472,7 @@ end_else
 
 begin_struct_decl
 struct_decl|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 struct_decl|;
 end_struct_decl
 
@@ -1606,7 +1579,7 @@ decl_stmt|;
 comment|/* Computed value for SCSIRATE reg */
 name|struct
 name|ahc_transinfo
-name|current
+name|curr
 decl_stmt|;
 name|struct
 name|ahc_transinfo
@@ -1626,10 +1599,10 @@ end_comment
 
 begin_struct
 struct|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 block|{
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|enabled_luns
 index|[
@@ -1644,6 +1617,10 @@ name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
 comment|/* 	 * Per initiator state bitmasks. 	 */
+name|uint16_t
+name|auto_negotiate
+decl_stmt|;
+comment|/* Auto Negotiation Required */
 name|uint16_t
 name|ultraenb
 decl_stmt|;
@@ -1871,7 +1848,11 @@ directive|define
 name|CFBIOSEN
 value|0x0004
 comment|/* BIOS enabled */
-comment|/*		UNUSED		0x0008	*/
+define|#
+directive|define
+name|CFBIOS_BUSSCAN
+value|0x0008
+comment|/* Have the BIOS Scan the Bus */
 define|#
 directive|define
 name|CFSM2DRV
@@ -1879,14 +1860,24 @@ value|0x0010
 comment|/* support more than two drives */
 define|#
 directive|define
+name|CFSTPWLEVEL
+value|0x0010
+comment|/* Termination level control */
+define|#
+directive|define
 name|CF284XEXTEND
 value|0x0020
 comment|/* extended translation (284x cards) */
 define|#
 directive|define
-name|CFSTPWLEVEL
-value|0x0010
-comment|/* Termination level control */
+name|CFCTRL_A
+value|0x0020
+comment|/* BIOS displays Ctrl-A message */
+define|#
+directive|define
+name|CFTERM_MENU
+value|0x0040
+comment|/* BIOS displays termination menu */
 define|#
 directive|define
 name|CFEXTEND
@@ -1897,6 +1888,28 @@ directive|define
 name|CFSCAMEN
 value|0x0100
 comment|/* SCAM enable */
+define|#
+directive|define
+name|CFMSG_LEVEL
+value|0x0600
+comment|/* BIOS Message Level */
+define|#
+directive|define
+name|CFMSG_VERBOSE
+value|0x0000
+define|#
+directive|define
+name|CFMSG_SILENT
+value|0x0200
+define|#
+directive|define
+name|CFMSG_DIAG
+value|0x0400
+define|#
+directive|define
+name|CFBOOTCD
+value|0x0800
+comment|/* Support Bootable CD-ROM */
 comment|/*		UNUSED		0xff00	*/
 comment|/*  * Host Adapter Control Bits  */
 name|uint16_t
@@ -1947,7 +1960,6 @@ define|#
 directive|define
 name|CFMULTILUN
 value|0x0020
-comment|/* SCSI low byte term (284x cards) */
 define|#
 directive|define
 name|CFRESETB
@@ -2182,6 +2194,21 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|ahc_bus_intr_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ahc_softc
@@ -2241,9 +2268,13 @@ comment|/* 	 * Platform specific device information. 	 */
 name|ahc_dev_softc_t
 name|dev_softc
 decl_stmt|;
+comment|/* 	 * Bus specific device information. 	 */
+name|ahc_bus_intr_t
+name|bus_intr
+decl_stmt|;
 comment|/* 	 * Target mode related state kept on a per enabled lun basis. 	 * Targets that are not enabled will have null entries. 	 * As an initiator, we keep one target entry for our initiator 	 * ID to store our sync/wide transfer settings. 	 */
 name|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 modifier|*
 name|enabled_targets
 index|[
@@ -2252,13 +2283,13 @@ index|]
 decl_stmt|;
 comment|/* 	 * The black hole device responsible for handling requests for 	 * disabled luns on enabled targets. 	 */
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|black_hole
 decl_stmt|;
 comment|/* 	 * Device instance currently on the bus awaiting a continue TIO 	 * for a command that was not given the disconnect priveledge. 	 */
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 name|pending_device
 decl_stmt|;
@@ -2326,10 +2357,6 @@ name|our_id
 decl_stmt|;
 name|uint8_t
 name|our_id_b
-decl_stmt|;
-comment|/* Targets that need negotiation messages */
-name|uint16_t
-name|targ_msg_req
 decl_stmt|;
 comment|/* 	 * PCI error detection. 	 */
 name|int
@@ -2520,10 +2547,8 @@ function_decl|(
 name|ahc_device_setup_t
 function_decl|)
 parameter_list|(
-name|ahc_dev_softc_t
-parameter_list|,
 name|struct
-name|ahc_probe_config
+name|ahc_softc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2840,17 +2865,6 @@ comment|/****************************** Initialization *************************
 end_comment
 
 begin_function_decl
-name|void
-name|ahc_init_probe_config
-parameter_list|(
-name|struct
-name|ahc_probe_config
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|ahc_softc
 modifier|*
@@ -2873,10 +2887,6 @@ name|ahc_softc_init
 parameter_list|(
 name|struct
 name|ahc_softc
-modifier|*
-parameter_list|,
-name|struct
-name|ahc_probe_config
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2906,6 +2916,21 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ahc_intr_enable
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|,
+name|int
+name|enable
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3282,6 +3307,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ahc_calc_residual
+parameter_list|(
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*************************** Utility Functions ********************************/
 end_comment
@@ -3429,29 +3466,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ahc_update_target_msg_request
+name|int
+name|ahc_update_neg_request
 parameter_list|(
 name|struct
 name|ahc_softc
 modifier|*
-name|ahc
 parameter_list|,
 name|struct
 name|ahc_devinfo
 modifier|*
-name|dinfo
+parameter_list|,
+name|struct
+name|ahc_tmode_tstate
+modifier|*
 parameter_list|,
 name|struct
 name|ahc_initiator_tinfo
 modifier|*
-name|tinfo
 parameter_list|,
 name|int
-name|force
-parameter_list|,
-name|int
-name|paused
+comment|/*force*/
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3519,6 +3554,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHC_QUEUE_NONE
+block|,
+name|AHC_QUEUE_BASIC
+block|,
+name|AHC_QUEUE_TAGGED
+block|}
+name|ahc_queue_alg
+typedef|;
+end_typedef
+
 begin_function_decl
 name|void
 name|ahc_set_tags
@@ -3533,8 +3582,8 @@ name|ahc_devinfo
 modifier|*
 name|devinfo
 parameter_list|,
-name|int
-name|enable
+name|ahc_queue_alg
+name|alg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3558,7 +3607,7 @@ name|ahc_softc
 modifier|*
 parameter_list|,
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3606,36 +3655,19 @@ modifier|*
 name|ccb
 parameter_list|,
 name|struct
-name|tmode_tstate
+name|ahc_tmode_tstate
 modifier|*
 modifier|*
 name|tstate
 parameter_list|,
 name|struct
-name|tmode_lstate
+name|ahc_tmode_lstate
 modifier|*
 modifier|*
 name|lstate
 parameter_list|,
 name|int
 name|notfound_failure
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ahc_setup_target_msgin
-parameter_list|(
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc
-parameter_list|,
-name|struct
-name|ahc_devinfo
-modifier|*
-name|devinfo
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx SCSI host adapter firmware asssembler symbol table implementation  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aicasm/aicasm_symbol.c#4 $  *  * $FreeBSD$  */
+comment|/*  * Aic7xxx SCSI host adapter firmware asssembler symbol table implementation  *  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aicasm/aicasm_symbol.c#7 $  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<db1/db.h>
+file|"aicdb.h"
 end_include
 
 begin_else
@@ -736,9 +736,10 @@ name|curnode
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
 name|symlist
-operator|->
-name|slh_first
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -765,11 +766,12 @@ condition|)
 break|break;
 name|curnode
 operator|=
+name|SLIST_NEXT
+argument_list|(
 name|curnode
-operator|->
+argument_list|,
 name|links
-operator|.
-name|sle_next
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -894,9 +896,10 @@ comment|/* NOTREACHED */
 block|}
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
 name|symlist
-operator|->
-name|slh_first
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -976,11 +979,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|SLIST_NEXT
+argument_list|(
 name|curnode
-operator|->
+argument_list|,
 name|links
-operator|.
-name|sle_next
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -1004,11 +1008,12 @@ name|cursymbol
 decl_stmt|;
 name|cursymbol
 operator|=
+name|SLIST_NEXT
+argument_list|(
 name|curnode
-operator|->
+argument_list|,
 name|links
-operator|.
-name|sle_next
+argument_list|)
 operator|->
 name|symbol
 expr_stmt|;
@@ -1074,11 +1079,12 @@ block|}
 block|}
 name|curnode
 operator|=
+name|SLIST_NEXT
+argument_list|(
 name|curnode
-operator|->
+argument_list|,
 name|links
-operator|.
-name|sle_next
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1115,9 +1121,10 @@ name|node2
 decl_stmt|;
 name|node1
 operator|=
+name|SLIST_FIRST
+argument_list|(
 name|symlist
-operator|->
-name|slh_first
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1128,11 +1135,12 @@ condition|)
 block|{
 name|node2
 operator|=
+name|SLIST_NEXT
+argument_list|(
 name|node1
-operator|->
+argument_list|,
 name|links
-operator|.
-name|sle_next
+argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
@@ -1184,9 +1192,10 @@ condition|(
 operator|(
 name|node
 operator|=
+name|SLIST_FIRST
+argument_list|(
 name|symlist_src2
-operator|->
-name|slh_first
+argument_list|)
 operator|)
 operator|!=
 name|NULL
@@ -1446,9 +1455,11 @@ block|}
 comment|/* Put in the masks and bits */
 while|while
 condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|masks
-operator|.
-name|slh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -1467,9 +1478,11 @@ name|regname
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|masks
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
@@ -1481,6 +1494,9 @@ argument_list|)
 expr_stmt|;
 name|regnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|curnode
 operator|->
 name|symbol
@@ -1490,8 +1506,7 @@ operator|.
 name|minfo
 operator|->
 name|symrefs
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|regname
 operator|=
@@ -1524,9 +1539,11 @@ block|}
 comment|/* Add the aliases */
 while|while
 condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|aliases
-operator|.
-name|slh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -1545,9 +1562,11 @@ name|regname
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|aliases
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
@@ -1596,14 +1615,18 @@ name|fprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"/*   * DO NOT EDIT - This file is automatically generated.   */\n"
+literal|"/*  * DO NOT EDIT - This file is automatically generated  *		 from the following source files:  * %s */\n"
+argument_list|,
+name|versions
 argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|registers
-operator|.
-name|slh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -1625,9 +1648,11 @@ name|tab_str2
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|registers
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
@@ -1808,9 +1833,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|constants
-operator|.
-name|slh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -1821,9 +1848,11 @@ name|curnode
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|constants
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
@@ -1871,9 +1900,11 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|download_constants
-operator|.
-name|slh_first
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -1884,9 +1915,11 @@ name|curnode
 decl_stmt|;
 name|curnode
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|download_constants
-operator|.
-name|slh_first
+argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE_HEAD
 argument_list|(
