@@ -1,37 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpcsvc/nlm_prot.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "from: @(#)nlm_prot.x 1.8 87/09/21 Copyr 1987 Sun Micro";*/
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_comment
-comment|/*static char sccsid[] = "from: * @(#)nlm_prot.x	2.1 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_endif
+unit|static char sccsid[] = "from: @(#)nlm_prot.x 1.8 87/09/21 Copyr 1987 Sun Micro"; static char sccsid[] = "from: * @(#)nlm_prot.x	2.1 88/08/01 4.0 RPCSRC";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"nlm_prot.x,v 1.1 1994/08/04 19:01:48 wollman Exp"
+literal|"$Id: test.c,v 1.3 1997/10/13 11:11:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +36,18 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/nlm_prot.h>
+end_include
 
 begin_comment
 comment|/* Default timeout can be changed using clnt_control() */
