@@ -1484,7 +1484,7 @@ directive|else
 comment|/* ! defined (HAVE_TEMPNAM) */
 ifdef|#
 directive|ifdef
-name|_POSIX_SOURCE
+name|HAVE_TMPNAM
 name|tmpnam
 argument_list|(
 name|buf
@@ -1844,11 +1844,15 @@ name|a
 operator|->
 name|orl
 condition|)
-name|rewind
+name|FSEEK
 argument_list|(
 name|b
 operator|->
 name|ufd
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1874,13 +1878,13 @@ operator|==
 literal|'A'
 operator|)
 operator|&&
-name|fseek
+name|FSEEK
 argument_list|(
 name|b
 operator|->
 name|ufd
 argument_list|,
-literal|0L
+literal|0
 argument_list|,
 name|SEEK_END
 argument_list|)

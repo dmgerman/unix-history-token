@@ -2520,15 +2520,12 @@ name|f__curunit
 operator|->
 name|useek
 condition|)
-operator|(
-name|void
-operator|)
-name|fseek
+name|FSEEK
 argument_list|(
 name|f__cf
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|f__cursor
 argument_list|,

@@ -486,15 +486,12 @@ argument_list|,
 literal|"dfe"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fseek
+name|FSEEK
 argument_list|(
 name|f__cf
 argument_list|,
 operator|(
-name|long
+name|off_t
 operator|)
 name|f__curunit
 operator|->
