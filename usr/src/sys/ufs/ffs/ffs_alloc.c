@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_alloc.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -218,7 +218,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|ino_t
-name|ffs_ialloccg
+name|ffs_nodealloccg
 name|__P
 argument_list|(
 operator|(
@@ -503,7 +503,7 @@ literal|0
 condition|)
 name|cg
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 name|fs
 argument_list|,
@@ -570,9 +570,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 operator|*
 name|bnp
@@ -1031,9 +1031,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|allocbuf
 argument_list|(
@@ -1415,9 +1415,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|allocbuf
 argument_list|(
@@ -1670,7 +1670,7 @@ literal|0
 expr_stmt|;
 name|cg
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 name|fs
 argument_list|,
@@ -1695,7 +1695,7 @@ name|ipref
 argument_list|,
 name|mode
 argument_list|,
-name|ffs_ialloccg
+name|ffs_nodealloccg
 argument_list|)
 expr_stmt|;
 if|if
@@ -2093,7 +2093,7 @@ condition|)
 block|{
 name|cg
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 name|fs
 argument_list|,
@@ -2134,7 +2134,7 @@ literal|0
 condition|)
 name|startcg
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 name|fs
 argument_list|,
@@ -3102,7 +3102,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether a block can be allocated.  *  * Check to see if a block of the apprpriate size is available,  * and if it is, allocate it.  */
+comment|/*  * Determine whether a block can be allocated.  *  * Check to see if a block of the appropriate size is available,  * and if it is, allocate it.  */
 end_comment
 
 begin_function
@@ -4241,7 +4241,7 @@ end_comment
 begin_function
 specifier|static
 name|ino_t
-name|ffs_ialloccg
+name|ffs_nodealloccg
 parameter_list|(
 name|ip
 parameter_list|,
@@ -4586,7 +4586,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_ialloccg: map corrupted"
+literal|"ffs_nodealloccg: map corrupted"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -4671,7 +4671,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"ffs_ialloccg: block not in map"
+literal|"ffs_nodealloccg: block not in map"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -5610,7 +5610,7 @@ argument_list|)
 expr_stmt|;
 name|cg
 operator|=
-name|itog
+name|ino_to_cg
 argument_list|(
 name|fs
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -949,15 +949,34 @@ end_define
 begin_define
 define|#
 directive|define
-name|cgstart
+name|cgdmin
 parameter_list|(
 name|fs
 parameter_list|,
 name|c
 parameter_list|)
-define|\
-value|(cgbase(fs, c) + (fs)->fs_cgoffset * ((c)& ~((fs)->fs_cgmask)))
+value|(cgstart(fs, c) + (fs)->fs_dblkno)
 end_define
+
+begin_comment
+comment|/* 1st data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cgimin
+parameter_list|(
+name|fs
+parameter_list|,
+name|c
+parameter_list|)
+value|(cgstart(fs, c) + (fs)->fs_iblkno)
+end_define
+
+begin_comment
+comment|/* inode blk */
+end_comment
 
 begin_define
 define|#
@@ -994,34 +1013,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|cgimin
+name|cgstart
 parameter_list|(
 name|fs
 parameter_list|,
 name|c
 parameter_list|)
-value|(cgstart(fs, c) + (fs)->fs_iblkno)
+define|\
+value|(cgbase(fs, c) + (fs)->fs_cgoffset * ((c)& ~((fs)->fs_cgmask)))
 end_define
-
-begin_comment
-comment|/* inode blk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cgdmin
-parameter_list|(
-name|fs
-parameter_list|,
-name|c
-parameter_list|)
-value|(cgstart(fs, c) + (fs)->fs_dblkno)
-end_define
-
-begin_comment
-comment|/* 1st data */
-end_comment
 
 begin_comment
 comment|/*  * Macros for handling inode numbers:  *     inode number to file system block offset.  *     inode number to cylinder group number.  *     inode number to file system block address.  */
@@ -1030,19 +1030,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|itoo
-parameter_list|(
-name|fs
-parameter_list|,
-name|x
-parameter_list|)
-value|((x) % INOPB(fs))
-end_define
-
-begin_define
-define|#
-directive|define
-name|itog
+name|ino_to_cg
 parameter_list|(
 name|fs
 parameter_list|,
@@ -1054,14 +1042,26 @@ end_define
 begin_define
 define|#
 directive|define
-name|itod
+name|ino_to_fsba
 parameter_list|(
 name|fs
 parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(fs, itog(fs, x)) + \ 	(blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+value|((daddr_t)(cgimin(fs, ino_to_cg(fs, x)) +			\ 	    (blkstofrags((fs), (((x) % (fs)->fs_ipg) / INOPB(fs))))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ino_to_fsbo
+parameter_list|(
+name|fs
+parameter_list|,
+name|x
+parameter_list|)
+value|((x) % INOPB(fs))
 end_define
 
 begin_comment

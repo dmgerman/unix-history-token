@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)pcb.h	8.1 (Berkeley) %G%  *  * from: $Header: pcb.h,v 1.6 92/11/26 02:04:39 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)pcb.h	8.2 (Berkeley) %G%  *  * from: $Header: pcb.h,v 1.6 92/11/26 02:04:39 torek Exp $  */
 end_comment
 
 begin_include
@@ -58,15 +58,15 @@ block|{
 name|int
 name|pcb_sp
 decl_stmt|;
-comment|/* sp (%o6) when swtch() was called */
+comment|/* sp (%o6) when switch() was called */
 name|int
 name|pcb_pc
 decl_stmt|;
-comment|/* pc (%o7) when swtch() was called */
+comment|/* pc (%o7) when switch() was called */
 name|int
 name|pcb_psr
 decl_stmt|;
-comment|/* %psr when swtch() was called */
+comment|/* %psr when switch() was called */
 name|caddr_t
 name|pcb_onfault
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)locore2.c	8.2 (Berkeley) %G%  *  * from: $Header: locore2.c,v 1.8 92/11/26 03:05:01 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)locore2.c	8.3 (Berkeley) %G%  *  * from: $Header: locore2.c,v 1.8 92/11/26 03:05:01 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ name|which
 init|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|>>
 literal|2
 decl_stmt|;
@@ -76,7 +76,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_rlink
+name|p_back
 operator|!=
 name|NULL
 condition|)
@@ -101,7 +101,7 @@ name|which
 expr_stmt|;
 name|p
 operator|->
-name|p_link
+name|p_forw
 operator|=
 operator|(
 expr|struct
@@ -112,7 +112,7 @@ name|q
 expr_stmt|;
 name|p
 operator|->
-name|p_rlink
+name|p_back
 operator|=
 name|oldlast
 operator|=
@@ -128,7 +128,7 @@ name|p
 expr_stmt|;
 name|oldlast
 operator|->
-name|p_link
+name|p_forw
 operator|=
 name|p
 expr_stmt|;
@@ -160,7 +160,7 @@ name|which
 init|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|>>
 literal|2
 decl_stmt|;
@@ -191,27 +191,27 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_link
+name|p_forw
 operator|->
-name|p_rlink
+name|p_back
 operator|=
 name|p
 operator|->
-name|p_rlink
+name|p_back
 expr_stmt|;
 name|p
 operator|->
-name|p_rlink
+name|p_back
 operator|->
-name|p_link
+name|p_forw
 operator|=
 name|p
 operator|->
-name|p_link
+name|p_forw
 expr_stmt|;
 name|p
 operator|->
-name|p_rlink
+name|p_back
 operator|=
 name|NULL
 expr_stmt|;

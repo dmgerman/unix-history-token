@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	8.1 (Berkeley) %G%  *  * from: $Header: vm_machdep.c,v 1.10 92/11/26 03:05:11 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	8.2 (Berkeley) %G%  *  * from: $Header: vm_machdep.c,v 1.10 92/11/26 03:05:11 torek Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -681,7 +681,7 @@ name|off
 decl_stmt|,
 name|ssize
 decl_stmt|;
-comment|/* 	 * Save all the registers to p1's stack or, in the case of 	 * user registers and invalid stack pointers, to opcb. 	 * snapshot() also sets the given pcb's pcb_sp and pcb_psr 	 * to the current %sp and %psr, and sets pcb_pc to a stub 	 * which returns 1.  We then copy the whole pcb to p2; 	 * when swtch() selects p2 to run, it will run at the stub, 	 * rather than at the copying code below, and cpu_fork 	 * will return 1. 	 * 	 * Note that the order `*npcb = *opcb, snapshot(npcb)' is wrong, 	 * as user registers might then wind up only in opcb. 	 * We could call save_user_windows first, 	 * but that would only save 3 stores anyway. 	 * 	 * If process p1 has an FPU state, we must copy it.  If it is 	 * the FPU user, we must save the FPU state first. 	 */
+comment|/* 	 * Save all the registers to p1's stack or, in the case of 	 * user registers and invalid stack pointers, to opcb. 	 * snapshot() also sets the given pcb's pcb_sp and pcb_psr 	 * to the current %sp and %psr, and sets pcb_pc to a stub 	 * which returns 1.  We then copy the whole pcb to p2; 	 * when switch() selects p2 to run, it will run at the stub, 	 * rather than at the copying code below, and cpu_fork 	 * will return 1. 	 * 	 * Note that the order `*npcb = *opcb, snapshot(npcb)' is wrong, 	 * as user registers might then wind up only in opcb. 	 * We could call save_user_windows first, 	 * but that would only save 3 stores anyway. 	 * 	 * If process p1 has an FPU state, we must copy it.  If it is 	 * the FPU user, we must save the FPU state first. 	 */
 name|snapshot
 argument_list|(
 name|opcb
@@ -1014,7 +1014,7 @@ operator|->
 name|p_vmspace
 argument_list|)
 expr_stmt|;
-name|swtchexit
+name|switchexit
 argument_list|(
 name|kernel_map
 argument_list|,

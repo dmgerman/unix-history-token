@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -336,7 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* for use by swtch_exit() */
+comment|/* for use by switch_exit() */
 end_comment
 
 begin_comment
@@ -659,7 +659,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * init nullproc for swtch_exit(). 	 * init mapping for u page(s), pm_tlbpid 0 	 * This could be used for an idle process. 	 */
+comment|/* 	 * init nullproc for switch_exit(). 	 * init mapping for u page(s), pm_tlbpid 0 	 * This could be used for an idle process. 	 */
 name|nullproc
 operator|.
 name|p_addr

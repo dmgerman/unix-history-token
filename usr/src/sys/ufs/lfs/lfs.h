@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -818,7 +818,7 @@ name|sn
 parameter_list|)
 comment|/* segment number to disk address */
 define|\
-value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
+value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) +	\ 	    (fs)->lfs_sboffs[0]))
 end_define
 
 begin_comment
@@ -836,7 +836,7 @@ name|F
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_data; \ }
+value|{					\ 	VTOI((F)->lfs_ivnode)->i_flag |= IN_ACCESS;			\ 	if (bread((F)->lfs_ivnode,					\ 	    (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP)))			\ 		panic("lfs: ifile read");				\ 	(CP) = (CLEANERINFO *)(BP)->b_data;				\ }
 end_define
 
 begin_comment
@@ -856,7 +856,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read %d", _e); \ 	(IP) = (IFILE *)(BP)->b_data + (IN) % (F)->lfs_ifpb; \ }
+value|{					\ 	int _e;								\ 	VTOI((F)->lfs_ivnode)->i_flag |= IN_ACCESS;			\ 	if (_e = bread((F)->lfs_ivnode,					\ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz,\ 	    (F)->lfs_bsize, NOCRED,&(BP)))				\ 		panic("lfs: ifile read %d", _e);			\ 	(IP) = (IFILE *)(BP)->b_data + (IN) % (F)->lfs_ifpb;		\ }
 end_define
 
 begin_comment
@@ -876,7 +876,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read: %d", _e); \ 	(SP) = (SEGUSE *)(BP)->b_data + ((IN)& (F)->lfs_sepb - 1); \ }
+value|{					\ 	int _e;								\ 	VTOI((F)->lfs_ivnode)->i_flag |= IN_ACCESS;			\ 	if (_e = bread((F)->lfs_ivnode,					\ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz,		\ 	    (F)->lfs_bsize, NOCRED,&(BP)))				\ 		panic("lfs: ifile read: %d", _e);			\ 	(SP) = (SEGUSE *)(BP)->b_data + ((IN)& (F)->lfs_sepb - 1);	\ }
 end_define
 
 begin_comment
@@ -893,7 +893,7 @@ parameter_list|,
 name|db
 parameter_list|)
 define|\
-value|((long)((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE + (fs)->lfs_segtabsz))\< (fs)->lfs_avail)
+value|((long)((db + ((fs)->lfs_uinodes + INOPB((fs))) / INOPB((fs)) +	\ 	fsbtodb(fs, 1) + LFS_SUMMARY_SIZE / DEV_BSIZE +			\ 	(fs)->lfs_segtabsz))< (fs)->lfs_avail)
 end_define
 
 begin_comment
@@ -1063,7 +1063,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|(((C)->cr_uid == 0&& (F)->lfs_bfree>= (BB)) || \ 	((C)->cr_uid != 0&& IS_FREESPACE(F, BB)))
+value|(((C)->cr_uid == 0&& (F)->lfs_bfree>= (BB)) ||		\ 	((C)->cr_uid != 0&& IS_FREESPACE(F, BB)))
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -402,7 +402,7 @@ name|u_procp
 operator|->
 name|p_flag
 operator|&
-name|SOWEUPC
+name|P_OWEUPC
 operator|)
 operator|&&
 name|u
@@ -431,7 +431,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SOWEUPC
+name|P_OWEUPC
 expr_stmt|;
 block|}
 goto|goto
@@ -599,14 +599,14 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -617,7 +617,7 @@ condition|(
 name|runrun
 condition|)
 block|{
-comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
+comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we switched, we might not be on the queue 		 * indicated by our priority. 		 */
 operator|(
 name|void
 operator|)
@@ -636,7 +636,7 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
-name|swtch
+name|Xswitch
 argument_list|()
 expr_stmt|;
 if|if
@@ -658,7 +658,7 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
@@ -746,7 +746,7 @@ name|curpriority
 operator|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 expr_stmt|;
 block|}
 end_block
@@ -1199,14 +1199,14 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -1217,7 +1217,7 @@ condition|(
 name|runrun
 condition|)
 block|{
-comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
+comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we switched, we might not be on the queue 		 * indicated by our priority. 		 */
 operator|(
 name|void
 operator|)
@@ -1236,7 +1236,7 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
-name|swtch
+name|Xswitch
 argument_list|()
 expr_stmt|;
 if|if
@@ -1248,7 +1248,7 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
@@ -1336,7 +1336,7 @@ name|curpriority
 operator|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 expr_stmt|;
 ifdef|#
 directive|ifdef

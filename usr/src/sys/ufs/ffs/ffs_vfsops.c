@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1201,11 +1201,6 @@ modifier|*
 name|ip
 decl_stmt|;
 name|struct
-name|dinode
-modifier|*
-name|dp
-decl_stmt|;
-name|struct
 name|csum
 modifier|*
 name|space
@@ -1657,7 +1652,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -1692,8 +1687,12 @@ name|error
 operator|)
 return|;
 block|}
-name|dp
+name|ip
+operator|->
+name|i_din
 operator|=
+operator|*
+operator|(
 operator|(
 expr|struct
 name|dinode
@@ -1702,10 +1701,8 @@ operator|)
 name|bp
 operator|->
 name|b_data
-expr_stmt|;
-name|dp
-operator|+=
-name|itoo
+operator|+
+name|ino_to_fsbo
 argument_list|(
 name|fs
 argument_list|,
@@ -1713,13 +1710,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|i_din
-operator|=
-operator|*
-name|dp
+operator|)
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -3659,13 +3650,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IMODIFIED
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|IUPDATE
+name|IN_MODIFIED
 operator||
-name|ICHANGE
+name|IN_UPDATE
 operator|)
 operator|)
 operator|==
@@ -3753,7 +3744,7 @@ name|allerror
 operator|)
 return|;
 block|}
-comment|/*  * Look up a FFS dinode number to find its incore vnode.  * If it is not in core, read it in from the specified device.  * If it is in core, wait for the lock bit to clear, then  * return the inode locked. Detection and handling of mount  * points must be done by the calling routine.  */
+comment|/*  * Look up a FFS dinode number to find its incore vnode, otherwise read it  * in from disk.  If it is in core, wait for the lock bit to clear, then  * return the inode locked.  Detection and handling of mount points must be  * done by the calling routine.  */
 name|int
 name|ffs_vget
 parameter_list|(
@@ -3799,11 +3790,6 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-name|struct
-name|dinode
-modifier|*
-name|dp
 decl_stmt|;
 name|struct
 name|vnode
@@ -4018,7 +4004,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -4062,8 +4048,12 @@ name|error
 operator|)
 return|;
 block|}
-name|dp
+name|ip
+operator|->
+name|i_din
 operator|=
+operator|*
+operator|(
 operator|(
 expr|struct
 name|dinode
@@ -4072,22 +4062,14 @@ operator|)
 name|bp
 operator|->
 name|b_data
-expr_stmt|;
-name|dp
-operator|+=
-name|itoo
+operator|+
+name|ino_to_fsbo
 argument_list|(
 name|fs
 argument_list|,
 name|ino
 argument_list|)
-expr_stmt|;
-name|ip
-operator|->
-name|i_din
-operator|=
-operator|*
-name|dp
+operator|)
 expr_stmt|;
 name|brelse
 argument_list|(
@@ -4196,7 +4178,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMODIFIED
+name|IN_MODIFIED
 expr_stmt|;
 block|}
 comment|/* 	 * Ensure that uid and gid are correct. This is a temporary 	 * fix until fsck has been changed to do the update. 	 */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -946,7 +946,7 @@ name|targp
 operator|->
 name|p_flag
 operator|&
-name|SEXEC
+name|P_EXEC
 condition|)
 return|return
 operator|(
@@ -1205,7 +1205,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1348,7 +1348,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1500,7 +1500,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1645,7 +1645,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1823,7 +1823,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 return|return
 operator|(

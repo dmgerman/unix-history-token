@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1990,11 +1990,11 @@ name|ip
 operator|->
 name|i_flags
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 condition|)
 name|printf
 argument_list|(
-literal|"Cleaned vnode ILOCKED\n"
+literal|"cleaned vnode locked\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2005,7 +2005,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMODIFIED
+name|IN_MODIFIED
 operator|)
 condition|)
 block|{
@@ -2020,14 +2020,14 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMODIFIED
+name|IN_MODIFIED
 expr_stmt|;
 block|}
 name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMODIFIED
+name|IN_MODIFIED
 expr_stmt|;
 return|return
 operator|(
@@ -2206,7 +2206,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCKED
+name|IN_LOCKED
 expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
 if|if
@@ -2255,7 +2255,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMODIFIED
+name|IN_MODIFIED
 expr_stmt|;
 operator|++
 name|ump

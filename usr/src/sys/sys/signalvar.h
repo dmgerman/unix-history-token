@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -147,7 +147,7 @@ value|(p->p_sigacts->ps_sigact[(sig)])
 end_define
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current process,  * 0 if none.  If there is a pending stop signal with default action,  * the process stops in issig().  */
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issig().  */
 end_comment
 
 begin_define
@@ -158,7 +158,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|(((p)->p_sig == 0 || \ 	    ((p)->p_flag&STRC) == 0&& ((p)->p_sig&~ (p)->p_sigmask) == 0) ? \ 	    0 : issig(p))
+value|(((p)->p_siglist == 0 ||					\ 	    ((p)->p_flag& P_TRACED) == 0&&				\ 	    ((p)->p_siglist& ~(p)->p_sigmask) == 0) ?			\ 	    0 : issignal(p))
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ name|p
 parameter_list|,
 name|sig
 parameter_list|)
-value|{ (p)->p_sig&= ~sigmask(sig); }
+value|{ (p)->p_siglist&= ~sigmask(sig); }
 end_define
 
 begin_comment
@@ -403,15 +403,15 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|stopsigmask
-value|(sigmask(SIGSTOP)|sigmask(SIGTSTP)|\ 			 sigmask(SIGTTIN)|sigmask(SIGTTOU))
+name|contsigmask
+value|(sigmask(SIGCONT))
 end_define
 
 begin_define
 define|#
 directive|define
-name|contsigmask
-value|(sigmask(SIGCONT))
+name|stopsigmask
+value|(sigmask(SIGSTOP) | sigmask(SIGTSTP) | \ 			    sigmask(SIGTTIN) | sigmask(SIGTTOU))
 end_define
 
 begin_endif
@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|sigcantmask
-value|(sigmask(SIGKILL)|sigmask(SIGSTOP))
+value|(sigmask(SIGKILL) | sigmask(SIGSTOP))
 end_define
 
 begin_ifdef
@@ -441,8 +441,8 @@ comment|/*  * Machine-independent functions:  */
 end_comment
 
 begin_decl_stmt
-name|void
-name|siginit
+name|int
+name|coredump
 name|__P
 argument_list|(
 operator|(
@@ -487,6 +487,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|issig
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|pgsignal
 name|__P
@@ -509,20 +524,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|trapsignal
+name|postsig
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|proc
-operator|*
-name|p
-operator|,
 name|int
 name|sig
-operator|,
-name|unsigned
-name|code
 operator|)
 argument_list|)
 decl_stmt|;
@@ -547,8 +554,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|issig
+name|void
+name|siginit
 name|__P
 argument_list|(
 operator|(
@@ -563,20 +570,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|psig
-name|__P
-argument_list|(
-operator|(
-name|int
-name|sig
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|coredump
+name|trapsignal
 name|__P
 argument_list|(
 operator|(
@@ -584,6 +578,12 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|,
+name|int
+name|sig
+operator|,
+name|unsigned
+name|code
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)buf.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -163,12 +163,64 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* Device driver compatibility definitions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|b_active
+value|b_bcount
+end_define
+
+begin_comment
+comment|/* Driver queue head: drive active. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|b_data
 value|b_un.b_addr
 end_define
+
+begin_comment
+comment|/* b_un.b_addr is not changeable. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|b_errcnt
+value|b_resid
+end_define
+
+begin_comment
+comment|/* Retry count while I/O in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|iodone
+value|biodone
+end_define
+
+begin_comment
+comment|/* Old name for biodone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|iowait
+value|biowait
+end_define
+
+begin_comment
+comment|/* Old name for biowait. */
+end_comment
 
 begin_comment
 comment|/*  * These flags are kept in b_flags.  */
@@ -469,54 +521,6 @@ end_define
 
 begin_comment
 comment|/* Debugging flag. */
-end_comment
-
-begin_comment
-comment|/* Device driver compatibility definitions. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|b_active
-value|b_bcount
-end_define
-
-begin_comment
-comment|/* Driver queue head: drive active. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|b_errcnt
-value|b_resid
-end_define
-
-begin_comment
-comment|/* Retry count while I/O in progress. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|iodone
-value|biodone
-end_define
-
-begin_comment
-comment|/* Old name for biodone. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|iowait
-value|biowait
-end_define
-
-begin_comment
-comment|/* Old name for biowait. */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1493,7 +1493,7 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 control|)
 if|if
 condition|(
@@ -1508,7 +1508,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SSYS
+name|P_SYSTEM
 operator|)
 operator|==
 literal|0
@@ -1839,7 +1839,7 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 control|)
 if|if
 condition|(
@@ -1854,7 +1854,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SSYS
+name|P_SYSTEM
 operator|)
 operator|==
 literal|0

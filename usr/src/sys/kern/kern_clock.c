@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_clock.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1142,7 +1142,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 operator|)
 operator|==
 literal|0
@@ -1152,7 +1152,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SPROFIL
+name|P_PROFIL
 expr_stmt|;
 if|if
 condition|(
@@ -1218,7 +1218,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 block|{
 name|p
@@ -1226,7 +1226,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SPROFIL
+name|P_PROFIL
 expr_stmt|;
 if|if
 condition|(
@@ -1330,7 +1330,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 name|addupc_intr
 argument_list|(
@@ -1545,7 +1545,7 @@ name|i
 index|]
 operator|++
 expr_stmt|;
-comment|/* 	 * We adjust the priority of the current process. 	 * The priority of a process gets worse as it accumulates 	 * CPU time.  The cpu usage estimator (p_cpu) is increased here 	 * and the formula for computing priorities (in kern_synch.c) 	 * will compute a different value each time the p_cpu increases 	 * by 4.  The cpu usage estimator ramps up quite quickly when 	 * the process is running (linearly), and decays away 	 * exponentially, at a rate which is proportionally slower 	 * when the system is busy.  The basic principal is that the 	 * system will 90% forget that a process used a lot of CPU 	 * time in 5*loadav seconds.  This causes the system to favor 	 * processes which haven't run much recently, and to 	 * round-robin among other processes. 	 */
+comment|/* 	 * We adjust the priority of the current process.  The priority of 	 * a process gets worse as it accumulates CPU time.  The cpu usage 	 * estimator (p_estcpu) is increased here.  The formula for computing 	 * priorities (in kern_synch.c) will compute a different value each 	 * time p_estcpu increases by 4.  The cpu usage estimator ramps up 	 * quite quickly when the process is running (linearly), and decays 	 * away exponentially, at a rate which is proportionally slower when 	 * the system is busy.  The basic principal is that the system will 	 * 90% forget that the process used a lot of CPU time in 5 * loadav 	 * seconds.  This causes the system to favor processes which haven't 	 * run much recently, and to round-robin among other processes. 	 */
 if|if
 condition|(
 name|p
@@ -1563,13 +1563,13 @@ condition|(
 operator|++
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|==
 literal|0
 condition|)
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|--
 expr_stmt|;
 if|if
@@ -1577,7 +1577,7 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|&
 literal|3
 operator|)
@@ -1594,13 +1594,13 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|>=
 name|PUSER
 condition|)
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_inode.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -165,7 +165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
+comment|/*  * Last reference to an inode.  If necessary, write or delete it.  */
 end_comment
 
 begin_function
@@ -310,7 +310,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCKED
+name|IN_LOCKED
 expr_stmt|;
 if|if
 condition|(
@@ -379,6 +379,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|ip
+operator|->
+name|i_rdev
+operator|=
+literal|0
+expr_stmt|;
 name|mode
 operator|=
 name|ip
@@ -393,17 +399,11 @@ literal|0
 expr_stmt|;
 name|ip
 operator|->
-name|i_rdev
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|VOP_VFREE
 argument_list|(
@@ -424,13 +424,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IMODIFIED
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|IUPDATE
+name|IN_MODIFIED
 operator||
-name|ICHANGE
+name|IN_UPDATE
 operator|)
 condition|)
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * from: hp300/hp300/vm_machdep.c	7.14 (Berkeley) 12/27/92  *  *	@(#)vm_machdep.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  * from: hp300/hp300/vm_machdep.c	7.14 (Berkeley) 12/27/92  *  *	@(#)vm_machdep.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -149,7 +149,7 @@ name|MDP_HPUXTRACE
 operator|)
 operator|)
 expr_stmt|;
-comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * swtch compensates for this when the child eventually runs. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
+comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * switch compensates for this when the child eventually runs. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
 name|p2
 operator|->
 name|p_addr
@@ -242,7 +242,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * cpu_exit is called as the last action during exit.  * We release the address space and machine-dependent resources,  * including the memory for the user structure and kernel stack.  * Once finished, we call swtch_exit, which switches to a temporary  * pcb and stack and never returns.  We block memory allocation  * until swtch_exit has made things safe again.  */
+comment|/*  * cpu_exit is called as the last action during exit.  * We release the address space and machine-dependent resources,  * including the memory for the user structure and kernel stack.  * Once finished, we call switch_exit, which switches to a temporary  * pcb and stack and never returns.  We block memory allocation  * until switch_exit has made things safe again.  */
 end_comment
 
 begin_macro
@@ -292,7 +292,7 @@ name|UPAGES
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|swtch_exit
+name|switch_exit
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */

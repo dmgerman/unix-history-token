@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/genassym.c	7.14 (Berkeley) 12/30/92  *  *	@(#)genassym.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/genassym.c	7.14 (Berkeley) 12/30/92  *  *	@(#)genassym.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -341,22 +341,22 @@ argument_list|)
 expr_stmt|;
 name|off
 argument_list|(
-literal|"P_LINK"
+literal|"P_FORW"
 argument_list|,
 expr|struct
 name|proc
 argument_list|,
-name|p_link
+name|p_forw
 argument_list|)
 expr_stmt|;
 name|off
 argument_list|(
-literal|"P_RLINK"
+literal|"P_BACK"
 argument_list|,
 expr|struct
 name|proc
 argument_list|,
-name|p_rlink
+name|p_back
 argument_list|)
 expr_stmt|;
 name|off
@@ -381,12 +381,12 @@ argument_list|)
 expr_stmt|;
 name|off
 argument_list|(
-literal|"P_PRI"
+literal|"P_PRIORITY"
 argument_list|,
 expr|struct
 name|proc
 argument_list|,
-name|p_pri
+name|p_priority
 argument_list|)
 expr_stmt|;
 name|off

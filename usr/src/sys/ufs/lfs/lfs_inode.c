@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -260,13 +260,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_MODIFIED
 operator||
-name|IMODIFIED
+name|IN_UPDATE
 operator|)
 operator|)
 operator|==
@@ -283,7 +283,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IACCESS
+name|IN_ACCESS
 condition|)
 name|ip
 operator|->
@@ -303,7 +303,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IUPDATE
+name|IN_UPDATE
 condition|)
 block|{
 name|ip
@@ -332,7 +332,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ICHANGE
+name|IN_CHANGE
 condition|)
 name|ip
 operator|->
@@ -350,11 +350,11 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 operator|)
 expr_stmt|;
 if|if
@@ -365,7 +365,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMODIFIED
+name|IN_MODIFIED
 operator|)
 condition|)
 operator|++
@@ -386,7 +386,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMODIFIED
+name|IN_MODIFIED
 expr_stmt|;
 comment|/* If sync, push back the vnode and any dirty blocks it may have. */
 return|return
@@ -635,9 +635,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -686,9 +686,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -1390,9 +1390,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 comment|/* 	 * Traverse dirty block list counting number of dirty buffers 	 * that are being deleted out of the cache, so that the lfs_avail 	 * field can be updated. 	 */
 name|a_released

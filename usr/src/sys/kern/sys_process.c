@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -187,7 +187,7 @@ name|curp
 operator|->
 name|p_flag
 operator||=
-name|STRC
+name|P_TRACED
 expr_stmt|;
 return|return
 operator|(
@@ -232,7 +232,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SUGID
+name|P_SUGID
 operator|||
 name|p
 operator|->
@@ -276,7 +276,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 condition|)
 return|return
 operator|(
@@ -304,7 +304,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|STRC
+name|P_TRACED
 expr_stmt|;
 name|p
 operator|->
@@ -356,7 +356,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 operator|)
 condition|)
 return|return
@@ -418,7 +418,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SWTED
+name|P_WAITED
 expr_stmt|;
 while|while
 condition|(
@@ -637,7 +637,7 @@ comment|/*  * Transmit a tracing request from the parent to the child process  *
 end_comment
 
 begin_expr_stmt
-name|procxmt
+name|trace_req
 argument_list|(
 name|p
 argument_list|)
@@ -1363,7 +1363,7 @@ name|ipc
 operator|.
 name|ip_data
 expr_stmt|;
-comment|/* see issig */
+comment|/* see issignal */
 ifdef|#
 directive|ifdef
 name|PSL_T
@@ -1487,13 +1487,13 @@ name|ipc
 operator|.
 name|ip_data
 expr_stmt|;
-comment|/* see issig */
+comment|/* see issignal */
 name|p
 operator|->
 name|p_flag
 operator|&=
 operator|~
-name|STRC
+name|P_TRACED
 expr_stmt|;
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	8.1 (Berkeley) %G%  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	8.2 (Berkeley) %G%  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
 end_comment
 
 begin_include
@@ -116,7 +116,7 @@ name|int
 name|mvesp
 parameter_list|()
 function_decl|;
-comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * swtch compensates for this when the child eventually runs. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
+comment|/* 	 * Copy pcb and stack from proc p1 to p2.  	 * We do this as cheaply as possible, copying only the active 	 * part of the stack.  The stack and pcb need to agree; 	 * this is tricky, as the final pcb is constructed by savectx, 	 * but its frame isn't yet on the stack when the stack is copied. 	 * mi_switch compensates for this when the child eventually runs. 	 * This should be done differently, with a single call 	 * that copies and updates the pcb+stack, 	 * replacing the bcopy and savectx. 	 */
 name|p2
 operator|->
 name|p_addr
@@ -345,14 +345,14 @@ name|notyet
 end_ifdef
 
 begin_comment
-comment|/*  * cpu_exit is called as the last action during exit.  *  * We change to an inactive address space and a "safe" stack,  * passing thru an argument to the new stack. Now, safely isolated  * from the resources we're shedding, we release the address space  * and any remaining machine-dependent resources, including the  * memory for the user structure and kernel stack.  *  * Next, we assign a dummy context to be written over by swtch,  * calling it to send this process off to oblivion.  * [The nullpcb allows us to minimize cost in swtch() by not having  * a special case].  */
+comment|/*  * cpu_exit is called as the last action during exit.  *  * We change to an inactive address space and a "safe" stack,  * passing thru an argument to the new stack. Now, safely isolated  * from the resources we're shedding, we release the address space  * and any remaining machine-dependent resources, including the  * memory for the user structure and kernel stack.  *  * Next, we assign a dummy context to be written over by mi_switch,  * calling it to send this process off to oblivion.  * [The nullpcb allows us to minimize cost in mi_switch() by not having  * a special case].  */
 end_comment
 
 begin_function_decl
 name|struct
 name|proc
 modifier|*
-name|swtch_to_inactive
+name|switch_to_inactive
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -377,7 +377,7 @@ name|struct
 name|pcb
 name|nullpcb
 decl_stmt|;
-comment|/* pcb to overwrite on last swtch */
+comment|/* pcb to overwrite on last switch */
 if|#
 directive|if
 name|NNPX
@@ -399,7 +399,7 @@ directive|endif
 comment|/* move to inactive space and stack, passing arg accross */
 name|p
 operator|=
-name|swtch_to_inactive
+name|switch_to_inactive
 argument_list|(
 name|p
 argument_list|)
@@ -441,7 +441,7 @@ operator|)
 operator|&
 name|nullpcb
 expr_stmt|;
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -490,7 +490,7 @@ name|curproc
 operator|=
 name|p
 expr_stmt|;
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 block|}

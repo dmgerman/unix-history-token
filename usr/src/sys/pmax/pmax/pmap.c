@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.1 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4695,7 +4695,7 @@ comment|/*  * Miscellaneous support routines  */
 end_comment
 
 begin_comment
-comment|/*  * Allocate a hardware PID and return it.  * It takes almost as much or more time to search the TLB for a  * specific PID and flush those entries as it does to flush the entire TLB.  * Therefore, when we allocate a new PID, we just take the next number. When  * we run out of numbers, we flush the TLB, increment the generation count  * and start over. PID zero is reserved for kernel use.  * This is called only by swtch().  */
+comment|/*  * Allocate a hardware PID and return it.  * It takes almost as much or more time to search the TLB for a  * specific PID and flush those entries as it does to flush the entire TLB.  * Therefore, when we allocate a new PID, we just take the next number. When  * we run out of numbers, we flush the TLB, increment the generation count  * and start over. PID zero is reserved for kernel use.  * This is called only by switch().  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3050,7 +3050,7 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 control|)
 block|{
 comment|/* 		 * Skip embryonic processes. 		 */
@@ -3124,7 +3124,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|==
 literal|0
@@ -3599,7 +3599,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 operator|)
 operator|&&
 operator|(

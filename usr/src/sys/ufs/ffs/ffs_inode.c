@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -184,11 +184,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-name|struct
-name|dinode
-modifier|*
-name|dp
-decl_stmt|;
 specifier|register
 name|struct
 name|fs
@@ -223,13 +218,13 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_MODIFIED
 operator||
-name|IMODIFIED
+name|IN_UPDATE
 operator|)
 expr_stmt|;
 return|return
@@ -246,13 +241,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_MODIFIED
 operator||
-name|IMODIFIED
+name|IN_UPDATE
 operator|)
 operator|)
 operator|==
@@ -269,7 +264,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IACCESS
+name|IN_ACCESS
 condition|)
 name|ip
 operator|->
@@ -289,7 +284,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IUPDATE
+name|IN_UPDATE
 condition|)
 block|{
 name|ip
@@ -316,7 +311,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ICHANGE
+name|IN_CHANGE
 condition|)
 name|ip
 operator|->
@@ -334,13 +329,13 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_MODIFIED
 operator||
-name|IMODIFIED
+name|IN_UPDATE
 operator|)
 expr_stmt|;
 name|fs
@@ -398,7 +393,7 @@ name|fsbtodb
 argument_list|(
 name|fs
 argument_list|,
-name|itod
+name|ino_to_fsba
 argument_list|(
 name|fs
 argument_list|,
@@ -433,8 +428,8 @@ name|error
 operator|)
 return|;
 block|}
-name|dp
-operator|=
+operator|*
+operator|(
 operator|(
 expr|struct
 name|dinode
@@ -444,7 +439,7 @@ name|bp
 operator|->
 name|b_data
 operator|+
-name|itoo
+name|ino_to_fsbo
 argument_list|(
 name|fs
 argument_list|,
@@ -452,9 +447,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|)
-expr_stmt|;
-operator|*
-name|dp
+operator|)
 operator|=
 name|ip
 operator|->
@@ -524,7 +517,7 @@ comment|/* index of triple indirect block */
 end_comment
 
 begin_comment
-comment|/*  * Truncate the inode oip to at most length size.  Free affected disk  * blocks -- the blocks of the file are removed in reverse order.  */
+comment|/*  * Truncate the inode oip to at most length size, freeing the  * disk blocks.  */
 end_comment
 
 begin_macro
@@ -724,9 +717,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -758,9 +751,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -930,9 +923,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -1264,9 +1257,9 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 if|if
 condition|(
@@ -1862,7 +1855,7 @@ name|oip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 ifdef|#
 directive|ifdef

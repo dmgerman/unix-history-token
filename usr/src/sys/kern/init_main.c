@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -565,9 +565,9 @@ name|p
 operator|->
 name|p_flag
 operator|=
-name|SLOAD
+name|P_INMEM
 operator||
-name|SSYS
+name|P_SYSTEM
 expr_stmt|;
 end_expr_stmt
 
@@ -1313,7 +1313,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * Now can look at time, having had a chance to verify the time 	 * from the file system.  Reset p->p_rtime as it may have been 	 * munched in swtch() after the time got set. 	 */
+comment|/* 	 * Now can look at time, having had a chance to verify the time 	 * from the file system.  Reset p->p_rtime as it may have been 	 * munched in mi_switch() after the time got set. 	 */
 end_comment
 
 begin_expr_stmt
@@ -1450,9 +1450,9 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SLOAD
+name|P_INMEM
 operator||
-name|SSYS
+name|P_SYSTEM
 expr_stmt|;
 comment|/* XXX */
 name|bcopy
@@ -1892,7 +1892,7 @@ name|envp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		 * Now try to exec the program. 		 */
+comment|/* 		 * Now try to exec the program.  If can't for any reason 		 * other than it doesn't exist, complain. 		 */
 if|if
 condition|(
 operator|(
@@ -1919,23 +1919,15 @@ name|error
 operator|!=
 name|ENOENT
 condition|)
-block|{
-comment|/* 			 * Found "init", but couldn't execute it. 			 * Complain now. 			 */
 name|printf
 argument_list|(
-literal|"Can't invoke %s: error %d\n"
+literal|"exec %s: error %d\n"
 argument_list|,
 name|path
 argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"init error"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|printf
 argument_list|(

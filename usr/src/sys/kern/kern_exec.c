@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -568,7 +568,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 operator|)
 operator|&&
 operator|(
@@ -2771,14 +2771,14 @@ name|VM_MAXUSER_ADDRESS
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If parent is waiting for us to exec or exit, 	 * SPPWAIT will be set; clear it and wakeup parent. 	 */
+comment|/* 	 * If parent is waiting for us to exec or exit, 	 * P_PPWAIT will be set; clear it and wakeup parent. 	 */
 if|if
 condition|(
 name|p
 operator|->
 name|p_flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 condition|)
 block|{
 name|p
@@ -2786,7 +2786,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SPPWAIT
+name|P_PPWAIT
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -2929,7 +2929,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SEXEC
+name|P_EXEC
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -3597,7 +3597,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SKEEP
+name|P_NOSWAP
 expr_stmt|;
 return|return
 operator|(
@@ -3611,7 +3611,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 if|if
 condition|(
@@ -3620,7 +3620,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 operator|)
 operator|==
 literal|0
@@ -3705,7 +3705,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SUGID
+name|P_SUGID
 expr_stmt|;
 block|}
 block|}
@@ -3767,7 +3767,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 name|stopprofclock
 argument_list|(

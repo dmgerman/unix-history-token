@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * constants for digital decay and forget  *	90% of (p_cpu) usage in 5*loadav time  *	95% of (p_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that hardclock updates p_cpu and p_cpticks independently.  *  * We wish to decay away 90% of p_cpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		p_cpu *= decay;  * will compute  * 	p_cpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *	  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
+comment|/*  * Constants for digital decay and forget:  *	90% of (p_estcpu) usage in 5 * loadav time  *	95% of (p_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that hardclock updates p_estcpu and p_cpticks independently.  *  * We wish to decay away 90% of p_estcpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		p_estcpu *= decay;  * will compute  * 	p_estcpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *	  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
 end_comment
 
 begin_comment
@@ -265,13 +265,13 @@ name|p
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 control|)
 block|{
 comment|/* 		 * Increment time in/out of memory and sleep time 		 * (if sleeping).  We ignore overflow; with 16-bit int's 		 * (remember them?) overflow takes 45 days. 		 */
 name|p
 operator|->
-name|p_time
+name|p_swtime
 operator|++
 expr_stmt|;
 if|if
@@ -422,7 +422,7 @@ name|loadfac
 argument_list|,
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 argument_list|)
 operator|+
 name|p
@@ -431,7 +431,7 @@ name|p_nice
 expr_stmt|;
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|=
 name|min
 argument_list|(
@@ -449,7 +449,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|>=
 name|PUSER
 condition|)
@@ -478,13 +478,13 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|&&
 operator|(
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|/
 name|PPQ
 operator|)
@@ -505,7 +505,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -520,7 +520,7 @@ block|}
 else|else
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -567,7 +567,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max p_cpu of 255, sleeping for at least  * six times the loadfactor will decay p_cpu to zero.  */
+comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max p_estcpu of 255, sleeping for at  * least six times the loadfactor will decay p_estcpu to zero.  */
 end_comment
 
 begin_function
@@ -590,7 +590,7 @@ name|newcpu
 init|=
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 decl_stmt|;
 specifier|register
 name|fixpt_t
@@ -618,7 +618,7 @@ name|loadfac
 condition|)
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|=
 literal|0
 expr_stmt|;
@@ -653,7 +653,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|=
 name|min
 argument_list|(
@@ -674,22 +674,22 @@ end_function
 begin_define
 define|#
 directive|define
-name|SQSIZE
-value|0100
+name|TABLESIZE
+value|64
 end_define
 
 begin_comment
-comment|/* Must be power of 2 */
+comment|/* Must be power of 2. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HASH
+name|LOOKUP
 parameter_list|(
 name|x
 parameter_list|)
-value|(( (int) x>> 5)& (SQSIZE-1))
+value|((int)x& (TABLESIZE - 1))
 end_define
 
 begin_struct
@@ -710,7 +710,7 @@ decl_stmt|;
 block|}
 name|slpque
 index|[
-name|SQSIZE
+name|TABLESIZE
 index|]
 struct|;
 end_struct
@@ -866,7 +866,7 @@ name|SRUN
 operator|||
 name|p
 operator|->
-name|p_rlink
+name|p_back
 condition|)
 name|panic
 argument_list|(
@@ -895,7 +895,7 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|priority
 operator|&
@@ -906,7 +906,7 @@ operator|=
 operator|&
 name|slpque
 index|[
-name|HASH
+name|LOOKUP
 argument_list|(
 name|ident
 argument_list|)
@@ -943,7 +943,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 operator|)
 operator|=
 literal|0
@@ -975,7 +975,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SSINTR
+name|P_SINTR
 expr_stmt|;
 if|if
 condition|(
@@ -1046,7 +1046,7 @@ operator|.
 name|ru_nvcsw
 operator|++
 expr_stmt|;
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 name|resume
@@ -1067,7 +1067,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SSINTR
+name|P_SINTR
 expr_stmt|;
 if|if
 condition|(
@@ -1075,7 +1075,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STIMO
+name|P_TIMEOUT
 condition|)
 block|{
 name|p
@@ -1083,7 +1083,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|STIMO
+name|P_TIMEOUT
 expr_stmt|;
 if|if
 condition|(
@@ -1310,7 +1310,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|STIMO
+name|P_TIMEOUT
 expr_stmt|;
 block|}
 name|splx
@@ -1431,7 +1431,7 @@ name|SRUN
 operator|||
 name|p
 operator|->
-name|p_rlink
+name|p_back
 condition|)
 name|panic
 argument_list|(
@@ -1460,7 +1460,7 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|priority
 expr_stmt|;
@@ -1469,7 +1469,7 @@ operator|=
 operator|&
 name|slpque
 index|[
-name|HASH
+name|LOOKUP
 argument_list|(
 name|ident
 argument_list|)
@@ -1506,7 +1506,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 operator|)
 operator|=
 literal|0
@@ -1551,7 +1551,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1647,7 +1647,7 @@ operator|=
 operator|&
 name|slpque
 index|[
-name|HASH
+name|LOOKUP
 argument_list|(
 name|p
 operator|->
@@ -1673,14 +1673,14 @@ operator|*
 name|hp
 operator|)
 operator|->
-name|p_link
+name|p_forw
 expr_stmt|;
 operator|*
 name|hp
 operator|=
 name|p
 operator|->
-name|p_link
+name|p_forw
 expr_stmt|;
 if|if
 condition|(
@@ -1691,7 +1691,7 @@ operator|==
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 condition|)
 name|qp
 operator|->
@@ -1759,7 +1759,7 @@ operator|=
 operator|&
 name|slpque
 index|[
-name|HASH
+name|LOOKUP
 argument_list|(
 name|ident
 argument_list|)
@@ -1790,7 +1790,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_rlink
+name|p_back
 operator|||
 name|p
 operator|->
@@ -1831,7 +1831,7 @@ name|q
 operator|=
 name|p
 operator|->
-name|p_link
+name|p_forw
 expr_stmt|;
 if|if
 condition|(
@@ -1842,7 +1842,7 @@ operator|==
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 condition|)
 name|qp
 operator|->
@@ -1891,14 +1891,14 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 condition|)
 name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Since curpriority is a user priority, 				 * p->p_pri is always better than curpriority. 				 */
+comment|/* 				 * Since curpriority is a user priority, 				 * p->p_priority is always better than 				 * curpriority. 				 */
 if|if
 condition|(
 operator|(
@@ -1906,7 +1906,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|==
 literal|0
@@ -1936,7 +1936,7 @@ operator|=
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 expr_stmt|;
 block|}
 name|splx
@@ -1948,12 +1948,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The machine independent parts of swtch().  * Must be called at splstatclock() or higher.  */
+comment|/*  * The machine independent parts of mi_switch().  * Must be called at splstatclock() or higher.  */
 end_comment
 
 begin_function
 name|void
-name|swtch
+name|mi_switch
 parameter_list|()
 block|{
 specifier|register
@@ -2174,7 +2174,7 @@ operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
-name|cpu_swtch
+name|cpu_switch
 argument_list|(
 name|p
 argument_list|)
@@ -2322,7 +2322,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 condition|)
 name|setrunqueue
 argument_list|(
@@ -2360,7 +2360,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SLOAD
+name|P_INMEM
 operator|)
 operator|==
 literal|0
@@ -2379,7 +2379,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|<
 name|curpriority
 condition|)
@@ -2417,7 +2417,7 @@ name|PUSER
 operator|+
 name|p
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|/
 literal|4
 operator|+

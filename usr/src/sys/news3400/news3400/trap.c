@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa Utashiro  * of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa Utashiro  * of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.32 91/04/06$  *  *	@(#)trap.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3367,14 +3367,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -3392,7 +3392,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
+comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we switch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
 name|s
 operator|=
 name|splstatclock
@@ -3412,7 +3412,7 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 name|splx
@@ -3433,7 +3433,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|i
 argument_list|)
@@ -3446,7 +3446,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 block|{
 specifier|extern
@@ -3478,7 +3478,7 @@ name|curpriority
 operator|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 expr_stmt|;
 return|return
 operator|(
@@ -4269,14 +4269,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|sig
 argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_pri
+name|p_priority
 operator|=
 name|p
 operator|->
@@ -4292,7 +4292,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SOWEUPC
+name|P_OWEUPC
 condition|)
 block|{
 name|p
@@ -4300,7 +4300,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SOWEUPC
+name|P_OWEUPC
 expr_stmt|;
 name|ADDUPROF
 argument_list|(
@@ -4316,7 +4316,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
-comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
+comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we switch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
 name|s
 operator|=
 name|splstatclock
@@ -4336,7 +4336,7 @@ operator|.
 name|ru_nivcsw
 operator|++
 expr_stmt|;
-name|swtch
+name|mi_switch
 argument_list|()
 expr_stmt|;
 name|splx
@@ -4357,7 +4357,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|psig
+name|postsig
 argument_list|(
 name|sig
 argument_list|)
@@ -4367,7 +4367,7 @@ name|curpriority
 operator|=
 name|p
 operator|->
-name|p_pri
+name|p_priority
 expr_stmt|;
 block|}
 end_block

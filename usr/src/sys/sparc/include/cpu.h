@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.1 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.12 93/05/25 10:36:34 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	8.2 (Berkeley) %G%  *  * from: $Header: cpu.h,v 1.12 93/05/25 10:36:34 torek Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -290,7 +290,7 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->p_flag |= SOWEUPC, want_ast = 1)
+value|((p)->p_flag |= P_OWEUPC, want_ast = 1)
 end_define
 
 begin_comment

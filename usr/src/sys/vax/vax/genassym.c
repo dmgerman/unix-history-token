@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	7.11 (Berkeley) %G%"
+literal|"@(#)genassym.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,22 +301,22 @@ literal|0
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_LINK %d\n"
+literal|"#define\tP_FORW %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_RLINK %d\n"
+literal|"#define\tP_BACK %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_rlink
+name|p_back
 argument_list|)
 expr_stmt|;
 name|printf
@@ -341,12 +341,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tP_PRI %d\n"
+literal|"#define\tP_PRIORITY %d\n"
 argument_list|,
 operator|&
 name|p
 operator|->
-name|p_pri
+name|p_priority
 argument_list|)
 expr_stmt|;
 name|printf

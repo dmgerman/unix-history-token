@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -272,7 +272,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IACCESS
+name|IN_ACCESS
 value|0x0001
 end_define
 
@@ -283,7 +283,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ICHANGE
+name|IN_CHANGE
 value|0x0002
 end_define
 
@@ -294,7 +294,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEXLOCK
+name|IN_EXLOCK
 value|0x0004
 end_define
 
@@ -305,7 +305,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ILOCKED
+name|IN_LOCKED
 value|0x0008
 end_define
 
@@ -316,7 +316,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ILWAIT
+name|IN_LWAIT
 value|0x0010
 end_define
 
@@ -327,7 +327,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IMODIFIED
+name|IN_MODIFIED
 value|0x0020
 end_define
 
@@ -338,7 +338,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IRENAME
+name|IN_RENAME
 value|0x0040
 end_define
 
@@ -349,7 +349,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISHLOCK
+name|IN_SHLOCK
 value|0x0080
 end_define
 
@@ -360,7 +360,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IUPDATE
+name|IN_UPDATE
 value|0x0100
 end_define
 
@@ -371,7 +371,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IWANT
+name|IN_WANTED
 value|0x0200
 end_define
 
@@ -444,7 +444,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{						\ 	if ((ip)->i_flag& (IUPDATE | IACCESS | ICHANGE)) {		\ 		(ip)->i_flag |= IMODIFIED;				\ 		if ((ip)->i_flag& IACCESS)				\ 			(ip)->i_atime.ts_sec = (t1)->tv_sec;		\ 		if ((ip)->i_flag& IUPDATE) {				\ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec;		\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& ICHANGE)				\ 			(ip)->i_ctime.ts_sec = time.tv_sec;		\ 		(ip)->i_flag&= ~(IACCESS | IUPDATE | ICHANGE);		\ 	}								\ }
+value|{						\ 	if ((ip)->i_flag& (IN_ACCESS | IN_CHANGE | IN_UPDATE)) {	\ 		(ip)->i_flag |= IN_MODIFIED;				\ 		if ((ip)->i_flag& IN_ACCESS)				\ 			(ip)->i_atime.ts_sec = (t1)->tv_sec;		\ 		if ((ip)->i_flag& IN_UPDATE) {				\ 			(ip)->i_mtime.ts_sec = (t2)->tv_sec;		\ 			(ip)->i_modrev++;				\ 		}							\ 		if ((ip)->i_flag& IN_CHANGE)				\ 			(ip)->i_ctime.ts_sec = time.tv_sec;		\ 		(ip)->i_flag&= ~(IN_ACCESS | IN_CHANGE | IN_UPDATE);	\ 	}								\ }
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)np.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986 MICOM-Interlan, Inc., Boxborough Mass  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)np.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -8821,7 +8821,7 @@ name|procp
 operator|->
 name|p_flag
 operator||=
-name|SPHYSIO
+name|P_PHYSIO
 expr_stmt|;
 if|if
 condition|(
@@ -8983,7 +8983,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SPHYSIO
+name|P_PHYSIO
 expr_stmt|;
 if|if
 condition|(

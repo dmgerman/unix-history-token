@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1735,10 +1735,12 @@ operator|&
 name|ISTRIP
 operator|)
 condition|)
+name|CLR
+argument_list|(
 name|c
-operator|&=
-operator|~
+argument_list|,
 literal|0x80
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Extensions to POSIX input modes which aren't controlled 	 * by ICANON, ISIG, or IXON. 	 */
 if|if
@@ -2536,9 +2538,13 @@ operator|&=
 literal|0377
 expr_stmt|;
 comment|/* 	 * Do tab expansion if OXTABS is set.  Special case if we external 	 * processing, we don't do the tab expansion because we'll probably 	 * get it wrong.  If tab expansion needs to be done, let it happen 	 * externally. 	 */
+name|CLR
+argument_list|(
 name|c
-operator|&=
+argument_list|,
+operator|~
 name|TTY_CHARMASK
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2661,6 +2667,26 @@ operator|-
 literal|1
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * Newline translation: if ONLCR is set, 	 * translate newline into "\r\n". 	 */
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+operator|&&
+name|ISSET
+argument_list|(
+name|tp
+operator|->
+name|t_oflag
+argument_list|,
+name|ONLCR
+argument_list|)
+condition|)
+block|{
 name|tk_nout
 operator|++
 expr_stmt|;
@@ -2669,27 +2695,11 @@ operator|->
 name|t_outcc
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * Newline translation: if ONLCR is set, 	 * translate newline into "\r\n". 	 */
-endif|#
-directive|endif
 if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_lflag
-operator|&
-name|FLUSHO
-operator|)
-operator|==
-literal|0
-operator|&&
 name|putc
 argument_list|(
-name|c
+literal|'\r'
 argument_list|,
 operator|&
 name|tp
@@ -2702,6 +2712,15 @@ operator|(
 name|c
 operator|)
 return|;
+block|}
+name|tk_nout
+operator|++
+expr_stmt|;
+name|tp
+operator|->
+name|t_outcc
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2810,7 +2829,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Common code for ioctls on all tty devices.  Called after line-discipline  * specific ioctl has been called to do discipline-specific functions and/or  * reject any of these ioctl commands.  */
+comment|/*  * Ioctls for all tty devices.  Called after line-discipline specific ioctl  * has been called to do discipline-specific functions and/or reject any  * of these ioctl commands.  */
 end_comment
 
 begin_comment
@@ -2823,7 +2842,7 @@ name|ttioctl
 parameter_list|(
 name|tp
 parameter_list|,
-name|com
+name|cmd
 parameter_list|,
 name|data
 parameter_list|,
@@ -2836,7 +2855,7 @@ modifier|*
 name|tp
 decl_stmt|;
 name|int
-name|com
+name|cmd
 decl_stmt|,
 name|flag
 decl_stmt|;
@@ -2854,7 +2873,7 @@ decl_stmt|;
 comment|/* Temporary virtual console. */
 specifier|extern
 name|int
-name|nldisp
+name|nlinesw
 decl_stmt|;
 specifier|register
 name|struct
@@ -2875,7 +2894,7 @@ comment|/* XXX */
 comment|/* If the ioctl involves modification, hang if in the background. */
 switch|switch
 condition|(
-name|com
+name|cmd
 condition|)
 block|{
 case|case
@@ -2964,7 +2983,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 operator|)
 operator|==
 literal|0
@@ -3037,7 +3056,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|com
+name|cmd
 condition|)
 block|{
 comment|/* Process the ioctl. */
@@ -3400,11 +3419,14 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+name|SET
+argument_list|(
 name|tp
 operator|->
 name|t_cflag
-operator||=
+argument_list|,
 name|HUPCL
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -3489,11 +3511,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|com
+name|cmd
 operator|==
 name|TIOCSETAW
 operator|||
-name|com
+name|cmd
 operator|==
 name|TIOCSETAF
 condition|)
@@ -3521,7 +3543,7 @@ return|;
 block|}
 if|if
 condition|(
-name|com
+name|cmd
 operator|==
 name|TIOCSETAF
 condition|)
@@ -3672,7 +3694,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|com
+name|cmd
 operator|!=
 name|TIOCSETAF
 condition|)
@@ -3709,11 +3731,14 @@ name|ICANON
 argument_list|)
 condition|)
 block|{
+name|SET
+argument_list|(
 name|tp
 operator|->
 name|t_lflag
-operator||=
+argument_list|,
 name|PENDIN
+argument_list|)
 expr_stmt|;
 name|ttwakeup
 argument_list|(
@@ -3872,7 +3897,7 @@ name|u_int
 operator|)
 name|t
 operator|>=
-name|nldisp
+name|nlinesw
 condition|)
 return|return
 operator|(
@@ -4252,7 +4277,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SCTTY
+name|P_CONTROLT
 expr_stmt|;
 break|break;
 case|case
@@ -4388,7 +4413,7 @@ name|ttcompat
 argument_list|(
 name|tp
 argument_list|,
-name|com
+name|cmd
 argument_list|,
 name|data
 argument_list|,
@@ -5921,7 +5946,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 operator|||
 name|p
 operator|->
@@ -6414,7 +6439,7 @@ name|wait
 condition|?
 name|curproc
 operator|->
-name|p_sig
+name|p_siglist
 else|:
 literal|0
 expr_stmt|;
@@ -6454,7 +6479,7 @@ literal|0
 operator|||
 name|curproc
 operator|->
-name|p_sig
+name|p_siglist
 operator|!=
 name|oldsig
 condition|)
@@ -6764,7 +6789,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 operator|)
 operator|==
 literal|0
@@ -7421,22 +7446,26 @@ literal|2
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|CLR
+argument_list|(
+name|c
+argument_list|,
+operator|~
+name|TTY_CHARMASK
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|CCLASS
 argument_list|(
 name|c
-operator|&=
-name|TTY_CHARMASK
 argument_list|)
 condition|)
 block|{
 case|case
 name|ORDINARY
 case|:
-ifdef|#
-directive|ifdef
-name|notdef
 name|ttyrubo
 argument_list|(
 name|tp
@@ -7454,13 +7483,22 @@ case|:
 case|case
 name|NEWLINE
 case|:
+case|case
+name|RETURN
+case|:
+case|case
+name|VTAB
+case|:
 if|if
 condition|(
+name|ISSET
+argument_list|(
 name|tp
 operator|->
 name|t_lflag
-operator|&
+argument_list|,
 name|ECHOCTL
+argument_list|)
 condition|)
 name|ttyrubo
 argument_list|(
@@ -7504,11 +7542,23 @@ name|tp
 operator|->
 name|t_column
 expr_stmt|;
+name|SET
+argument_list|(
+name|tp
+operator|->
+name|t_state
+argument_list|,
+name|TS_CNTTB
+argument_list|)
+expr_stmt|;
+name|SET
+argument_list|(
 name|tp
 operator|->
 name|t_lflag
-operator||=
+argument_list|,
 name|FLUSHO
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->
@@ -7526,6 +7576,10 @@ name|t_rawq
 operator|.
 name|c_cf
 expr_stmt|;
+if|if
+condition|(
+name|cp
+condition|)
 name|tabc
 operator|=
 operator|*
@@ -7662,6 +7716,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 block|}
 block|}
 elseif|else
@@ -8090,11 +8145,12 @@ name|ECHOCTL
 argument_list|)
 operator|&&
 operator|(
-operator|(
+name|ISSET
+argument_list|(
 name|c
-operator|&
+argument_list|,
 name|TTY_CHARMASK
-operator|)
+argument_list|)
 operator|<=
 literal|037
 operator|&&
@@ -8106,11 +8162,12 @@ name|c
 operator|!=
 literal|'\n'
 operator|||
-operator|(
+name|ISSET
+argument_list|(
 name|c
-operator|&
+argument_list|,
 name|TTY_CHARMASK
-operator|)
+argument_list|)
 operator|==
 literal|0177
 operator|)
@@ -8126,9 +8183,13 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+name|CLR
+argument_list|(
 name|c
-operator|&=
+argument_list|,
+operator|~
 name|TTY_CHARMASK
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8678,10 +8739,10 @@ literal|0
 expr_stmt|;
 comment|/* so pending input will be retyped if BS */
 block|}
-comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) (Only foreground processes are eligable - implied)  *	2) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	3  Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just "short-term" sleepers (SSINTR == 0).  *	   Further ties are broken by picking the highest  *	   pid.  *  */
+comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) Only foreground processes are eligible - implied.  *	2) Runnable processes are favored over anything else.  The runner  *	   with the highest cpu utilization is picked (p_estcpu).  Ties are  *	   broken by picking the highest pid.  *	3) The sleeper with the shortest sleep time is next.  With ties,  *	   we pick out just "short-term" sleepers (P_SINTR == 0).  *	4) Further ties are broken by picking the highest pid.  */
 define|#
 directive|define
-name|isrun
+name|ISRUN
 parameter_list|(
 name|p
 parameter_list|)
@@ -8741,12 +8802,12 @@ switch|switch
 condition|(
 name|TESTAB
 argument_list|(
-name|isrun
+name|ISRUN
 argument_list|(
 name|p1
 argument_list|)
 argument_list|,
-name|isrun
+name|ISRUN
 argument_list|(
 name|p2
 argument_list|)
@@ -8777,11 +8838,11 @@ if|if
 condition|(
 name|p2
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|>
 name|p1
 operator|->
-name|p_cpu
+name|p_estcpu
 condition|)
 return|return
 operator|(
@@ -8792,11 +8853,11 @@ if|if
 condition|(
 name|p1
 operator|->
-name|p_cpu
+name|p_estcpu
 operator|>
 name|p2
 operator|->
-name|p_cpu
+name|p_estcpu
 condition|)
 return|return
 operator|(
@@ -8905,14 +8966,14 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|&&
 operator|(
 name|p2
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|)
 operator|==
 literal|0
@@ -8928,14 +8989,14 @@ name|p2
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|&&
 operator|(
 name|p1
 operator|->
 name|p_flag
 operator|&
-name|SSINTR
+name|P_SINTR
 operator|)
 operator|==
 literal|0

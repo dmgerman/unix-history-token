@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -706,7 +706,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IACCESS
+name|IN_ACCESS
 expr_stmt|;
 return|return
 operator|(
@@ -1336,9 +1336,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 block|}
 comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 */

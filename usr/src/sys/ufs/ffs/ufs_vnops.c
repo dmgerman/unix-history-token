@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -391,11 +391,11 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 if|if
 condition|(
@@ -571,7 +571,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 operator|)
 condition|)
 name|ITIMES
@@ -1504,7 +1504,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -1731,7 +1731,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IACCESS
+name|IN_ACCESS
 expr_stmt|;
 if|if
 condition|(
@@ -1747,9 +1747,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|atimeval
 operator|.
@@ -2008,7 +2008,7 @@ operator|&
 name|ALLPERMS
 operator|)
 operator||
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -2704,7 +2704,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -2971,7 +2971,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 name|out
@@ -3212,7 +3212,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|tv
 operator|=
@@ -3263,7 +3263,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 name|FREE
@@ -4439,7 +4439,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IRENAME
+name|IN_RENAME
 operator|)
 condition|)
 block|{
@@ -4460,7 +4460,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IRENAME
+name|IN_RENAME
 expr_stmt|;
 name|oldparent
 operator|=
@@ -4510,7 +4510,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|tv
 operator|=
@@ -4749,7 +4749,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -4802,7 +4802,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 operator|(
 name|void
@@ -5033,7 +5033,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 name|vput
@@ -5093,7 +5093,7 @@ name|xp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|vput
 argument_list|(
@@ -5243,7 +5243,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|error
 operator|=
@@ -5467,7 +5467,7 @@ name|xp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 name|xp
@@ -5475,7 +5475,7 @@ operator|->
 name|i_flag
 operator|&=
 operator|~
-name|IRENAME
+name|IN_RENAME
 expr_stmt|;
 block|}
 if|if
@@ -5551,7 +5551,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|vput
 argument_list|(
@@ -5896,11 +5896,11 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|ip
 operator|->
@@ -5950,7 +5950,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -6082,7 +6082,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 goto|goto
 name|bad
@@ -6123,7 +6123,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 comment|/* Directory set up, now install it's entry in the parent directory. */
@@ -6150,7 +6150,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 block|}
 name|bad
@@ -6171,7 +6171,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|vput
 argument_list|(
@@ -6399,7 +6399,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|cache_purge
 argument_list|(
@@ -6607,9 +6607,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 block|}
 else|else
@@ -7314,14 +7314,14 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 condition|)
 block|{
 name|ip
 operator|->
 name|i_flag
 operator||=
-name|IWANT
+name|IN_WANTED
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -7449,7 +7449,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ILOCKED
+name|IN_LOCKED
 expr_stmt|;
 return|return
 operator|(
@@ -7515,7 +7515,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 operator|)
 operator|==
 literal|0
@@ -7593,7 +7593,7 @@ operator|->
 name|i_flag
 operator|&=
 operator|~
-name|ILOCKED
+name|IN_LOCKED
 expr_stmt|;
 if|if
 condition|(
@@ -7601,7 +7601,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IWANT
+name|IN_WANTED
 condition|)
 block|{
 name|ip
@@ -7609,7 +7609,7 @@ operator|->
 name|i_flag
 operator|&=
 operator|~
-name|IWANT
+name|IN_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -7656,7 +7656,7 @@ argument_list|)
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 condition|)
 return|return
 operator|(
@@ -8204,7 +8204,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 operator|)
 condition|?
 literal|" (LOCKED)"
@@ -8289,7 +8289,7 @@ argument_list|)
 operator|->
 name|i_flag
 operator||=
-name|IACCESS
+name|IN_ACCESS
 expr_stmt|;
 return|return
 operator|(
@@ -8336,9 +8336,9 @@ argument_list|)
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -8404,7 +8404,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 operator|)
 condition|)
 name|ITIMES
@@ -8478,7 +8478,7 @@ argument_list|)
 operator|->
 name|i_flag
 operator||=
-name|IACCESS
+name|IN_ACCESS
 expr_stmt|;
 return|return
 operator|(
@@ -8534,9 +8534,9 @@ argument_list|)
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
@@ -8616,7 +8616,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ILOCKED
+name|IN_LOCKED
 operator|)
 condition|)
 name|ITIMES
@@ -9640,11 +9640,11 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPDATE
+name|IN_ACCESS
 operator||
-name|IACCESS
+name|IN_CHANGE
 operator||
-name|ICHANGE
+name|IN_UPDATE
 expr_stmt|;
 name|ip
 operator|->
@@ -9810,7 +9810,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHANGE
+name|IN_CHANGE
 expr_stmt|;
 name|vput
 argument_list|(

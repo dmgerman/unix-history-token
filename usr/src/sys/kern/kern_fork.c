@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_fork.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -432,7 +432,7 @@ name|p2
 operator|=
 name|p2
 operator|->
-name|p_nxt
+name|p_next
 control|)
 block|{
 while|while
@@ -556,7 +556,7 @@ name|p_pid
 operator|=
 name|nextpid
 expr_stmt|;
-comment|/* 	 * This is really: 	 *	p2->p_nxt = allproc; 	 *	allproc->p_prev =&p2->p_nxt; 	 *	p2->p_prev =&allproc; 	 *	allproc = p2; 	 * The assignment via allproc is legal since it is never NULL. 	 */
+comment|/* 	 * This is really: 	 *	p2->p_next = allproc; 	 *	allproc->p_prev =&p2->p_next; 	 *	p2->p_prev =&allproc; 	 *	allproc = p2; 	 * The assignment via allproc is legal since it is never NULL. 	 */
 operator|*
 operator|(
 specifier|volatile
@@ -568,7 +568,7 @@ operator|)
 operator|&
 name|Vp2
 operator|->
-name|p_nxt
+name|p_next
 operator|=
 name|allproc
 expr_stmt|;
@@ -596,7 +596,7 @@ operator|)
 operator|&
 name|Vp2
 operator|->
-name|p_nxt
+name|p_next
 expr_stmt|;
 operator|*
 operator|(
@@ -624,14 +624,11 @@ directive|undef
 name|Vp2
 name|p2
 operator|->
-name|p_link
+name|p_forw
 operator|=
-name|NULL
-expr_stmt|;
-comment|/* shouldn't be necessary */
 name|p2
 operator|->
-name|p_rlink
+name|p_back
 operator|=
 name|NULL
 expr_stmt|;
@@ -731,7 +728,7 @@ name|p2
 operator|->
 name|p_flag
 operator|=
-name|SLOAD
+name|P_INMEM
 expr_stmt|;
 if|if
 condition|(
@@ -739,7 +736,7 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 name|startprofclock
 argument_list|(
@@ -864,13 +861,13 @@ name|p1
 operator|->
 name|p_flag
 operator|&
-name|SCTTY
+name|P_CONTROLT
 condition|)
 name|p2
 operator|->
 name|p_flag
 operator||=
-name|SCTTY
+name|P_CONTROLT
 expr_stmt|;
 if|if
 condition|(
@@ -880,7 +877,7 @@ name|p2
 operator|->
 name|p_flag
 operator||=
-name|SPPWAIT
+name|P_PPWAIT
 expr_stmt|;
 name|p2
 operator|->
@@ -980,7 +977,7 @@ name|p1
 operator|->
 name|p_flag
 operator||=
-name|SKEEP
+name|P_NOSWAP
 expr_stmt|;
 comment|/* 	 * Set return values for child before vm_fork, 	 * so they can be copied to child stack. 	 * We return parent pid, and mark as child in retval[1]. 	 * NOTE: the kernel stack may be at a different location in the child 	 * process, and thus addresses of automatic variables (including retval) 	 * may be invalid after vm_fork returns in the child process. 	 */
 name|retval
@@ -1074,9 +1071,9 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SKEEP
+name|P_NOSWAP
 expr_stmt|;
-comment|/* 	 * Preserve synchronization semantics of vfork. 	 * If waiting for child to exec or exit, set SPPWAIT 	 * on child, and sleep on our proc (in case of exit). 	 */
+comment|/* 	 * Preserve synchronization semantics of vfork.  If waiting for 	 * child to exec or exit, set P_PPWAIT on child, and sleep on our 	 * proc (in case of exit). 	 */
 if|if
 condition|(
 name|isvfork
@@ -1087,13 +1084,10 @@ name|p2
 operator|->
 name|p_flag
 operator|&
-name|SPPWAIT
+name|P_PPWAIT
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|p1
 argument_list|,
 name|PWAIT

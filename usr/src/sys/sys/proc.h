@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)proc.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -125,18 +125,18 @@ block|{
 name|struct
 name|proc
 modifier|*
-name|p_link
+name|p_forw
 decl_stmt|;
 comment|/* Doubly-linked run/sleep queue. */
 name|struct
 name|proc
 modifier|*
-name|p_rlink
+name|p_back
 decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|p_nxt
+name|p_next
 decl_stmt|;
 comment|/* Linked list of active procs */
 name|struct
@@ -260,7 +260,7 @@ decl_stmt|;
 comment|/* Sideways return value from fdopen. XXX */
 comment|/* scheduling */
 name|u_int
-name|p_cpu
+name|p_estcpu
 decl_stmt|;
 comment|/* Time averaged value of p_cpticks. */
 name|int
@@ -270,7 +270,7 @@ comment|/* Ticks of cpu time. */
 name|fixpt_t
 name|p_pctcpu
 decl_stmt|;
-comment|/* %cpu for this process during p_time */
+comment|/* %cpu for this process during p_swtime */
 name|void
 modifier|*
 name|p_wchan
@@ -282,7 +282,7 @@ name|p_wmesg
 decl_stmt|;
 comment|/* Reason for sleep. */
 name|u_int
-name|p_time
+name|p_swtime
 decl_stmt|;
 comment|/* Time swapped in or out. */
 name|u_int
@@ -322,7 +322,7 @@ name|p_tracep
 decl_stmt|;
 comment|/* Trace to vnode. */
 name|int
-name|p_sig
+name|p_siglist
 decl_stmt|;
 comment|/* Signals arrived but not delivered. */
 name|long
@@ -355,7 +355,7 @@ name|p_sigcatch
 decl_stmt|;
 comment|/* Signals being caught by user. */
 name|u_char
-name|p_pri
+name|p_priority
 decl_stmt|;
 comment|/* Process priority. */
 name|u_char
@@ -498,8 +498,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SADVLCK
-value|0x0000001
+name|P_ADVLOCK
+value|0x00001
 end_define
 
 begin_comment
@@ -509,8 +509,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTTY
-value|0x0000002
+name|P_CONTROLT
+value|0x00002
 end_define
 
 begin_comment
@@ -520,8 +520,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SLOAD
-value|0x0000004
+name|P_INMEM
+value|0x00004
 end_define
 
 begin_comment
@@ -531,8 +531,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SNOCLDSTOP
-value|0x0000008
+name|P_NOCLDSTOP
+value|0x00008
 end_define
 
 begin_comment
@@ -542,8 +542,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPPWAIT
-value|0x0000010
+name|P_PPWAIT
+value|0x00010
 end_define
 
 begin_comment
@@ -553,8 +553,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SPROFIL
-value|0x0000020
+name|P_PROFIL
+value|0x00020
 end_define
 
 begin_comment
@@ -564,8 +564,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSEL
-value|0x0000040
+name|P_SELECT
+value|0x00040
 end_define
 
 begin_comment
@@ -575,8 +575,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSINTR
-value|0x0000080
+name|P_SINTR
+value|0x00080
 end_define
 
 begin_comment
@@ -586,8 +586,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSYS
-value|0x0000100
+name|P_SYSTEM
+value|0x00100
 end_define
 
 begin_comment
@@ -597,8 +597,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STIMO
-value|0x0000200
+name|P_TIMEOUT
+value|0x00200
 end_define
 
 begin_comment
@@ -608,19 +608,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STRC
-value|0x0000400
+name|P_TRACED
+value|0x00400
 end_define
 
 begin_comment
-comment|/* Process being debugged. */
+comment|/* Debugged process being traced. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SUGID
-value|0x0000800
+name|P_SUGID
+value|0x00800
 end_define
 
 begin_comment
@@ -630,8 +630,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWEXIT
-value|0x0001000
+name|P_WEXIT
+value|0x01000
 end_define
 
 begin_comment
@@ -641,8 +641,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SWTED
-value|0x0002000
+name|P_WAITED
+value|0x02000
 end_define
 
 begin_comment
@@ -652,8 +652,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SEXEC
-value|0x0004000
+name|P_EXEC
+value|0x04000
 end_define
 
 begin_comment
@@ -661,14 +661,14 @@ comment|/* Process called exec. */
 end_comment
 
 begin_comment
-comment|/* The following three should probably be changed into a hold count. */
+comment|/* Should probably be changed into a hold count. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SKEEP
-value|0x0008000
+name|P_NOSWAP
+value|0x08000
 end_define
 
 begin_comment
@@ -678,19 +678,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SLOCK
-value|0x0010000
-end_define
-
-begin_comment
-comment|/* Process being swapped out. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SPHYSIO
-value|0x0020000
+name|P_PHYSIO
+value|0x10000
 end_define
 
 begin_comment
@@ -698,14 +687,14 @@ comment|/* Doing physical I/O. */
 end_comment
 
 begin_comment
-comment|/* The following should be moved to machine-dependent areas. */
+comment|/* Should be moved to machine-dependent areas. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SOWEUPC
-value|0x0040000
+name|P_OWEUPC
+value|0x20000
 end_define
 
 begin_comment
@@ -1012,24 +1001,12 @@ comment|/* Find process group by id. */
 end_comment
 
 begin_decl_stmt
-name|int
-name|tsleep
+name|void
+name|mi_switch
 name|__P
 argument_list|(
 operator|(
 name|void
-operator|*
-name|chan
-operator|,
-name|int
-name|pri
-operator|,
-name|char
-operator|*
-name|wmesg
-operator|,
-name|int
-name|timo
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1095,12 +1072,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|swtch
+name|int
+name|tsleep
 name|__P
 argument_list|(
 operator|(
 name|void
+operator|*
+name|chan
+operator|,
+name|int
+name|pri
+operator|,
+name|char
+operator|*
+name|wmesg
+operator|,
+name|int
+name|timo
 operator|)
 argument_list|)
 decl_stmt|;

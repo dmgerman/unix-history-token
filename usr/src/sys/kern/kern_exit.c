@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -322,7 +322,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SPROFIL
+name|P_PROFIL
 condition|)
 name|stopprofclock
 argument_list|(
@@ -350,23 +350,23 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If parent is waiting for us to exit or exec, 	 * SPPWAIT is set; we will wakeup the parent below. 	 */
+comment|/* 	 * If parent is waiting for us to exit or exec, 	 * P_PPWAIT is set; we will wakeup the parent below. 	 */
 name|p
 operator|->
 name|p_flag
 operator|&=
 operator|~
 operator|(
-name|STRC
+name|P_TRACED
 operator||
-name|SPPWAIT
+name|P_PPWAIT
 operator|)
 expr_stmt|;
 name|p
 operator|->
 name|p_flag
 operator||=
-name|SWEXIT
+name|P_WEXIT
 expr_stmt|;
 name|p
 operator|->
@@ -377,7 +377,7 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
-name|p_sig
+name|p_siglist
 operator|=
 literal|0
 expr_stmt|;
@@ -608,11 +608,11 @@ name|p_prev
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 condition|)
 name|p
 operator|->
-name|p_nxt
+name|p_next
 operator|->
 name|p_prev
 operator|=
@@ -624,20 +624,20 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_nxt
+name|p_next
 operator|=
 name|zombproc
 condition|)
 name|p
 operator|->
-name|p_nxt
+name|p_next
 operator|->
 name|p_prev
 operator|=
 operator|&
 name|p
 operator|->
-name|p_nxt
+name|p_next
 expr_stmt|;
 name|p
 operator|->
@@ -807,7 +807,7 @@ name|q
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 condition|)
 block|{
 name|q
@@ -815,7 +815,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|STRC
+name|P_TRACED
 expr_stmt|;
 name|psignal
 argument_list|(
@@ -1684,12 +1684,12 @@ name|p_prev
 operator|=
 name|p
 operator|->
-name|p_nxt
+name|p_next
 condition|)
 comment|/* off zombproc */
 name|p
 operator|->
-name|p_nxt
+name|p_next
 operator|->
 name|p_prev
 operator|=
@@ -1786,7 +1786,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SWTED
+name|P_WAITED
 operator|)
 operator|==
 literal|0
@@ -1796,7 +1796,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 operator|||
 name|uap
 operator|->
@@ -1810,7 +1810,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|SWTED
+name|P_WAITED
 expr_stmt|;
 name|retval
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -265,7 +265,7 @@ name|curp
 operator|->
 name|p_flag
 operator||=
-name|STRC
+name|P_TRACED
 expr_stmt|;
 return|return
 operator|(
@@ -341,7 +341,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|SUGID
+name|P_SUGID
 operator|||
 name|p
 operator|->
@@ -385,7 +385,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 condition|)
 return|return
 operator|(
@@ -409,7 +409,7 @@ name|p
 operator|->
 name|p_flag
 operator||=
-name|STRC
+name|P_TRACED
 expr_stmt|;
 name|p
 operator|->
@@ -545,7 +545,7 @@ name|p
 operator|->
 name|p_flag
 operator|&
-name|STRC
+name|P_TRACED
 operator|)
 condition|)
 return|return
@@ -663,7 +663,7 @@ operator|->
 name|p_flag
 operator|&=
 operator|~
-name|SWTED
+name|P_WAITED
 expr_stmt|;
 do|do
 block|{
@@ -1200,7 +1200,7 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
-comment|/* see issig */
+comment|/* see issignal */
 name|wakeup
 argument_list|(
 operator|(
@@ -1327,13 +1327,13 @@ name|p_xstat
 operator|=
 name|sig
 expr_stmt|;
-comment|/* see issig */
+comment|/* see issignal */
 name|p
 operator|->
 name|p_flag
 operator|&=
 operator|~
-name|STRC
+name|P_TRACED
 expr_stmt|;
 if|if
 condition|(
