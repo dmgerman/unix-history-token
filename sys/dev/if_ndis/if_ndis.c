@@ -3041,7 +3041,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * See if the OID_802_11_NETWORK_TYPES_SUPPORTED OID is 	 * supported by this driver. If it is, then this an 802.11 	 * wireless driver, and we should set up media for wireless. 	 */
+comment|/* 	 * See if the OID_802_11_CONFIGURATION OID is 	 * supported by this driver. If it is, then this an 802.11 	 * wireless driver, and we should set up media for wireless. 	 */
 for|for
 control|(
 name|i
@@ -3067,7 +3067,7 @@ index|[
 name|i
 index|]
 operator|==
-name|OID_802_11_NETWORK_TYPES_SUPPORTED
+name|OID_802_11_CONFIGURATION
 condition|)
 block|{
 name|sc
@@ -4663,6 +4663,9 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|ifp
@@ -4676,6 +4679,8 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
