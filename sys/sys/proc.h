@@ -2848,7 +2848,7 @@ name|FIRST_THREAD_IN_PROC
 parameter_list|(
 name|p
 parameter_list|)
-value|TAILQ_FIRST(&p->p_threads)
+value|TAILQ_FIRST(&(p)->p_threads)
 end_define
 
 begin_define
@@ -2858,7 +2858,7 @@ name|FIRST_KSEGRP_IN_PROC
 parameter_list|(
 name|p
 parameter_list|)
-value|TAILQ_FIRST(&p->p_ksegrps)
+value|TAILQ_FIRST(&(p)->p_ksegrps)
 end_define
 
 begin_define
@@ -2868,7 +2868,7 @@ name|FIRST_KSE_IN_KSEGRP
 parameter_list|(
 name|kg
 parameter_list|)
-value|TAILQ_FIRST(&kg->kg_kseq)
+value|TAILQ_FIRST(&(kg)->kg_kseq)
 end_define
 
 begin_define
@@ -2954,7 +2954,7 @@ name|e
 parameter_list|,
 name|v
 parameter_list|)
-value|do {					\ 	PROC_LOCK_ASSERT(p, MA_OWNED);					\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK,&p->p_mtx.mtx_object, \  	    "checking stopevent %d", (e));				\ 	if ((p)->p_stops& (e)) {					\ 		stopevent((p), (e), (v));				\ 	}								\ } while (0)
+value|do {					\ 	PROC_LOCK_ASSERT(p, MA_OWNED);					\ 	WITNESS_WARN(WARN_GIANTOK | WARN_SLEEPOK,&p->p_mtx.mtx_object, \ 	    "checking stopevent %d", (e));				\ 	if ((p)->p_stops& (e))						\ 		stopevent((p), (e), (v));				\ } while (0)
 end_define
 
 begin_comment
@@ -3066,8 +3066,7 @@ name|PGRP_LOCK_PGSIGNAL
 parameter_list|(
 name|pg
 parameter_list|)
-define|\
-value|do {								\ 		if ((pg) != NULL)					\ 			PGRP_LOCK(pg);					\ 	} while (0);
+value|do {					\ 	if ((pg) != NULL)						\ 		PGRP_LOCK(pg);						\ } while (0)
 end_define
 
 begin_define
@@ -3077,8 +3076,7 @@ name|PGRP_UNLOCK_PGSIGNAL
 parameter_list|(
 name|pg
 parameter_list|)
-define|\
-value|do {								\ 		if ((pg) != NULL)					\ 			PGRP_UNLOCK(pg);				\ 	} while (0);
+value|do {					\ 	if ((pg) != NULL)						\ 		PGRP_UNLOCK(pg);					\ } while (0)
 end_define
 
 begin_comment
