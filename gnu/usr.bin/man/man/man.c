@@ -498,6 +498,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|man_locale
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|use_man_locale
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|use_original
 decl_stmt|;
@@ -1879,6 +1894,18 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|asprintf
+argument_list|(
+operator|&
+name|man_locale
+argument_list|,
+literal|"%s.%s"
+argument_list|,
+name|locale_lang
+argument_list|,
+name|locale_codeset
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -4538,7 +4565,7 @@ argument_list|(
 name|lbuf
 argument_list|)
 argument_list|,
-literal|"%s -T%s"
+literal|"%s -T%s%s%s"
 argument_list|,
 name|NROFF
 argument_list|,
@@ -4549,6 +4576,18 @@ condition|?
 literal|"ascii"
 else|:
 name|locale_opts
+argument_list|,
+name|use_man_locale
+condition|?
+literal|" -dlocale="
+else|:
+literal|""
+argument_list|,
+name|use_man_locale
+condition|?
+name|man_locale
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|add_directive
@@ -6694,6 +6733,10 @@ name|locale_opts
 operator|=
 name|locale_nroff
 expr_stmt|;
+name|use_man_locale
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -6811,6 +6854,10 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
+name|use_man_locale
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -6872,6 +6919,10 @@ block|}
 name|locale_opts
 operator|=
 name|NULL
+expr_stmt|;
+name|use_man_locale
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -6990,6 +7041,10 @@ name|locale_opts
 operator|=
 name|locale_nroff
 expr_stmt|;
+name|use_man_locale
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -7109,6 +7164,10 @@ name|glob
 argument_list|)
 expr_stmt|;
 block|}
+name|use_man_locale
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7171,6 +7230,10 @@ block|}
 name|locale_opts
 operator|=
 name|NULL
+expr_stmt|;
+name|use_man_locale
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
