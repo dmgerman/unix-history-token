@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#24 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx.h#27 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -637,6 +637,7 @@ name|AHC_AIC7770_FE
 init|=
 name|AHC_FENONE
 block|,
+comment|/* 	 * The real 7850 does not support Ultra modes, but there are 	 * several cards that use the generic 7850 PCI ID even though 	 * they are using an Ultra capable chip (7859/7860).  We start 	 * out with the AHC_ULTRA feature set and then check the DEVSTATUS 	 * register to determine if the capability is really present. 	 */
 name|AHC_AIC7850_FE
 init|=
 name|AHC_SPIOCAP
@@ -644,16 +645,12 @@ operator||
 name|AHC_AUTOPAUSE
 operator||
 name|AHC_TARGETMODE
-block|,
-name|AHC_AIC7855_FE
-init|=
-name|AHC_AIC7850_FE
+operator||
+name|AHC_ULTRA
 block|,
 name|AHC_AIC7860_FE
 init|=
 name|AHC_AIC7850_FE
-operator||
-name|AHC_ULTRA
 block|,
 name|AHC_AIC7870_FE
 init|=
@@ -885,11 +882,6 @@ name|AHC_ALL_INTERRUPTS
 init|=
 literal|0x100000
 block|,
-name|AHC_ULTRA_DISABLED
-init|=
-literal|0x200000
-block|,
-comment|/* 					   * The precision resistor for 					   * ultra transmission speeds is 					   * missing, so we must limit 					   * ourselves to fast SCSI. 					   */
 name|AHC_PAGESCBS
 init|=
 literal|0x400000
@@ -1612,7 +1604,7 @@ decl_stmt|;
 comment|/* Computed value for SCSIRATE reg */
 name|struct
 name|ahc_transinfo
-name|current
+name|curr
 decl_stmt|;
 name|struct
 name|ahc_transinfo
@@ -1881,7 +1873,11 @@ directive|define
 name|CFBIOSEN
 value|0x0004
 comment|/* BIOS enabled */
-comment|/*		UNUSED		0x0008	*/
+define|#
+directive|define
+name|CFBIOS_BUSSCAN
+value|0x0008
+comment|/* Have the BIOS Scan the Bus */
 define|#
 directive|define
 name|CFSM2DRV
@@ -1889,14 +1885,24 @@ value|0x0010
 comment|/* support more than two drives */
 define|#
 directive|define
+name|CFSTPWLEVEL
+value|0x0010
+comment|/* Termination level control */
+define|#
+directive|define
 name|CF284XEXTEND
 value|0x0020
 comment|/* extended translation (284x cards) */
 define|#
 directive|define
-name|CFSTPWLEVEL
-value|0x0010
-comment|/* Termination level control */
+name|CFCTRL_A
+value|0x0020
+comment|/* BIOS displays Ctrl-A message */
+define|#
+directive|define
+name|CFTERM_MENU
+value|0x0040
+comment|/* BIOS displays termination menu */
 define|#
 directive|define
 name|CFEXTEND
@@ -1907,6 +1913,28 @@ directive|define
 name|CFSCAMEN
 value|0x0100
 comment|/* SCAM enable */
+define|#
+directive|define
+name|CFMSG_LEVEL
+value|0x0600
+comment|/* BIOS Message Level */
+define|#
+directive|define
+name|CFMSG_VERBOSE
+value|0x0000
+define|#
+directive|define
+name|CFMSG_SILENT
+value|0x0200
+define|#
+directive|define
+name|CFMSG_DIAG
+value|0x0400
+define|#
+directive|define
+name|CFBOOTCD
+value|0x0800
+comment|/* Support Bootable CD-ROM */
 comment|/*		UNUSED		0xff00	*/
 comment|/*  * Host Adapter Control Bits  */
 name|uint16_t
@@ -1957,7 +1985,6 @@ define|#
 directive|define
 name|CFMULTILUN
 value|0x0020
-comment|/* SCSI low byte term (284x cards) */
 define|#
 directive|define
 name|CFRESETB
@@ -3322,6 +3349,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ahc_calc_residual
+parameter_list|(
+name|struct
+name|scb
+modifier|*
+name|scb
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*************************** Utility Functions ********************************/
 end_comment
@@ -3557,6 +3596,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AHC_QUEUE_NONE
+block|,
+name|AHC_QUEUE_BASIC
+block|,
+name|AHC_QUEUE_TAGGED
+block|}
+name|ahc_queue_alg
+typedef|;
+end_typedef
+
 begin_function_decl
 name|void
 name|ahc_set_tags
@@ -3571,8 +3624,8 @@ name|ahc_devinfo
 modifier|*
 name|devinfo
 parameter_list|,
-name|int
-name|enable
+name|ahc_queue_alg
+name|alg
 parameter_list|)
 function_decl|;
 end_function_decl

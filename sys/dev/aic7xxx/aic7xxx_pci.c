@@ -1,42 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995-2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#21 $  *  * $FreeBSD$  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995-2000 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: //depot/src/aic7xxx/aic7xxx_pci.c#24 $  *  * $FreeBSD$  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_linux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_inline.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_93cx6.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
 
 begin_include
 include|#
@@ -55,11 +20,6 @@ include|#
 directive|include
 file|<dev/aic7xxx/aic7xxx_93cx6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1184,7 +1144,7 @@ name|ID_DEV_VENDOR_MASK
 block|,
 name|ID_DEV_VENDOR_MASK
 block|,
-literal|"Adaptec 2930C SCSI adapter (VAR)"
+literal|"Adaptec 2930C Ultra SCSI adapter (VAR)"
 block|,
 name|ahc_aic7860_setup
 block|}
@@ -1508,7 +1468,7 @@ name|ID_AIC7892_ARO
 block|,
 name|ID_ALL_MASK
 block|,
-literal|"Adaptec aic7892 Ultra2 SCSI adapter (ARO)"
+literal|"Adaptec aic7892 Ultra160 SCSI adapter (ARO)"
 block|,
 name|ahc_aic7892_setup
 block|}
@@ -1668,7 +1628,7 @@ name|ID_DEV_VENDOR_MASK
 block|,
 name|ID_DEV_VENDOR_MASK
 block|,
-literal|"Adaptec aic7859 Ultra SCSI adapter"
+literal|"Adaptec aic7859 SCSI adapter"
 block|,
 name|ahc_aic7860_setup
 block|}
@@ -1680,7 +1640,7 @@ name|ID_DEV_VENDOR_MASK
 block|,
 name|ID_DEV_VENDOR_MASK
 block|,
-literal|"Adaptec aic7860 SCSI adapter"
+literal|"Adaptec aic7860 Ultra SCSI adapter"
 block|,
 name|ahc_aic7860_setup
 block|}
@@ -2801,6 +2761,12 @@ argument_list|,
 name|OPTIONMODE
 argument_list|,
 name|OPTIONMODE_DEFAULTS
+operator||
+name|AUTOACKEN
+operator||
+name|BUSFREEREV
+operator||
+name|EXPPHASEDIS
 argument_list|)
 expr_stmt|;
 name|ahc_outb
@@ -2829,24 +2795,6 @@ name|TARGCRCENDEN
 argument_list|)
 expr_stmt|;
 block|}
-name|error
-operator|=
-name|ahc_pci_map_int
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|dscommand0
 operator|=
 name|ahc_inb
@@ -2949,6 +2897,55 @@ name|pci_cachesize
 operator|*=
 literal|4
 expr_stmt|;
+comment|/* 	 * We cannot perform ULTRA speeds without the presense 	 * of the external precision resistor. 	 */
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|features
+operator|&
+name|AHC_ULTRA
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|uint32_t
+name|devconfig
+decl_stmt|;
+name|devconfig
+operator|=
+name|ahc_pci_read_config
+argument_list|(
+name|ahc
+operator|->
+name|dev_softc
+argument_list|,
+name|DEVCONFIG
+argument_list|,
+comment|/*bytes*/
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|devconfig
+operator|&
+name|REXTVALID
+operator|)
+operator|==
+literal|0
+condition|)
+name|ahc
+operator|->
+name|features
+operator|&=
+operator|~
+name|AHC_ULTRA
+expr_stmt|;
+block|}
 comment|/* See if we have a SEEPROM and perform auto-term */
 name|check_extport
 argument_list|(
@@ -3120,54 +3117,6 @@ name|flags
 operator||=
 name|AHC_TERM_ENB_A
 expr_stmt|;
-comment|/* 	 * We cannot perform ULTRA speeds without 	 * the presense of the external precision 	 * resistor. 	 */
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
-name|features
-operator|&
-name|AHC_ULTRA
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|uint32_t
-name|devconfig
-decl_stmt|;
-name|devconfig
-operator|=
-name|ahc_pci_read_config
-argument_list|(
-name|ahc
-operator|->
-name|dev_softc
-argument_list|,
-name|DEVCONFIG
-argument_list|,
-comment|/*bytes*/
-literal|4
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|devconfig
-operator|&
-name|REXTVALID
-operator|)
-operator|==
-literal|0
-condition|)
-name|ahc
-operator|->
-name|flags
-operator||=
-name|AHC_ULTRA_DISABLED
-expr_stmt|;
-block|}
 comment|/* Core initialization */
 name|error
 operator|=
@@ -3194,6 +3143,24 @@ name|ahc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allow interrupts now that we are completely setup. 	 */
+name|error
+operator|=
+name|ahc_pci_map_int
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|ahc_intr_enable
 argument_list|(
 name|ahc

@@ -7,41 +7,6 @@ begin_comment
 comment|/*  *   The instruction set of the 93C66/56/46/26/06 chips are as follows:  *  *               Start  OP	    *  *     Function   Bit  Code  Address**  Data     Description  *     -------------------------------------------------------------------  *     READ        1    10   A5 - A0             Reads data stored in memory,  *                                               starting at specified address  *     EWEN        1    00   11XXXX              Write enable must precede  *                                               all programming modes  *     ERASE       1    11   A5 - A0             Erase register A5A4A3A2A1A0  *     WRITE       1    01   A5 - A0   D15 - D0  Writes register  *     ERAL        1    00   10XXXX              Erase all registers  *     WRAL        1    00   01XXXX    D15 - D0  Writes to all registers  *     EWDS        1    00   00XXXX              Disables all programming  *                                               instructions  *     *Note: A value of X for address is a don't care condition.  *    **Note: There are 8 address bits for the 93C56/66 chips unlike  *	      the 93C46/26/06 chips which have 6 address bits.  *  *   The 93C46 has a four wire interface: clock, chip select, data in, and  *   data out.  In order to perform one of the above functions, you need  *   to enable the chip select for a clock period (typically a minimum of  *   1 usec, with the clock high and low a minimum of 750 and 250 nsec  *   respectively).  While the chip select remains high, you can clock in  *   the instructions (above) starting with the start bit, followed by the  *   OP code, Address, and Data (if needed).  For the READ instruction, the  *   requested 16-bit register contents is read from the data out line but  *   is preceded by an initial zero (leading 0, followed by 16-bits, MSB  *   first).  The clock cycling from low to high initiates the next data  *   bit to be sent from the chip.  *  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_linux.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_inline.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"aic7xxx_93cx6.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -59,11 +24,6 @@ include|#
 directive|include
 file|<dev/aic7xxx/aic7xxx_93cx6.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Right now, we only have to read the SEEPROM.  But we make it easier to  * add other 93Cx6 functions.  */

@@ -46,15 +46,22 @@ begin_comment
 comment|/* for config options */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NPCI
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<pci.h>
 end_include
 
-begin_comment
-comment|/* for NPCI */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -322,6 +329,29 @@ define|\
 value|(SCB_GET_CHANNEL(ahc, scb) == 'A' ? (ahc)->platform_data->sim \ 					  : (ahc)->platform_data->sim_b)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|offsetof
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|offsetof
+parameter_list|(
+name|type
+parameter_list|,
+name|member
+parameter_list|)
+value|((size_t)(&((type *)0)->member))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/************************* Forward Declarations *******************************/
 end_comment
@@ -524,11 +554,7 @@ comment|/************************ Tunable Driver Parameters  *******************
 end_comment
 
 begin_comment
-comment|/*  * The number of dma segments supported.  The sequencer can handle any number  * of physically contiguous S/G entrys.  To reduce the driver's memory  * consumption, we limit the number supported to be sufficient to handle  * the largest mapping supported by the kernel, MAXPHYS.  Assuming the  * transfer is as fragmented as possible and unaligned, this turns out to  * be the number of paged sized transfers in MAXPHYS plus an extra element  * to handle any unaligned residual.  The sequencer fetches SG elements  * in 128 byte chucks, so make the number per-transaction a nice multiple  * of 16 (8 byte S/G elements).  */
-end_comment
-
-begin_comment
-comment|/* XXX Worth the space??? */
+comment|/*  * The number of dma segments supported.  The sequencer can handle any number  * of physically contiguous S/G entrys.  To reduce the driver's memory  * consumption, we limit the number supported to be sufficient to handle  * the largest mapping supported by the kernel, MAXPHYS.  Assuming the  * transfer is as fragmented as possible and unaligned, this turns out to  * be the number of paged sized transfers in MAXPHYS plus an extra element  * to handle any unaligned residual.  The sequencer fetches SG elements  * in cacheline sized chucks, so make the number per-transaction an even  * multiple of 16 which should align us on even the largest of cacheline  * boundaries.   */
 end_comment
 
 begin_define
@@ -2511,6 +2537,10 @@ name|u_int
 comment|/*lun*/
 parameter_list|,
 name|ac_code
+parameter_list|,
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
