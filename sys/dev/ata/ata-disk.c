@@ -1949,7 +1949,7 @@ name|channel
 operator|->
 name|hw
 operator|.
-name|transaction
+name|begin_transaction
 argument_list|(
 operator|&
 name|request
