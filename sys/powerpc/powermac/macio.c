@@ -577,12 +577,6 @@ name|MACIO_QUIRK_IGNORE
 block|}
 block|,
 block|{
-literal|"gpio"
-block|,
-name|MACIO_QUIRK_IGNORE
-block|}
-block|,
-block|{
 literal|"timer"
 block|,
 name|MACIO_QUIRK_IGNORE
