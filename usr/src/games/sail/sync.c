@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	2.6 84/04/28"
+literal|"@(#)sync.c	2.7 85/03/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,13 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|BUFSIZE
+value|4096
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -369,6 +376,13 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|sync_fp
+operator|==
+name|NULL
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -407,28 +421,16 @@ condition|)
 block|{
 name|int
 name|omask
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SETUID
-name|omask
-operator|=
+init|=
 name|umask
 argument_list|(
+name|issetuid
+condition|?
 literal|077
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|omask
-operator|=
-name|umask
-argument_list|(
+else|:
 literal|011
 argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+decl_stmt|;
 name|sync_fp
 operator|=
 name|fopen
@@ -461,12 +463,13 @@ if|if
 condition|(
 name|sync_fp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|sync_seek
 operator|==
 literal|0
@@ -1564,7 +1567,9 @@ name|W_SIGNAL
 case|:
 if|if
 condition|(
-name|isplayer
+name|mode
+operator|==
+name|MODE_PLAYER
 condition|)
 name|Signal
 argument_list|(

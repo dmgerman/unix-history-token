@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	2.4 84/02/23  */
+comment|/*  * @(#)extern.h	2.5 85/03/04  */
 end_comment
 
 begin_include
@@ -24,8 +24,99 @@ end_include
 begin_include
 include|#
 directive|include
+file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machdep.h"
 end_include
+
+begin_comment
+comment|/* program mode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|jmp_buf
+name|restart
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MODE_PLAYER
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODE_DRIVER
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MODE_LOGGER
+value|3
+end_define
+
+begin_comment
+comment|/* command line flags */
+end_comment
+
+begin_decl_stmt
+name|char
+name|debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -D */
+end_comment
+
+begin_decl_stmt
+name|char
+name|randomize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -x */
+end_comment
+
+begin_decl_stmt
+name|char
+name|longfmt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -l */
+end_comment
+
+begin_comment
+comment|/* other initial modes */
+end_comment
+
+begin_decl_stmt
+name|char
+name|issetuid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* running setuid */
+end_comment
 
 begin_define
 define|#
@@ -1383,12 +1474,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|isplayer
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|hasdriver
 decl_stmt|;
 end_decl_stmt
@@ -1437,6 +1522,14 @@ begin_function_decl
 name|char
 modifier|*
 name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|rindex
 parameter_list|()
 function_decl|;
 end_function_decl

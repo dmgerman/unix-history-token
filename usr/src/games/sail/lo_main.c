@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lo_main.c	2.1 83/10/31"
+literal|"@(#)lo_main.c	2.2 85/03/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Print out the top ten SAILors  *  * sail.log [-s/l]  *  *  -s force a short listing (without real usernames)  *  -l force a long listing (print out real usernames)  */
+comment|/*  * Print out the top ten SAILors  *  * -l force a long listing (print out real usernames)  */
 end_comment
 
 begin_include
@@ -66,21 +66,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|main
-parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
-name|int
-name|argc
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
+begin_macro
+name|lo_main
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|FILE
 modifier|*
@@ -98,11 +89,6 @@ init|=
 literal|0
 decl_stmt|,
 name|people
-decl_stmt|;
-name|int
-name|usrnam
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|passwd
@@ -122,73 +108,6 @@ name|ship
 modifier|*
 name|ship
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
-name|argc
-operator|==
-literal|2
-condition|)
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"-s"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|usrnam
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|argv
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"-l"
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|usrnam
-operator|=
-literal|1
-expr_stmt|;
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: %s: [-s/l]\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -298,7 +217,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|usrnam
+name|longfmt
 operator|&&
 operator|(
 name|pass
@@ -405,8 +324,11 @@ argument_list|,
 name|people
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	2.5 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	2.6 %G%";  */
 end_comment
 
 begin_define
@@ -10,42 +10,8 @@ name|LOGFILE
 value|"/usr/games/lib/saillog"
 end_define
 
-begin_define
-define|#
-directive|define
-name|DRIVER1
-value|"driver"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRIVER2
-value|"/usr/games/lib/saildriver"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRIVER3
-value|"/usr/public/.driver"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRIVERNAME
-value|"driver"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SETUID
-end_define
-
 begin_comment
-comment|/* player and driver run setuid */
+comment|/* has to match the makefile */
 end_comment
 
 begin_define
@@ -56,15 +22,8 @@ value|300
 end_define
 
 begin_comment
-comment|/* Sync() time out */
+comment|/* Sync() timeout in seconds */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFSIZE
-value|4096
-end_define
 
 begin_comment
 comment|/* for 4.2bsd machines */
