@@ -3617,16 +3617,19 @@ operator|->
 name|ksq_group
 expr_stmt|;
 comment|/* 	 * If there are any idle groups, give them our extra load.  The 	 * threshold at which we start to reassign kses has a large impact 	 * on the overall performance of the system.  Tuned too high and 	 * some CPUs may idle.  Too low and there will be excess migration 	 * and context swiches. 	 */
-comment|/* 	 * XXX This ksg_transferable might work better if we were checking 	 * against a global group load.  As it is now, this prevents us from 	 * transfering a thread from a group that is potentially bogged down 	 * with non transferable load. 	 */
 if|if
 condition|(
 name|ksg
 operator|->
-name|ksg_transferable
+name|ksg_load
 operator|>
+operator|(
 name|ksg
 operator|->
 name|ksg_cpus
+operator|*
+literal|2
+operator|)
 operator|&&
 name|kseq_idle
 condition|)
