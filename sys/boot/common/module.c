@@ -4527,6 +4527,14 @@ name|d_link
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|ep
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 comment|/*      * Delete unused directories if any      */
 name|mdp
