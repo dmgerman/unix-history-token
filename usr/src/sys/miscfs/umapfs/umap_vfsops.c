@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.1 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	8.2 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
@@ -102,14 +102,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|umap_args
 name|args
@@ -134,6 +126,9 @@ name|amp
 decl_stmt|;
 name|u_int
 name|size
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -162,7 +157,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* return VFS_MOUNT(MOUNTTOUMAPMOUNT(mp)->umapm_vfs, path, data, ndp, p);*/
+comment|/* return (VFS_MOUNT(MOUNTTOUMAPMOUNT(mp)->umapm_vfs, path, data, ndp, p));*/
 block|}
 comment|/* 	 * Get argument 	 */
 if|if
@@ -357,7 +352,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_long
 argument_list|)
 operator|*
 name|args
@@ -447,7 +442,7 @@ literal|2
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_long
 argument_list|)
 operator|*
 name|args
@@ -751,7 +746,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* return VFS_START(MOUNTTOUMAPMOUNT(mp)->umapm_vfs, flags, p); */
+comment|/* return (VFS_START(MOUNTTOUMAPMOUNT(mp)->umapm_vfs, flags, p)); */
 block|}
 end_function
 
@@ -942,7 +937,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1027,7 +1024,9 @@ operator|=
 name|vp
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1067,6 +1066,7 @@ name|p
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|VFS_QUOTACTL
 argument_list|(
 name|MOUNTTOUMAPMOUNT
@@ -1084,6 +1084,7 @@ name|arg
 argument_list|,
 name|p
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1397,6 +1398,7 @@ name|vpp
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|VFS_VGET
 argument_list|(
 name|MOUNTTOUMAPMOUNT
@@ -1410,6 +1412,7 @@ name|ino
 argument_list|,
 name|vpp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1463,6 +1466,7 @@ name|credanonp
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|VFS_FHTOVP
 argument_list|(
 name|MOUNTTOUMAPMOUNT
@@ -1482,6 +1486,7 @@ name|exflagsp
 argument_list|,
 name|credanonp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1506,6 +1511,7 @@ name|fhp
 decl_stmt|;
 block|{
 return|return
+operator|(
 name|VFS_VPTOFH
 argument_list|(
 name|UMAPVPTOLOWERVP
@@ -1515,6 +1521,7 @@ argument_list|)
 argument_list|,
 name|fhp
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
