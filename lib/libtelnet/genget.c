@@ -68,12 +68,6 @@ end_function
 
 begin_block
 block|{
-specifier|register
-name|int
-name|n
-init|=
-literal|0
-decl_stmt|;
 name|char
 modifier|*
 name|os1
