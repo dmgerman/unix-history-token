@@ -1,21 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  ----------------------------------------------------------------------      Copyright (C) 2000  Cesar Miquel  (miquel@df.uba.ar)      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      ---------------------------------------------------------------------- */
+comment|/*  ----------------------------------------------------------------------      Copyright (C) 2000  Cesar Miquel  (miquel@df.uba.ar)      Redistribution and use in source and binary forms, with or without     modification, are permitted under any licence of your choise which     meets the open source licence definiton     http://www.opensource.org/opd.html such as the GNU licence or the     BSD licence.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU     General Public License or the BSD license for more details.      ----------------------------------------------------------------------      Modified for FreeBSD by Iwasa Kazmi<kzmi@ca2.so-net.ne.jp>      ---------------------------------------------------------------------- */
 end_comment
 
 begin_comment
-comment|/* modified for FreeBSD by Iwasa Kazmi<kzmi@ca2.so-net.ne.jp> */
+comment|/*  $FreeBSD$ */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -68,9 +77,22 @@ begin_struct
 struct|struct
 name|RioCommand
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 name|u_int16_t
 name|length
 decl_stmt|;
@@ -104,11 +126,24 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
