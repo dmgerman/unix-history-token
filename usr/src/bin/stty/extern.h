@@ -1,10 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_decl_stmt
-name|__BEGIN_DECLS
 name|int
 name|c_cchars
 name|__P
@@ -66,22 +65,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -199,38 +182,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|warn
+name|usage
 name|__P
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|__END_DECLS
+begin_decl_stmt
 specifier|extern
-expr|struct
+name|struct
 name|cchar
 name|cchars1
 index|[]
-operator|,
+decl_stmt|,
 name|cchars2
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|usage
 decl_stmt|;
 end_decl_stmt
 
