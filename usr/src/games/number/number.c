@@ -5,9 +5,15 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	number.c	4.1	82/10/24	"
+literal|"	number.c	4.2	86/11/26	"
 decl_stmt|;
 end_decl_stmt
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_decl_stmt
 name|int
@@ -196,10 +202,14 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 name|getchar
 argument_list|()
+operator|)
+operator|!=
+name|EOF
 condition|)
 block|{
 if|if
@@ -251,13 +261,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|c
 operator|=
 name|getchar
 argument_list|()
 operator|)
+operator|==
+name|EOF
 condition|)
 name|exit
 argument_list|(
@@ -307,13 +318,14 @@ literal|'0'
 condition|)
 if|if
 condition|(
-operator|!
 operator|(
 name|c
 operator|=
 name|getchar
 argument_list|()
 operator|)
+operator|==
+name|EOF
 condition|)
 name|exit
 argument_list|(
@@ -344,13 +356,14 @@ name|c
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|c
 operator|=
 name|getchar
 argument_list|()
 operator|)
+operator|==
+name|EOF
 condition|)
 name|exit
 argument_list|(
