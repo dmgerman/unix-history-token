@@ -83,8 +83,7 @@ name|d
 argument_list|)
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -93,8 +92,13 @@ literal|"directory `%s' nonexistent (ut1)"
 argument_list|,
 name|d
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 name|unlink
 argument_list|(
 name|name

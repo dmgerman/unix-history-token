@@ -11,7 +11,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)help.c	4.2	%G%"
+literal|"@(#)help.c	4.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -419,8 +419,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -429,6 +427,10 @@ literal|"%s not found (he1)"
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}

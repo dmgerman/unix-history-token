@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)admin.c	4.2	%G%"
+literal|"@(#)admin.c	4.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,8 +449,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -459,8 +458,13 @@ literal|"value after %c flag (ad12)"
 argument_list|,
 name|f
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|fatal
@@ -541,8 +545,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -551,8 +554,13 @@ literal|"value after %c flag (ad13)"
 argument_list|,
 name|f
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|VALFLAG
@@ -723,8 +731,7 @@ operator|*
 name|p
 operator|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -733,8 +740,13 @@ literal|"flag %c has no value (ad2)"
 argument_list|,
 name|f
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|fatal
@@ -1275,8 +1287,7 @@ name|HADN
 operator|&&
 name|fexists
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -1285,8 +1296,13 @@ literal|"file %s exists (ad19)"
 argument_list|,
 name|afile
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1295,8 +1311,7 @@ operator|&&
 operator|!
 name|fexists
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -1305,8 +1320,13 @@ literal|"file %s does not exist (ad20)"
 argument_list|,
 name|afile
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	   Check for '-h' flag.  If set, create child process and 	   invoke 'get' to examine format of SCCS file. 	*/
 if|if
 condition|(
@@ -1339,14 +1359,6 @@ condition|)
 block|{
 comment|/* child */
 comment|/* 			   perform 'val' with appropriate keyletters 			*/
-name|execl
-argument_list|(
-literal|"/bin/sh"
-argument_list|,
-literal|"/bin/sh"
-argument_list|,
-literal|"-c"
-argument_list|,
 name|sprintf
 argument_list|(
 name|command
@@ -1355,12 +1367,20 @@ literal|"/usr/local/val -s %s"
 argument_list|,
 name|afile
 argument_list|)
+expr_stmt|;
+name|execl
+argument_list|(
+literal|"/bin/sh"
+argument_list|,
+literal|"/bin/sh"
+argument_list|,
+literal|"-c"
+argument_list|,
+name|command
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -1369,6 +1389,10 @@ literal|"cannot execute '%s'"
 argument_list|,
 name|Valpgm
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}
@@ -1532,11 +1556,6 @@ condition|)
 block|{
 comment|/*   N E W   F I L E   */
 comment|/* 		Beginning of SCCS file. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1549,6 +1568,13 @@ name|HEAD
 argument_list|,
 literal|"00000"
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 comment|/* 		Statistics. 		*/
@@ -1702,11 +1728,6 @@ condition|(
 name|HADY
 condition|)
 block|{
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1717,6 +1738,13 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|putline
@@ -1757,11 +1785,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		End of delta-table. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1772,14 +1795,16 @@ name|CTLCHAR
 argument_list|,
 name|EDELTAB
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* 		Beginning of user-name section. 		*/
 name|putline
 argument_list|(
 operator|&
 name|gpkt
 argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+comment|/* 		Beginning of user-name section. 		*/
 name|sprintf
 argument_list|(
 name|line
@@ -1790,6 +1815,13 @@ name|CTLCHAR
 argument_list|,
 name|BUSERNAM
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -1823,11 +1855,7 @@ condition|;
 name|k
 operator|++
 control|)
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|line
@@ -1839,8 +1867,16 @@ index|[
 name|k
 index|]
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	Do not copy those user-names which are to be erased. 	*/
 if|if
 condition|(
@@ -1955,11 +1991,6 @@ condition|)
 block|{
 comment|/*   N E W  F I L E   */
 comment|/* 		End of user-name section. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1970,6 +2001,13 @@ name|CTLCHAR
 argument_list|,
 name|EUSERNAM
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2261,12 +2299,8 @@ if|if
 condition|(
 name|HADN
 condition|)
+block|{
 comment|/* 		Beginning of descriptive (user) text. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2277,8 +2311,16 @@ name|CTLCHAR
 argument_list|,
 name|BUSERTXT
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 comment|/* 		Write out BUSERTXT record which was read in 		above loop that processes flags. 		*/
 name|gpkt
@@ -2360,11 +2402,6 @@ condition|)
 block|{
 comment|/*   N E W  F I L E   */
 comment|/* 		End of user description. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2375,14 +2412,16 @@ name|CTLCHAR
 argument_list|,
 name|EUSERTXT
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* 		Beginning of body (text) of first delta. 		*/
 name|putline
 argument_list|(
 operator|&
 name|gpkt
 argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+comment|/* 		Beginning of body (text) of first delta. 		*/
 name|sprintf
 argument_list|(
 name|line
@@ -2395,6 +2434,13 @@ name|INS
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 if|if
@@ -2505,11 +2551,6 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 		End of body of first delta. 		*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2522,6 +2563,13 @@ name|END
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2681,8 +2729,7 @@ name|strp
 operator|==
 name|CTLCHAR
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -2693,8 +2740,13 @@ name|file
 argument_list|,
 name|k
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|check_id
@@ -2973,10 +3025,6 @@ condition|;
 name|argv
 operator|++
 control|)
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2990,6 +3038,12 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}

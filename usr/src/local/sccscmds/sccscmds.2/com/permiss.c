@@ -21,7 +21,7 @@ operator|)
 name|permiss
 operator|.
 name|c
-literal|1.2
+literal|1.3
 operator|%
 name|G
 operator|%
@@ -478,8 +478,7 @@ name|p
 argument_list|)
 operator|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -494,8 +493,13 @@ name|s_rel
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -530,8 +534,7 @@ name|p
 argument_list|)
 operator|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -546,8 +549,13 @@ name|s_rel
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

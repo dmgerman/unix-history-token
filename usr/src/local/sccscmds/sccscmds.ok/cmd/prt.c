@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)prt.c	4.2	%G%"
+literal|"@(#)prt.c	4.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1023,8 +1023,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -1033,6 +1031,10 @@ literal|"format error at line %d (co4)"
 argument_list|,
 name|linenum
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}

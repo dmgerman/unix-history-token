@@ -33,7 +33,7 @@ operator|)
 name|vc
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2823,8 +2823,6 @@ end_macro
 
 begin_block
 block|{
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -2834,6 +2832,10 @@ argument_list|,
 operator|&
 name|arg
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}

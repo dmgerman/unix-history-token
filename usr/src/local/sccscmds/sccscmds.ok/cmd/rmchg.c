@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)rmchg.c	4.3	%G%"
+literal|"@(#)rmchg.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,8 +565,7 @@ argument_list|(
 name|file
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -575,8 +574,13 @@ literal|"file %s does not exist (rc2)"
 argument_list|,
 name|file
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	Lock out any other user who may be trying to process 	the same file. 	*/
 if|if
 condition|(
@@ -815,8 +819,7 @@ name|logname
 argument_list|()
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -825,8 +828,13 @@ literal|"you are neither owner nor '%s' (rc4)"
 argument_list|,
 name|Pgmr
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	For 'rmdel', check that delta being removed is a 	'leaf' delta, and if ok, 	process the body. 	*/
 if|if
 condition|(
@@ -1185,10 +1193,6 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1199,6 +1203,12 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|putline
@@ -1215,10 +1225,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1229,6 +1235,12 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|putline
@@ -1254,10 +1266,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1267,6 +1275,12 @@ argument_list|,
 name|logname
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -1384,10 +1398,7 @@ condition|;
 name|argv
 operator|++
 control|)
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|str
@@ -1401,8 +1412,15 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

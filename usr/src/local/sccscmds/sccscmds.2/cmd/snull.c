@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)snull.c	4.4	%G%"
+literal|"@(#)snull.c	4.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,11 +666,6 @@ comment|/* 	Write new header. 	*/
 end_comment
 
 begin_expr_stmt
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -681,6 +676,16 @@ name|CTLCHAR
 argument_list|,
 name|HEAD
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -736,11 +741,7 @@ operator|-
 literal|'a'
 index|]
 condition|)
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|line
@@ -753,8 +754,16 @@ name|FLAG
 argument_list|,
 name|NULLFLAG
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
@@ -1949,10 +1958,6 @@ condition|)
 block|{
 comment|/* 'null' delta */
 comment|/* 			Write out statistics line. 			*/
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -1981,6 +1986,12 @@ name|ds_stats
 operator|.
 name|s_unc
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 comment|/* 			Write 'delta' line, taken from 			in-core list. 			*/
@@ -1991,10 +2002,6 @@ argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2007,12 +2014,14 @@ name|COMMENTS
 argument_list|,
 literal|"INSERTED BY SNULL"
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|putline
 argument_list|(
 name|pkt
 argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|line
@@ -2023,6 +2032,12 @@ name|CTLCHAR
 argument_list|,
 name|EDELTAB
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}
@@ -2119,10 +2134,6 @@ name|p_wrttn
 operator|=
 literal|1
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2135,6 +2146,12 @@ operator|*
 name|p
 operator|++
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|NONBLANK
@@ -2179,10 +2196,6 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2194,6 +2207,12 @@ index|[
 name|ser
 index|]
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|NONBLANK
@@ -2468,10 +2487,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 			Output new value of sequence number. 			*/
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|line
@@ -2487,6 +2502,12 @@ index|[
 name|ser
 index|]
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)bdiff.c	4.3	%G%"
+literal|"@(#)bdiff.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -706,8 +706,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -716,6 +714,10 @@ literal|"cannot execute '%s' (bd5)"
 argument_list|,
 name|diff
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}
@@ -800,8 +802,7 @@ operator|&
 operator|~
 literal|0x100
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -810,8 +811,13 @@ literal|"'%s' failed (bd6)"
 argument_list|,
 name|diff
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|linenum
 operator|+=

@@ -68,10 +68,6 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|strp
@@ -88,8 +84,12 @@ name|fivech
 argument_list|,
 name|fivech
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
 argument_list|,
-literal|0
+name|strp
 argument_list|)
 expr_stmt|;
 block|}

@@ -39,7 +39,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)get.c	4.8	%G%"
+literal|"@(#)get.c	4.9	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,8 +481,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -491,8 +490,13 @@ literal|"value after %c arg (cm8)"
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1083,8 +1087,7 @@ argument_list|(
 name|Gfile
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -1093,8 +1096,13 @@ literal|"writable `%s' exists (ge4)"
 argument_list|,
 name|Gfile
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_if
@@ -1922,8 +1930,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -1932,6 +1938,10 @@ literal|"%s already included (ge9)"
 argument_list|,
 name|str
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1945,8 +1955,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -1955,6 +1963,10 @@ literal|"%s already excluded (ge10)"
 argument_list|,
 name|str
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3998,8 +4010,6 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -4008,6 +4018,10 @@ literal|"being edited: `%s' (ge17)"
 argument_list|,
 name|line
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}

@@ -21,7 +21,7 @@ operator|)
 name|stree
 operator|.
 name|c
-literal|4.3
+literal|4.4
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -280,8 +280,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -290,8 +289,13 @@ literal|"value after %c arg (cm7)"
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

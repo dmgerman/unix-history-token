@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)delta.c	4.9	%G%"
+literal|"@(#)delta.c	4.10	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,8 +384,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -394,8 +393,13 @@ literal|"value after %c arg (cm7)"
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1300,9 +1304,8 @@ operator|)
 operator|==
 literal|32
 condition|)
+block|{
 comment|/* 'execl' failed */
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -1311,8 +1314,13 @@ literal|"cannot execute '%s' (de12)"
 argument_list|,
 name|Diffpgm
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 			Re-try. 			*/
 if|if
 condition|(
@@ -1695,10 +1703,6 @@ name|str
 argument_list|)
 expr_stmt|;
 block|}
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -1709,6 +1713,12 @@ name|CTLCHAR
 argument_list|,
 name|HEAD
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|newstats
@@ -2064,10 +2074,6 @@ argument_list|(
 literal|"MRs required (de10)"
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2078,6 +2084,12 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|putline
@@ -2094,10 +2106,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2108,6 +2116,12 @@ name|CTLCHAR
 argument_list|,
 name|EDELTAB
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 if|if
@@ -2121,10 +2135,6 @@ operator|--
 name|ser_inc
 condition|)
 block|{
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2141,6 +2151,12 @@ literal|"00000"
 argument_list|,
 name|orig_nlines
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|dt
@@ -2192,10 +2208,6 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2206,6 +2218,12 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|putline
@@ -2215,10 +2233,6 @@ argument_list|,
 literal|"AUTO NULL DELTA\n"
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2229,6 +2243,12 @@ name|CTLCHAR
 argument_list|,
 name|EDELTAB
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -2282,10 +2302,6 @@ index|[
 literal|512
 index|]
 decl_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -2296,6 +2312,12 @@ name|CTLCHAR
 argument_list|,
 name|ch
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 for|for
@@ -2326,10 +2348,7 @@ name|a_reason
 operator|==
 name|reason
 condition|)
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|str
@@ -2338,8 +2357,15 @@ literal|" %u"
 argument_list|,
 name|n
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|putline
 argument_list|(
@@ -2402,10 +2428,7 @@ condition|;
 name|argv
 operator|++
 control|)
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|str
@@ -2419,8 +2442,15 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -3276,10 +3306,6 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -3292,6 +3318,12 @@ name|INS
 argument_list|,
 name|ser
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 for|for
@@ -3326,10 +3358,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -3342,6 +3370,12 @@ name|END
 argument_list|,
 name|ser
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}
@@ -3401,10 +3435,6 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -3417,6 +3447,12 @@ name|DEL
 argument_list|,
 name|ser
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|after
@@ -3430,10 +3466,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -3446,6 +3478,12 @@ name|END
 argument_list|,
 name|ser
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 block|}

@@ -11,7 +11,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)dohist.c	1.3	%G%"
+literal|"@(#)dohist.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,10 +293,6 @@ argument_list|(
 literal|"comments? "
 argument_list|)
 expr_stmt|;
-name|Comments
-operator|=
-name|getresp
-argument_list|(
 name|sprintf
 argument_list|(
 name|line
@@ -307,6 +303,12 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|Comments
+operator|=
+name|getresp
+argument_list|(
+name|line
 argument_list|,
 name|Cstr
 argument_list|)

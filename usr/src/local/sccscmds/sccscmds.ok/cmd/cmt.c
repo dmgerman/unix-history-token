@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)cmt.c	4.4	%G%"
+literal|"@(#)cmt.c	4.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -626,8 +626,7 @@ name|logname
 argument_list|()
 argument_list|)
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -636,8 +635,13 @@ literal|"you are neither owner nor '%s' (rc4)"
 argument_list|,
 name|Pgmr
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -736,11 +740,6 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 	Write new header. 	*/
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|Line
@@ -751,6 +750,13 @@ name|CTLCHAR
 argument_list|,
 name|HEAD
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|Line
 argument_list|)
 expr_stmt|;
 name|do_delt
@@ -1511,11 +1517,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|Line
@@ -1526,8 +1528,16 @@ name|CTLCHAR
 argument_list|,
 name|MRNUM
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|Line
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1543,10 +1553,6 @@ condition|(
 name|Opened
 condition|)
 block|{
-name|Comments
-operator|=
-name|getinput
-argument_list|(
 name|sprintf
 argument_list|(
 name|Line
@@ -1557,15 +1563,16 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|Comments
+operator|=
+name|getinput
+argument_list|(
+name|Line
 argument_list|,
 name|Cstr
 argument_list|)
 expr_stmt|;
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
 name|sprintf
 argument_list|(
 name|str
@@ -1576,6 +1583,13 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
 name|putline
@@ -1596,11 +1610,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|putline
-argument_list|(
-operator|&
-name|gpkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|Line
@@ -1611,8 +1621,16 @@ name|CTLCHAR
 argument_list|,
 name|COMMENTS
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+operator|&
+name|gpkt
+argument_list|,
+name|Line
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|F_Opened
@@ -1862,10 +1880,7 @@ condition|;
 name|argv
 operator|++
 control|)
-name|putline
-argument_list|(
-name|pkt
-argument_list|,
+block|{
 name|sprintf
 argument_list|(
 name|str
@@ -1879,8 +1894,15 @@ argument_list|,
 operator|*
 name|argv
 argument_list|)
+expr_stmt|;
+name|putline
+argument_list|(
+name|pkt
+argument_list|,
+name|str
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 

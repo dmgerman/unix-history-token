@@ -45,7 +45,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)prs.c	4.2	%G%"
+literal|"@(#)prs.c	4.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3233,8 +3233,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|fatal
-argument_list|(
 name|sprintf
 argument_list|(
 name|Error
@@ -3243,6 +3241,10 @@ literal|"cannot execute '%s'"
 argument_list|,
 name|Getpgm
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
 block|}

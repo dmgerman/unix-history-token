@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)comb.c	4.3	%G%"
+literal|"@(#)comb.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -276,8 +276,7 @@ condition|(
 operator|*
 name|p
 condition|)
-name|fatal
-argument_list|(
+block|{
 name|sprintf
 argument_list|(
 name|Error
@@ -286,8 +285,13 @@ literal|"value after %c arg (cm7)"
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+name|fatal
+argument_list|(
+name|Error
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
