@@ -1465,6 +1465,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|vm_object_set_flag
+argument_list|(
+name|object
+argument_list|,
+name|OBJ_DISCONNECTWNT
+argument_list|)
+expr_stmt|;
 name|msleep
 argument_list|(
 name|object

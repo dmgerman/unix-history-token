@@ -297,6 +297,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|OBJ_DISCONNECTWNT
+value|0x4000
+end_define
+
+begin_comment
+comment|/* disconnect from vnode wanted */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IDX_TO_OFF
 parameter_list|(
 name|idx
