@@ -2466,22 +2466,33 @@ comment|/* XXXKSE */
 ifdef|#
 directive|ifdef
 name|KTRACE
-comment|/* 	 * Copy traceflag and tracefile if enabled.  If not inherited, 	 * these were zeroed above but we still could have a trace race 	 * so make sure p2's p_tracep is NULL. 	 */
-if|if
-condition|(
-operator|(
-name|p1
-operator|->
-name|p_traceflag
+comment|/* 	 * Copy traceflag and tracefile if enabled. 	 */
+name|mtx_lock
+argument_list|(
 operator|&
-name|KTRFAC_INHERIT
-operator|)
-operator|&&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
 name|p2
 operator|->
 name|p_tracep
 operator|==
 name|NULL
+argument_list|,
+operator|(
+literal|"new process has a ktrace vnode"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p1
+operator|->
+name|p_traceflag
+operator|&
+name|KTRFAC_INHERIT
 condition|)
 block|{
 name|p2
@@ -2514,6 +2525,12 @@ name|p_tracep
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ktrace_mtx
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * set priority of child to be that of parent 	 * XXXKSE hey! copying the estcpu seems dodgy.. should split it.. 	 */
@@ -3391,21 +3408,12 @@ condition|(
 name|KTRPOINT
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|KTR_SYSRET
 argument_list|)
 condition|)
-block|{
 name|ktrsysret
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_tracep
-argument_list|,
 name|SYS_fork
 argument_list|,
 literal|0
@@ -3413,7 +3421,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|mtx_assert
