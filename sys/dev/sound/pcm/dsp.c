@@ -4637,6 +4637,17 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|c
+operator|->
+name|flags
+operator|&
+name|CHN_F_MAPPED
+operator|)
+condition|)
 name|c
 operator|->
 name|flags
