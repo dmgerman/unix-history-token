@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -408,7 +414,7 @@ name|CHK
 parameter_list|(
 name|s
 parameter_list|)
-value|(*name == s[0]&& !strcmp(name, s))
+value|(*arg == s[0]&& !strcmp(arg, s))
 if|if
 condition|(
 name|CHK
