@@ -302,16 +302,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"en.h"
-end_include
-
-begin_comment
-comment|/* XXX for midwayvar.h's NEN */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -492,23 +482,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sparc
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -526,6 +499,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ic/midwayreg.h>
 end_include
 
@@ -535,40 +514,6 @@ directive|include
 file|<dev/ic/midwayvar.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* XXX XXX NEED REAL DMA MAPPING SUPPORT XXX XXX */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)(va))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_elif
 elif|#
 directive|elif
@@ -577,6 +522,30 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_elif
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
 
 begin_include
 include|#
@@ -626,6 +595,40 @@ end_endif
 begin_comment
 comment|/* __FreeBSD__ */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* XXX XXX NEED REAL DMA MAPPING SUPPORT XXX XXX */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|vtophys
+end_undef
+
+begin_define
+define|#
+directive|define
+name|vtophys
+parameter_list|(
+name|va
+parameter_list|)
+value|alpha_XXX_dmamap((vm_offset_t)(va))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -862,6 +865,12 @@ begin_comment
 comment|/* use DMA (switch off for dbg) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
+
 begin_comment
 comment|/*  * autoconfig attachments  */
 end_comment
@@ -880,6 +889,11 @@ name|DV_IFNET
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * local structures  */
@@ -1553,7 +1567,7 @@ name|SC
 parameter_list|,
 name|R
 parameter_list|)
-value|ntohl(en_read(SC,R))
+value|(u_int32_t)ntohl(en_read(SC,R))
 end_define
 
 begin_define
@@ -2385,11 +2399,8 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|)
@@ -2446,11 +2457,8 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|)
@@ -3111,16 +3119,14 @@ literal|" (pipelined)"
 else|:
 literal|""
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
+name|u_long
+operator|)
 name|sc
 operator|->
 name|en_obmemsz
 operator|/
 literal|1024
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4047,12 +4053,16 @@ end_comment
 begin_if
 if|#
 directive|if
-literal|1
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_define
 define|#
@@ -4164,11 +4174,8 @@ operator|)
 name|roundup
 argument_list|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|buffer
 argument_list|,
@@ -4179,11 +4186,8 @@ while|while
 condition|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|sp
 operator|&
@@ -4216,11 +4220,8 @@ condition|(
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|sp
 operator|+
@@ -4241,11 +4242,8 @@ condition|(
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|dp
 operator|+
@@ -4501,7 +4499,7 @@ comment|/*  * en_dmaprobe_doit: do actual testing  */
 end_comment
 
 begin_function
-specifier|static
+name|STATIC
 name|int
 name|en_dmaprobe_doit
 parameter_list|(
@@ -4772,12 +4770,20 @@ directive|ifdef
 name|EN_DEBUG
 name|printf
 argument_list|(
-literal|"DMA test lcv=%d, sp=0x%x, dp=0x%x, wmtry=%d\n"
+literal|"DMA test lcv=%d, sp=0x%lx, dp=0x%lx, wmtry=%d\n"
 argument_list|,
 name|lcv
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sp
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dp
 argument_list|,
 name|wmtry
@@ -7642,6 +7648,9 @@ name|dv_xname
 argument_list|,
 name|slot
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -8039,15 +8048,11 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
-name|uintptr_t
-operator|)
 name|mtod
 argument_list|(
-name|lastm
+argument|lastm
 argument_list|,
-name|void
-operator|*
+argument|unsigned long
 argument_list|)
 operator|%
 sizeof|sizeof
@@ -8254,7 +8259,6 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|atm_pseudohdr
-operator|*
 argument_list|)
 expr_stmt|;
 name|toadd
@@ -8329,11 +8333,17 @@ name|printf
 argument_list|(
 literal|"     leading_space=%d, trailing_space=%d\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_LEADINGSPACE
 argument_list|(
 name|m
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|M_TRAILINGSPACE
 argument_list|(
 name|lastm
@@ -9423,11 +9433,7 @@ name|off
 init|=
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|u_long
 operator|)
 name|d
 operator|)
@@ -9546,7 +9552,7 @@ directive|ifdef
 name|EN_DEBUG
 name|printf
 argument_list|(
-literal|"%s: mfix mbuf m_data=0x%x, m_len=%d\n"
+literal|"%s: mfix mbuf m_data=%p, m_len=%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -9579,11 +9585,8 @@ name|off
 operator|=
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|d
 operator|)
@@ -10980,6 +10983,9 @@ name|printf
 argument_list|(
 literal|"     HW: base_address=0x%x, size=%d, read=%d, descstart=%d\n"
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|MIDX_BASE
 argument_list|(
 name|count
@@ -10990,6 +10996,9 @@ argument_list|(
 name|count
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -11000,6 +11009,9 @@ name|chan
 argument_list|)
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -11192,11 +11204,8 @@ literal|0
 operator|&&
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|%
@@ -11514,11 +11523,8 @@ comment|/* do we need to do a DMA op to align to word boundary? */
 name|needalign
 operator|=
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|%
@@ -11703,11 +11709,8 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|)
@@ -12467,11 +12470,16 @@ name|dv_xname
 argument_list|,
 name|chan
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|pad
 operator|*
 sizeof|sizeof
 argument_list|(
 name|u_int32_t
+argument_list|)
 argument_list|)
 argument_list|,
 name|cur
@@ -15547,11 +15555,8 @@ operator|=
 operator|(
 operator|(
 operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
+name|unsigned
+name|long
 operator|)
 name|data
 operator|)
@@ -16331,6 +16336,70 @@ name|ptr
 decl_stmt|,
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|devclass_t
+name|dc
+decl_stmt|;
+name|int
+name|maxunit
+decl_stmt|;
+name|dc
+operator|=
+name|devclass_find
+argument_list|(
+literal|"en"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dc
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"en_dump: can't find devclass!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|maxunit
+operator|=
+name|devclass_get_maxunit
+argument_list|(
+name|dc
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|lcv
+operator|=
+literal|0
+init|;
+name|lcv
+operator|<
+name|maxunit
+condition|;
+name|lcv
+operator|++
+control|)
+block|{
+name|sc
+operator|=
+name|devclass_get_softc
+argument_list|(
+name|dc
+argument_list|,
+name|lcv
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 for|for
 control|(
 name|lcv
@@ -16361,6 +16430,8 @@ index|[
 name|lcv
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
@@ -16648,11 +16719,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"resid = 0x%lx\n"
+literal|"resid = 0x%x\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16714,11 +16782,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"serv_write = [chip=%ld] [us=%d]\n"
+literal|"serv_write = [chip=%u] [us=%u]\n"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16736,11 +16801,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dma addr = 0x%lx\n"
+literal|"dma addr = 0x%x\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -16751,11 +16813,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DRQ: chip[rd=0x%lx,wr=0x%lx], sc[chip=0x%x,us=0x%x]\n"
+literal|"DRQ: chip[rd=0x%x,wr=0x%x], sc[chip=0x%x,us=0x%x]\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|MID_DRQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16766,9 +16825,6 @@ name|MID_DMA_RDRX
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|MID_DRQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16790,11 +16846,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DTQ: chip[rd=0x%lx,wr=0x%lx], sc[chip=0x%x,us=0x%x]\n"
+literal|"DTQ: chip[rd=0x%x,wr=0x%x], sc[chip=0x%x,us=0x%x]\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|MID_DTQ_REG2A
 argument_list|(
 name|EN_READ
@@ -16805,9 +16858,6 @@ name|MID_DMA_RDTX
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|MID_DTQ_REG2A
 argument_list|(
 name|EN_READ
@@ -17029,10 +17079,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"txhw: base_address=0x%lx, size=%ld, read=%ld, descstart=%ld\n"
+literal|"txhw: base_address=0x%x, size=%u, read=%u, descstart=%u\n"
 argument_list|,
 operator|(
-name|u_long
+name|u_int
 operator|)
 name|MIDX_BASE
 argument_list|(
@@ -17047,9 +17097,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|MIDX_SZ
 argument_list|(
 name|EN_READ
@@ -17063,9 +17110,6 @@ argument_list|)
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17076,9 +17120,6 @@ name|slot
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17197,11 +17238,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"RXHW: mode=0x%lx, DST_RP=0x%lx, WP_ST_CNT=0x%lx\n"
+literal|"RXHW: mode=0x%x, DST_RP=0x%x, WP_ST_CNT=0x%x\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17219,9 +17257,6 @@ name|atm_vci
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17239,9 +17274,6 @@ name|atm_vci
 argument_list|)
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17308,7 +17340,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%lx]\n"
+literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%x]\n"
 argument_list|,
 name|sc
 operator|->
@@ -17343,9 +17375,6 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17415,7 +17444,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%lx]\n"
+literal|"\t0x%x=[cnt=%d, chan=%d, end=%d, type=%d @ 0x%x]\n"
 argument_list|,
 name|sc
 operator|->
@@ -17450,9 +17479,6 @@ argument_list|(
 name|reg
 argument_list|)
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|EN_READ
 argument_list|(
 name|sc
@@ -17541,17 +17567,8 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * en_dumpmem: dump the memory  */
-end_comment
-
-begin_comment
 comment|/* Do not staticize - meant for calling from DDB! */
-end_comment
-
-begin_function
 name|int
 name|en_dumpmem
 parameter_list|(
@@ -17577,6 +17594,46 @@ decl_stmt|;
 name|u_int32_t
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|devclass_t
+name|dc
+decl_stmt|;
+name|dc
+operator|=
+name|devclass_find
+argument_list|(
+literal|"en"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dc
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"en_dumpmem: can't find devclass!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|sc
+operator|=
+name|devclass_get_softc
+argument_list|(
+name|dc
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|unit
@@ -17621,6 +17678,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|addr
 operator|=
 name|addr

@@ -87,15 +87,6 @@ define|\
 value|((void) t, ((void)(*(volatile u_int32_t *)((h) + (o)) = (v))))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -109,11 +100,6 @@ end_define
 begin_comment
 comment|/* sun4c dvma */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
