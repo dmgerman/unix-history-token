@@ -1717,7 +1717,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * If we have been given a wired unit number, check for existing      * device.      */
+comment|/* If we have been given a wired unit number, check for existing device */
 if|if
 condition|(
 name|unit
@@ -1767,22 +1767,31 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|unit
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-block|}
-comment|/*      * We ended up with an unwired device, so let's find the next available      * slot for it.      */
-if|if
+comment|/* find the next available slot */
+while|while
 condition|(
+operator|++
 name|unit
-operator|==
-operator|-
-literal|1
+operator|<
+name|dc
+operator|->
+name|maxunit
+operator|&&
+name|dc
+operator|->
+name|devices
+index|[
+name|unit
+index|]
+operator|!=
+name|NULL
 condition|)
+empty_stmt|;
+block|}
+block|}
+else|else
 block|{
+comment|/* Unwired device, find the next available slot for it */
 name|unit
 operator|=
 literal|0
