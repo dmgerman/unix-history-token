@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.33 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,12 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -257,10 +263,10 @@ block|}
 block|,
 define|#
 directive|define
-name|X_PHZ
+name|X_STATHZ
 value|6
 block|{
-literal|"_phz"
+literal|"_stathz"
 block|}
 block|,
 define|#
@@ -501,6 +507,13 @@ literal|20
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|kvm_t
+modifier|*
+name|kd
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -651,6 +664,12 @@ name|memf
 decl_stmt|,
 modifier|*
 name|nlistf
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
 decl_stmt|;
 name|memf
 operator|=
@@ -821,8 +840,8 @@ name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|kd
+operator|=
 name|kvm_openfiles
 argument_list|(
 name|nlistf
@@ -830,8 +849,16 @@ argument_list|,
 name|memf
 argument_list|,
 name|NULL
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|errbuf
 argument_list|)
-operator|<
+expr_stmt|;
+if|if
+condition|(
+name|kd
+operator|==
 literal|0
 condition|)
 block|{
@@ -844,8 +871,7 @@ name|stderr
 argument_list|,
 literal|"vmstat: kvm_openfiles: %s\n"
 argument_list|,
-name|kvm_geterr
-argument_list|()
+name|errbuf
 argument_list|)
 expr_stmt|;
 name|exit
@@ -861,6 +887,8 @@ name|c
 operator|=
 name|kvm_nlist
 argument_list|(
+name|kd
+argument_list|,
 name|nl
 argument_list|)
 operator|)
@@ -954,7 +982,9 @@ argument_list|,
 literal|"vmstat: kvm_nlist: %s\n"
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1705,7 +1735,7 @@ if|if
 condition|(
 name|nl
 index|[
-name|X_PHZ
+name|X_STATHZ
 index|]
 operator|.
 name|n_type
@@ -1714,7 +1744,7 @@ literal|0
 operator|&&
 name|nl
 index|[
-name|X_PHZ
+name|X_STATHZ
 index|]
 operator|.
 name|n_value
@@ -1723,7 +1753,7 @@ literal|0
 condition|)
 name|kread
 argument_list|(
-name|X_PHZ
+name|X_STATHZ
 argument_list|,
 operator|&
 name|hz
@@ -4670,10 +4700,8 @@ if|if
 condition|(
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|nl
 index|[
 name|nlx
@@ -4720,7 +4748,9 @@ argument_list|,
 name|sym
 argument_list|,
 name|kvm_geterr
-argument_list|()
+argument_list|(
+name|kd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
