@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ch2rst.c	1.6	85/02/15  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
+comment|/*	ch2rst.c	1.6	85/02/19  *  * Font translation to Imagen-style fonts (RST format) from character format.  *  *	Use:	ch2rst  [ -i  -s ]  charfile> rstfile  *  *		Takes input from charfile (which must be in the format written  *	by one of the xxx2ch programs), converts to rst format and writes to  *	stdout.  If charfile is missing, stdin is read.  The -i flag tells  *	ch2rst to ignore the character codes at the start of each glyph  *	definition, and pack the glyphs in consecutive code positions starting  *	with 0.  The -s flag forces ch2rst to NOT trim off any white space in  *	the glyph map.  This is usefull to make stipples of fixed size.  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINE
-value|250
+value|300
 end_define
 
 begin_define
@@ -115,12 +115,24 @@ name|code
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* read in code for a glyph */
+end_comment
+
 begin_decl_stmt
 name|int
 name|width
 decl_stmt|,
 name|length
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* width and length of read-in matrix */
+end_comment
+
+begin_decl_stmt
+name|int
 name|maxv
 decl_stmt|,
 name|minv
@@ -128,12 +140,24 @@ decl_stmt|,
 name|maxh
 decl_stmt|,
 name|minh
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extent of "blackness" in glyph */
+end_comment
+
+begin_decl_stmt
+name|int
 name|refv
 decl_stmt|,
 name|refh
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* reference point in matrix */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -149,6 +173,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* flag: ignore the code number; successive */
+end_comment
+
 begin_decl_stmt
 name|int
 name|stipple
@@ -156,6 +184,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* flag: don't eliminate white-space */
+end_comment
 
 begin_decl_stmt
 name|FILE
@@ -309,6 +341,17 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+condition|)
+name|error
+argument_list|(
+literal|"too many arguments"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -730,7 +773,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ch2rst: Warning, wrong resolution (%d).\n"
+literal|"ch2rst: warning, wrong resolution (%d).\n"
 argument_list|,
 name|p
 operator|.
@@ -903,6 +946,20 @@ break|break;
 case|case
 literal|'x'
 case|:
+if|if
+condition|(
+name|refv
+operator|!=
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"two reference points in glyph %d"
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 name|refh
 operator|=
 name|i
@@ -920,6 +977,20 @@ break|break;
 case|case
 literal|'X'
 case|:
+if|if
+condition|(
+name|refv
+operator|!=
+operator|-
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"two reference points in glyph %d"
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 name|refh
 operator|=
 name|i
@@ -982,6 +1053,20 @@ block|}
 comment|/* switch */
 block|}
 comment|/* for i */
+if|if
+condition|(
+operator|*
+name|chp
+operator|!=
+literal|'\n'
+condition|)
+name|error
+argument_list|(
+literal|"not all lines equal length in glyph %d"
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fgets
@@ -1160,6 +1245,19 @@ argument_list|)
 operator|)
 operator|-
 literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|glyphs
+index|[
+name|codeindex
+index|]
+condition|)
+name|error
+argument_list|(
+literal|"out of memory"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
