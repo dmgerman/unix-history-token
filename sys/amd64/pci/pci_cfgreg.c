@@ -585,6 +585,7 @@ comment|/*   * Read configuration space register  */
 end_comment
 
 begin_function
+specifier|static
 name|u_int32_t
 name|pci_do_cfgregread
 parameter_list|(
