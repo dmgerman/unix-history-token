@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: repquota.c,v 1.5 1997/10/13 11:05:07 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,24 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|max
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)>= (b) ? (a) : (b))
+end_define
 
 begin_decl_stmt
 name|char
@@ -1104,12 +1122,30 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"                        Block limits               File limits\n"
+literal|"%*s              Block limits                 File limits\n"
+argument_list|,
+name|max
+argument_list|(
+name|UT_NAMESIZE
+argument_list|,
+literal|10
+argument_list|)
+argument_list|,
+literal|" "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"User            used    soft    hard  grace    used  soft  hard  grace\n"
+literal|"User%*s  used    soft    hard  grace    used  soft  hard  grace\n"
+argument_list|,
+name|max
+argument_list|(
+name|UT_NAMESIZE
+argument_list|,
+literal|10
+argument_list|)
+argument_list|,
+literal|" "
 argument_list|)
 expr_stmt|;
 for|for
@@ -1166,7 +1202,14 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%-10s"
+literal|"%-*s"
+argument_list|,
+name|max
+argument_list|(
+name|UT_NAMESIZE
+argument_list|,
+literal|10
+argument_list|)
 argument_list|,
 name|fup
 operator|->
