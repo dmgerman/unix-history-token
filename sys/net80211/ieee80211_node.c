@@ -2347,6 +2347,14 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+else|else
+name|ic
+operator|->
+name|ic_stats
+operator|.
+name|is_rx_nodealloc
+operator|++
+expr_stmt|;
 return|return
 name|ni
 return|;
