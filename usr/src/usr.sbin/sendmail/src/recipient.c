@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.91 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.92 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3068,11 +3068,6 @@ name|flags
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|char
-name|RealUserName
-index|[]
-decl_stmt|;
 name|euid
 operator|=
 name|RealUid

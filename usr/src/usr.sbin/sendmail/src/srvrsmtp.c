@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.76 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.77 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.76 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.77 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,14 +426,6 @@ name|skipword
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|RealUserName
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

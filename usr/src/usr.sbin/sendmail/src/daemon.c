@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.94 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.95 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.94 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.95 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2057,12 +2057,6 @@ modifier|*
 name|hostnamebyanyaddr
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-name|RealUserName
-index|[]
-decl_stmt|;
-comment|/* main.c */
 name|falen
 operator|=
 sizeof|sizeof

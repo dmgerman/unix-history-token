@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.120 (Berkeley) %G%"
+literal|"@(#)main.c	8.121 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,19 +166,6 @@ literal|""
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|RealUserName
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the actual user id on this host */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -419,6 +406,14 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 comment|/* holds MyHostName */
+specifier|static
+name|char
+name|rnamebuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+comment|/* holds RealUserName */
 specifier|extern
 name|int
 name|DtableSize
@@ -823,7 +818,7 @@ name|void
 operator|)
 name|strcpy
 argument_list|(
-name|RealUserName
+name|rnamebuf
 argument_list|,
 name|pw
 operator|->
@@ -836,12 +831,16 @@ name|void
 operator|)
 name|sprintf
 argument_list|(
-name|RealUserName
+name|rnamebuf
 argument_list|,
 literal|"Unknown UID %d"
 argument_list|,
 name|RealUid
 argument_list|)
+expr_stmt|;
+name|RealUserName
+operator|=
+name|rnamebuf
 expr_stmt|;
 comment|/* save command line arguments */
 name|i

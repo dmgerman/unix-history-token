@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.73 (Berkeley) %G%"
+literal|"@(#)util.c	8.74 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2637,11 +2637,6 @@ name|stat
 name|stb
 decl_stmt|,
 name|sta
-decl_stmt|;
-specifier|extern
-name|char
-name|RealUserName
-index|[]
 decl_stmt|;
 if|if
 condition|(
