@@ -1164,7 +1164,7 @@ argument_list|)
 expr_stmt|;
 name|xfer
 operator|=
-name|usbd_alloc_request
+name|usbd_alloc_xfer
 argument_list|(
 name|dev
 argument_list|)
@@ -1191,7 +1191,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|usbd_setup_request
+name|usbd_setup_xfer
 argument_list|(
 name|xfer
 argument_list|,
@@ -1237,7 +1237,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -1248,7 +1248,7 @@ name|err
 operator|)
 return|;
 block|}
-name|usbd_get_request_status
+name|usbd_get_xfer_status
 argument_list|(
 name|xfer
 argument_list|,
@@ -1274,7 +1274,7 @@ name|xfer_size
 operator|=
 name|size
 expr_stmt|;
-name|usbd_free_request
+name|usbd_free_xfer
 argument_list|(
 name|xfer
 argument_list|)
@@ -2427,6 +2427,19 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"%s: Woops! This will panic your system.\n"
+literal|"Detachment of the drive is not supported currently.\n"
+argument_list|,
+name|USBDEVNAME
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xpt_async
 argument_list|(
 name|AC_LOST_DEVICE
