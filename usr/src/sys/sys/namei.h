@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	namei.h	6.2	84/01/03	*/
+comment|/*	namei.h	6.3	84/01/04	*/
 end_comment
 
 begin_struct
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|NCHNAMLEN
-value|11
+value|15
 end_define
 
 begin_comment
@@ -182,6 +182,42 @@ name|int
 name|nchsize
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Stats on usefulness of namei caches.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nchstats
+block|{
+name|long
+name|ncs_goodhits
+decl_stmt|;
+comment|/* hits that we can reall use */
+name|long
+name|ncs_badhits
+decl_stmt|;
+comment|/* hits we must drop */
+name|long
+name|ncs_miss
+decl_stmt|;
+comment|/* misses */
+name|long
+name|ncs_long
+decl_stmt|;
+comment|/* long names that ignore cache */
+name|long
+name|ncs_pass2
+decl_stmt|;
+comment|/* names found with passes == 2 */
+name|long
+name|ncs_2passes
+decl_stmt|;
+comment|/* number of times we attempt it */
+block|}
+struct|;
+end_struct
 
 end_unit
 
