@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: route.c,v 1.3 1995/01/23 20:19:16 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2345,8 +2345,19 @@ name|rmx_expire
 condition|)
 block|{
 name|time_t
-name|now
-init|=
+name|expire_time
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|expire_time
+operator|=
+name|rt
+operator|->
+name|rt_rmx
+operator|.
+name|rmx_expire
+operator|-
 name|time
 argument_list|(
 operator|(
@@ -2355,20 +2366,17 @@ operator|*
 operator|)
 literal|0
 argument_list|)
-decl_stmt|;
+operator|)
+operator|>
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|" %8.8s %6d%s"
 argument_list|,
 name|prettyname
 argument_list|,
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_expire
-operator|-
-name|now
+name|expire_time
 argument_list|,
 name|rt
 operator|->
