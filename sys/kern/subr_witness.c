@@ -1300,6 +1300,13 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
+literal|"intr table"
+block|,
+operator|&
+name|lock_class_mtx_spin
+block|}
+block|,
+block|{
 literal|"ithread table lock"
 block|,
 operator|&
@@ -1352,17 +1359,9 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__i386__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|APIC_IO
-argument_list|)
 block|{
 literal|"tlb"
 block|,
@@ -1370,11 +1369,6 @@ operator|&
 name|lock_class_mtx_spin
 block|}
 block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|"lazypmap"
 block|,
