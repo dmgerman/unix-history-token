@@ -4087,6 +4087,98 @@ value|0x6c
 end_define
 
 begin_comment
+comment|/*  * Register definitions for the Adaptec 'Rocket' RAID-On-Chip adapters.  * Unsurprisingly, it's quite similar to the i960!  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_IDBR
+value|0x20
+end_define
+
+begin_comment
+comment|/* inbound doorbell register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_IISR
+value|0x24
+end_define
+
+begin_comment
+comment|/* inbound interrupt status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_IIMR
+value|0x28
+end_define
+
+begin_comment
+comment|/* inbound interrupt mask register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_ODBR
+value|0x2c
+end_define
+
+begin_comment
+comment|/* outbound doorbell register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OISR
+value|0x30
+end_define
+
+begin_comment
+comment|/* outbound interrupt status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_OIMR
+value|0x34
+end_define
+
+begin_comment
+comment|/* outbound interrupt mask register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_MAILBOX
+value|0x1000
+end_define
+
+begin_comment
+comment|/* mailbox */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AAC_RKT_FWSTATUS
+value|0x101c
+end_define
+
+begin_comment
+comment|/* Firmware Status (mailbox 7) */
+end_comment
+
+begin_comment
 comment|/*  * Common bit definitions for the doorbell registers.  */
 end_comment
 

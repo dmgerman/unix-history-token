@@ -642,6 +642,14 @@ name|aac_fa_interface
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|aac_interface
+name|aac_rkt_interface
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -912,6 +920,10 @@ define|#
 directive|define
 name|AAC_HWIF_FALCON
 value|2
+define|#
+directive|define
+name|AAC_HWIF_RKT
+value|3
 define|#
 directive|define
 name|AAC_HWIF_UNKNOWN

@@ -603,6 +603,22 @@ literal|"Adaptec SCSI RAID 2810SA"
 block|}
 block|,
 block|{
+literal|0x9005
+block|,
+literal|0x0286
+block|,
+literal|0x9005
+block|,
+literal|0x028d
+block|,
+name|AAC_HWIF_RKT
+block|,
+literal|0
+block|,
+literal|"Adaptec SCSI RAID 2130S"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -1172,12 +1188,6 @@ name|out
 goto|;
 block|}
 comment|/*  	 * Detect the hardware interface version, set up the bus interface 	 * indirection. 	 */
-name|sc
-operator|->
-name|aac_hwif
-operator|=
-name|AAC_HWIF_UNKNOWN
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1323,6 +1333,31 @@ operator|->
 name|aac_if
 operator|=
 name|aac_fa_interface
+expr_stmt|;
+break|break;
+case|case
+name|AAC_HWIF_RKT
+case|:
+name|debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"setu hardware up for Rocket/MIPS"
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aac_if
+operator|=
+name|aac_rkt_interface
+expr_stmt|;
+break|break;
+default|default:
+name|sc
+operator|->
+name|aac_hwif
+operator|=
+name|AAC_HWIF_UNKNOWN
 expr_stmt|;
 break|break;
 block|}
