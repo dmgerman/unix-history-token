@@ -12549,6 +12549,9 @@ name|POSITION_TO_ELEMENT
 case|:
 comment|/* SEEK_10 */
 case|case
+name|SYNCHRONIZE_CACHE
+case|:
+case|case
 name|MODE_SELECT_10
 case|:
 case|case
