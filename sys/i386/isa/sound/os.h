@@ -661,7 +661,7 @@ parameter_list|,
 name|linux_ptr
 parameter_list|)
 define|\
-value|{(mem_ptr) = (typecast)malloc((size), M_DEVBUF, M_NOWAIT); \    if (!(mem_ptr))panic("SOUND: Cannot allocate memory\n");}
+value|{(mem_ptr) = (typecast)malloc((size), M_DEVBUF, M_NOWAIT); \    if (!(mem_ptr))panic("SOUND: Cannot allocate memory");}
 end_define
 
 begin_comment

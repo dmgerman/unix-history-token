@@ -506,7 +506,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"snd: Invalid memory allocation\n"
+literal|"snd: Invalid memory allocation"
 argument_list|)
 expr_stmt|;
 return|return
@@ -632,7 +632,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"snd#: Invalid memory allocation\n"
+literal|"snd#: Invalid memory allocation"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.11 1994/12/27 12:37:36 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.12 1995/01/09 16:05:00 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -4560,7 +4560,7 @@ block|{
 comment|/* this should never happen */
 name|panic
 argument_list|(
-literal|"msdosfs_rename(): updating .. in root directory?\n"
+literal|"msdosfs_rename(): updating .. in root directory?"
 argument_list|)
 expr_stmt|;
 block|}

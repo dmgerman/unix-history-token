@@ -5,12 +5,12 @@ name|char
 name|nic38_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3008.c,v 1.1 1995/02/14 15:00:10 jkh Exp $"
+literal|"@(#)$Id: nic3008.c,v 1.2 1995/02/15 11:59:40 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -4323,7 +4323,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"3008 conflict with 16 bit card\nReconfig your system\n"
+literal|"3008 conflict with 16 bit card\nReconfig your system"
 argument_list|)
 expr_stmt|;
 if|if
