@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_debug.c	5.4 (Berkeley) %G%"
+literal|"@(#)bt_debug.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -803,7 +803,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"size %2d pgno %2d"
+literal|"size %03d pgno %03d"
 argument_list|,
 name|bi
 operator|->
@@ -846,7 +846,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" {%s}"
+literal|" {%.*s}"
+argument_list|,
+name|bi
+operator|->
+name|ksize
 argument_list|,
 name|bi
 operator|->
@@ -873,7 +877,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"entries %2d pgno %2d"
+literal|"entries %03d pgno %03d"
 argument_list|,
 name|ri
 operator|->
@@ -1028,7 +1032,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|bl
+operator|->
+name|dsize
 argument_list|,
 name|bl
 operator|->
@@ -1109,7 +1117,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s"
+literal|"%.*s"
+argument_list|,
+name|rl
+operator|->
+name|dsize
 argument_list|,
 name|rl
 operator|->
