@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -53,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: expand.c,v 1.2 1997/07/01 06:34:31 charnier Exp $"
+literal|"$Id: expand.c,v 1.3 1998/02/02 07:10:59 cwt Exp $"
 decl_stmt|;
 end_decl_stmt
 

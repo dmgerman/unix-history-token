@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -46,11 +48,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chpass.c,v 1.13 1997/02/22 19:54:25 peter Exp $"
+literal|"$Id: chpass.c,v 1.14 1997/03/29 04:28:38 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,6 +283,8 @@ name|struct
 name|passwd
 modifier|*
 name|pw
+init|=
+name|NULL
 decl_stmt|,
 name|lpw
 decl_stmt|;
@@ -299,6 +304,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|arg
+init|=
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ee.c,v 1.10 1998/04/30 12:49:11 ache Exp $"
+literal|"$Id: ee.c,v 1.11 1998/10/01 21:18:18 obrien Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"@(#) ee, version 1.3  $Revision: 1.10 $"
+literal|"@(#) ee, version 1.3  $Revision: 1.11 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -10810,6 +10810,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|direction
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|text
@@ -11177,6 +11179,8 @@ name|struct
 name|files
 modifier|*
 name|temp_names
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -16291,6 +16295,8 @@ name|input
 decl_stmt|;
 name|int
 name|temp
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|list_size

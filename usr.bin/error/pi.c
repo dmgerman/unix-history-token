@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pi.c,v 1.3 1997/11/03 07:44:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,6 +616,8 @@ name|char
 modifier|*
 modifier|*
 name|nwordv
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(

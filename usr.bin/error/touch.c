@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: touch.c,v 1.4 1997/11/03 07:44:25 charnier Exp $"
+literal|"$Id: touch.c,v 1.5 1998/02/25 02:24:04 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2263,6 +2263,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|sep
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|fi

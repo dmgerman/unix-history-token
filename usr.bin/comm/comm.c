@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -53,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: comm.c,v 1.4 1997/09/07 15:09:17 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,8 +199,12 @@ name|int
 name|comp
 decl_stmt|,
 name|file1done
+init|=
+literal|0
 decl_stmt|,
 name|file2done
+init|=
+literal|0
 decl_stmt|,
 name|read1
 decl_stmt|,

@@ -1602,6 +1602,7 @@ index|]
 operator|)
 operator||
 operator|(
+operator|(
 name|ocode
 operator|<<
 name|r_off
@@ -1611,6 +1612,7 @@ name|lmask
 index|[
 name|r_off
 index|]
+operator|)
 expr_stmt|;
 name|bp
 operator|++
@@ -3036,6 +3038,7 @@ name|zs
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|mode
 index|[
 literal|0
@@ -3049,6 +3052,7 @@ literal|0
 index|]
 operator|!=
 literal|'w'
+operator|)
 operator|||
 name|mode
 index|[
@@ -3246,6 +3250,11 @@ operator|)
 return|;
 block|}
 comment|/* NOTREACHED */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_block
 
