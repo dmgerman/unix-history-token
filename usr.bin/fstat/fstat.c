@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fstat.c,v 1.7.2.1 1997/07/10 06:35:39 charnier Exp $"
+literal|"$Id: fstat.c,v 1.7.2.2 1997/08/29 05:29:13 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2172,7 +2172,7 @@ block|}
 default|default:
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %6lu"
 argument_list|,
 name|fst
 operator|.
