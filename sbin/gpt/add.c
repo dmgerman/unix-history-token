@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<uuid.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"map.h"
 end_include
 
