@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.73 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.74 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2814,6 +2814,12 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+specifier|register
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 name|int
 name|fmode
 decl_stmt|,
@@ -3016,6 +3022,12 @@ name|error
 operator|)
 return|;
 block|}
+name|vp
+operator|=
+name|ndp
+operator|->
+name|ni_vp
+expr_stmt|;
 name|fp
 operator|->
 name|f_flag
@@ -3096,9 +3108,7 @@ name|error
 operator|=
 name|VOP_ADVLOCK
 argument_list|(
-name|ndp
-operator|->
-name|ni_vp
+name|vp
 argument_list|,
 operator|(
 name|caddr_t
@@ -3114,11 +3124,27 @@ name|type
 argument_list|)
 condition|)
 block|{
-name|vput
+name|VOP_UNLOCK
 argument_list|(
-name|ndp
+name|vp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vn_close
+argument_list|(
+name|vp
+argument_list|,
+name|fp
 operator|->
-name|ni_vp
+name|f_flag
+argument_list|,
+name|fp
+operator|->
+name|f_cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|ffree
@@ -3150,9 +3176,7 @@ expr_stmt|;
 block|}
 name|VOP_UNLOCK
 argument_list|(
-name|ndp
-operator|->
-name|ni_vp
+name|vp
 argument_list|)
 expr_stmt|;
 name|fp
@@ -3175,9 +3199,7 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
-name|ndp
-operator|->
-name|ni_vp
+name|vp
 expr_stmt|;
 operator|*
 name|retval
