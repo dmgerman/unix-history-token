@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * compress.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Oct 25 22:12:46 1995 ylo  *   * Interface to packet compression for ssh.  *   */
+comment|/*  *  * compress.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Wed Oct 25 22:12:46 1995 ylo  *  * Interface to packet compression for ssh.  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: compress.h,v 1.3 1999/11/24 19:53:46 markus Exp $"); */
+comment|/* RCSID("$Id: compress.h,v 1.4 2000/04/14 10:30:31 markus Exp $"); */
 end_comment
 
 begin_ifndef

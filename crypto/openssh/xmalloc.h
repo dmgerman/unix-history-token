@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * xmalloc.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Mar 20 22:09:17 1995 ylo  *   * Versions of malloc and friends that check their results, and never return  * failure (they call fatal if they encounter an error).  *   */
+comment|/*  *  * xmalloc.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Mar 20 22:09:17 1995 ylo  *  * Versions of malloc and friends that check their results, and never return  * failure (they call fatal if they encounter an error).  *  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: xmalloc.h,v 1.2 1999/11/24 00:26:04 deraadt Exp $"); */
+comment|/* RCSID("$Id: xmalloc.h,v 1.3 2000/04/14 10:30:34 markus Exp $"); */
 end_comment
 
 begin_ifndef

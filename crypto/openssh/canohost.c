@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * canohost.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun Jul  2 17:52:22 1995 ylo  *   * Functions for returning the canonical host name of the remote site.  *   */
+comment|/*  *  * canohost.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sun Jul  2 17:52:22 1995 ylo  *  * Functions for returning the canonical host name of the remote site.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: canohost.c,v 1.11 2000/01/04 13:41:32 markus Exp $"
+literal|"$Id: canohost.c,v 1.12 2000/04/14 10:30:30 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

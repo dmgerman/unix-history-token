@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: atomicio.c,v 1.2 2000/02/01 22:32:53 d Exp $"
+literal|"$Id: atomicio.c,v 1.3 2000/03/16 20:56:13 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -41,7 +41,7 @@ name|f
 argument_list|,
 name|fd
 argument_list|,
-name|s
+name|_s
 argument_list|,
 name|n
 argument_list|)
@@ -63,7 +63,7 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 modifier|*
-name|s
+name|_s
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|s
+init|=
+name|_s
+decl_stmt|;
 name|ssize_t
 name|res
 decl_stmt|,

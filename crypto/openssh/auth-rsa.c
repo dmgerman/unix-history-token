@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * auth-rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Mar 27 01:46:52 1995 ylo  *   * RSA-based authentication.  This code determines whether to admit a login  * based on RSA authentication.  This file also contains functions to check  * validity of the host key.  *   * $FreeBSD$  */
+comment|/*  *  * auth-rsa.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Mar 27 01:46:52 1995 ylo  *  * RSA-based authentication.  This code determines whether to admit a login  * based on RSA authentication.  This file also contains functions to check  * validity of the host key.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-rsa.c,v 1.18 2000/02/11 10:59:11 markus Exp $"
+literal|"$Id: auth-rsa.c,v 1.23 2000/04/29 18:11:51 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"uidswap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"match.h"
 end_include
 
 begin_include
@@ -147,13 +153,9 @@ begin_function
 name|int
 name|auth_rsa_challenge_dialog
 parameter_list|(
-name|BIGNUM
+name|RSA
 modifier|*
-name|e
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|n
+name|pk
 parameter_list|)
 block|{
 name|BIGNUM
@@ -162,10 +164,6 @@ name|challenge
 decl_stmt|,
 modifier|*
 name|encrypted_challenge
-decl_stmt|;
-name|RSA
-modifier|*
-name|pk
 decl_stmt|;
 name|BN_CTX
 modifier|*
@@ -233,6 +231,8 @@ name|challenge
 argument_list|,
 name|challenge
 argument_list|,
+name|pk
+operator|->
 name|n
 argument_list|,
 name|ctx
@@ -243,44 +243,6 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/* Create the public key data structure. */
-name|pk
-operator|=
-name|RSA_new
-argument_list|()
-expr_stmt|;
-name|pk
-operator|->
-name|e
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|BN_copy
-argument_list|(
-name|pk
-operator|->
-name|e
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-name|pk
-operator|->
-name|n
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|BN_copy
-argument_list|(
-name|pk
-operator|->
-name|n
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
 comment|/* Encrypt the challenge with the public key. */
 name|rsa_public_encrypt
 argument_list|(
@@ -288,11 +250,6 @@ name|encrypted_challenge
 argument_list|,
 name|challenge
 argument_list|,
-name|pk
-argument_list|)
-expr_stmt|;
-name|RSA_free
-argument_list|(
 name|pk
 argument_list|)
 expr_stmt|;
@@ -522,12 +479,9 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-name|BIGNUM
+name|RSA
 modifier|*
-name|e
-decl_stmt|,
-modifier|*
-name|n
+name|pk
 decl_stmt|;
 comment|/* Temporarily use the user's uid. */
 name|temporarily_use_uid
@@ -819,6 +773,11 @@ condition|(
 name|fail
 condition|)
 block|{
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
 name|buf
@@ -842,11 +801,20 @@ name|authenticated
 operator|=
 literal|0
 expr_stmt|;
+name|pk
+operator|=
+name|RSA_new
+argument_list|()
+expr_stmt|;
+name|pk
+operator|->
 name|e
 operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
+name|pk
+operator|->
 name|n
 operator|=
 name|BN_new
@@ -1016,8 +984,12 @@ argument_list|,
 operator|&
 name|bits
 argument_list|,
+name|pk
+operator|->
 name|e
 argument_list|,
+name|pk
+operator|->
 name|n
 argument_list|)
 condition|)
@@ -1048,6 +1020,8 @@ if|if
 condition|(
 name|BN_cmp
 argument_list|(
+name|pk
+operator|->
 name|n
 argument_list|,
 name|client_n
@@ -1063,6 +1037,8 @@ name|bits
 operator|!=
 name|BN_num_bits
 argument_list|(
+name|pk
+operator|->
 name|n
 argument_list|)
 condition|)
@@ -1077,6 +1053,8 @@ name|linenum
 argument_list|,
 name|BN_num_bits
 argument_list|(
+name|pk
+operator|->
 name|n
 argument_list|)
 argument_list|,
@@ -1090,9 +1068,7 @@ condition|(
 operator|!
 name|auth_rsa_challenge_dialog
 argument_list|(
-name|e
-argument_list|,
-name|n
+name|pk
 argument_list|)
 condition|)
 block|{
@@ -2010,14 +1986,9 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|BN_clear_free
+name|RSA_free
 argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|e
+name|pk
 argument_list|)
 expr_stmt|;
 if|if

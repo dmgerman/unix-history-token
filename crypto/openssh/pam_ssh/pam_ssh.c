@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Andrew J. Korty  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
+comment|/*-  * Copyright (c) 1999, 2000 Andrew J. Korty  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"includes.h"
 end_include
 
@@ -96,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ssh.h"
 end_include
 
@@ -103,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"authfd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"authfile.h"
 end_include
 
 begin_define
@@ -724,8 +742,7 @@ modifier|*
 name|identity
 decl_stmt|;
 comment|/* user's identity file */
-name|RSA
-modifier|*
+name|Key
 name|key
 decl_stmt|;
 comment|/* user's private key */
@@ -744,8 +761,7 @@ modifier|*
 name|prompt
 decl_stmt|;
 comment|/* passphrase prompt */
-name|RSA
-modifier|*
+name|Key
 name|public_key
 decl_stmt|;
 comment|/* user's public key */
@@ -872,11 +888,27 @@ return|;
 block|}
 comment|/* 	 * Fail unless we can load the public key.  Change to the 	 * owner's UID to appease load_public_key(). 	 */
 name|key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
+name|key
+operator|.
+name|rsa
 operator|=
 name|RSA_new
 argument_list|()
 expr_stmt|;
 name|public_key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
+name|public_key
+operator|.
+name|rsa
 operator|=
 name|RSA_new
 argument_list|()
@@ -904,6 +936,7 @@ name|load_public_key
 argument_list|(
 name|identity
 argument_list|,
+operator|&
 name|public_key
 argument_list|,
 operator|&
@@ -936,6 +969,8 @@ block|}
 name|RSA_free
 argument_list|(
 name|public_key
+operator|.
+name|rsa
 argument_list|)
 expr_stmt|;
 comment|/* build the passphrase prompt */
@@ -1039,6 +1074,7 @@ name|identity
 argument_list|,
 name|pass
 argument_list|,
+operator|&
 name|key
 argument_list|,
 operator|&
@@ -1079,6 +1115,8 @@ argument_list|,
 literal|"ssh_private_key"
 argument_list|,
 name|key
+operator|.
+name|rsa
 argument_list|,
 name|rsa_cleanup
 argument_list|)
@@ -1090,6 +1128,8 @@ block|{
 name|RSA_free
 argument_list|(
 name|key
+operator|.
+name|rsa
 argument_list|)
 expr_stmt|;
 name|free
@@ -1288,8 +1328,7 @@ modifier|*
 name|env_fp
 decl_stmt|;
 comment|/* env_file handle */
-name|RSA
-modifier|*
+name|Key
 name|key
 decl_stmt|;
 comment|/* user's private key */
@@ -1830,6 +1869,12 @@ return|return
 name|PAM_SESSION_ERR
 return|;
 block|}
+name|key
+operator|.
+name|type
+operator|=
+name|KEY_RSA
+expr_stmt|;
 comment|/* connect to the agent and hand off the private key */
 if|if
 condition|(
@@ -1850,6 +1895,8 @@ operator|*
 operator|)
 operator|&
 name|key
+operator|.
+name|rsa
 argument_list|)
 operator|)
 operator|!=
@@ -1934,6 +1981,8 @@ argument_list|(
 name|ac
 argument_list|,
 name|key
+operator|.
+name|rsa
 argument_list|,
 name|comment
 argument_list|)

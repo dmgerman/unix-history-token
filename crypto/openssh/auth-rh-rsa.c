@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * auth-rh-rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sun May  7 03:08:06 1995 ylo  *   * Rhosts or /etc/hosts.equiv authentication combined with RSA host  * authentication.  *  */
+comment|/*  *  * auth-rh-rsa.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sun May  7 03:08:06 1995 ylo  *  * Rhosts or /etc/hosts.equiv authentication combined with RSA host  * authentication.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-rh-rsa.c,v 1.10 1999/11/24 19:53:43 markus Exp $"
+literal|"$Id: auth-rh-rsa.c,v 1.13 2000/04/14 10:30:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -47,6 +47,30 @@ directive|include
 file|"servconf.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/dsa.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"key.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"hostfile.h"
+end_include
+
 begin_comment
 comment|/*  * Tries to authenticate the user using the .rhosts file and the host using  * its host key.  Returns true if authentication succeeds.  */
 end_comment
@@ -65,13 +89,9 @@ name|char
 modifier|*
 name|client_user
 parameter_list|,
-name|BIGNUM
+name|RSA
 modifier|*
-name|client_host_key_e
-parameter_list|,
-name|BIGNUM
-modifier|*
-name|client_host_key_n
+name|client_host_key
 parameter_list|)
 block|{
 specifier|extern
@@ -86,12 +106,12 @@ decl_stmt|;
 name|HostStatus
 name|host_status
 decl_stmt|;
-name|BIGNUM
+name|Key
 modifier|*
-name|ke
+name|client_key
 decl_stmt|,
 modifier|*
-name|kn
+name|found
 decl_stmt|;
 name|debug
 argument_list|(
@@ -100,6 +120,15 @@ argument_list|,
 name|client_user
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|client_host_key
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Check if we would accept it using rhosts authentication. */
 if|if
 condition|(
@@ -126,17 +155,48 @@ argument_list|,
 name|canonical_hostname
 argument_list|)
 expr_stmt|;
+comment|/* wrap the RSA key into a 'generic' key */
+name|client_key
+operator|=
+name|key_new
+argument_list|(
+name|KEY_RSA
+argument_list|)
+expr_stmt|;
+name|BN_copy
+argument_list|(
+name|client_key
+operator|->
+name|rsa
+operator|->
+name|e
+argument_list|,
+name|client_host_key
+operator|->
+name|e
+argument_list|)
+expr_stmt|;
+name|BN_copy
+argument_list|(
+name|client_key
+operator|->
+name|rsa
+operator|->
+name|n
+argument_list|,
+name|client_host_key
+operator|->
+name|n
+argument_list|)
+expr_stmt|;
+name|found
+operator|=
+name|key_new
+argument_list|(
+name|KEY_RSA
+argument_list|)
+expr_stmt|;
 comment|/* Check if we know the host and its host key. */
-name|ke
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
-name|kn
-operator|=
-name|BN_new
-argument_list|()
-expr_stmt|;
 name|host_status
 operator|=
 name|check_host_in_hostfile
@@ -145,13 +205,9 @@ name|SSH_SYSTEM_HOSTFILE
 argument_list|,
 name|canonical_hostname
 argument_list|,
-name|client_host_key_e
+name|client_key
 argument_list|,
-name|client_host_key_n
-argument_list|,
-name|ke
-argument_list|,
-name|kn
+name|found
 argument_list|)
 expr_stmt|;
 comment|/* Check user host file unless ignored. */
@@ -262,13 +318,9 @@ name|user_hostfile
 argument_list|,
 name|canonical_hostname
 argument_list|,
-name|client_host_key_e
+name|client_key
 argument_list|,
-name|client_host_key_n
-argument_list|,
-name|ke
-argument_list|,
-name|kn
+name|found
 argument_list|)
 expr_stmt|;
 name|restore_uid
@@ -281,14 +333,14 @@ name|user_hostfile
 argument_list|)
 expr_stmt|;
 block|}
-name|BN_free
+name|key_free
 argument_list|(
-name|ke
+name|client_key
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|key_free
 argument_list|(
-name|kn
+name|found
 argument_list|)
 expr_stmt|;
 if|if
@@ -319,9 +371,7 @@ condition|(
 operator|!
 name|auth_rsa_challenge_dialog
 argument_list|(
-name|client_host_key_e
-argument_list|,
-name|client_host_key_n
+name|client_host_key
 argument_list|)
 condition|)
 block|{

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * readconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Apr 22 00:25:29 1995 ylo  *   * Functions for reading the configuration file.  *   * $FreeBSD$  */
+comment|/*  *  * readconf.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sat Apr 22 00:25:29 1995 ylo  *  * Functions for reading the configuration file.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: readconf.h,v 1.13 1999/12/01 13:59:15 markus Exp $"); */
+comment|/* RCSID("$Id: readconf.h,v 1.18 2000/05/08 17:12:15 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -81,6 +81,10 @@ name|int
 name|rsa_authentication
 decl_stmt|;
 comment|/* Try RSA authentication. */
+name|int
+name|dsa_authentication
+decl_stmt|;
+comment|/* Try DSA authentication. */
 name|int
 name|skey_authentication
 decl_stmt|;
@@ -177,6 +181,15 @@ decl_stmt|;
 comment|/* Cipher to use. */
 name|char
 modifier|*
+name|ciphers
+decl_stmt|;
+comment|/* SSH2 ciphers in order of preference. */
+name|int
+name|protocol
+decl_stmt|;
+comment|/* Protocol in order of preference. */
+name|char
+modifier|*
 name|hostname
 decl_stmt|;
 comment|/* Real host to connect. */
@@ -204,13 +217,32 @@ modifier|*
 name|user_hostfile
 decl_stmt|;
 comment|/* Path for $HOME/.ssh/known_hosts. */
+name|char
+modifier|*
+name|system_hostfile2
+decl_stmt|;
+name|char
+modifier|*
+name|user_hostfile2
+decl_stmt|;
 name|int
 name|num_identity_files
 decl_stmt|;
 comment|/* Number of files for RSA identities. */
+name|int
+name|num_identity_files2
+decl_stmt|;
+comment|/* DSA identities. */
 name|char
 modifier|*
 name|identity_files
+index|[
+name|SSH_MAX_IDENTITY_FILES
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|identity_files2
 index|[
 name|SSH_MAX_IDENTITY_FILES
 index|]

@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -8,10 +12,16 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-skey.c,v 1.5 1999/12/06 19:04:57 deraadt Exp $"
+literal|"$Id: auth-skey.c,v 1.6 2000/04/14 10:30:29 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
 
 begin_include
 include|#
@@ -28,11 +38,11 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sha1.h>
+file|<sha.h>
 end_include
 
 begin_comment
-comment|/*   * try skey authentication,  * return 1 on success, 0 on failure, -1 if skey is not available   */
+comment|/*  * try skey authentication,  * return 1 on success, 0 on failure, -1 if skey is not available  */
 end_comment
 
 begin_function
@@ -68,7 +78,7 @@ name|char
 modifier|*
 name|skeyinfo
 init|=
-name|skey_keyinfo
+name|opie_keyinfo
 argument_list|(
 name|pw
 operator|->
@@ -120,7 +130,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|skey_haskey
+name|opie_haskey
 argument_list|(
 name|pw
 operator|->
@@ -129,7 +139,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|skey_passcheck
+name|opie_passverify
 argument_list|(
 name|pw
 operator|->
@@ -293,7 +303,7 @@ decl_stmt|;
 name|u_char
 name|hseed
 index|[
-name|SKEY_MAX_SEED_LEN
+name|OPIE_SEED_MAX
 index|]
 decl_stmt|,
 name|flg
@@ -306,7 +316,7 @@ decl_stmt|;
 name|char
 name|pbuf
 index|[
-name|SKEY_MAX_PW_LEN
+name|OPIE_SECRET_MAX
 operator|+
 literal|1
 index|]
@@ -315,7 +325,7 @@ specifier|static
 name|char
 name|skeyprompt
 index|[
-name|SKEY_MAX_CHALLENGE
+name|OPIE_CHALLENGE_MAX
 operator|+
 literal|1
 index|]
@@ -341,7 +351,20 @@ decl_stmt|,
 modifier|*
 name|u
 decl_stmt|;
-comment|/* 	 * Base first 4 chars of seed on hostname. 	 * Add some filler for short hostnames if necessary. 	 */
+name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+comment|/* 	 * Base first 2 chars of seed on hostname. 	 * Add some filler for short hostnames if necessary. 	 */
 if|if
 condition|(
 name|gethostname
@@ -417,7 +440,7 @@ name|pbuf
 operator|-
 name|p
 operator|<
-literal|4
+literal|2
 condition|)
 operator|(
 name|void
@@ -428,7 +451,7 @@ name|p
 argument_list|,
 literal|"asjd"
 argument_list|,
-literal|4
+literal|2
 operator|-
 operator|(
 name|pbuf
@@ -439,7 +462,7 @@ argument_list|)
 expr_stmt|;
 name|pbuf
 index|[
-literal|4
+literal|2
 index|]
 operator|=
 literal|'\0'
@@ -450,7 +473,7 @@ condition|(
 operator|(
 name|up
 operator|=
-name|SHA1Data
+name|SHA1_Data
 argument_list|(
 name|username
 argument_list|,
@@ -473,9 +496,6 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
 comment|/* Collapse the hash */
 name|ptr
 operator|=
@@ -496,91 +516,74 @@ name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* See if the random file's there, else use ctime */
+comment|/* 		 * Seed the fake challenge with the system boot time, 		 * otherwise use ctime. 		 * 		 * XXX This should be a random source which is constant 		 * over short time periods, but changes over timescales on 		 * the order of a week. 		 */
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_KERN
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|KERN_BOOTTIME
+expr_stmt|;
+name|size
+operator|=
+sizeof|sizeof
+argument_list|(
+name|boottime
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|fd
-operator|=
-name|open
+name|sysctl
 argument_list|(
-name|_SKEY_RAND_FILE_PATH_
+name|mib
 argument_list|,
-name|O_RDONLY
-argument_list|)
-operator|)
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|fstat
-argument_list|(
-name|fd
+literal|2
 argument_list|,
 operator|&
-name|sb
-argument_list|)
-operator|==
+name|boottime
+argument_list|,
+operator|&
+name|size
+argument_list|,
+name|NULL
+argument_list|,
 literal|0
-operator|&&
-name|sb
-operator|.
-name|st_size
-operator|>
-operator|(
-name|off_t
-operator|)
-name|SKEY_MAX_SEED_LEN
-operator|&&
-name|lseek
-argument_list|(
-name|fd
-argument_list|,
-name|ptr
-operator|%
-operator|(
-name|sb
-operator|.
-name|st_size
-operator|-
-name|SKEY_MAX_SEED_LEN
-operator|)
-argument_list|,
-name|SEEK_SET
 argument_list|)
 operator|!=
 operator|-
 literal|1
 operator|&&
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|hseed
-argument_list|,
-name|SKEY_MAX_SEED_LEN
-argument_list|)
-operator|==
-name|SKEY_MAX_SEED_LEN
+name|boottime
+operator|.
+name|tv_sec
+operator|!=
+literal|0
 condition|)
 block|{
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|secret
 operator|=
-name|hseed
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|boottime
 expr_stmt|;
 name|secretlen
 operator|=
-name|SKEY_MAX_SEED_LEN
+name|size
+operator|/
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 expr_stmt|;
 name|flg
 operator|=
@@ -635,18 +638,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|fd
-operator|!=
-operator|-
-literal|1
-condition|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Put that in your pipe and smoke it */
 if|if
@@ -657,13 +648,13 @@ literal|0
 condition|)
 block|{
 comment|/* Hash secret value with username */
-name|SHA1Init
+name|SHA1_Init
 argument_list|(
 operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|SHA1Update
+name|SHA1_Update
 argument_list|(
 operator|&
 name|ctx
@@ -673,7 +664,7 @@ argument_list|,
 name|secretlen
 argument_list|)
 expr_stmt|;
-name|SHA1Update
+name|SHA1_Update
 argument_list|(
 operator|&
 name|ctx
@@ -686,7 +677,7 @@ name|username
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SHA1End
+name|SHA1_End
 argument_list|(
 operator|&
 name|ctx
@@ -705,13 +696,13 @@ name|secretlen
 argument_list|)
 expr_stmt|;
 comment|/* Now hash the hash */
-name|SHA1Init
+name|SHA1_Init
 argument_list|(
 operator|&
 name|ctx
 argument_list|)
 expr_stmt|;
-name|SHA1Update
+name|SHA1_Update
 argument_list|(
 operator|&
 name|ctx
@@ -724,7 +715,7 @@ name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|SHA1End
+name|SHA1_End
 argument_list|(
 operator|&
 name|ctx
@@ -745,11 +736,11 @@ for|for
 control|(
 name|i
 operator|=
-literal|4
+literal|2
 init|;
 name|i
 operator|<
-literal|9
+literal|6
 condition|;
 name|i
 operator|++
@@ -796,7 +787,7 @@ literal|3
 index|]
 operator|)
 operator|%
-literal|99
+literal|499
 operator|)
 operator|+
 literal|1
@@ -826,16 +817,16 @@ argument_list|,
 sizeof|sizeof
 name|skeyprompt
 argument_list|,
-literal|"otp-%.*s %d %.*s"
+literal|"opt-%.*s %d %.*s ext"
 argument_list|,
-name|SKEY_MAX_HASHNAME_LEN
+name|OPIE_HASHNAME_MAX
 argument_list|,
-name|skey_get_algorithm
+name|opie_get_algorithm
 argument_list|()
 argument_list|,
 name|ptr
 argument_list|,
-name|SKEY_MAX_SEED_LEN
+name|OPIE_SEED_MAX
 argument_list|,
 name|pbuf
 argument_list|)
@@ -843,21 +834,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Base last 8 chars of seed on username */
+comment|/* Base last 4 chars of seed on username */
 name|u
 operator|=
 name|username
 expr_stmt|;
 name|i
 operator|=
-literal|8
+literal|4
 expr_stmt|;
 name|p
 operator|=
 operator|&
 name|pbuf
 index|[
-literal|4
+literal|2
 index|]
 expr_stmt|;
 do|do
@@ -911,7 +902,7 @@ condition|)
 do|;
 name|pbuf
 index|[
-literal|12
+literal|6
 index|]
 operator|=
 literal|'\0'
@@ -926,16 +917,11 @@ argument_list|,
 sizeof|sizeof
 name|skeyprompt
 argument_list|,
-literal|"otp-%.*s %d %.*s"
+literal|"opt-md5 %d %.*s ext"
 argument_list|,
-name|SKEY_MAX_HASHNAME_LEN
+literal|499
 argument_list|,
-name|skey_get_algorithm
-argument_list|()
-argument_list|,
-literal|99
-argument_list|,
-name|SKEY_MAX_SEED_LEN
+name|OPIE_SEED_MAX
 argument_list|,
 name|pbuf
 argument_list|)

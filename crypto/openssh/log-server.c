@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * log-server.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Mar 20 21:19:30 1995 ylo  *   * Server-side versions of debug(), log(), etc.  These normally send the output  * to the system log.  *   */
+comment|/*  *  * log-server.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Mar 20 21:19:30 1995 ylo  *  * Server-side versions of debug(), log(), etc.  These normally send the output  * to the system log.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log-server.c,v 1.11 1999/11/24 00:26:02 deraadt Exp $"
+literal|"$Id: log-server.c,v 1.14 2000/04/14 10:30:31 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -259,7 +259,7 @@ end_function
 begin_define
 define|#
 directive|define
-name|MSGBUFSIZE
+name|MSGBUFSIZ
 value|1024
 end_define
 
@@ -282,13 +282,13 @@ block|{
 name|char
 name|msgbuf
 index|[
-name|MSGBUFSIZE
+name|MSGBUFSIZ
 index|]
 decl_stmt|;
 name|char
 name|fmtbuf
 index|[
-name|MSGBUFSIZE
+name|MSGBUFSIZ
 index|]
 decl_stmt|;
 name|char
@@ -436,6 +436,7 @@ if|if
 condition|(
 name|log_on_stderr
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -445,6 +446,9 @@ argument_list|,
 name|msgbuf
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 name|openlog
 argument_list|(
 name|__progname
@@ -466,6 +470,7 @@ expr_stmt|;
 name|closelog
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 

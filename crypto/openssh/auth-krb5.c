@@ -34,9 +34,10 @@ name|KRB5
 end_ifdef
 
 begin_decl_stmt
-specifier|extern
 name|krb5_context
 name|ssh_context
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 

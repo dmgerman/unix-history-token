@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * servconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Aug 21 15:35:03 1995 ylo  *   * Definitions for server configuration data and for the functions reading it.  *   * $FreeBSD$  */
+comment|/*  *  * servconf.h  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Mon Aug 21 15:35:03 1995 ylo  *  * Definitions for server configuration data and for the functions reading it.  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: servconf.h,v 1.15 2000/01/04 00:08:00 markus Exp $"); */
+comment|/* RCSID("$Id: servconf.h,v 1.22 2000/05/06 17:45:37 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -109,6 +109,16 @@ modifier|*
 name|host_key_file
 decl_stmt|;
 comment|/* File containing host key. */
+name|char
+modifier|*
+name|host_dsa_key_file
+decl_stmt|;
+comment|/* File containing dsa host key. */
+name|char
+modifier|*
+name|pid_file
+decl_stmt|;
+comment|/* Where to put our pid */
 name|int
 name|server_key_bits
 decl_stmt|;
@@ -157,6 +167,19 @@ name|int
 name|keepalives
 decl_stmt|;
 comment|/* If true, set SO_KEEPALIVE. */
+name|char
+modifier|*
+name|ciphers
+decl_stmt|;
+comment|/* Ciphers in order of preference. */
+name|int
+name|protocol
+decl_stmt|;
+comment|/* Protocol in order of preference. */
+name|int
+name|gateway_ports
+decl_stmt|;
+comment|/* If true, allow remote connects to forwarded ports. */
 name|SyslogFacility
 name|log_facility
 decl_stmt|;
@@ -177,6 +200,10 @@ name|int
 name|rsa_authentication
 decl_stmt|;
 comment|/* If true, permit RSA authentication. */
+name|int
+name|dsa_authentication
+decl_stmt|;
+comment|/* If true, permit DSA authentication. */
 ifdef|#
 directive|ifdef
 name|KRB4

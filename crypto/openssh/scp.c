@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * scp - secure remote copy.  This is basically patched BSD rcp which uses ssh  * to do the data transfer (instead of using rcmd).  *   * NOTE: This version should NOT be suid root.  (This uses ssh to do the transfer  * and ssh has the necessary privileges.)  *   * 1995 Timo Rinne<tri@iki.fi>, Tatu Ylonen<ylo@cs.hut.fi>  *  */
+comment|/*  *  * scp - secure remote copy.  This is basically patched BSD rcp which uses ssh  * to do the data transfer (instead of using rcmd).  *  * NOTE: This version should NOT be suid root.  (This uses ssh to do the transfer  * and ssh has the necessary privileges.)  *  * 1995 Timo Rinne<tri@iki.fi>, Tatu Ylonen<ylo@cs.hut.fi>  * */
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: scp.c,v 1.25 2000/01/24 22:11:20 markus Exp $"
+literal|"$Id: scp.c,v 1.30 2000/05/02 18:21:48 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2666,8 +2666,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|buf
@@ -2748,8 +2750,10 @@ block|}
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|buf
@@ -2873,8 +2877,10 @@ condition|)
 block|{
 name|result
 operator|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|fd
 argument_list|,
 name|bp
@@ -2908,8 +2914,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|bp
@@ -2923,8 +2931,10 @@ else|else
 block|{
 name|result
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|bp
@@ -2989,8 +2999,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -3147,8 +3159,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|path
@@ -3217,8 +3231,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 name|path
@@ -3367,8 +3383,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|"E\n"
@@ -3558,8 +3576,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -3608,8 +3628,10 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 name|cp
@@ -3637,8 +3659,10 @@ do|do
 block|{
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 operator|&
@@ -3718,8 +3742,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|STDERR_FILENO
 argument_list|,
 name|buf
@@ -3766,8 +3792,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -3893,8 +3921,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -4333,8 +4363,10 @@ block|}
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -4444,8 +4476,10 @@ do|do
 block|{
 name|j
 operator|=
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 name|cp
@@ -4519,8 +4553,10 @@ condition|)
 block|{
 name|j
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|ofd
 argument_list|,
 name|bp
@@ -4587,8 +4623,10 @@ operator|&&
 operator|(
 name|j
 operator|=
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|ofd
 argument_list|,
 name|bp
@@ -4779,8 +4817,10 @@ case|:
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|remout
 argument_list|,
 literal|""
@@ -4832,8 +4872,10 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 operator|&
@@ -4893,8 +4935,10 @@ do|do
 block|{
 if|if
 condition|(
-name|read
+name|atomicio
 argument_list|(
+name|read
+argument_list|,
 name|remin
 argument_list|,
 operator|&
@@ -4951,8 +4995,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|STDERR_FILENO
 argument_list|,
 name|rbuf
@@ -5147,7 +5193,7 @@ comment|/* Stuff below is from BSD rcp util.c. */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scp.c,v 1.25 2000/01/24 22:11:20 markus Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scp.c,v 1.30 2000/05/02 18:21:48 deraadt Exp $  */
 end_comment
 
 begin_function
@@ -5674,7 +5720,8 @@ begin_function
 name|void
 name|updateprogressmeter
 parameter_list|(
-name|void
+name|int
+name|ignore
 parameter_list|)
 block|{
 name|int
@@ -6206,6 +6253,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|flag
+operator|!=
+literal|1
+condition|)
 name|remaining
 operator|=
 call|(
@@ -6222,6 +6275,11 @@ operator|)
 operator|-
 name|elapsed
 argument_list|)
+expr_stmt|;
+else|else
+name|remaining
+operator|=
+name|elapsed
 expr_stmt|;
 name|i
 operator|=
@@ -6305,7 +6363,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%02d:%02d ETA"
+literal|"%02d:%02d%s"
 argument_list|,
 name|i
 operator|/
@@ -6314,6 +6372,16 @@ argument_list|,
 name|i
 operator|%
 literal|60
+argument_list|,
+operator|(
+name|flag
+operator|!=
+literal|1
+operator|)
+condition|?
+literal|" ETA"
+else|:
+literal|"    "
 argument_list|)
 expr_stmt|;
 block|}
@@ -6346,10 +6414,6 @@ name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|updateprogressmeter
 argument_list|)
 expr_stmt|;
@@ -6372,8 +6436,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|write
+name|atomicio
 argument_list|(
+name|write
+argument_list|,
 name|fileno
 argument_list|(
 name|stdout

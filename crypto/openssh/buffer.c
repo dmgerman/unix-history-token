@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * buffer.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Mar 18 04:15:33 1995 ylo  *   * Functions for manipulating fifo buffers (that can grow if needed).  *   */
+comment|/*  *  * buffer.c  *  * Author: Tatu Ylonen<ylo@cs.hut.fi>  *  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *  * Created: Sat Mar 18 04:15:33 1995 ylo  *  * Functions for manipulating fifo buffers (that can grow if needed).  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: buffer.c,v 1.4 1999/11/24 19:53:44 markus Exp $"
+literal|"$Id: buffer.c,v 1.6 2000/04/14 10:30:30 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -420,7 +420,7 @@ name|offset
 condition|)
 name|fatal
 argument_list|(
-literal|"buffer_get trying to get more bytes than in buffer"
+literal|"buffer_get: trying to get more bytes than in buffer"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -478,7 +478,7 @@ name|offset
 condition|)
 name|fatal
 argument_list|(
-literal|"buffer_get trying to get more bytes than in buffer"
+literal|"buffer_consume: trying to get more bytes than in buffer"
 argument_list|)
 expr_stmt|;
 name|buffer
@@ -521,7 +521,7 @@ name|offset
 condition|)
 name|fatal
 argument_list|(
-literal|"buffer_get trying to get more bytes than in buffer"
+literal|"buffer_consume_end: trying to get more bytes than in buffer"
 argument_list|)
 expr_stmt|;
 name|buffer
