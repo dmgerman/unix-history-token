@@ -343,7 +343,7 @@ comment|/* compile in the kstack guard page */
 end_comment
 
 begin_comment
-comment|/*  * Ceiling on amount of swblock kva space.  */
+comment|/*  * Ceiling on amount of swblock kva space, can be changed via  * the kern.maxswzone /boot/loader.conf variable.  */
 end_comment
 
 begin_ifndef
@@ -356,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|VM_SWZONE_SIZE_MAX
-value|(70 * 1024 * 1024)
+value|(32 * 1024 * 1024)
 end_define
 
 begin_endif
@@ -365,7 +365,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Ceiling on size of buffer cache (really only effects write queueing,  * the VM page cache is not effected).  */
+comment|/*  * Ceiling on size of buffer cache (really only effects write queueing,  * the VM page cache is not effected), can be changed via  * the kern.maxbcache /boot/loader.conf variable.  */
 end_comment
 
 begin_ifndef
