@@ -1188,6 +1188,11 @@ name|FPU_lookahead
 operator|=
 name|FPU_LOOKAHEAD
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|curproc
@@ -1199,6 +1204,11 @@ condition|)
 name|FPU_lookahead
 operator|=
 literal|0
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|curproc
+argument_list|)
 expr_stmt|;
 name|do_another_FPU_instruction
 label|:
