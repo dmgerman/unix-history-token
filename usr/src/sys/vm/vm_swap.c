@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.6	82/06/25	*/
+comment|/*	vm_swap.c	4.7	82/07/15	*/
 end_comment
 
 begin_include
@@ -87,6 +87,28 @@ decl_stmt|;
 name|dev_t
 name|dev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GENERIC
+comment|/* 	 * A mini-root gets copied into the front of the swap 	 * and we run over top of the swap area just long 	 * enough for us to do a mkfs and restor of the real 	 * root (sure beats rewriting standalone restor). 	 */
+define|#
+directive|define
+name|MINIROOTSIZE
+value|2048
+if|if
+condition|(
+name|rootdev
+operator|==
+name|dumpdev
+condition|)
+name|bp
+operator|->
+name|b_blkno
+operator|+=
+name|MINIROOTSIZE
+expr_stmt|;
+endif|#
+directive|endif
 name|sz
 operator|=
 operator|(
