@@ -2550,7 +2550,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-b | -H | -h | -k | -m | -P] [-ailn] [-t type] [file | file system ...]\n"
+literal|"usage: df [-b | -H | -h | -k | -m | -P] [-ailn] [-t type] [file | filesystem ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
