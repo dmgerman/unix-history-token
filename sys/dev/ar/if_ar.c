@@ -1411,6 +1411,8 @@ operator|=
 name|IFF_POINTOPOINT
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
 name|ifp
 operator|->
