@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4807,6 +4807,57 @@ operator|!
 name|globulize
 argument_list|(
 operator|&
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+condition|)
+block|{
+name|code
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"-"
+argument_list|)
+operator|&&
+operator|*
+name|argv
+index|[
+literal|2
+index|]
+operator|!=
+literal|'|'
+condition|)
+if|if
+condition|(
+operator|!
+name|globulize
+argument_list|(
+operator|&
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+operator|||
+operator|!
+name|confirm
+argument_list|(
+literal|"output to local-file:"
+argument_list|,
 name|argv
 index|[
 literal|2
