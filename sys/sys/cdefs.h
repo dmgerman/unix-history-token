@@ -636,7 +636,7 @@ parameter_list|,
 name|aliassym
 parameter_list|)
 define|\
-value|extern __typeof (sym) aliassym __attribute__ ((alias (#sym)));
+value|extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)));
 end_define
 
 begin_ifdef
