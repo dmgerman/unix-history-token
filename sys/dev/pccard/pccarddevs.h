@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.78 2003/11/03 16:04:31 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.79 2003/11/03 16:09:17 imp Exp   */
 end_comment
 
 begin_comment
@@ -2653,22 +2653,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_INTEL_ETHEREXP
+name|PCMCIA_CIS_INTEL_ETHEREXPPRO
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_INTEL_ETHEREXP
+name|PCMCIA_PRODUCT_INTEL_ETHEREXPPRO
 value|0x0301
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_INTEL_ETHEREXP
-value|"Intel EtherExpress PCMCIA Card"
+name|PCMCIA_STR_INTEL_ETHEREXPPRO
+value|"Intel EtherExpress Pro PCMCIA Card"
 end_define
 
 begin_comment
