@@ -1345,6 +1345,7 @@ expr_stmt|;
 name|cr
 operator|=
 operator|(
+operator|(
 name|tio
 operator|.
 name|c_oflag
@@ -1353,6 +1354,7 @@ operator|(
 name|OPOST
 operator||
 name|ONLCR
+operator|)
 operator|)
 operator|==
 operator|(
