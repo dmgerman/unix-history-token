@@ -4839,11 +4839,13 @@ name|struct
 name|thread
 modifier|*
 name|td
-init|=
+decl_stmt|;
+name|td
+operator|=
 operator|&
 name|thread0
-decl_stmt|;
-comment|/* XXX for credentials, will break if sleep */
+expr_stmt|;
+comment|/* XXX for credentials, may break if sleep */
 name|s
 operator|=
 name|splnet
