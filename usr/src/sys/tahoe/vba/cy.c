@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	1.4	86/01/26	*/
+comment|/*	cy.c	1.5	86/01/26	*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"cy.h"
-end_include
 
 begin_include
 include|#
