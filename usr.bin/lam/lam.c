@@ -444,6 +444,9 @@ literal|1
 index|]
 condition|)
 block|{
+name|morefiles
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -451,12 +454,14 @@ name|p
 operator|==
 literal|'-'
 condition|)
+block|{
 name|ip
 operator|->
 name|fp
 operator|=
 name|stdin
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
