@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)tree.h 1.1 %G%"; */
+comment|/* static	char sccsid[] = "@(#)tree.h 1.2 %G%"; */
 end_comment
 
 begin_define
@@ -432,13 +432,6 @@ define|#
 directive|define
 name|T_IF
 value|61
-end_define
-
-begin_define
-define|#
-directive|define
-name|T_ASRT
-value|62
 end_define
 
 begin_define

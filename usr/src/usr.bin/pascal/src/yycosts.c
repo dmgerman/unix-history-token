@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycosts.c 1.2 %G%"
+literal|"@(#)yycosts.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,9 +178,6 @@ name|YWHILE
 case|:
 case|case
 name|YWITH
-case|:
-case|case
-name|YASSERT
 case|:
 return|return
 operator|(

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c 1.2 %G%"
+literal|"@(#)hash.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,10 +76,6 @@ block|,
 literal|"array"
 block|,
 name|YARRAY
-block|,
-literal|"assert"
-block|,
-name|YASSERT
 block|,
 literal|"begin"
 block|,

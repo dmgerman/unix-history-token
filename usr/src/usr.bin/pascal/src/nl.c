@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.7 %G%"
+literal|"@(#)nl.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,8 @@ name|in_procs
 index|[]
 init|=
 block|{
+literal|"assert"
+block|,
 literal|"date"
 block|,
 literal|"dispose"
@@ -510,6 +512,10 @@ name|in_pops
 index|[]
 init|=
 block|{
+name|O_ASRT
+operator||
+name|NSTAND
+block|,
 name|O_DATE
 operator||
 name|NSTAND
