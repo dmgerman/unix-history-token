@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	stat.h	4.5	82/11/13	*/
+comment|/*	stat.h	4.6	82/12/23	*/
 end_comment
 
 begin_struct
@@ -35,14 +35,29 @@ decl_stmt|;
 name|time_t
 name|st_atime
 decl_stmt|;
+name|int
+name|st_spare1
+decl_stmt|;
 name|time_t
 name|st_mtime
+decl_stmt|;
+name|int
+name|st_spare2
 decl_stmt|;
 name|time_t
 name|st_ctime
 decl_stmt|;
+name|int
+name|st_spare3
+decl_stmt|;
 name|long
 name|st_blksize
+decl_stmt|;
+name|long
+name|st_spare4
+index|[
+literal|3
+index|]
 decl_stmt|;
 block|}
 struct|;
