@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	6.3	84/08/29	*/
+comment|/*	vm_meter.c	6.4	85/02/22	*/
 end_comment
 
 begin_include
@@ -215,12 +215,28 @@ name|lotsfree
 operator|==
 literal|0
 condition|)
+block|{
+name|lotsfree
+operator|=
+name|LOTSFREE
+operator|/
+name|NBPG
+expr_stmt|;
+if|if
+condition|(
+name|lotsfree
+operator|>
+name|LOOPPAGES
+operator|/
+name|LOTSFREEFRACT
+condition|)
 name|lotsfree
 operator|=
 name|LOOPPAGES
 operator|/
 name|LOTSFREEFRACT
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|desfree
