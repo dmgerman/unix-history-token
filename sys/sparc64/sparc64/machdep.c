@@ -1217,7 +1217,7 @@ argument_list|()
 expr_stmt|;
 name|globaldata_register
 argument_list|(
-name|globaldata
+name|globalp
 argument_list|)
 expr_stmt|;
 name|tick_start
@@ -1449,13 +1449,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Initialize the per-cpu pointer so we can set curproc. 	 */
-name|globaldata
+name|globalp
 operator|=
 operator|&
 name|__globaldata
 expr_stmt|;
 comment|/* 	 * Setup pointers to interrupt data tables. 	 */
-name|globaldata
+name|globalp
 operator|->
 name|gd_iq
 operator|=
@@ -1466,7 +1466,7 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* XXX cpuno */
-name|globaldata
+name|globalp
 operator|->
 name|gd_ivt
 operator|=
