@@ -275,21 +275,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
-name|int
-name|ip_rsvp_on
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|socket
-modifier|*
-name|ip_rsvpd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ipforwarding
 init|=
@@ -885,7 +870,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
+comment|/*  * XXX this is ugly -- the following two global variables are  * used to store packet state while it travels through the stack.  * Note that the code even makes assumptions on the size and  * alignment of fields inside struct ip_srcrt so e.g. adding some  * fields will break the code. This needs to be fixed.  *  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
 end_comment
 
 begin_decl_stmt
@@ -1255,22 +1240,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|sockaddr_in
-name|ipaddr
-init|=
-block|{
-sizeof|sizeof
-argument_list|(
-name|ipaddr
-argument_list|)
-block|,
-name|AF_INET
-block|}
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * XXX watch out this one. It is perhaps used as a cache for  * the most recently used route ? it is cleared in in_addroute()  * when a new route is successfully created.  */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -4964,6 +4936,19 @@ decl_stmt|;
 name|n_time
 name|ntime
 decl_stmt|;
+name|struct
+name|sockaddr_in
+name|ipaddr
+init|=
+block|{
+sizeof|sizeof
+argument_list|(
+name|ipaddr
+argument_list|)
+block|,
+name|AF_INET
+block|}
+decl_stmt|;
 name|dst
 operator|=
 name|ip
@@ -7302,7 +7287,7 @@ name|ipforward_rt
 operator|.
 name|ro_rt
 expr_stmt|;
-comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * We don't use m_copy() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
+comment|/* 	 * Save the IP header and at most 8 bytes of the payload, 	 * in case we need to generate an ICMP message to the src. 	 * 	 * XXX this can be optimized a lot by saving the data in a local 	 * buffer on the stack (72 bytes at most), and only allocating the 	 * mbuf if really necessary. The vast majority of the packets 	 * are forwarded without having to send an ICMP back (either 	 * because unnecessary, or because rate limited), so we are 	 * really we are wasting a lot of work here. 	 * 	 * We don't use m_copy() because it might return a reference 	 * to a shared cluster. Both this function and ip_output() 	 * assume exclusive access to the IP header in `m', so any 	 * data in a cluster may change before we reach icmp_error(). 	 */
 name|MGET
 argument_list|(
 name|mcopy
@@ -8364,6 +8349,25 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * XXX these routines are called from the upper part of the kernel.  * They need to be locked when we remove Giant.  *  * They could also be moved to ip_mroute.c, since all the RSVP  *  handling is done there already.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ip_rsvp_on
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|ip_rsvpd
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
