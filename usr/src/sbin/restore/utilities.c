@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.6 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1494,7 +1494,7 @@ name|ino
 operator|==
 literal|0
 operator|||
-name|BIT
+name|TSTINO
 argument_list|(
 name|ino
 argument_list|,

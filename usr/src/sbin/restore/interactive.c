@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.13 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,7 +2291,7 @@ condition|(
 operator|!
 name|dflag
 operator|&&
-name|BIT
+name|TSTINO
 argument_list|(
 name|dp
 operator|->
@@ -3130,7 +3130,7 @@ condition|(
 operator|!
 name|dflag
 operator|&&
-name|BIT
+name|TSTINO
 argument_list|(
 name|dp
 operator|->
@@ -4013,7 +4013,7 @@ if|if
 condition|(
 name|dflag
 operator|&&
-name|BIT
+name|TSTINO
 argument_list|(
 name|fp
 operator|->

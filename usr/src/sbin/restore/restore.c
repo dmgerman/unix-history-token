@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.9 (Berkeley) %G%"
+literal|"@(#)restore.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ name|FAIL
 decl_stmt|;
 if|if
 condition|(
-name|BIT
+name|TSTINO
 argument_list|(
 name|ino
 argument_list|,
@@ -79,13 +79,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|descend
 operator|)
 return|;
-block|}
 name|vprintf
 argument_list|(
 name|stdout
@@ -168,7 +166,7 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|BIT
+name|TSTINO
 argument_list|(
 name|ino
 argument_list|,
@@ -366,7 +364,7 @@ name|ep
 decl_stmt|;
 if|if
 condition|(
-name|BIT
+name|TSTINO
 argument_list|(
 name|ino
 argument_list|,
@@ -375,13 +373,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 return|return
 operator|(
 name|descend
 operator|)
 return|;
-block|}
 name|ep
 operator|=
 name|lookupino
@@ -483,7 +479,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|BIT
+name|TSTINO
 argument_list|(
 name|i
 argument_list|,
@@ -649,7 +645,7 @@ function_decl|;
 comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 * 	 * Check to see if the file is on the tape. 	 */
 if|if
 condition|(
-name|BIT
+name|TSTINO
 argument_list|(
 name|ino
 argument_list|,
@@ -1720,7 +1716,7 @@ name|e_type
 operator|==
 name|LEAF
 operator|||
-name|BIT
+name|TSTINO
 argument_list|(
 name|i
 argument_list|,
