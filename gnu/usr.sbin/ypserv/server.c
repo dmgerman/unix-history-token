@@ -593,6 +593,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|status
+operator|&&
+operator|(
 name|sin
 operator|->
 name|sin_addr
@@ -604,6 +608,7 @@ operator|||
 name|status
 operator|!=
 name|oldstatus
+operator|)
 condition|)
 block|{
 name|syslog

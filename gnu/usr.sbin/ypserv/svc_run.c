@@ -115,6 +115,15 @@ specifier|extern
 name|int
 name|forked
 decl_stmt|;
+name|int
+name|pid
+decl_stmt|;
+comment|/* Establish the identity of the parent ypserv process. */
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -193,6 +202,11 @@ expr_stmt|;
 if|if
 condition|(
 name|forked
+operator|&&
+name|pid
+operator|!=
+name|getpid
+argument_list|()
 condition|)
 name|exit
 argument_list|(
