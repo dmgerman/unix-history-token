@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.30 (Berkeley) %G%"
+literal|"@(#)ls.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1226,11 +1226,18 @@ name|NULL
 expr_stmt|;
 name|statfcn
 operator|=
+operator|(
+name|f_longform
+operator|||
+name|f_listdir
+operator|)
+operator|&&
+operator|!
 name|f_ignorelink
 condition|?
-name|stat
-else|:
 name|lstat
+else|:
+name|stat
 expr_stmt|;
 for|for
 control|(
@@ -1250,6 +1257,22 @@ block|{
 if|if
 condition|(
 name|statfcn
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|statfcn
+operator|!=
+name|stat
+operator|||
+name|lstat
 argument_list|(
 operator|*
 name|argv
@@ -1289,6 +1312,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
