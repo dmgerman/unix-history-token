@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.12 (Berkeley) %G%"
+literal|"@(#)login.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +139,34 @@ include|#
 directive|include
 file|<syslog.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|WRITENAME
+value|"write"
+end_define
+
+begin_comment
+comment|/* name of group to own ttys */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WRITEGID
+value|write_gid()
+end_define
+
+begin_comment
+comment|/* gid that owns all ttys */
+end_comment
 
 begin_define
 define|#
@@ -1904,9 +1932,7 @@ name|pwd
 operator|->
 name|pw_uid
 argument_list|,
-name|pwd
-operator|->
-name|pw_gid
+name|WRITEGID
 argument_list|)
 expr_stmt|;
 if|if
@@ -1932,7 +1958,7 @@ name|chmod
 argument_list|(
 name|ttyn
 argument_list|,
-literal|0622
+literal|0620
 argument_list|)
 expr_stmt|;
 name|setgid
@@ -3365,6 +3391,60 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|write_gid
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|struct
+name|group
+modifier|*
+name|getgrnam
+argument_list|()
+decl_stmt|,
+modifier|*
+name|gr
+decl_stmt|;
+name|int
+name|gid
+init|=
+literal|0
+decl_stmt|;
+name|gr
+operator|=
+name|getgrnam
+argument_list|(
+name|WRITENAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gr
+operator|!=
+operator|(
+expr|struct
+name|group
+operator|*
+operator|)
+literal|0
+condition|)
+name|gid
+operator|=
+name|gr
+operator|->
+name|gr_gid
+expr_stmt|;
+name|endgrent
+argument_list|()
+expr_stmt|;
+return|return
+name|gid
+return|;
 block|}
 end_block
 
