@@ -206,6 +206,8 @@ name|OFF_TO_IDX
 argument_list|(
 name|foff
 operator|+
+name|PAGE_MASK
+operator|+
 name|size
 argument_list|)
 argument_list|)
