@@ -633,7 +633,14 @@ name|STAT
 argument_list|(
 name|crypto_keyfail
 argument_list|,
-literal|"setkey faied 'cuz driver key alloc failed"
+literal|"setkey failed 'cuz driver key alloc failed"
+argument_list|)
+expr_stmt|;
+name|STAT
+argument_list|(
+name|crypto_enmicfail
+argument_list|,
+literal|"enmic failed (may be mbuf exhaustion)"
 argument_list|)
 expr_stmt|;
 name|STAT
