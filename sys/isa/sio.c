@@ -3168,12 +3168,6 @@ name|COM_ISMULTIPORT
 argument_list|(
 name|flags
 argument_list|)
-operator|&&
-operator|!
-name|COM_NOTAST4
-argument_list|(
-name|flags
-argument_list|)
 condition|)
 block|{
 name|Port_t
@@ -3223,6 +3217,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|COM_NOTAST4
+argument_list|(
+name|flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 name|bus_get_resource
 argument_list|(
 name|idev
@@ -3258,6 +3261,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|outb
 argument_list|(
@@ -3268,7 +3273,6 @@ argument_list|,
 literal|0x80
 argument_list|)
 expr_stmt|;
-comment|/* no irq */
 else|else
 name|outb
 argument_list|(
@@ -3284,6 +3288,7 @@ name|mcr_image
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -4468,6 +4473,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+operator|!=
+literal|0
 expr_stmt|;
 name|com
 operator|->
@@ -5314,6 +5321,11 @@ name|com
 operator|->
 name|no_irq
 operator|=
+operator|(
+name|masterdev
+operator|==
+name|NULL
+operator|||
 name|bus_get_resource
 argument_list|(
 name|masterdev
@@ -5326,6 +5338,9 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
+operator|!=
+literal|0
+operator|)
 expr_stmt|;
 block|}
 endif|#
