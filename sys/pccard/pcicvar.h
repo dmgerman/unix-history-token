@@ -94,39 +94,29 @@ decl_stmt|;
 comment|/* Interesting flags */
 define|#
 directive|define
-name|PCIC_IO_MAPPED
+name|PCIC_AB_POWER
 value|0x00000001
-comment|/* ExCA registers are io mapped */
-define|#
-directive|define
-name|PCIC_MEM_MAPPED
-value|0x00000002
-comment|/* ExCA registers mem mapped */
-define|#
-directive|define
-name|PCIC_VG_POWER
-value|0x00000004
-comment|/* Uses VG power regs */
+comment|/* Use old A/B step power */
 define|#
 directive|define
 name|PCIC_DF_POWER
-value|0x00000008
+value|0x00000002
 comment|/* Uses DF step regs  */
 define|#
 directive|define
 name|PCIC_PD_POWER
-value|0x00000010
+value|0x00000004
 comment|/* Uses CL-PD regs  */
 define|#
 directive|define
-name|PCIC_KING_POWER
-value|0x00000020
-comment|/* Uses IBM KING regs  */
+name|PCIC_VG_POWER
+value|0x00000008
+comment|/* Uses VG power regs */
 define|#
 directive|define
-name|PCIC_AB_POWER
-value|0x00000040
-comment|/* Use old A/B step power */
+name|PCIC_KING_POWER
+value|0x00000010
+comment|/* Uses IBM KING regs  */
 name|int
 name|iorid
 decl_stmt|;
@@ -418,6 +408,16 @@ parameter_list|,
 name|unsigned
 name|char
 name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcic_dealloc
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
