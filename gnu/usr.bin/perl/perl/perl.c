@@ -178,16 +178,6 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|fdscript
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|main
 parameter_list|(
@@ -249,9 +239,6 @@ literal|""
 decl_stmt|;
 endif|#
 directive|endif
-name|int
-name|which
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SETUID_SCRIPTS_ARE_SECURE_NOW
@@ -1571,70 +1558,6 @@ name|COEFFSIZE
 argument_list|)
 expr_stmt|;
 comment|/* for remembering status of dead pids */
-if|if
-condition|(
-name|strnEQ
-argument_list|(
-name|scriptname
-argument_list|,
-literal|"/dev/fd/"
-argument_list|,
-literal|8
-argument_list|)
-operator|&&
-name|isDIGIT
-argument_list|(
-name|scriptname
-index|[
-literal|8
-index|]
-argument_list|)
-condition|)
-block|{
-name|char
-modifier|*
-name|s
-init|=
-name|scriptname
-operator|+
-literal|8
-decl_stmt|;
-name|fdscript
-operator|=
-name|atoi
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|isDIGIT
-argument_list|(
-operator|*
-name|s
-argument_list|)
-condition|)
-name|s
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|s
-condition|)
-name|scriptname
-operator|=
-name|s
-operator|+
-literal|1
-expr_stmt|;
-block|}
-else|else
-name|fdscript
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|origfilename
 operator|=
 name|savestr
@@ -1664,50 +1587,6 @@ name|scriptname
 operator|=
 literal|""
 expr_stmt|;
-if|if
-condition|(
-name|fdscript
-operator|>=
-literal|0
-condition|)
-block|{
-name|rsfp
-operator|=
-name|fdopen
-argument_list|(
-name|fdscript
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_FCNTL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|F_SETFD
-argument_list|)
-name|fcntl
-argument_list|(
-name|fileno
-argument_list|(
-name|rsfp
-argument_list|)
-argument_list|,
-name|F_SETFD
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* ensure close-on-exec */
-endif|#
-directive|endif
-block|}
-elseif|else
 if|if
 condition|(
 name|preprocess
@@ -1858,27 +1737,9 @@ literal|"Can't take set-id script from stdin"
 argument|);
 endif|#
 directive|endif
-argument|rsfp = stdin;     }     else { 	rsfp = fopen(scriptname,
+argument|rsfp = stdin;     }     else 	rsfp = fopen(scriptname,
 literal|"r"
-argument|);
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_FCNTL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|F_SETFD
-argument_list|)
-argument|fcntl(fileno(rsfp),F_SETFD,
-literal|1
-argument|);
-comment|/* ensure close-on-exec */
-endif|#
-directive|endif
-argument|}     if ((FILE*)rsfp == Nullfp) {
+argument|);     if ((FILE*)rsfp == Nullfp) {
 ifdef|#
 directive|ifdef
 name|DOSUID
@@ -1915,9 +1776,7 @@ argument|)
 comment|/* normal stat is insecure */
 argument|fatal(
 literal|"Can't stat script \"%s\""
-argument|,origfilename);     if (fdscript<
-literal|0
-argument|&& statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
+argument|,origfilename);     if (statbuf.st_mode& (S_ISUID|S_ISGID)) { 	int len;
 ifdef|#
 directive|ifdef
 name|IAMSUID
@@ -2112,46 +1971,8 @@ directive|ifdef
 name|IAMSUID
 argument|else if (preprocess) 	fatal(
 literal|"-P not allowed for setuid/setgid script\n"
-argument|);     else if (fdscript>=
-literal|0
-argument|) 	fatal(
-literal|"fd script not allowed in suidperl\n"
 argument|);     else 	fatal(
 literal|"Script is not setuid/setgid in suidperl\n"
-argument|);
-comment|/* We absolutely must clear out any saved ids here, so we */
-comment|/* exec taintperl, substituting fd script for scriptname. */
-comment|/* (We pass script name as "subdir" of fd, which taintperl will grok.) */
-argument|rewind(rsfp);     for (which =
-literal|1
-argument|; origargv[which]&& origargv[which] != scriptname; which++) ;     if (!origargv[which]) 	fatal(
-literal|"Permission denied"
-argument|);     (void)sprintf(buf,
-literal|"/dev/fd/%d/%.127s"
-argument|, fileno(rsfp), origargv[which]);     origargv[which] = buf;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAS_FCNTL
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|F_SETFD
-argument_list|)
-argument|fcntl(fileno(rsfp),F_SETFD,
-literal|0
-argument|);
-comment|/* ensure no close-on-exec */
-endif|#
-directive|endif
-argument|(void)sprintf(tokenbuf,
-literal|"%s/tperl%s"
-argument|, BIN, patchlevel);     execv(tokenbuf, origargv);
-comment|/* try again */
-argument|fatal(
-literal|"Can't do setuid\n"
 argument|);
 else|#
 directive|else
@@ -2866,8 +2687,6 @@ literal|'v'
 argument|: 	fputs(
 literal|"\nThis is perl, version 4.0\n\n"
 argument|,stdout); 	fputs(rcsid,stdout); 	fputs(
-literal|"+ suidperl security patch\n"
-argument|, stdout); 	fputs(
 literal|"\nCopyright (c) 1989, 1990, 1991, Larry Wall\n"
 argument|,stdout);
 ifdef|#
