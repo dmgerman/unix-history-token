@@ -355,40 +355,33 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
 specifier|static
-specifier|inline
-name|struct
+name|__inline
+expr|struct
 name|acl
-modifier|*
+operator|*
 name|_find_acl
-parameter_list|(
-name|struct
-name|aclstate
-modifier|*
-name|as
-parameter_list|,
-specifier|const
-name|u_int8_t
-modifier|*
-name|macaddr
-parameter_list|)
-block|{
-name|struct
+argument_list|(
+argument|struct aclstate *as
+argument_list|,
+argument|const u_int8_t *macaddr
+argument_list|)
+block|{ 	struct
 name|acl
-modifier|*
+operator|*
 name|acl
-decl_stmt|;
+block|;
 name|int
 name|hash
-decl_stmt|;
+block|;
 name|hash
 operator|=
 name|ACL_HASH
 argument_list|(
 name|macaddr
 argument_list|)
-expr_stmt|;
+block|;
 name|LIST_FOREACH
 argument_list|(
 argument|acl
@@ -413,14 +406,16 @@ return|return
 name|acl
 return|;
 block|}
+end_expr_stmt
+
+begin_return
 return|return
 name|NULL
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|_acl_free
 parameter_list|(
