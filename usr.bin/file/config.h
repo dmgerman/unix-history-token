@@ -194,6 +194,17 @@ value|8
 end_define
 
 begin_comment
+comment|/* Define if you have the mmap function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strerror function.  */
 end_comment
 
@@ -227,6 +238,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/mman.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MMAN_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -256,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"3.32"
+value|"3.36"
 end_define
 
 end_unit
