@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rmdir.c	4.4 (Berkeley) %G%"
+literal|"@(#)rmdir.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_include

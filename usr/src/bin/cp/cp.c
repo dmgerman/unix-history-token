@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.4 82/04/28"
+literal|"@(#)cp.c	4.5 82/05/07"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -45,14 +45,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ndir.h>
+file|<dir.h>
 end_include
 
 begin_define
 define|#
 directive|define
 name|BSIZE
-value|1024
+value|8192
 end_define
 
 begin_decl_stmt
