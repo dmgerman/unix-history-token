@@ -220,11 +220,15 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x>> VINUM_TYPE_SHIFT)& 7)
+comment|/*  * This mess is used to catch people who compile  * a debug vinum(8) and non-debug kernel module,  * or the other way round.  */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
 name|VINUM_SUPERDEV
 init|=
 name|VINUMBDEV
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -234,11 +238,57 @@ name|VINUM_SUPERDEV_TYPE
 argument_list|)
 block|,
 comment|/* superdevice number */
-name|VINUM_DAEMON_DEV
+name|VINUM_WRONGSUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* non-debug superdevice number */
+else|#
+directive|else
+name|VINUM_SUPERDEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* superdevice number */
+name|VINUM_WRONGSUPERDEV
 init|=
 name|VINUMBDEV
 argument_list|(
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+block|,
+comment|/* debug superdevice number */
+endif|#
+directive|endif
+name|VINUM_DAEMON_DEV
+init|=
+name|VINUMBDEV
+argument_list|(
+literal|0
 argument_list|,
 literal|0
 argument_list|,
@@ -378,6 +428,54 @@ name|VINUM_RDIR
 value|"/dev/rvinum"
 end_define
 
+begin_comment
+comment|/*  * These definitions help catch  * userland/kernel mismatches.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|VINUMDEBUG
+end_if
+
+begin_define
+define|#
+directive|define
+name|VINUM_WRONGSUPERDEV_NAME
+value|VINUM_DIR"/control"
+end_define
+
+begin_comment
+comment|/* normal super device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUM_SUPERDEV_NAME
+value|VINUM_DIR"/Control"
+end_define
+
+begin_comment
+comment|/* debug super device */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VINUM_WRONGSUPERDEV_NAME
+value|VINUM_DIR"/Control"
+end_define
+
+begin_comment
+comment|/* debug super device */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -388,6 +486,11 @@ end_define
 begin_comment
 comment|/* normal super device */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -483,11 +586,7 @@ init|=
 literal|0x4000
 block|,
 comment|/* we're reading config database from disk */
-name|VF_DISKCONFIG
-init|=
-literal|0x8000
-block|,
-comment|/* we're reading the config from disk */
+comment|/* 0x8000 going begging */
 name|VF_NEWBORN
 init|=
 literal|0x10000
@@ -1488,6 +1587,11 @@ init|=
 literal|64
 block|,
 comment|/* keep info about Frees */
+name|DEBUG_BIGDRIVE
+init|=
+literal|128
+block|,
+comment|/* pretend our drives are 100 times the size */
 name|DEBUG_REMOTEGDB
 init|=
 literal|256
