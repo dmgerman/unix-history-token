@@ -125,55 +125,7 @@ comment|/* OOB/Urgent data can be written */
 end_comment
 
 begin_comment
-comment|/*  * File extensions:  * polling on a regular file might return one  * of these events (currently only supported on UFS).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLLEXTEND
-value|0x0200
-end_define
-
-begin_comment
-comment|/* file may have been extended */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLLATTRIB
-value|0x0400
-end_define
-
-begin_comment
-comment|/* file attributes may have changed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLLNLINK
-value|0x0800
-end_define
-
-begin_comment
-comment|/* (un)link/rename may have happened */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POLLWRITE
-value|0x1000
-end_define
-
-begin_comment
-comment|/* file's contents may have changed */
-end_comment
-
-begin_comment
-comment|/* General FreeBSD extensions (currently only supported for sockets): */
+comment|/* General FreeBSD extension (currently only supported for sockets): */
 end_comment
 
 begin_define
@@ -184,7 +136,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* POLLIN, except ignore EOF */
+comment|/* like POLLIN, except ignore EOF */
 end_comment
 
 begin_comment
