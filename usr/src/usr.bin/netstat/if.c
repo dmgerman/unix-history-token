@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)if.c	8.2 (Berkeley) %G%"
+literal|"@(#)if.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,6 +826,8 @@ name|m
 operator|=
 name|printf
 argument_list|(
+literal|"%-11.11s "
+argument_list|,
 literal|"<Link>"
 argument_list|)
 expr_stmt|;
