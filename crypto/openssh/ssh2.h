@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * draft-ietf-secsh-architecture-04.txt  *  *   Transport layer protocol:  *  *     1-19     Transport layer generic (e.g. disconnect, ignore, debug,  *              etc)  *     20-29    Algorithm negotiation  *     30-49    Key exchange method specific (numbers can be reused for  *              different authentication methods)  *  *   User authentication protocol:  *  *     50-59    User authentication generic  *     60-79    User authentication method specific (numbers can be reused  *              for different authentication methods)  *  *   Connection protocol:  *  *     80-89    Connection protocol generic  *     90-127   Channel related messages  *  *   Reserved for client protocols:  *  *     128-191  Reserved  *  *   Local extensions:  *  *     192-255  Local extensions  */
+comment|/*  * draft-ietf-secsh-architecture-05.txt  *  *   Transport layer protocol:  *  *     1-19     Transport layer generic (e.g. disconnect, ignore, debug,  *              etc)  *     20-29    Algorithm negotiation  *     30-49    Key exchange method specific (numbers can be reused for  *              different authentication methods)  *  *   User authentication protocol:  *  *     50-59    User authentication generic  *     60-79    User authentication method specific (numbers can be reused  *              for different authentication methods)  *  *   Connection protocol:  *  *     80-89    Connection protocol generic  *     90-127   Channel related messages  *  *   Reserved for client protocols:  *  *     128-191  Reserved  *  *   Local extensions:  *  *     192-255  Local extensions  */
+end_comment
+
+begin_comment
+comment|/* RCSID("$OpenBSD: ssh2.h,v 1.3 2000/05/15 07:03:12 markus Exp $"); */
 end_comment
 
 begin_comment
@@ -290,6 +294,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SSH2_DISCONNECT_RESERVED
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|SSH2_DISCONNECT_MAC_ERROR
 value|5
 end_define
@@ -334,6 +345,34 @@ define|#
 directive|define
 name|SSH2_DISCONNECT_BY_APPLICATION
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_DISCONNECT_TOO_MANY_CONNECTIONS
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_DISCONNECT_AUTH_CANCELLED_BY_USER
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_DISCONNECT_NO_MORE_AUTH_METHODS_AVAILABLE
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_DISCONNECT_ILLEGAL_USER_NAME
+value|15
 end_define
 
 begin_comment
