@@ -1743,6 +1743,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ttyldoptim
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|tty
 modifier|*
