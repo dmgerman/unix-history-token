@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rusers.c,v 1.5 1997/02/22 19:56:52 peter Exp $"
+literal|"$Id: rusers.c,v 1.6 1997/08/08 12:12:54 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,6 +1025,10 @@ name|NULL
 argument_list|,
 name|xdr_utmpidlearr
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|up
 argument_list|,
