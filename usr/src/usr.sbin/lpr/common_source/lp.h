@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * 	@(#)lp.h	5.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * 	@(#)lp.h	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -584,7 +584,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_macro
-name|_BEGIN_DECLS
+name|__BEGIN_DECLS
 end_macro
 
 begin_struct_decl
@@ -916,7 +916,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|_END_DECLS
+name|__END_DECLS
 end_macro
 
 end_unit
