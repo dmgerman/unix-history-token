@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)config.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)config.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -188,7 +188,7 @@ block|{
 name|int
 name|d_type
 decl_stmt|;
-comment|/* CONTROLLER, DEVICE, UBA or MBA */
+comment|/* CONTROLLER, DEVICE, bus adaptor */
 name|struct
 name|device
 modifier|*
@@ -261,6 +261,13 @@ name|TO_NEXUS
 value|(struct device *)-1
 end_define
 
+begin_define
+define|#
+directive|define
+name|TO_VBA
+value|(struct device *)-2
+end_define
+
 begin_struct
 struct|struct
 name|config
@@ -304,7 +311,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MACHINE_SUN
+name|MACHINE_TAHOE
 value|2
 end_define
 
@@ -481,6 +488,23 @@ name|int
 name|seen_mba
 decl_stmt|,
 name|seen_uba
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|MACHINE_TAHOE
+end_if
+
+begin_decl_stmt
+name|int
+name|seen_vba
 decl_stmt|;
 end_decl_stmt
 

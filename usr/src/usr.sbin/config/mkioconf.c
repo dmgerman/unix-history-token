@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1510,11 +1510,11 @@ end_endif
 begin_if
 if|#
 directive|if
-name|MACHINE_SUN
+name|MACHINE_TAHOE
 end_if
 
 begin_macro
-name|sun_ioconf
+name|tahoe_ioconf
 argument_list|()
 end_macro
 
@@ -1528,9 +1528,14 @@ name|dp
 decl_stmt|,
 modifier|*
 name|mp
+decl_stmt|,
+modifier|*
+name|np
 decl_stmt|;
 specifier|register
 name|int
+name|vba_n
+decl_stmt|,
 name|slave
 decl_stmt|;
 name|FILE
@@ -1581,6 +1586,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"#include \"../machine/pte.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|"#include \"../h/buf.h\"\n"
 argument_list|)
 expr_stmt|;
@@ -1595,13 +1607,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../h/vm.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1609,7 +1614,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"../sundev/mbvar.h\"\n"
+literal|"#include \"../tahoevba/vbavar.h\"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1626,14 +1631,7 @@ argument_list|,
 literal|"#define C (caddr_t)\n\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Now generate interrupt vectors for the Multibus 	 */
+comment|/* 	 * Now generate interrupt vectors for the versabus 	 */
 for|for
 control|(
 name|dp
@@ -1655,11 +1653,16 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_pri
+name|d_vec
 operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|idlst
+modifier|*
+name|ip
+decl_stmt|;
 name|mp
 operator|=
 name|dp
@@ -1683,7 +1686,7 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
-literal|"mb"
+literal|"vba"
 argument_list|)
 condition|)
 continue|continue;
@@ -1691,28 +1694,163 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"extern struct mb_driver %sdriver;\n"
+literal|"extern struct vba_driver %sdriver;\n"
 argument_list|,
 name|dp
 operator|->
 name|d_name
 argument_list|)
 expr_stmt|;
-block|}
-block|}
-comment|/* 	 * Now spew forth the mb_cinfo structure 	 */
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\nstruct mb_ctlr mbcinit[] = {\n"
+literal|"extern "
+argument_list|)
+expr_stmt|;
+name|ip
+operator|=
+name|dp
+operator|->
+name|d_vec
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"X%s%d()"
+argument_list|,
+name|ip
+operator|->
+name|id
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+name|ip
+operator|=
+name|ip
+operator|->
+name|id_next
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|==
+literal|0
+condition|)
+break|break;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|";\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"/*\t driver,\tctlr,\talive,\taddr,\tintpri */\n"
+literal|"int\t (*%sint%d[])() = { "
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+name|ip
+operator|=
+name|dp
+operator|->
+name|d_vec
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"X%s%d"
+argument_list|,
+name|ip
+operator|->
+name|id
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|)
+expr_stmt|;
+name|ip
+operator|=
+name|ip
+operator|->
+name|id_next
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|==
+literal|0
+condition|)
+break|break;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|", "
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|", 0 } ;\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\nstruct vba_ctlr vbminit[] = {\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"/*\t driver,\tctlr,\tvbanum,\talive,\tintr,\taddr */\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1761,7 +1899,7 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
-literal|"mb"
+literal|"vba"
 argument_list|)
 condition|)
 continue|continue;
@@ -1769,14 +1907,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_pri
+name|d_vec
 operator|==
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"must specify priority for %s%d\n"
+literal|"must specify vector for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1830,12 +1968,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drives need their own entries; "
+literal|"drives need their own entries; dont "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dont specify drive or slave for %s%d\n"
+literal|"specify drive or slave for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -1857,12 +1995,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"controllers (e.g. %s%d) don't have flags, "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"only devices do\n"
+literal|"controllers (e.g. %s%d) "
 argument_list|,
 name|dp
 operator|->
@@ -1873,13 +2006,33 @@ operator|->
 name|d_unit
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"don't have flags, only devices do\n"
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t{&%sdriver,\t%d,\t0,\tC 0x%x,\t%d },\n"
+literal|"\t{&%sdriver,\t%d,\t%s,\t0,\t%sint%d, C 0x%x },\n"
+argument_list|,
+name|dp
+operator|->
+name|d_name
+argument_list|,
+name|dp
+operator|->
+name|d_unit
+argument_list|,
+name|qu
+argument_list|(
+name|mp
+operator|->
+name|d_unit
+argument_list|)
 argument_list|,
 name|dp
 operator|->
@@ -1892,10 +2045,6 @@ argument_list|,
 name|dp
 operator|->
 name|d_addr
-argument_list|,
-name|dp
-operator|->
-name|d_pri
 argument_list|)
 expr_stmt|;
 block|}
@@ -1906,19 +2055,19 @@ argument_list|,
 literal|"\t0\n};\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now we go for the mb_device stuff 	 */
+comment|/* versabus devices */
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\nstruct mb_device mbdinit[] = {\n"
+literal|"\nstruct vba_device vbdinit[] = {\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t/* driver,  unit, ctlr,  slave,   addr,    pri,    dk, flags*/\n"
+literal|"\t/* driver,  unit, ctlr,  vbanum, slave,   intr,    addr,    dk, flags*/\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1982,6 +2131,36 @@ literal|"mba"
 argument_list|)
 condition|)
 continue|continue;
+name|np
+operator|=
+name|mp
+operator|->
+name|d_conn
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|!=
+literal|0
+operator|&&
+name|np
+operator|!=
+name|TO_NEXUS
+operator|&&
+name|eq
+argument_list|(
+name|np
+operator|->
+name|d_name
+argument_list|,
+literal|"mba"
+argument_list|)
+condition|)
+continue|continue;
+name|np
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|eq
@@ -1990,7 +2169,7 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
-literal|"mb"
+literal|"vba"
 argument_list|)
 condition|)
 block|{
@@ -1998,7 +2177,7 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_pri
+name|d_vec
 operator|==
 literal|0
 condition|)
@@ -2059,12 +2238,17 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"drives/slaves can be specified only "
+literal|"drives/slaves can be specified "
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"for controllers, not for device %s%d\n"
+literal|"only for controllers, "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"not for device %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -2077,6 +2261,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|vba_n
+operator|=
+name|mp
+operator|->
+name|d_unit
+expr_stmt|;
 name|slave
 operator|=
 name|QUES
@@ -2086,16 +2276,20 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
+name|np
+operator|=
 name|mp
 operator|->
 name|d_conn
+operator|)
 operator|==
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d isn't connected to anything, "
+literal|"%s%d isn't connected to anything "
 argument_list|,
 name|mp
 operator|->
@@ -2108,7 +2302,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"so %s%d is unattached\n"
+literal|", so %s%d is unattached\n"
 argument_list|,
 name|dp
 operator|->
@@ -2121,6 +2315,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|vba_n
+operator|=
+name|np
+operator|->
+name|d_unit
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -2132,7 +2332,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"must specify ``drive number'' for %s%d\n"
+literal|"must specify ``drive number'' "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"for %s%d\n"
 argument_list|,
 name|dp
 operator|->
@@ -2180,14 +2385,14 @@ if|if
 condition|(
 name|dp
 operator|->
-name|d_pri
+name|d_vec
 operator|!=
 literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"interrupt priority should not be "
+literal|"interrupt vectors should not be "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2216,7 +2421,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"csr addresses should be given only"
+literal|"csr addresses should be given only "
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2245,7 +2450,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\t{&%sdriver,  %2d,   %s,    %2d,   C 0x%x, %d,  %d,  0x%x },\n"
+literal|"\t{&%sdriver,  %2d,   %s,"
 argument_list|,
 name|eq
 argument_list|(
@@ -2253,7 +2458,7 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
-literal|"mb"
+literal|"vba"
 argument_list|)
 condition|?
 name|dp
@@ -2274,7 +2479,7 @@ name|mp
 operator|->
 name|d_name
 argument_list|,
-literal|"mb"
+literal|"vba"
 argument_list|)
 condition|?
 literal|" -1"
@@ -2285,16 +2490,29 @@ name|mp
 operator|->
 name|d_unit
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"  %s,    %2d,   %s, C 0x%-6x,  %d,  0x%x },\n"
+argument_list|,
+name|qu
+argument_list|(
+name|vba_n
+argument_list|)
 argument_list|,
 name|slave
+argument_list|,
+name|intv
+argument_list|(
+name|dp
+argument_list|)
 argument_list|,
 name|dp
 operator|->
 name|d_addr
-argument_list|,
-name|dp
-operator|->
-name|d_pri
 argument_list|,
 name|dp
 operator|->

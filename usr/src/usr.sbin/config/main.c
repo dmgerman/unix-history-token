@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,9 +212,12 @@ expr_stmt|;
 comment|/* Create ubglue.s */
 break|break;
 case|case
-name|MACHINE_SUN
+name|MACHINE_TAHOE
 case|:
-name|sun_ioconf
+name|tahoe_ioconf
+argument_list|()
+expr_stmt|;
+name|vbglue
 argument_list|()
 expr_stmt|;
 break|break;

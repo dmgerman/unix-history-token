@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.9 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,15 @@ literal|1024
 block|}
 block|,
 comment|/* MACHINE_VAX */
+block|{
+literal|4
+block|,
+literal|2
+block|,
+literal|128
+block|}
+block|,
+comment|/* MACHINE_TAHOE */
 block|}
 struct|;
 end_struct
@@ -2575,6 +2584,9 @@ block|{
 case|case
 name|MACHINE_VAX
 case|:
+case|case
+name|MACHINE_TAHOE
+case|:
 name|fprintf
 argument_list|(
 name|f
@@ -2619,6 +2631,9 @@ condition|)
 block|{
 case|case
 name|MACHINE_VAX
+case|:
+case|case
+name|MACHINE_TAHOE
 case|:
 name|fprintf
 argument_list|(
@@ -2687,6 +2702,52 @@ condition|(
 name|machine
 condition|)
 block|{
+case|case
+name|MACHINE_TAHOE
+case|:
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t${CC} -c -S %s %s../%sc\n"
+argument_list|,
+name|COPTS
+argument_list|,
+name|extras
+argument_list|,
+name|np
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\tex - %ss< ${GPROF.EX}\n"
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t${C2} %ss | ${INLINE} | ${AS} -o %so\n"
+argument_list|,
+name|tp
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\trm -f %ss\n\n"
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|MACHINE_VAX
 case|:
@@ -2929,12 +2990,16 @@ condition|(
 name|machine
 operator|==
 name|MACHINE_VAX
+operator|||
+name|machine
+operator|==
+name|MACHINE_TAHOE
 condition|)
 name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" ${INLINECMD}"
+literal|" ${INLINE}"
 argument_list|,
 name|machinename
 argument_list|)
@@ -2943,7 +3008,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" locore.o emulate.o ${OBJS} param.o ioconf.o swap%s.o\n"
+literal|" locore.o ${OBJS} param.o ioconf.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
@@ -3004,8 +3069,6 @@ operator|->
 name|f_needs
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 name|fprintf
 argument_list|(
 name|f
@@ -3013,6 +3076,30 @@ argument_list|,
 literal|"locore.o emulate.o ${OBJS} vers.o ioconf.o param.o "
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|MACHINE_TAHOE
+case|:
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t@${LD} -n -o %s -e start -x -T C0000800 "
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"locore.o ${OBJS} vers.o ioconf.o param.o "
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|fprintf
 argument_list|(
 name|f
@@ -3179,6 +3266,9 @@ condition|)
 block|{
 case|case
 name|MACHINE_VAX
+case|:
+case|case
+name|MACHINE_TAHOE
 case|:
 name|fprintf
 argument_list|(
