@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.2 (Berkeley) %G%"
+literal|"@(#)touch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,19 @@ name|argv
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * System V and POSIX 1003.1 require that a NULL argument 		 * set the access/modification times to the current time. 		 * The permission checks are different, too, in that the 		 * ability to write the file is sufficient.  Take a shot. 		 */
+if|if
+condition|(
+operator|!
+name|utimes
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+continue|continue;
 comment|/* Try reading/writing. */
 if|if
 condition|(
