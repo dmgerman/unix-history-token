@@ -208,6 +208,9 @@ name|ih
 init|=
 name|ihead
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|lint
 if|if
 condition|(
 name|VN_MAXPRIVATE
@@ -223,6 +226,9 @@ argument_list|(
 literal|"ihinit: too small"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* not lint */
 for|for
 control|(
 name|i
@@ -1278,9 +1284,6 @@ block|{
 specifier|register
 name|struct
 name|inode
-modifier|*
-name|iq
-decl_stmt|,
 modifier|*
 name|ip
 init|=
