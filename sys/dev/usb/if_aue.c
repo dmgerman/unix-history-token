@@ -4463,11 +4463,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return;
 name|done
 label|:
-ifdef|#
-directive|ifdef
-name|foo
 comment|/* Setup new transfer. */
 name|usbd_setup_xfer
 argument_list|(
@@ -4506,8 +4504,6 @@ argument_list|(
 name|xfer
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
