@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for Cronyx-Sigma adapter driver.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.1, Wed Oct 26 16:09:46 MSK 1994  */
+comment|/*  * Defines for Cronyx-Sigma adapter driver.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  */
 end_comment
 
 begin_comment
@@ -1927,6 +1927,13 @@ name|cx_soft_opt_t
 name|sopt
 decl_stmt|;
 comment|/* software options and state flags */
+name|char
+name|master
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* master interface name or \0 */
 block|}
 name|cx_options_t
 typedef|;
@@ -1963,6 +1970,12 @@ modifier|*
 name|chip
 decl_stmt|;
 comment|/* controller pointer */
+name|struct
+name|_stat_t
+modifier|*
+name|stat
+decl_stmt|;
+comment|/* statistics */
 name|unsigned
 name|long
 name|rxbaud
@@ -2066,6 +2079,18 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* network interface data */
+name|struct
+name|ifnet
+modifier|*
+name|master
+decl_stmt|;
+comment|/* master interface, or ==ifp */
+name|struct
+name|_chan_t
+modifier|*
+name|slaveq
+decl_stmt|;
+comment|/* slave queue pointer, or NULL */
 name|caddr_t
 name|bpf
 decl_stmt|;
@@ -2124,6 +2149,71 @@ decl_stmt|;
 comment|/* oscillator frequency in Hz */
 block|}
 name|cx_chip_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_stat_t
+block|{
+name|unsigned
+name|char
+name|board
+decl_stmt|;
+comment|/* adapter number, 0..2 */
+name|unsigned
+name|char
+name|channel
+decl_stmt|;
+comment|/* channel number, 0..15 */
+name|unsigned
+name|long
+name|rintr
+decl_stmt|;
+comment|/* receive interrupts */
+name|unsigned
+name|long
+name|tintr
+decl_stmt|;
+comment|/* transmit interrupts */
+name|unsigned
+name|long
+name|mintr
+decl_stmt|;
+comment|/* modem interrupts */
+name|unsigned
+name|long
+name|ibytes
+decl_stmt|;
+comment|/* input bytes */
+name|unsigned
+name|long
+name|ipkts
+decl_stmt|;
+comment|/* input packets */
+name|unsigned
+name|long
+name|ierrs
+decl_stmt|;
+comment|/* input errors */
+name|unsigned
+name|long
+name|obytes
+decl_stmt|;
+comment|/* output bytes */
+name|unsigned
+name|long
+name|opkts
+decl_stmt|;
+comment|/* output packets */
+name|unsigned
+name|long
+name|oerrs
+decl_stmt|;
+comment|/* output errors */
+block|}
+name|cx_stat_t
 typedef|;
 end_typedef
 
@@ -2196,6 +2286,13 @@ name|NCHAN
 index|]
 decl_stmt|;
 comment|/* channel structures */
+name|cx_stat_t
+name|stat
+index|[
+name|NCHAN
+index|]
+decl_stmt|;
+comment|/* channel statistics */
 name|char
 name|name
 index|[
@@ -2524,6 +2621,17 @@ end_define
 
 begin_comment
 comment|/* set channel options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CXIOCGETSTAT
+value|_IOWR('x', 3, cx_stat_t)
+end_define
+
+begin_comment
+comment|/* get channel stats */
 end_comment
 
 end_unit
