@@ -76,6 +76,12 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sched.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
 end_comment
@@ -360,31 +366,11 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Scheduling definitions.  */
-end_comment
-
-begin_enum
-enum|enum
-name|schedparam_policy
-block|{
-name|SCHED_RR
-block|,
-name|SCHED_IO
-block|,
-name|SCHED_FIFO
-block|,
-name|SCHED_OTHER
-block|}
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|pthread_attr
 block|{
-name|enum
-name|schedparam_policy
+name|int
 name|schedparam_policy
 decl_stmt|;
 name|int
@@ -413,21 +399,6 @@ name|stackaddr_attr
 decl_stmt|;
 name|size_t
 name|stacksize_attr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|sched_param
-block|{
-name|int
-name|prio
-decl_stmt|;
-name|void
-modifier|*
-name|no_data
 decl_stmt|;
 block|}
 struct|;

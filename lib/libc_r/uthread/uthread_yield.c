@@ -22,6 +22,40 @@ file|"pthread_private.h"
 end_include
 
 begin_function
+name|int
+name|sched_yield
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* Reset the accumulated time slice value for the current thread: */
+name|_thread_run
+operator|->
+name|slice_usec
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Schedule the next thread: */
+name|_thread_kern_sched
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* Always return no error. */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Draft 4 yield */
+end_comment
+
+begin_function
 name|void
 name|pthread_yield
 parameter_list|(
