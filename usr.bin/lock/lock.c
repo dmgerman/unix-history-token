@@ -125,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -150,6 +144,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -224,7 +224,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sgttyb
+name|termios
 name|tty
 decl_stmt|,
 name|ntty
@@ -501,11 +501,9 @@ expr_stmt|;
 comment|/* discard privs */
 if|if
 condition|(
-name|ioctl
+name|tcgetattr
 argument_list|(
 literal|0
-argument_list|,
-name|TIOCGETP
 argument_list|,
 operator|&
 name|tty
@@ -633,7 +631,7 @@ name|tty
 expr_stmt|;
 name|ntty
 operator|.
-name|sg_flags
+name|c_lflag
 operator|&=
 operator|~
 name|ECHO
@@ -641,11 +639,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TCSADRAIN
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|ntty
@@ -741,11 +741,16 @@ argument_list|(
 literal|"\07lock: passwords didn't match.\n"
 argument_list|)
 expr_stmt|;
-name|ioctl
+operator|(
+name|void
+operator|)
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TCSADRAIN
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|tty
@@ -863,11 +868,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TCSADRAIN
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|tty
@@ -1091,11 +1098,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ioctl
+name|tcgetattr
 argument_list|(
 literal|0
-argument_list|,
-name|TIOCGETP
 argument_list|,
 operator|&
 name|ntty
@@ -1278,11 +1283,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TCSADRAIN
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|tty
@@ -1331,11 +1338,13 @@ block|{
 operator|(
 name|void
 operator|)
-name|ioctl
+name|tcsetattr
 argument_list|(
 literal|0
 argument_list|,
-name|TIOCSETP
+name|TCSADRAIN
+operator||
+name|TCSASOFT
 argument_list|,
 operator|&
 name|tty
