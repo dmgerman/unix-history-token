@@ -2037,6 +2037,9 @@ decl_stmt|;
 name|int
 name|end
 decl_stmt|;
+name|int
+name|spaces
+decl_stmt|;
 if|if
 condition|(
 name|pf
@@ -2102,6 +2105,10 @@ name|irqres
 operator|=
 name|NULL
 expr_stmt|;
+name|spaces
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2162,6 +2169,21 @@ name|i
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|bus
+operator|,
+literal|"I/O rid %d start %x end %x\n"
+operator|,
+name|i
+operator|,
+name|start
+operator|,
+name|end
+operator|)
+argument_list|)
 expr_stmt|;
 name|r
 operator|=
@@ -2281,6 +2303,9 @@ name|res
 operator|=
 name|r
 expr_stmt|;
+name|spaces
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2292,6 +2317,35 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Not implement yet, Fix me. 			 */
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|bus
+operator|,
+literal|"Memory space not yet implemented.\n"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|spaces
+operator|==
+literal|0
+condition|)
+block|{
+name|DEVPRINTF
+argument_list|(
+operator|(
+name|bus
+operator|,
+literal|"Neither memory nor I/O mampped\n"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|not_this_one
+goto|;
 block|}
 if|if
 condition|(
@@ -5289,7 +5343,9 @@ operator|!=
 name|dev
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 name|bus_release_resource
 argument_list|(
@@ -5350,7 +5406,10 @@ name|RF_SHAREABLE
 expr_stmt|;
 break|break;
 block|}
-return|return
+name|rle
+operator|->
+name|res
+operator|=
 name|resource_list_alloc
 argument_list|(
 operator|&
@@ -5380,6 +5439,13 @@ name|count
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|rle
+operator|->
+name|res
+operator|)
 return|;
 block|}
 block|}
