@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor_wrap.h,v 1.5 2002/05/12 23:53:45 djm Exp $	*/
+comment|/*	$OpenBSD: monitor_wrap.h,v 1.8 2002/09/26 11:38:43 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -633,6 +633,81 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* auth_krb */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB4
+end_ifdef
+
+begin_function_decl
+name|int
+name|mm_auth_krb4
+parameter_list|(
+name|struct
+name|Authctxt
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5
+end_ifdef
+
+begin_comment
+comment|/* auth and reply are really krb5_data objects, but we don't want to  * include all of the krb5 headers here */
+end_comment
+
+begin_function_decl
+name|int
+name|mm_auth_krb5
+parameter_list|(
+name|void
+modifier|*
+name|authctxt
+parameter_list|,
+name|void
+modifier|*
+name|auth
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|client
+parameter_list|,
+name|void
+modifier|*
+name|reply
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* zlib allocation hooks */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: scard.h,v 1.10 2002/03/25 17:34:27 markus Exp $	*/
+comment|/*	$OpenBSD: scard.h,v 1.11 2002/06/30 21:59:45 deraadt Exp $	*/
 end_comment
 
 begin_comment

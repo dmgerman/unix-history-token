@@ -290,6 +290,10 @@ name|isatty
 decl_stmt|;
 comment|/* rfd is a tty */
 name|int
+name|wfd_isatty
+decl_stmt|;
+comment|/* wfd is a tty */
+name|int
 name|force_drain
 decl_stmt|;
 comment|/* force close on iEOF */

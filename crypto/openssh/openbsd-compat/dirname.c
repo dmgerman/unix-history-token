@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dirname.c,v 1.6 2001/06/28 04:27:19 pjanzen Exp $	*/
+comment|/*	$OpenBSD: dirname.c,v 1.7 2002/05/24 21:22:37 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: dirname.c,v 1.6 2001/06/28 04:27:19 pjanzen Exp $"
+literal|"$OpenBSD: dirname.c,v 1.7 2002/05/24 21:22:37 deraadt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|bname
 argument_list|,
 literal|"."
+argument_list|,
+sizeof|sizeof
+name|bname
 argument_list|)
 expr_stmt|;
 return|return
@@ -178,7 +181,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|bname
 argument_list|,
@@ -190,6 +193,9 @@ condition|?
 literal|"/"
 else|:
 literal|"."
+argument_list|,
+sizeof|sizeof
+name|bname
 argument_list|)
 expr_stmt|;
 return|return

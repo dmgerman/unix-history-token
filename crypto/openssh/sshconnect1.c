@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect1.c,v 1.51 2002/05/23 19:24:30 markus Exp $"
+literal|"$OpenBSD: sshconnect1.c,v 1.52 2002/08/08 13:50:23 aaron Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -998,7 +1006,7 @@ condition|(
 name|public
 operator|->
 name|flags
-operator|&&
+operator|&
 name|KEY_FLAG_EXT
 condition|)
 name|private

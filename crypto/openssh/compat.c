@@ -12,7 +12,15 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compat.c,v 1.63 2002/04/10 08:21:47 markus Exp $"
+literal|"$OpenBSD: compat.c,v 1.65 2002/09/27 10:42:09 mickey Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,7 +92,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|verbose
+name|debug
 argument_list|(
 literal|"Enabling compatibility mode for protocol 2.0"
 argument_list|)
@@ -103,7 +111,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|verbose
+name|debug
 argument_list|(
 literal|"Enabling compatibility mode for protocol 1.3"
 argument_list|)
@@ -474,6 +482,12 @@ block|{
 literal|"*SSH_Version_Mapper*"
 block|,
 name|SSH_BUG_SCANNER
+block|}
+block|,
+block|{
+literal|"Probe-*"
+block|,
+name|SSH_BUG_PROBE
 block|}
 block|,
 block|{

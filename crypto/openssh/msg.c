@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: msg.c,v 1.3 2002/06/24 15:49:22 itojun Exp $"
+literal|"$OpenBSD: msg.c,v 1.4 2002/07/01 16:15:25 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,7 +49,7 @@ end_include
 
 begin_function
 name|void
-name|msg_send
+name|ssh_msg_send
 parameter_list|(
 name|int
 name|fd
@@ -78,7 +78,7 @@ argument_list|)
 decl_stmt|;
 name|debug3
 argument_list|(
-literal|"msg_send: type %u"
+literal|"ssh_msg_send: type %u"
 argument_list|,
 operator|(
 name|unsigned
@@ -129,7 +129,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"msg_send: write"
+literal|"ssh_msg_send: write"
 argument_list|)
 expr_stmt|;
 if|if
@@ -152,7 +152,7 @@ name|mlen
 condition|)
 name|fatal
 argument_list|(
-literal|"msg_send: write"
+literal|"ssh_msg_send: write"
 argument_list|)
 expr_stmt|;
 block|}
@@ -160,7 +160,7 @@ end_function
 
 begin_function
 name|int
-name|msg_recv
+name|ssh_msg_recv
 parameter_list|(
 name|int
 name|fd
@@ -184,7 +184,7 @@ name|msg_len
 decl_stmt|;
 name|debug3
 argument_list|(
-literal|"msg_recv entering"
+literal|"ssh_msg_recv entering"
 argument_list|)
 expr_stmt|;
 name|res
@@ -225,7 +225,7 @@ literal|1
 return|;
 name|fatal
 argument_list|(
-literal|"msg_recv: read: header %ld"
+literal|"ssh_msg_recv: read: header %ld"
 argument_list|,
 operator|(
 name|long
@@ -251,7 +251,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"msg_recv: read: bad msg_len %d"
+literal|"ssh_msg_recv: read: bad msg_len %u"
 argument_list|,
 name|msg_len
 argument_list|)
@@ -292,7 +292,7 @@ name|msg_len
 condition|)
 name|fatal
 argument_list|(
-literal|"msg_recv: read: %ld != msg_len"
+literal|"ssh_msg_recv: read: %ld != msg_len"
 argument_list|,
 operator|(
 name|long

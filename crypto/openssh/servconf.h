@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.58 2002/06/20 23:05:55 markus Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.59 2002/07/30 17:03:55 markus Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -353,6 +357,10 @@ name|int
 name|permit_empty_passwd
 decl_stmt|;
 comment|/* If false, do not permit empty 					 * passwords. */
+name|int
+name|permit_user_env
+decl_stmt|;
+comment|/* If true, read ~/.ssh/environment */
 name|int
 name|use_login
 decl_stmt|;

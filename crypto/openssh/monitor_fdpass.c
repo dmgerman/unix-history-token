@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: monitor_fdpass.c,v 1.3 2002/06/04 23:05:49 markus Exp $"
+literal|"$OpenBSD: monitor_fdpass.c,v 1.4 2002/06/26 14:50:04 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,7 +77,7 @@ name|ch
 init|=
 literal|'\0'
 decl_stmt|;
-name|int
+name|ssize_t
 name|n
 decl_stmt|;
 ifndef|#
@@ -273,10 +273,13 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: sendmsg: expected sent 1 got %d"
+literal|"%s: sendmsg: expected sent 1 got %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -328,13 +331,14 @@ name|struct
 name|iovec
 name|vec
 decl_stmt|;
+name|ssize_t
+name|n
+decl_stmt|;
 name|char
 name|ch
 decl_stmt|;
 name|int
 name|fd
-decl_stmt|,
-name|n
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -477,10 +481,13 @@ literal|1
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: recvmsg: expected received 1 got %d"
+literal|"%s: recvmsg: expected received 1 got %ld"
 argument_list|,
 name|__func__
 argument_list|,
+operator|(
+name|long
+operator|)
 name|n
 argument_list|)
 expr_stmt|;

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"config.h"
+file|"includes.h"
 end_include
 
 begin_if
@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: inet_ntoa.c,v 1.2 1996/08/19 08:29:16 tholo Exp $"
+literal|"$OpenBSD: inet_ntoa.c,v 1.3 2002/06/27 10:14:01 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,7 +142,7 @@ argument_list|(
 name|b
 argument_list|)
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%u.%u.%u.%u"
 argument_list|,
 name|UC
 argument_list|(

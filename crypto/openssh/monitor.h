@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: monitor.h,v 1.6 2002/06/11 05:46:20 mpech Exp $	*/
+comment|/*	$OpenBSD: monitor.h,v 1.8 2002/09/26 11:38:43 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -100,6 +100,14 @@ block|,
 name|MONITOR_REQ_RSARESPONSE
 block|,
 name|MONITOR_ANS_RSARESPONSE
+block|,
+name|MONITOR_REQ_KRB4
+block|,
+name|MONITOR_ANS_KRB4
+block|,
+name|MONITOR_REQ_KRB5
+block|,
+name|MONITOR_ANS_KRB5
 block|,
 name|MONITOR_REQ_PAM_START
 block|,

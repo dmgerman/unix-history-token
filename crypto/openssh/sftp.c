@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.30 2002/06/23 09:30:14 deraadt Exp $"
+literal|"$OpenBSD: sftp.c,v 1.31 2002/07/25 01:16:59 mouring Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -575,14 +575,6 @@ literal|"ssh"
 argument_list|)
 expr_stmt|;
 comment|/* overwritten with ssh_program */
-name|addargs
-argument_list|(
-operator|&
-name|args
-argument_list|,
-literal|"-oFallBackToRsh no"
-argument_list|)
-expr_stmt|;
 name|addargs
 argument_list|(
 operator|&

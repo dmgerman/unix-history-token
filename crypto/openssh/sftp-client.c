@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.33 2002/06/23 09:30:14 deraadt Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.35 2002/09/11 22:41:49 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -36,7 +36,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"openbsd-compat/fake-queue.h"
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -1998,37 +1998,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|do_ls
-parameter_list|(
-name|struct
-name|sftp_conn
-modifier|*
-name|conn
-parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|)
-block|{
-return|return
-operator|(
-name|do_lsreaddir
-argument_list|(
-name|conn
-argument_list|,
-name|path
-argument_list|,
-literal|1
-argument_list|,
-name|NULL
-argument_list|)
 operator|)
 return|;
 block|}
@@ -5646,7 +5615,7 @@ expr_stmt|;
 operator|++
 name|ackid
 expr_stmt|;
-name|free
+name|xfree
 argument_list|(
 name|ack
 argument_list|)

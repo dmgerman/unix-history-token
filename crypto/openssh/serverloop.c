@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: serverloop.c,v 1.103 2002/06/24 14:33:27 markus Exp $"
+literal|"$OpenBSD: serverloop.c,v 1.104 2002/09/19 16:03:15 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|"servconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
 end_include
 
 begin_include
@@ -708,6 +714,9 @@ name|child_terminated
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_UNICOS
 name|mysignal
 argument_list|(
 name|SIGCHLD
@@ -715,6 +724,8 @@ argument_list|,
 name|sigchld_handler
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|notify_parent
 argument_list|()
 expr_stmt|;
@@ -1431,7 +1442,10 @@ condition|)
 block|{
 name|verbose
 argument_list|(
-literal|"Connection closed by remote host."
+literal|"Connection closed by %.100s"
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|connection_closed
@@ -1468,7 +1482,11 @@ condition|)
 block|{
 name|verbose
 argument_list|(
-literal|"Read error from remote host: %.100s"
+literal|"Read error from remote host "
+literal|"%.100s: %.100s"
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
 argument_list|,
 name|strerror
 argument_list|(
@@ -3915,6 +3933,9 @@ operator|.
 name|allow_tcp_forwarding
 operator|||
 name|no_port_forwarding_flag
+ifndef|#
+directive|ifndef
+name|NO_IPPORT_RESERVED_CONCEPT
 operator|||
 operator|(
 name|listen_port
@@ -3927,6 +3948,8 @@ name|pw_uid
 operator|!=
 literal|0
 operator|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|success

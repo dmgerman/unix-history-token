@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -40,6 +48,16 @@ include|#
 directive|include
 file|"auth.h"
 end_include
+
+begin_comment
+comment|/*  * Do not try to use PAM for password authentication, as it is  * already (and far better) supported by the challenge/response  * authentication mechanism.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_PAM
+end_undef
 
 begin_if
 if|#
@@ -297,6 +315,25 @@ name|options
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_AIXAUTHENTICATE
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|aixloginmsg
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Tries to authenticate the user using password.  Returns true if  * authentication succeeds.  */
 end_comment
@@ -462,9 +499,8 @@ name|char
 modifier|*
 name|authmsg
 decl_stmt|;
-name|char
-modifier|*
-name|loginmsg
+name|int
+name|authsuccess
 decl_stmt|;
 name|int
 name|reenter
@@ -601,7 +637,8 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|WITH_AIXAUTHENTICATE
-return|return
+name|authsuccess
+operator|=
 operator|(
 name|authenticate
 argument_list|(
@@ -619,6 +656,43 @@ name|authmsg
 argument_list|)
 operator|==
 literal|0
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|authsuccess
+condition|)
+comment|/* We don't have a pty yet, so just label the line as "ssh" */
+if|if
+condition|(
+name|loginsuccess
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|,
+name|get_canonical_hostname
+argument_list|(
+name|options
+operator|.
+name|verify_reverse_mapping
+argument_list|)
+argument_list|,
+literal|"ssh"
+argument_list|,
+operator|&
+name|aixloginmsg
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|aixloginmsg
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|authsuccess
 operator|)
 return|;
 endif|#

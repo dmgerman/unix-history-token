@@ -8,7 +8,7 @@ comment|/* config.h.in.  Generated from configure.ac by autoheader.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.141 2002/06/25 22:35:16 tim Exp $ */
+comment|/* $Id: acconfig.h,v 1.145 2002/09/26 00:38:48 tim Exp $ */
 end_comment
 
 begin_comment
@@ -475,6 +475,14 @@ end_comment
 
 begin_comment
 comment|/* #undef DISABLE_LASTLOG */
+end_comment
+
+begin_comment
+comment|/* Define if you don't want to use lastlog in session.c */
+end_comment
+
+begin_comment
+comment|/* #undef NO_SSH_LASTLOG */
 end_comment
 
 begin_comment
@@ -1028,6 +1036,14 @@ comment|/* #undef NO_X11_UNIX_SOCKETS */
 end_comment
 
 begin_comment
+comment|/* Define if the concept of ports only accessible to superusers isn't known */
+end_comment
+
+begin_comment
+comment|/* #undef NO_IPPORT_RESERVED_CONCEPT */
+end_comment
+
+begin_comment
 comment|/* Needed for SCO and NeXT */
 end_comment
 
@@ -1157,22 +1173,11 @@ comment|/* #undef PRIVSEP_PATH */
 end_comment
 
 begin_comment
-comment|/* Define if you have the `mmap' function that supports MAP_ANON|SHARED */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MMAP_ANON_SHARED
-value|1
-end_define
-
-begin_comment
-comment|/* Define if sendmsg()/recvmsg() has problems passing file descriptors */
+comment|/* Define if your platform needs to skip post auth file descriptor passing */
 end_comment
 
 begin_comment
-comment|/* #undef BROKEN_FD_PASSING */
+comment|/* #undef DISABLE_FD_PASSING */
 end_comment
 
 begin_comment
@@ -1427,6 +1432,17 @@ comment|/* #undef HAVE_GETOPT_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `getpeereid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPEEREID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `getpwanam' function. */
 end_comment
 
@@ -1549,6 +1565,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<ia.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_IA_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the `inet_aton' function. */
 end_comment
 
@@ -1617,6 +1641,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LASTLOG_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the `crypt' library (-lcrypt). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBCRYPT */
 end_comment
 
 begin_comment
@@ -1723,6 +1755,14 @@ directive|define
 name|HAVE_LIBUTIL_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `xnet' library (-lxnet). */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBXNET */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `z' library (-lz). */
@@ -2562,6 +2602,14 @@ directive|define
 name|HAVE_TIME_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the<tmpdir.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_TMPDIR_H */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `truncate' function. */

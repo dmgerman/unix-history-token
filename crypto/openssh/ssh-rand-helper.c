@@ -85,7 +85,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-rand-helper.c,v 1.7 2002/06/09 19:41:49 mouring Exp $"
+literal|"$Id: ssh-rand-helper.c,v 1.8 2002/07/28 20:42:24 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -438,6 +438,7 @@ name|entropy_cmd_t
 modifier|*
 name|src
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|hash
@@ -1196,6 +1197,7 @@ name|entropy_cmd_t
 modifier|*
 name|src
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|hash
@@ -2103,6 +2105,7 @@ name|entropy
 decl_stmt|,
 name|total_entropy
 decl_stmt|;
+name|unsigned
 name|char
 name|hash
 index|[
@@ -2422,12 +2425,14 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+name|unsigned
 name|char
 name|seed
 index|[
 name|SEED_FILE_SIZE
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|filename
 index|[
 name|MAXPATHLEN

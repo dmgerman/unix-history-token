@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: hostfile.h,v 1.10 2001/12/18 10:04:21 jakob Exp $	*/
+comment|/*	$OpenBSD: hostfile.h,v 1.12 2002/09/08 20:24:08 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -28,6 +28,8 @@ block|,
 name|HOST_NEW
 block|,
 name|HOST_CHANGED
+block|,
+name|HOST_FOUND
 block|}
 name|HostStatus
 typedef|;
@@ -87,6 +89,29 @@ name|char
 modifier|*
 parameter_list|,
 name|Key
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|lookup_key_in_hostfile_by_type
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|Key
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;

@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth2-pam.c,v 1.13 2002/06/26 13:58:00 djm Exp $"
+literal|"$Id: auth2-pam.c,v 1.14 2002/06/28 16:48:12 mouring Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -717,15 +717,15 @@ condition|)
 name|fatal
 argument_list|(
 literal|"%s: Received incorrect number of responses "
-literal|"(expected %u, received %u)"
+literal|"(expected %d, received %u)"
 argument_list|,
 name|__func__
-argument_list|,
-name|nresp
 argument_list|,
 name|context_pam2
 operator|.
 name|num_expected
+argument_list|,
+name|nresp
 argument_list|)
 expr_stmt|;
 if|if
