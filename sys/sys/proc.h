@@ -337,12 +337,6 @@ name|p_fd
 decl_stmt|;
 comment|/* Ptr to open files structure. */
 name|struct
-name|filedesc_to_leader
-modifier|*
-name|p_fdtol
-decl_stmt|;
-comment|/* Ptr to tracking node */
-name|struct
 name|pstats
 modifier|*
 name|p_stats
@@ -758,6 +752,12 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* process-specific emulator state data */
+name|struct
+name|filedesc_to_leader
+modifier|*
+name|p_fdtol
+decl_stmt|;
+comment|/* Ptr to tracking node */
 block|}
 struct|;
 end_struct
