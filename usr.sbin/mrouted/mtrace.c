@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: mtrace.c,v 1.8 1996/10/01 23:14:35 fenner Exp $"
+literal|"@(#) $Id: mtrace.c,v 1.8.2.1 1996/11/11 23:38:01 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1181,6 +1181,15 @@ expr_stmt|;
 if|if
 condition|(
 name|e
+operator|&&
+name|e
+operator|->
+name|h_length
+operator|==
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
 condition|)
 name|memcpy
 argument_list|(
