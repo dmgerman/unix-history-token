@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)signalvar.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -147,7 +147,7 @@ value|(p->p_sigacts->ps_sigact[(sig)])
 end_define
 
 begin_comment
-comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issig().  */
+comment|/*  * Determine signal that should be delivered to process p, the current  * process, 0 if none.  If there is a pending stop signal with default  * action, the process stops in issignal().  */
 end_comment
 
 begin_define
@@ -488,7 +488,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|issig
+name|issignal
 name|__P
 argument_list|(
 operator|(
