@@ -201,7 +201,7 @@ literal|'e'
 case|:
 name|c
 operator|=
-literal|'\e'
+literal|'\033'
 expr_stmt|;
 break|break;
 case|case
