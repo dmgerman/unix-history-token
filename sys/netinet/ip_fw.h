@@ -1093,6 +1093,13 @@ name|fw_one_pass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|fw_enable
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* For kernel ipfw_ether and ipfw_bridge. */
 end_comment
