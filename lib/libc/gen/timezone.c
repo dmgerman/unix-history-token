@@ -513,9 +513,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|czone
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|czone
+argument_list|)
 argument_list|,
 literal|"GMT%c%d:%02d"
 argument_list|,
