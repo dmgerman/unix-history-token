@@ -1131,7 +1131,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %s trap:\n"
+literal|"%s %s trap (cpu %d):\n"
 argument_list|,
 name|isfatal
 condition|?
@@ -1144,6 +1144,11 @@ condition|?
 literal|"user"
 else|:
 literal|"kernel"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1230,6 +1235,40 @@ argument_list|,
 name|imm
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|framep
+operator|->
+name|tf_cr_ipsr
+operator|&
+name|IA64_PSR_IS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"    ar.cflg     = 0x%x\n"
+argument_list|,
+name|ia64_get_cflg
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    ar.csd      = 0x%x\n"
+argument_list|,
+name|ia64_get_csd
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    ar.ssd      = 0x%x\n"
+argument_list|,
+name|ia64_get_ssd
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"    curthread   = %p\n"
@@ -3673,13 +3712,13 @@ decl_stmt|;
 name|int
 name|narg
 decl_stmt|;
-name|int
+name|u_int32_t
 name|args
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|int64_t
+name|u_int64_t
 name|args64
 index|[
 literal|8
@@ -3749,7 +3788,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int32_t
 argument_list|)
 expr_stmt|;
 name|code
@@ -3920,7 +3959,7 @@ name|narg
 operator|*
 sizeof|sizeof
 argument_list|(
-name|int
+name|u_int32_t
 argument_list|)
 operator|)
 operator|&&
@@ -3936,9 +3975,6 @@ name|caddr_t
 operator|)
 name|args
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|i
 argument_list|)
 operator|)
