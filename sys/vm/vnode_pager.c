@@ -1984,7 +1984,12 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2055,6 +2060,17 @@ operator|->
 name|pindex
 argument_list|)
 expr_stmt|;
+name|vp
+operator|=
+name|object
+operator|->
+name|handle
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Allocate a kernel virtual address and initialize so that 		 * we can use VOP_READ/WRITE routines. 		 */
 name|kva
 operator|=
@@ -2062,12 +2078,6 @@ name|vm_pager_map_page
 argument_list|(
 name|m
 argument_list|)
-expr_stmt|;
-name|vp
-operator|=
-name|object
-operator|->
-name|handle
 expr_stmt|;
 name|aiov
 operator|.
@@ -2239,11 +2249,6 @@ operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
 expr_stmt|;
 return|return
 name|error
@@ -2542,11 +2547,6 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|cnt
 operator|.
 name|v_vnodein
@@ -2557,7 +2557,8 @@ operator|.
 name|v_vnodepgsin
 operator|++
 expr_stmt|;
-return|return
+name|error
+operator|=
 name|vnode_pager_input_old
 argument_list|(
 name|object
@@ -2567,6 +2568,16 @@ index|[
 name|reqpage
 index|]
 argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 comment|/* 		 * if the blocksize is smaller than a page size, then use 		 * special small filesystem code.  NFS sometimes has a small 		 * blocksize, but it can handle large reads itself. 		 */
 block|}
