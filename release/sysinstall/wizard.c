@@ -112,7 +112,7 @@ name|strcpy
 argument_list|(
 name|device
 argument_list|,
-literal|"/dev/r"
+literal|"/dev/"
 argument_list|)
 expr_stmt|;
 name|strcat
