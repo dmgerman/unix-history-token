@@ -18,36 +18,59 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLB_DIRECT_MASK
-value|(((1UL<< (64 - 38)) - 1)<< 38)
+name|TLB_DIRECT_ADDRESS_BITS
+value|(43)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TLB_DIRECT_SHIFT
-value|(3)
+name|TLB_DIRECT_PAGE_BITS
+value|(PAGE_SHIFT_4M)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TLB_DIRECT_UNCACHEABLE_SHIFT
-value|(11)
+name|TLB_DIRECT_ADDRESS_MASK
+value|((1UL<< TLB_DIRECT_ADDRESS_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TLB_DIRECT_COLOR_SHIFT
-value|(10)
+name|TLB_DIRECT_PAGE_MASK
+value|((1UL<< TLB_DIRECT_PAGE_BITS) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
-name|TLB_DIRECT_UNCACHEABLE
-value|(1<< TLB_DIRECT_UNCACHEABLE_SHIFT)
+name|TLB_PHYS_TO_DIRECT
+parameter_list|(
+name|pa
+parameter_list|)
+define|\
+value|((pa) | VM_MIN_DIRECT_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_DIRECT_TO_PHYS
+parameter_list|(
+name|va
+parameter_list|)
+define|\
+value|((va)& TLB_DIRECT_ADDRESS_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLB_DIRECT_TO_TTE_MASK
+define|\
+value|(TD_V | TD_4M | (TLB_DIRECT_ADDRESS_MASK - TLB_DIRECT_PAGE_MASK))
 end_define
 
 begin_define
