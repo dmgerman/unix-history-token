@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)vd.c	1.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1251,6 +1251,36 @@ operator|=
 literal|66
 operator|*
 literal|23
+expr_stmt|;
+name|lp
+operator|->
+name|d_npartitions
+operator|=
+literal|1
+expr_stmt|;
+name|lp
+operator|->
+name|d_partitions
+index|[
+literal|0
+index|]
+operator|.
+name|p_offset
+operator|=
+literal|0
+expr_stmt|;
+name|lp
+operator|->
+name|d_partitions
+index|[
+literal|0
+index|]
+operator|.
+name|p_size
+operator|=
+name|LABELSECTOR
+operator|+
+literal|1
 expr_stmt|;
 comment|/* 	 * Initialize invariant portion of 	 * dcb used for overlapped seeks. 	 */
 name|dk
