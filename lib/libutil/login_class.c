@@ -224,6 +224,14 @@ name|RLIMIT_SBSIZE
 block|}
 block|,
 block|{
+literal|"vmemoryuse"
+block|,
+name|login_getcapsize
+block|,
+name|RLIMIT_VMEM
+block|}
+block|,
+block|{
 name|NULL
 block|,
 literal|0
