@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1160,7 +1160,7 @@ block|,
 comment|/* 8: scsi disk */
 name|cdev_disk_init
 argument_list|(
-name|NSD
+name|NRD
 argument_list|,
 name|rd
 argument_list|)
