@@ -7208,9 +7208,7 @@ name|ds_offset_done
 operator|==
 name|sc
 operator|->
-name|sc_provider
-operator|->
-name|mediasize
+name|sc_mediasize
 operator|/
 operator|(
 name|sc
@@ -8663,9 +8661,7 @@ name|ds_offset
 operator|<
 name|sc
 operator|->
-name|sc_provider
-operator|->
-name|mediasize
+name|sc_mediasize
 operator|/
 operator|(
 name|sc
@@ -14917,9 +14913,7 @@ operator|/
 operator|(
 name|sc
 operator|->
-name|sc_provider
-operator|->
-name|mediasize
+name|sc_mediasize
 operator|/
 operator|(
 name|sc
