@@ -1885,7 +1885,7 @@ name|bp
 argument_list|,
 name|NULL
 argument_list|,
-name|EIO
+name|ENOMEM
 argument_list|)
 expr_stmt|;
 return|return;

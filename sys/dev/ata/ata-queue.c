@@ -653,6 +653,11 @@ name|ENOMEM
 decl_stmt|;
 if|if
 condition|(
+name|request
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|atadev
 operator|->
@@ -674,11 +679,6 @@ name|packet_size
 operator|=
 literal|16
 expr_stmt|;
-if|if
-condition|(
-name|request
-condition|)
-block|{
 name|request
 operator|->
 name|device

@@ -7048,7 +7048,7 @@ name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
-name|EIO
+name|ENOMEM
 argument_list|)
 expr_stmt|;
 return|return;
@@ -8459,9 +8459,7 @@ name|ata_alloc_request
 argument_list|()
 operator|)
 condition|)
-block|{
 return|return;
-block|}
 name|request
 operator|->
 name|device
