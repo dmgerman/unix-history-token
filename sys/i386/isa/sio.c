@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.7 1993/09/08 17:38:05 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/sio.c,v 1.8 1993/09/10 16:59:16 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2169,6 +2169,16 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COM_MULTIPORT
+if|if
+condition|(
+literal|0
+condition|)
+empty_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|scr1
@@ -2184,6 +2194,8 @@ argument_list|(
 literal|"<8250>"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 else|else
 block|{
 name|outb
