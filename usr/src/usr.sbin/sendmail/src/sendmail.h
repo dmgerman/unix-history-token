@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.41 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.40		%G%"
+literal|"@(#)sendmail.h	5.41		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1934,6 +1934,11 @@ modifier|*
 name|map_file
 decl_stmt|;
 comment|/* the (nominal) filename */
+name|void
+modifier|*
+name|map_db
+decl_stmt|;
+comment|/* the open database ptr */
 block|}
 end_block
 
@@ -1954,6 +1959,17 @@ end_define
 
 begin_comment
 comment|/* this entry is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_INCLNULL
+value|00002
+end_define
+
+begin_comment
+comment|/* include null byte in key */
 end_comment
 
 begin_escape

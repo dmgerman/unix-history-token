@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.43 (Berkeley) %G%"
+literal|"@(#)conf.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,14 +607,14 @@ name|BTREE_MAP
 comment|/* new database file access -- btree files */
 block|{
 specifier|extern
-name|void
+name|bool
 name|bt_map_init
 parameter_list|()
 function_decl|;
 specifier|extern
 name|char
 modifier|*
-name|bt_map_lookup
+name|db_map_lookup
 parameter_list|()
 function_decl|;
 name|s
@@ -642,7 +642,7 @@ name|s_mapclass
 operator|.
 name|map_lookup
 operator|=
-name|bt_map_lookup
+name|db_map_lookup
 expr_stmt|;
 block|}
 endif|#
@@ -653,14 +653,14 @@ name|HASH_MAP
 comment|/* new database file access -- hash files */
 block|{
 specifier|extern
-name|void
+name|bool
 name|hash_map_init
 parameter_list|()
 function_decl|;
 specifier|extern
 name|char
 modifier|*
-name|hash_map_lookup
+name|db_map_lookup
 parameter_list|()
 function_decl|;
 name|s
@@ -688,7 +688,7 @@ name|s_mapclass
 operator|.
 name|map_lookup
 operator|=
-name|hash_map_lookup
+name|db_map_lookup
 expr_stmt|;
 block|}
 endif|#

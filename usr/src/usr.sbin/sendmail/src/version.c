@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)version.c	5.123 (Berkeley) %G%"
+literal|"@(#)version.c	5.124 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"5.123"
+literal|"5.124"
 decl_stmt|;
 end_decl_stmt
 

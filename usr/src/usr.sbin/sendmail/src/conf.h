@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -191,24 +191,6 @@ begin_comment
 comment|/* **  Compilation options. ** **	#define these if they are available; comment them out otherwise. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|hpux
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SYSTEM5
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -314,6 +296,65 @@ begin_comment
 comment|/* look in user database (requires NEWDB) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BTREE_MAP
+value|1
+end_define
+
+begin_comment
+comment|/* enable BTREE mapping type (requires NEWDB) */
+end_comment
+
+begin_comment
+comment|/*# define HASH_MAP	1	/* enable HASH mapping type (requires NEWDB) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NDBM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DBM_MAP
+value|1
+end_define
+
+begin_comment
+comment|/* enable DBM mapping type (requires NDBM) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Some general configuration -- you shouldn't have to touch these */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -346,20 +387,6 @@ end_define
 begin_comment
 comment|/* use System V style timezones */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
-
-begin_define
-define|#
-directive|define
-name|rindex
-value|strrchr
-end_define
 
 begin_endif
 endif|#
