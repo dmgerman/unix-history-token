@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)C.c	5.1 (Berkeley) %G%"
+literal|"@(#)C.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1073,11 +1073,23 @@ name|int
 operator|)
 literal|'{'
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|inf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NO
 operator|)
 return|;
+block|}
 block|}
 operator|*
 name|sp
