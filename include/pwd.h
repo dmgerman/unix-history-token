@@ -193,11 +193,11 @@ modifier|*
 name|pw_passwd
 decl_stmt|;
 comment|/* encrypted password */
-name|int
+name|uid_t
 name|pw_uid
 decl_stmt|;
 comment|/* user uid */
-name|int
+name|gid_t
 name|pw_gid
 decl_stmt|;
 comment|/* user gid */
