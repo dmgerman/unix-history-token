@@ -977,6 +977,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|elf_get_symname
+parameter_list|(
+name|linker_file_t
+name|_lf
+parameter_list|,
+name|Elf_Word
+name|_symidx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* values for type */
 end_comment
