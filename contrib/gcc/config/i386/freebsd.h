@@ -601,7 +601,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\       }									\     else								\       {									\ 	int rounded = (SIZE);						\ 	if (rounded == 0) rounded = 1;					\ 	rounded += (BIGGEST_ALIGNMENT / BITS_PER_UNIT) - 1;		\ 	rounded = (rounded / (BIGGEST_ALIGNMENT / BITS_PER_UNIT)	\ 		   * (BIGGEST_ALIGNMENT / BITS_PER_UNIT));		\ 	fprintf ((FILE), "%s ", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
+value|do {									\     if (TARGET_ELF)							\       {									\ 	fprintf ((FILE), "%s", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u,%u\n", (SIZE), (ALIGN) / BITS_PER_UNIT);	\       }									\     else								\       {									\ 	int alignbytes = ((ALIGN) + BITS_PER_UNIT - 1) / BITS_PER_UNIT;	\ 	int rounded = (SIZE);						\ 	rounded += alignbytes - 1;					\ 	rounded = (rounded / alignbytes) * alignbytes;			\ 	fprintf ((FILE), "%s ", COMMON_ASM_OP);				\ 	assemble_name ((FILE), (NAME));					\ 	fprintf ((FILE), ",%u\n", (rounded));				\       }									\   } while (0)
 end_define
 
 begin_comment
