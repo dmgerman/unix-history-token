@@ -3268,15 +3268,11 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"Flags: 0x%x\t%d opens\n"
+literal|"Flags: 0x%x\n"
 argument_list|,
 name|vinum_conf
 operator|.
 name|flags
-argument_list|,
-name|vinum_conf
-operator|.
-name|opencount
 argument_list|)
 expr_stmt|;
 if|if
