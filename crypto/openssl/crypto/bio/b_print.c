@@ -67,6 +67,16 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<openssl/bn.h>
+end_include
+
+begin_comment
+comment|/* To get BN_LLONG properly defined */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<openssl/bio.h>
 end_include
 
@@ -147,12 +157,44 @@ directive|if
 name|HAVE_LONG_LONG
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLONG
+value|_int64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LLONG
 value|long long
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -489,7 +531,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX
+name|OSSL_MAX
 parameter_list|(
 name|p
 parameter_list|,
@@ -2123,7 +2165,7 @@ name|spadlen
 operator|=
 name|min
 operator|-
-name|MAX
+name|OSSL_MAX
 argument_list|(
 name|max
 argument_list|,
@@ -2167,7 +2209,7 @@ condition|)
 block|{
 name|zpadlen
 operator|=
-name|MAX
+name|OSSL_MAX
 argument_list|(
 name|zpadlen
 argument_list|,
@@ -2711,13 +2753,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|fracpart
-operator|&&
-operator|(
 name|fplace
 operator|<
-literal|20
-operator|)
+name|max
 condition|)
 do|;
 if|if

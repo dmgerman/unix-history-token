@@ -932,10 +932,16 @@ condition|(
 name|a
 operator|->
 name|parameter
+operator|&&
+operator|(
+name|a
+operator|->
+name|parameter
 operator|->
 name|type
 operator|==
 name|V_ASN1_SEQUENCE
+operator|)
 condition|)
 block|{
 name|ret

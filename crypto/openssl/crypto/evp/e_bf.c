@@ -89,7 +89,7 @@ literal|16
 argument_list|,
 literal|8
 argument_list|,
-literal|0
+argument|EVP_CIPH_VARIABLE_LENGTH
 argument_list|,
 argument|bf_init_key
 argument_list|,

@@ -2561,6 +2561,33 @@ block|}
 if|if
 condition|(
 operator|(
+name|hiv
+operator|==
+name|NULL
+operator|)
+operator|&&
+operator|(
+name|str
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+comment|/* No IV was explicitly set and no IV was generated 			 * during EVP_BytesToKey. Hence the IV is undefined, 			 * making correct decryption impossible. */
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"iv undefined\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|end
+goto|;
+block|}
+if|if
+condition|(
+operator|(
 name|hkey
 operator|!=
 name|NULL
