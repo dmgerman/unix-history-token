@@ -616,6 +616,8 @@ name|WNOHANG
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 empty_stmt|;
 block|}
