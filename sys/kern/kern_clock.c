@@ -1542,6 +1542,17 @@ name|clockinfo
 name|clkinfo
 decl_stmt|;
 comment|/* 	 * Construct clockinfo structure. 	 */
+name|bzero
+argument_list|(
+operator|&
+name|clkinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|clkinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|clkinfo
 operator|.
 name|hz

@@ -824,6 +824,9 @@ name|tick
 decl_stmt|;
 comment|/* micro-seconds per hz tick */
 name|int
+name|spare
+decl_stmt|;
+name|int
 name|stathz
 decl_stmt|;
 comment|/* statistics clock frequency */
