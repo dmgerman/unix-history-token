@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.7	81/03/17	*/
+comment|/*	ioctl.h	4.8	81/08/31	*/
 end_comment
 
 begin_comment
@@ -250,6 +250,17 @@ end_define
 
 begin_comment
 comment|/* only ^Q starts after ^S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LNOFLSH
+value|0100000
+end_define
+
+begin_comment
+comment|/* dont flush output on signals */
 end_comment
 
 begin_comment
