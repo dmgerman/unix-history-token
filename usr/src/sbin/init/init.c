@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.12 (Berkeley) %G%"
+literal|"@(#)init.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,20 +84,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_decl_stmt
-name|struct
-name|utmp
-name|ut
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LINSIZ
-value|sizeof(ut.ut_line)
-end_define
 
 begin_define
 define|#
@@ -200,7 +186,7 @@ block|{
 name|char
 name|line
 index|[
-name|LINSIZ
+name|UT_LINESIZE
 index|]
 decl_stmt|;
 name|char
