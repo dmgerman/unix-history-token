@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/usr.bin/crontab/crontab.c,v 1.2 1994/01/22 20:41:10 guido Exp $"
+literal|"$Id: /home/cvs/386BSD/src/usr.bin/crontab/crontab.c,v 1.3 1994/01/27 19:06:16 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
