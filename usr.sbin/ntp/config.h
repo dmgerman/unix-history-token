@@ -1335,12 +1335,25 @@ begin_comment
 comment|/* Define to 1 if you have the `mlockall' function. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500102
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_MLOCKALL
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 if you have the `mrand48' function. */
