@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.1 1995/02/26 19:34:33 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.2 1995/02/26 19:40:06 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -9,84 +9,70 @@ directive|include
 file|"ix.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NIX
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<sys/devconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_types.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_dl.h"
+file|<net/if_types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/netisr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"net/route.h"
+file|<net/if_dl.h>
 end_include
 
 begin_ifdef
@@ -98,31 +84,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netinet/in.h"
+file|<netinet/in.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_systm.h"
+file|<netinet/in_systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/in_var.h"
+file|<netinet/in_var.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/ip.h"
+file|<netinet/ip.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netinet/if_ether.h"
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -147,13 +133,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"netns/ns.h"
+file|<netns/ns.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netns/ns_if.h"
+file|<netns/ns_if.h>
 end_include
 
 begin_endif
@@ -178,13 +164,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"netiso/iso.h"
+file|<netiso/iso.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netiso/iso_var.h"
+file|<netiso/iso_var.h>
 end_include
 
 begin_decl_stmt
@@ -234,13 +220,13 @@ end_if
 begin_include
 include|#
 directive|include
-file|"net/bpf.h"
+file|<net/bpf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/bpfdesc.h"
+file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -255,25 +241,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/isa/icu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/include/pio.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/if_ixreg.h"
+file|<i386/isa/if_ixreg.h>
 end_include
 
 begin_decl_stmt
@@ -795,8 +775,6 @@ begin_function_decl
 name|void
 name|ixreset
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -5701,21 +5679,6 @@ operator|*
 operator|)
 name|rb
 decl_stmt|;
-comment|/* ether_input expects the ether_type to be in host order */
-name|eh
-operator|->
-name|ether_type
-operator|=
-name|ntohs
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|eh
-operator|->
-name|ether_type
-argument_list|)
-expr_stmt|;
 comment|/* here we go, lets build an mbuf chain up to hold all this */
 name|MGETHDR
 argument_list|(
@@ -6934,25 +6897,7 @@ case|case
 name|AF_INET
 case|:
 block|{
-operator|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-name|ifp
-operator|)
-operator|->
-name|ac_ipaddr
-operator|=
-name|IA_SIN
-argument_list|(
-name|ifa
-argument_list|)
-operator|->
-name|sin_addr
-expr_stmt|;
-name|arpwhohas
+name|arp_ifinit
 argument_list|(
 operator|(
 expr|struct
@@ -6961,13 +6906,7 @@ operator|*
 operator|)
 name|ifp
 argument_list|,
-operator|&
-name|IA_SIN
-argument_list|(
 name|ifa
-argument_list|)
-operator|->
-name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7125,12 +7064,8 @@ name|ixreset
 parameter_list|(
 name|int
 name|unit
-parameter_list|,
-name|int
-name|uban
 parameter_list|)
 block|{
-comment|/* XXX uban is no longer used!!! */
 name|ix_softc_t
 modifier|*
 name|sc
@@ -7247,8 +7182,6 @@ operator|++
 expr_stmt|;
 name|ixreset
 argument_list|(
-name|unit
-argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
@@ -7711,15 +7644,6 @@ expr_stmt|;
 comment|/* EESK must be stable for 8.38 uSec */
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NIX> 0 */
-end_comment
 
 end_unit
 
