@@ -7,6 +7,10 @@ begin_comment
 comment|/* The algorithm implemented by these routines bears a startling resemblence    to one discovered by Beate Commentz-Walter, although it is not identical.    See "A String Matching Algorithm Fast on the Average," Technical Report,    IBM-Germany, Scientific Center Heidelberg, Tiergartenstrasse 15, D-6900    Heidelberg, Germany.  See also Aho, A.V., and M. Corasick, "Efficient    String Matching:  An Aid to Bibliographic Search," CACM June 1975,    Vol. 18, No. 6, which describes the failure function used below. */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3217,11 +3221,14 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|U
+argument_list|(
 name|tp
 index|[
 operator|-
 literal|2
 index|]
+argument_list|)
 operator|==
 name|gc
 condition|)
