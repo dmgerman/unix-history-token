@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.19 (Berkeley) 5/27/95  * $Id: cd9660_vnops.c,v 1.38 1997/09/14 02:57:43 peter Exp $  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)cd9660_vnops.c	8.19 (Berkeley) 5/27/95  * $Id: cd9660_vnops.c,v 1.39 1997/09/21 04:22:40 dyson Exp $  */
 end_comment
 
 begin_include
@@ -406,39 +406,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  * Sysctl values for the cd9660 filesystem.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CD9660_CLUSTERREAD
-value|1
-end_define
-
-begin_comment
-comment|/* cluster reading enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CD9660_MAXID
-value|2
-end_define
-
-begin_comment
-comment|/* number of valid cd9660 ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CD9660_NAMES
-value|{ \ 	{0, 0}, \ 	{ "doclusterread", CTLTYPE_INT}, \ }
-end_define
 
 begin_comment
 comment|/*  * Setattr call. Only allowed for block and character special devices.  */
@@ -1341,54 +1308,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|int
-name|cd9660_doclusterread
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_vfs
-argument_list|,
-name|MOUNT_CD9660
-argument_list|,
-name|cd9660
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"CD9660 filesystem"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_cd9660
-argument_list|,
-name|CD9660_CLUSTERREAD
-argument_list|,
-name|doclusterread
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|cd9660_doclusterread
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Vnode op for reading.  */
 end_comment
@@ -1605,7 +1524,17 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|cd9660_doclusterread
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_NOCLUSTERR
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 if|if

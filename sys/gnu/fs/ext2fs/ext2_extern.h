@@ -19,50 +19,6 @@ directive|define
 name|_SYS_GNU_EXT2FS_EXT2_EXTERN_H_
 end_define
 
-begin_comment
-comment|/*  * Sysctl values for the ext2fs filesystem.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2FS_CLUSTERREAD
-value|1
-end_define
-
-begin_comment
-comment|/* cluster reading enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2FS_CLUSTERWRITE
-value|2
-end_define
-
-begin_comment
-comment|/* cluster writing enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2FS_MAXID
-value|3
-end_define
-
-begin_comment
-comment|/* number of valid ext2fs ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXT2FS_NAMES
-value|{\ 	{0, 0}, \ 	{ "doclusterread", CTLTYPE_INT }, \ 	{ "doculsterwrite", CTLTYPE_INT }, \ }
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|dinode
