@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.4 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * This is a test program to be a sink for TP4 connections.  */
+comment|/*  * This is a test program to be a sink for ISO packets.  */
 end_comment
 
 begin_include
@@ -225,6 +225,12 @@ init|=
 literal|0
 decl_stmt|,
 name|isode_mode
+init|=
+literal|0
+decl_stmt|,
+name|dgramp
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +297,7 @@ name|cp
 decl_stmt|;
 name|struct
 name|iso_addr
+modifier|*
 name|iso_addr
 parameter_list|()
 function_decl|;
@@ -355,6 +362,7 @@ name|laddr
 operator|.
 name|siso_addr
 operator|=
+operator|*
 name|iso_addr
 argument_list|(
 operator|*
@@ -759,10 +767,31 @@ init|=
 literal|0
 decl_stmt|,
 name|n
+decl_stmt|,
+name|ns
 decl_stmt|;
 specifier|extern
 name|int
 name|errno
+decl_stmt|;
+name|int
+name|socktype
+init|=
+operator|(
+name|dgramp
+condition|?
+name|SOCK_DGRAM
+else|:
+name|SOCK_SEQPACKET
+operator|)
+decl_stmt|;
+name|int
+name|addrlen
+init|=
+sizeof|sizeof
+argument_list|(
+name|faddr
+argument_list|)
 decl_stmt|;
 name|try
 argument_list|(
@@ -771,7 +800,7 @@ argument_list|,
 operator|(
 name|AF_ISO
 operator|,
-name|SOCK_SEQPACKET
+name|socktype
 operator|,
 literal|0
 operator|)
@@ -806,6 +835,19 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/*try(setsockopt, (s, SOL_SOCKET, SO_DEBUG,&on, sizeof (on)), ""); */
+if|if
+condition|(
+name|dgramp
+condition|)
+block|{
+name|ns
+operator|=
+name|s
+expr_stmt|;
+goto|goto
+name|dgram1
+goto|;
+block|}
 name|try
 argument_list|(
 name|listen
@@ -856,16 +898,6 @@ control|)
 block|{
 name|int
 name|child
-decl_stmt|,
-name|ns
-decl_stmt|;
-name|int
-name|addrlen
-init|=
-sizeof|sizeof
-argument_list|(
-name|faddr
-argument_list|)
 decl_stmt|;
 name|char
 name|childname
@@ -1077,7 +1109,7 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
@@ -1174,6 +1206,8 @@ init|;
 condition|;
 control|)
 block|{
+name|dgram1
+label|:
 name|msghdr
 operator|.
 name|msg_iovlen
@@ -1188,6 +1222,21 @@ sizeof|sizeof
 argument_list|(
 name|control
 argument_list|)
+expr_stmt|;
+name|msghdr
+operator|.
+name|msg_namelen
+operator|=
+operator|(
+name|dgramp
+condition|?
+operator|(
+sizeof|sizeof
+name|name
+operator|)
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|iov
 operator|->
@@ -1242,6 +1291,27 @@ expr_stmt|;
 name|fflush
 argument_list|(
 name|stdout
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dgramp
+operator|&&
+name|msghdr
+operator|.
+name|msg_namelen
+operator|&&
+name|verbose
+condition|)
+name|dumpit
+argument_list|(
+literal|"from:\n"
+argument_list|,
+name|name
+argument_list|,
+name|msghdr
+operator|.
+name|msg_namelen
 argument_list|)
 expr_stmt|;
 if|if
