@@ -83,6 +83,12 @@ name|SOUND_MIXER_RECLEV
 index|]
 operator|=
 literal|0
+block|,
+index|[
+name|SOUND_MIXER_OGAIN
+index|]
+operator|=
+literal|50
 block|, }
 decl_stmt|;
 end_decl_stmt
