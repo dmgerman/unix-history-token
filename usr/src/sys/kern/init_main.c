@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)init_main.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syscallargs.h>
 end_include
 
 begin_include
@@ -344,7 +350,8 @@ name|i
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
+decl_stmt|;
+name|register_t
 name|rval
 index|[
 literal|2
@@ -1539,6 +1546,7 @@ name|addr
 decl_stmt|;
 name|struct
 name|execve_args
+comment|/* { 		syscallarg(char *) path; 		syscallarg(char **) argp; 		syscallarg(char **) envp; 	} */
 name|args
 decl_stmt|;
 name|int
@@ -1546,12 +1554,13 @@ name|options
 decl_stmt|,
 name|i
 decl_stmt|,
+name|error
+decl_stmt|;
+name|register_t
 name|retval
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|error
 decl_stmt|;
 name|char
 modifier|*
@@ -1812,16 +1821,12 @@ operator|*
 operator|)
 operator|(
 operator|(
-name|int
+name|long
 operator|)
 name|ucp
 operator|&
 operator|~
-operator|(
-name|NBPW
-operator|-
-literal|1
-operator|)
+name|ALIGNBYTES
 operator|)
 expr_stmt|;
 operator|(
@@ -1851,7 +1856,7 @@ operator|--
 name|uap
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|arg1
 argument_list|)
@@ -1868,27 +1873,39 @@ operator|--
 name|uap
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|arg0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Point at the arguments. 		 */
+name|SCARG
+argument_list|(
+operator|&
 name|args
-operator|.
-name|fname
+argument_list|,
+name|path
+argument_list|)
 operator|=
 name|arg0
 expr_stmt|;
+name|SCARG
+argument_list|(
+operator|&
 name|args
-operator|.
+argument_list|,
 name|argp
+argument_list|)
 operator|=
 name|uap
 expr_stmt|;
+name|SCARG
+argument_list|(
+operator|&
 name|args
-operator|.
+argument_list|,
 name|envp
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
@@ -1905,7 +1922,6 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-operator|&
 name|retval
 argument_list|)
 operator|)
