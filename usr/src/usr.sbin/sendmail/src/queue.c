@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.28 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.29 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.28 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.29 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,6 +465,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|printopenfds
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"!queueup: cannot create queue temp file %s"
@@ -472,6 +478,7 @@ argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
