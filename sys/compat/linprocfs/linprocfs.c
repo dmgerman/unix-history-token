@@ -3505,7 +3505,7 @@ comment|/*  * Filler function for proc/devices  */
 end_comment
 
 begin_endif
-unit|static int linprocfs_dodevices(PFS_FILL_ARGS) { 	int i;  	sbuf_printf(sb, "Character devices:\n");  	for (i = 0; i< NUMCDEVSW; i++) 		if (cdevsw[i] != NULL) 			sbuf_printf(sb, "%3d %s\n", i, cdevsw[i]->d_name);  	sbuf_printf(sb, "\nBlock devices:\n"); 	 	return (0); }
+unit|static int linprocfs_dodevices(PFS_FILL_ARGS) { 	int i;  	sbuf_printf(sb, "Character devices:\n");  	for (i = 0; i< NUMCDEVSW; i++) 		if (cdevsw[i] != NULL) 			sbuf_printf(sb, "%3d %s\n", i, cdevsw[i]->d_name);  	sbuf_printf(sb, "\nBlock devices:\n");  	return (0); }
 endif|#
 directive|endif
 end_endif
@@ -3557,7 +3557,7 @@ comment|/*  * Filler function for proc/modules  */
 end_comment
 
 begin_endif
-unit|static int linprocfs_domodules(PFS_FILL_ARGS) { 	struct linker_file *lf; 	 	TAILQ_FOREACH(lf,&linker_files, link) { 		sbuf_printf(sb, "%-20s%8lu%4d\n", lf->filename, 		    (unsigned long)lf->size, lf->refs); 	} 	return (0); }
+unit|static int linprocfs_domodules(PFS_FILL_ARGS) { 	struct linker_file *lf;  	TAILQ_FOREACH(lf,&linker_files, link) { 		sbuf_printf(sb, "%-20s%8lu%4d\n", lf->filename, 		    (unsigned long)lf->size, lf->refs); 	} 	return (0); }
 endif|#
 directive|endif
 end_endif
