@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	4.32 (Berkeley) %G%"
+literal|"@(#)ftpd.c	4.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3700,10 +3700,12 @@ begin_block
 block|{
 if|if
 condition|(
-operator|!
 name|logged_in
 condition|)
-return|return;
+block|{
+operator|(
+name|void
+operator|)
 name|seteuid
 argument_list|(
 literal|0
@@ -3788,6 +3790,7 @@ argument_list|(
 name|wtmp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* beware of flushing buffers after a SIGPIPE */
 name|_exit
