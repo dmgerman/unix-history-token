@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_utils.c	5.4 (Berkeley) %G%"
+literal|"@(#)rec_utils.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,9 +255,9 @@ name|t
 operator|->
 name|bt_dbuf
 argument_list|,
-name|t
+name|rl
 operator|->
-name|bt_dbufsz
+name|dsize
 argument_list|)
 expr_stmt|;
 name|data
