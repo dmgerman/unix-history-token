@@ -1975,8 +1975,6 @@ name|NULL
 argument_list|,
 operator|-
 literal|1
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* if there's actually a pccard device attached, initialize the slot */
