@@ -764,7 +764,7 @@ block|,
 name|USB_PRODUCT_SOURCENEXT_KEIKAI8
 block|}
 block|,
-comment|/* SOURCENEXT KeikaiDenwa 8 with chager */
+comment|/* SOURCENEXT KeikaiDenwa 8 with charger */
 block|{
 name|USB_VENDOR_SOURCENEXT
 block|,
