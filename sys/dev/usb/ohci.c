@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.116 2001/11/21 08:18:40 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.117 2001/12/27 11:27:11 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6630,7 +6630,7 @@ name|OHCI_TD_HANDLED
 operator|)
 condition|)
 block|{
-comment|/* xfer == NULL: There seems to be no xfer associated 			 * with this TD. It is tailp that happened to end up on 			 * the done queue. 			 * flags& OHCI_TD_HANDLED: The TD has already been 			 * handled by process_done and should not be done again. 			 */
+comment|/* 			 * xfer == NULL: There seems to be no xfer associated 			 * with this TD. It is tailp that happened to end up on 			 * the done queue. 			 * flags& OHCI_TD_HANDLED: The TD has already been 			 * handled by process_done and should not be done again. 			 * Shouldn't happen, but some chips are broken(?). 			 */
 continue|continue;
 block|}
 if|if
