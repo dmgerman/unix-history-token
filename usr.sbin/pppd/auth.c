@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.14 1997/04/15 07:00:32 danny Exp $"
+literal|"$Id: auth.c,v 1.15 1997/04/16 02:07:06 danny Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4136,6 +4136,8 @@ name|best_flag
 operator|&
 name|NONWILD_CLIENT
 operator|)
+operator|&&
+name|client
 operator|&&
 operator|*
 name|client
