@@ -1929,6 +1929,28 @@ name|val
 index|]
 expr_stmt|;
 block|}
+else|else
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"WI_RID_OWN_CHNL failed, using first channel!\n"
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_ibss_chan
+operator|=
+operator|&
+name|ic
+operator|->
+name|ic_channels
+index|[
+literal|0
+index|]
+expr_stmt|;
+block|}
 comment|/* 	 * Set flags based on firmware version. 	 */
 switch|switch
 condition|(
