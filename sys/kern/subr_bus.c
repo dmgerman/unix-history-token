@@ -5254,6 +5254,10 @@ block|{
 if|if
 condition|(
 name|dev
+operator|!=
+name|NULL
+operator|&&
+name|dev
 operator|->
 name|devclass
 condition|)
