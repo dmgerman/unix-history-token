@@ -267,6 +267,10 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Access the _thread_dfl_count array under the protection of signal 	 * deferral. 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Enter a loop to find the signals that are SIG_DFL.  For 	 * these signals we must install a dummy signal handler in 	 * order for the kernel to pass them in to us.  POSIX says 	 * that the _application_ must explicitly install a dummy 	 * handler for signals that are SIG_IGN in order to sigwait 	 * on them.  Note that SIG_IGN signals are left in the 	 * mask because a subsequent sigaction could enable an 	 * ignored signal. 	 */
 for|for
 control|(
@@ -306,6 +310,22 @@ name|SIG_DFL
 operator|)
 condition|)
 block|{
+name|_thread_dfl_count
+index|[
+name|i
+index|]
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|_thread_dfl_count
+index|[
+name|i
+index|]
+operator|==
+literal|1
+condition|)
+block|{
 if|if
 condition|(
 name|_thread_sys_sigaction
@@ -327,6 +347,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+comment|/* Done accessing _thread_dfl_count for now. */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|ret
@@ -372,6 +397,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* 	 * Access the _thread_dfl_count array under the protection of signal 	 * deferral. 	 */
+name|_thread_kern_sig_defer
+argument_list|()
+expr_stmt|;
 comment|/* Restore the sigactions: */
 name|act
 operator|.
@@ -417,6 +446,19 @@ name|SIG_DFL
 operator|)
 condition|)
 block|{
+name|_thread_dfl_count
+index|[
+name|i
+index|]
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|_thread_dfl_count
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|_thread_sys_sigaction
@@ -438,6 +480,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+comment|/* Done accessing _thread_dfl_count. */
+name|_thread_kern_sig_undefer
+argument_list|()
+expr_stmt|;
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;

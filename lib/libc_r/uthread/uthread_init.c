@@ -1102,6 +1102,14 @@ literal|"Cannot read signal handler info"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Initialize the SIG_DFL dummy handler count. */
+name|_thread_dfl_count
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 		 * Install the signal handler for the most important 		 * signals that the user-thread kernel needs. Actually 		 * SIGINFO isn't really needed, but it is nice to have. 		 */
 if|if
