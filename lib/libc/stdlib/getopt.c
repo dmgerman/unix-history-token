@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: getopt.c,v 1.26 2003/08/07 16:43:40 agc Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
@@ -73,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -162,8 +172,8 @@ decl_stmt|;
 name|char
 modifier|*
 specifier|const
-modifier|*
 name|nargv
+index|[]
 decl_stmt|;
 specifier|const
 name|char
@@ -188,15 +198,23 @@ if|if
 condition|(
 name|optreset
 operator|||
-operator|!
 operator|*
 name|place
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* update scanning pointer */
 name|optreset
 operator|=
 literal|0
+expr_stmt|;
+name|place
+operator|=
+name|nargv
+index|[
+name|optind
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -205,18 +223,13 @@ operator|>=
 name|nargc
 operator|||
 operator|*
-operator|(
 name|place
-operator|=
-name|nargv
-index|[
-name|optind
-index|]
-operator|)
+operator|++
 operator|!=
 literal|'-'
 condition|)
 block|{
+comment|/* Argument is absent or is not an option */
 name|place
 operator|=
 name|EMSG
@@ -228,21 +241,25 @@ literal|1
 operator|)
 return|;
 block|}
+name|optopt
+operator|=
+operator|*
+name|place
+operator|++
+expr_stmt|;
 if|if
 condition|(
-name|place
-index|[
-literal|1
-index|]
-operator|&&
-operator|*
-operator|++
-name|place
+name|optopt
 operator|==
 literal|'-'
+operator|&&
+operator|*
+name|place
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* found "--" */
+comment|/* "--" => end of options */
 operator|++
 name|optind
 expr_stmt|;
@@ -257,27 +274,55 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
-comment|/* option letter okay? */
 if|if
 condition|(
+name|optopt
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Solitary '-', treat as a '-' option 			   if the program (eg su) is looking for it. */
+name|place
+operator|=
+name|EMSG
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|ostr
+argument_list|,
+literal|'-'
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
 operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|optopt
 operator|=
-operator|(
-name|int
-operator|)
+literal|'-'
+expr_stmt|;
+block|}
+block|}
+else|else
+name|optopt
+operator|=
 operator|*
 name|place
 operator|++
-operator|)
+expr_stmt|;
+comment|/* See if option letter is one the caller wanted... */
+if|if
+condition|(
+name|optopt
 operator|==
-operator|(
-name|int
-operator|)
 literal|':'
 operator|||
-operator|!
 operator|(
 name|oli
 operator|=
@@ -288,29 +333,16 @@ argument_list|,
 name|optopt
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
-comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means -1. 		 */
 if|if
 condition|(
-name|optopt
-operator|==
-operator|(
-name|int
-operator|)
-literal|'-'
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-operator|!
 operator|*
 name|place
+operator|==
+literal|0
 condition|)
 operator|++
 name|optind
@@ -323,10 +355,6 @@ operator|*
 name|ostr
 operator|!=
 literal|':'
-operator|&&
-name|optopt
-operator|!=
-name|BADCH
 condition|)
 operator|(
 name|void
@@ -349,11 +377,13 @@ name|BADCH
 operator|)
 return|;
 block|}
+comment|/* Does this option need an argument? */
 if|if
 condition|(
-operator|*
-operator|++
 name|oli
+index|[
+literal|1
+index|]
 operator|!=
 literal|':'
 condition|)
@@ -365,9 +395,10 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|*
 name|place
+operator|==
+literal|0
 condition|)
 operator|++
 name|optind
@@ -375,13 +406,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* need an argument */
+comment|/* Option-argument is either the rest of this argument or the 		   entire next argument. */
 if|if
 condition|(
 operator|*
 name|place
 condition|)
-comment|/* no white space */
 name|optarg
 operator|=
 name|place
@@ -390,12 +420,20 @@ elseif|else
 if|if
 condition|(
 name|nargc
-operator|<=
+operator|>
 operator|++
 name|optind
 condition|)
+name|optarg
+operator|=
+name|nargv
+index|[
+name|optind
+index|]
+expr_stmt|;
+else|else
 block|{
-comment|/* no arg */
+comment|/* option-argument absent */
 name|place
 operator|=
 name|EMSG
@@ -437,15 +475,6 @@ name|BADCH
 operator|)
 return|;
 block|}
-else|else
-comment|/* white space */
-name|optarg
-operator|=
-name|nargv
-index|[
-name|optind
-index|]
-expr_stmt|;
 name|place
 operator|=
 name|EMSG
@@ -459,7 +488,7 @@ operator|(
 name|optopt
 operator|)
 return|;
-comment|/* dump back option letter */
+comment|/* return option letter */
 block|}
 end_function
 
