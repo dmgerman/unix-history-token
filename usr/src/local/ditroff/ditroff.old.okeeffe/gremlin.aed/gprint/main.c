@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c	1.7	83/06/24  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
+comment|/* main.c	1.8	83/07/06  *  * Copyright -C- 1982 Barry S. Roitblat  *  *	This file contains the main and file system dependent routines  * for producing hard copy from gremlin files.  It is extensively modified  * from the vplot source.  */
 end_comment
 
 begin_include
@@ -172,16 +172,6 @@ name|int
 name|linmod
 init|=
 name|SOLID
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|chrtab
-index|[]
-index|[
-literal|16
-index|]
 decl_stmt|;
 end_decl_stmt
 
