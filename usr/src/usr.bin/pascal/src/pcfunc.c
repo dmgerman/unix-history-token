@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pcfunc.c 1.6 %G%"
+literal|"@(#)pcfunc.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,6 +653,13 @@ name|O_EXP
 case|:
 name|funcname
 operator|=
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|?
+literal|"_EXP"
+else|:
 literal|"_exp"
 expr_stmt|;
 goto|goto
@@ -663,6 +670,13 @@ name|O_SIN
 case|:
 name|funcname
 operator|=
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|?
+literal|"_SIN"
+else|:
 literal|"_sin"
 expr_stmt|;
 goto|goto
@@ -673,6 +687,13 @@ name|O_COS
 case|:
 name|funcname
 operator|=
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|?
+literal|"_COS"
+else|:
 literal|"_cos"
 expr_stmt|;
 goto|goto
@@ -683,6 +704,13 @@ name|O_ATAN
 case|:
 name|funcname
 operator|=
+name|opt
+argument_list|(
+literal|'t'
+argument_list|)
+condition|?
+literal|"_ATAN"
+else|:
 literal|"_atan"
 expr_stmt|;
 goto|goto
