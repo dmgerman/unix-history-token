@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -849,6 +855,72 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* sysctl vars */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pci
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+literal|0
+argument_list|,
+literal|"PCI bus tuning parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|pci_enable_io_modes
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pci.enable_io_modes"
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+operator|&
+name|pci_enable_io_modes
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pci
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|enable_io_modes
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|pci_enable_io_modes
+argument_list|,
+literal|1
+argument_list|,
+literal|"Enable I/O and memory bits in the config register.  Some BIOSes do not\n\ enable these bits correctly.  We'd like to do this all the time, but there\n\ are some peripherals that this causes problems with."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Find a device_t by bus/slot/function */
@@ -3121,14 +3193,9 @@ decl_stmt|;
 name|u_int32_t
 name|testval
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PCI_ENABLE_IO_MODES
 name|u_int16_t
 name|cmd
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|type
 decl_stmt|;
@@ -3370,9 +3437,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * This code theoretically does the right thing, but has 	 * undesirable side effects in some cases where 	 * peripherals respond oddly to having these bits 	 * enabled.  Leave them alone by default. 	 */
-ifdef|#
-directive|ifdef
-name|PCI_ENABLE_IO_MODES
+if|if
+condition|(
+name|pci_enable_io_modes
+condition|)
+block|{
 comment|/* Turn on resources that have been left off by a lazy BIOS */
 if|if
 condition|(
@@ -3490,8 +3559,9 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-else|#
-directive|else
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|type
@@ -3538,8 +3608,7 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
+block|}
 name|resource_list_add
 argument_list|(
 name|rl
@@ -5858,6 +5927,17 @@ name|dinfo
 operator|->
 name|cfg
 decl_stmt|;
+comment|/* 	 * You can share PCI interrupts. 	 */
+if|if
+condition|(
+name|type
+operator|==
+name|SYS_RES_IRQ
+condition|)
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
 comment|/* 	 * Perform lazy resource allocation 	 * 	 * XXX add support here for SYS_RES_IOPORT and SYS_RES_MEMORY 	 */
 if|if
 condition|(
