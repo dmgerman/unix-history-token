@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_proto.c	4.22	82/06/20	*/
+comment|/*	uipc_proto.c	4.23	82/09/06	*/
 end_comment
 
 begin_include
@@ -25,6 +25,18 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -682,6 +694,12 @@ name|pr_init
 call|)
 argument_list|()
 expr_stmt|;
+name|pffasttimo
+argument_list|()
+expr_stmt|;
+name|pfslowtimo
+argument_list|()
+expr_stmt|;
 block|}
 end_block
 
@@ -946,6 +964,17 @@ name|pr_slowtimo
 call|)
 argument_list|()
 expr_stmt|;
+name|timeout
+argument_list|(
+name|pfslowtimo
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+name|PR_SLOWHZ
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -988,6 +1017,17 @@ operator|->
 name|pr_fasttimo
 call|)
 argument_list|()
+expr_stmt|;
+name|timeout
+argument_list|(
+name|pffasttimo
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+name|PR_FASTHZ
+argument_list|)
 expr_stmt|;
 block|}
 end_block
