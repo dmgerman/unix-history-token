@@ -1181,7 +1181,7 @@ name|DC_TSTAT_LS100
 operator|)
 condition|)
 break|break;
-comment|/*                  * Only retry autonegotiation every 5 seconds. 		 * 		 * Otherwise, fall through to calling dcphy_status() 		 * since real Intel 21143 chips don't show valid link 		 * status until autonegotiation is switched off, and 		 * that only happens in dcphy_status().  Without this, 		 * successful autonegotation is never recognised on 		 * these chips.                  */
+comment|/*                  * Only retry autonegotiation every 5 seconds. 		 * 		 * Otherwise, fall through to calling dcphy_status() 		 * since real Intel 21143 chips don't show valid link 		 * status until autonegotiation is switched off, and 		 * that only happens in dcphy_status().  Without this, 		 * successful autonegotiation is never recognised on 		 * these chips.                  */
 if|if
 condition|(
 operator|++
