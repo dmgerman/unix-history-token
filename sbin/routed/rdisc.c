@@ -1,44 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)rdisc.c	8.1 (Berkeley) x/y/95";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
+comment|/*  * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -64,6 +26,66 @@ include|#
 directive|include
 file|<netinet/ip_icmp.h>
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+init|=
+literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+literal|"$NetBSD$"
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_empty
+empty|#ident "$FreeBSD$"
+end_empty
 
 begin_comment
 comment|/* router advertisement ICMP packet */
@@ -209,8 +231,12 @@ begin_define
 define|#
 directive|define
 name|MAX_ADS
-value|5
+value|16
 end_define
+
+begin_comment
+comment|/* at least one per interface */
+end_comment
 
 begin_struct
 struct|struct
@@ -254,7 +280,31 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* adjust preference by interface metric without driving it to infinity */
+comment|/* convert between signed, balanced around zero,  * and unsigned zero-based preferences */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGN_PREF
+parameter_list|(
+name|p
+parameter_list|)
+value|((p) ^ MIN_PreferenceLevel)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNSIGN_PREF
+parameter_list|(
+name|p
+parameter_list|)
+value|SIGN_PREF(p)
+end_define
+
+begin_comment
+comment|/* adjust unsigned preference by interface metric,  * without driving it to infinity */
 end_comment
 
 begin_define
@@ -266,7 +316,7 @@ name|p
 parameter_list|,
 name|ifp
 parameter_list|)
-value|((p)<= (ifp)->int_metric ? ((p) != 0 ? 1 : 0) \ 		      : (p) - ((ifp)->int_metric))
+value|((int)(p)<= (ifp)->int_metric ? ((p) != 0 ? 1 : 0) \ 		      : (p) - ((ifp)->int_metric))
 end_define
 
 begin_function_decl
@@ -288,6 +338,7 @@ specifier|static
 name|void
 name|trace_rdisc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|act
@@ -526,6 +577,9 @@ name|int_name
 else|:
 literal|"?"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ntohl
 argument_list|(
 name|p
@@ -686,10 +740,12 @@ condition|)
 return|return;
 endif|#
 directive|endif
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|m
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1181,7 +1237,7 @@ condition|(
 name|supplier
 condition|)
 block|{
-comment|/* if switching from client to server, get rid of old 		 * default routes. 		 */
+comment|/* If switching from client to server, get rid of old 		 * default routes. 		 */
 if|if
 condition|(
 name|cur_drp
@@ -1294,37 +1350,27 @@ break|break;
 block|}
 block|}
 block|}
-comment|/* delete old redirected routes to keep the kernel table small 	 */
-name|sec
-operator|=
-operator|(
-name|cur_drp
-operator|==
-literal|0
-operator|)
-condition|?
-name|MaxMaxAdvertiseInterval
-else|:
-name|cur_drp
-operator|->
-name|dr_life
-expr_stmt|;
-name|del_redirects
-argument_list|(
-name|bad_gate
-argument_list|,
-name|now
-operator|.
-name|tv_sec
-operator|-
-name|sec
-argument_list|)
-expr_stmt|;
 name|rdisc_sol
 argument_list|()
 expr_stmt|;
 name|rdisc_sort
 argument_list|()
+expr_stmt|;
+comment|/* Delete old redirected routes to keep the kernel table small, 	 * and to prevent black holes.  Check that the kernel table 	 * matches the daemon table (i.e. has the default route). 	 * But only if RIP is not running and we are not dealing with 	 * a bad gateway, since otherwise age() will be called. 	 */
+if|if
+condition|(
+name|rip_sock
+operator|<
+literal|0
+operator|&&
+name|bad_gate
+operator|==
+literal|0
+condition|)
+name|age
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1383,13 +1429,23 @@ literal|0
 expr_stmt|;
 name|drp
 operator|->
+name|dr_ts
+operator|=
+literal|0
+expr_stmt|;
+name|drp
+operator|->
 name|dr_life
 operator|=
 literal|0
 expr_stmt|;
 block|}
-name|rdisc_sort
-argument_list|()
+comment|/* make a note to re-solicit, turn RIP on or off, etc. */
+name|rdisc_timer
+operator|.
+name|tv_sec
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1483,11 +1539,16 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
+name|naddr
+name|gate
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 name|del_redirects
 argument_list|(
+name|gate
+operator|=
 name|drp
 operator|->
 name|dr_gate
@@ -1558,9 +1619,31 @@ comment|/* If that was the last good discovered router on the interface, 	 * the
 if|if
 condition|(
 name|i
-operator|==
+operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+name|trace_act
+argument_list|(
+literal|"discovered router %s via %s"
+literal|" is bad--have %d remaining"
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|gate
+argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|ifp
 operator|->
 name|int_rdisc_cnt
@@ -1570,7 +1653,13 @@ condition|)
 block|{
 name|trace_act
 argument_list|(
-literal|"discovered route is bad--re-solicit routers via %s"
+literal|"last discovered router %s via %s"
+literal|" is bad--re-solicit"
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|gate
+argument_list|)
 argument_list|,
 name|ifp
 operator|->
@@ -1593,6 +1682,24 @@ literal|0
 expr_stmt|;
 name|rdisc_sol
 argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|trace_act
+argument_list|(
+literal|"last discovered router %s via %s"
+literal|" is bad--wait to solicit"
+argument_list|,
+name|naddr_ntoa
+argument_list|(
+name|gate
+argument_list|)
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -1624,15 +1731,23 @@ modifier|*
 name|rt
 decl_stmt|;
 name|struct
+name|rt_spare
+name|new
+decl_stmt|;
+name|struct
 name|interface
 modifier|*
 name|ifp
 decl_stmt|;
 name|u_int
 name|new_st
+init|=
+literal|0
 decl_stmt|;
 name|n_long
 name|new_pref
+init|=
+literal|0
 decl_stmt|;
 comment|/* Find the best discovered route. 	 */
 name|new_drp
@@ -1873,6 +1988,31 @@ name|RS_RDISC
 operator|)
 condition|)
 block|{
+name|new
+operator|=
+name|rt
+operator|->
+name|rt_spares
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|new
+operator|.
+name|rts_metric
+operator|=
+name|HOPCNT_INFINITY
+expr_stmt|;
+name|new
+operator|.
+name|rts_time
+operator|=
+name|now
+operator|.
+name|tv_sec
+operator|-
+name|GARBAGE_TIME
+expr_stmt|;
 name|rtchange
 argument_list|(
 name|rt
@@ -1884,27 +2024,8 @@ operator|&
 operator|~
 name|RS_RDISC
 argument_list|,
-name|rt
-operator|->
-name|rt_gate
-argument_list|,
-name|rt
-operator|->
-name|rt_router
-argument_list|,
-name|HOPCNT_INFINITY
-argument_list|,
-literal|0
-argument_list|,
-name|rt
-operator|->
-name|rt_ifp
-argument_list|,
-name|now
-operator|.
-name|tv_sec
-operator|-
-name|GARBAGE_TIME
+operator|&
+name|new
 argument_list|,
 literal|0
 argument_list|)
@@ -1917,12 +2038,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* turn on RIP if permitted */
-name|rip_on
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1992,6 +2107,59 @@ name|int_name
 argument_list|)
 expr_stmt|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|new
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|new
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|new
+operator|.
+name|rts_ifp
+operator|=
+name|new_drp
+operator|->
+name|dr_ifp
+expr_stmt|;
+name|new
+operator|.
+name|rts_gate
+operator|=
+name|new_drp
+operator|->
+name|dr_gate
+expr_stmt|;
+name|new
+operator|.
+name|rts_router
+operator|=
+name|new_drp
+operator|->
+name|dr_gate
+expr_stmt|;
+name|new
+operator|.
+name|rts_metric
+operator|=
+name|HOPCNT_INFINITY
+operator|-
+literal|1
+expr_stmt|;
+name|new
+operator|.
+name|rts_time
+operator|=
+name|now
+operator|.
+name|tv_sec
+expr_stmt|;
 if|if
 condition|(
 name|rt
@@ -2009,25 +2177,8 @@ name|rt_state
 operator||
 name|RS_RDISC
 argument_list|,
-name|new_drp
-operator|->
-name|dr_gate
-argument_list|,
-name|new_drp
-operator|->
-name|dr_gate
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|new_drp
-operator|->
-name|dr_ifp
-argument_list|,
-name|now
-operator|.
-name|tv_sec
+operator|&
+name|new
 argument_list|,
 literal|0
 argument_list|)
@@ -2041,36 +2192,40 @@ name|RIP_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|new_drp
-operator|->
-name|dr_gate
-argument_list|,
-name|new_drp
-operator|->
-name|dr_gate
-argument_list|,
-name|HOPCNT_INFINITY
-operator|-
-literal|1
-argument_list|,
-literal|0
-argument_list|,
 name|RS_RDISC
 argument_list|,
-name|new_drp
-operator|->
-name|dr_ifp
+operator|&
+name|new
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Now turn off RIP and delete RIP routes, 			 * which might otherwise include the default 			 * we just modified. 			 */
-name|rip_off
-argument_list|()
-expr_stmt|;
 block|}
 name|cur_drp
 operator|=
 name|new_drp
+expr_stmt|;
+block|}
+comment|/* turn RIP on or off */
+if|if
+condition|(
+operator|!
+name|rdisc_ok
+operator|||
+name|rip_interfaces
+operator|>
+literal|1
+condition|)
+block|{
+name|rip_on
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|rip_off
+argument_list|()
 expr_stmt|;
 block|}
 block|}
@@ -2094,6 +2249,7 @@ parameter_list|,
 name|n_long
 name|pref
 parameter_list|,
+comment|/* signed and in network order */
 name|u_short
 name|life
 parameter_list|,
@@ -2201,12 +2357,13 @@ block|}
 comment|/* Convert preference to an unsigned value 	 * and later bias it by the metric of the interface. 	 */
 name|pref
 operator|=
+name|UNSIGN_PREF
+argument_list|(
 name|ntohl
 argument_list|(
 name|pref
 argument_list|)
-operator|^
-name|MIN_PreferenceLevel
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2215,8 +2372,8 @@ operator|==
 literal|0
 operator|||
 name|life
-operator|==
-literal|0
+operator|<
+name|MinMaxAdvertiseInterval
 condition|)
 block|{
 name|pref
@@ -2612,7 +2769,7 @@ parameter_list|,
 name|naddr
 name|dst
 parameter_list|,
-comment|/* 0 or UNICAST destination */
+comment|/* 0 or unicast destination */
 name|int
 name|type
 parameter_list|)
@@ -2625,6 +2782,7 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -2632,10 +2790,12 @@ decl_stmt|;
 name|naddr
 name|tgt_mcast
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sin
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2683,7 +2843,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* UNICAST */
+comment|/* unicast */
 default|default:
 name|msg
 operator|=
@@ -2986,7 +3146,7 @@ parameter_list|,
 name|naddr
 name|dst
 parameter_list|,
-comment|/* 0 or UNICAST destination */
+comment|/* 0 or unicast destination */
 name|int
 name|type
 parameter_list|)
@@ -2999,10 +3159,12 @@ decl_stmt|;
 name|n_long
 name|pref
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|u
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3067,24 +3229,15 @@ operator|*
 literal|3
 argument_list|)
 expr_stmt|;
+comment|/* Convert the configured preference to an unsigned value, 	 * bias it by the interface metric, and then send it as a 	 * signed, network byte order value. 	 */
 name|pref
 operator|=
+name|UNSIGN_PREF
+argument_list|(
 name|ifp
 operator|->
 name|int_rdisc_pref
-operator|^
-name|MIN_PreferenceLevel
-expr_stmt|;
-name|pref
-operator|=
-name|PREF
-argument_list|(
-name|pref
-argument_list|,
-name|ifp
 argument_list|)
-operator|^
-name|MIN_PreferenceLevel
 expr_stmt|;
 name|u
 operator|.
@@ -3099,7 +3252,15 @@ name|icmp_ad_pref
 operator|=
 name|htonl
 argument_list|(
+name|SIGN_PREF
+argument_list|(
+name|PREF
+argument_list|(
 name|pref
+argument_list|,
+name|ifp
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|u
@@ -3451,10 +3612,12 @@ operator|>
 argument_list|)
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|u
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3606,6 +3769,7 @@ modifier|*
 comment|/* 0 if bad */
 name|ck_icmp
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|act
@@ -3630,6 +3794,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|type
@@ -4164,6 +4329,9 @@ name|icmp_ad_asize
 operator|*
 literal|4
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|p
@@ -4221,7 +4389,10 @@ if|if
 condition|(
 name|cc
 operator|!=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|p
@@ -4257,7 +4428,7 @@ literal|0
 index|]
 argument_list|)
 operator|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|msglim
@@ -4387,6 +4558,11 @@ operator|->
 name|int_state
 operator|&
 name|IS_NO_ADV_OUT
+condition|)
+continue|continue;
+if|if
+condition|(
+name|stopint
 condition|)
 continue|continue;
 comment|/* XXX 			 * We should handle messages from address 0. 			 */

@@ -1,74 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/5/93";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
+comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifdef
@@ -91,8 +35,95 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|char
+name|copyright
+index|[]
+init|=
+literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+init|=
+literal|"@(#)main.c	8.1 (Berkeley) 6/5/93"
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__COPYRIGHT
+argument_list|(
+literal|"@(#) Copyright (c) 1983, 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_empty
+empty|#ident "$FreeBSD$"
+end_empty
 
 begin_decl_stmt
 name|pid_t
@@ -118,6 +149,12 @@ name|MAXHOSTNAMELEN
 operator|+
 literal|1
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|verbose
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +267,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|int
+name|usec_fudge
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|timeval
 name|now
@@ -285,6 +329,13 @@ end_decl_stmt
 begin_comment
 comment|/* inhibit flash update */
 end_comment
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|flush_kern_timer
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|fd_set
@@ -403,6 +454,11 @@ name|p
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|struct
 name|timeval
@@ -548,7 +604,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmAtT:F:P:"
+literal|"sqdghmpAtvT:F:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -596,10 +652,12 @@ break|break;
 case|case
 literal|'g'
 case|:
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|parm
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -613,7 +671,7 @@ name|parm_d_metric
 operator|=
 literal|1
 expr_stmt|;
-name|p
+name|cp
 operator|=
 name|check_parms
 argument_list|(
@@ -623,7 +681,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|cp
 operator|!=
 literal|0
 condition|)
@@ -631,7 +689,7 @@ name|msglog
 argument_list|(
 literal|"bad -g: %s"
 argument_list|,
-name|p
+name|cp
 argument_list|)
 expr_stmt|;
 else|else
@@ -774,10 +832,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|parm
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -803,7 +863,7 @@ name|parm_d_metric
 operator|=
 name|n
 expr_stmt|;
-name|p
+name|cp
 operator|=
 name|check_parms
 argument_list|(
@@ -813,7 +873,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|cp
 operator|!=
 literal|0
 condition|)
@@ -821,57 +881,63 @@ name|msglog
 argument_list|(
 literal|"bad -F: %s"
 argument_list|,
-name|p
+name|cp
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'P'
 case|:
-comment|/* handle arbitrary, (usually) per-interface 			 * parameters. 			 */
-name|p
+comment|/* handle arbitrary parameters. 			 */
+name|q
+operator|=
+name|strdup
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+name|cp
 operator|=
 name|parse_parms
 argument_list|(
-name|optarg
+name|q
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|cp
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|p
-argument_list|,
-name|optarg
-argument_list|)
-condition|)
 name|msglog
 argument_list|(
-literal|"%s in \"%s\""
+literal|"%s in \"-P %s\""
 argument_list|,
-name|p
+name|cp
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-else|else
-name|msglog
+name|free
 argument_list|(
-literal|"bad \"-P %s\""
-argument_list|,
-name|optarg
+name|q
 argument_list|)
 expr_stmt|;
-block|}
+break|break;
+case|case
+literal|'v'
+case|:
+comment|/* display version */
+name|verbose
+operator|++
+expr_stmt|;
+name|msglog
+argument_list|(
+literal|"version 2.17"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 goto|goto
@@ -937,8 +1003,8 @@ name|logbad
 argument_list|(
 literal|0
 argument_list|,
-literal|"usage: routed [-sqdghmpAt] [-T tracefile]"
-literal|" [-F net[/mask[,metric]]] [-P parms]"
+literal|"usage: routed [-sqdghmpAtv] [-T tracefile]"
+literal|" [-F net[,metric]] [-P parms]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -949,6 +1015,16 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|logbad
 argument_list|(
 literal|0
@@ -956,6 +1032,7 @@ argument_list|,
 literal|"requires UID 0"
 argument_list|)
 expr_stmt|;
+block|}
 name|mib
 index|[
 literal|0
@@ -1155,26 +1232,11 @@ operator||
 name|_DF_NOFORK
 operator|)
 argument_list|,
-name|new_tracelevel
-operator|==
-literal|0
-condition|?
-operator|-
-literal|1
-else|:
+name|STDIN_FILENO
+argument_list|,
 name|STDOUT_FILENO
 argument_list|,
-name|new_tracelevel
-operator|==
-literal|0
-condition|?
-operator|-
-literal|1
-else|:
 name|STDERR_FILENO
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 condition|)
 name|BADERR
@@ -1194,7 +1256,7 @@ name|daemon
 argument_list|(
 literal|0
 argument_list|,
-name|new_tracelevel
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -1317,18 +1379,6 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|background
-operator|&&
-name|new_tracelevel
-operator|==
-literal|0
-condition|)
-name|ftrace
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|tracename
 operator|!=
 literal|0
@@ -1352,7 +1402,7 @@ name|set_tracefile
 argument_list|(
 name|inittracename
 argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 operator|-
 literal|1
@@ -1363,7 +1413,7 @@ else|else
 block|{
 name|tracelevel_msg
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 operator|-
 literal|1
@@ -1428,15 +1478,24 @@ expr_stmt|;
 name|ifinit
 argument_list|()
 expr_stmt|;
-name|flush_kern
-argument_list|()
-expr_stmt|;
 comment|/* Ask for routes */
 name|rip_query
 argument_list|()
 expr_stmt|;
 name|rdisc_sol
 argument_list|()
+expr_stmt|;
+comment|/* Now turn off stdio if not tracing */
+if|if
+condition|(
+name|new_tracelevel
+operator|==
+literal|0
+condition|)
+name|trace_close
+argument_list|(
+name|background
+argument_list|)
 expr_stmt|;
 comment|/* Loop forever, listening and broadcasting. 	 */
 for|for
@@ -1456,6 +1515,42 @@ name|clk
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|prev_clk
+operator|.
+name|tv_sec
+operator|==
+name|clk
+operator|.
+name|tv_sec
+operator|&&
+name|prev_clk
+operator|.
+name|tv_usec
+operator|==
+name|clk
+operator|.
+name|tv_usec
+operator|+
+name|usec_fudge
+condition|)
+block|{
+comment|/* Much of `routed` depends on time always advancing. 			 * On systems that do not guarantee that gettimeofday() 			 * produces unique timestamps even if called within 			 * a single tick, use trickery like that in classic 			 * BSD kernels. 			 */
+name|clk
+operator|.
+name|tv_usec
+operator|+=
+operator|++
+name|usec_fudge
+expr_stmt|;
+block|}
+else|else
+block|{
+name|usec_fudge
+operator|=
+literal|0
 expr_stmt|;
 name|timevalsub
 argument_list|(
@@ -1488,7 +1583,7 @@ operator|+
 literal|5
 condition|)
 block|{
-comment|/* Deal with time changes before other housekeeping to 			 * keep everything straight. 			 */
+comment|/* Deal with time changes before other 				 * housekeeping to keep everything straight. 				 */
 name|dt
 operator|=
 name|t2
@@ -1511,6 +1606,9 @@ name|trace_act
 argument_list|(
 literal|"time changed by %d sec"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dt
 argument_list|)
 expr_stmt|;
@@ -1520,6 +1618,7 @@ name|tv_sec
 operator|+=
 name|dt
 expr_stmt|;
+block|}
 block|}
 name|timevalsub
 argument_list|(
@@ -1578,7 +1677,7 @@ argument_list|()
 expr_stmt|;
 name|trace_off
 argument_list|(
-literal|"exiting with signal %d\n"
+literal|"exiting with signal %d"
 argument_list|,
 name|stopint
 argument_list|)
@@ -1627,6 +1726,62 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* Check the kernel table occassionally for mysteriously 		 * evaporated routes 		 */
+name|timevalsub
+argument_list|(
+operator|&
+name|t2
+argument_list|,
+operator|&
+name|flush_kern_timer
+argument_list|,
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t2
+operator|.
+name|tv_sec
+operator|<=
+literal|0
+condition|)
+block|{
+name|flush_kern
+argument_list|()
+expr_stmt|;
+name|flush_kern_timer
+operator|.
+name|tv_sec
+operator|=
+operator|(
+name|now
+operator|.
+name|tv_sec
+operator|+
+name|CHECK_QUIET_INTERVAL
+operator|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|timercmp
+argument_list|(
+operator|&
+name|t2
+argument_list|,
+operator|&
+name|wtime
+argument_list|,
+operator|<
+argument_list|)
+condition|)
+name|wtime
+operator|=
+name|t2
+expr_stmt|;
 comment|/* If it is time, then broadcast our routes. 		 */
 if|if
 condition|(
@@ -1870,7 +2025,7 @@ name|wtime
 operator|=
 name|t2
 expr_stmt|;
-comment|/* take care of router discovery, 		 * but do it to the millisecond 		 */
+comment|/* take care of router discovery, 		 * but do it in the correct the millisecond 		 */
 if|if
 condition|(
 operator|!
@@ -2111,6 +2266,7 @@ name|sigalrm
 parameter_list|(
 name|int
 name|s
+name|UNUSED
 parameter_list|)
 block|{
 comment|/* Historically, SIGALRM would cause the daemon to check for 	 * new and broken interfaces. 	 */
@@ -2322,6 +2478,7 @@ parameter_list|(
 name|int
 name|sock
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2616,10 +2773,12 @@ argument_list|,
 literal|"rip_sock = socket()"
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sin
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2766,7 +2925,6 @@ name|interface
 modifier|*
 name|ifp
 decl_stmt|;
-specifier|register
 name|naddr
 name|addr
 decl_stmt|;
@@ -3040,15 +3198,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* If the main RIP socket is off and it makes sense to turn it on, 	 * then turn it on for all of the interfaces. 	 */
+comment|/* If the main RIP socket is off and it makes sense to turn it on, 	 * then turn it on for all of the interfaces. 	 * It makes sense if either router discovery is off, or if 	 * router discover is on and at most one interface is doing RIP. 	 */
 if|if
 condition|(
 name|rip_interfaces
 operator|>
 literal|0
 operator|&&
+operator|(
 operator|!
 name|rdisc_ok
+operator|||
+name|rip_interfaces
+operator|>
+literal|1
+operator|)
 condition|)
 block|{
 name|trace_act
@@ -3232,6 +3396,7 @@ parameter_list|(
 name|size_t
 name|size
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3250,13 +3415,18 @@ if|if
 condition|(
 name|p
 operator|==
-name|NULL
+literal|0
 condition|)
 name|logbad
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc() failed in %s"
+literal|"malloc(%lu) failed in %s"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|size
 argument_list|,
 name|msg
 argument_list|)
@@ -3464,6 +3634,7 @@ begin_function
 name|void
 name|msglog
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3558,6 +3729,7 @@ parameter_list|,
 name|naddr
 name|addr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p
@@ -3579,6 +3751,7 @@ decl_stmt|,
 modifier|*
 name|ms
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p1
@@ -3794,6 +3967,7 @@ parameter_list|(
 name|int
 name|dump
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|p

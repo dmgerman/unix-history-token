@@ -1,44 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)radix.c	8.4 (Berkeley) 11/2/94";
-endif|#
-directive|endif
-end_endif
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
+comment|/*  * Copyright (c) 1988, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)radix.c	8.4 (Berkeley) 11/2/94  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -50,6 +12,64 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+name|__attribute__
+argument_list|(
+operator|(
+name|unused
+operator|)
+argument_list|)
+init|=
+literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_empty
+empty|#ident "$FreeBSD$"
+end_empty
 
 begin_define
 define|#
@@ -179,13 +199,13 @@ name|b
 parameter_list|,
 name|l
 parameter_list|)
-value|(l == 0 ? 0 : bcmp((caddr_t)(a), (caddr_t)(b), (u_long)l))
+value|(l == 0 ? 0 \ 		       : memcmp((caddr_t)(a), (caddr_t)(b), (size_t)l))
 end_define
 
 begin_function_decl
 specifier|static
 name|int
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 parameter_list|(
 name|char
 modifier|*
@@ -219,13 +239,11 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
 name|x
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|v
 decl_stmt|;
@@ -302,13 +320,11 @@ modifier|*
 name|m_arg
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
 name|x
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|v
 init|=
@@ -393,7 +409,6 @@ modifier|*
 name|n_arg
 parameter_list|)
 block|{
-specifier|register
 name|caddr_t
 name|m
 init|=
@@ -403,7 +418,6 @@ name|n
 init|=
 name|n_arg
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|lim
 decl_stmt|,
@@ -559,32 +573,20 @@ name|radix_node
 modifier|*
 name|rn_lookup
 parameter_list|(
-name|v_arg
-parameter_list|,
-name|m_arg
-parameter_list|,
-name|head
-parameter_list|)
 name|void
 modifier|*
 name|v_arg
-decl_stmt|,
-decl|*
+parameter_list|,
+name|void
+modifier|*
 name|m_arg
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|struct
 name|radix_node_head
 modifier|*
 name|head
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -670,18 +672,17 @@ return|return
 name|x
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 parameter_list|(
 name|char
 modifier|*
 name|trial
 parameter_list|,
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -691,7 +692,6 @@ name|int
 name|skip
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -837,7 +837,6 @@ name|v
 init|=
 name|v_arg
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -850,7 +849,6 @@ decl_stmt|,
 modifier|*
 name|x
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|cp
 init|=
@@ -889,7 +887,6 @@ name|cp
 decl_stmt|,
 name|matched_off
 decl_stmt|;
-specifier|register
 name|int
 name|test
 decl_stmt|,
@@ -1137,6 +1134,7 @@ name|t
 operator|->
 name|rn_dupedkey
 control|)
+block|{
 comment|/* 		 * Even if we don't match exactly as a host, 		 * we may match if the leaf we wound up at is 		 * a route to a net. 		 */
 if|if
 condition|(
@@ -1162,7 +1160,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 argument_list|(
 name|v
 argument_list|,
@@ -1171,9 +1169,12 @@ argument_list|,
 name|matched_off
 argument_list|)
 condition|)
+block|{
 return|return
 name|t
 return|;
+block|}
+block|}
 name|t
 operator|=
 name|saved_t
@@ -1181,7 +1182,6 @@ expr_stmt|;
 comment|/* start searching up the tree */
 do|do
 block|{
-specifier|register
 name|struct
 name|radix_mask
 modifier|*
@@ -1280,7 +1280,7 @@ if|if
 condition|(
 name|x
 operator|&&
-name|rn_satsifies_leaf
+name|rn_satisfies_leaf
 argument_list|(
 name|v
 argument_list|,
@@ -1380,7 +1380,6 @@ literal|2
 index|]
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -1562,7 +1561,6 @@ operator|)
 name|v
 operator|)
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -1575,7 +1573,6 @@ argument_list|,
 name|top
 argument_list|)
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|cp
 init|=
@@ -1583,7 +1580,6 @@ name|v
 operator|+
 name|head_off
 decl_stmt|;
-specifier|register
 name|int
 name|b
 decl_stmt|;
@@ -1594,7 +1590,6 @@ name|tt
 decl_stmt|;
 comment|/* 	 * Find first bit at which v and t->rn_key differ 	 */
 block|{
-specifier|register
 name|caddr_t
 name|cp2
 init|=
@@ -1604,7 +1599,6 @@ name|rn_key
 operator|+
 name|head_off
 decl_stmt|;
-specifier|register
 name|int
 name|cmp_res
 decl_stmt|;
@@ -1713,7 +1707,6 @@ literal|1
 expr_stmt|;
 block|}
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -1763,6 +1756,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|b
 operator|>
 operator|(
@@ -1773,7 +1769,6 @@ operator|->
 name|rn_b
 condition|)
 do|;
-comment|/* x->rn_b< b&& x->rn_b>= 0 */
 ifdef|#
 directive|ifdef
 name|RN_DEBUG
@@ -1950,19 +1945,16 @@ name|caddr_t
 operator|)
 name|n_arg
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
 name|x
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|cp
 decl_stmt|,
 name|cplim
 decl_stmt|;
-specifier|register
 name|int
 name|b
 init|=
@@ -2221,21 +2213,10 @@ argument_list|,
 literal|"rn_addmask"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|saved_x
 operator|=
 name|x
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+expr_stmt|;
 name|Bzero
 argument_list|(
 name|x
@@ -2452,7 +2433,6 @@ modifier|*
 name|n_arg
 parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|mp
@@ -2527,20 +2507,17 @@ name|radix_mask
 modifier|*
 name|rn_new_radix_mask
 parameter_list|(
-specifier|register
 name|struct
 name|radix_node
 modifier|*
 name|tt
 parameter_list|,
-specifier|register
 name|struct
 name|radix_mask
 modifier|*
 name|next
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_mask
 modifier|*
@@ -2679,7 +2656,6 @@ name|caddr_t
 operator|)
 name|n_arg
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -3457,7 +3433,6 @@ modifier|*
 name|head
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -4300,7 +4275,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s %lx at %lx\n"
+literal|"%s 0x%lx at 0x%lx\n"
 argument_list|,
 literal|"rn_delete: Orphaned Mask"
 argument_list|,
@@ -4435,36 +4410,35 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|int
 name|rn_walktree
-argument_list|(
-expr|struct
+parameter_list|(
+name|struct
 name|radix_node_head
-operator|*
+modifier|*
 name|h
-argument_list|,
-specifier|register
+parameter_list|,
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|f
-argument_list|)
-argument_list|(
-expr|struct
+function_decl|)
+parameter_list|(
+name|struct
 name|radix_node
-operator|*
-argument_list|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|walkarg
-operator|*
-argument_list|)
-argument_list|,
-expr|struct
+modifier|*
+parameter_list|)
+parameter_list|,
+name|struct
 name|walkarg
-operator|*
+modifier|*
 name|w
-argument_list|)
+parameter_list|)
 block|{
 name|int
 name|error
@@ -4477,7 +4451,6 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -4635,7 +4608,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|int
@@ -4650,13 +4623,11 @@ name|int
 name|off
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|radix_node_head
 modifier|*
 name|rnh
 decl_stmt|;
-specifier|register
 name|struct
 name|radix_node
 modifier|*
@@ -4696,17 +4667,6 @@ argument_list|,
 literal|"rn_inithead"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rnh
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|Bzero
 argument_list|(
 name|rnh
@@ -4879,17 +4839,6 @@ literal|3
 operator|*
 name|max_keylen
 argument_list|,
-literal|"rn_init"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rn_zeros
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
 literal|"rn_init"
 argument_list|)
 expr_stmt|;

@@ -1,7 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgment:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)defs.h	8.1 (Berkeley) 6/5/93  *  * $FreeBSD$  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sgi
+end_ifdef
+
+begin_empty
+empty|#ident "$FreeBSD$"
+end_empty
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Definitions for RIPv2 routing process.  *  * This code is based on the 4.4BSD `routed` daemon, with extensions to  * support:  *	RIPv2, including variable length subnet masks.  *	Router Discovery  *	aggregate routes in the kernel tables.  *	aggregate advertised routes.  *	maintain spare routes for faster selection of another gateway  *		when the current gateway dies.  *	timers on routes with second granularity so that selection  *		of a new route does not wait 30-60 seconds.  *	tolerance of static routes.  *	tell the kernel hop counts  *	do not advertise if ipforwarding=0  *  * The vestigial support for other protocols has been removed.  There  * is no likelihood that IETF RIPv1 or RIPv2 will ever be used with  * other protocols.  The result is far smaller, faster, cleaner, and  * perhaps understandable.  *  * The accumulation of special flags and kludges added over the many  * years have been simplified and integrated.  */
@@ -87,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -114,17 +141,17 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|sgi
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_USER_ROUTE_TREE
+end_define
 
 begin_include
 include|#
@@ -142,6 +169,25 @@ include|#
 directive|include
 file|"radix.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+value|__attribute__((unused))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATTRIB
+parameter_list|(
+name|f
+parameter_list|,
+name|l
+parameter_list|)
+value|__attribute__((format (printf,f,l)))
+end_define
 
 begin_endif
 endif|#
@@ -205,25 +251,35 @@ begin_define
 define|#
 directive|define
 name|naddr
-value|__uint32_t
+value|u_int32_t
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__NetBSD__
-end_ifdef
+argument_list|)
+end_elif
 
 begin_define
 define|#
 directive|define
 name|naddr
 value|u_int32_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|_HAVE_SA_LEN
+end_define
+
+begin_define
+define|#
+directive|define
+name|_HAVE_SIN_LEN
 end_define
 
 begin_else
@@ -237,11 +293,6 @@ directive|define
 name|naddr
 value|u_long
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -264,9 +315,22 @@ begin_comment
 comment|/* Turn on if IP_DROP_MEMBERSHIP and IP_ADD_MEMBERSHIP do not look at  * the dstaddr of point-to-point interfaces.  */
 end_comment
 
-begin_comment
-comment|/* #define MCAST_PPP_BUG */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NetBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MCAST_PPP_BUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -495,6 +559,28 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|GNAME_LEN
+value|64
+end_define
+
+begin_comment
+comment|/* assumed=64 in parms.c */
+end_comment
+
+begin_comment
+comment|/* bigger than IFNAMSIZ, with room for "external()" or "remote()" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_NAME_LEN
+value|(GNAME_LEN+15)
+end_define
+
 begin_comment
 comment|/* No more routes than this, to protect ourself in case something goes  * whacko and starts broadcasting zillions of bogus routes.  */
 end_comment
@@ -609,6 +695,10 @@ name|time_t
 name|rts_time
 decl_stmt|;
 comment|/* timer to junk stale routes */
+name|u_int
+name|rts_de_ag
+decl_stmt|;
+comment|/* de-aggregation level */
 define|#
 directive|define
 name|NUM_SPARES
@@ -687,6 +777,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|rt_de_ag
+value|rt_spares[0].rts_de_ag
+end_define
+
+begin_define
+define|#
+directive|define
 name|HOST_MASK
 value|0xffffffff
 end_define
@@ -732,7 +829,7 @@ name|A
 parameter_list|,
 name|B
 parameter_list|)
-value|((A)->rts_metric< HOPCNT_INFINITY	\&& now_stale<= (A)->rts_time		\&& ((A)->rts_metric< (B)->rts_metric	\ 				 || ((A)->rts_gate == (A)->rts_router	\&& (B)->rts_gate != (B)->rts_router) \ 				 || ((A)->rts_metric == (B)->rts_metric	\&& now_stale> (B)->rts_time)	\ 				 || (RT_ISHOST(rt)			\&& (rt)->rt_dst == (A)->rts_router	\&& (A)->rts_metric == (B)->rts_metric)))
+value|((A)->rts_metric< HOPCNT_INFINITY		\&& now_stale<= (A)->rts_time		\&& ((A)->rts_metric< (B)->rts_metric	\ 				 || ((A)->rts_gate == (A)->rts_router	\&& (B)->rts_gate != (B)->rts_router) \ 				 || ((A)->rts_metric == (B)->rts_metric	\&& now_stale> (B)->rts_time)	\ 				 || (RT_ISHOST(rt)			\&& (rt)->rt_dst == (A)->rts_router	\&& (A)->rts_metric == (B)->rts_metric)))
 end_define
 
 begin_comment
@@ -791,14 +888,11 @@ decl_stmt|;
 name|char
 name|int_name
 index|[
-name|IFNAMSIZ
-operator|+
-literal|15
+name|IF_NAME_LEN
 operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* big enough for IS_REMOTE */
 name|u_short
 name|int_index
 decl_stmt|;
@@ -906,7 +1000,7 @@ struct|struct
 name|auth
 block|{
 comment|/* authentication info */
-name|u_char
+name|u_int16_t
 name|type
 decl_stmt|;
 name|u_char
@@ -929,10 +1023,11 @@ index|[
 name|MAX_AUTH_KEYS
 index|]
 struct|;
+comment|/* router discovery parameters */
 name|int
 name|int_rdisc_pref
 decl_stmt|;
-comment|/* advertised rdisc preference */
+comment|/* signed preference to advertise */
 name|int
 name|int_rdisc_int
 decl_stmt|;
@@ -1226,26 +1321,41 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_NO_ADV_IN
+name|IS_NO_RIP_MCAST
 value|0x0100000
 end_define
+
+begin_comment
+comment|/* broadcast RIPv2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_NO_ADV_IN
+value|0x0200000
+end_define
+
+begin_comment
+comment|/* do not listen to advertisements */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IS_NO_SOL_OUT
-value|0x0200000
+value|0x0400000
 end_define
 
 begin_comment
-comment|/* no solicitations */
+comment|/* send no solicitations */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IS_SOL_OUT
-value|0x0400000
+value|0x0800000
 end_define
 
 begin_comment
@@ -1255,15 +1365,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GROUP_IS_SOL
-value|(IS_NO_ADV_IN|IS_NO_SOL_OUT)
+name|GROUP_IS_SOL_OUT
+value|(IS_SOL_OUT | IS_NO_SOL_OUT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IS_NO_ADV_OUT
-value|0x0800000
+value|0x1000000
 end_define
 
 begin_comment
@@ -1274,7 +1384,7 @@ begin_define
 define|#
 directive|define
 name|IS_ADV_OUT
-value|0x1000000
+value|0x2000000
 end_define
 
 begin_comment
@@ -1284,15 +1394,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GROUP_IS_ADV
-value|(IS_NO_ADV_OUT|IS_ADV_OUT)
+name|GROUP_IS_ADV_OUT
+value|(IS_NO_ADV_OUT | IS_ADV_OUT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IS_BCAST_RDISC
-value|0x2000000
+value|0x4000000
 end_define
 
 begin_comment
@@ -1310,51 +1420,21 @@ begin_define
 define|#
 directive|define
 name|IS_PM_RDISC
-value|0x4000000
+value|0x8000000
 end_define
 
 begin_comment
 comment|/* poor-man's router discovery */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|IFF_UP_RUNNING
-value|(IFF_RUNNING|IFF_UP)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|IFF_UP_RUNNING
-value|IFF_UP
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|iff_alive
+name|iff_up
 parameter_list|(
 name|f
 parameter_list|)
-value|(((f)& IFF_UP_RUNNING) == IFF_UP_RUNNING)
+value|((f)& IFF_UP)
 end_define
 
 begin_comment
@@ -1421,7 +1501,7 @@ value|0x001
 comment|/* combine with coarser mask */
 define|#
 directive|define
-name|AGS_PROMOTE
+name|AGS_AGGREGATE
 value|0x002
 comment|/* synthesize combined routes */
 define|#
@@ -1473,8 +1553,8 @@ comment|/* suppress for split horizon */
 comment|/* some bits are set if they are set on either route */
 define|#
 directive|define
-name|AGS_PROMOTE_EITHER
-value|(AGS_RIPV2 | AGS_GATEWAY |   \ 				AGS_SUPPRESS | AGS_CORS_GATE)
+name|AGS_AGGREGATE_EITHER
+value|(AGS_RIPV2 | AGS_GATEWAY |   \ 				  AGS_SUPPRESS | AGS_CORS_GATE)
 block|}
 struct|;
 end_struct
@@ -1496,7 +1576,7 @@ decl_stmt|;
 name|char
 name|parm_name
 index|[
-name|IFNAMSIZ
+name|IF_NAME_LEN
 operator|+
 literal|1
 index|]
@@ -1516,9 +1596,11 @@ decl_stmt|;
 name|int
 name|parm_rdisc_pref
 decl_stmt|;
+comment|/* signed IRDP preference */
 name|int
 name|parm_rdisc_int
 decl_stmt|;
+comment|/* IRDP advertising interval */
 name|struct
 name|auth
 name|parm_auth
@@ -1549,6 +1631,7 @@ decl_stmt|;
 name|naddr
 name|intnet_addr
 decl_stmt|;
+comment|/* network byte order */
 name|naddr
 name|intnet_mask
 decl_stmt|;
@@ -1558,6 +1641,36 @@ decl_stmt|;
 block|}
 modifier|*
 name|intnets
+struct|;
+end_struct
+
+begin_comment
+comment|/* defined RIPv1 netmasks */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|r1net
+block|{
+name|struct
+name|r1net
+modifier|*
+name|r1net_next
+decl_stmt|;
+name|naddr
+name|r1net_net
+decl_stmt|;
+comment|/* host order */
+name|naddr
+name|r1net_match
+decl_stmt|;
+name|naddr
+name|r1net_mask
+decl_stmt|;
+block|}
+modifier|*
+name|r1nets
 struct|;
 end_struct
 
@@ -1578,6 +1691,26 @@ decl_stmt|;
 name|naddr
 name|tgate_addr
 decl_stmt|;
+define|#
+directive|define
+name|MAX_TGATE_NETS
+value|32
+struct|struct
+name|tgate_net
+block|{
+name|naddr
+name|net
+decl_stmt|;
+comment|/* host order */
+name|naddr
+name|mask
+decl_stmt|;
+block|}
+name|tgate_nets
+index|[
+name|MAX_TGATE_NETS
+index|]
+struct|;
 block|}
 modifier|*
 name|tgates
@@ -1757,23 +1890,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|lookforinterfaces
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1=probe for new up interfaces */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|supplier_set
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* -s or -q requested */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lookforinterfaces
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1=probe for new up interfaces */
 end_comment
 
 begin_decl_stmt
@@ -2050,7 +2183,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|update_seqno
 decl_stmt|;
 end_decl_stmt
@@ -2186,6 +2319,7 @@ name|fix_sock
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2325,13 +2459,23 @@ specifier|extern
 name|void
 name|msglog
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_struct
 struct|struct
@@ -2374,13 +2518,23 @@ modifier|*
 parameter_list|,
 name|naddr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -2399,13 +2553,23 @@ name|logbad
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -2472,6 +2636,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|saddr_ntoa
@@ -2491,6 +2656,7 @@ name|rtmalloc
 parameter_list|(
 name|size_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2572,6 +2738,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|parse_parms
@@ -2586,6 +2753,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|check_parms
@@ -2622,11 +2790,23 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|trace_close
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|set_tracefile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2640,6 +2820,7 @@ specifier|extern
 name|void
 name|tracelevel_msg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2653,13 +2834,23 @@ specifier|extern
 name|void
 name|trace_off
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
@@ -2684,47 +2875,78 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|trace_kernel
+name|trace_misc
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|void
 name|trace_act
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|void
 name|trace_pkt
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PATTRIB
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|extern
 name|void
 name|trace_add_del
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2746,20 +2968,11 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|naddr
-parameter_list|,
-name|naddr
-parameter_list|,
-name|int
-parameter_list|,
-name|u_short
-parameter_list|,
 name|struct
-name|interface
+name|rt_spare
 modifier|*
 parameter_list|,
-name|time_t
-parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2771,6 +2984,7 @@ specifier|extern
 name|void
 name|trace_if
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2794,19 +3008,9 @@ name|struct
 name|rt_spare
 modifier|*
 parameter_list|,
-name|naddr
-parameter_list|,
-name|naddr
-parameter_list|,
 name|struct
-name|interface
+name|rt_spare
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|u_short
-parameter_list|,
-name|time_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2816,9 +3020,11 @@ specifier|extern
 name|void
 name|trace_rip
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2850,6 +3056,21 @@ parameter_list|,
 name|naddr
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|rtname
+parameter_list|(
+name|naddr
+parameter_list|,
+name|naddr
+parameter_list|,
+name|naddr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3093,6 +3314,8 @@ name|naddr
 parameter_list|,
 name|naddr
 parameter_list|,
+name|naddr
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -3155,18 +3378,10 @@ name|naddr
 parameter_list|,
 name|naddr
 parameter_list|,
-name|naddr
-parameter_list|,
-name|naddr
-parameter_list|,
-name|int
-parameter_list|,
-name|u_short
-parameter_list|,
 name|u_int
 parameter_list|,
 name|struct
-name|interface
+name|rt_spare
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3183,20 +3398,9 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|naddr
-parameter_list|,
-name|naddr
-parameter_list|,
-name|int
-parameter_list|,
-name|u_short
-parameter_list|,
 name|struct
-name|interface
+name|rt_spare
 modifier|*
-name|ifp
-parameter_list|,
-name|time_t
 parameter_list|,
 name|char
 modifier|*
@@ -3211,6 +3415,22 @@ name|rtdelete
 parameter_list|(
 name|struct
 name|rt_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rts_delete
+parameter_list|(
+name|struct
+name|rt_entry
+modifier|*
+parameter_list|,
+name|struct
+name|rt_spare
 modifier|*
 parameter_list|)
 function_decl|;
@@ -3454,7 +3674,6 @@ specifier|extern
 name|int
 name|addrouteforif
 parameter_list|(
-specifier|register
 name|struct
 name|interface
 modifier|*
@@ -3497,6 +3716,7 @@ name|struct
 name|interface
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -3578,6 +3798,8 @@ modifier|*
 name|ifwithindex
 parameter_list|(
 name|u_short
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3624,11 +3846,86 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_include
-include|#
-directive|include
-file|<md5.h>
-end_include
+begin_define
+define|#
+directive|define
+name|MD5_DIGEST_LEN
+value|16
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|state
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* state (ABCD) */
+name|u_int32_t
+name|count
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* # of bits, modulo 2^64 (LSB 1st) */
+name|unsigned
+name|char
+name|buffer
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* input buffer */
+block|}
+name|MD5_CTX
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|void
+name|MD5Init
+parameter_list|(
+name|MD5_CTX
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|MD5Update
+parameter_list|(
+name|MD5_CTX
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|MD5Final
+parameter_list|(
+name|u_char
+index|[
+name|MD5_DIGEST_LEN
+index|]
+parameter_list|,
+name|MD5_CTX
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
