@@ -5486,7 +5486,7 @@ literal|0
 argument_list|,
 name|_
 argument_list|(
-literal|"warning: %s: %s\n"
+literal|"warning: %s: %s"
 argument_list|)
 argument_list|,
 name|dir
