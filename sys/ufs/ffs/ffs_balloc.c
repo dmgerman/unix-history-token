@@ -81,18 +81,16 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_balloc_args
-comment|/* { 		struct inode *a_ip; 		ufs_daddr_t a_lbn; 		int a_size; 		struct ucred *a_cred; 		int a_flags; 		struct buf *a_bpp; 	} */
+comment|/* { 		struct vnode *a_vp; 		ufs_daddr_t a_lbn; 		int a_size; 		struct ucred *a_cred; 		int a_flags; 		struct buf *a_bpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-specifier|register
 name|ufs_daddr_t
 name|lbn
 decl_stmt|;
@@ -175,6 +173,14 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|vp
 operator|=
 name|ap
@@ -1796,7 +1802,21 @@ operator|)
 return|;
 name|fail
 label|:
-comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 */
+comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 */
+operator|(
+name|void
+operator|)
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|cred
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|deallocated
@@ -1895,6 +1915,20 @@ operator||
 name|IN_UPDATE
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|VOP_FSYNC
+argument_list|(
+name|vp
+argument_list|,
+name|cred
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
