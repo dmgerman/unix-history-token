@@ -147,17 +147,17 @@ directive|include
 file|<string.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|YP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<rpc/rpc.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|YP
+end_ifdef
 
 begin_include
 include|#

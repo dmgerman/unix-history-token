@@ -634,6 +634,7 @@ else|#
 directive|else
 if|if
 condition|(
+operator|(
 name|netf
 operator|=
 name|fopen
@@ -642,6 +643,7 @@ name|_PATH_NETGROUP
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
 condition|)
 block|{
 endif|#
