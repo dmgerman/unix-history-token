@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.1 81/10/24 */
+comment|/* tcp_input.c 1.2 81/10/25 */
 end_comment
 
 begin_include
@@ -1107,6 +1107,17 @@ operator|=
 name|n
 operator|->
 name|t_src
+expr_stmt|;
+name|tp
+operator|->
+name|t_ucb
+operator|->
+name|uc_template
+operator|=
+name|tcp_template
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 name|rcv_ctldat
 argument_list|(
