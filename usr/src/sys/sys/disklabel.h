@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)disklabel.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,6 +29,56 @@ begin_comment
 comment|/*  * Each disk has a label which includes information about the hardware  * disk geometry, filesystem partitions, and drive specific information.  * The label is in block 0 or 1, possibly offset from the beginning  * to leave room for a bootstrap, etc.  */
 end_comment
 
+begin_comment
+comment|/* XXX these should be defined per controller (or drive) elsewhere, not here! */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|i386
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LABELSECTOR
+value|1
+end_define
+
+begin_comment
+comment|/* sector containing label */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LABELOFFSET
+value|0
+end_define
+
+begin_comment
+comment|/* offset of label in sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXPARTITIONS
+value|32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LABELSECTOR
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -50,6 +100,11 @@ end_define
 begin_comment
 comment|/* offset of label in sector */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
