@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	2.5 (Berkeley) %G%"
+literal|"@(#)mkfs.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2769,7 +2769,7 @@ for|for
 control|(
 name|cylno
 operator|=
-literal|1
+literal|0
 init|;
 name|cylno
 operator|<
