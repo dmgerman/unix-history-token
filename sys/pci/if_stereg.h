@@ -326,6 +326,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|STE_LATE_COLLS
+value|0x75
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_MULTI_COLLS
+value|0x76
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_SINGLE_COLLS
+value|0x77
+end_define
+
+begin_define
+define|#
+directive|define
 name|STE_DMACTL_RXDMA_STOPPED
 value|0x00000001
 end_define
@@ -943,7 +964,7 @@ begin_define
 define|#
 directive|define
 name|STE_TXSTART_THRESH
-value|0x1FFF
+value|0x1FFC
 end_define
 
 begin_comment
@@ -954,7 +975,7 @@ begin_define
 define|#
 directive|define
 name|STE_RXEARLY_THRESH
-value|0x1FFF
+value|0x1FFC
 end_define
 
 begin_define
@@ -1207,7 +1228,7 @@ define|#
 directive|define
 name|STE_INTRS
 define|\
-value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|STE_IMR_STATS_OFLOW|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR|STE_IMR_RX_EARLY)
+value|(STE_IMR_RX_DMADONE|STE_IMR_TX_DMADONE|	\ 	STE_IMR_TX_DONE|STE_IMR_HOSTERR| \         STE_IMR_LINKEVENT)
 end_define
 
 begin_define
@@ -1900,7 +1921,7 @@ begin_define
 define|#
 directive|define
 name|STE_MAXFRAGS
-value|63
+value|8
 end_define
 
 begin_struct
@@ -2181,14 +2202,14 @@ begin_define
 define|#
 directive|define
 name|STE_RX_LIST_CNT
-value|128
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|STE_TX_LIST_CNT
-value|256
+value|64
 end_define
 
 begin_define
@@ -2201,6 +2222,18 @@ parameter_list|,
 name|y
 parameter_list|)
 value|(x) = (x + 1) % y
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_NEXT
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x + 1) % y
 end_define
 
 begin_struct
@@ -2375,6 +2408,9 @@ decl_stmt|;
 name|device_t
 name|ste_miibus
 decl_stmt|;
+name|device_t
+name|ste_dev
+decl_stmt|;
 name|int
 name|ste_unit
 decl_stmt|;
@@ -2386,6 +2422,9 @@ name|ste_link
 decl_stmt|;
 name|int
 name|ste_if_flags
+decl_stmt|;
+name|int
+name|ste_tx_prev_idx
 decl_stmt|;
 name|struct
 name|ste_list_data
