@@ -1028,7 +1028,7 @@ name|struct
 name|pthread_mutex
 name|_lcl_mutexd
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,7 +1038,7 @@ name|struct
 name|pthread_mutex
 name|_gmt_mutexd
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -5573,7 +5573,7 @@ name|struct
 name|pthread_mutex
 name|_localtime_mutex
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 decl_stmt|;
 specifier|static
 name|pthread_mutex_t
@@ -5935,7 +5935,7 @@ name|struct
 name|pthread_mutex
 name|_gmtime_mutex
 init|=
-name|PTHREAD_MUTEX_INITIALIZER
+name|PTHREAD_MUTEX_STATIC_INITIALIZER
 decl_stmt|;
 specifier|static
 name|pthread_mutex_t
