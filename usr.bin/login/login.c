@@ -1149,7 +1149,7 @@ name|login_getcapstr
 argument_list|(
 name|lc
 argument_list|,
-literal|"prompt"
+literal|"login_prompt"
 argument_list|,
 name|default_prompt
 argument_list|,
