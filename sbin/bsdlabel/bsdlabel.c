@@ -300,6 +300,15 @@ name|__alpha__
 argument_list|)
 end_elif
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_elif
+
 begin_else
 else|#
 directive|else
