@@ -303,6 +303,12 @@ name|FILE
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STDSTREAM_DECLARED
+end_ifndef
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
@@ -330,6 +336,11 @@ end_decl_stmt
 
 begin_function_decl
 name|__END_DECLS
+define|#
+directive|define
+name|_STDSTREAM_DECLARED
+endif|#
+directive|endif
 define|#
 directive|define
 name|__SLBF
