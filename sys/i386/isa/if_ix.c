@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.6 1995/05/10 15:19:25 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.9 1995/10/05 03:01:13 davidg Exp $  */
 end_comment
 
 begin_include
@@ -656,14 +656,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|inthand2_t
 name|ixintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1555,6 +1552,44 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+name|char
+name|irq_encode
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|5
+block|,
+literal|6
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+decl_stmt|;
 name|DEBUGBEGIN
 argument_list|(
 argument|DEBUGPROBE
@@ -2282,12 +2317,6 @@ operator|)
 operator|>>
 name|IRQ_SHIFT
 expr_stmt|;
-name|sc
-operator|->
-name|irq_encoded
-operator|=
-name|irq
-expr_stmt|;
 name|irq
 operator|=
 name|irq_translate
@@ -2295,6 +2324,15 @@ index|[
 name|irq
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|dvp
+operator|->
+name|id_irq
+operator|>
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|irq
@@ -2306,11 +2344,82 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Warning board is configured for IRQ %d\n"
+literal|"ix%d: WARNING: board is configured for IRQ %d, using %d\n"
 argument_list|,
+name|unit
+argument_list|,
+name|ffs
+argument_list|(
 name|irq
 argument_list|)
+operator|-
+literal|1
+argument_list|,
+name|ffs
+argument_list|(
+name|dvp
+operator|->
+name|id_irq
+argument_list|)
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
+name|irq
+operator|=
+name|dvp
+operator|->
+name|id_irq
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|dvp
+operator|->
+name|id_irq
+operator|=
+name|irq
+expr_stmt|;
+block|}
+name|sc
+operator|->
+name|irq_encoded
+operator|=
+name|irq_encode
+index|[
+name|ffs
+argument_list|(
+name|irq
+argument_list|)
+operator|-
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|irq_encoded
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ix%d: invalid irq (%d)\n"
+argument_list|,
+name|ffs
+argument_list|(
+name|irq
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+goto|goto
+name|ixprobe_exit
+goto|;
 block|}
 comment|/* 	 * Get the slot width, either 8 bit or 16 bit. 	 */
 if|if
@@ -4786,7 +4895,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|ixintr
 parameter_list|(
 name|int
@@ -5125,18 +5234,9 @@ argument|);
 argument_list|)
 end_macro
 
-begin_macro
+begin_expr_stmt
 name|DEBUGEND
-end_macro
-
-begin_return
-return|return
-operator|(
-literal|0
-comment|/* XXX Should be ??? */
-operator|)
-return|;
-end_return
+end_expr_stmt
 
 begin_function
 unit|}  static
@@ -6910,6 +7010,9 @@ name|status
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|ix_softc_t
 modifier|*
 name|sc
@@ -6931,6 +7034,11 @@ literal|"ixioctl:"
 argument|);
 argument_list|)
 name|DEBUGEND
+name|s
+init|=
+name|splimp
+argument_list|()
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -7134,6 +7242,11 @@ decl_stmt|;
 break|break;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|DEBUGBEGIN
 argument_list|(
 argument|DEBUGIOCTL
