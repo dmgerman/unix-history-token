@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	6.4	84/08/28	*/
+comment|/*	param.h	6.5	84/08/29	*/
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../machine/param.h"
+file|"../machine/machparam.h"
 end_include
 
 begin_else
@@ -27,7 +27,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<machine/param.h>
+file|<machine/machparam.h>
 end_include
 
 begin_endif
