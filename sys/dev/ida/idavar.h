@@ -424,6 +424,17 @@ begin_comment
 comment|/* attached, interrupts okay */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IDA_FIRMWARE
+value|0x02
+end_define
+
+begin_comment
+comment|/* firmware must be started */
+end_comment
+
 begin_struct
 struct|struct
 name|ida_softc
@@ -561,8 +572,13 @@ name|devstat
 name|stats
 decl_stmt|;
 name|int
+name|drive
+decl_stmt|;
+comment|/* per controller */
+name|int
 name|unit
 decl_stmt|;
+comment|/* global */
 name|int
 name|cylinders
 decl_stmt|;
