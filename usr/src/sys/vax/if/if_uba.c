@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.5.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_uba.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -172,7 +172,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|ncl
+name|nclbytes
 decl_stmt|,
 name|off
 decl_stmt|;
@@ -191,21 +191,26 @@ name|off
 operator|=
 literal|0
 expr_stmt|;
-name|ncl
+name|nclbytes
 operator|=
+name|CLBYTES
+operator|*
+operator|(
 name|clrnd
 argument_list|(
 name|nmr
 argument_list|)
 operator|/
 name|CLSIZE
+operator|)
 expr_stmt|;
 if|if
 condition|(
 name|hlen
 condition|)
-name|ncl
-operator|++
+name|nclbytes
+operator|+=
+name|CLBYTES
 expr_stmt|;
 if|if
 condition|(
@@ -231,7 +236,10 @@ else|else
 block|{
 name|cp
 operator|=
-name|m_clalloc
+operator|(
+name|caddr_t
+operator|)
+name|malloc
 argument_list|(
 operator|(
 name|nr
@@ -239,11 +247,11 @@ operator|+
 name|nw
 operator|)
 operator|*
-name|ncl
+name|nclbytes
 argument_list|,
-name|MPG_SPACE
+name|M_DEVBUF
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -288,9 +296,7 @@ name|off
 expr_stmt|;
 name|p
 operator|+=
-name|ncl
-operator|*
-name|CLBYTES
+name|nclbytes
 expr_stmt|;
 block|}
 for|for
@@ -329,9 +335,7 @@ name|off
 expr_stmt|;
 name|p
 operator|+=
-name|ncl
-operator|*
-name|CLBYTES
+name|nclbytes
 expr_stmt|;
 block|}
 name|ifu
@@ -562,17 +566,11 @@ operator|.
 name|ifrw_info
 argument_list|)
 expr_stmt|;
-name|m_pgfree
+name|free
 argument_list|(
 name|cp
 argument_list|,
-operator|(
-name|nr
-operator|+
-name|nw
-operator|)
-operator|*
-name|ncl
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|ifr
