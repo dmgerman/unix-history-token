@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	6.5	84/10/19	*/
+comment|/*	tcp_output.c	6.6	84/11/01	*/
 end_comment
 
 begin_include
@@ -291,6 +291,20 @@ name|tp
 operator|->
 name|t_maxseg
 expr_stmt|;
+comment|/* 		 * Don't send more than one segment if retransmitting. 		 */
+if|if
+condition|(
+name|SEQ_GT
+argument_list|(
+name|tp
+operator|->
+name|snd_nxt
+argument_list|,
+name|tp
+operator|->
+name|snd_max
+argument_list|)
+condition|)
 name|sendalot
 operator|=
 literal|1
@@ -359,7 +373,7 @@ condition|)
 goto|goto
 name|send
 goto|;
-comment|/* 	 * Sender silly window avoidance.  If can send all data, 	 * a maximum segment, at least 1/4 of window do it, 	 * or are forced, do it; otherwise don't bother. 	 */
+comment|/* 	 * Sender silly window avoidance.  If connection is idle 	 * and can send all data, a maximum segment, 	 * at least a maximum default-size segment do it, 	 * or are forced, do it; otherwise don't bother. 	 */
 if|if
 condition|(
 name|len
@@ -373,8 +387,6 @@ name|tp
 operator|->
 name|t_maxseg
 operator|||
-name|off
-operator|+
 name|len
 operator|>=
 name|so
@@ -383,18 +395,15 @@ name|so_snd
 operator|.
 name|sb_cc
 condition|)
+comment|/* off = 0*/
 goto|goto
 name|send
 goto|;
 if|if
 condition|(
 name|len
-operator|*
-literal|4
 operator|>=
-name|tp
-operator|->
-name|snd_wnd
+name|TCP_MSS
 condition|)
 comment|/* a lot */
 goto|goto
