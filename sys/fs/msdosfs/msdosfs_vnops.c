@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.5 1994/10/06 21:06:53 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.6 1994/10/23 00:41:17 martin Exp $ */
 end_comment
 
 begin_comment
@@ -6032,9 +6032,18 @@ name|diff
 operator|<=
 literal|0
 condition|)
+block|{
+operator|*
+name|ap
+operator|->
+name|a_eofflag
+operator|=
+literal|1
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 name|diff
@@ -6712,7 +6721,7 @@ operator|=
 name|cookies
 expr_stmt|;
 block|}
-comment|/* 	 * I don't know why we bother setting this eofflag, getdirentries() 	 * in vfs_syscalls.c doesn't bother to look at it when we return. 	 * (because NFS uses it in nfs_serv.c -- JMP) 	 */
+comment|/* 	 * Set the eofflag (NFS uses it) 	 */
 if|if
 condition|(
 name|ap
@@ -6725,11 +6734,13 @@ name|dep
 operator|->
 name|de_FileSize
 operator|-
+operator|(
 name|uio
 operator|->
 name|uio_offset
 operator|-
 name|bias
+operator|)
 operator|<=
 literal|0
 condition|)
