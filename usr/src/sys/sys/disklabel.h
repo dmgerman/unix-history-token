@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)disklabel.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)disklabel.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -724,7 +724,7 @@ begin_define
 define|#
 directive|define
 name|DIOCGDINFO
-value|_IOR(d, 101, struct disklabel)
+value|_IOR('d', 101, struct disklabel)
 end_define
 
 begin_comment
@@ -735,7 +735,7 @@ begin_define
 define|#
 directive|define
 name|DIOCSDINFO
-value|_IOW(d, 102, struct disklabel)
+value|_IOW('d', 102, struct disklabel)
 end_define
 
 begin_comment
@@ -746,7 +746,7 @@ begin_define
 define|#
 directive|define
 name|DIOCWDINFO
-value|_IOW(d, 103, struct disklabel)
+value|_IOW('d', 103, struct disklabel)
 end_define
 
 begin_comment
@@ -757,7 +757,7 @@ begin_define
 define|#
 directive|define
 name|DIOCGPART
-value|_IOW(d, 104, struct partinfo)
+value|_IOW('d', 104, struct partinfo)
 end_define
 
 begin_comment
@@ -772,21 +772,21 @@ begin_define
 define|#
 directive|define
 name|DIOCRFORMAT
-value|_IOWR(d, 105, struct format_op)
+value|_IOWR('d', 105, struct format_op)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIOCWFORMAT
-value|_IOWR(d, 106, struct format_op)
+value|_IOWR('d', 106, struct format_op)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DIOCSSTEP
-value|_IOW(d, 107, int)
+value|_IOW('d', 107, int)
 end_define
 
 begin_comment
@@ -797,7 +797,7 @@ begin_define
 define|#
 directive|define
 name|DIOCSRETRIES
-value|_IOW(d, 108, int)
+value|_IOW('d', 108, int)
 end_define
 
 begin_comment
