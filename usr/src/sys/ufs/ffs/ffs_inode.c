@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.49 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_inode.c	7.50 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -638,6 +638,27 @@ operator||=
 name|IMOD
 expr_stmt|;
 block|}
+comment|/* 	 * Ensure that uid and gid are correct. This is a temporary 	 * fix until fsck has been changed to do the update. 	 */
+name|ip
+operator|->
+name|i_uid
+operator|=
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_ouid
+expr_stmt|;
+name|ip
+operator|->
+name|i_gid
+operator|=
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_ogid
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -836,6 +857,27 @@ name|ICHG
 operator||
 name|IMOD
 operator|)
+expr_stmt|;
+comment|/* 	 * Ensure that uid and gid are correct. This is a temporary 	 * fix until fsck has been changed to do the update. 	 */
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_ouid
+operator|=
+name|ip
+operator|->
+name|i_uid
+expr_stmt|;
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_ogid
+operator|=
+name|ip
+operator|->
+name|i_gid
 expr_stmt|;
 name|fs
 operator|=
