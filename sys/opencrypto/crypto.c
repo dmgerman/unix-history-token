@@ -531,9 +531,9 @@ argument_list|(
 operator|&
 name|crypto_drivers_mtx
 argument_list|,
-literal|"crypto driver table"
+literal|"crypto"
 argument_list|,
-name|NULL
+literal|"crypto driver table"
 argument_list|,
 name|MTX_DEF
 operator||
@@ -557,9 +557,9 @@ argument_list|(
 operator|&
 name|crypto_q_mtx
 argument_list|,
-literal|"crypto op queues"
+literal|"crypto"
 argument_list|,
-name|NULL
+literal|"crypto op queues"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -581,9 +581,9 @@ argument_list|(
 operator|&
 name|crypto_ret_q_mtx
 argument_list|,
-literal|"crypto return queues"
+literal|"crypto"
 argument_list|,
-name|NULL
+literal|"crypto return queues"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -2580,6 +2580,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|CRYPTO_Q_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2632,10 +2635,7 @@ operator|==
 name|ERESTART
 condition|)
 block|{
-comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``blocked'' for cryptop's and put 				 * the request on the queue. 				 */
-name|CRYPTO_Q_LOCK
-argument_list|()
-expr_stmt|;
+comment|/* 				 * The driver ran out of resources, mark the 				 * driver ``blocked'' for cryptop's and put 				 * the request on the queue. 				 * 				 * XXX ops are placed at the tail so their 				 * order is preserved but this can place them 				 * behind batch'd ops. 				 */
 name|crypto_drivers
 index|[
 name|hid
@@ -2644,32 +2644,6 @@ operator|.
 name|cc_qblocked
 operator|=
 literal|1
-expr_stmt|;
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|crp_q
-argument_list|,
-name|crp
-argument_list|,
-name|crp_next
-argument_list|)
-expr_stmt|;
-name|CRYPTO_Q_UNLOCK
-argument_list|()
-expr_stmt|;
-name|cryptostats
-operator|.
-name|cs_blocks
-operator|++
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* 			 * The driver is blocked, just queue the op until 			 * it unblocks and the kernel thread gets kicked. 			 */
-name|CRYPTO_Q_LOCK
-argument_list|()
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -2681,8 +2655,29 @@ argument_list|,
 name|crp_next
 argument_list|)
 expr_stmt|;
-name|CRYPTO_Q_UNLOCK
-argument_list|()
+name|cryptostats
+operator|.
+name|cs_blocks
+operator|++
+expr_stmt|;
+name|result
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 			 * The driver is blocked, just queue the op until 			 * it unblocks and the kernel thread gets kicked. 			 */
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|crp_q
+argument_list|,
+name|crp
+argument_list|,
+name|crp_next
+argument_list|)
 expr_stmt|;
 name|result
 operator|=
@@ -2696,9 +2691,6 @@ name|int
 name|wasempty
 decl_stmt|;
 comment|/* 		 * Caller marked the request as ``ok to delay''; 		 * queue it for the dispatch thread.  This is desirable 		 * when the operation is low priority and/or suitable 		 * for batching. 		 */
-name|CRYPTO_Q_LOCK
-argument_list|()
-expr_stmt|;
 name|wasempty
 operator|=
 name|TAILQ_EMPTY
@@ -2727,14 +2719,14 @@ operator|&
 name|crp_q
 argument_list|)
 expr_stmt|;
-name|CRYPTO_Q_UNLOCK
-argument_list|()
-expr_stmt|;
 name|result
 operator|=
 literal|0
 expr_stmt|;
 block|}
+name|CRYPTO_Q_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 name|result
 return|;
@@ -2818,7 +2810,7 @@ name|cc_kqblocked
 operator|=
 literal|1
 expr_stmt|;
-name|TAILQ_INSERT_HEAD
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|crp_kq
@@ -3672,6 +3664,33 @@ modifier|*
 name|crp
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_DONE
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"crypto_done: op already done, flags 0x%x"
+operator|,
+name|crp
+operator|->
+name|crp_flags
+operator|)
+argument_list|)
+expr_stmt|;
+name|crp
+operator|->
+name|crp_flags
+operator||=
+name|CRYPTO_F_DONE
+expr_stmt|;
 if|if
 condition|(
 name|crp
