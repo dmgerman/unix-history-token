@@ -367,6 +367,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|AR_REBUILD_SIZE
+value|128
+end_define
+
 begin_function
 name|int
 name|ata_raiddisk_attach
@@ -6425,7 +6432,7 @@ name|rdp
 operator|->
 name|lock_start
 operator|+
-literal|256
+name|AR_REBUILD_SIZE
 expr_stmt|;
 name|rdp
 operator|->
@@ -6442,7 +6449,7 @@ name|buffer
 operator|=
 name|malloc
 argument_list|(
-literal|256
+name|AR_REBUILD_SIZE
 operator|*
 name|DEV_BSIZE
 argument_list|,
@@ -6476,7 +6483,7 @@ name|size
 init|=
 name|min
 argument_list|(
-literal|256
+name|AR_REBUILD_SIZE
 argument_list|,
 operator|(
 name|rdp
