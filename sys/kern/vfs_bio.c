@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.53 1995/07/24 03:16:41 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.54 1995/07/25 05:03:06 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -1525,9 +1525,6 @@ literal|0
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|needsbuffer
 argument_list|)
@@ -1556,9 +1553,6 @@ operator|)
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -1582,9 +1576,6 @@ name|B_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -1999,9 +1990,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -2804,9 +2792,6 @@ literal|1
 expr_stmt|;
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|needsbuffer
 argument_list|,
@@ -2895,9 +2880,6 @@ name|B_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -3792,9 +3774,6 @@ condition|(
 operator|!
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|,
 name|PRIBIO
@@ -5220,9 +5199,6 @@ literal|0
 condition|)
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|,
 name|PRIBIO
@@ -5863,9 +5839,6 @@ name|PG_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -5912,9 +5885,6 @@ name|OBJ_PIPWNT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|obj
 argument_list|)
 expr_stmt|;
@@ -5947,9 +5917,6 @@ name|B_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|bp
 argument_list|)
 expr_stmt|;
@@ -6039,9 +6006,6 @@ condition|)
 block|{
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|vfs_update_wakeup
 argument_list|,
@@ -6257,9 +6221,6 @@ name|PG_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|m
 argument_list|)
 expr_stmt|;
@@ -6291,9 +6252,6 @@ name|OBJ_PIPWNT
 expr_stmt|;
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|obj
 argument_list|)
 expr_stmt|;
