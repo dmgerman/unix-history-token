@@ -2405,9 +2405,14 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 name|int
 name|i
 decl_stmt|;
+endif|#
+directive|endif
 name|slice_min
 operator|=
 operator|(
