@@ -335,12 +335,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* Old value from CSRG; this is probably better. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HUGE
+value|HUGE_VAL
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|HUGE
 value|MAXFLOAT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * set X_TLOSS = pi*2**52, which is possibly defined in<values.h>  * (one may replace the following line by "#include<values.h>")  */
@@ -418,6 +445,10 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_comment
+comment|/*  * Most of these functions have the side effect of setting errno, so they  * are not declared as __pure2.  (XXX: this point needs to be revisited,  * since C99 doesn't require the mistake of setting errno, and we mostly  * don't set it anyway.  In C99, pragmas and functions for changing the  * rounding mode affect the purity of these functions.)  */
+end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
@@ -534,6 +565,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_function_decl
 name|double
 name|ldexp
@@ -574,6 +609,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
 
 begin_function_decl
 name|double
@@ -633,6 +672,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * These functions are not in C90 so they can be "right".  The ones that  * never set errno in lib/msun are declared as __pure2.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -658,14 +701,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|erfc
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|finite
+argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -687,32 +741,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|isinf
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|isnan
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|finite
-parameter_list|(
-name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -818,23 +865,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|cbrt
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|logb
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -917,16 +966,17 @@ begin_comment
 comment|/*  * Functions callable from C, intended to support IEEE arithmetic.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|copysign
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|,
+argument_list|,
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -937,14 +987,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|rint
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|double
@@ -972,23 +1023,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|expm1
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|double
 name|log1p
-parameter_list|(
+argument_list|(
 name|double
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Reentrant version of gamma& lgamma; passes signgam back by reference  * as the second argument; user must allocate space for signgam.  */
@@ -1150,6 +1203,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
+
 begin_function_decl
 name|float
 name|ldexpf
@@ -1190,6 +1247,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* fundamentally !__pure2 */
+end_comment
 
 begin_function_decl
 name|float
@@ -1258,14 +1319,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|erfcf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|finitef
+argument_list|(
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|float
@@ -1276,34 +1348,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|hypotf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|,
+argument_list|,
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|int
+name|isinf
+argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|isnanf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|finitef
-parameter_list|(
-name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|float
@@ -1399,23 +1474,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|cbrtf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|logbf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|float
@@ -1467,16 +1544,17 @@ begin_comment
 comment|/*  * Float versions of functions callable from C, intended to support  * IEEE arithmetic.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|copysignf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|,
+argument_list|,
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -1522,23 +1600,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|expm1f
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|float
 name|log1pf
-parameter_list|(
+argument_list|(
 name|float
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Float versions of reentrant version of gamma& lgamma; passes  * signgam back by reference as the second argument; user must  * allocate space for signgam.  */
@@ -1613,6 +1693,48 @@ end_endif
 begin_comment
 comment|/* !_MATH_H_ */
 end_comment
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
+
+begin_escape
+end_escape
 
 end_unit
 
