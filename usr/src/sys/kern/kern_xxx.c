@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_xxx.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_xxx.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -797,6 +797,9 @@ name|struct
 name|timeb
 name|tb
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|uap
 operator|=
 operator|(
@@ -808,10 +811,9 @@ name|u
 operator|.
 name|u_ap
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl7
+name|s
+operator|=
+name|splhigh
 argument_list|()
 expr_stmt|;
 name|tb
@@ -832,11 +834,10 @@ name|tv_usec
 operator|/
 literal|1000
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|tb
 operator|.
@@ -922,7 +923,7 @@ decl_stmt|;
 name|int
 name|s
 init|=
-name|spl7
+name|splhigh
 argument_list|()
 decl_stmt|;
 name|untimeout
