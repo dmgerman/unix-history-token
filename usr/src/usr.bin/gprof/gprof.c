@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gprof.c	5.6 (Berkeley) %G%"
+literal|"@(#)gprof.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,10 +173,37 @@ break|break;
 case|case
 literal|'c'
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|cflag
 operator|=
 name|TRUE
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gprof: -c isn't supported on this architecture yet\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'d'
