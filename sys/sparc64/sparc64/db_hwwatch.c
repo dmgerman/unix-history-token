@@ -141,7 +141,7 @@ block|{
 name|u_long
 name|lsucr
 decl_stmt|;
-name|stxa
+name|stxa_sync
 argument_list|(
 name|AA_DMMU_PWPR
 argument_list|,
@@ -192,7 +192,7 @@ operator|<<
 name|LSU_PM_SHIFT
 operator|)
 expr_stmt|;
-name|stxa
+name|stxa_sync
 argument_list|(
 literal|0
 argument_list|,
@@ -341,7 +341,7 @@ name|void
 name|watch_phys_clear
 parameter_list|()
 block|{
-name|stxa
+name|stxa_sync
 argument_list|(
 literal|0
 argument_list|,
@@ -395,7 +395,7 @@ block|{
 name|u_long
 name|lsucr
 decl_stmt|;
-name|stxa
+name|stxa_sync
 argument_list|(
 name|AA_DMMU_VWPR
 argument_list|,
@@ -446,7 +446,7 @@ operator|<<
 name|LSU_VM_SHIFT
 operator|)
 expr_stmt|;
-name|stxa
+name|stxa_sync
 argument_list|(
 literal|0
 argument_list|,
@@ -595,7 +595,7 @@ name|void
 name|watch_virt_clear
 parameter_list|()
 block|{
-name|stxa
+name|stxa_sync
 argument_list|(
 literal|0
 argument_list|,
