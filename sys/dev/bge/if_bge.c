@@ -12857,6 +12857,8 @@ name|statusword
 decl_stmt|;
 name|u_int32_t
 name|status
+decl_stmt|,
+name|mimode
 decl_stmt|;
 name|sc
 operator|=
@@ -13029,7 +13031,7 @@ operator|&
 name|BGE_STATFLAG_LINKSTATE_CHANGED
 condition|)
 block|{
-comment|/* 			 * Sometimes PCS encoding errors are detected in 			 * TBI mode (on fiber NICs), and for some reason 			 * the chip will signal them as link changes. 			 * If we get a link change event, but the 'PCS 			 * encoding error' bit in the MAC status register 			 * is set, don't bother doing a link check. 			 * This avoids spurious "gigabit link up" messages 			 * that sometimes appear on fiber NICs during 			 * periods of heavy traffic. (There should be no 			 * effect on copper NICs.) 			 */
+comment|/* 			 * Sometimes PCS encoding errors are detected in 			 * TBI mode (on fiber NICs), and for some reason 			 * the chip will signal them as link changes. 			 * If we get a link change event, but the 'PCS 			 * encoding error' bit in the MAC status register 			 * is set, don't bother doing a link check. 			 * This avoids spurious "gigabit link up" messages 			 * that sometimes appear on fiber NICs during 			 * periods of heavy traffic. (There should be no 			 * effect on copper NICs.) 			 * 			 * If we do have a copper NIC (bge_tbi == 0) then 			 * check that the AUTOPOLL bit is set before 			 * processing the event as a real link change. 			 * Turning AUTOPOLL on and off in the MII read/write 			 * functions will often trigger a link status 			 * interrupt for no reason. 			 */
 name|status
 operator|=
 name|CSR_READ_4
@@ -13037,6 +13039,15 @@ argument_list|(
 name|sc
 argument_list|,
 name|BGE_MAC_STS
+argument_list|)
+expr_stmt|;
+name|mimode
+operator|=
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|BGE_MI_MODE
 argument_list|)
 expr_stmt|;
 if|if
@@ -13049,6 +13060,19 @@ operator|(
 name|BGE_MACSTAT_PORT_DECODE_ERROR
 operator||
 name|BGE_MACSTAT_MI_COMPLETE
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|!
+name|sc
+operator|->
+name|bge_tbi
+operator|&&
+operator|(
+name|mimode
+operator|&
+name|BGE_MIMODE_AUTOPOLL
 operator|)
 operator|)
 condition|)
