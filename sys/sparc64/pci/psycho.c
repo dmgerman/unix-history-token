@@ -3869,6 +3869,37 @@ name|arg
 parameter_list|)
 block|{
 comment|/* We lost power.  Try to shut down NOW. */
+ifdef|#
+directive|ifdef
+name|DEBUGGER_ON_POWERFAIL
+name|struct
+name|psycho_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|psycho_softc
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|Debugger
+argument_list|(
+literal|"powerfail"
+argument_list|)
+expr_stmt|;
+name|PSYCHO_WRITE8
+argument_list|(
+name|sc
+argument_list|,
+name|PSR_POWER_INT_CLR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|printf
 argument_list|(
 literal|"Power Failure Detected: Shutting down NOW.\n"
@@ -3879,6 +3910,8 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
