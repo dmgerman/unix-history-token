@@ -42,6 +42,28 @@ begin_comment
 comment|/* 4 byte alignment, zero filled */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ALIGN_TEXT
+value|.align	4,0x90
+end_define
+
+begin_comment
+comment|/* 16-byte alignment, nop filled */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -52,6 +74,11 @@ end_define
 begin_comment
 comment|/* 4-byte alignment, nop filled */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
