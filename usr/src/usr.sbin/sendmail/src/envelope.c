@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.9 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -953,6 +953,12 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|&&
+name|e
+operator|->
+name|e_class
+operator|>=
+literal|0
 condition|)
 block|{
 specifier|auto
