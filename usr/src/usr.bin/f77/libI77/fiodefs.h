@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_fiodefs[] = "@(#)fiodefs.h	1.1";  *  * fortran file i/o type definitions  */
+comment|/* char id_fiodefs[] = "@(#)fiodefs.h	1.2";  *  * fortran file i/o type definitions  */
 end_comment
 
 begin_include
@@ -506,6 +506,44 @@ block|}
 name|uint
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|ioiflg
+block|{
+name|short
+name|if_obof
+decl_stmt|;
+name|short
+name|if_ctrl
+decl_stmt|;
+name|short
+name|if_bzro
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|opnbof
+value|ioiflg_.if_obof
+end_define
+
+begin_define
+define|#
+directive|define
+name|ccntrl
+value|ioiflg_.if_ctrl
+end_define
+
+begin_define
+define|#
+directive|define
+name|blzero
+value|ioiflg_.if_bzro
+end_define
 
 end_unit
 
