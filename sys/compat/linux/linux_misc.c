@@ -5557,6 +5557,8 @@ operator|->
 name|pc_ucred
 operator|->
 name|cr_ngroups
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * cr_groups[0] holds egid. Returning the whole set 	 * here will cause a duplicate. Exclude cr_groups[0] 	 * to prevent that. 	 */
 if|if
@@ -5580,8 +5582,6 @@ literal|0
 index|]
 operator|=
 name|bsd_gidsetsz
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -5594,8 +5594,6 @@ condition|(
 name|ngrp
 operator|<
 name|bsd_gidsetsz
-operator|-
-literal|1
 condition|)
 return|return
 operator|(
@@ -5604,7 +5602,7 @@ operator|)
 return|;
 name|ngrp
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -5616,13 +5614,13 @@ block|{
 name|linux_gidset
 index|[
 name|ngrp
-operator|-
-literal|1
 index|]
 operator|=
 name|bsd_gidset
 index|[
 name|ngrp
+operator|+
+literal|1
 index|]
 expr_stmt|;
 name|ngrp
@@ -5670,8 +5668,6 @@ literal|0
 index|]
 operator|=
 name|ngrp
-operator|-
-literal|1
 expr_stmt|;
 return|return
 operator|(
