@@ -513,6 +513,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|array
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 name|free
 argument_list|(
 name|array
@@ -1070,7 +1077,7 @@ name|NULL
 condition|)
 name|chars
 operator|=
-literal|". \t"
+literal|", \t"
 expr_stmt|;
 if|if
 condition|(
