@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.9 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.10 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.9 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.10 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -596,7 +596,7 @@ condition|)
 goto|goto
 name|tempfail1
 goto|;
-comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	*/
+comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	** 	**	If this code remains at all, "CheckLoopBack" should be 	**	a mailer flag.  This is a MAYBENEXTRELEASE feature. 	*/
 name|p
 operator|=
 name|strchr
