@@ -489,7 +489,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aafh:t:v"
+literal|"AaF:fh:t:v"
 argument_list|)
 operator|)
 operator|!=
@@ -515,6 +515,15 @@ case|:
 name|all
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|setfstab
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -872,7 +881,8 @@ literal|1
 argument_list|,
 literal|"%s"
 argument_list|,
-name|_PATH_FSTAB
+name|getfstab
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|errs
@@ -3767,7 +3777,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: umount [-fv] special | node"
 argument_list|,
-literal|"       umount -a | -A [-fv] [-h host] [-t type]"
+literal|"       umount -a | -A [ -F fstab] [-fv] [-h host] [-t type]"
 argument_list|)
 expr_stmt|;
 name|exit

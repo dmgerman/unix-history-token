@@ -651,7 +651,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adfo:prwt:uv"
+literal|"adF:fo:prwt:uv"
 argument_list|)
 operator|)
 operator|!=
@@ -677,6 +677,15 @@ case|:
 name|debug
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'F'
+case|:
+name|setfstab
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3722,7 +3731,7 @@ literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: mount [-dfpruvw] [-o options] [-t ufs | external_type] special node"
 argument_list|,
-literal|"       mount [-adfpruvw] [-t ufs | external_type]"
+literal|"       mount [-adfpruvw] [ -F fstab] [-t ufs | external_type]"
 argument_list|,
 literal|"       mount [-dfpruvw] special | node"
 argument_list|)
