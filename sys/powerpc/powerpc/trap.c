@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ktrace.h"
 end_include
 
@@ -33,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -226,30 +226,6 @@ directive|include
 file|<machine/sr.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MULTIPROCESSOR
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|intr_depth
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|trap
@@ -419,6 +395,17 @@ name|syscallnames
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|debugger_on_panic
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_struct
 struct|struct
@@ -1174,13 +1161,13 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 if|if
 condition|(
 operator|(
 name|debugger_on_panic
 operator|||
-name|db_active
+name|kdb_active
 operator|)
 operator|&&
 name|kdb_trap
@@ -1188,6 +1175,8 @@ argument_list|(
 name|frame
 operator|->
 name|exc
+argument_list|,
+literal|0
 argument_list|,
 name|frame
 argument_list|)
