@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lock.c	5.9 (Berkeley) %G%"
+literal|"@(#)lock.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -792,6 +792,18 @@ condition|(
 name|usemine
 condition|)
 block|{
+name|s
+index|[
+name|strlen
+argument_list|(
+name|s
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|!
