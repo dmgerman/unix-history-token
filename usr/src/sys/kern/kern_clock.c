@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.44	82/10/31	*/
+comment|/*	kern_clock.c	4.45	82/11/13	*/
 end_comment
 
 begin_include
@@ -926,9 +926,6 @@ name|callfree
 operator|=
 name|p1
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|splx
 argument_list|(
 name|s

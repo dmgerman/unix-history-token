@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prof.c	4.1	82/06/28	*/
+comment|/*	subr_prof.c	4.2	82/11/13	*/
 end_comment
 
 begin_ifdef
@@ -169,7 +169,7 @@ operator|*
 operator|)
 name|wmemall
 argument_list|(
-name|vmemall
+name|memall
 argument_list|,
 name|ssiz
 argument_list|)
@@ -206,7 +206,7 @@ operator|*
 operator|)
 name|wmemall
 argument_list|(
-name|vmemall
+name|memall
 argument_list|,
 name|s_textsize
 argument_list|)
@@ -255,7 +255,7 @@ operator|*
 operator|)
 name|wmemall
 argument_list|(
-name|vmemall
+name|memall
 argument_list|,
 name|s_textsize
 argument_list|)

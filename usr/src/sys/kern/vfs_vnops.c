@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.29	82/10/31	*/
+comment|/*	vfs_vnops.c	4.30	82/11/13	*/
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nami.h"
 end_include
 
 begin_comment
@@ -466,7 +472,7 @@ name|namei
 argument_list|(
 name|uchar
 argument_list|,
-literal|0
+name|LOOKUP
 argument_list|,
 name|follow
 argument_list|)

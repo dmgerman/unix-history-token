@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.11	82/10/31	*/
+comment|/*	kern_sig.c	5.12	82/11/13	*/
 end_comment
 
 begin_include
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|"../h/kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nami.h"
 end_include
 
 begin_comment
@@ -2505,7 +2511,7 @@ name|namei
 argument_list|(
 name|schar
 argument_list|,
-literal|1
+name|CREATE
 argument_list|,
 literal|1
 argument_list|)
@@ -2596,6 +2602,9 @@ name|itrunc
 argument_list|(
 name|ip
 argument_list|,
+operator|(
+name|u_long
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.17	82/10/30	*/
+comment|/*	kern_descrip.c	5.18	82/11/13	*/
 end_comment
 
 begin_include
@@ -340,9 +340,9 @@ name|i
 index|]
 operator|&
 operator|(
-name|RDLOCK
+name|SHLOCK
 operator||
-name|WRLOCK
+name|EXLOCK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -532,9 +532,9 @@ name|i
 index|]
 operator|&
 operator|(
-name|RDLOCK
+name|SHLOCK
 operator||
-name|WRLOCK
+name|EXLOCK
 operator|)
 argument_list|)
 expr_stmt|;
@@ -603,26 +603,26 @@ if|if
 condition|(
 name|lockflags
 operator|&
-name|RDLOCK
+name|SHLOCK
 condition|)
 name|fp
 operator|->
 name|f_inode
 operator|->
-name|i_rdlockc
+name|i_shlockc
 operator|++
 expr_stmt|;
 if|if
 condition|(
 name|lockflags
 operator|&
-name|WRLOCK
+name|EXLOCK
 condition|)
 name|fp
 operator|->
 name|f_inode
 operator|->
-name|i_wrlockc
+name|i_exlockc
 operator|++
 expr_stmt|;
 block|}
@@ -2281,9 +2281,9 @@ name|IFMT
 expr_stmt|;
 name|flags
 operator|&=
-name|RDLOCK
+name|SHLOCK
 operator||
-name|WRLOCK
+name|EXLOCK
 expr_stmt|;
 comment|/* conservative */
 if|if

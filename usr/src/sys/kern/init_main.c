@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.42	82/11/02	*/
+comment|/*	init_main.c	4.43	82/11/13	*/
 end_comment
 
 begin_include
@@ -147,7 +147,7 @@ comment|/* have to declare it somewhere! */
 end_comment
 
 begin_comment
-comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc something in user mode -- /etc/init  *	cannot be executed.  */
+comment|/*  * Initialization code.  * Called from cold start routine as  * soon as a stack and segmentation  * have been established.  * Functions:  *	clear and free user core  *	turn on clock  *	hand craft 0th process  *	call all initialization routines  *	fork - process 0 to schedule  *	     - process 2 to page out  *	     - process 1 execute bootstrap  *  * loop at loc 13 (0xd) in user mode -- /etc/init  *	cannot be executed.  */
 end_comment
 
 begin_ifdef
@@ -203,6 +203,9 @@ name|struct
 name|fs
 modifier|*
 name|fs
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|rqinit
 argument_list|()
@@ -500,6 +503,12 @@ expr_stmt|;
 comment|/* XXX */
 endif|#
 directive|endif
+comment|/* 	 * Block reception of incoming packets 	 * until protocols have been initialized. 	 */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|ifinit
 argument_list|()
 expr_stmt|;
@@ -508,6 +517,16 @@ directive|endif
 name|domaininit
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ihinit
 argument_list|()
 expr_stmt|;
@@ -1096,9 +1115,13 @@ name|B_HEAD
 expr_stmt|;
 block|}
 name|dp
-operator|--
+operator|=
+operator|&
+name|bfreelist
+index|[
+name|BQ_AGE
+index|]
 expr_stmt|;
-comment|/* dp =&bfreelist[BQUEUES-1]; */
 for|for
 control|(
 name|i
@@ -1129,6 +1152,12 @@ name|NODEV
 expr_stmt|;
 name|bp
 operator|->
+name|b_bcount
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
 name|b_un
 operator|.
 name|b_addr
@@ -1141,9 +1170,11 @@ name|MAXBSIZE
 expr_stmt|;
 name|bp
 operator|->
-name|b_bcount
+name|b_bufsize
 operator|=
-name|MAXBSIZE
+literal|2
+operator|*
+name|CLBYTES
 expr_stmt|;
 name|bp
 operator|->

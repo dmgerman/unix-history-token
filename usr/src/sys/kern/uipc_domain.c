@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	5.5	82/11/02	*/
+comment|/*	uipc_domain.c	5.6	82/11/13	*/
 end_comment
 
 begin_include
@@ -27,6 +27,18 @@ directive|include
 file|"../h/domain.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -50,6 +62,21 @@ end_macro
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|domain
+modifier|*
+name|dp
+decl_stmt|;
+specifier|register
+name|struct
+name|protosw
+modifier|*
+name|pr
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|lint
 name|ADDDOMAIN
 argument_list|(
 name|unix
@@ -85,35 +112,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|pfinit
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Operations applying to the sets of protocols  * defined by the available communications domains.  */
-end_comment
-
-begin_macro
-name|pfinit
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|domain
-modifier|*
-name|dp
-decl_stmt|;
-specifier|register
-name|struct
-name|protosw
-modifier|*
-name|pr
-decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|dp
@@ -157,6 +157,12 @@ name|pr
 operator|->
 name|pr_init
 call|)
+argument_list|()
+expr_stmt|;
+name|pffasttimo
+argument_list|()
+expr_stmt|;
+name|pfslowtimo
 argument_list|()
 expr_stmt|;
 block|}
@@ -340,7 +346,7 @@ operator|->
 name|dom_protosw
 init|;
 name|pr
-operator|<=
+operator|<
 name|dp
 operator|->
 name|dom_protoswNPROTOSW
@@ -520,6 +526,20 @@ name|pr_slowtimo
 call|)
 argument_list|()
 expr_stmt|;
+name|timeout
+argument_list|(
+name|pfslowtimo
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|hz
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -586,6 +606,20 @@ operator|->
 name|pr_fasttimo
 call|)
 argument_list|()
+expr_stmt|;
+name|timeout
+argument_list|(
+name|pffasttimo
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+name|hz
+operator|/
+literal|5
+argument_list|)
 expr_stmt|;
 block|}
 end_block

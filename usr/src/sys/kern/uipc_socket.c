@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.63	82/11/02	*/
+comment|/*	uipc_socket.c	4.64	82/11/13	*/
 end_comment
 
 begin_include
@@ -167,19 +167,8 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|pf
-decl_stmt|,
 name|error
 decl_stmt|;
-name|pf
-operator|=
-name|dom
-condition|?
-name|PF_UNIX
-else|:
-name|PF_INET
-expr_stmt|;
-comment|/* should be u.u_protof */
 if|if
 condition|(
 name|proto
@@ -188,7 +177,7 @@ name|prp
 operator|=
 name|pffindproto
 argument_list|(
-name|pf
+name|dom
 argument_list|,
 name|proto
 argument_list|)
@@ -198,7 +187,7 @@ name|prp
 operator|=
 name|pffindtype
 argument_list|(
-name|pf
+name|dom
 argument_list|,
 name|type
 argument_list|)
@@ -267,6 +256,12 @@ operator|->
 name|so_state
 operator|=
 literal|0
+expr_stmt|;
+name|so
+operator|->
+name|so_type
+operator|=
+name|type
 expr_stmt|;
 if|if
 condition|(
@@ -1073,6 +1068,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
+operator|(
+name|void
+operator|)
 name|copyout
 argument_list|(
 operator|(

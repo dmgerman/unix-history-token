@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mu_msg.c	Melb 4.1	82/07/16	*/
+comment|/*	uipc_mu_msg.c	Melb 4.2	82/11/13	*/
 end_comment
 
 begin_ifdef
@@ -409,6 +409,9 @@ name|p
 operator|->
 name|p_mb
 argument_list|,
+operator|(
+name|int
+operator|)
 name|p
 operator|->
 name|p_mb
@@ -567,6 +570,9 @@ argument_list|(
 operator|&
 name|mb
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mb
 operator|.
 name|msg_pid
@@ -687,9 +693,7 @@ decl_stmt|;
 specifier|register
 name|int
 name|pid
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|from
 decl_stmt|;
 block|{

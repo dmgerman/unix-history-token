@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.35	82/10/21	*/
+comment|/*	uipc_syscalls.c	4.36	82/11/13	*/
 end_comment
 
 begin_include
@@ -202,7 +202,7 @@ name|u_error
 operator|=
 name|socreate
 argument_list|(
-literal|0
+name|AF_UNSPEC
 argument_list|,
 operator|&
 name|so
@@ -2593,7 +2593,7 @@ name|u_error
 operator|=
 name|socreate
 argument_list|(
-literal|1
+name|AF_UNIX
 argument_list|,
 operator|&
 name|rso
@@ -2623,7 +2623,7 @@ name|u_error
 operator|=
 name|socreate
 argument_list|(
-literal|1
+name|AF_UNIX
 argument_list|,
 operator|&
 name|wso

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_balloc.c	5.2	82/09/25	*/
+comment|/*	ffs_balloc.c	5.3	82/11/13	*/
 end_comment
 
 begin_include
@@ -241,6 +241,9 @@ name|ip
 argument_list|,
 name|nb
 argument_list|,
+operator|(
+name|int
+operator|)
 name|nb
 argument_list|,
 operator|&
@@ -254,6 +257,9 @@ argument_list|)
 argument_list|,
 name|osize
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -424,6 +430,9 @@ name|ip
 argument_list|,
 name|bn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bn
 argument_list|,
 operator|&
@@ -487,6 +496,9 @@ name|ip
 argument_list|,
 name|bn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bn
 argument_list|,
 operator|&
@@ -733,6 +745,10 @@ name|lbn
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|daddr_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -744,6 +760,9 @@ name|ip
 argument_list|,
 name|pref
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -828,6 +847,9 @@ argument_list|,
 name|nb
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize
@@ -942,6 +964,10 @@ name|lbn
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|daddr_t
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -971,6 +997,9 @@ name|ip
 argument_list|,
 name|pref
 argument_list|,
+operator|(
+name|int
+operator|)
 name|fs
 operator|->
 name|fs_bsize

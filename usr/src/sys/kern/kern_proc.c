@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.47	82/11/02	*/
+comment|/*	kern_proc.c	4.48	82/11/13	*/
 end_comment
 
 begin_include
@@ -133,6 +133,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nami.h"
 end_include
 
 begin_macro
@@ -509,7 +515,7 @@ name|namei
 argument_list|(
 name|uchar
 argument_list|,
-literal|0
+name|LOOKUP
 argument_list|,
 literal|1
 argument_list|)
@@ -1067,7 +1073,7 @@ name|namei
 argument_list|(
 name|schar
 argument_list|,
-literal|0
+name|LOOKUP
 argument_list|,
 literal|1
 argument_list|)
@@ -5584,13 +5590,13 @@ index|[
 name|n
 index|]
 operator|&
-name|RDLOCK
+name|SHLOCK
 condition|)
 name|fp
 operator|->
 name|f_inode
 operator|->
-name|i_rdlockc
+name|i_shlockc
 operator|++
 expr_stmt|;
 if|if
@@ -5602,13 +5608,13 @@ index|[
 name|n
 index|]
 operator|&
-name|WRLOCK
+name|EXLOCK
 condition|)
 name|fp
 operator|->
 name|f_inode
 operator|->
-name|i_wrlockc
+name|i_exlockc
 operator|++
 expr_stmt|;
 block|}

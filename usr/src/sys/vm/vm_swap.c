@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.14	82/11/02	*/
+comment|/*	vm_swap.c	4.15	82/11/13	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/nami.h"
 end_include
 
 begin_decl_stmt
@@ -365,7 +371,7 @@ name|namei
 argument_list|(
 name|uchar
 argument_list|,
-literal|0
+name|LOOKUP
 argument_list|,
 literal|1
 argument_list|)
