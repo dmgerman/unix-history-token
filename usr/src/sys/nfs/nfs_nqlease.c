@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_nqlease.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5938,13 +5938,19 @@ name|int
 name|deltat
 decl_stmt|;
 block|{
-specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 name|struct
 name|nqlease
 modifier|*
 name|lp
 decl_stmt|;
-specifier|register
 name|struct
 name|nfsnode
 modifier|*
@@ -5954,6 +5960,9 @@ name|struct
 name|mount
 modifier|*
 name|mp
+decl_stmt|,
+modifier|*
+name|nxtmp
 decl_stmt|;
 name|struct
 name|nfsmount
@@ -6015,6 +6024,12 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Search the mount list for all nqnfs mounts and do their timer 	 * queues. 	 */
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|mp
@@ -6034,13 +6049,34 @@ name|mountlist
 condition|;
 name|mp
 operator|=
+name|nxtmp
+control|)
+block|{
+if|if
+condition|(
+name|vfs_busy
+argument_list|(
+name|mp
+argument_list|,
+name|LK_NOWAIT
+argument_list|,
+operator|&
+name|mountlist_slock
+argument_list|,
+name|p
+argument_list|)
+condition|)
+block|{
+name|nxtmp
+operator|=
 name|mp
 operator|->
 name|mnt_list
 operator|.
 name|cqe_next
-control|)
-block|{
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|mp
@@ -6048,10 +6084,10 @@ operator|->
 name|mnt_stat
 operator|.
 name|f_type
-operator|!=
+operator|==
 name|nfs_mount_type
 condition|)
-continue|continue;
+block|{
 name|nmp
 operator|=
 name|VFSTONFS
@@ -6107,6 +6143,34 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|simple_lock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
+name|nxtmp
+operator|=
+name|mp
+operator|->
+name|mnt_list
+operator|.
+name|cqe_next
+expr_stmt|;
+name|vfs_unbusy
+argument_list|(
+name|mp
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|simple_unlock
+argument_list|(
+operator|&
+name|mountlist_slock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
