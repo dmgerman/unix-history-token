@@ -10,7 +10,7 @@ file|<sys/callout.h>
 end_include
 
 begin_comment
-comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have less static cost (a dma map is allocated which could  * cause bounce buffers to be reserved; other that that, the only required  * memory is sizeof(struct hme_txdesc)).  */
+comment|/*  * Number of receive and transmit descriptors. For each receive descriptor,  * an mbuf cluster is allocated and set up to receive a packet, and a dma map  * is created. Therefore, this number should not be too high to not waste  * memory.  * TX descriptors have no static cost, except for the memory directly allocated  * for them. TX queue elements (the number of which is fixed by HME_NTXQ) hold  * the software state for a transmit job; each has a dmamap allocated for it.  * There may be multiple descriptors allocated to a single queue element.  * HME_NTXQ is completely arbitrary.  */
 end_comment
 
 begin_define
@@ -24,7 +24,14 @@ begin_define
 define|#
 directive|define
 name|HME_NTXDESC
-value|64
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|HME_NTXQ
+value|(HME_NTXDESC / 2)
 end_define
 
 begin_comment
@@ -54,15 +61,26 @@ decl_stmt|;
 name|bus_dmamap_t
 name|hrx_dmamap
 decl_stmt|;
-name|int
-name|hrx_offs
-decl_stmt|;
-name|bus_size_t
-name|hrx_len
-decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Lazily leave at least one burst size grace space. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HME_DESC_RXLEN
+parameter_list|(
+name|sc
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|ulmin(HME_BUFSZ, (d)->hrx_m->m_len - (sc)->sc_burst)
+end_define
 
 begin_struct
 struct|struct
@@ -77,11 +95,27 @@ name|bus_dmamap_t
 name|htx_dmamap
 decl_stmt|;
 name|int
-name|htx_flags
+name|htx_lastdesc
 decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|hme_txdesc
+argument_list|)
+name|htx_q
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|hme_txdq
+argument_list|,
+name|hme_txdesc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Value for htx_flags */
@@ -147,8 +181,16 @@ name|struct
 name|hme_txdesc
 name|rb_txdesc
 index|[
-name|HME_NTXDESC
+name|HME_NTXQ
 index|]
+decl_stmt|;
+name|struct
+name|hme_txdq
+name|rb_txfreeq
+decl_stmt|;
+name|struct
+name|hme_txdq
+name|rb_txbusyq
 decl_stmt|;
 name|bus_dmamap_t
 name|rb_spare_dmamap
@@ -290,29 +332,6 @@ decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
-comment|/* Special hardware hooks */
-name|void
-function_decl|(
-modifier|*
-name|sc_hwreset
-function_decl|)
-parameter_list|(
-name|struct
-name|hme_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_hwinit
-function_decl|)
-parameter_list|(
-name|struct
-name|hme_softc
-modifier|*
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct

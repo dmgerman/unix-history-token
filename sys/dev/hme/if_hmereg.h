@@ -1959,5 +1959,19 @@ name|PCI_HME_BASEADDR
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|HME_MINRXALIGN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HME_RXOFFS
+value|2
+end_define
+
 end_unit
 
