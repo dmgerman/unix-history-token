@@ -893,9 +893,7 @@ name|d
 operator|->
 name|chancount
 operator|==
-name|d
-operator|->
-name|maxchans
+literal|1
 condition|)
 name|pcm_makelinks
 argument_list|(
