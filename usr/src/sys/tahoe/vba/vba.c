@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.6	87/04/01	*/
+comment|/*	vba.c	1.7	87/04/06	*/
+end_comment
+
+begin_comment
+comment|/*  * Tahoe VERSAbus adapator support routines.  */
 end_comment
 
 begin_include
@@ -110,7 +114,7 @@ value|(&Sysmap[btop((int)(v)&~ KERNBASE)])
 end_define
 
 begin_comment
-comment|/*  * Tahoe VERSAbus adapator support routines.  */
+comment|/*  * Allocate private page map and intermediate buffer  * for a VERSAbus device, large enough for maximum transfer size.  * Intermediate buffer   * Make intermediate buffer uncacheable.  */
 end_comment
 
 begin_expr_stmt
@@ -220,7 +224,7 @@ name|PGOFSET
 condition|)
 name|panic
 argument_list|(
-literal|"vbinit"
+literal|"vbinit pgoff"
 argument_list|)
 expr_stmt|;
 name|vb
@@ -282,6 +286,26 @@ argument_list|(
 name|VB_MAXADDR32
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|btoc
+argument_list|(
+name|vb
+operator|->
+name|vb_physbuf
+operator|+
+name|n
+argument_list|)
+operator|>
+name|vb
+operator|->
+name|vb_maxphys
+condition|)
+name|panic
+argument_list|(
+literal|"vbinit physbuf"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make raw buffer pages uncacheable. 	 */
 name|pte
 operator|=
@@ -324,11 +348,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Next piece of logic takes care of unusual cases when less (or more) than  * a full block (or sector) are required. This is done by the swapping  * logic, when it brings page table pages from the swap device.  * Since some controllers can't read less than a sector, the  * only alternative is to read the disk to a temporary buffer and  * then to move the amount needed back to the process (usually proc[0]  * or proc[2]).  * On Tahoe, the virtual addresses versus physical I/O problem creates  * the need to move I/O data through an intermediate buffer whenever one  * of the following is true:  *	1) The data length is not a multiple of sector size (?)  *	2) The buffer is not physically contiguous and the controller  *	   does not support scatter-gather operations.  *	3) The physical address for I/O is higher than addressible  *	   by the device.  */
-end_comment
-
-begin_comment
-comment|/*  * Check a transfer to see whether it can be done directly  * to the destination buffer, or whether it must be copied.  * If copying is necessary, the intermediate buffer is mapped.  * This routine is called by the start routine. It  * returns the physical address of the first byte for i/o, to  * be presented to the controller. If intermediate buffering is  * needed and a write out is done, now is the time to get the  * original user's data in the buffer.  */
+comment|/*  * Check a transfer to see whether it can be done directly  * to the destination buffer, or whether it must be copied.  * On Tahoe, the lack of a bus I/O map forces data to be copied  * to a physically-contiguous buffer whenever one of the following is true:  *	1) The data length is not a multiple of sector size.  *	   (The swapping code does this, unfortunately.)  *	2) The buffer is not physically contiguous and the controller  *	   does not support scatter-gather operations.  *	3) The physical address for I/O is higher than addressible  *	   by the device.  * This routine is called by the start routine.  * If copying is necessary, the intermediate buffer is mapped;  * if the operation is a write, the data is copied into the buffer.  * It returns the physical address of the first byte for DMA, to  * be presented to the controller.  */
 end_comment
 
 begin_function
@@ -393,8 +413,6 @@ operator|&
 name|PGOFSET
 expr_stmt|;
 name|npf
-operator|=
-name|i
 operator|=
 name|btoc
 argument_list|(
@@ -511,8 +529,6 @@ name|dpte
 operator|=
 name|spte
 expr_stmt|;
-for|for
-control|(
 name|p
 operator|=
 operator|(
@@ -521,9 +537,17 @@ operator|++
 operator|)
 operator|->
 name|pg_pfnum
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|npf
 init|;
 operator|--
 name|i
+operator|>
+literal|0
 condition|;
 name|dpte
 operator|++
@@ -541,7 +565,7 @@ operator|)
 operator|!=
 name|p
 operator|+
-name|NBPG
+name|CLSIZE
 operator|&&
 operator|(
 name|vb
@@ -737,6 +761,8 @@ operator||
 name|PG_V
 operator||
 name|PG_KW
+operator||
+name|PG_N
 expr_stmt|;
 name|mtpr
 argument_list|(
