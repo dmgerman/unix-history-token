@@ -30,6 +30,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|sf_buf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sysentvec
 struct_decl|;
 end_struct_decl
@@ -154,7 +160,7 @@ name|auxargs
 decl_stmt|;
 comment|/* ELF Auxinfo structure pointer */
 name|struct
-name|vm_page
+name|sf_buf
 modifier|*
 name|firstpage
 decl_stmt|;
