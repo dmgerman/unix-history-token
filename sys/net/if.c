@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/radix.h>
 end_include
 
@@ -1106,6 +1112,26 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do any type-specific detach operation 	 */
+switch|switch
+condition|(
+name|ifp
+operator|->
+name|if_type
+condition|)
+block|{
+case|case
+name|IFT_ETHER
+case|:
+name|ether_ifdetach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* 	 * Remove address from ifnet_addrs[] and maybe decrement if_index. 	 * Clean up all addresses. 	 */
 name|ifnet_addrs
 index|[

@@ -234,13 +234,11 @@ name|int
 name|ac_multicnt
 decl_stmt|;
 comment|/* length of ac_multiaddrs list */
-comment|/* #ifdef	NETGRAPH */
 name|void
 modifier|*
-name|ac_ng
+name|ac_netgraph
 decl_stmt|;
-comment|/* hook to hang netgraph stuff off */
-comment|/* #endif */
+comment|/* ng_ether(4) netgraph node info */
 block|}
 struct|;
 end_struct

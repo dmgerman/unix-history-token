@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ETHER_COOKIE
-value|917786904
+value|917786905
 end_define
 
 begin_comment
@@ -40,9 +40,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NG_ETHER_HOOK_ORPHAN
-value|"orphans"
+name|NG_ETHER_HOOK_LOWER
+value|"lower"
 end_define
+
+begin_comment
+comment|/* connection to raw device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ETHER_HOOK_UPPER
+value|"upper"
+end_define
+
+begin_comment
+comment|/* connection to upper layers */
+end_comment
 
 begin_define
 define|#
@@ -52,26 +67,35 @@ value|"divert"
 end_define
 
 begin_comment
-comment|/* For adding/removing Ethernet multicast addresses */
+comment|/* alias for lower */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_ETHER_HOOK_ORPHAN
+value|"orphans"
+end_define
+
+begin_comment
+comment|/* like lower, unknowns only */
+end_comment
+
+begin_comment
+comment|/* Netgraph control messages */
 end_comment
 
 begin_enum
 enum|enum
 block|{
-name|NGM_ETHER_ADD_MULTICAST
+name|NGM_ETHER_GET_IFNAME
 init|=
 literal|1
 block|,
-comment|/* supply struct ether_addr */
-name|NGM_ETHER_DEL_MULTICAST
+comment|/* get the interface name */
+name|NGM_ETHER_GET_IFINDEX
 block|,
-comment|/* supply struct ether_addr */
-name|NGM_ETHER_GET_MULTICAST
-block|,
-comment|/* returns array of struct ether_addr */
-name|NGM_ETHER_CLR_MULTICAST
-block|,
-comment|/* clears all multicast addresses */
+comment|/* get the interface global index # */
 block|}
 enum|;
 end_enum
