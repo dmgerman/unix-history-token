@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.14 81/10/31 */
+comment|/* tcp_input.c 1.15 81/10/31 */
 end_comment
 
 begin_include
@@ -3573,15 +3573,17 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m
-operator|=
-name|m_free
+name|MFREE
 argument_list|(
 name|m
+argument_list|,
+operator|*
+name|mp
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
+else|else
+block|{
 operator|*
 name|mp
 operator|=
@@ -3594,6 +3596,7 @@ name|m
 operator|->
 name|m_next
 expr_stmt|;
+block|}
 name|m
 operator|=
 operator|*
