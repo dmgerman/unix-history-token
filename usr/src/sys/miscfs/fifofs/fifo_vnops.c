@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo_vnops.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -250,11 +250,11 @@ end_comment
 begin_macro
 name|fifo_lookup
 argument_list|(
-argument|vp
+argument|dvp
 argument_list|,
-argument|ndp
+argument|vpp
 argument_list|,
-argument|p
+argument|cnp
 argument_list|)
 end_macro
 
@@ -262,37 +262,31 @@ begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
-name|vp
+name|dvp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|nameidata
+name|vnode
 modifier|*
-name|ndp
+modifier|*
+name|vpp
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|proc
+name|componentname
 modifier|*
-name|p
+name|cnp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|ndp
-operator|->
-name|ni_dvp
-operator|=
-name|vp
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_vp
+operator|*
+name|vpp
 operator|=
 name|NULL
 expr_stmt|;
