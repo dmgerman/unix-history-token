@@ -347,12 +347,6 @@ name|u_short
 name|if_index
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
 struct|;
 end_struct
 
@@ -458,12 +452,6 @@ decl_stmt|;
 comment|/* number of advertisement routers */
 comment|/* struct sockaddr_in6 advrtr[] */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
 struct|;
 end_struct
 
