@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.17 1998/03/22 05:33:03 peter Exp $"
+literal|"$Id: options.c,v 1.18 1998/03/22 06:57:20 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1461,6 +1461,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|setupdetach
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|setmodem
 name|__P
 argument_list|(
@@ -2091,7 +2106,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|setnobaddeflate
+name|setnodeflatedraft
 name|__P
 argument_list|(
 operator|(
@@ -2725,6 +2740,15 @@ name|setnodetach
 block|}
 block|,
 comment|/* don't fork */
+block|{
+literal|"updetach"
+block|,
+literal|0
+block|,
+name|setupdetach
+block|}
+block|,
+comment|/* Detach once an NP has come up */
 block|{
 literal|"noip"
 block|,
@@ -3555,23 +3579,14 @@ block|}
 block|,
 comment|/* don't allow Deflate compression */
 block|{
-literal|"nobaddeflate"
+literal|"nodeflatedraft"
 block|,
 literal|0
 block|,
-name|setnobaddeflate
+name|setnodeflatedraft
 block|}
 block|,
-comment|/* don't allow (wrong) Deflate */
-block|{
-literal|"-baddeflate"
-block|,
-literal|0
-block|,
-name|setnobaddeflate
-block|}
-block|,
-comment|/* don't allow (wrong) Deflate */
+comment|/* don't use draft deflate # */
 block|{
 literal|"predictor1"
 block|,
@@ -9301,6 +9316,32 @@ end_function
 begin_function
 specifier|static
 name|int
+name|setupdetach
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+name|nodetach
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|setdemand
 parameter_list|(
 name|argv
@@ -10986,7 +11027,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|setnobaddeflate
+name|setnodeflatedraft
 parameter_list|(
 name|argv
 parameter_list|)
@@ -11001,7 +11042,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|baddeflate
+name|deflate_draft
 operator|=
 literal|0
 expr_stmt|;
@@ -11010,7 +11051,7 @@ index|[
 literal|0
 index|]
 operator|.
-name|baddeflate
+name|deflate_draft
 operator|=
 literal|0
 expr_stmt|;
@@ -11287,6 +11328,7 @@ operator|->
 name|h_addr
 expr_stmt|;
 block|}
+comment|/* if there is no primary then update it. */
 if|if
 condition|(
 name|ipcp_allowoptions
@@ -11301,7 +11343,6 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
 name|ipcp_allowoptions
 index|[
 literal|0
@@ -11314,9 +11355,7 @@ index|]
 operator|=
 name|dns
 expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* always set the secondary address value to the same value. */
 name|ipcp_allowoptions
 index|[
 literal|0
@@ -11329,7 +11368,6 @@ index|]
 operator|=
 name|dns
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
@@ -11418,6 +11456,7 @@ operator|->
 name|h_addr
 expr_stmt|;
 block|}
+comment|/* if there is no primary then update it. */
 if|if
 condition|(
 name|ipcp_allowoptions
@@ -11432,7 +11471,6 @@ index|]
 operator|==
 literal|0
 condition|)
-block|{
 name|ipcp_allowoptions
 index|[
 literal|0
@@ -11445,9 +11483,7 @@ index|]
 operator|=
 name|wins
 expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* always set the secondary address value to the same value. */
 name|ipcp_allowoptions
 index|[
 literal|0
@@ -11460,7 +11496,6 @@ index|]
 operator|=
 name|wins
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
@@ -11903,6 +11938,9 @@ name|accept_network
 operator|=
 literal|1
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -11937,6 +11975,9 @@ name|accept_local
 operator|=
 literal|1
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -11971,6 +12012,9 @@ name|accept_remote
 operator|=
 literal|1
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

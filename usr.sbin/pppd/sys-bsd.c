@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.12 1998/01/16 17:38:53 bde Exp $"
+literal|"$Id: sys-bsd.c,v 1.13 1998/03/22 05:33:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +256,23 @@ end_else
 begin_comment
 comment|/* NetBSD 1.2D or later */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -6774,6 +6791,22 @@ expr_stmt|;
 block|}
 return|return
 name|mask
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Use the hostid as part of the random number seed.  */
+end_comment
+
+begin_function
+name|int
+name|get_host_seed
+parameter_list|()
+block|{
+return|return
+name|gethostid
+argument_list|()
 return|;
 block|}
 end_function

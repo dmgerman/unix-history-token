@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipcp.c,v 1.9 1997/08/19 17:52:38 peter Exp $"
+literal|"$Id: ipcp.c,v 1.10 1997/08/22 12:03:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4336,6 +4336,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|script_setenv
+argument_list|(
+literal|"IPLOCAL"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|go
+operator|->
+name|ouraddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|script_setenv
+argument_list|(
+literal|"IPREMOTE"
+argument_list|,
+name|ip_ntoa
+argument_list|(
+name|ho
+operator|->
+name|hisaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/*      * Check that the peer is allowed to use the IP address it wants.      */
 if|if
 condition|(
@@ -5595,14 +5619,11 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|"addrs %s"
+literal|"addrs %I"
 argument_list|,
-name|ip_ntoa
-argument_list|(
 name|htonl
 argument_list|(
 name|cilong
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5617,14 +5638,11 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|" %s"
+literal|" %I"
 argument_list|,
-name|ip_ntoa
-argument_list|(
 name|htonl
 argument_list|(
 name|cilong
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5723,14 +5741,11 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|"addr %s"
+literal|"addr %I"
 argument_list|,
-name|ip_ntoa
-argument_list|(
 name|htonl
 argument_list|(
 name|cilong
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5757,14 +5772,11 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|"dns-addr %s"
+literal|"ms-dns %I"
 argument_list|,
-name|ip_ntoa
-argument_list|(
 name|htonl
 argument_list|(
 name|cilong
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5790,14 +5802,11 @@ name|printer
 argument_list|(
 name|arg
 argument_list|,
-literal|"wins-addr %s"
+literal|"ms-wins %I"
 argument_list|,
-name|ip_ntoa
-argument_list|(
 name|htonl
 argument_list|(
 name|cilong
-argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;

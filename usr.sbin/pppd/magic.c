@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: magic.c,v 1.6 1997/08/19 17:52:42 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ argument_list|)
 expr_stmt|;
 name|seed
 operator|=
-name|gethostid
+name|get_host_seed
 argument_list|()
 operator|^
 name|t

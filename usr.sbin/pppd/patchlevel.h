@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: patchlevel.h,v 1.7 1997/08/22 12:03:57 peter Exp $ */
+comment|/* $Id: patchlevel.h,v 1.8 1998/03/22 05:33:05 peter Exp $ */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PATCHLEVEL
-value|3
+value|5
 end_define
 
 begin_define
@@ -28,7 +28,7 @@ begin_define
 define|#
 directive|define
 name|DATE
-value|"11 December 1997"
+value|"4 May 1998"
 end_define
 
 end_unit
