@@ -591,6 +591,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * XXXRW: ngt_unit is protected by ng_tty_mtx.  ngt_ldisc is constant once  * ng_tty is initialized.  ngt_nodeop_ok is untouched, and might want to be a  * sleep lock in the future?  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -615,6 +619,29 @@ name|int
 name|ngt_ldisc
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_tty_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ng_tty
+argument_list|,
+operator|&
+name|ng_tty_mtx
+argument_list|,
+literal|"ng_tty"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/****************************************************************** 		    LINE DISCIPLINE METHODS ******************************************************************/
@@ -810,6 +837,12 @@ goto|goto
 name|done
 goto|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_tty_mtx
+argument_list|)
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|name
@@ -827,6 +860,12 @@ name|name
 argument_list|,
 name|ngt_unit
 operator|++
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_tty_mtx
 argument_list|)
 expr_stmt|;
 comment|/* Assign node its name */
