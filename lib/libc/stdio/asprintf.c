@@ -164,7 +164,7 @@ name|_w
 operator|=
 literal|127
 expr_stmt|;
-comment|/* Leave room for the NULL */
+comment|/* Leave room for the NUL */
 name|f
 operator|.
 name|_extra
