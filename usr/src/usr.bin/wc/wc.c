@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wc.c	4.2 (Berkeley) %G%"
+literal|"@(#)wc.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,15 +185,6 @@ break|break;
 case|case
 literal|'s'
 case|:
-if|if
-condition|(
-name|argc
-operator|==
-literal|2
-condition|)
-goto|goto
-name|usage
-goto|;
 name|lpp
 operator|=
 name|atoi
@@ -237,15 +228,6 @@ break|break;
 case|case
 literal|'b'
 case|:
-if|if
-condition|(
-name|argc
-operator|==
-literal|2
-condition|)
-goto|goto
-name|usage
-goto|;
 name|baud
 operator|=
 name|atoi
@@ -292,7 +274,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: wc [-lwcpt] [-v] [-u] [-s pagesize] [-b baudrate]\n"
+literal|"Usage: wc [-lwcpt] [-v] [-u] [-spagesize] [-bbaudrate]\n"
 argument_list|)
 expr_stmt|;
 name|exit
