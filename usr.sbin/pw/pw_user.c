@@ -66,8 +66,28 @@ end_include
 begin_include
 include|#
 directive|include
+file|<utmp.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_MD5RAND
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
 file|<md5.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -86,6 +106,42 @@ include|#
 directive|include
 file|"pwupd.h"
 end_include
+
+begin_if
+if|#
+directive|if
+operator|(
+name|MAXLOGNAME
+operator|-
+literal|1
+operator|)
+operator|>
+name|UT_NAMESIZE
+end_if
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|UT_NAMESIZE
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LOGNAMESIZE
+value|(MAXLOGNAME-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -6248,7 +6304,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Login Name: %-10s   #%-16ld  Group: %-10s   #%ld\n"
+literal|"Login Name: %-15s   #%-12ld Group: %-15s   #%ld\n"
 literal|" Full Name: %s\n"
 literal|"      Home: %-26.26s      Class: %s\n"
 literal|"     Shell: %-26.26s     Office: %s\n"
@@ -6541,7 +6597,7 @@ name|gecos
 operator|&&
 name|l
 operator|>
-name|MAXLOGNAME
+name|LOGNAMESIZE
 condition|)
 name|cmderr
 argument_list|(
