@@ -1417,9 +1417,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CB_SP_VCC_MASK
+value|0x70
+end_define
+
+begin_define
+define|#
+directive|define
 name|CB_SP_VCC_0V
 value|0x00
 end_define
+
+begin_comment
+comment|/* 0x10 is reserved 12V in VPP */
+end_comment
 
 begin_define
 define|#
@@ -1447,6 +1458,17 @@ define|#
 directive|define
 name|CB_SP_VCC_YV
 value|0x50
+end_define
+
+begin_comment
+comment|/* 0x60 and 0x70 are reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CB_SP_VPP_MASK
+value|0x07
 end_define
 
 begin_define
@@ -1490,6 +1512,10 @@ directive|define
 name|CB_SP_VPP_YV
 value|0x05
 end_define
+
+begin_comment
+comment|/* 0x6 and 0x7 are reserved */
+end_comment
 
 end_unit
 
