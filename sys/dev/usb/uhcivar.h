@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list.  Every UHCI_VFRAMELIST_COUNT entries in the real  * frame list points to a non-active TD.  These, in turn, which form the   * starts of the virtual frame list.  This also has the advantage that it   * simplifies linking in/out TD/QH in the schedule.  * Furthermore, initially each of the inactive TDs point to an inactive  * QH that forms the start of the interrupt traffic for that slot.  * Each of these QHs point to the same QH that is the start of control  * traffic.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and<= UHCI_FRAMELIST_COUNT.  */
+comment|/*  * To avoid having 1024 TDs for each isochronous transfer we introduce  * a virtual frame list.  Every UHCI_VFRAMELIST_COUNT entries in the real  * frame list points to a non-active TD.  These, in turn, form the   * starts of the virtual frame list.  This also has the advantage that it   * simplifies linking in/out of TDs/QHs in the schedule.  * Furthermore, initially each of the inactive TDs point to an inactive  * QH that forms the start of the interrupt traffic for that slot.  * Each of these QHs point to the same QH that is the start of control  * traffic.  This QH points at another QH which is the start of the  * bulk traffic.  *  * UHCI_VFRAMELIST_COUNT should be a power of 2 and<= UHCI_FRAMELIST_COUNT.  */
 end_comment
 
 begin_define
@@ -401,7 +401,7 @@ comment|/* Info for the root hub interrupt channel. */
 name|int
 name|sc_ival
 decl_stmt|;
-comment|/* time between root hug intrs */
+comment|/* time between root hub intrs */
 name|usbd_xfer_handle
 name|sc_has_timo
 decl_stmt|;
@@ -450,7 +450,7 @@ directive|endif
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
-comment|/* /dev/usb device */
+comment|/* /dev/usb# device */
 block|}
 name|uhci_softc_t
 typedef|;
