@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: fsdb.c,v 1.2 1995/10/08 23:18:10 thorpej Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
