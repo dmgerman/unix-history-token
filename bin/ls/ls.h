@@ -145,6 +145,28 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_slash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* append a '/' if the file is a directory */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|f_sortacross
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sort across rows, not down columns */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_statustime
 decl_stmt|;
 end_decl_stmt

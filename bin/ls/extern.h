@@ -155,6 +155,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|printstream
+parameter_list|(
+name|DISPLAY
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|usage
 parameter_list|(
 name|void

@@ -532,12 +532,42 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_slash
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* similar to f_type, but only for dirs */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_sortacross
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sort across rows, not down columns */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_statustime
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* use time of last mode change */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_stream
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* stream the output, seperate with commas */
 end_comment
 
 begin_decl_stmt
@@ -860,7 +890,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHLPRTWZabcdfghiklnoqrstuw"
+literal|"1ABCFGHLPRTWZabcdfghiklmnopqrstuwx"
 argument_list|)
 operator|)
 operator|!=
@@ -873,7 +903,7 @@ condition|(
 name|ch
 condition|)
 block|{
-comment|/* 		 * The -1, -C and -l options all override each other so shell 		 * aliasing works right. 		 */
+comment|/* 		 * The -1, -C, -x and -l options all override each other so 		 * shell aliasing works right. 		 */
 case|case
 literal|'1'
 case|:
@@ -882,6 +912,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|f_longform
+operator|=
+literal|0
+expr_stmt|;
+name|f_stream
 operator|=
 literal|0
 expr_stmt|;
@@ -905,6 +939,8 @@ break|break;
 case|case
 literal|'C'
 case|:
+name|f_sortacross
+operator|=
 name|f_longform
 operator|=
 name|f_singlecol
@@ -918,6 +954,26 @@ case|:
 name|f_longform
 operator|=
 literal|1
+expr_stmt|;
+name|f_singlecol
+operator|=
+literal|0
+expr_stmt|;
+name|f_stream
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'x'
+case|:
+name|f_sortacross
+operator|=
+literal|1
+expr_stmt|;
+name|f_longform
+operator|=
+literal|0
 expr_stmt|;
 name|f_singlecol
 operator|=
@@ -955,6 +1011,10 @@ case|:
 name|f_type
 operator|=
 literal|1
+expr_stmt|;
+name|f_slash
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1084,6 +1144,22 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+name|f_stream
+operator|=
+literal|1
+expr_stmt|;
+name|f_singlecol
+operator|=
+literal|0
+expr_stmt|;
+name|f_longform
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|f_numericonly
@@ -1095,6 +1171,18 @@ case|case
 literal|'o'
 case|:
 name|f_flags
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|f_slash
+operator|=
+literal|1
+expr_stmt|;
+name|f_type
 operator|=
 literal|1
 expr_stmt|;
@@ -1577,6 +1665,15 @@ condition|)
 name|printfcn
 operator|=
 name|printlong
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|f_stream
+condition|)
+name|printfcn
+operator|=
+name|printstream
 expr_stmt|;
 else|else
 name|printfcn
