@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -44,7 +44,7 @@ comment|/* see F_ below */
 name|int
 name|i_adapt
 decl_stmt|;
-comment|/* adapter */
+comment|/* adapter or bus */
 name|int
 name|i_ctlr
 decl_stmt|;
@@ -131,6 +131,13 @@ define|#
 directive|define
 name|i_fs
 value|i_un.ui_fs
+end_define
+
+begin_define
+define|#
+directive|define
+name|i_bus
+value|i_adapt
 end_define
 
 begin_comment
