@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: usleep.c,v 1.19 1997/10/17 09:40:08 ache Exp $"
+literal|"$Id: usleep.c,v 1.20 1997/10/22 10:55:49 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,12 +48,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
 
 begin_include
 include|#
@@ -85,29 +79,17 @@ decl_stmt|;
 if|if
 condition|(
 name|useconds
-operator|>=
-literal|1000000
-condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-if|if
-condition|(
-name|useconds
 condition|)
 block|{
 name|time_to_sleep
 operator|.
 name|tv_nsec
 operator|=
+operator|(
 name|useconds
+operator|%
+literal|1000000
+operator|)
 operator|*
 literal|1000
 expr_stmt|;
@@ -115,7 +97,9 @@ name|time_to_sleep
 operator|.
 name|tv_sec
 operator|=
-literal|0
+name|useconds
+operator|/
+literal|1000000
 expr_stmt|;
 return|return
 name|nanosleep
