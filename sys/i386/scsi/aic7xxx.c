@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.71 1996/05/30 07:19:57 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.72 1996/05/31 06:32:09 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -531,7 +531,7 @@ parameter_list|(
 name|ahc
 parameter_list|)
 define|\
-value|AHC_OUTB(ahc, SEQCTL, SEQRESET|FASTMODE);			\ 									\ 	UNPAUSE_SEQUENCER(ahc);
+value|do {								\ 		AHC_OUTB(ahc, SEQCTL, SEQRESET|FASTMODE);		\ 	} while((AHC_INB(ahc, SEQADDR0) != 0)				\ 		|| (AHC_INB(ahc, SEQADDR1) != 0));			\ 									\ 	UNPAUSE_SEQUENCER(ahc);
 end_define
 
 begin_if
@@ -6925,7 +6925,7 @@ argument_list|,
 name|phase
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Assert ATN if we got a parity error in an "in" 			 * phase, and stuff the message buffer with 			 * the appropriate message.  "In" phases have set 			 * mesg_out to something other than MSG_NOP. 			 */
+comment|/* 			 * We've set the hardware to assert ATN if we    			 * get a parity error on "in" phases, so all we   			 * need to do is stuff the message buffer with 			 * the appropriate message.  "In" phases have set 			 * mesg_out to something other than MSG_NOP. 			 */
 if|if
 condition|(
 name|mesg_out
@@ -6933,27 +6933,6 @@ operator|!=
 name|MSG_NOP
 condition|)
 block|{
-name|u_char
-name|scsisig
-init|=
-name|AHC_INB
-argument_list|(
-name|ahc
-argument_list|,
-name|SCSISIGI
-argument_list|)
-decl_stmt|;
-name|AHC_OUTB
-argument_list|(
-name|ahc
-argument_list|,
-name|SCSISIGO
-argument_list|,
-name|scsisig
-operator||
-name|ATNO
-argument_list|)
-expr_stmt|;
 name|AHC_OUTB
 argument_list|(
 name|ahc
@@ -11053,17 +11032,8 @@ name|seqprog
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AHC_OUTB
-argument_list|(
-name|ahc
-argument_list|,
-name|SEQCTL
-argument_list|,
-name|FASTMODE
-operator||
-name|SEQRESET
-argument_list|)
-expr_stmt|;
+do|do
+block|{
 name|AHC_OUTB
 argument_list|(
 name|ahc
@@ -11075,6 +11045,32 @@ operator||
 name|FASTMODE
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQADDR0
+argument_list|)
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|AHC_INB
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQADDR1
+argument_list|)
+operator|!=
+literal|0
+operator|)
+condition|)
+do|;
 block|}
 end_function
 
