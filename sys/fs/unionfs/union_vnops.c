@@ -911,7 +911,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * The parent directory will have been unlocked, unless lookup 	 * found the last component or if dvp == tdvp (tdvp must be locked). 	 * 	 * We want our dvp to remain locked and ref'd.  We also want tdvp 	 * to remain locked and ref'd. 	 */
+comment|/* 	 * The parent directory will have been unlocked, unless this is a 	 * dotdot lookup or if dvp == tdvp (tdvp must be locked). 	 * 	 * We want our dvp to remain locked and ref'd.  We also want tdvp 	 * to remain locked and ref'd. 	 */
 name|UDEBUG
 argument_list|(
 operator|(
@@ -938,10 +938,8 @@ name|cnp
 operator|->
 name|cn_flags
 operator|&
-name|ISLASTCN
+name|ISDOTDOT
 operator|)
-operator|==
-literal|0
 condition|)
 name|vn_lock
 argument_list|(
