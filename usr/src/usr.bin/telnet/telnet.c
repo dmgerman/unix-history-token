@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	4.18 (Berkeley) %G%"
+literal|"@(#)telnet.c	4.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,18 @@ directive|include
 file|<netinet/in.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|TELOPTS
+end_define
+
+begin_include
+include|#
+directive|include
+file|<arpa/telnet.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -82,18 +94,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|TELOPTS
-end_define
-
-begin_include
-include|#
-directive|include
-file|"telnet.h"
 end_include
 
 begin_define
