@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -3520,8 +3526,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_entry: %#llx\n"
+literal|"\te_entry: %#jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|entry
 argument_list|)
 expr_stmt|;
@@ -3529,8 +3538,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_phoff: %lld\n"
+literal|"\te_phoff: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|phoff
 argument_list|)
 expr_stmt|;
@@ -3538,8 +3550,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_shoff: %lld\n"
+literal|"\te_shoff: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shoff
 argument_list|)
 expr_stmt|;
@@ -3547,8 +3562,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_flags: %lld\n"
+literal|"\te_flags: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|flags
 argument_list|)
 expr_stmt|;
@@ -3556,8 +3574,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_ehsize: %lld\n"
+literal|"\te_ehsize: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ehsize
 argument_list|)
 expr_stmt|;
@@ -3565,8 +3586,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_phentsize: %lld\n"
+literal|"\te_phentsize: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|phentsize
 argument_list|)
 expr_stmt|;
@@ -3574,8 +3598,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_phnum: %lld\n"
+literal|"\te_phnum: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|phnum
 argument_list|)
 expr_stmt|;
@@ -3583,8 +3610,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_shentsize: %lld\n"
+literal|"\te_shentsize: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shentsize
 argument_list|)
 expr_stmt|;
@@ -3592,8 +3622,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_shnum: %lld\n"
+literal|"\te_shnum: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shnum
 argument_list|)
 expr_stmt|;
@@ -3601,8 +3634,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\te_shstrndx: %lld\n"
+literal|"\te_shstrndx: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shstrndx
 argument_list|)
 expr_stmt|;
@@ -3839,8 +3875,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_offset: %lld\n"
+literal|"\tp_offset: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
@@ -3848,8 +3887,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_vaddr: %#llx\n"
+literal|"\tp_vaddr: %#jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|vaddr
 argument_list|)
 expr_stmt|;
@@ -3857,8 +3899,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_paddr: %#llx\n"
+literal|"\tp_paddr: %#jx\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|paddr
 argument_list|)
 expr_stmt|;
@@ -3866,8 +3911,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_filesz: %lld\n"
+literal|"\tp_filesz: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|filesz
 argument_list|)
 expr_stmt|;
@@ -3875,8 +3923,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_memsz: %lld\n"
+literal|"\tp_memsz: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|memsz
 argument_list|)
 expr_stmt|;
@@ -3896,8 +3947,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tp_align: %lld\n"
+literal|"\tp_align: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|align
 argument_list|)
 expr_stmt|;
@@ -4186,7 +4240,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_addr: %#llx\n"
+literal|"\tsh_addr: %#jx\n"
 argument_list|,
 name|addr
 argument_list|)
@@ -4195,8 +4249,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_offset: %lld\n"
+literal|"\tsh_offset: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
@@ -4204,8 +4261,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_size: %lld\n"
+literal|"\tsh_size: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -4213,8 +4273,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_link: %lld\n"
+literal|"\tsh_link: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shlink
 argument_list|)
 expr_stmt|;
@@ -4222,8 +4285,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_info: %lld\n"
+literal|"\tsh_info: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -4231,8 +4297,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_addralign: %lld\n"
+literal|"\tsh_addralign: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|addralign
 argument_list|)
 expr_stmt|;
@@ -4240,8 +4309,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tsh_entsize: %lld\n"
+literal|"\tsh_entsize: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|entsize
 argument_list|)
 expr_stmt|;
@@ -4472,7 +4544,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tst_value: %#llx\n"
+literal|"\tst_value: %#jx\n"
 argument_list|,
 name|value
 argument_list|)
@@ -4481,8 +4553,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tst_size: %lld\n"
+literal|"\tst_size: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -4513,8 +4588,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tst_shndx: %lld\n"
+literal|"\tst_shndx: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|shndx
 argument_list|)
 expr_stmt|;
@@ -4751,8 +4829,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\td_val: %lld\n"
+literal|"\td_val: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|val
 argument_list|)
 expr_stmt|;
@@ -4785,7 +4866,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\td_ptr: %#llx\n"
+literal|"\td_ptr: %#jx\n"
 argument_list|,
 name|ptr
 argument_list|)
@@ -5000,7 +5081,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tr_offset: %#llx\n"
+literal|"\tr_offset: %#jx\n"
 argument_list|,
 name|offset
 argument_list|)
@@ -5009,8 +5090,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tr_info: %lld\n"
+literal|"\tr_info: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -5018,8 +5102,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tr_addend: %lld\n"
+literal|"\tr_addend: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|addend
 argument_list|)
 expr_stmt|;
@@ -5204,7 +5291,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tr_offset: %#llx\n"
+literal|"\tr_offset: %#jx\n"
 argument_list|,
 name|offset
 argument_list|)
@@ -5213,8 +5300,11 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\tr_info: %lld\n"
+literal|"\tr_info: %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|info
 argument_list|)
 expr_stmt|;
@@ -5422,7 +5512,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\t%#llx\n"
+literal|"\t%#jx\n"
 argument_list|,
 name|addr
 argument_list|)
