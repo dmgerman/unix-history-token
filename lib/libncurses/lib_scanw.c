@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"curses.priv.h"
 end_include
 
@@ -80,22 +86,15 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
-literal|"scanw(%s,...) called"
-argument_list|,
+operator|(
+literal|"scanw(\"%s\",...) called"
+operator|,
 name|fmt
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|va_start
 argument_list|(
 name|ap
@@ -136,24 +135,17 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
-literal|"wscanw(%x,%s,...) called"
-argument_list|,
+operator|(
+literal|"wscanw(%x,\"%s\",...) called"
+operator|,
 name|win
-argument_list|,
+operator|,
 name|fmt
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|va_start
 argument_list|(
 name|ap

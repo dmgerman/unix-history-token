@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_ifdef
@@ -201,7 +201,7 @@ expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"newterm(%s,%x,%x) called"
+literal|"newterm(\"%s\",%x,%x) called"
 operator|,
 name|term
 operator|,
@@ -403,6 +403,29 @@ operator|->
 name|_fifopeek
 operator|=
 literal|0
+expr_stmt|;
+name|SP
+operator|->
+name|_endwin
+operator|=
+name|FALSE
+expr_stmt|;
+name|SP
+operator|->
+name|_checkfd
+operator|=
+name|fileno
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|typeahead
+argument_list|(
+name|fileno
+argument_list|(
+name|ifp
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -669,12 +692,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|stdscr
-operator|==
-name|NULL
-condition|)
-if|if
-condition|(
 operator|(
 name|stdscr
 operator|=
@@ -699,6 +716,18 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|SP
+operator|->
+name|_stdscr
+operator|=
+name|stdscr
+expr_stmt|;
+name|def_shell_mode
+argument_list|()
+expr_stmt|;
+name|def_prog_mode
+argument_list|()
+expr_stmt|;
 name|T
 argument_list|(
 operator|(

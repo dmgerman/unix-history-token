@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  */
+comment|/*   * bs.c - original author: Bruce Holloway  *		salvo option by: Chuck A DeGaul  * with improved user interface, autoconfiguration and code cleanup  *		by Eric S. Raymond<esr@snark.thyrsus.com>  * v1.2 with color support and minor portability fixes, November 1990  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -18,42 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NONPOSIX
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -68,10 +27,72 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|A_UNDERLINE
+end_ifndef
+
+begin_comment
+comment|/* BSD curses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|beep
+parameter_list|()
+value|write(1,"\007",1);
+end_define
+
+begin_define
+define|#
+directive|define
+name|cbreak
+value|crmode
+end_define
+
+begin_define
+define|#
+directive|define
+name|saveterm
+value|savetty
+end_define
+
+begin_define
+define|#
+directive|define
+name|resetterm
+value|resetty
+end_define
+
+begin_define
+define|#
+directive|define
+name|nocbreak
+value|nocrmode
+end_define
+
+begin_define
+define|#
+directive|define
+name|strchr
+value|index
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !A_UNDERLINE */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYSV
+name|isxdigit
 end_ifdef
 
 begin_comment
@@ -121,7 +142,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|memset((char *)(s), '\0', n)
+value|(void)memset((char *)(s), '\0', n)
 end_define
 
 begin_function_decl
@@ -133,14 +154,63 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Try this if ungetch() fails to resolve.  *  * #define ungetch ungetc  */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* SYSV */
+comment|/* isxdigit */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|unsigned
+name|sleep
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|strchr
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|bool
+name|checkplace
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Constants for tuning the random-fire algorithm. It prefers moves that  * diagonal-stripe the board with a stripe separation of srchstep. If  * no such preferred moves are found, srchstep is decremented.  */
@@ -318,7 +388,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|move(PY(y), PX(x))
+value|(void)move(PY(y), PX(x))
 end_define
 
 begin_comment
@@ -368,7 +438,7 @@ name|y
 parameter_list|,
 name|x
 parameter_list|)
-value|move(CY(y), CX(x))
+value|(void)move(CY(y), CX(x))
 end_define
 
 begin_define
@@ -539,7 +609,7 @@ name|char
 name|dftname
 index|[]
 init|=
-literal|"Stranger"
+literal|"stranger"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,7 +792,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 comment|/* coordinates of ship start point */
-name|int
+name|char
 name|dir
 decl_stmt|;
 comment|/* direction of `bow' */
@@ -931,63 +1001,45 @@ begin_define
 define|#
 directive|define
 name|PR
-value|addstr
+value|(void)addstr
 end_define
-
-begin_function_decl
-specifier|static
-name|int
-name|rnd
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|checkplace
-parameter_list|(
-name|int
-parameter_list|,
-name|ship_t
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|getcoord
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
 name|void
 name|uninitgame
-parameter_list|()
+parameter_list|(
+name|sig
+parameter_list|)
 comment|/* end the game, either normally or due to signal */
+name|int
+name|sig
+decl_stmt|;
 block|{
 name|clear
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|resetterm
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|echo
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|endwin
 argument_list|()
 expr_stmt|;
@@ -1015,6 +1067,9 @@ operator|||
 name|closepack
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"Playing optional game ("
@@ -1024,12 +1079,18 @@ if|if
 condition|(
 name|salvo
 condition|)
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"salvo, "
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"nosalvo, "
@@ -1039,12 +1100,18 @@ if|if
 condition|(
 name|blitz
 condition|)
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"blitz "
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"noblitz, "
@@ -1054,12 +1121,18 @@ if|if
 condition|(
 name|closepack
 condition|)
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"closepack)"
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"noclosepack)"
@@ -1067,6 +1140,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|"Playing standard game (noblitz, nosalvo, noclosepack)"
@@ -1081,6 +1157,12 @@ name|void
 name|intro
 parameter_list|()
 block|{
+specifier|extern
+name|char
+modifier|*
+name|getlogin
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|tmpname
@@ -1097,6 +1179,9 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Kick the random number generator */
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1104,6 +1189,9 @@ argument_list|,
 name|uninitgame
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1111,6 +1199,9 @@ argument_list|,
 name|uninitgame
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGIOT
@@ -1130,6 +1221,9 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -1139,28 +1233,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|tmpname
 operator|=
 name|getlogin
 argument_list|()
-operator|)
-operator|!=
-name|NULL
 condition|)
+block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|name
 argument_list|,
 name|tmpname
-argument_list|)
-expr_stmt|;
-else|else
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
-name|dftname
 argument_list|)
 expr_stmt|;
 name|name
@@ -1176,27 +1262,73 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|name
+argument_list|,
+name|dftname
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|initscr
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+name|keypad
+argument_list|(
+name|stdscr
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* KEY_MIN */
+operator|(
+name|void
+operator|)
 name|saveterm
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|nonl
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|cbreak
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|noecho
 argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PENGUIN
+operator|(
+name|void
+operator|)
 name|clear
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 literal|4
@@ -1206,6 +1338,9 @@ argument_list|,
 literal|"Welcome to Battleship!"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|move
 argument_list|(
 literal|8
@@ -1263,6 +1398,9 @@ argument_list|(
 literal|"             \\___________________________________________________/\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 literal|22
@@ -1272,101 +1410,102 @@ argument_list|,
 literal|"Hit any key to continue..."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|getch
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* PENGUIN */
-name|clear
+ifdef|#
+directive|ifdef
+name|A_COLOR
+name|start_color
 argument_list|()
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-literal|0
+name|COLOR_BLACK
 argument_list|,
-literal|35
+name|COLOR_BLACK
 argument_list|,
-literal|"BATTLESHIPS"
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|move
+name|init_pair
 argument_list|(
-name|PROMPTLINE
-operator|+
-literal|2
+name|COLOR_GREEN
 argument_list|,
-literal|0
+name|COLOR_GREEN
+argument_list|,
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|announceopts
-argument_list|()
-expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|MYBASE
+name|COLOR_RED
 argument_list|,
-name|MXBASE
+name|COLOR_RED
 argument_list|,
-literal|"Aiming keys:"
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|SYBASE
+name|COLOR_CYAN
 argument_list|,
-name|SXBASE
+name|COLOR_CYAN
 argument_list|,
-literal|"y k u    7 8 9"
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|SYBASE
-operator|+
-literal|1
+name|COLOR_WHITE
 argument_list|,
-name|SXBASE
+name|COLOR_WHITE
 argument_list|,
-literal|" \\|/      \\|/ "
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|SYBASE
-operator|+
-literal|2
+name|COLOR_MAGENTA
 argument_list|,
-name|SXBASE
+name|COLOR_MAGENTA
 argument_list|,
-literal|"h-+-l    4-+-6"
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|SYBASE
-operator|+
-literal|3
+name|COLOR_BLUE
 argument_list|,
-name|SXBASE
+name|COLOR_BLUE
 argument_list|,
-literal|" /|\\      /|\\ "
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
-name|mvaddstr
+name|init_pair
 argument_list|(
-name|SYBASE
-operator|+
-literal|4
+name|COLOR_YELLOW
 argument_list|,
-name|SXBASE
+name|COLOR_YELLOW
 argument_list|,
-literal|"b j n    1 2 3"
+name|COLOR_BLACK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* A_COLOR */
 block|}
 end_function
 
@@ -1400,6 +1539,9 @@ end_function
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|move
 argument_list|(
 name|PROMPTLINE
@@ -1409,9 +1551,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|clrtoeol
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 name|f
@@ -1419,6 +1567,9 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -1437,6 +1588,9 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+operator|(
+name|void
+operator|)
 name|move
 argument_list|(
 name|PROMPTLINE
@@ -1446,6 +1600,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|clrtoeol
 argument_list|()
 expr_stmt|;
@@ -1454,11 +1611,17 @@ condition|(
 name|s
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|addstr
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|beep
 argument_list|()
 expr_stmt|;
@@ -1566,6 +1729,9 @@ argument_list|,
 name|newx
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 operator|(
@@ -1584,6 +1750,34 @@ name|hits
 operator|=
 literal|0
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|rnd
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+operator|(
+name|rand
+argument_list|()
+operator|&
+literal|0x7FFF
+operator|)
+operator|%
+name|n
+operator|)
+operator|)
+return|;
 block|}
 end_function
 
@@ -1692,87 +1886,39 @@ name|ship_t
 modifier|*
 name|ss
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|A_COLOR
-name|start_color
+operator|(
+name|void
+operator|)
+name|clear
 argument_list|()
 expr_stmt|;
-name|init_pair
+operator|(
+name|void
+operator|)
+name|mvaddstr
 argument_list|(
-name|COLOR_BLACK
+literal|0
 argument_list|,
-name|COLOR_BLACK
+literal|35
 argument_list|,
-name|COLOR_BLACK
+literal|"BATTLESHIPS"
 argument_list|)
 expr_stmt|;
-name|init_pair
+operator|(
+name|void
+operator|)
+name|move
 argument_list|(
-name|COLOR_GREEN
+name|PROMPTLINE
+operator|+
+literal|2
 argument_list|,
-name|COLOR_GREEN
-argument_list|,
-name|COLOR_BLACK
+literal|0
 argument_list|)
 expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_RED
-argument_list|,
-name|COLOR_RED
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
+name|announceopts
+argument_list|()
 expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_CYAN
-argument_list|,
-name|COLOR_CYAN
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
-expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_WHITE
-argument_list|,
-name|COLOR_WHITE
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
-expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_MAGENTA
-argument_list|,
-name|COLOR_MAGENTA
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
-expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_BLUE
-argument_list|,
-name|COLOR_BLUE
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
-expr_stmt|;
-name|init_pair
-argument_list|(
-name|COLOR_YELLOW
-argument_list|,
-name|COLOR_YELLOW
-argument_list|,
-name|COLOR_BLACK
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* A_COLOR */
 name|bzero
 argument_list|(
 name|board
@@ -1877,6 +2023,9 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* draw empty boards */
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|PYBASE
@@ -1890,6 +2039,9 @@ argument_list|,
 literal|"Main Board"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|PYBASE
@@ -1917,6 +2069,9 @@ operator|++
 name|i
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|mvaddch
 argument_list|(
 name|PYBASE
@@ -1951,6 +2106,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 literal|' '
@@ -1969,6 +2127,9 @@ condition|;
 name|j
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|addstr
 argument_list|(
 literal|" . "
@@ -1985,11 +2146,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 name|i
@@ -1998,6 +2165,9 @@ literal|'A'
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|PYBASE
@@ -2011,6 +2181,9 @@ argument_list|,
 name|numbers
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|CYBASE
@@ -2024,6 +2197,9 @@ argument_list|,
 literal|"Hit/Miss Board"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|CYBASE
@@ -2051,6 +2227,9 @@ operator|++
 name|i
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|mvaddch
 argument_list|(
 name|CYBASE
@@ -2085,6 +2264,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 literal|' '
@@ -2103,6 +2285,9 @@ condition|;
 name|j
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|addstr
 argument_list|(
 literal|" . "
@@ -2119,11 +2304,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 name|i
@@ -2132,6 +2323,9 @@ literal|'A'
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|CYBASE
@@ -2145,6 +2339,9 @@ argument_list|,
 name|numbers
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2154,6 +2351,9 @@ argument_list|,
 literal|"To position your ships: move the cursor to a spot, then"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2165,6 +2365,9 @@ argument_list|,
 literal|"type the first letter of a ship type to select it, then"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2176,6 +2379,9 @@ argument_list|,
 literal|"type a direction ([hjkl] or [4862]), indicating how the"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2187,6 +2393,9 @@ argument_list|,
 literal|"ship should be pointed. You may also type a ship letter"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2198,6 +2407,9 @@ argument_list|,
 literal|"followed by `r' to position it randomly, or type `R' to"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2207,6 +2419,86 @@ argument_list|,
 name|HXBASE
 argument_list|,
 literal|"place all remaining ships randomly."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|MYBASE
+argument_list|,
+name|MXBASE
+argument_list|,
+literal|"Aiming keys:"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|SYBASE
+argument_list|,
+name|SXBASE
+argument_list|,
+literal|"y k u    7 8 9"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|SYBASE
+operator|+
+literal|1
+argument_list|,
+name|SXBASE
+argument_list|,
+literal|" \\|/      \\|/ "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|SYBASE
+operator|+
+literal|2
+argument_list|,
+name|SXBASE
+argument_list|,
+literal|"h-+-l    4-+-6"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|SYBASE
+operator|+
+literal|3
+argument_list|,
+name|SXBASE
+argument_list|,
+literal|" /|\\      /|\\ "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|mvaddstr
+argument_list|(
+name|SYBASE
+operator|+
+literal|4
+argument_list|,
+name|SXBASE
+argument_list|,
+literal|"b j n    1 2 3"
 argument_list|)
 expr_stmt|;
 comment|/* have the computer place ships */
@@ -2253,6 +2545,17 @@ name|NULL
 expr_stmt|;
 do|do
 block|{
+specifier|extern
+name|char
+modifier|*
+name|strchr
+parameter_list|()
+function_decl|;
+specifier|static
+name|char
+name|getcoord
+parameter_list|()
+function_decl|;
 name|char
 name|c
 decl_stmt|,
@@ -2353,6 +2656,9 @@ name|c
 operator|==
 literal|'R'
 condition|)
+operator|(
+name|void
+operator|)
 name|ungetch
 argument_list|(
 literal|'R'
@@ -2434,6 +2740,9 @@ operator|==
 name|FF
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|clearok
 argument_list|(
 name|stdscr
@@ -2441,6 +2750,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -2724,6 +3036,9 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2733,6 +3048,9 @@ argument_list|,
 literal|"To fire, move the cursor to your chosen aiming point   "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2744,6 +3062,9 @@ argument_list|,
 literal|"and strike any key other than a motion key.            "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2755,6 +3076,9 @@ argument_list|,
 literal|"                                                       "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2766,6 +3090,9 @@ argument_list|,
 literal|"                                                       "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2777,6 +3104,9 @@ argument_list|,
 literal|"                                                       "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|HYBASE
@@ -2788,6 +3118,9 @@ argument_list|,
 literal|"                                                       "
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|prompt
 argument_list|(
 literal|0
@@ -2795,37 +3128,12 @@ argument_list|,
 literal|"Press any key to start..."
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|getch
 argument_list|()
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|rnd
-parameter_list|(
-name|n
-parameter_list|)
-name|int
-name|n
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-operator|(
-name|rand
-argument_list|()
-operator|&
-literal|0x7FFF
-operator|)
-operator|%
-name|n
-operator|)
-operator|)
-return|;
 block|}
 end_function
 
@@ -2866,6 +3174,9 @@ argument_list|,
 name|curx
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -2880,6 +3191,9 @@ condition|(
 name|atcpu
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|CYBASE
@@ -2911,6 +3225,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|PYBASE
@@ -2954,6 +3271,15 @@ case|:
 case|case
 literal|'8'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_UP
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -2973,6 +3299,15 @@ case|:
 case|case
 literal|'2'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_DOWN
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -2990,6 +3325,15 @@ case|:
 case|case
 literal|'4'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_LEFT
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3009,6 +3353,15 @@ case|:
 case|case
 literal|'6'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_RIGHT
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3026,6 +3379,15 @@ case|:
 case|case
 literal|'7'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_A1
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3049,6 +3411,15 @@ case|:
 case|case
 literal|'1'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_C1
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3070,6 +3441,15 @@ case|:
 case|case
 literal|'9'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_A3
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3091,6 +3471,15 @@ case|:
 case|case
 literal|'3'
 case|:
+ifdef|#
+directive|ifdef
+name|KEY_MIN
+case|case
+name|KEY_C3
+case|:
+endif|#
+directive|endif
+comment|/* KEY_MIN */
 name|ny
 operator|=
 name|cury
@@ -3115,6 +3504,9 @@ name|ny
 operator|=
 name|cury
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|clearok
 argument_list|(
 name|stdscr
@@ -3122,6 +3514,9 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -3131,6 +3526,9 @@ if|if
 condition|(
 name|atcpu
 condition|)
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|CYBASE
@@ -3147,6 +3545,9 @@ literal|"      "
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|mvaddstr
 argument_list|(
 name|PYBASE
@@ -3211,7 +3612,6 @@ decl_stmt|;
 comment|/* anything on the square */
 if|if
 condition|(
-operator|(
 name|collide
 operator|=
 name|IS_SHIP
@@ -3227,9 +3627,6 @@ index|[
 name|y
 index|]
 argument_list|)
-operator|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
@@ -3320,7 +3717,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|checkplace
 parameter_list|(
 name|b
@@ -3515,7 +3912,7 @@ literal|1
 case|:
 name|error
 argument_list|(
-literal|"Collision alert! Aaaaaagh!"
+literal|"Collision alert!  Aaaaaagh!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3531,14 +3928,14 @@ break|break;
 block|}
 return|return
 operator|(
-literal|0
+name|FALSE
 operator|)
 return|;
 block|}
 block|}
 return|return
 operator|(
-literal|1
+name|TRUE
 operator|)
 return|;
 block|}
@@ -3932,6 +4329,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 name|MARK_MISS
@@ -4031,6 +4431,9 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 name|ss
@@ -4040,6 +4443,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|move
 argument_list|(
 name|oldy
@@ -4054,6 +4460,9 @@ operator|)
 return|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|move
 argument_list|(
 name|oldy
@@ -4103,6 +4512,9 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|getcoord
 argument_list|(
 name|COMPUTER
@@ -4208,6 +4620,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 operator|(
@@ -4314,6 +4729,9 @@ literal|" You'll pick up survivors from my my %s, I hope...!"
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 name|m
@@ -4323,6 +4741,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|beep
 argument_list|()
 expr_stmt|;
@@ -4363,6 +4784,9 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -4424,6 +4848,9 @@ operator|*
 name|s1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 operator|(
@@ -4432,6 +4859,9 @@ operator|)
 name|ch
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
@@ -4804,6 +5234,9 @@ name|MARK_HIT
 else|:
 name|MARK_MISS
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|PROMPTLINE
@@ -4827,7 +5260,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sunk
 operator|=
 operator|(
@@ -4844,10 +5276,10 @@ name|y
 argument_list|)
 operator|)
 operator|)
-operator|)
-operator|!=
-literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|printw
 argument_list|(
 literal|" I've sunk your %s"
@@ -4857,6 +5289,9 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|clrtoeol
 argument_list|()
 expr_stmt|;
@@ -4899,6 +5334,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* A_COLOR */
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 call|(
@@ -5637,9 +6075,15 @@ condition|(
 name|salvo
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|refresh
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 literal|1
@@ -5662,6 +6106,9 @@ return|;
 ifdef|#
 directive|ifdef
 name|DEBUG
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 name|PROMPTLINE
@@ -5692,10 +6139,12 @@ return|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
 name|playagain
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|int
 name|j
@@ -5764,6 +6213,9 @@ name|dir
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|addch
 argument_list|(
 operator|(
@@ -5814,6 +6266,9 @@ condition|)
 operator|++
 name|j
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|mvprintw
 argument_list|(
 literal|1
@@ -5862,7 +6317,7 @@ literal|'Y'
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -5922,6 +6377,9 @@ default|default:
 case|case
 literal|'?'
 case|:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5929,6 +6387,9 @@ argument_list|,
 literal|"Usage: battle [-s | -b] [-c]\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5936,6 +6397,9 @@ argument_list|,
 literal|"\tWhere the options are:\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5943,6 +6407,9 @@ argument_list|,
 literal|"\t-s : play a salvo game\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5950,6 +6417,9 @@ argument_list|,
 literal|"\t-b : play a blitz game\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -5991,6 +6461,9 @@ operator|==
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -6019,6 +6492,9 @@ operator|==
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -6042,6 +6518,9 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -6150,7 +6629,6 @@ block|}
 end_function
 
 begin_function
-name|int
 name|main
 parameter_list|(
 name|argc
@@ -6206,10 +6684,16 @@ if|if
 condition|(
 name|turn
 condition|)
+operator|(
+name|void
+operator|)
 name|cputurn
 argument_list|()
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|plyturn
 argument_list|()
 expr_stmt|;

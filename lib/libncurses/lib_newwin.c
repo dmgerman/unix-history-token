@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_include
@@ -440,6 +440,22 @@ name|_parx
 operator|=
 name|begx
 expr_stmt|;
+name|win
+operator|->
+name|_attrs
+operator|=
+name|orig
+operator|->
+name|_attrs
+expr_stmt|;
+name|win
+operator|->
+name|_bkgd
+operator|=
+name|orig
+operator|->
+name|_bkgd
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -811,6 +827,12 @@ operator|->
 name|_attrs
 operator|=
 name|A_NORMAL
+expr_stmt|;
+name|win
+operator|->
+name|_bkgd
+operator|=
+literal|' '
 expr_stmt|;
 name|win
 operator|->

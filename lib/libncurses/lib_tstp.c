@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_ifdef
@@ -158,13 +158,9 @@ if|if
 condition|(
 name|enter_ca_mode
 condition|)
-name|tputs
+name|putp
 argument_list|(
 name|enter_ca_mode
-argument_list|,
-literal|1
-argument_list|,
-name|_outc
 argument_list|)
 expr_stmt|;
 name|doupdate

@@ -182,7 +182,7 @@ name|keypad
 argument_list|(
 name|win
 argument_list|,
-name|FALSE
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|erasec
@@ -432,8 +432,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|oldnl
+operator|==
+name|FALSE
 condition|)
 name|nonl
 argument_list|()
@@ -441,6 +442,8 @@ expr_stmt|;
 if|if
 condition|(
 name|oldecho
+operator|==
+name|TRUE
 condition|)
 name|echo
 argument_list|()
@@ -448,14 +451,17 @@ expr_stmt|;
 if|if
 condition|(
 name|oldraw
+operator|==
+name|TRUE
 condition|)
 name|raw
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|oldcbreak
+operator|==
+name|FALSE
 condition|)
 name|nocbreak
 argument_list|()
@@ -463,12 +469,14 @@ expr_stmt|;
 if|if
 condition|(
 name|oldkeypad
+operator|==
+name|FALSE
 condition|)
 name|keypad
 argument_list|(
 name|win
 argument_list|,
-name|TRUE
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -495,9 +503,12 @@ expr_stmt|;
 name|T
 argument_list|(
 operator|(
-literal|"wgetnstr returns %s"
+literal|"wgetnstr returns \"%s\""
 operator|,
+name|visbuf
+argument_list|(
 name|oldstr
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

@@ -32,11 +32,14 @@ block|{
 name|T
 argument_list|(
 operator|(
-literal|"waddnstr(%x,%s,%d) called"
+literal|"waddnstr(%x,\"%s\",%d) called"
 operator|,
 name|win
 operator|,
+name|visbuf
+argument_list|(
 name|str
+argument_list|)
 operator|,
 name|n
 operator|)
@@ -72,6 +75,9 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 operator|(
 name|unsigned
 name|char
@@ -116,6 +122,9 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
 operator|(
 name|unsigned
 name|char
@@ -185,6 +194,13 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|str
 operator|++
@@ -216,6 +232,13 @@ name|waddch
 argument_list|(
 name|win
 argument_list|,
+operator|(
+name|chtype
+operator|)
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|str
 operator|++

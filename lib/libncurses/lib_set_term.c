@@ -16,7 +16,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_function
@@ -38,22 +38,15 @@ name|screen
 modifier|*
 name|oldSP
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
+operator|(
 literal|"set_term(%o) called"
-argument_list|,
+operator|,
 name|screen
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|oldSP
 operator|=
 name|SP
@@ -79,6 +72,12 @@ operator|=
 name|SP
 operator|->
 name|_newscr
+expr_stmt|;
+name|stdscr
+operator|=
+name|SP
+operator|->
+name|_stdscr
 expr_stmt|;
 return|return
 operator|(

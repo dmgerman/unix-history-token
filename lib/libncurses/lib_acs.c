@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_include
@@ -304,13 +304,9 @@ name|ena_acs
 operator|!=
 name|NULL
 condition|)
-name|tputs
+name|putp
 argument_list|(
 name|ena_acs
-argument_list|,
-literal|1
-argument_list|,
-name|_outc
 argument_list|)
 expr_stmt|;
 if|if
@@ -462,13 +458,11 @@ directive|ifdef
 name|TRACE
 else|else
 block|{
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
+operator|(
 literal|"acsc not defined, using default mapping"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

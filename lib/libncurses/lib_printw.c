@@ -33,22 +33,15 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
-literal|"printw(%s,...) called"
-argument_list|,
+operator|(
+literal|"printw(\"%s\",...) called"
+operator|,
 name|fmt
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|va_start
 argument_list|(
 name|argp
@@ -107,24 +100,17 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TRACE
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
-literal|"wprintw(%x,%s,...) called"
-argument_list|,
+operator|(
+literal|"wprintw(%x,\"%s\",...) called"
+operator|,
 name|win
-argument_list|,
+operator|,
 name|fmt
+operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|va_start
 argument_list|(
 name|argp

@@ -13,6 +13,12 @@ directive|include
 file|"curses.priv.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"terminfo.h"
+end_include
+
 begin_function
 name|int
 name|wsetscrreg
@@ -91,6 +97,33 @@ name|bottom
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|change_scroll_region
+operator|!=
+name|NULL
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"changing scroll region"
+operator|)
+argument_list|)
+expr_stmt|;
+name|putp
+argument_list|(
+name|tparm
+argument_list|(
+name|change_scroll_region
+argument_list|,
+name|top
+argument_list|,
+name|bottom
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|OK

@@ -10,13 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"curses.priv.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_decl_stmt
@@ -34,18 +40,8 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|char
+modifier|*
 name|color_pairs
-index|[
-literal|64
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_coloron
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -67,13 +63,9 @@ name|orig_pair
 operator|!=
 name|NULL
 condition|)
-name|tputs
+name|putp
 argument_list|(
 name|orig_pair
-argument_list|,
-literal|1
-argument_list|,
-name|_outc
 argument_list|)
 expr_stmt|;
 else|else
@@ -95,6 +87,13 @@ else|else
 return|return
 name|ERR
 return|;
+name|color_pairs
+operator|=
+name|malloc
+argument_list|(
+name|max_pairs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|max_colors
@@ -110,6 +109,8 @@ else|else
 return|return
 name|ERR
 return|;
+name|SP
+operator|->
 name|_coloron
 operator|=
 literal|1
@@ -168,7 +169,7 @@ operator|)
 operator|||
 operator|(
 name|pair
-operator|>
+operator|>=
 name|COLOR_PAIRS
 operator|)
 condition|)
@@ -227,10 +228,7 @@ literal|4
 operator|)
 expr_stmt|;
 return|return
-name|color_pairs
-index|[
-name|pair
-index|]
+name|OK
 return|;
 block|}
 end_function
@@ -342,7 +340,7 @@ condition|)
 return|return
 name|ERR
 return|;
-name|tputs
+name|putp
 argument_list|(
 name|tparm
 argument_list|(
@@ -356,10 +354,6 @@ name|g
 argument_list|,
 name|b
 argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-name|_outc
 argument_list|)
 expr_stmt|;
 return|return

@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|NCURSES_VERSION
-value|"1.8.5"
+value|"1.8.6"
 end_define
 
 end_unit

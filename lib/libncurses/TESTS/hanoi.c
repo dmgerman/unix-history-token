@@ -90,7 +90,7 @@ name|LENTOIND
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x)-1)/2-1)
+value|(((x)-1)/2)
 end_define
 
 begin_define
@@ -391,9 +391,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|traceon
-argument_list|()
-expr_stmt|;
 name|start_color
 argument_list|()
 expr_stmt|;

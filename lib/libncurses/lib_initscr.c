@@ -31,13 +31,11 @@ name|TRACE
 name|_init_trace
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|_tracing
-condition|)
-name|_tracef
+name|T
 argument_list|(
+operator|(
 literal|"initscr() called"
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#

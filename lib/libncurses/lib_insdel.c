@@ -22,12 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nterm.h>
+file|"terminfo.h"
 end_include
 
 begin_function
 name|int
-name|winsdel
+name|winsdelln
 parameter_list|(
 name|WINDOW
 modifier|*

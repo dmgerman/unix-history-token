@@ -31,11 +31,14 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|BRAINDEAD
-end_ifdef
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -364,6 +367,15 @@ condition|)
 goto|goto
 name|again
 goto|;
+name|T
+argument_list|(
+operator|(
+literal|"read %d characters"
+operator|,
+name|n
+operator|)
+argument_list|)
+expr_stmt|;
 name|SP
 operator|->
 name|_fifo
@@ -698,6 +710,13 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|head
+operator|==
+operator|-
+literal|1
+condition|)
 name|fifo_push
 argument_list|()
 expr_stmt|;
@@ -840,7 +859,7 @@ decl_stmt|;
 name|int
 name|timeleft
 init|=
-literal|2000
+literal|1000
 decl_stmt|;
 name|T
 argument_list|(

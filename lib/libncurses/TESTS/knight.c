@@ -708,18 +708,12 @@ name|noecho
 argument_list|()
 expr_stmt|;
 comment|/* no immediate echo */
-name|traceon
-argument_list|()
-expr_stmt|;
 name|title
 argument_list|(
 literal|1
 argument_list|,
 literal|23
 argument_list|)
-expr_stmt|;
-name|traceoff
-argument_list|()
 expr_stmt|;
 name|mvaddstr
 argument_list|(
