@@ -1143,7 +1143,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"afd%d: %luMB floppy<%.40s> at ata%d as %s mode %s\n"
+literal|"afd%d: %luMB floppy<%.40s> at ata%d-%s using %s\n"
 argument_list|,
 name|fdp
 operator|->

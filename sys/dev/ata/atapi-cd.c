@@ -2661,7 +2661,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acd%d: %s%s<%.40s> at ata%d as %s mode %s\n"
+literal|"acd%d: %s%s<%.40s> at ata%d-%s using %s\n"
 argument_list|,
 name|cdp
 operator|->
@@ -6635,6 +6635,23 @@ operator|&
 name|B_READ
 condition|)
 block|{
+if|if
+condition|(
+name|cdp
+operator|->
+name|block_size
+operator|==
+literal|2048
+condition|)
+name|ccb
+index|[
+literal|0
+index|]
+operator|=
+name|ATAPI_READ_BIG
+expr_stmt|;
+else|else
+block|{
 name|ccb
 index|[
 literal|0
@@ -6649,7 +6666,7 @@ index|]
 operator|=
 literal|0x10
 expr_stmt|;
-comment|/* read user data only */
+block|}
 block|}
 else|else
 name|ccb

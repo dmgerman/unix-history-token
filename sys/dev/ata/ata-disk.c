@@ -933,7 +933,7 @@ block|}
 else|else
 name|printf
 argument_list|(
-literal|"ad%d: %luMB disk<%.40s> at ata%d as %s mode %s\n"
+literal|"ad%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s using %s\n"
 argument_list|,
 name|adp
 operator|->
@@ -956,6 +956,28 @@ argument_list|,
 name|AD_PARAM
 operator|->
 name|model
+argument_list|,
+name|adp
+operator|->
+name|total_secs
+operator|/
+operator|(
+name|adp
+operator|->
+name|heads
+operator|*
+name|adp
+operator|->
+name|sectors
+operator|)
+argument_list|,
+name|adp
+operator|->
+name|heads
+argument_list|,
+name|adp
+operator|->
+name|sectors
 argument_list|,
 name|scp
 operator|->
