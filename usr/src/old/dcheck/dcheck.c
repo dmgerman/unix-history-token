@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	1.1 (Berkeley) %G%"
+literal|"@(#)dcheck.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ino.h"
 end_include
 
 begin_include
@@ -99,13 +93,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
-name|iaddr
-index|[
-name|NDADDR
-operator|+
-name|NIADDR
-index|]
+name|struct
+name|dinode
+modifier|*
+name|gip
 decl_stmt|;
 end_decl_stmt
 
@@ -724,18 +715,9 @@ operator|!=
 name|IFDIR
 condition|)
 return|return;
-name|l3tol
-argument_list|(
-name|iaddr
-argument_list|,
+name|gip
+operator|=
 name|ip
-operator|->
-name|di_addr
-argument_list|,
-name|NDADDR
-operator|+
-name|NIADDR
-argument_list|)
 expr_stmt|;
 name|doff
 operator|=
@@ -1128,7 +1110,9 @@ name|NDADDR
 condition|)
 return|return
 operator|(
-name|iaddr
+name|gip
+operator|->
+name|di_db
 index|[
 name|i
 index|]
@@ -1163,9 +1147,11 @@ return|;
 block|}
 name|bread
 argument_list|(
-name|iaddr
+name|gip
+operator|->
+name|di_ib
 index|[
-name|NDADDR
+name|i
 index|]
 argument_list|,
 operator|(

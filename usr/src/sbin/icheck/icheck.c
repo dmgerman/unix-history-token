@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.1 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ino.h"
 end_include
 
 begin_include
@@ -167,17 +161,6 @@ name|dinode
 name|itab
 index|[
 name|MAXIPG
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|iaddr
-index|[
-name|NDADDR
-operator|+
-name|NIADDR
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1649,19 +1632,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|l3tol
-argument_list|(
-name|iaddr
-argument_list|,
-name|ip
-operator|->
-name|di_addr
-argument_list|,
-name|NDADDR
-operator|+
-name|NIADDR
-argument_list|)
-expr_stmt|;
 name|ndb
 operator|=
 name|howmany
@@ -1691,7 +1661,9 @@ control|)
 block|{
 if|if
 condition|(
-name|iaddr
+name|ip
+operator|->
+name|di_db
 index|[
 name|i
 index|]
@@ -1744,7 +1716,9 @@ operator|++
 control|)
 name|chk
 argument_list|(
-name|iaddr
+name|ip
+operator|->
+name|di_db
 index|[
 name|i
 index|]
@@ -1779,7 +1753,9 @@ operator|++
 control|)
 name|chk
 argument_list|(
-name|iaddr
+name|ip
+operator|->
+name|di_db
 index|[
 name|i
 index|]
@@ -1812,7 +1788,9 @@ control|)
 block|{
 if|if
 condition|(
-name|iaddr
+name|ip
+operator|->
+name|di_ib
 index|[
 name|i
 index|]
@@ -1886,7 +1864,9 @@ if|if
 condition|(
 name|chk
 argument_list|(
-name|iaddr
+name|ip
+operator|->
+name|di_ib
 index|[
 name|i
 index|]
@@ -1899,7 +1879,9 @@ condition|)
 continue|continue;
 name|bread
 argument_list|(
-name|iaddr
+name|ip
+operator|->
+name|di_ib
 index|[
 name|i
 index|]

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.1 (Berkeley) %G%"
+literal|"@(#)main.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|"../h/dir.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/ino.h"
 end_include
 
 begin_include
@@ -4213,14 +4207,6 @@ name|ndb
 decl_stmt|,
 name|size
 decl_stmt|;
-name|daddr_t
-name|iaddrs
-index|[
-name|NDADDR
-operator|+
-name|NIADDR
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|SPECIAL
@@ -4230,19 +4216,6 @@ operator|(
 name|KEEPON
 operator|)
 return|;
-name|l3tol
-argument_list|(
-name|iaddrs
-argument_list|,
-name|dp
-operator|->
-name|di_addr
-argument_list|,
-name|NDADDR
-operator|+
-name|NIADDR
-argument_list|)
-expr_stmt|;
 name|func
 operator|=
 operator|(
@@ -4270,12 +4243,16 @@ for|for
 control|(
 name|ap
 operator|=
-name|iaddrs
+name|dp
+operator|->
+name|di_db
 init|;
 name|ap
 operator|<
 operator|&
-name|iaddrs
+name|dp
+operator|->
+name|di_db
 index|[
 name|NDADDR
 index|]
