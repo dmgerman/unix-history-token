@@ -8268,6 +8268,11 @@ modifier|*
 name|newvp
 decl_stmt|;
 block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
 name|int
 name|delay
 decl_stmt|;
@@ -8285,6 +8290,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|vp
+operator|=
+name|bp
+operator|->
+name|b_vp
+expr_stmt|;
 operator|++
 name|reassignbufcalls
 expr_stmt|;
@@ -8305,9 +8316,7 @@ expr_stmt|;
 comment|/* 	 * Delete from old vnode list, if on one. 	 */
 name|VI_LOCK
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -8330,9 +8339,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 operator|!=
 name|newvp
 condition|)
@@ -8353,19 +8360,25 @@ expr_stmt|;
 comment|/* for clarification */
 block|}
 block|}
+if|if
+condition|(
+name|vp
+operator|!=
+name|newvp
+condition|)
+block|{
 name|VI_UNLOCK
 argument_list|(
-name|bp
-operator|->
-name|b_vp
+name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If dirty, put on list of dirty buffers; otherwise insert onto list 	 * of clean buffers. 	 */
 name|VI_LOCK
 argument_list|(
 name|newvp
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * If dirty, put on list of dirty buffers; otherwise insert onto list 	 * of clean buffers. 	 */
 if|if
 condition|(
 name|bp
@@ -10953,7 +10966,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DIAGNOSTIC
+name|INVARIANTS
 if|if
 condition|(
 name|vp
@@ -10984,6 +10997,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|VSHOULDFREE
+argument_list|(
+name|vp
+argument_list|)
+condition|)
 name|vfree
 argument_list|(
 name|vp
