@@ -342,10 +342,7 @@ name|ACPI_FAILURE
 argument_list|(
 name|AcpiGetHandle
 argument_list|(
-name|acpi_get_handle
-argument_list|(
-name|pcib
-argument_list|)
+name|ACPI_ROOT_OBJECT
 argument_list|,
 name|entry
 operator|->
