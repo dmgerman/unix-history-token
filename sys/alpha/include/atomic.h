@@ -23,6 +23,7 @@ begin_function_decl
 name|void
 name|atomic_set_8
 parameter_list|(
+specifier|volatile
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -35,6 +36,7 @@ begin_function_decl
 name|void
 name|atomic_clear_8
 parameter_list|(
+specifier|volatile
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -47,6 +49,7 @@ begin_function_decl
 name|void
 name|atomic_add_8
 parameter_list|(
+specifier|volatile
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -59,6 +62,7 @@ begin_function_decl
 name|void
 name|atomic_subtract_8
 parameter_list|(
+specifier|volatile
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -71,6 +75,7 @@ begin_function_decl
 name|void
 name|atomic_set_16
 parameter_list|(
+specifier|volatile
 name|u_int16_t
 modifier|*
 parameter_list|,
@@ -83,6 +88,7 @@ begin_function_decl
 name|void
 name|atomic_clear_16
 parameter_list|(
+specifier|volatile
 name|u_int16_t
 modifier|*
 parameter_list|,
@@ -95,6 +101,7 @@ begin_function_decl
 name|void
 name|atomic_add_16
 parameter_list|(
+specifier|volatile
 name|u_int16_t
 modifier|*
 parameter_list|,
@@ -107,6 +114,7 @@ begin_function_decl
 name|void
 name|atomic_subtract_16
 parameter_list|(
+specifier|volatile
 name|u_int16_t
 modifier|*
 parameter_list|,
@@ -119,6 +127,7 @@ begin_function_decl
 name|void
 name|atomic_set_32
 parameter_list|(
+specifier|volatile
 name|u_int32_t
 modifier|*
 parameter_list|,
@@ -131,6 +140,7 @@ begin_function_decl
 name|void
 name|atomic_clear_32
 parameter_list|(
+specifier|volatile
 name|u_int32_t
 modifier|*
 parameter_list|,
@@ -143,6 +153,7 @@ begin_function_decl
 name|void
 name|atomic_add_32
 parameter_list|(
+specifier|volatile
 name|u_int32_t
 modifier|*
 parameter_list|,
@@ -155,6 +166,7 @@ begin_function_decl
 name|void
 name|atomic_subtract_32
 parameter_list|(
+specifier|volatile
 name|u_int32_t
 modifier|*
 parameter_list|,
@@ -167,6 +179,7 @@ begin_function_decl
 name|void
 name|atomic_set_64
 parameter_list|(
+specifier|volatile
 name|u_int64_t
 modifier|*
 parameter_list|,
@@ -179,6 +192,7 @@ begin_function_decl
 name|void
 name|atomic_clear_64
 parameter_list|(
+specifier|volatile
 name|u_int64_t
 modifier|*
 parameter_list|,
@@ -191,6 +205,7 @@ begin_function_decl
 name|void
 name|atomic_add_64
 parameter_list|(
+specifier|volatile
 name|u_int64_t
 modifier|*
 parameter_list|,
@@ -203,6 +218,7 @@ begin_function_decl
 name|void
 name|atomic_subtract_64
 parameter_list|(
+specifier|volatile
 name|u_int64_t
 modifier|*
 parameter_list|,
@@ -322,6 +338,250 @@ directive|define
 name|atomic_subtract_long
 value|atomic_subtract_64
 end_define
+
+begin_comment
+comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int32_t
+name|atomic_cmpset_32
+parameter_list|(
+specifier|volatile
+name|u_int32_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int32_t
+name|cmpval
+parameter_list|,
+name|u_int32_t
+name|newval
+parameter_list|)
+block|{
+name|u_int32_t
+name|ret
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldl_l %1, %5\n\t"
+comment|/* load old value */
+literal|"cmpeq %1, %3, %0\n\t"
+comment|/* compare */
+literal|"beq %0, 2f\n\t"
+comment|/* exit if not equal */
+literal|"mov %4, %1\n\t"
+comment|/* value to store */
+literal|"stl_c %1, %2\n\t"
+comment|/* attempt to store */
+literal|"beq %1, 3f\n\t"
+comment|/* if it failed, spin */
+literal|"2:\n"
+comment|/* done */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"3:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|ret
+return|;
+end_return
+
+begin_comment
+unit|}
+comment|/*  * Atomically compare the value stored at *p with cmpval and if the  * two values are equal, update the value of *p with newval. Returns  * zero if the compare failed, nonzero otherwise.  */
+end_comment
+
+begin_function
+unit|static
+name|__inline
+name|u_int64_t
+name|atomic_cmpset_64
+parameter_list|(
+specifier|volatile
+name|u_int64_t
+modifier|*
+name|p
+parameter_list|,
+name|u_int64_t
+name|cmpval
+parameter_list|,
+name|u_int64_t
+name|newval
+parameter_list|)
+block|{
+name|u_int64_t
+name|ret
+decl_stmt|,
+name|temp
+decl_stmt|;
+asm|__asm __volatile (
+literal|"1:\tldq_l %1, %5\n\t"
+comment|/* load old value */
+literal|"cmpeq %1, %3, %0\n\t"
+comment|/* compare */
+literal|"beq %0, 2f\n\t"
+comment|/* exit if not equal */
+literal|"mov %4, %1\n\t"
+comment|/* value to store */
+literal|"stq_c %1, %2\n\t"
+comment|/* attempt to store */
+literal|"beq %1, 3f\n\t"
+comment|/* if it failed, spin */
+literal|"2:\n"
+comment|/* done */
+literal|".section .text3,\"ax\"\n"
+comment|/* improve branch prediction */
+literal|"3:\tbr 1b\n"
+comment|/* try again */
+literal|".previous\n"
+operator|:
+literal|"=&r"
+operator|(
+name|ret
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|temp
+operator|)
+operator|,
+literal|"=m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|cmpval
+operator|)
+operator|,
+literal|"r"
+operator|(
+name|newval
+operator|)
+operator|,
+literal|"m"
+operator|(
+operator|*
+name|p
+operator|)
+operator|:
+literal|"memory"
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|ret
+return|;
+end_return
+
+begin_define
+unit|}
+define|#
+directive|define
+name|atomic_cmpset_int
+value|atomic_cmpset_32
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_cmpset_long
+value|atomic_cmpset_64
+end_define
+
+begin_function
+unit|static
+name|__inline
+name|int
+name|atomic_cmpset_ptr
+parameter_list|(
+specifier|volatile
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|void
+modifier|*
+name|exp
+parameter_list|,
+name|void
+modifier|*
+name|src
+parameter_list|)
+block|{
+return|return
+operator|(
+name|atomic_cmpset_long
+argument_list|(
+operator|(
+specifier|volatile
+name|u_long
+operator|*
+operator|)
+name|dst
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|exp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|src
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
