@@ -809,7 +809,7 @@ name|u_int32_t
 name|link_addr
 decl_stmt|;
 comment|/* Bytes 0 - 21 -- common to all i8255x */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD2
 argument_list|(
 name|byte_count
@@ -819,7 +819,7 @@ argument_list|, :
 literal|2
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD3
 argument_list|(
 name|rx_fifo_limit
@@ -836,7 +836,7 @@ decl_stmt|;
 name|u_int8_t
 name|adaptive_ifs
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD5
 argument_list|(
 name|mwi_enable
@@ -863,7 +863,7 @@ argument_list|:
 literal|4
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD2
 argument_list|(
 name|rx_dma_bytecount
@@ -873,7 +873,7 @@ argument_list|, :
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD2
 argument_list|(
 name|tx_dma_bytecount
@@ -885,7 +885,7 @@ operator|:
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD8
 argument_list|(
 name|late_scb
@@ -926,7 +926,7 @@ operator|:
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD6
 argument_list|(
 name|disc_short_rx
@@ -955,7 +955,7 @@ literal|1
 argument_list|)
 decl_stmt|;
 comment|/* 8,9 */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD3
 argument_list|(
 name|mediatype
@@ -972,7 +972,7 @@ literal|1
 argument_list|)
 decl_stmt|;
 comment|/* 8,9 */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD6
 argument_list|(
 name|tcp_udp_cksum
@@ -1004,7 +1004,7 @@ literal|1
 argument_list|)
 decl_stmt|;
 comment|/* 8 */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD4
 argument_list|(:
 literal|3
@@ -1022,7 +1022,7 @@ operator|:
 literal|2
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD2
 argument_list|(
 name|linear_priority
@@ -1034,7 +1034,7 @@ argument_list|:
 literal|5
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD3
 argument_list|(
 name|linear_pri_mode
@@ -1050,15 +1050,15 @@ operator|:
 literal|4
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 label|:
 literal|8
 expr_stmt|;
-name|u_int8_t
+name|u_int
 label|:
 literal|8
 expr_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD8
 argument_list|(
 name|promiscuous
@@ -1095,19 +1095,19 @@ operator|:
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|fc_delay_lsb
 range|:
 literal|8
 decl_stmt|;
 comment|/* 8,9 */
-name|u_int8_t
+name|u_int
 name|fc_delay_msb
 range|:
 literal|8
 decl_stmt|;
 comment|/* 8,9 */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD6
 argument_list|(
 name|stripping
@@ -1136,7 +1136,7 @@ argument_list|:
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD8
 argument_list|(
 name|ia_wake_en
@@ -1178,7 +1178,7 @@ operator|:
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD4
 argument_list|(:
 literal|5
@@ -1195,7 +1195,7 @@ argument_list|, 			    :
 literal|1
 argument_list|)
 decl_stmt|;
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD3
 argument_list|(:
 literal|3
@@ -1208,7 +1208,7 @@ literal|4
 argument_list|)
 decl_stmt|;
 comment|/* Bytes 22 - 31 -- i82550 only */
-name|u_int8_t
+name|u_int
 name|__FXP_BITFIELD3
 argument_list|(
 name|gamla_rx
