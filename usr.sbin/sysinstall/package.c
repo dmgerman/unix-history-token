@@ -349,7 +349,7 @@ expr_stmt|;
 comment|/* Check to make sure it's not already there */
 if|if
 condition|(
-name|package_exists
+name|package_installed
 argument_list|(
 name|name
 argument_list|)
