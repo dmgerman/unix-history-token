@@ -242,6 +242,16 @@ control|)
 block|{
 if|if
 condition|(
+name|pci_get_slot
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|pci_get_slot
+argument_list|(
+name|child
+argument_list|)
+operator|&&
 name|pci_get_devid
 argument_list|(
 name|children
