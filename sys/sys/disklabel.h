@@ -1166,51 +1166,6 @@ begin_comment
 comment|/* write bootblocks */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * XXX encoding of disk minor numbers, should be elsewhere.  *  * See<sys/reboot.h> for a possibly better encoding.  *  * "cpio -H newc" can be used to back up device files with large minor  * numbers (but not ones>= 2^31).  Old cpio formats and all tar formats  * don't have enough bits, and cpio and tar don't notice the lossage.  * There are also some sign extension bugs.  */
-end_comment
-
-begin_comment
-comment|/*        3                   2                   1                   0      1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0     _________________________________________________________________     | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |     -----------------------------------------------------------------     |    SPARE    |UNIT_2 | SLICE   |  MAJOR?       |  UNIT   |PART |     ----------------------------------------------------------------- */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DKMAXUNIT
-value|0x1ff
-end_define
-
-begin_define
-define|#
-directive|define
-name|dkmakeminor
-parameter_list|(
-name|unit
-parameter_list|,
-name|slice
-parameter_list|,
-name|part
-parameter_list|)
-define|\
-value|(((slice)<< 16) | (((unit)& 0x1e0)<< 16) | \ 				(((unit)& 0x1f)<< 3) | (part))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
