@@ -371,17 +371,41 @@ value|0x40
 define|#
 directive|define
 name|TM_WILDCARD_ENABLED
-value|0x20
+value|0x02
 define|#
 directive|define
 name|TM_TMODE_ENABLED
-value|0x03
+value|0x01
+name|struct
+name|cv
+name|tgtcv0
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* two busses */
+name|struct
+name|cv
+name|tgtcv1
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* two busses */
 name|u_int8_t
 name|tmflags
+index|[
+literal|2
+index|]
 decl_stmt|;
+comment|/* two busses */
 name|u_int8_t
 name|rstatus
+index|[
+literal|2
+index|]
 decl_stmt|;
+comment|/* two bussed */
 name|u_int16_t
 name|rollinfo
 decl_stmt|;
