@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)vars.c	2.1 %G%"
+literal|"@(#)vars.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,10 +620,26 @@ name|cp
 operator|++
 control|)
 empty_stmt|;
+if|if
+condition|(
 name|h
-operator|&=
-operator|~
-literal|0100000
+operator|<
+literal|0
+condition|)
+name|h
+operator|=
+operator|-
+name|h
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|<
+literal|0
+condition|)
+name|h
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
