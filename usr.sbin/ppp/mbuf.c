@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.24 1999/03/29 08:21:28 brian Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.25 1999/05/08 11:07:07 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -158,9 +158,7 @@ operator|->
 name|cnt
 expr_stmt|;
 return|return
-operator|(
 name|len
-operator|)
 return|;
 block|}
 end_function
@@ -656,6 +654,8 @@ decl_stmt|;
 if|if
 condition|(
 name|bp
+operator|&&
+name|bp
 operator|->
 name|offset
 condition|)
@@ -749,8 +749,12 @@ operator|+
 name|extra
 argument_list|,
 name|bp
+condition|?
+name|bp
 operator|->
 name|type
+else|:
+name|MB_FSM
 argument_list|)
 expr_stmt|;
 name|head
@@ -1373,6 +1377,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 name|queue
 operator|->
 name|last
@@ -1421,6 +1432,7 @@ name|qlen
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
@@ -1436,6 +1448,13 @@ name|bp
 parameter_list|)
 block|{
 comment|/* Put it all in one contigous (aligned) mbuf */
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 name|bp
@@ -1556,6 +1575,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+block|}
 return|return
 name|bp
 return|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.32 1999/03/29 08:21:28 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.33 1999/05/08 11:07:02 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -295,7 +295,9 @@ block|}
 end_function
 
 begin_function
-name|void
+name|struct
+name|mbuf
+modifier|*
 name|lqr_RecvEcho
 parameter_list|(
 name|struct
@@ -326,7 +328,6 @@ name|hdlc
 decl_stmt|;
 name|struct
 name|echolqr
-modifier|*
 name|lqr
 decl_stmt|;
 name|u_int32_t
@@ -340,22 +341,18 @@ name|bp
 argument_list|)
 operator|==
 sizeof|sizeof
-argument_list|(
-expr|struct
-name|echolqr
-argument_list|)
+name|lqr
 condition|)
 block|{
-name|lqr
-operator|=
-operator|(
-expr|struct
-name|echolqr
-operator|*
-operator|)
-name|MBUF_CTOP
+name|mbuf_Read
 argument_list|(
 name|bp
+argument_list|,
+operator|&
+name|lqr
+argument_list|,
+sizeof|sizeof
+name|lqr
 argument_list|)
 expr_stmt|;
 if|if
@@ -363,7 +360,7 @@ condition|(
 name|ntohl
 argument_list|(
 name|lqr
-operator|->
+operator|.
 name|signature
 argument_list|)
 operator|==
@@ -375,7 +372,7 @@ operator|=
 name|ntohl
 argument_list|(
 name|lqr
-operator|->
+operator|.
 name|sequence
 argument_list|)
 expr_stmt|;
@@ -454,7 +451,7 @@ operator|)
 name|ntohl
 argument_list|(
 name|lqr
-operator|->
+operator|.
 name|signature
 argument_list|)
 argument_list|,
@@ -487,6 +484,9 @@ name|echolqr
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|bp
+return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.41 1999/03/29 08:21:26 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.42 1999/05/08 11:06:35 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -2508,7 +2508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *   Actions when receive packets  */
+comment|/*  * Actions when receive packets  */
 end_comment
 
 begin_function
@@ -2598,7 +2598,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*    * Check and process easy case    */
+comment|/* Check and process easy case */
 switch|switch
 condition|(
 name|fp
@@ -2630,7 +2630,7 @@ operator|==
 name|ST_OPENED
 condition|)
 block|{
-comment|/*        * ccp_SetOpenMode() leaves us in initial if we're disabling        *& denying everything.        *        * this is a bit smelly... we know that bp has a leading fsmheader.        */
+comment|/*        * ccp_SetOpenMode() leaves us in initial if we're disabling        *& denying everything.        */
 name|bp
 operator|=
 name|mbuf_Prepend
@@ -3691,6 +3691,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|bp
+operator|=
+name|mbuf_Contiguous
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|dec
 operator|.
 name|ackend
@@ -4389,6 +4396,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|bp
+operator|=
+name|mbuf_Contiguous
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|dec
 operator|.
 name|ackend
@@ -4616,35 +4630,42 @@ name|link
 argument_list|)
 decl_stmt|;
 name|u_short
-modifier|*
-name|sp
-decl_stmt|,
 name|proto
 decl_stmt|;
+if|if
+condition|(
+name|mbuf_Length
+argument_list|(
 name|bp
-operator|=
-name|mbuf_Contiguous
+argument_list|)
+operator|<
+literal|2
+condition|)
+block|{
+name|mbuf_Free
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|sp
+return|return;
+block|}
+name|bp
 operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|MBUF_CTOP
+name|mbuf_Read
 argument_list|(
 name|bp
+argument_list|,
+operator|&
+name|proto
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 name|proto
 operator|=
 name|ntohs
 argument_list|(
-operator|*
-name|sp
+name|proto
 argument_list|)
 expr_stmt|;
 name|log_Printf
@@ -4866,6 +4887,13 @@ decl_stmt|;
 if|if
 condition|(
 name|lcp
+operator|&&
+name|mbuf_Length
+argument_list|(
+name|bp
+argument_list|)
+operator|>=
+literal|4
 condition|)
 block|{
 name|cp
@@ -4994,16 +5022,29 @@ decl_stmt|;
 if|if
 condition|(
 name|lcp
-condition|)
-block|{
-name|ua_ntohl
-argument_list|(
-name|MBUF_CTOP
+operator|&&
+name|mbuf_Length
 argument_list|(
 name|bp
 argument_list|)
+operator|>=
+literal|4
+condition|)
+block|{
+name|mbuf_Read
+argument_list|(
+name|bp
 argument_list|,
 operator|&
+name|magic
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|magic
+operator|=
+name|ntohl
+argument_list|(
 name|magic
 argument_list|)
 expr_stmt|;
@@ -5031,7 +5072,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"%s: RecvEchoRep: Bad magic: expected 0x%08x, got: 0x%08x\n"
+literal|"%s: RecvEchoRep: Bad magic: expected 0x%08x,"
+literal|" got 0x%08x\n"
 argument_list|,
 name|fp
 operator|->
@@ -5048,6 +5090,8 @@ argument_list|)
 expr_stmt|;
 comment|/*        * XXX: We should send terminate request. But poor implementations may        * die as a result.        */
 block|}
+name|bp
+operator|=
 name|lqr_RecvEcho
 argument_list|(
 name|fp
