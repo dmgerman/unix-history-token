@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.15 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,7 +1639,7 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
-name|openxscript
+name|initsys
 argument_list|(
 name|ee
 argument_list|)
