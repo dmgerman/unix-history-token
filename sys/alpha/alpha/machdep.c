@@ -9421,6 +9421,17 @@ comment|/* 	 * For SMP, we should check the fpcurproc of each cpu. 	 */
 ifndef|#
 directive|ifndef
 name|SMP
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|save_intr
+argument_list|()
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -9447,6 +9458,11 @@ condition|)
 name|panic
 argument_list|(
 literal|"alpha_check_fpcurproc: bogus"
+argument_list|)
+expr_stmt|;
+name|restore_intr
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 endif|#
