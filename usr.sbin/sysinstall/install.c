@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.53 1995/05/25 01:22:15 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.54 1995/05/25 01:52:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -68,7 +74,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cpio_extract
+name|root_extract
 parameter_list|(
 name|void
 parameter_list|)
@@ -819,7 +825,88 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
-name|cpio_extract
+comment|/* If we're running as init, stick a shell over on the 4th VTY */
+if|if
+condition|(
+name|RunningAsInit
+operator|&&
+operator|!
+name|fork
+argument_list|()
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|,
+name|fd
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|64
+condition|;
+name|i
+operator|++
+control|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/ttyv3"
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+operator|&
+name|fd
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|dup2
+argument_list|(
+literal|0
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|execlp
+argument_list|(
+literal|"sh"
+argument_list|,
+literal|"-sh"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|root_extract
 argument_list|()
 expr_stmt|;
 name|alreadyDone
@@ -1640,7 +1727,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|cpio_extract
+name|root_extract
 parameter_list|(
 name|void
 parameter_list|)
@@ -1695,18 +1782,18 @@ name|mediaDevice
 argument_list|)
 condition|)
 block|{
-name|CpioFD
+name|RootFD
 operator|=
 name|open
 argument_list|(
-literal|"/cdrom/floppies/cpio.flp"
+literal|"/cdrom/floppies/root.flp"
 argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|CpioFD
+name|RootFD
 operator|!=
 operator|-
 literal|1
@@ -1714,7 +1801,7 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Loading CPIO floppy from CDROM"
+literal|"Loading root floppy from CDROM"
 argument_list|)
 expr_stmt|;
 name|onCDROM
@@ -1729,7 +1816,7 @@ name|tryagain
 label|:
 while|while
 condition|(
-name|CpioFD
+name|RootFD
 operator|==
 operator|-
 literal|1
@@ -1829,14 +1916,14 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Please Insert CPIO floppy in %s"
+literal|"Please Insert ROOT floppy in %s"
 argument_list|,
 name|floppyDev
 operator|->
 name|description
 argument_list|)
 expr_stmt|;
-name|CpioFD
+name|RootFD
 operator|=
 name|open
 argument_list|(
@@ -1849,14 +1936,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|CpioFD
+name|RootFD
 operator|>=
 literal|0
 condition|)
 break|break;
 name|msgDebug
 argument_list|(
-literal|"Error on open of cpio floppy: %s (%d)\n"
+literal|"Error on open of root floppy: %s (%d)\n"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1885,7 +1972,7 @@ argument_list|)
 expr_stmt|;
 name|msgWeHaveOutput
 argument_list|(
-literal|"Extracting contents of CPIO floppy..."
+literal|"Extracting contents of root floppy..."
 argument_list|)
 expr_stmt|;
 name|pipe
@@ -1906,14 +1993,14 @@ condition|)
 block|{
 name|dup2
 argument_list|(
-name|CpioFD
+name|RootFD
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|CpioFD
+name|RootFD
 argument_list|)
 expr_stmt|;
 name|dup2
@@ -2011,7 +2098,7 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|CpioFD
+name|RootFD
 argument_list|)
 expr_stmt|;
 name|close
@@ -2111,7 +2198,7 @@ argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|CpioFD
+name|RootFD
 argument_list|)
 expr_stmt|;
 name|i
@@ -2235,15 +2322,15 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"CPIO floppy did not extract properly!  Please verify\nthat your media is correct and try again."
+literal|"Root floppy did not extract properly!  Please verify\nthat your media is correct and try again."
 argument_list|)
 expr_stmt|;
 name|close
 argument_list|(
-name|CpioFD
+name|RootFD
 argument_list|)
 expr_stmt|;
-name|CpioFD
+name|RootFD
 operator|=
 operator|-
 literal|1
@@ -2267,7 +2354,7 @@ name|onCDROM
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Please remove the CPIO floppy from the drive"
+literal|"Please remove all floppies in any drives at this time.\nThey are no longer needed."
 argument_list|)
 expr_stmt|;
 block|}
