@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -764,7 +764,9 @@ name|todrop
 decl_stmt|,
 name|acked
 decl_stmt|,
-name|newwin
+name|needoutput
+init|=
+literal|0
 decl_stmt|;
 name|short
 name|ostate
@@ -2776,6 +2778,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 		 * If all outstanding data is acked, stop retransmit 		 * timer and remember to restart (more output or persist). 		 * If there is more data to be acked, restart retransmit 		 * timer. 		 */
 if|if
 condition|(
 name|ti
@@ -2786,6 +2789,7 @@ name|tp
 operator|->
 name|snd_max
 condition|)
+block|{
 name|tp
 operator|->
 name|t_timer
@@ -2795,7 +2799,23 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-else|else
+name|needoutput
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_PERSIST
+index|]
+operator|==
+literal|0
+condition|)
 block|{
 name|TCPT_RANGESET
 argument_list|(
@@ -3194,16 +3214,11 @@ name|tp
 operator|->
 name|snd_wnd
 expr_stmt|;
-name|newwin
+name|needoutput
 operator|=
 literal|1
 expr_stmt|;
 block|}
-else|else
-name|newwin
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 	 * Process segments with URG. 	 */
 if|if
 condition|(
@@ -3638,7 +3653,7 @@ expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
 if|if
 condition|(
-name|newwin
+name|needoutput
 operator|||
 operator|(
 name|tp
