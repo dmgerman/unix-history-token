@@ -12,14 +12,6 @@ struct|struct
 name|pcic_slot
 block|{
 name|int
-name|index
-decl_stmt|;
-comment|/* Index register */
-name|int
-name|data
-decl_stmt|;
-comment|/* Data register */
-name|int
 name|offset
 decl_stmt|;
 comment|/* Offset value for index */
@@ -71,11 +63,12 @@ parameter_list|,
 name|u_char
 parameter_list|)
 function_decl|;
-name|u_char
-modifier|*
-name|regs
+name|bus_space_tag_t
+name|bst
 decl_stmt|;
-comment|/* Pointer to regs in mem */
+name|bus_space_handle_t
+name|bsh
+decl_stmt|;
 block|}
 struct|;
 end_struct

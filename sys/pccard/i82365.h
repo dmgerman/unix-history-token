@@ -153,45 +153,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCIC_INDEX_0
+name|PCIC_INDEX
+value|0
+end_define
+
+begin_comment
+comment|/* Index register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_DATA
+value|1
+end_define
+
+begin_comment
+comment|/* Data register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_NPORT
+value|2
+end_define
+
+begin_comment
+comment|/* Number of ports */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PORT_0
 value|0x3e0
 end_define
 
 begin_comment
 comment|/* index reg, chips 0 and 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_DATA_0
-value|(PCIC_INDEX_0 + 1)
-end_define
-
-begin_comment
-comment|/* data reg, chips 0 and 1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_INDEX_1
-value|(PCIC_INDEX_0 + 2)
-end_define
-
-begin_comment
-comment|/* index reg, chips 2 and 3 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCIC_DATA_1
-value|(PCIC_INDEX_1 + 1)
-end_define
-
-begin_comment
-comment|/* data reg, chips 2 and 3 */
 end_comment
 
 begin_comment

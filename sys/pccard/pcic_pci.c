@@ -116,7 +116,7 @@ expr_stmt|;
 comment|/* 	 * Some BIOS leave the legacy address uninitialized.  This 	 * insures that the PD6832 puts itself where the driver will 	 * look.  We assume that multiple 6832's should be laid out 	 * sequentially.  We only initialize the first socket's legacy port, 	 * the other is a dummy. 	 */
 name|io_port
 operator|=
-name|PCIC_INDEX_0
+name|PCIC_PORT_0
 operator|+
 name|num6832
 operator|*
