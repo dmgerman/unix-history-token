@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"ifontinfo.c	1.6	(Berkeley)	86/01/05"
+literal|"ifontinfo.c	1.7	(Berkeley)	86/03/04"
 decl_stmt|;
 end_decl_stmt
 
