@@ -1,10 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	3.2	%H%	*/
+comment|/*	tty.h	3.3	%H%	*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
 begin_comment
-comment|/*  * A clist structure is the head  * of a linked list queue of characters.  * The characters are stored in 4-word  * blocks containing a link and several characters.  * The routines getc and putc  * manipulate these structures.  */
+comment|/*  * A clist structure is the head  * of a linked list queue of characters.  * The characters are stored in  * blocks containing a link and CBSIZE (param.h)  * characters.  The routines getc, putc, ... in prim.c  * manipulate these structures.  */
 end_comment
 
 begin_struct
@@ -30,40 +42,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * A tty structure is needed for  * each UNIX character device that  * is used for normal terminal IO.  * The routines in tty.c handle the  * common code associated with  * these structures.  * The definition and device dependent  * code is in each driver. (kl.c dz.c)  */
+comment|/*  * A tty structure is needed for  * each UNIX character device that  * is used for normal terminal IO.  * The routines in tty.c handle the  * common code associated with  * these structures.  The definition  * and device dependent code is in  * each driver. (cons.c, dh.c, dz.c, kl.c)  */
 end_comment
-
-begin_struct
-struct|struct
-name|tc
-block|{
-name|char
-name|t_intrc
-decl_stmt|;
-comment|/* interrupt */
-name|char
-name|t_quitc
-decl_stmt|;
-comment|/* quit */
-name|char
-name|t_startc
-decl_stmt|;
-comment|/* start output */
-name|char
-name|t_stopc
-decl_stmt|;
-comment|/* stop output */
-name|char
-name|t_eofc
-decl_stmt|;
-comment|/* end-of-file */
-name|char
-name|t_brkc
-decl_stmt|;
-comment|/* input delimiter (like nl) */
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -88,15 +68,12 @@ define|#
 directive|define
 name|t_rawq
 value|t_nu.t_t.T_rawq
-comment|/* input chars right off device */
+comment|/* raw characters or partial line */
 define|#
 directive|define
 name|t_canq
 value|t_nu.t_t.T_canq
-comment|/* input chars after erase and kill */
-ifdef|#
-directive|ifdef
-name|BERKNET
+comment|/* complete input lines */
 struct|struct
 block|{
 name|struct
@@ -111,6 +88,9 @@ decl_stmt|;
 name|int
 name|T_inbuf
 decl_stmt|;
+name|int
+name|T_rec
+decl_stmt|;
 block|}
 name|t_n
 struct|;
@@ -118,7 +98,7 @@ define|#
 directive|define
 name|t_bufp
 value|t_nu.t_n.T_bufp
-comment|/* buffer we ripped off for network */
+comment|/* buffer allocated to protocol */
 define|#
 directive|define
 name|t_cp
@@ -128,9 +108,12 @@ define|#
 directive|define
 name|t_inbuf
 value|t_nu.t_n.T_inbuf
-comment|/* number chars in the magic buffer */
-endif|#
-directive|endif
+comment|/* number chars in the buffer */
+define|#
+directive|define
+name|t_rec
+value|t_nu.t_n.T_rec
+comment|/* have a complete record */
 block|}
 name|t_nu
 union|;
@@ -217,10 +200,33 @@ name|char
 name|t_ospeed
 decl_stmt|;
 comment|/* output speed */
+comment|/* begin local */
+name|char
+name|t_rocount
+decl_stmt|;
+comment|/* chars input since a ttwrite() */
+name|char
+name|t_rocol
+decl_stmt|;
+comment|/* t_col when first input this line */
+name|struct
+name|ltchars
+name|t_lchr
+decl_stmt|;
+comment|/* local special characters */
+name|short
+name|t_local
+decl_stmt|;
+comment|/* local mode word */
+name|short
+name|t_lstate
+decl_stmt|;
+comment|/* local state bits */
+comment|/* end local */
 union|union
 block|{
 name|struct
-name|tc
+name|tchars
 name|t_chr
 decl_stmt|;
 name|struct
@@ -241,32 +247,12 @@ name|tun
 value|tp->t_un.t_chr
 end_define
 
-begin_comment
-comment|/*  * structure of arg for ioctl  */
-end_comment
-
-begin_struct
-struct|struct
-name|ttiocb
-block|{
-name|char
-name|ioc_ispeed
-decl_stmt|;
-name|char
-name|ioc_ospeed
-decl_stmt|;
-name|char
-name|ioc_erase
-decl_stmt|;
-name|char
-name|ioc_kill
-decl_stmt|;
-name|short
-name|ioc_flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|tlun
+value|tp->t_lchr
+end_define
 
 begin_define
 define|#
@@ -285,8 +271,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|CERASE
-value|'#'
+name|CTRL
+parameter_list|(
+name|c
+parameter_list|)
+value|('c'&037)
 end_define
 
 begin_comment
@@ -296,8 +285,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CERASE
+value|'#'
+end_define
+
+begin_define
+define|#
+directive|define
 name|CEOT
-value|004
+value|CTRL(d)
 end_define
 
 begin_define
@@ -333,23 +329,15 @@ begin_define
 define|#
 directive|define
 name|CSTOP
-value|023
+value|CTRL(s)
 end_define
-
-begin_comment
-comment|/* Stop output: ctl-s */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|CSTART
-value|021
+value|CTRL(q)
 end_define
-
-begin_comment
-comment|/* Start output: ctl-q */
-end_comment
 
 begin_define
 define|#
@@ -384,102 +372,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* modes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TANDEM
-value|01
-end_define
-
-begin_define
-define|#
-directive|define
-name|CBREAK
-value|02
-end_define
-
-begin_define
-define|#
-directive|define
-name|LCASE
-value|04
-end_define
-
-begin_define
-define|#
-directive|define
-name|ECHO
-value|010
-end_define
-
-begin_define
-define|#
-directive|define
-name|CRMOD
-value|020
-end_define
-
-begin_define
-define|#
-directive|define
-name|RAW
-value|040
-end_define
-
-begin_define
-define|#
-directive|define
-name|ODDP
-value|0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|EVENP
-value|0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|NLDELAY
-value|001400
-end_define
-
-begin_define
-define|#
-directive|define
-name|TBDELAY
-value|006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|XTABS
-value|006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|CRDELAY
-value|030000
-end_define
-
-begin_define
-define|#
-directive|define
-name|VTDELAY
-value|040000
-end_define
-
-begin_comment
-comment|/* Hardware bits */
+comment|/* hardware bits */
 end_comment
 
 begin_define
@@ -497,7 +390,7 @@ value|0100
 end_define
 
 begin_comment
-comment|/* Internal state bits */
+comment|/* internal state bits */
 end_comment
 
 begin_define
@@ -508,7 +401,7 @@ value|01
 end_define
 
 begin_comment
-comment|/* Delay timeout in progress */
+comment|/* delay timeout in progress */
 end_comment
 
 begin_define
@@ -519,7 +412,7 @@ value|02
 end_define
 
 begin_comment
-comment|/* Waiting for open to complete */
+comment|/* waiting for open to complete */
 end_comment
 
 begin_define
@@ -530,7 +423,7 @@ value|04
 end_define
 
 begin_comment
-comment|/* Device is open */
+comment|/* device is open */
 end_comment
 
 begin_define
@@ -552,7 +445,7 @@ value|020
 end_define
 
 begin_comment
-comment|/* Software copy of carrier-present */
+comment|/* software copy of carrier-present */
 end_comment
 
 begin_define
@@ -563,7 +456,7 @@ value|040
 end_define
 
 begin_comment
-comment|/* Output in progress */
+comment|/* output in progress */
 end_comment
 
 begin_define
@@ -574,7 +467,7 @@ value|0100
 end_define
 
 begin_comment
-comment|/* Wakeup when output done */
+comment|/* wakeup when output done */
 end_comment
 
 begin_define
@@ -596,7 +489,7 @@ value|0400
 end_define
 
 begin_comment
-comment|/* Output stopped by ctl-s */
+comment|/* output stopped by ctl-s */
 end_comment
 
 begin_define
@@ -607,7 +500,7 @@ value|01000
 end_define
 
 begin_comment
-comment|/* Hang up upon last close */
+comment|/* hang up upon last close */
 end_comment
 
 begin_define
@@ -677,314 +570,82 @@ comment|/* interpret t_un as clist */
 end_comment
 
 begin_comment
-comment|/*  * tty ioctl commands  */
+comment|/* define partab character types */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TIOCGETD
-value|(('t'<<8)|0)
+name|ORDINARY
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCSETD
-value|(('t'<<8)|1)
+name|CONTROL
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCHPCL
-value|(('t'<<8)|2)
+name|BACKSPACE
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCMODG
-value|(('t'<<8)|3)
+name|NEWLINE
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCMODS
-value|(('t'<<8)|4)
+name|TAB
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCGETP
-value|(('t'<<8)|8)
+name|VTAB
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|TIOCSETP
-value|(('t'<<8)|9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCSETN
-value|(('t'<<8)|10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCEXCL
-value|(('t'<<8)|13)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCNXCL
-value|(('t'<<8)|14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCFLUSH
-value|(('t'<<8)|16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCSETC
-value|(('t'<<8)|17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCGETC
-value|(('t'<<8)|18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCSBRK
-value|(('t'<<8)|19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCLSTN
-value|(('d'<<8)|1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCNTRL
-value|(('d'<<8)|2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCMPX
-value|(('d'<<8)|3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCNMPX
-value|(('d'<<8)|4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSCALL
-value|(('d'<<8)|5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCRCALL
-value|(('d'<<8)|6)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCPGRP
-value|(('d'<<8)|7)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCGETP
-value|(('d'<<8)|8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSETP
-value|(('d'<<8)|9)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCLOSE
-value|(('d'<<8)|10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCTIME
-value|(('d'<<8)|11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCRESET
-value|(('d'<<8)|12)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSMETA
-value|(('d'<<8)|13)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCMERGE
-value|(('d'<<8)|14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCICHAN
-value|(('d'<<8)|15)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCPAD
-value|(('d'<<8)|16)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCRMETA
-value|(('d'<<8)|17)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCXOUT
-value|(('d'<<8)|18)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCBMETA
-value|(('d'<<8)|19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCAMETA
-value|(('d'<<8)|20)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIOCSBMETA
-value|(('d'<<8)|21)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIOCLEX
-value|(('f'<<8)|1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIONCLEX
-value|(('f'<<8)|2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MXLSTN
-value|(('x'<<8)|1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MXNBLK
-value|(('x'<<8)|2)
+name|RETURN
+value|6
 end_define
 
 begin_comment
-comment|/* ##bsb 1/12/80 (from stt) ioctl code for "capacity" call */
-end_comment
-
-begin_comment
-comment|/* returns no. of bytes left before EOF or hang in cp_nbytes */
-end_comment
-
-begin_comment
-comment|/* returns flag indicating EOF versus hang in cp_eof */
+comment|/* define dmctl actions */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FIOCAPACITY
-value|(('f'<<8)|99)
+name|DMSET
+value|0
 end_define
 
-begin_struct
-struct|struct
-name|capacity
-block|{
-name|off_t
-name|cp_nbytes
-decl_stmt|;
-name|int
-name|cp_eof
-decl_stmt|;
-block|}
-struct|;
-end_struct
+begin_define
+define|#
+directive|define
+name|DMBIS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMBIC
+value|2
+end_define
 
 end_unit
 
