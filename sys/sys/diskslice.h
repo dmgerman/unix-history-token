@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.13 1996/06/14 11:02:28 asami Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.14 1996/07/23 07:46:59 asami Exp $  */
 end_comment
 
 begin_ifndef
@@ -258,9 +258,6 @@ argument|};
 ifdef|#
 directive|ifdef
 name|KERNEL
-include|#
-directive|include
-file|<sys/conf.h>
 define|#
 directive|define
 name|dsgetbad
@@ -279,7 +276,7 @@ parameter_list|,
 name|ssp
 parameter_list|)
 value|(ssp->dss_slices[dkslice(dev)].ds_label)
-argument|struct buf; struct disklabel;  typedef int ds_setgeom_t __P((struct disklabel *lp));  int	dscheck __P((struct buf *bp, struct diskslices *ssp)); void	dsclose __P((dev_t dev, int mode, struct diskslices *ssp)); void	dsgone __P((struct diskslices **sspp)); int	dsinit __P((char *dname, dev_t dev, d_strategy_t *strat, 		    struct disklabel *lp, struct diskslices **sspp)); int	dsioctl __P((char *dname, dev_t dev, int cmd, caddr_t data, int flags, 		     struct diskslices **sspp, d_strategy_t *strat, 		     ds_setgeom_t *setgeom)); int	dsisopen __P((struct diskslices *ssp)); char	*dsname __P((char *dname, int unit, int slice, int part, 		     char *partname)); int	dsopen __P((char *dname, dev_t dev, int mode, struct diskslices **sspp, 		    struct disklabel *lp, d_strategy_t *strat, 		    ds_setgeom_t *setgeom, struct bdevsw *bdevsw, 		    struct cdevsw *cdevsw)); int	dssize __P((dev_t dev, struct diskslices **sspp, d_open_t dopen, 		    d_close_t dclose));
+argument|struct buf; struct disklabel;  typedef int ds_setgeom_t __P((struct disklabel *lp));  int	dscheck __P((struct buf *bp, struct diskslices *ssp)); void	dsclose __P((dev_t dev, int mode, struct diskslices *ssp)); void	dsgone __P((struct diskslices **sspp)); int	dsinit __P((char *dname, dev_t dev, void (*strat)(struct buf *bp), 		    struct disklabel *lp, struct diskslices **sspp)); int	dsioctl __P((char *dname, dev_t dev, int cmd, caddr_t data, int flags, 		     struct diskslices **sspp, void (*strat)(struct buf *bp), 		     ds_setgeom_t *setgeom)); int	dsisopen __P((struct diskslices *ssp)); char	*dsname __P((char *dname, int unit, int slice, int part, 		     char *partname)); int	dsopen __P((char *dname, dev_t dev, int mode, struct diskslices **sspp, 		    struct disklabel *lp, void (*strat)(struct buf *bp), 		    ds_setgeom_t *setgeom, struct bdevsw *bdevsw, 		    struct cdevsw *cdevsw)); int	dssize __P((dev_t dev, struct diskslices **sspp, 		    int (*dopen)(dev_t dev, int oflags, int devtype, 				  struct proc *p), 		    int (*dclose)(dev_t dev, int fflag, int devtype, 				   struct proc *p)));
 end_decl_stmt
 
 begin_endif
