@@ -186,8 +186,6 @@ block|,
 comment|/* flags */
 name|D_DISK
 operator||
-name|D_CANFREE
-operator||
 name|D_TRACKCLOSE
 block|,
 comment|/* kqfilter */
@@ -605,6 +603,20 @@ name|gp
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|G_PF_CANDELETE
+condition|)
+name|dev
+operator|->
+name|si_flags
+operator||=
+name|SI_CANDELETE
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
