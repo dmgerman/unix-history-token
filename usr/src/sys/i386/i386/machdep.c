@@ -2236,11 +2236,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|notdef
 name|pg
 argument_list|(
 literal|"pausing (hit any key to reset)"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|reset_cpu
 argument_list|()
 expr_stmt|;
