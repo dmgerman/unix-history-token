@@ -1707,11 +1707,16 @@ block|{
 comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME first (iff 		 * we're not running setuid or setgid) and then trying 		 * the password file 		 */
 if|if
 condition|(
+ifndef|#
+directive|ifndef
+name|__NETBSD_SYSCALLS
 name|issetugid
 argument_list|()
 operator|!=
 literal|0
 operator|||
+endif|#
+directive|endif
 operator|(
 name|h
 operator|=
