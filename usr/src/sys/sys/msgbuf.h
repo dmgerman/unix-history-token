@@ -1,20 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	msgbuf.h	6.1	83/07/29	*/
+comment|/*	msgbuf.h	6.2	84/07/17	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MSG_MAGIC
-value|0x063060
+value|0x063061
 end_define
 
 begin_define
 define|#
 directive|define
 name|MSG_BSIZE
-value|(4096 - 2 * sizeof (long))
+value|(4096 - 3 * sizeof (long))
 end_define
 
 begin_struct
@@ -26,6 +26,9 @@ name|msg_magic
 decl_stmt|;
 name|long
 name|msg_bufx
+decl_stmt|;
+name|long
+name|msg_bufr
 decl_stmt|;
 name|char
 name|msg_bufc
