@@ -1482,6 +1482,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISP_CFG_NPORT
+value|0x04
+end_define
+
+begin_comment
+comment|/* try to force N- instead of L-Port */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISP_FW_REV
 parameter_list|(
 name|maj
@@ -1613,6 +1624,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ISP_HA_SCSI_12160
+value|0xb
+end_define
+
+begin_define
+define|#
+directive|define
 name|ISP_HA_FC
 value|0xf0
 end_define
@@ -1674,12 +1692,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|IS_12160
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_SCSI_12160)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IS_12X0
 parameter_list|(
 name|isp
 parameter_list|)
-define|\
-value|(isp->isp_type == ISP_HA_SCSI_1240 || isp->isp_type == ISP_HA_SCSI_1280)
+value|(IS_1240(isp) || IS_1280(isp))
 end_define
 
 begin_define
@@ -1689,7 +1716,7 @@ name|IS_DUALBUS
 parameter_list|(
 name|isp
 parameter_list|)
-value|IS_12X0(isp)
+value|(IS_12X0(isp) || IS_12160(isp))
 end_define
 
 begin_define
@@ -1699,8 +1726,17 @@ name|IS_ULTRA2
 parameter_list|(
 name|isp
 parameter_list|)
-define|\
-value|(isp->isp_type == ISP_HA_SCSI_1080 || isp->isp_type == ISP_HA_SCSI_1280)
+value|(IS_1080(isp) || IS_1280(isp) || IS_12160(isp))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_ULTRA3
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_12160(isp))
 end_define
 
 begin_define
@@ -1711,6 +1747,26 @@ parameter_list|(
 name|isp
 parameter_list|)
 value|(isp->isp_type& ISP_HA_FC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2100
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_FC_2100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_2200
+parameter_list|(
+name|isp
+parameter_list|)
+value|(isp->isp_type == ISP_HA_FC_2200)
 end_define
 
 begin_comment
