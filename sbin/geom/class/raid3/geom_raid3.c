@@ -856,6 +856,12 @@ literal|0
 expr_stmt|;
 name|md
 operator|.
+name|md_genid
+operator|=
+literal|0
+expr_stmt|;
+name|md
+operator|.
 name|md_syncid
 operator|=
 literal|1

@@ -2609,13 +2609,9 @@ name|disk
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_bump_syncid
-operator|=
-name|G_RAID3_BUMP_IMMEDIATELY
-expr_stmt|;
 block|}
+else|else
+block|{
 name|g_raid3_event_send
 argument_list|(
 name|disk
@@ -2625,6 +2621,7 @@ argument_list|,
 name|G_RAID3_EVENT_WAIT
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|G_RAID3_DISK_STATE_NODISK
