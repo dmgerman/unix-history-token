@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.29 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,67 +57,6 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* System 5 compatibility */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|S_ISREG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|S_ISREG
-parameter_list|(
-name|foo
-parameter_list|)
-value|((foo& S_IFREG) == S_IFREG)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|S_IWGRP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|S_IWGRP
-value|020
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|S_IWOTH
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|S_IWOTH
-value|002
-end_define
 
 begin_endif
 endif|#
