@@ -204,7 +204,7 @@ name|inst_trap_return
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ name|inst_return
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -224,7 +224,7 @@ name|inst_call
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -234,7 +234,7 @@ name|inst_branch
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -244,7 +244,7 @@ name|inst_load
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -254,7 +254,7 @@ name|inst_store
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
@@ -264,7 +264,7 @@ name|inst_unconditional_flow_transfer
 parameter_list|(
 name|ins
 parameter_list|)
-value|0
+value|(ins& 0)
 end_define
 
 begin_define
