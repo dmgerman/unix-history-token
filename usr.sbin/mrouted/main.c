@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.12 1997/09/30 06:15:01 charnier Exp $"
+literal|"$Id: main.c,v 1.13 1998/01/16 07:17:43 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2851,6 +2851,9 @@ name|struct
 name|timeval
 name|now
 decl_stmt|;
+name|time_t
+name|now_sec
+decl_stmt|;
 name|struct
 name|tm
 modifier|*
@@ -2913,6 +2916,9 @@ decl_stmt|;
 name|struct
 name|timeval
 name|now
+decl_stmt|;
+name|time_t
+name|now_sec
 decl_stmt|;
 name|struct
 name|tm
@@ -2998,14 +3004,18 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|now_sec
+operator|=
+name|now
+operator|.
+name|tv_sec
+expr_stmt|;
 name|thyme
 operator|=
 name|localtime
 argument_list|(
 operator|&
-name|now
-operator|.
-name|tv_sec
+name|now_sec
 argument_list|)
 expr_stmt|;
 name|strftime
