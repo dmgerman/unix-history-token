@@ -36,6 +36,9 @@ modifier|*
 name|tp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|union
 name|descriptor
 name|ldt
@@ -164,6 +167,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("movl %0,%%gs" : : "rm" ((sel<< 3) | 7));
+else|#
+directive|else
+name|_amd64_set_gsbase
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
