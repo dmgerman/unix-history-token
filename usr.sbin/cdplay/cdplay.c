@@ -4,7 +4,7 @@ comment|/* Non-X based CD player by Jean-Marc Zucconi */
 end_comment
 
 begin_comment
-comment|/* Modifications by Andrew A. Chernov         */
+comment|/* Modifications by Andrey A. Chernov         */
 end_comment
 
 begin_comment
@@ -1426,7 +1426,7 @@ name|t
 operator|.
 name|starting_track
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|t
 operator|.
