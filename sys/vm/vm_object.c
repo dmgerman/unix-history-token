@@ -261,7 +261,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|vm_object_list_mtx
@@ -686,6 +685,12 @@ operator|->
 name|generation
 operator|++
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -694,6 +699,12 @@ argument_list|,
 name|object
 argument_list|,
 name|object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
 argument_list|)
 expr_stmt|;
 name|object_hash_rand
@@ -4831,6 +4842,12 @@ name|backing_object
 operator|)
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -4839,6 +4856,12 @@ argument_list|,
 name|backing_object
 argument_list|,
 name|object_list
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
 argument_list|)
 expr_stmt|;
 name|uma_zfree

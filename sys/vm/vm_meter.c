@@ -385,6 +385,12 @@ expr_stmt|;
 comment|/* 	 * Mark all objects as inactive. 	 */
 name|GIANT_REQUIRED
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|object
@@ -398,6 +404,12 @@ argument_list|(
 name|object
 argument_list|,
 name|OBJ_ACTIVE
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate process statistics. 	 */
@@ -688,6 +700,12 @@ name|allproc_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate object memory usage statistics. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|object
@@ -803,6 +821,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_object_list_mtx
+argument_list|)
+expr_stmt|;
 name|totalp
 operator|->
 name|t_free

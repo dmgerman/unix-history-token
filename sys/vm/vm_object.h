@@ -372,6 +372,18 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mtx
+name|vm_object_list_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* lock for object list and count */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|vm_object_t
 name|kernel_object
 decl_stmt|;
