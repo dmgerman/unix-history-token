@@ -2647,24 +2647,6 @@ argument_list|()
 decl_stmt|;
 name|variable_set2
 argument_list|(
-literal|"nfs_server_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
-literal|"sendmail_enable"
-argument_list|,
-literal|"NO"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
 literal|"sshd_enable"
 argument_list|,
 literal|"NO"
@@ -2697,8 +2679,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Extreme security settings have been selected.\n\n"
-literal|"Sendmail, sshd, and NFS services have been disabled, and\n"
-literal|"securelevels have been enabled.\n\n"
+literal|"Sshd has been disabled, and kernel security levels have"
+literal|"been enabled.\n\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
@@ -2735,15 +2717,6 @@ argument_list|()
 decl_stmt|;
 name|variable_set2
 argument_list|(
-literal|"sendmail_enable"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
 literal|"sshd_enable"
 argument_list|,
 literal|"YES"
@@ -2767,8 +2740,8 @@ condition|)
 name|msgConfirm
 argument_list|(
 literal|"Moderate security settings have been selected.\n\n"
-literal|"Sendmail and sshd have been enabled, securelevels are\n"
-literal|"disabled, and NFS server settings have been left intact.\n\n"
+literal|"Sshd has been enabled and kernel securelevels are disabled;\n"
+literal|"all other settings have been left intact.\n\n"
 literal|"PLEASE NOTE that this still does not save you from having\n"
 literal|"to properly secure your system in other ways or exercise\n"
 literal|"due diligence in your administration, this simply picks\n"
