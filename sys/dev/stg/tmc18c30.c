@@ -371,6 +371,7 @@ name|STG_DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|stg_debug
 decl_stmt|;
@@ -392,6 +393,7 @@ name|STG_STATICS
 end_ifdef
 
 begin_struct
+specifier|static
 struct|struct
 name|stg_statics
 block|{

@@ -385,6 +385,7 @@ name|NCV_DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ncv_debug
 decl_stmt|;
@@ -406,6 +407,7 @@ name|NCV_STATICS
 end_ifdef
 
 begin_struct
+specifier|static
 struct|struct
 name|ncv_statics
 block|{
