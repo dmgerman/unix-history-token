@@ -1156,6 +1156,24 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+block|,
+block|{
+comment|/* 		 * Fujitsu-Siemens Memorybird pen drive 		 * PR: kern/34712 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Fujitsu"
+block|,
+literal|"Memorybird"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
