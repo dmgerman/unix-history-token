@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_var.h,v 1.10 2001/07/27 04:14:12 itojun Exp $	*/
+comment|/*	$KAME: key_var.h,v 1.11 2001/09/12 23:05:07 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -107,15 +107,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEYCTL_MAXID
+name|KEYCTL_PREFERED_OLDSA
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
+name|KEYCTL_MAXID
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|KEYCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ 	{ "esp_keymin", CTLTYPE_INT }, \ 	{ "esp_auth", CTLTYPE_INT }, \ 	{ "ah_keymin", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ 	{ "esp_keymin", CTLTYPE_INT }, \ 	{ "esp_auth", CTLTYPE_INT }, \ 	{ "ah_keymin", CTLTYPE_INT }, \ 	{ "prefered_oldsa", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
