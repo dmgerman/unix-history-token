@@ -817,11 +817,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-name|_set_ospeed
-argument_list|(
-name|wwbaud
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|wwospeed
