@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MAXNAME
-value|12
+value|24
 end_define
 
 begin_comment
