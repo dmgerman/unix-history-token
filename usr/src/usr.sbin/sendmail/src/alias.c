@@ -125,7 +125,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.35 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.36 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,7 +146,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.35 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.36 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +161,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.35 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.36 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2594,7 +2594,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|MAKEDBMFILES
+name|IF_MAKEDBMFILES
 name|store
 argument_list|(
 name|key
