@@ -628,15 +628,16 @@ expr_stmt|;
 comment|/* 	 * If the file exists, and -f was specified, unlink it. 	 * Attempt the link. 	 */
 if|if
 condition|(
+operator|(
 name|fflag
 operator|&&
 name|exists
 operator|&&
-operator|(
 name|unlink
 argument_list|(
 name|source
 argument_list|)
+operator|)
 operator|||
 call|(
 modifier|*
@@ -647,7 +648,6 @@ name|target
 argument_list|,
 name|source
 argument_list|)
-operator|)
 condition|)
 block|{
 name|warn
