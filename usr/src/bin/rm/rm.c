@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rm.c	4.14 (Berkeley) %G%"
+literal|"@(#)rm.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -416,6 +416,7 @@ condition|(
 operator|!
 name|fflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"nonexistent"
@@ -424,6 +425,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -450,6 +452,12 @@ operator|!
 name|rflg
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|fflg
+condition|)
+block|{
 name|error
 argument_list|(
 literal|"directory"
@@ -458,6 +466,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -500,6 +509,7 @@ condition|(
 operator|!
 name|fflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"not changed"
@@ -508,6 +518,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -565,6 +576,7 @@ condition|(
 operator|!
 name|fflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"cannot read?"
@@ -573,6 +585,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -693,6 +706,7 @@ condition|(
 operator|!
 name|fflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"cannot read?"
@@ -701,6 +715,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 break|break;
 block|}
 comment|/* pick up where we left off */
@@ -815,6 +830,7 @@ condition|(
 operator|!
 name|fflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"cannot cd to '..'?"
@@ -823,6 +839,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -865,6 +882,7 @@ name|fflg
 operator|||
 name|iflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"not removed"
@@ -873,6 +891,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -978,6 +997,7 @@ name|fflg
 operator|||
 name|iflg
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"not removed"
@@ -986,6 +1006,7 @@ expr_stmt|;
 name|errcode
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
