@@ -1541,7 +1541,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"unable to prepend VLAN header"
+literal|"unable to prepend VLAN header\n"
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -1589,7 +1589,7 @@ name|if_printf
 argument_list|(
 name|ifp
 argument_list|,
-literal|"cannot pullup VLAN header"
+literal|"cannot pullup VLAN header\n"
 argument_list|)
 expr_stmt|;
 name|ifp
