@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"lookup.c	(CWI)	1.1	85/03/01"
+literal|"@(#)lookup.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -106,7 +107,11 @@ name|SUP
 block|,
 literal|".EN"
 block|,
-name|EOF
+name|DOTEN
+block|,
+literal|".EQ"
+block|,
+name|DOTEQ
 block|,
 literal|"from"
 block|,
@@ -176,21 +181,42 @@ literal|"inter"
 block|,
 name|INTER
 block|,
+literal|"matrix"
+block|,
+name|MATRIX
+block|,
+literal|"col"
+block|,
+name|COL
+block|,
+literal|"lcol"
+block|,
+name|LCOL
+block|,
+literal|"ccol"
+block|,
+name|CCOL
+block|,
+literal|"rcol"
+block|,
+name|RCOL
+block|,
 literal|"pile"
 block|,
-name|PILE
+name|COL
 block|,
+comment|/* synonyms ... */
 literal|"lpile"
 block|,
-name|LPILE
+name|LCOL
 block|,
 literal|"cpile"
 block|,
-name|CPILE
+name|CCOL
 block|,
 literal|"rpile"
 block|,
-name|RPILE
+name|RCOL
 block|,
 literal|"over"
 block|,
@@ -269,6 +295,10 @@ name|NDEFINE
 block|,
 endif|#
 directive|endif
+literal|"ifdef"
+block|,
+name|IFDEF
+block|,
 literal|"gsize"
 block|,
 name|GSIZE
@@ -282,6 +312,10 @@ block|,
 name|GFONT
 block|,
 literal|"include"
+block|,
+name|INCLUDE
+block|,
+literal|"copy"
 block|,
 name|INCLUDE
 block|,
@@ -312,26 +346,6 @@ block|,
 literal|"lineup"
 block|,
 name|LINEUP
-block|,
-literal|"matrix"
-block|,
-name|MATRIX
-block|,
-literal|"col"
-block|,
-name|COL
-block|,
-literal|"lcol"
-block|,
-name|LCOL
-block|,
-literal|"ccol"
-block|,
-name|CCOL
-block|,
-literal|"rcol"
-block|,
-name|RCOL
 block|,
 literal|0
 block|,
@@ -475,7 +489,7 @@ literal|"\\v'-.3m'\\ .\\ .\\ .\\ \\v'.3m'"
 block|,
 literal|",...,"
 block|,
-literal|",\\ .\\ .\\ .\\ ,\\|"
+literal|"\\f1,\\fP\\ .\\ .\\ .\\ \\f1,\\fP\\|"
 block|,
 endif|#
 directive|endif
@@ -754,11 +768,6 @@ name|s
 init|=
 name|name
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|h

@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"funny.c	(CWI)	1.1	85/03/01"
+literal|"@(#)funny.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -53,7 +54,7 @@ name|f
 decl_stmt|;
 name|yyval
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
 expr_stmt|;
 switch|switch
@@ -107,15 +108,11 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\v'.3m'\\s+5%s\\s-5\\v'-.3m'\\s%d\n"
+literal|".ds %d \\v'.3m'\\s+5%s\\s-5\\v'-.3m'\n"
 argument_list|,
 name|yyval
 argument_list|,
-name|ps
-argument_list|,
 name|f
-argument_list|,
-name|ps
 argument_list|)
 expr_stmt|;
 name|eht
@@ -123,8 +120,6 @@ index|[
 name|yyval
 index|]
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 literal|1.0
@@ -140,30 +135,29 @@ literal|0.2
 argument_list|,
 name|ps
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|ebase
 index|[
 name|yyval
 index|]
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 literal|0.3
 argument_list|,
 name|ps
 argument_list|)
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|eps
+index|[
+name|yyval
+index|]
+operator|=
+name|ps
+expr_stmt|;
+name|dprintf
 argument_list|(
-literal|".\tfunny: S%d<- %s; h=%d b=%d\n"
+literal|".\tS%d<- %s; h=%g b=%g\n"
 argument_list|,
 name|yyval
 argument_list|,

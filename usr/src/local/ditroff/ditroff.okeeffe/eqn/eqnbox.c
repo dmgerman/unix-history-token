@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"eqnbox.c	(CWI)	1.1	85/03/01"
+literal|"@(#)eqnbox.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -39,7 +40,7 @@ end_macro
 
 begin_block
 block|{
-name|int
+name|float
 name|b
 decl_stmt|,
 name|h
@@ -106,13 +107,9 @@ index|]
 operator|=
 name|b
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\te:eb: S%d<- S%d S%d; b=%d, h=%d\n"
+literal|".\tS%d<- %d %d; b=%g, h=%g\n"
 argument_list|,
 name|yyval
 argument_list|,
@@ -143,8 +140,9 @@ name|ROM
 condition|)
 name|sh
 operator|=
-literal|"\\|"
+literal|"\\^"
 expr_stmt|;
+comment|/* was \| */
 else|else
 name|sh
 operator|=
@@ -157,11 +155,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|".nr %d \\w'\\s%d\\*(%d%s'\n"
+literal|".nr %d \\w'\\*(%d%s'\n"
 argument_list|,
 name|p1
-argument_list|,
-name|ps
 argument_list|,
 name|p1
 argument_list|,
@@ -170,7 +166,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\h'|\\n(97u-\\n(%du'\\*(%d\n"
+literal|".ds %d \\h'|\\n(09u-\\n(%du'\\*(%d\n"
 argument_list|,
 name|p1
 argument_list|,
@@ -201,7 +197,7 @@ index|[
 name|p2
 index|]
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|p2
 argument_list|)

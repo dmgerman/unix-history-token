@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"integral.c	(CWI)	1.1	85/03/01"
+literal|"@(#)integral.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -53,7 +54,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|".ds %d \\h'-0.4m'\\v'0.4m'\\*(%d\\v'-0.4m'\n"
+literal|".ds %d \\h'-0.4m'\\v'0.2m'\\*(%d\\v'-0.2m'\n"
 argument_list|,
 name|p1
 argument_list|,
@@ -68,7 +69,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|".ds %d \\v'-0.3m'\\*(%d\\v'0.3m'\n"
+literal|".ds %d \\v'-0.1m'\\^\\*(%d\\v'0.1m'\n"
 argument_list|,
 name|p2
 argument_list|,
@@ -126,13 +127,9 @@ argument_list|,
 name|p2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\tintegral: S%d; h=%d b=%d\n"
+literal|".\tintegral: S%d; h=%g b=%g\n"
 argument_list|,
 name|p
 argument_list|,
@@ -164,30 +161,16 @@ end_macro
 
 begin_block
 block|{
-name|char
-modifier|*
-name|f
-decl_stmt|;
 name|yyval
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
-expr_stmt|;
-name|f
-operator|=
-literal|"\\(is"
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\v'.1m'\\s+4%s\\s-4\\v'-.1m'\\s%d\n"
+literal|".ds %d \\v'.1m'\\s+4\\(is\\s-4\\v'-.1m'\n"
 argument_list|,
 name|yyval
-argument_list|,
-name|ps
-argument_list|,
-name|f
-argument_list|,
-name|ps
 argument_list|)
 expr_stmt|;
 name|eht
@@ -195,8 +178,6 @@ index|[
 name|yyval
 index|]
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 literal|1.15
@@ -205,22 +186,25 @@ name|ps
 operator|+
 literal|4
 argument_list|)
-argument_list|)
 expr_stmt|;
 name|ebase
 index|[
 name|yyval
 index|]
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 literal|0.3
 argument_list|,
 name|ps
 argument_list|)
-argument_list|)
+expr_stmt|;
+name|eps
+index|[
+name|yyval
+index|]
+operator|=
+name|ps
 expr_stmt|;
 name|lfont
 index|[

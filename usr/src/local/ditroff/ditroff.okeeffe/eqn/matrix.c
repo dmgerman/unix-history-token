@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"matrix.c	(CWI)	1.1	85/03/01"
+literal|"@(#)matrix.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -27,19 +28,79 @@ file|"e.h"
 end_include
 
 begin_macro
-name|column
+name|startcol
 argument_list|(
 argument|type
-argument_list|,
-argument|p1
 argument_list|)
 end_macro
+
+begin_comment
+comment|/* mark start of column in lp[] array */
+end_comment
 
 begin_decl_stmt
 name|int
 name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|oct
+init|=
+name|ct
+decl_stmt|;
+name|lp
+index|[
+name|ct
+operator|++
+index|]
+operator|=
+name|type
+expr_stmt|;
+name|lp
+index|[
+name|ct
+operator|++
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* count, to come */
+name|lp
+index|[
+name|ct
+operator|++
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* separation, to come */
+return|return
+name|oct
+return|;
+block|}
+end_block
+
+begin_macro
+name|column
+argument_list|(
+argument|oct
+argument_list|,
+argument|sep
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* remember end of column that started at lp[oct] */
+end_comment
+
+begin_decl_stmt
+name|int
+name|oct
 decl_stmt|,
-name|p1
+name|sep
 decl_stmt|;
 end_decl_stmt
 
@@ -47,17 +108,37 @@ begin_block
 block|{
 name|int
 name|i
+decl_stmt|,
+name|type
 decl_stmt|;
 name|lp
 index|[
-name|p1
+name|oct
+operator|+
+literal|1
 index|]
 operator|=
 name|ct
 operator|-
-name|p1
+name|oct
 operator|-
-literal|1
+literal|3
+expr_stmt|;
+name|lp
+index|[
+name|oct
+operator|+
+literal|2
+index|]
+operator|=
+name|sep
+expr_stmt|;
+name|type
+operator|=
+name|lp
+index|[
+name|oct
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -75,9 +156,9 @@ for|for
 control|(
 name|i
 operator|=
-name|p1
+name|oct
 operator|+
-literal|1
+literal|3
 init|;
 name|i
 operator|<
@@ -98,36 +179,41 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", rows=%d\n"
+literal|", rows=%d, sep=%d\n"
 argument_list|,
 name|lp
 index|[
-name|p1
+name|oct
+operator|+
+literal|1
+index|]
+argument_list|,
+name|lp
+index|[
+name|oct
+operator|+
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|lp
-index|[
-name|ct
-operator|++
-index|]
-operator|=
-name|type
-expr_stmt|;
 block|}
 end_block
 
 begin_macro
 name|matrix
 argument_list|(
-argument|p1
+argument|oct
 argument_list|)
 end_macro
 
+begin_comment
+comment|/* matrix is list of columns */
+end_comment
+
 begin_decl_stmt
 name|int
-name|p1
+name|oct
 decl_stmt|;
 end_decl_stmt
 
@@ -144,14 +230,15 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
-name|hb
-decl_stmt|,
-name|b
-decl_stmt|,
 name|val
 index|[
 literal|100
 index|]
+decl_stmt|;
+name|float
+name|b
+decl_stmt|,
+name|hb
 decl_stmt|;
 name|char
 modifier|*
@@ -161,14 +248,19 @@ name|space
 operator|=
 literal|"\\ \\ "
 expr_stmt|;
+comment|/* between columns of matrix */
 name|nrow
 operator|=
 name|lp
 index|[
-name|p1
+name|oct
+operator|+
+literal|1
 index|]
 expr_stmt|;
 comment|/* disaster if rows inconsistent */
+comment|/* also assumes just columns */
+comment|/* fix when add other things */
 name|ncol
 operator|=
 literal|0
@@ -177,7 +269,9 @@ for|for
 control|(
 name|i
 operator|=
-name|p1
+name|oct
+operator|+
+literal|1
 init|;
 name|i
 operator|<
@@ -190,17 +284,13 @@ index|[
 name|i
 index|]
 operator|+
-literal|2
+literal|3
 control|)
 block|{
 name|ncol
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|".\tcolct=%d\n"
 argument_list|,
@@ -233,9 +323,11 @@ literal|0
 expr_stmt|;
 name|j
 operator|=
-name|p1
+name|oct
 operator|+
 name|k
+operator|+
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -293,16 +385,12 @@ name|j
 operator|+=
 name|nrow
 operator|+
-literal|2
+literal|3
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\trow %d: b=%d, hb=%d\n"
+literal|".\trow %d: b=%g, hb=%g\n"
 argument_list|,
 name|k
 argument_list|,
@@ -313,9 +401,11 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|=
-name|p1
+name|oct
 operator|+
 name|k
+operator|+
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -357,13 +447,13 @@ name|j
 operator|+=
 name|nrow
 operator|+
-literal|2
+literal|3
 expr_stmt|;
 block|}
 block|}
 name|j
 operator|=
-name|p1
+name|oct
 expr_stmt|;
 for|for
 control|(
@@ -379,32 +469,9 @@ name|i
 operator|++
 control|)
 block|{
-name|lpile
+name|pile
 argument_list|(
-name|lp
-index|[
 name|j
-operator|+
-name|lp
-index|[
-name|j
-index|]
-operator|+
-literal|1
-index|]
-argument_list|,
-name|j
-operator|+
-literal|1
-argument_list|,
-name|j
-operator|+
-name|lp
-index|[
-name|j
-index|]
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|val
@@ -418,12 +485,12 @@ name|j
 operator|+=
 name|nrow
 operator|+
-literal|2
+literal|3
 expr_stmt|;
 block|}
 name|yyval
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
 expr_stmt|;
 name|eht
@@ -464,13 +531,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\tmatrix S%d: r=%d, c=%d, h=%d, b=%d\n"
+literal|".\tmatrix S%d: r=%d, c=%d, h=%g, b=%g\n"
 argument_list|,
 name|yyval
 argument_list|,
@@ -530,7 +593,7 @@ else|:
 name|space
 argument_list|)
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|val
 index|[
@@ -543,10 +606,6 @@ name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
-expr_stmt|;
-name|ct
-operator|=
-name|p1
 expr_stmt|;
 block|}
 end_block

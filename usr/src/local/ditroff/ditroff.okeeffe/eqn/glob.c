@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"glob.c	(CWI)	1.1	85/03/01"
+literal|"@(#)glob.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -40,7 +41,7 @@ begin_decl_stmt
 name|int
 name|lp
 index|[
-literal|80
+literal|200
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -108,24 +109,71 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|gfont
+name|ft
 init|=
-name|ITAL
+literal|'2'
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Font
+name|ftstack
+index|[
+literal|10
+index|]
+init|=
+block|{
+literal|'2'
+block|,
+literal|"2"
+block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* italic */
+comment|/* bottom is global font */
+end_comment
+
+begin_decl_stmt
+name|Font
+modifier|*
+name|ftp
+init|=
+name|ftstack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|szstack
+index|[
+literal|10
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* non-zero if absolute size set at this level */
 end_comment
 
 begin_decl_stmt
 name|int
-name|ft
+name|nszstack
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|display
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default font */
+comment|/* 1=>display, 0=>.EQ/.EN */
 end_comment
 
 begin_ifdef
@@ -133,6 +181,19 @@ ifdef|#
 directive|ifdef
 name|APS
 end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|typesetter
+init|=
+literal|"aps"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name for -T */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -170,60 +231,19 @@ begin_comment
 comment|/* min size it can handle; ditto */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-end_ifdef
-
-begin_comment
-comment|/* 		 * with just two possible typesetters, this would be the 		 * approach 		 */
-end_comment
-
-begin_decl_stmt
-name|int
-name|ttype
-init|=
-name|DEV202
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* type of typesetter today */
-end_comment
-
-begin_decl_stmt
-name|int
-name|res
-init|=
-literal|972
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resolution of typesetter; dflt = 202 */
-end_comment
-
-begin_decl_stmt
-name|int
-name|minsize
-init|=
-literal|6
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* min size it can handle; ditto */
-end_comment
-
 begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+name|char
+modifier|*
+name|typesetter
+init|=
+literal|"har"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -266,59 +286,22 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|curfile
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* current input file */
+comment|/*  *	char	*typesetter = "202";  *	int	ttype	= DEV202;	/* type of typesetter today  *	int	res	= 972;		/* resolution of typesetter; dflt = 202  *	int	minsize	= 5;		/* min size it can handle; ditto */
 end_comment
 
 begin_decl_stmt
 name|int
-name|ifile
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|linect
+name|synerr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* line number in file */
+comment|/* 1 if syntax err in this eqn */
 end_comment
 
 begin_decl_stmt
-name|int
-name|eqline
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* line where eqn started */
-end_comment
-
-begin_decl_stmt
-name|int
-name|svargc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-modifier|*
-name|svargv
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+name|float
 name|eht
 index|[
 literal|100
@@ -327,8 +310,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|float
 name|ebase
+index|[
+literal|100
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|eps
 index|[
 literal|100
 index|]
@@ -364,13 +356,13 @@ comment|/* register where final string appears */
 end_comment
 
 begin_decl_stmt
-name|int
+name|float
 name|eqnht
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* inal height of equation */
+comment|/* final height of equation */
 end_comment
 
 begin_decl_stmt
@@ -395,16 +387,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* right in-line delimiter */
-end_comment
-
-begin_decl_stmt
-name|int
-name|lastchar
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last character read by lex */
 end_comment
 
 begin_decl_stmt

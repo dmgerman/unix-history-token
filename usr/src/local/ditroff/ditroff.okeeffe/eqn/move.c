@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"move.c	(CWI)	1.1	85/03/01"
+literal|"@(#)move.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -55,7 +56,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
+name|float
 name|a
 decl_stmt|;
 name|yyval
@@ -64,19 +65,13 @@ name|p
 expr_stmt|;
 name|a
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 name|amt
 operator|/
 literal|100.0
 argument_list|,
-name|EFFPS
-argument_list|(
 name|ps
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -96,10 +91,9 @@ name|dir
 operator|==
 name|BACK
 condition|)
-comment|/* fwd, back */
 name|printf
 argument_list|(
-literal|"\\h'%s%du'\\*(%d\n"
+literal|"\\h'%s%gm'\\*(%d\n"
 argument_list|,
 operator|(
 name|dir
@@ -125,7 +119,7 @@ name|UP
 condition|)
 name|printf
 argument_list|(
-literal|"\\v'-%du'\\*(%d\\v'%du'\n"
+literal|"\\v'-%gm'\\*(%d\\v'%gm'\n"
 argument_list|,
 name|a
 argument_list|,
@@ -143,7 +137,7 @@ name|DOWN
 condition|)
 name|printf
 argument_list|(
-literal|"\\v'%du'\\*(%d\\v'-%du'\n"
+literal|"\\v'%gm'\\*(%d\\v'-%gm'\n"
 argument_list|,
 name|a
 argument_list|,
@@ -152,13 +146,9 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\tmove %d dir %d amt %d; h=%d b=%d\n"
+literal|".\tmove %d dir %d amt %g; h=%g b=%g\n"
 argument_list|,
 name|p
 argument_list|,

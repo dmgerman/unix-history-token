@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"over.c	(CWI)	1.1	85/03/01"
+literal|"@(#)over.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -46,17 +47,18 @@ end_decl_stmt
 begin_block
 block|{
 name|int
+name|treg
+decl_stmt|;
+name|float
 name|h
 decl_stmt|,
 name|b
-decl_stmt|,
-name|treg
 decl_stmt|,
 name|d
 decl_stmt|;
 name|treg
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
 expr_stmt|;
 name|yyval
@@ -65,14 +67,11 @@ name|p1
 expr_stmt|;
 name|d
 operator|=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
 literal|0.3
 argument_list|,
 name|ps
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|h
@@ -98,13 +97,9 @@ index|]
 operator|-
 name|d
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|".\tb:bob: S%d<- S%d over S%d; b=%d, h=%d\n"
+literal|".\tS%d<- %d over %d; b=%g, h=%g\n"
 argument_list|,
 name|yyval
 argument_list|,
@@ -159,24 +154,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr %d \\n(%d+\\s%d.5m\\s0\n"
+literal|".nr %d \\n(%d+.5m\n"
 argument_list|,
 name|treg
 argument_list|,
 name|treg
-argument_list|,
-name|EFFPS
-argument_list|(
-name|ps
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\v'%du'\\h'\\n(%du-\\n(%du/2u'\\*(%d\\\n"
+literal|".ds %d \\v'%gm'\\h'\\n(%du-\\n(%du/2u'\\*(%d\\\n"
 argument_list|,
 name|yyval
 argument_list|,
+name|REL
+argument_list|(
 name|eht
 index|[
 name|p2
@@ -189,6 +181,9 @@ index|]
 operator|-
 name|d
 argument_list|,
+name|ps
+argument_list|)
+argument_list|,
 name|treg
 argument_list|,
 name|p2
@@ -198,12 +193,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\\h'-\\n(%du-\\n(%du/2u'\\v'%du'\\*(%d\\\n"
+literal|"\\h'-\\n(%du-\\n(%du/2u'\\v'%gm'\\*(%d\\\n"
 argument_list|,
 name|p2
 argument_list|,
 name|p1
 argument_list|,
+name|REL
+argument_list|(
 operator|-
 operator|(
 name|eht
@@ -224,17 +221,22 @@ name|p1
 index|]
 operator|)
 argument_list|,
+name|ps
+argument_list|)
+argument_list|,
 name|p1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\\h'-\\n(%du-\\n(%du/2u+.1m'\\v'%du'\\l'\\n(%du-.2m'\\h'.1m'\\v'%du'\n"
+literal|"\\h'-\\n(%du-\\n(%du/2u+.1m'\\v'%gm'\\l'\\n(%du-.2m'\\h'.1m'\\v'%gm'\n"
 argument_list|,
 name|treg
 argument_list|,
 name|p1
 argument_list|,
+name|REL
+argument_list|(
 name|ebase
 index|[
 name|p1
@@ -242,9 +244,17 @@ index|]
 operator|+
 name|d
 argument_list|,
+name|ps
+argument_list|)
+argument_list|,
 name|treg
 argument_list|,
+name|REL
+argument_list|(
 name|d
+argument_list|,
+name|ps
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ebase
@@ -273,12 +283,12 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|treg
 argument_list|)

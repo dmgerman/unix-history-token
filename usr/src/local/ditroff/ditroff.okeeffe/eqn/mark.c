@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"mark.c	(CWI)	1.1	85/03/01"
+literal|"@(#)mark.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -47,7 +48,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\k(97\\*(%d\n"
+literal|".ds %d \\k(09\\*(%d\n"
 argument_list|,
 name|p1
 argument_list|,
@@ -58,11 +59,7 @@ name|yyval
 operator|=
 name|p1
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|".\tmark %d\n"
 argument_list|,
@@ -94,22 +91,18 @@ condition|)
 block|{
 name|yyval
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\h'|\\n(97u'\n"
+literal|".ds %d \\h'|\\n(09u'\n"
 argument_list|,
 name|yyval
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|".\tlineup %d\n"
 argument_list|,

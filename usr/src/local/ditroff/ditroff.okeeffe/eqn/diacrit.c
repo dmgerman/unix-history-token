@@ -8,16 +8,17 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"diacrit.c	(CWI)	1.1	85/03/01"
+literal|"@(#)diacrit.c	2.1 (CWI) 85/07/18"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
+endif|lint
 end_endif
 
 begin_include
@@ -55,42 +56,33 @@ name|int
 name|c
 decl_stmt|,
 name|t
-decl_stmt|,
-name|effps
 decl_stmt|;
 name|c
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
 expr_stmt|;
 name|t
 operator|=
-name|oalloc
+name|salloc
 argument_list|()
-expr_stmt|;
-name|effps
-operator|=
-name|EFFPS
-argument_list|(
-name|ps
-argument_list|)
 expr_stmt|;
 name|nrwid
 argument_list|(
 name|p1
 argument_list|,
-name|effps
+name|ps
 argument_list|,
 name|p1
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr 10 %du\n"
+literal|".nr 10 %gm\n"
 argument_list|,
-name|VERT
-argument_list|(
 name|max
+argument_list|(
+name|REL
 argument_list|(
 name|eht
 index|[
@@ -102,8 +94,6 @@ index|[
 name|p1
 index|]
 operator|-
-name|EM
-argument_list|(
 literal|1
 argument_list|,
 name|ps
@@ -112,35 +102,29 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|)
-argument_list|)
 expr_stmt|;
-comment|/* vertical shift if high */
+comment|/* vert shift if high */
 name|printf
 argument_list|(
-literal|".if \\n(ct>1 .nr 10 \\n(10+\\s%d.25m\\s0\n"
-argument_list|,
-name|effps
+literal|".if \\n(ct>1 .nr 10 \\n(10+.25m\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr %d \\s%d.1m\\s0\n"
+literal|".nr %d .025m\n"
 argument_list|,
 name|t
-argument_list|,
-name|effps
 argument_list|)
 expr_stmt|;
 comment|/* horiz shift if high */
 name|printf
 argument_list|(
-literal|".if \\n(ct>1 .nr %d \\s%d.15m\\s0\n"
+literal|".if \\n(ct>1 .nr %d .05m\n"
 argument_list|,
 name|t
-argument_list|,
-name|effps
 argument_list|)
 expr_stmt|;
+comment|/* was .1 and .15 */
 switch|switch
 condition|(
 name|type
@@ -151,18 +135,9 @@ name|VEC
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.4m'\\s%d\\(->\\s0\\v'.4m'\n"
+literal|".ds %d \\v'-.45m'\\s-1\\(->\\s0\\v'.45m'\n"
 argument_list|,
 name|c
-argument_list|,
-name|max
-argument_list|(
-name|effps
-operator|-
-literal|3
-argument_list|,
-name|minsize
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -171,18 +146,9 @@ name|DYAD
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.4m'\\s%d\\z\\(<-\\(->\\s0\\v'.4m'\n"
+literal|".ds %d \\v'-.45m'\\s-1\\z\\(<-\\|\\(->\\s0\\v'.45m'\n"
 argument_list|,
 name|c
-argument_list|,
-name|max
-argument_list|(
-name|effps
-operator|-
-literal|3
-argument_list|,
-name|minsize
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -191,7 +157,7 @@ name|HAT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d ^\n"
+literal|".ds %d \\v'-.1m'\\s+1^\\s0\\v'.1m'\n"
 argument_list|,
 name|c
 argument_list|)
@@ -202,7 +168,7 @@ name|TILDE
 case|:
 name|printf
 argument_list|(
-literal|".ds %d ~\n"
+literal|".ds %d \\v'-.1m'\\s+1~\\s0\\v'.1m'\n"
 argument_list|,
 name|c
 argument_list|)
@@ -213,11 +179,9 @@ name|DOT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\v'-.67m'.\\v'.67m'\\s0\n"
+literal|".ds %d \\v'-.67m'.\\v'.67m'\n"
 argument_list|,
 name|c
-argument_list|,
-name|effps
 argument_list|)
 expr_stmt|;
 break|break;
@@ -226,11 +190,9 @@ name|DOTDOT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\v'-.67m'..\\v'.67m\\s0'\n"
+literal|".ds %d \\v'-.67m'..\\v'.67m'\n"
 argument_list|,
 name|c
-argument_list|,
-name|effps
 argument_list|)
 expr_stmt|;
 break|break;
@@ -239,11 +201,9 @@ name|BAR
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\v'-.68m'\\h'.05m'\\l'\\n(%du-.1m'\\h'.05m'\\v'.68m'\\s0\n"
+literal|".ds %d \\v'-.68m'\\h'.05m'\\l'\\n(%du-.1m'\\h'.05m'\\v'.68m'\n"
 argument_list|,
 name|c
-argument_list|,
-name|effps
 argument_list|,
 name|p1
 argument_list|)
@@ -270,17 +230,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr 10 0-%d\n"
+literal|".nr 10 0-.1m-%gm\n"
 argument_list|,
+name|REL
+argument_list|(
 name|ebase
 index|[
 name|p1
 index|]
+argument_list|,
+name|ps
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".if \\n(ct%%2=1 .nr 10 \\n(10-.25m\n"
+literal|".if \\n(ct%%2=1 .nr 10 0\\n(10-.25m\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -303,17 +268,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr 10 0-%d\n"
+literal|".nr 10 0-%gm\n"
 argument_list|,
+name|REL
+argument_list|(
 name|ebase
 index|[
 name|p1
 index|]
+argument_list|,
+name|ps
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".if \\n(ct%%2=1 .nr 10 \\n(10-.25m\n"
+literal|".if \\n(ct%%2=1 .nr 10 0\\n(10-.25m\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -369,7 +339,6 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
-comment|/* BUG - should go to right end of widest */
 if|if
 condition|(
 name|type
@@ -385,23 +354,17 @@ index|[
 name|p1
 index|]
 operator|+=
-name|VERT
-argument_list|(
 name|EM
 argument_list|(
-literal|0.15
+literal|0.25
 argument_list|,
 name|ps
 argument_list|)
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dbg
-condition|)
-name|printf
+comment|/* was .15 */
+name|dprintf
 argument_list|(
-literal|".\tdiacrit: %c over S%d, lf=%c, rf=%c, h=%d,b=%d\n"
+literal|".\tdiacrit: %c over S%d, lf=%c, rf=%c, h=%g, b=%g\n"
 argument_list|,
 name|type
 argument_list|,
@@ -428,12 +391,12 @@ name|p1
 index|]
 argument_list|)
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-name|ofree
+name|sfree
 argument_list|(
 name|t
 argument_list|)
