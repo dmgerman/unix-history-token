@@ -156,7 +156,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|rpc_call
+name|krpc_call
 block|{
 name|u_int32_t
 name|rp_xid
@@ -200,7 +200,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|rpc_reply
+name|krpc_reply
 block|{
 name|u_int32_t
 name|rp_xid
@@ -621,12 +621,12 @@ modifier|*
 name|mhead
 decl_stmt|;
 name|struct
-name|rpc_call
+name|krpc_call
 modifier|*
 name|call
 decl_stmt|;
 name|struct
-name|rpc_reply
+name|krpc_reply
 modifier|*
 name|reply
 decl_stmt|;
@@ -971,7 +971,7 @@ argument_list|(
 name|mhead
 argument_list|,
 expr|struct
-name|rpc_call
+name|krpc_call
 operator|*
 argument_list|)
 expr_stmt|;
@@ -1416,7 +1416,7 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|rpc_reply
+name|krpc_reply
 operator|*
 argument_list|)
 expr_stmt|;
@@ -1587,7 +1587,7 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|rpc_reply
+name|krpc_reply
 operator|*
 argument_list|)
 expr_stmt|;
