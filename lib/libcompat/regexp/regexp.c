@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<regexp.h>
 end_include
 
@@ -37,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"regmagic.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"collate.h"
 end_include
 
 begin_comment
@@ -1984,7 +1990,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|class
 argument_list|,
@@ -2017,7 +2023,7 @@ name|i
 operator|!=
 name|class
 operator|&&
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|class
 argument_list|,
@@ -2026,7 +2032,7 @@ argument_list|)
 operator|<=
 literal|0
 operator|&&
-name|__collcmp
+name|collate_range_cmp
 argument_list|(
 name|i
 argument_list|,
