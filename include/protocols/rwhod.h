@@ -37,7 +37,7 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* user id */
-name|long
+name|int32_t
 name|out_time
 decl_stmt|;
 comment|/* time on */
