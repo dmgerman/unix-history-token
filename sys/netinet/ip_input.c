@@ -4076,13 +4076,6 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
-name|m_cat
-argument_list|(
-name|m
-argument_list|,
-name|q
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
@@ -4106,6 +4099,13 @@ operator|->
 name|m_pkthdr
 operator|.
 name|csum_data
+expr_stmt|;
+name|m_cat
+argument_list|(
+name|m
+argument_list|,
+name|q
+argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
