@@ -16,9 +16,26 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snit.c,v 1.45.1.1 1999/10/07 23:46:40 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snit.c,v 1.54 2000/10/28 00:01:30 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_endif
 endif|#
@@ -175,23 +192,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MALLOC_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -214,12 +214,6 @@ begin_include
 include|#
 directive|include
 file|"pcap-int.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnuc.h"
 end_include
 
 begin_ifdef
@@ -441,11 +435,18 @@ operator|(
 literal|0
 operator|)
 return|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
 operator|->
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"pcap_read: %s"
 argument_list|,
@@ -826,9 +827,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"NIOCSTIME: %s"
 argument_list|,
@@ -907,9 +910,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"NIOCSFLAGS: %s"
 argument_list|,
@@ -1009,7 +1014,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ebuf
 argument_list|,
@@ -1017,6 +1022,8 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1036,9 +1043,11 @@ name|snaplen
 operator|=
 literal|96
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1067,9 +1076,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"%s: %s"
 argument_list|,
@@ -1104,9 +1115,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"I_SRDOPT: %s"
 argument_list|,
@@ -1134,9 +1147,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"push nbuf: %s"
 argument_list|,
@@ -1202,9 +1217,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"NIOCSCHUNK: %s"
 argument_list|,
@@ -1296,9 +1313,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"NIOCBIND: %s: %s"
 argument_list|,
@@ -1362,9 +1381,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|ebuf
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|,
 literal|"NIOCSSNAP: %s"
 argument_list|,
@@ -1457,7 +1478,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ebuf
 argument_list|,
@@ -1465,6 +1486,8 @@ name|pcap_strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|,
+name|PCAP_ERRBUF_SIZE
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1516,13 +1539,23 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
+if|if
+condition|(
+name|install_bpf_program
+argument_list|(
 name|p
-operator|->
-name|fcode
-operator|=
-operator|*
+argument_list|,
 name|fp
-expr_stmt|;
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 return|return
 operator|(
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-namedb.h,v 1.6 1999/10/19 15:18:31 itojun Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-namedb.h,v 1.8 2000/07/29 07:36:43 guy Exp $ (LBL)  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,19 @@ directive|define
 name|lib_pcap_ethers_h
 end_define
 
-begin_comment
-comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they'll  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_struct
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/*  * As returned by the pcap_next_etherent()  * XXX this stuff doesn't belong in this interface, but this  * library already must do name to address translation, so  * on systems that don't have support for /etc/ethers, we  * export these hooks since they'll  */
 struct|struct
 name|pcap_etherent
 block|{
@@ -37,27 +45,15 @@ index|]
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|PCAP_ETHERS_FILE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|PCAP_ETHERS_FILE
 value|"/etc/ethers"
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function_decl
 name|struct
 name|pcap_etherent
 modifier|*
@@ -67,9 +63,6 @@ name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_char
 modifier|*
 name|pcap_ether_hostton
@@ -79,9 +72,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_char
 modifier|*
 name|pcap_ether_aton
@@ -91,15 +81,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET6
-end_ifndef
-
-begin_function_decl
 name|bpf_u_int32
 modifier|*
 modifier|*
@@ -110,32 +91,21 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|addrinfo
 modifier|*
-name|pcap_nametoaddr
+name|pcap_nametoaddrinfo
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function_decl
 name|bpf_u_int32
 name|pcap_nametonetaddr
 parameter_list|(
@@ -144,9 +114,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoport
 parameter_list|(
@@ -161,9 +128,6 @@ name|int
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoproto
 parameter_list|(
@@ -172,9 +136,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pcap_nametoeproto
 parameter_list|(
@@ -183,24 +144,12 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * If a protocol is unknown, PROTO_UNDEF is returned.  * Also, pcap_nametoport() returns the protocol along with the port number.  * If there are ambiguous entried in /etc/services (i.e. domain  * can be either tcp or udp) PROTO_UNDEF is returned.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|PROTO_UNDEF
 value|-1
-end_define
-
-begin_comment
 comment|/* XXX move these to pcap-int.h? */
-end_comment
-
-begin_function_decl
 name|int
 name|__pcap_atodn
 parameter_list|(
@@ -212,9 +161,6 @@ name|bpf_u_int32
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|__pcap_atoin
 parameter_list|(
@@ -226,9 +172,6 @@ name|bpf_u_int32
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_short
 name|__pcap_nametodnaddr
 parameter_list|(
@@ -237,7 +180,16 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
