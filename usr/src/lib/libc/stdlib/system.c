@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	5.5 (Berkeley) %G%"
+literal|"@(#)system.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_macro
 name|system
 argument_list|(
@@ -89,18 +95,11 @@ argument_list|()
 decl_stmt|;
 name|int
 name|omask
+decl_stmt|;
+name|sig_t
+name|intsave
 decl_stmt|,
-argument_list|(
-operator|*
-name|i
-argument_list|)
-argument_list|()
-decl_stmt|,
-argument_list|(
-operator|*
-name|q
-argument_list|)
-argument_list|()
+name|quitsave
 decl_stmt|;
 name|omask
 operator|=
@@ -166,7 +165,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
@@ -187,7 +186,7 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
-name|i
+name|intsave
 operator|=
 name|signal
 argument_list|(
@@ -196,7 +195,7 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|q
+name|quitsave
 operator|=
 name|signal
 argument_list|(
@@ -232,7 +231,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|i
+name|intsave
 argument_list|)
 expr_stmt|;
 operator|(
@@ -242,7 +241,7 @@ name|signal
 argument_list|(
 name|SIGQUIT
 argument_list|,
-name|q
+name|quitsave
 argument_list|)
 expr_stmt|;
 return|return
