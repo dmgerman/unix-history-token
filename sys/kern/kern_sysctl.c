@@ -6481,6 +6481,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6527,6 +6529,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6593,6 +6597,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6639,6 +6645,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6685,6 +6693,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6731,6 +6741,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6777,6 +6789,8 @@ literal|0
 argument_list|,
 operator|&
 name|size
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

@@ -199,6 +199,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
@@ -339,6 +341,8 @@ argument_list|,
 name|uap
 operator|->
 name|len
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
