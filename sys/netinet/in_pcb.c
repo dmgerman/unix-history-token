@@ -3178,26 +3178,14 @@ name|RTF_CLONING
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If we found a route, use the address 		 * corresponding to the outgoing interface 		 * unless it is the loopback (in case a route 		 * to our address on another net goes to loopback). 		 */
+comment|/* 		 * If we found a route, use the address 		 * corresponding to the outgoing interface. 		 */
 if|if
 condition|(
 name|sro
 operator|.
 name|ro_rt
-operator|&&
-operator|!
-operator|(
-name|sro
-operator|.
-name|ro_rt
-operator|->
-name|rt_ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
 condition|)
+block|{
 name|ia
 operator|=
 name|ifatoia
@@ -3209,12 +3197,6 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sro
-operator|.
-name|ro_rt
-condition|)
 name|RTFREE
 argument_list|(
 name|sro
@@ -3222,6 +3204,7 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ia
