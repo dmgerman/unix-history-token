@@ -266,7 +266,8 @@ literal|"b:c:d:f:sn"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -506,17 +507,15 @@ init|;
 operator|(
 name|p
 operator|=
-name|strtok
+name|strsep
 argument_list|(
+operator|&
 name|list
 argument_list|,
 literal|", \t"
 argument_list|)
 operator|)
 condition|;
-name|list
-operator|=
-name|NULL
 control|)
 block|{
 name|setautostart
@@ -1003,7 +1002,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: line too long"
+literal|"%s: line too long."
 argument_list|,
 name|fname
 argument_list|)
