@@ -1942,11 +1942,6 @@ argument_list|(
 name|XL_MII_CLK
 argument_list|)
 expr_stmt|;
-name|MII_SET
-argument_list|(
-name|XL_MII_CLK
-argument_list|)
-expr_stmt|;
 name|ack
 operator|=
 name|CSR_READ_2
@@ -1957,6 +1952,11 @@ name|XL_W4_PHY_MGMT
 argument_list|)
 operator|&
 name|XL_MII_DATA
+expr_stmt|;
+name|MII_SET
+argument_list|(
+name|XL_MII_CLK
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now try reading data bits. If the ack failed, we still 	 * need to clock through 16 cycles to keep the PHY(s) in sync. 	 */
 if|if

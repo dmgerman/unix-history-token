@@ -1349,16 +1349,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|SIO_SET
-argument_list|(
-name|VR_MIICMD_CLK
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|ack
 operator|=
 name|CSR_READ_4
@@ -1369,6 +1359,16 @@ name|VR_MIICMD
 argument_list|)
 operator|&
 name|VR_MIICMD_DATAOUT
+expr_stmt|;
+name|SIO_SET
+argument_list|(
+name|VR_MIICMD_CLK
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now try reading data bits. If the ack failed, we still 	 * need to clock through 16 cycles to keep the PHY(s) in sync. 	 */
 if|if

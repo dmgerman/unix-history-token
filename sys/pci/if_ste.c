@@ -1333,16 +1333,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|MII_SET
-argument_list|(
-name|STE_PHYCTL_MCLK
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|ack
 operator|=
 name|CSR_READ_2
@@ -1353,6 +1343,16 @@ name|STE_PHYCTL
 argument_list|)
 operator|&
 name|STE_PHYCTL_MDATA
+expr_stmt|;
+name|MII_SET
+argument_list|(
+name|STE_PHYCTL_MCLK
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now try reading data bits. If the ack failed, we still 	 * need to clock through 16 cycles to keep the PHY(s) in sync. 	 */
 if|if

@@ -1879,16 +1879,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|SIO_SET
-argument_list|(
-name|NGE_MEAR_MII_CLK
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|ack
 operator|=
 name|CSR_READ_4
@@ -1899,6 +1889,16 @@ name|NGE_MEAR
 argument_list|)
 operator|&
 name|NGE_MEAR_MII_DATA
+expr_stmt|;
+name|SIO_SET
+argument_list|(
+name|NGE_MEAR_MII_CLK
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Now try reading data bits. If the ack failed, we still 	 * need to clock through 16 cycles to keep the PHY(s) in sync. 	 */
 if|if
