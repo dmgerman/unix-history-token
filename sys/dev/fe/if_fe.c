@@ -4,7 +4,7 @@ comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_fe.c,v 1.52 1999/08/18 06:11:58 mdodd Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * $Id: if_fe.c,v 1.53 1999/08/18 22:14:21 mdodd Exp $  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 3.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments to support RE1000,  * C-NET(98)P2 and so on. These cards are not for AT-compatibles,  * but for NEC PC-98 bus -- a proprietary bus architecture available  * only in Japan. Confusingly, it is different from the Microsoft's  * PC98 architecture. :-{  * Further work for PC-98 version will be available as a part of  * FreeBSD(98) project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
@@ -3489,12 +3489,7 @@ expr_stmt|;
 comment|/* Restore the saved register values, for the case that we            didn't have 78Q8377A at the given address.  */
 name|outb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-name|FE_BMPR12
-index|]
+name|bmpr12
 argument_list|,
 name|save12
 argument_list|)
@@ -3959,12 +3954,7 @@ name|save20
 operator|=
 name|inb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-literal|0x14
-index|]
+name|reg20
 argument_list|)
 expr_stmt|;
 comment|/* NOTE: DELAY() timing constants are approximately three            times longer (slower) than the required minimum.  This is            to guarantee a reliable operation under some tough            conditions...  Fortunately, this routine is only called            during the boot phase, so the speed is less important than            stability.  */
@@ -4190,12 +4180,7 @@ name|RET
 label|:
 name|outb
 argument_list|(
-name|sc
-operator|->
-name|ioaddr
-index|[
-literal|0x14
-index|]
+name|reg20
 argument_list|,
 name|save20
 argument_list|)
@@ -4204,15 +4189,15 @@ if|#
 directive|if
 literal|1
 comment|/* Report what we got.  */
-name|data
-operator|-=
-name|LNX_EEPROM_SIZE
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
 condition|)
 block|{
+name|data
+operator|-=
+name|LNX_EEPROM_SIZE
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4221,7 +4206,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|JLI_EEPROM_SIZE
+name|LNX_EEPROM_SIZE
 condition|;
 name|i
 operator|+=
