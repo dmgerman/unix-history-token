@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	4.8 83/01/13"
+literal|"@(#)rshd.c	4.9 83/01/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,13 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|reapchild
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -159,10 +166,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|union
-name|wait
-name|status
-decl_stmt|;
 name|int
 name|f
 decl_stmt|;
@@ -534,6 +537,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
 name|listen
 argument_list|(
 name|f
@@ -579,14 +589,16 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|perror
 argument_list|(
 literal|"rshd: accept"
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -618,10 +630,26 @@ argument_list|(
 name|g
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_macro
+name|reapchild
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|union
+name|wait
+name|status
+decl_stmt|;
 while|while
 condition|(
 name|wait3
 argument_list|(
+operator|&
 name|status
 argument_list|,
 name|WNOHANG
@@ -631,10 +659,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+empty_stmt|;
 block|}
-block|}
-end_function
+end_block
 
 begin_decl_stmt
 name|char
