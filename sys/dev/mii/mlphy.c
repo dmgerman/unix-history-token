@@ -875,8 +875,6 @@ operator|)
 name|mii_phy_auto
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|msc
@@ -1218,23 +1216,16 @@ name|BMCR_ISO
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
 name|mii_phy_auto
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
-operator|==
-name|EJUSTRETURN
-condition|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-break|break;
 block|}
 comment|/* Update the media status. */
 if|if
@@ -1590,8 +1581,6 @@ expr_stmt|;
 name|mii_phy_auto
 argument_list|(
 name|other
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -253,11 +253,6 @@ modifier|*
 name|mii_pdata
 decl_stmt|;
 comment|/* pointer to parent's mii_data */
-name|struct
-name|callout_handle
-name|mii_auto_ch
-decl_stmt|;
-comment|/* callout handle for phy autoneg */
 name|int
 name|mii_flags
 decl_stmt|;
@@ -333,17 +328,6 @@ end_define
 
 begin_comment
 comment|/* no loopback capability */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIIF_DOINGAUTO
-value|0x0008
-end_define
-
-begin_comment
-comment|/* doing autonegotiation (mii_softc) */
 end_comment
 
 begin_define
@@ -770,8 +754,6 @@ parameter_list|(
 name|struct
 name|mii_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

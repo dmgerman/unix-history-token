@@ -663,8 +663,6 @@ operator|)
 name|mii_phy_auto
 argument_list|(
 name|sc
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 break|break;
