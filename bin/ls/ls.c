@@ -939,19 +939,6 @@ break|break;
 case|case
 literal|'G'
 case|:
-ifdef|#
-directive|ifdef
-name|COLORLS
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"The -G flag is deprecated, please define CLICOLOR instead.\n"
-argument_list|)
-expr_stmt|;
 name|setenv
 argument_list|(
 literal|"CLICOLOR"
@@ -961,20 +948,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Color support not compiled in.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 literal|'L'
@@ -1178,9 +1151,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COLORLS
 comment|/* Enabling of colours is conditional on the environment. */
 if|if
 condition|(
@@ -1201,6 +1171,9 @@ literal|"CLICOLOR_FORCE"
 argument_list|)
 operator|)
 condition|)
+ifdef|#
+directive|ifdef
+name|COLORLS
 if|if
 condition|(
 name|tgetent
@@ -1275,6 +1248,24 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Color support not compiled in.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/*COLORLS*/
+ifdef|#
+directive|ifdef
+name|COLORLS
 if|if
 condition|(
 name|f_color
