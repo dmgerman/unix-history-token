@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rsh.c,v 1.15 1998/03/23 07:46:23 charnier Exp $"
+literal|"$Id: rsh.c,v 1.16 1998/10/09 06:47:57 markm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,7 +70,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1487,6 +1487,8 @@ name|timeval
 name|tvtimeout
 decl_stmt|;
 name|int
+name|nfds
+decl_stmt|,
 name|srval
 decl_stmt|;
 if|if
@@ -1554,11 +1556,17 @@ operator|&
 name|rembits
 argument_list|)
 expr_stmt|;
+name|nfds
+operator|=
+name|rem
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|select
 argument_list|(
-literal|16
+name|nfds
 argument_list|,
 literal|0
 argument_list|,
@@ -1748,6 +1756,19 @@ operator|&
 name|readfrom
 argument_list|)
 expr_stmt|;
+name|nfds
+operator|=
+name|MAX
+argument_list|(
+name|rfd2
+operator|+
+literal|1
+argument_list|,
+name|rem
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 do|do
 block|{
 name|ready
@@ -1763,7 +1784,7 @@ name|srval
 operator|=
 name|select
 argument_list|(
-literal|16
+name|nfds
 argument_list|,
 operator|&
 name|ready
@@ -1783,7 +1804,7 @@ name|srval
 operator|=
 name|select
 argument_list|(
-literal|16
+name|nfds
 argument_list|,
 operator|&
 name|ready
