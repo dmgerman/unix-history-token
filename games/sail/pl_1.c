@@ -380,12 +380,11 @@ name|void
 name|child
 parameter_list|()
 block|{
-name|union
-name|wait
-name|status
+name|pid_t
+name|pid
 decl_stmt|;
 name|int
-name|pid
+name|status
 decl_stmt|;
 operator|(
 name|void

@@ -532,9 +532,7 @@ name|last
 decl_stmt|;
 name|int
 name|omask
-decl_stmt|;
-name|union
-name|wait
+decl_stmt|,
 name|pstat
 decl_stmt|;
 name|pid_t
@@ -692,8 +690,6 @@ operator|-
 literal|1
 else|:
 name|pstat
-operator|.
-name|w_status
 operator|)
 return|;
 block|}

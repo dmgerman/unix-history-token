@@ -67,9 +67,6 @@ name|void
 name|wwchild
 parameter_list|()
 block|{
-name|int
-name|olderrno
-decl_stmt|;
 specifier|register
 name|struct
 name|ww
@@ -77,12 +74,13 @@ modifier|*
 modifier|*
 name|wp
 decl_stmt|;
-name|union
-name|wait
-name|w
+name|pid_t
+name|pid
 decl_stmt|;
 name|int
-name|pid
+name|olderrno
+decl_stmt|,
+name|w
 decl_stmt|;
 name|char
 name|collected
