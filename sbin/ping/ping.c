@@ -5015,12 +5015,22 @@ break|break;
 case|case
 name|IPOPT_LSRR
 case|:
+case|case
+name|IPOPT_SSRR
+case|:
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
+operator|*
+name|cp
+operator|==
+name|IPOPT_LSRR
+condition|?
 literal|"\nLSRR: "
+else|:
+literal|"\nSSRR: "
 argument_list|)
 expr_stmt|;
 name|j
