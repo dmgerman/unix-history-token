@@ -23,7 +23,7 @@ begin_struct
 struct|struct
 name|osigframe
 block|{
-comment|/* 	 * The first three members may be used by applications. 	 */
+comment|/* 	 * The first four members may be used by applications. 	 */
 name|register_t
 name|sf_signum
 decl_stmt|;
@@ -35,11 +35,11 @@ comment|/* Points to sf_siginfo.si_sc. */
 name|register_t
 name|sf_scp
 decl_stmt|;
-comment|/* 	 * The following arguments are not constrained by the 	 * function call protocol. 	 * Applications are not supposed to access these members, 	 * except using the pointers we provide in the first three 	 * arguments. 	 */
-name|char
+name|register_t
 modifier|*
 name|sf_addr
 decl_stmt|;
+comment|/* 	 * The following arguments are not constrained by the 	 * function call protocol. 	 * Applications are not supposed to access these members, 	 * except using the pointers we provide in the first three 	 * arguments. 	 */
 union|union
 block|{
 name|__osiginfohandler_t
@@ -65,7 +65,7 @@ begin_struct
 struct|struct
 name|sigframe
 block|{
-comment|/* 	 * The first four members may be used by applications. 	 * NOTE: The 4th argument is undocumented, ill commented 	 *       on and seems to be somewhat BSD "standard". 	 *       Handlers installed with sigvec may be using it. 	 */
+comment|/* 	 * The first four members may be used by applications. 	 * 	 * NOTE: The 4th argument is undocumented, ill commented 	 * on and seems to be somewhat BSD "standard".  Handlers 	 * installed with sigvec may be using it. 	 */
 name|register_t
 name|sf_signum
 decl_stmt|;
@@ -77,7 +77,7 @@ name|register_t
 name|sf_ucontext
 decl_stmt|;
 comment|/* points to sf_uc */
-name|char
+name|register_t
 modifier|*
 name|sf_addr
 decl_stmt|;
