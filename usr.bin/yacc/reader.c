@@ -43,6 +43,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -3220,7 +3226,7 @@ if|if
 condition|(
 name|n
 operator|>
-name|MAXCHAR
+name|UCHAR_MAX
 condition|)
 name|illegal_character
 argument_list|(
@@ -3309,7 +3315,7 @@ if|if
 condition|(
 name|n
 operator|>
-name|MAXCHAR
+name|UCHAR_MAX
 condition|)
 name|illegal_character
 argument_list|(

@@ -40,18 +40,6 @@ comment|/*  they might have to be changed for other machines	*/
 end_comment
 
 begin_comment
-comment|/*  MAXCHAR is the largest unsigned character value	*/
-end_comment
-
-begin_comment
-comment|/*  MAXSHORT is the largest value of a C short		*/
-end_comment
-
-begin_comment
-comment|/*  MINSHORT is the most negative value of a C short	*/
-end_comment
-
-begin_comment
 comment|/*  MAXTABLE is the maximum table size			*/
 end_comment
 
@@ -78,27 +66,6 @@ end_comment
 begin_comment
 comment|/*  SETBIT sets the n-th bit starting from r		*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXCHAR
-value|255
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSHORT
-value|32767
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINSHORT
-value|-32768
-end_define
 
 begin_define
 define|#
