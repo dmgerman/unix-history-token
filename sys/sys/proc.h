@@ -614,6 +614,10 @@ argument_list|)
 name|td_umtx
 expr_stmt|;
 comment|/* (c?) Link for when we're blocked. */
+name|u_int
+name|td_generation
+decl_stmt|;
+comment|/* (k) Enable detection of preemption */
 define|#
 directive|define
 name|td_endzero

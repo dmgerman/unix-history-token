@@ -1976,6 +1976,12 @@ name|switchtime
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|td
+operator|->
+name|td_generation
+operator|++
+expr_stmt|;
+comment|/* bump preempt-detect counter */
 ifdef|#
 directive|ifdef
 name|DDB
