@@ -1642,6 +1642,12 @@ name|his_shortseq
 operator|=
 literal|0
 expr_stmt|;
+name|lcp
+operator|->
+name|mru_req
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3348,6 +3354,12 @@ name|maxreq
 operator|*
 literal|3
 expr_stmt|;
+name|lcp
+operator|->
+name|mru_req
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -3728,8 +3740,6 @@ decl_stmt|,
 name|op
 decl_stmt|,
 name|callback_req
-decl_stmt|,
-name|mru_req
 decl_stmt|;
 name|u_int32_t
 name|magic
@@ -3789,8 +3799,6 @@ operator|=
 name|op
 operator|=
 name|callback_req
-operator|=
-name|mru_req
 operator|=
 literal|0
 expr_stmt|;
@@ -4158,6 +4166,8 @@ break|break;
 case|case
 name|TY_MRU
 case|:
+name|lcp
+operator|->
 name|mru_req
 operator|=
 literal|1
@@ -7860,6 +7870,8 @@ operator|==
 name|MODE_REQ
 operator|&&
 operator|!
+name|lcp
+operator|->
 name|mru_req
 condition|)
 block|{
@@ -7976,6 +7988,13 @@ name|nakend
 operator|+=
 literal|2
 expr_stmt|;
+name|lcp
+operator|->
+name|mru_req
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Don't keep NAK'ing this */
 block|}
 block|}
 if|if

@@ -173,6 +173,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Does peer do addr& cntrl fld compression */
+name|unsigned
+name|mru_req
+range|:
+literal|1
+decl_stmt|;
+comment|/* Has the peer requested an MRU */
 name|u_short
 name|want_mru
 decl_stmt|;
