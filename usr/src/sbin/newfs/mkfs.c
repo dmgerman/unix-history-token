@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.28 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6768,7 +6768,7 @@ name|bno
 operator|*
 name|sectorsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
