@@ -1832,6 +1832,7 @@ name|np
 operator|->
 name|n_flink
 control|)
+block|{
 comment|/* Don't copy deleted addresses to the header */
 if|if
 condition|(
@@ -1946,6 +1947,7 @@ name|n_type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
