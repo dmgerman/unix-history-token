@@ -28,12 +28,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -46,37 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkbad.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
 end_include
 
 begin_include
@@ -95,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
 end_include
 
 begin_include

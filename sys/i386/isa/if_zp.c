@@ -4,7 +4,7 @@ comment|/*  * This code is based on  *  (1) FreeBSD implementation on ISA/EISA E
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.35 1997/03/24 11:32:57 bde Exp $  */
+comment|/*  * Copyright (c) 1993 Herb Peyerl<hpeyerl@novatel.ca>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	From: if_ep.c,v 1.9 1994/01/25 10:46:29 deraadt Exp $  *	$Id: if_zp.c,v 1.37 1997/04/21 13:38:32 nate Exp $  */
 end_comment
 
 begin_comment
@@ -123,12 +123,6 @@ directive|include
 file|<sys/conf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -155,12 +149,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/syslog.h>
 end_include
 
@@ -168,18 +156,6 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_ifdef
@@ -192,24 +168,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -281,12 +239,6 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
 end_include
 
 begin_endif

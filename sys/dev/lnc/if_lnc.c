@@ -72,18 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -120,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_types.h>
 end_include
 
@@ -139,24 +121,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -182,12 +146,6 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
 end_include
 
 begin_endif

@@ -42,19 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
 end_include
 
 begin_include
@@ -78,25 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
 end_include
 
 begin_ifdef
@@ -109,24 +79,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -198,12 +150,6 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
 end_include
 
 begin_endif

@@ -53,12 +53,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -90,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<machine/qcam.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/qcamreg.h>
 end_include
 
 begin_include

@@ -30,12 +30,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -49,30 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -97,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/ic/ncr53400.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
 end_include
 
 begin_include

@@ -30,19 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -69,18 +57,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -101,12 +77,6 @@ end_endif
 begin_comment
 comment|/*DEVFS*/
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
 
 begin_include
 include|#

@@ -20,12 +20,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1251,12 +1245,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysproto.h>
 end_include
 
 begin_include

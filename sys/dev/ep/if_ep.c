@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.57 1997/02/22 09:36:25 peter Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.58 1997/03/24 11:32:45 bde Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -59,12 +59,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -89,18 +83,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_if
@@ -129,18 +111,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -151,24 +121,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -240,12 +192,6 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
 end_include
 
 begin_endif
@@ -649,12 +595,6 @@ name|NCRD
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"apm.h"
-end_include
 
 begin_include
 include|#

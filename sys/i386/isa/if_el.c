@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.29 1997/02/22 09:36:23 peter Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.30 1997/03/24 11:32:43 bde Exp $  */
 end_comment
 
 begin_comment
@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -85,18 +79,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -107,24 +89,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -196,12 +160,6 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
 end_include
 
 begin_endif

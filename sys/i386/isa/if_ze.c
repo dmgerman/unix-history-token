@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.42 1997/04/26 11:45:57 peter Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.43 1997/04/27 21:18:58 fsmp Exp $  */
 end_comment
 
 begin_comment
@@ -117,12 +117,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sockio.h>
 end_include
 
@@ -150,24 +144,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if_dl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/netisr.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -178,24 +154,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -269,12 +227,6 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -290,12 +242,6 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
 end_include
 
 begin_include

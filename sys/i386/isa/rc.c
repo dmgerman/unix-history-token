@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_comconsole.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"rc.h"
 end_include
 
@@ -76,19 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_ifdef
@@ -122,12 +104,6 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/sioreg.h>
 end_include
 
 begin_include
