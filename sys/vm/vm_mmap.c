@@ -2274,23 +2274,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|void munmapfd(td, fd) 	struct thread *td; 	int fd; {
-comment|/* 	 * XXX should unmap any regions mapped to this file 	 */
-end_comment
-
-begin_endif
-unit|FILEDESC_LOCK(p->p_fd); 	td->td_proc->p_fd->fd_ofileflags[fd]&= ~UF_MAPPED; 	FILEDESC_UNLOCK(p->p_fd); }
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
