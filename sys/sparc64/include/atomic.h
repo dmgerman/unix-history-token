@@ -22,6 +22,40 @@ file|<machine/cpufunc.h>
 end_include
 
 begin_comment
+comment|/* Userland needs different ASI's. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__ASI_ATOMIC
+value|ASI_N
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__ASI_ATOMIC
+value|ASI_P
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Various simple arithmetic on memory which is atomic in the presence  * of interrupts and multiple processors.  See atomic(9) for details.  * Note that efficient hardware support exists only for the 32 and 64  * bit variants; the 8 and 16 bit versions are not provided and should  * not be used in MI code.  *  * This implementation takes advantage of the fact that the sparc64  * cas instruction is both a load and a store.  The loop is often coded  * as follows:  *  *	do {  *		expect = *p;  *		new = expect + 1;  *	} while (cas(p, expect, new) != expect);  *  * which performs an unnnecessary load on each iteration that the cas  * operation fails.  Modified as follows:  *  *	expect = *p;  *	for (;;) {  *		new = expect + 1;  *		result = cas(p, expect, new);  *		if (result == expect)  *			break;  *		expect = result;  *	}  *  * the return value of cas is used to avoid the extra reload.  At the  * time of writing, with gcc version 2.95.3, the branch for the if  * statement is predicted incorrectly as not taken, rather than taken.  * It is expected that the branch prediction hints available in gcc 3.0,  * __builtin_expect, will allow better code to be generated.  *  * The memory barriers provided by the acq and rel variants are intended  * to be sufficient for use of relaxed memory ordering.  Due to the  * suggested assembly syntax of the membar operands containing a #  * character, they cannot be used in macros.  The cmask and mmask bits  * are hard coded in machine/cpufunc.h and used here through macros.  * Hopefully sun will choose not to change the bit numbers.  */
 end_comment
 
@@ -46,7 +80,7 @@ name|e
 parameter_list|,
 name|s
 parameter_list|)
-value|casa(p, e, s, ASI_N)
+value|casa(p, e, s, __ASI_ATOMIC)
 end_define
 
 begin_define
@@ -60,7 +94,7 @@ name|e
 parameter_list|,
 name|s
 parameter_list|)
-value|casxa(p, e, s, ASI_N)
+value|casxa(p, e, s, __ASI_ATOMIC)
 end_define
 
 begin_define
@@ -329,6 +363,12 @@ literal|64
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_undef
+undef|#
+directive|undef
+name|__ASI_ATOMIC
+end_undef
 
 begin_undef
 undef|#
