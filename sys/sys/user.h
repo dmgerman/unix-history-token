@@ -295,10 +295,14 @@ argument_list|)
 index|]
 decl_stmt|;
 comment|/* setlogin() name */
+name|pid_t
+name|e_sid
+decl_stmt|;
+comment|/* session id */
 name|long
 name|e_spare
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 block|}
