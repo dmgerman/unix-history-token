@@ -40,46 +40,56 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_ses.h>
+include|SESINC
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|geteltnm
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|stat2ascii
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
-parameter_list|,
+operator|,
 name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
 name|main
 parameter_list|(
-name|int
 name|a
 parameter_list|,
+name|v
+parameter_list|)
+name|int
+name|a
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
 name|v
-parameter_list|)
+decl_stmt|;
 block|{
 name|ses_object
 modifier|*
@@ -628,7 +638,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s Element(%x): OK (%s)\n"
+literal|"Element 0x%x: %s OK (%s)\n"
+argument_list|,
+name|ob
+operator|.
+name|obj_id
 argument_list|,
 name|geteltnm
 argument_list|(
@@ -639,10 +653,6 @@ index|]
 operator|.
 name|object_type
 argument_list|)
-argument_list|,
-name|ob
-operator|.
-name|obj_id
 argument_list|,
 name|stat2ascii
 argument_list|(
@@ -666,7 +676,11 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%s Element(%x): %s\n"
+literal|"Element 0x%x: %s, %s\n"
+argument_list|,
+name|ob
+operator|.
+name|obj_id
 argument_list|,
 name|geteltnm
 argument_list|(
@@ -677,10 +691,6 @@ index|]
 operator|.
 name|object_type
 argument_list|)
-argument_list|,
-name|ob
-operator|.
-name|obj_id
 argument_list|,
 name|stat2ascii
 argument_list|(

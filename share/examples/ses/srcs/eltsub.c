@@ -34,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cam/scsi/scsi_ses.h>
+include|SESINC
 end_include
 
 begin_function
@@ -42,9 +42,11 @@ name|char
 modifier|*
 name|geteltnm
 parameter_list|(
-name|int
 name|type
 parameter_list|)
+name|int
+name|type
+decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -318,9 +320,11 @@ name|char
 modifier|*
 name|scode2ascii
 parameter_list|(
-name|u_char
 name|code
 parameter_list|)
+name|u_char
+name|code
+decl_stmt|;
 block|{
 specifier|static
 name|char
@@ -451,13 +455,17 @@ name|char
 modifier|*
 name|stat2ascii
 parameter_list|(
-name|int
 name|eletype
 parameter_list|,
+name|cstat
+parameter_list|)
+name|int
+name|eletype
+decl_stmt|;
 name|u_char
 modifier|*
 name|cstat
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|static
 name|char
