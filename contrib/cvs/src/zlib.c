@@ -613,7 +613,7 @@ expr|struct
 name|buffer_data
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -641,7 +641,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|BUFFER_DATA_SIZE
 argument_list|)
@@ -2305,7 +2305,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read all of FD and put the gzipped data (RFC1952/RFC1951) into *BUF,    replacing previous contents of *BUF.  *BUF is malloc'd and *SIZE is    its allocated size.  Put the actual number of bytes of data in    *LEN.  If something goes wrong, give a nonfatal error mentioning    FULLNAME as the name of the file for FD, and return 1 if we can't    recover from it).  LEVEL is the compression level (1-9).  */
+comment|/* Read all of FD and put the gzipped data (RFC1952/RFC1951) into *BUF,    replacing previous contents of *BUF.  *BUF is xmalloc'd and *SIZE is    its allocated size.  Put the actual number of bytes of data in    *LEN.  If something goes wrong, give a nonfatal error mentioning    FULLNAME as the name of the file for FD, and return 1 if we can't    recover from it).  LEVEL is the compression level (1-9).  */
 end_comment
 
 begin_function
@@ -2389,7 +2389,7 @@ literal|1024
 expr_stmt|;
 name|newbuf
 operator|=
-name|realloc
+name|xrealloc
 argument_list|(
 operator|*
 name|buf
@@ -2714,7 +2714,7 @@ literal|2
 expr_stmt|;
 name|newbuf
 operator|=
-name|realloc
+name|xrealloc
 argument_list|(
 operator|*
 name|buf

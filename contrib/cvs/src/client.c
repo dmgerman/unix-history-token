@@ -8418,12 +8418,14 @@ index|]
 operator|==
 literal|'\0'
 operator|||
+name|strcmp
+argument_list|(
 name|vn
-index|[
-literal|0
-index|]
+argument_list|,
+literal|"0"
+argument_list|)
 operator|==
-literal|'0'
+literal|0
 operator|||
 name|vn
 index|[
@@ -11923,11 +11925,14 @@ operator|)
 comment|/* TOPLEVEL_REPOS shouldn't be above current_parsed_root->directory */
 operator|&&
 operator|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|repository_len
 operator|-
 name|update_dir_len
-operator|)
+argument_list|)
 operator|>
 name|strlen
 argument_list|(
@@ -22028,7 +22033,7 @@ name|W_LOCAL
 argument_list|,
 name|aflag
 argument_list|,
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 argument_list|,
 operator|(
 name|char

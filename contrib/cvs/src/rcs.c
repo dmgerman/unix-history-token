@@ -31169,7 +31169,7 @@ name|STREQ
 argument_list|(
 name|value
 argument_list|,
-literal|"dead"
+name|RCSDEAD
 argument_list|)
 condition|)
 block|{
@@ -31520,7 +31520,7 @@ name|state
 operator|=
 name|xstrdup
 argument_list|(
-literal|"dead"
+name|RCSDEAD
 argument_list|)
 expr_stmt|;
 continue|continue;

@@ -27,6 +27,28 @@ directive|ifdef
 name|MY_NDBM
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|O_ACCMODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|O_ACCMODE
+value|O_RDONLY|O_WRONLY|O_RDWR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined O_ACCMODE */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|void

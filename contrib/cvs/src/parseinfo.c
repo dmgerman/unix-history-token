@@ -838,7 +838,7 @@ literal|1
 expr_stmt|;
 name|infopath
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1363,7 +1363,7 @@ condition|)
 block|{
 name|logHistory
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
