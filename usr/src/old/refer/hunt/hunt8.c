@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt8.c	4.2 (Berkeley) %G%"
+literal|"@(#)hunt8.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"/usr/lib/refer/mkey %s>%s.ig"
+literal|"/usr/lib/refer/mkey '%s'> '%s.ig'"
 argument_list|,
 name|s
 argument_list|,
