@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.22 1994/04/05 03:23:32 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.23 1994/04/20 07:06:57 davidg Exp $  */
 end_comment
 
 begin_define
@@ -851,6 +851,21 @@ name|SCSI_NOSLEEP
 operator||
 name|SCSI_NOMASK
 argument_list|)
+expr_stmt|;
+comment|/* check if secsiz is zero and set it to something reasonable 	  to prevent a divide fault. */
+if|if
+condition|(
+name|dp
+operator|->
+name|secsiz
+operator|==
+literal|0
+condition|)
+name|dp
+operator|->
+name|secsiz
+operator|=
+literal|512
 expr_stmt|;
 name|printf
 argument_list|(
