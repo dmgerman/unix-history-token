@@ -926,10 +926,6 @@ control|(
 name|sep
 operator|=
 name|dchar
-operator|,
-name|output
-operator|=
-literal|0
 init|;
 name|fgets
 argument_list|(
@@ -945,6 +941,10 @@ argument_list|)
 condition|;
 control|)
 block|{
+name|output
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|isdelim
