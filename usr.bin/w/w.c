@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.16.2.5 1998/03/08 14:31:56 jkh Exp $"
+literal|"$Id: w.c,v 1.16.2.6 1998/03/12 02:00:38 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -928,6 +928,22 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|!
+operator|(
+name|stp
+operator|=
+name|ttystat
+argument_list|(
+name|utmp
+operator|.
+name|ut_line
+argument_list|)
+operator|)
+condition|)
+comment|/* corrupted record */
+continue|continue;
 operator|++
 name|nusers
 expr_stmt|;
@@ -1012,17 +1028,6 @@ argument_list|(
 expr|struct
 name|utmp
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|stp
-operator|=
-name|ttystat
-argument_list|(
-name|ep
-operator|->
-name|utmp
-operator|.
-name|ut_line
 argument_list|)
 expr_stmt|;
 name|ep
@@ -2738,15 +2743,18 @@ operator|&
 name|sb
 argument_list|)
 condition|)
-name|err
+block|{
+name|warn
 argument_list|(
-literal|1
-argument_list|,
 literal|"%s"
 argument_list|,
 name|ttybuf
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 return|return
 operator|(
 operator|&
