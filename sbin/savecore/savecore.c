@@ -4003,7 +4003,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"usage: savecore [-cfvz] [-N system] directory"
+literal|"usage: savecore [-cfkvz] [-N system] directory"
 argument_list|)
 expr_stmt|;
 name|exit
