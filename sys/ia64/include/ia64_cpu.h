@@ -700,6 +700,19 @@ asm|__asm __volatile("mf");
 block|}
 end_function
 
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_mf_a
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+asm|__asm __volatile("mf.a");
+block|}
+end_function
+
 begin_comment
 comment|/*  * Calculate address in VHPT for va.  */
 end_comment
