@@ -419,11 +419,7 @@ decl_stmt|;
 comment|/* Tell mediaSetFloppy() to try floppy now */
 name|distWanted
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|1
+name|LOAD_CONFIG_FILE
 expr_stmt|;
 comment|/* Try to open the floppy drive if we can do that first */
 if|if

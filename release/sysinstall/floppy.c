@@ -428,18 +428,7 @@ operator|->
 name|description
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|distWanted
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-literal|1
-condition|)
-comment|/* 1 is kludge for "don't ask!" */
+else|else
 name|msgConfirm
 argument_list|(
 literal|"Please insert floppy containing %s for %s"
