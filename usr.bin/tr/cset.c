@@ -162,6 +162,12 @@ name|cs_havecache
 operator|=
 name|false
 expr_stmt|;
+name|cs
+operator|->
+name|cs_invert
+operator|=
+name|false
+expr_stmt|;
 return|return
 operator|(
 name|cs
