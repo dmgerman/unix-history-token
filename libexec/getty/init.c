@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -9,13 +9,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)init.c	8.1 (Berkeley) 6/4/93";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)init.c	5.6 (Berkeley) 3/27/91"
+literal|"$Id: init.c,v 1.1.1.2 1996/04/13 15:33:10 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +39,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_include
@@ -51,34 +61,32 @@ file|"pathnames.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|sgttyb
-name|tmode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tchars
-name|tc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ltchars
-name|ltc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
+specifier|static
 name|char
-name|hostname
+name|loginmsg
 index|[]
+init|=
+literal|"login: "
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|nullstr
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|loginprg
+index|[]
+init|=
+name|_PATH_LOGIN
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +115,7 @@ comment|/* initial message */
 block|{
 literal|"lm"
 block|,
-literal|"login: "
+name|loginmsg
 block|}
 block|,
 comment|/* login message */
@@ -117,7 +125,10 @@ block|,
 operator|&
 name|tmode
 operator|.
-name|sg_erase
+name|c_cc
+index|[
+name|VERASE
+index|]
 block|}
 block|,
 comment|/* erase character */
@@ -127,7 +138,10 @@ block|,
 operator|&
 name|tmode
 operator|.
-name|sg_kill
+name|c_cc
+index|[
+name|VKILL
+index|]
 block|}
 block|,
 comment|/* kill character */
@@ -135,16 +149,19 @@ block|{
 literal|"et"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_eofc
+name|c_cc
+index|[
+name|VEOF
+index|]
 block|}
 block|,
 comment|/* eof chatacter (eot) */
 block|{
 literal|"pc"
 block|,
-literal|""
+name|nullstr
 block|}
 block|,
 comment|/* pad character */
@@ -161,7 +178,7 @@ comment|/* enviroment */
 block|{
 literal|"lo"
 block|,
-name|_PATH_LOGIN
+name|loginprg
 block|}
 block|,
 comment|/* login program */
@@ -181,9 +198,12 @@ block|{
 literal|"in"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_intrc
+name|c_cc
+index|[
+name|VINTR
+index|]
 block|}
 block|,
 comment|/* interrupt char */
@@ -191,9 +211,12 @@ block|{
 literal|"qu"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_quitc
+name|c_cc
+index|[
+name|VQUIT
+index|]
 block|}
 block|,
 comment|/* quit char */
@@ -201,9 +224,12 @@ block|{
 literal|"xn"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_startc
+name|c_cc
+index|[
+name|VSTART
+index|]
 block|}
 block|,
 comment|/* XON (start) char */
@@ -211,9 +237,12 @@ block|{
 literal|"xf"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_stopc
+name|c_cc
+index|[
+name|VSTOP
+index|]
 block|}
 block|,
 comment|/* XOFF (stop) char */
@@ -221,9 +250,12 @@ block|{
 literal|"bk"
 block|,
 operator|&
-name|tc
+name|tmode
 operator|.
-name|t_brkc
+name|c_cc
+index|[
+name|VEOL
+index|]
 block|}
 block|,
 comment|/* brk char (alt \n) */
@@ -231,9 +263,12 @@ block|{
 literal|"su"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_suspc
+name|c_cc
+index|[
+name|VSUSP
+index|]
 block|}
 block|,
 comment|/* suspend char */
@@ -241,9 +276,12 @@ block|{
 literal|"ds"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_dsuspc
+name|c_cc
+index|[
+name|VDSUSP
+index|]
 block|}
 block|,
 comment|/* delayed suspend */
@@ -251,9 +289,12 @@ block|{
 literal|"rp"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_rprntc
+name|c_cc
+index|[
+name|VREPRINT
+index|]
 block|}
 block|,
 comment|/* reprint char */
@@ -261,9 +302,12 @@ block|{
 literal|"fl"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_flushc
+name|c_cc
+index|[
+name|VDISCARD
+index|]
 block|}
 block|,
 comment|/* flush output */
@@ -271,9 +315,12 @@ block|{
 literal|"we"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_werasc
+name|c_cc
+index|[
+name|VWERASE
+index|]
 block|}
 block|,
 comment|/* word erase */
@@ -281,12 +328,20 @@ block|{
 literal|"ln"
 block|,
 operator|&
-name|ltc
+name|tmode
 operator|.
-name|t_lnextc
+name|c_cc
+index|[
+name|VLNEXT
+index|]
 block|}
 block|,
 comment|/* literal next */
+block|{
+literal|"Lo"
+block|}
+block|,
+comment|/* locale for strftime() */
 block|{
 literal|0
 block|}
@@ -366,6 +421,66 @@ literal|"pf"
 block|}
 block|,
 comment|/* delay before flush at 1st prompt */
+block|{
+literal|"c0"
+block|}
+block|,
+comment|/* output c_flags */
+block|{
+literal|"c1"
+block|}
+block|,
+comment|/* input c_flags */
+block|{
+literal|"c2"
+block|}
+block|,
+comment|/* user mode c_flags */
+block|{
+literal|"i0"
+block|}
+block|,
+comment|/* output i_flags */
+block|{
+literal|"i1"
+block|}
+block|,
+comment|/* input i_flags */
+block|{
+literal|"i2"
+block|}
+block|,
+comment|/* user mode i_flags */
+block|{
+literal|"l0"
+block|}
+block|,
+comment|/* output l_flags */
+block|{
+literal|"l1"
+block|}
+block|,
+comment|/* input l_flags */
+block|{
+literal|"l2"
+block|}
+block|,
+comment|/* user mode l_flags */
+block|{
+literal|"o0"
+block|}
+block|,
+comment|/* output o_flags */
+block|{
+literal|"o1"
+block|}
+block|,
+comment|/* input o_flags */
+block|{
+literal|"o2"
+block|}
+block|,
+comment|/* user mode o_flags */
 block|{
 literal|0
 block|}
@@ -534,6 +649,13 @@ literal|0
 block|}
 block|,
 comment|/* no parity at all (8bit chars) */
+block|{
+literal|"mb"
+block|,
+literal|0
+block|}
+block|,
+comment|/* do MDMBUF flow control */
 block|{
 literal|0
 block|}
