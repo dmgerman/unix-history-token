@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.32 (Berkeley) %G%"
+literal|"@(#)main.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3494,10 +3494,6 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|FILE
-modifier|*
-name|pidf
-decl_stmt|;
 comment|/* put us in background */
 name|i
 operator|=
@@ -3526,46 +3522,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|OpMode
-operator|==
-name|MD_DAEMON
-condition|)
-block|{
-name|pidf
-operator|=
-name|fopen
-argument_list|(
-name|PidFile
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pidf
-operator|!=
-name|NULL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|pidf
-argument_list|,
-literal|"%d\n"
-argument_list|,
-name|getpid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|pidf
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* disconnect from our controlling tty */
 name|disconnect
 argument_list|(

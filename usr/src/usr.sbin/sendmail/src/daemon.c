@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.12 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.13 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.12 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.13 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,6 +163,10 @@ name|bool
 name|refusingconnections
 init|=
 name|TRUE
+decl_stmt|;
+name|FILE
+modifier|*
+name|pidf
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -407,6 +411,39 @@ argument_list|,
 name|reapchild
 argument_list|)
 expr_stmt|;
+comment|/* write the pid to the log file for posterity */
+name|pidf
+operator|=
+name|fopen
+argument_list|(
+name|PidFile
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pidf
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|pidf
+argument_list|,
+literal|"%d\n"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|pidf
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
