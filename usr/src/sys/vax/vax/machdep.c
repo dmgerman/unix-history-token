@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.14	%G%	*/
+comment|/*	machdep.c	3.15	%G%	*/
 end_comment
 
 begin_extern
@@ -92,7 +92,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.14) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.15) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,19 +195,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allow for the u. area of process 0 and its (single) 	 * page of page tables. 	 */
-name|printf
-argument_list|(
-literal|"firstaddr %X unixsize %X, cmap %X, ecmap %X\n"
-argument_list|,
-name|firstaddr
-argument_list|,
-name|unixsize
-argument_list|,
-name|cmap
-argument_list|,
-name|ecmap
-argument_list|)
-expr_stmt|;
 name|unixsize
 operator|=
 operator|(
