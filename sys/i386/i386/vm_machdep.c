@@ -1227,6 +1227,12 @@ block|{
 comment|/* XXXKSE  XXXSMP  not SMP SAFE.. what locks do we have? */
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -1244,6 +1250,12 @@ name|IOPAGES
 operator|+
 literal|1
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|pcb
