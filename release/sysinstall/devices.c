@@ -229,11 +229,29 @@ directive|endif
 block|{
 name|DEVICE_TYPE_CDROM
 block|,
-literal|"acd%dc"
+literal|"wcd%dc"
 block|,
 literal|"ATAPI IDE CDROM"
 block|,
 literal|19
+block|,
+literal|2
+block|,
+literal|8
+block|,
+literal|4
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_CDROM
+block|,
+literal|"acd%dc"
+block|,
+literal|"ATAPI/IDE CDROM"
+block|,
+literal|31
 block|,
 literal|2
 block|,
@@ -355,6 +373,42 @@ block|,
 block|{
 name|DEVICE_TYPE_DISK
 block|,
+literal|"ad%d"
+block|,
+literal|"ATA/IDE disk device"
+block|,
+literal|30
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|16
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"rad%d"
+block|,
+literal|"ATA/IDE disk device"
+block|,
+literal|116
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|16
+block|,
+literal|'c'
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_DISK
+block|,
 literal|"fla%d"
 block|,
 literal|"M-Systems DiskOnChip Flash device"
@@ -414,6 +468,42 @@ block|,
 literal|"ATAPI floppy device"
 block|,
 literal|87
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|4
+block|,
+literal|'c'
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"afd%d"
+block|,
+literal|"ATAPI/IDE floppy device"
+block|,
+literal|32
+block|,
+literal|65538
+block|,
+literal|8
+block|,
+literal|4
+block|,
+literal|'b'
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_DISK
+block|,
+literal|"rafd%d"
+block|,
+literal|"ATAPI/IDE floppy device"
+block|,
+literal|118
 block|,
 literal|65538
 block|,
