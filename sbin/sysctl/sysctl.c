@@ -813,7 +813,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tunable values are set in /boot/loader.conf and require a reboot to take effect.\n"
+literal|"Tunable values are set in"
+literal|" /boot/loader.conf and require a reboot to take effect.\n"
 argument_list|)
 expr_stmt|;
 name|errx
