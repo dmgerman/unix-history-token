@@ -2203,6 +2203,12 @@ operator|-
 literal|1
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|g_gate_list_mtx
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
