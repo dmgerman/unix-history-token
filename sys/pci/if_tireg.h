@@ -4130,9 +4130,6 @@ block|{
 name|caddr_t
 name|ti_buf
 decl_stmt|;
-name|int
-name|ti_inuse
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -9289,19 +9289,10 @@ return|;
 block|}
 if|if
 condition|(
-name|mclrefcnt
-index|[
-name|mtocl
+name|MEXT_IS_REF
 argument_list|(
 name|m
-operator|->
-name|m_ext
-operator|.
-name|ext_buf
 argument_list|)
-index|]
-operator|>
-literal|1
 condition|)
 block|{
 comment|/* make a real copy of the M_EXT mbuf since it is shared */

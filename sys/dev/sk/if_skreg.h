@@ -5974,9 +5974,6 @@ block|{
 name|caddr_t
 name|sk_buf
 decl_stmt|;
-name|int
-name|sk_inuse
-decl_stmt|;
 block|}
 struct|;
 end_struct

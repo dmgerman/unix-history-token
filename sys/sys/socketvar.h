@@ -791,10 +791,6 @@ argument_list|)
 name|free_list
 expr_stmt|;
 comment|/* list of free buffer slots */
-name|int
-name|refcnt
-decl_stmt|;
-comment|/* reference count */
 name|struct
 name|vm_page
 modifier|*

@@ -2862,7 +2862,7 @@ block|{
 name|printf
 argument_list|(
 literal|"  m_ext{ ext_buf:%p ext_free:%p "
-literal|"ext_size:%u ext_ref:%p }\n"
+literal|"ext_size:%u ref_cnt:%p }\n"
 argument_list|,
 name|m
 operator|->
@@ -2886,7 +2886,7 @@ name|m
 operator|->
 name|m_ext
 operator|.
-name|ext_ref
+name|ref_cnt
 argument_list|)
 expr_stmt|;
 block|}
