@@ -744,7 +744,7 @@ begin_define
 define|#
 directive|define
 name|INTSCOL
-value|63
+value|61
 end_define
 
 begin_define
@@ -1865,7 +1865,7 @@ name|INTSCOL
 operator|+
 literal|9
 argument_list|,
-literal|"%-8.8s"
+literal|"%-10.10s"
 argument_list|,
 name|intrname
 index|[
@@ -2209,7 +2209,7 @@ name|INTSCOL
 operator|+
 literal|9
 argument_list|,
-literal|"%-8.8s"
+literal|"%-10.10s"
 argument_list|,
 name|intrname
 index|[
@@ -2258,8 +2258,10 @@ name|i
 index|]
 argument_list|,
 name|INTSCOL
+operator|+
+literal|2
 argument_list|,
-literal|8
+literal|6
 argument_list|)
 expr_stmt|;
 block|}
@@ -2272,8 +2274,10 @@ operator|+
 literal|1
 argument_list|,
 name|INTSCOL
+operator|+
+literal|2
 argument_list|,
-literal|8
+literal|6
 argument_list|)
 expr_stmt|;
 name|Z
