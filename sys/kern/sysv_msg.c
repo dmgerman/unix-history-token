@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.17 1997/11/06 19:29:24 phk Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.18 1998/03/30 09:50:35 phk Exp $ */
 end_comment
 
 begin_comment
@@ -4287,6 +4287,8 @@ decl_stmt|;
 if|if
 condition|(
 name|msgsz
+operator|-
+name|len
 operator|>
 name|msginfo
 operator|.
@@ -4302,6 +4304,8 @@ else|else
 name|tlen
 operator|=
 name|msgsz
+operator|-
+name|len
 expr_stmt|;
 if|if
 condition|(
