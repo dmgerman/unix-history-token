@@ -1023,7 +1023,19 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s %s down&"
+literal|"LINE=%d %s %s down&"
+argument_list|,
+name|diali
+condition|?
+operator|(
+name|dialc
+operator|-
+literal|1
+operator|)
+operator|%
+name|diali
+else|:
+literal|0
 argument_list|,
 name|downscript
 condition|?
@@ -2210,7 +2222,19 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s %s up&"
+literal|"LINE=%d %s %s up&"
+argument_list|,
+name|diali
+condition|?
+operator|(
+name|dialc
+operator|-
+literal|1
+operator|)
+operator|%
+name|diali
+else|:
+literal|0
 argument_list|,
 name|upscript
 condition|?
