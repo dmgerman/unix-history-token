@@ -1108,7 +1108,7 @@ comment|/* XXX - UFS_MAGIC in Linux */
 end_comment
 
 begin_comment
-comment|/*  * ext2fs uses the VT_UFS tag. A mounted ext2 filesystem will therefore  * be seen as an ufs/mfs filesystem.  */
+comment|/*  * ext2fs uses the VT_UFS tag. A mounted ext2 filesystem will therefore  * be seen as an ufs filesystem.  */
 end_comment
 
 begin_function
