@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rmjob.c	4.2	83/05/13	*/
+comment|/*	rmjob.c	4.3	83/05/18	*/
 end_comment
 
 begin_comment
@@ -262,9 +262,6 @@ name|RP
 operator|=
 name|DEFLP
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|RM
 operator|=
 name|pgetstr
@@ -274,13 +271,6 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|RM
-operator|=
-name|host
 expr_stmt|;
 comment|/* 	 * If the format was `lprm -' and the user isn't the super-user, 	 *  then fake things to look like he said `lprm user'. 	 */
 if|if
@@ -624,7 +614,7 @@ if|if
 condition|(
 name|i
 operator|>
-literal|20
+literal|5
 condition|)
 block|{
 name|n
@@ -1348,7 +1338,9 @@ expr_stmt|;
 name|rem
 operator|=
 name|getport
-argument_list|()
+argument_list|(
+name|RM
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

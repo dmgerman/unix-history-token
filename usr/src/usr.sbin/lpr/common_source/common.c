@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	common.c	4.2	83/05/13	*/
+comment|/*	common.c	4.3	83/05/18	*/
 end_comment
 
 begin_comment
@@ -473,8 +473,17 @@ end_comment
 
 begin_macro
 name|getport
-argument_list|()
+argument_list|(
+argument|rhost
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|rhost
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -508,7 +517,7 @@ decl_stmt|;
 comment|/* 	 * Get the host address and port number to connect to. 	 */
 if|if
 condition|(
-name|RM
+name|rhost
 operator|==
 name|NULL
 condition|)
@@ -521,7 +530,7 @@ name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|RM
+name|rhost
 argument_list|)
 expr_stmt|;
 if|if
@@ -534,7 +543,7 @@ name|fatal
 argument_list|(
 literal|"unknown host %s"
 argument_list|,
-name|RM
+name|rhost
 argument_list|)
 expr_stmt|;
 name|sp
@@ -856,21 +865,12 @@ name|IPPORT_RESERVED
 operator|/
 literal|2
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: All ports in use\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 block|}
 block|}
 end_block

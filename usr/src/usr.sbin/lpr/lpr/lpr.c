@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.16	83/05/13	*/
+comment|/*	lpr.c	4.17	83/05/18	*/
 end_comment
 
 begin_comment
@@ -2726,11 +2726,6 @@ name|DU
 operator|=
 name|DEFUID
 expr_stmt|;
-name|RM
-operator|=
-name|host
-expr_stmt|;
-comment|/* machine for getport to connect to */
 block|}
 end_block
 
