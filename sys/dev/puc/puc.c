@@ -59,12 +59,6 @@ directive|include
 file|"opt_puc.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|__RMAN_RESOURCE_VISIBLE
-end_define
-
 begin_include
 include|#
 directive|include
