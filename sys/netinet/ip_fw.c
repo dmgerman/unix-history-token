@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.105 1999/03/30 23:45:34 nsayer Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.106 1999/04/17 08:56:38 peter Exp $  */
 end_comment
 
 begin_comment
@@ -6225,15 +6225,6 @@ name|old_ctl_ptr
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IPFIREWALL_MODULE
-argument_list|)
-end_if
-
 begin_function
 specifier|static
 name|int
@@ -6356,11 +6347,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"IP firewall unloaded\n"
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -6401,11 +6387,6 @@ name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

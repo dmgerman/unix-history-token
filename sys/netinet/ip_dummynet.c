@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.10 1999/03/26 14:15:59 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.11 1999/04/17 11:09:08 peter Exp $  */
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -2760,6 +2766,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ip_dn_init
 parameter_list|(
@@ -2787,18 +2794,6 @@ name|ip_dn_ctl
 expr_stmt|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DUMMYNET_MODULE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
 
 begin_decl_stmt
 specifier|static
@@ -2873,11 +2868,6 @@ expr_stmt|;
 name|dummynet_flush
 argument_list|()
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"DUMMYNET unloaded\n"
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 break|break;
@@ -2903,23 +2893,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|DECLARE_MODULE
 argument_list|(
-argument|dummynet
+name|dummynet
 argument_list|,
-argument|dummynet_mod
+name|dummynet_mod
 argument_list|,
-argument|SI_SUB_PSEUDO
+name|SI_SUB_PSEUDO
 argument_list|,
-argument|SI_ORDER_ANY
+name|SI_ORDER_ANY
 argument_list|)
-end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

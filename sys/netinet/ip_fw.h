@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.35 1998/09/02 19:14:01 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.36 1998/12/14 18:09:13 luigi Exp $  */
 end_comment
 
 begin_ifndef
@@ -777,72 +777,6 @@ modifier|*
 name|ip_fw_ctl_ptr
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* IP NAT hooks */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_nat_t
-name|__P
-typedef|((struct
-name|ip
-modifier|*
-modifier|*
-typedef|, struct
-name|mbuf
-modifier|*
-modifier|*
-typedef|, struct
-name|ifnet
-modifier|*
-typedef|,
-name|int
-typedef|));
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|ip_nat_ctl_t
-name|__P
-typedef|((struct
-name|sockopt
-modifier|*
-typedef|));
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|ip_nat_t
-modifier|*
-name|ip_nat_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ip_nat_ctl_t
-modifier|*
-name|ip_nat_ctl_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|IP_NAT_IN
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_NAT_OUT
-value|0x00000002
-end_define
 
 begin_endif
 endif|#
