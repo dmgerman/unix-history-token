@@ -4908,6 +4908,12 @@ name|ni_rates
 expr_stmt|;
 name|pktlen
 operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_frame
+argument_list|)
+operator|+
 literal|8
 operator|+
 literal|2
@@ -5353,6 +5359,29 @@ name|u_int8_t
 operator|*
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<=
+name|pktlen
+argument_list|,
+operator|(
+literal|"beacon bigger than expected, len %u calculated %u"
+operator|,
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|,
+name|pktlen
+operator|)
+argument_list|)
+expr_stmt|;
 name|DPRINTF2
 argument_list|(
 operator|(
@@ -5452,7 +5481,6 @@ index|]
 operator|.
 name|ds_addr
 expr_stmt|;
-comment|/* XXX verify mbuf data area covers this roundup */
 comment|/* 	 * Calculate rate code. 	 * XXX everything at min xmit rate 	 */
 name|rt
 operator|=
@@ -5565,6 +5593,7 @@ comment|/* rts/cts duration */
 argument_list|)
 expr_stmt|;
 comment|/* NB: beacon's BufLen must be a multiple of 4 bytes */
+comment|/* XXX verify mbuf data area covers this roundup */
 name|ath_hal_filltxdesc
 argument_list|(
 name|ah
