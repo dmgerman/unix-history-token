@@ -2616,6 +2616,8 @@ comment|/* If the Delete key is preferable, an stty is necessary     */
 if|if
 condition|(
 name|sc
+operator|->
+name|kbd
 operator|!=
 name|NULL
 condition|)
