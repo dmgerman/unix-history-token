@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	6.4	85/04/27	*/
+comment|/*	if_loop.c	6.5	85/05/30	*/
 end_comment
 
 begin_comment
@@ -124,24 +124,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|LONET
-value|127
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOHOST
-value|1
-end_define
-
-begin_comment
-comment|/* can't be 0, that's broadcast */
-end_comment
 
 begin_define
 define|#
