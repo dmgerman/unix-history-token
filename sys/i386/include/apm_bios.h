@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Advanced Power Management (APM) BIOS driver for laptop PCs.  *   * Copyright (c) 1994 by HOSOKAWA Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.2 1994/10/01 05:13:36 davidg Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Aug, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm_bios.h,v 1.3 1994/10/02 17:31:27 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -606,7 +606,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|ASM
+name|ASSEMBLER
 argument_list|)
 operator|&&
 operator|!
@@ -620,111 +620,101 @@ begin_comment
 comment|/* C definitions */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|apm_hook_func
+name|apmhook
 block|{
 name|struct
-name|apm_hook_func
+name|apmhook
 modifier|*
-name|next
+name|ah_next
 decl_stmt|;
-comment|/* Linked list */
 name|int
 function_decl|(
 modifier|*
-name|func
+name|ah_fun
 function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+parameter_list|()
 function_decl|;
+name|void
+modifier|*
+name|ah_arg
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|name
+name|ah_name
 decl_stmt|;
 name|int
-name|order
+name|ah_order
 decl_stmt|;
 block|}
-typedef|*
-name|apm_hook_func_t
-typedef|;
-end_typedef
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|APM_HOOK_NONE
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_HOOK_SUSPEND
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APM_HOOK_RESUME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAPM_HOOK
+value|2
+end_define
 
 begin_function_decl
-name|apm_hook_func_t
-name|apm_resume_hook_init
-parameter_list|(
-name|int
-function_decl|(
-modifier|*
-name|func
-function_decl|)
+name|void
+name|apm_suspend
 parameter_list|(
 name|void
 parameter_list|)
-parameter_list|,
-name|char
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|apmhook
 modifier|*
-name|name
-parameter_list|,
+name|apm_hook_establish
+parameter_list|(
 name|int
-name|order
+name|apmh
+parameter_list|,
+name|struct
+name|apmhook
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|void
-name|apm_resume_hook_delete
-parameter_list|(
-name|apm_hook_func_t
-name|delete_func
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|apm_hook_func_t
-name|apm_suspend_hook_init
+name|apm_hook_disestablish
 parameter_list|(
 name|int
-function_decl|(
-modifier|*
-name|func
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
+name|apmh
 parameter_list|,
-name|char
+name|struct
+name|apmhook
 modifier|*
-name|name
-parameter_list|,
-name|int
-name|order
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|apm_suspend_hook_delete
-parameter_list|(
-name|apm_hook_func_t
-name|delete_func
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|apm_suspend_resume
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -753,7 +743,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !ASM&& !INITIALIZER */
+comment|/* !ASSEMBLER&& !INITIALIZER */
 end_comment
 
 begin_define
@@ -907,7 +897,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|ASM
+name|ASSEMBLER
 argument_list|)
 operator|&&
 operator|!
@@ -947,6 +937,12 @@ typedef|*
 name|apm_info_t
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_define
 define|#
@@ -990,13 +986,29 @@ name|APMIO_NOTHALTCPU
 value|_IO('P', 8)
 end_define
 
+begin_define
+define|#
+directive|define
+name|APMIO_DISPLAYOFF
+value|_IO('P', 9)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* !ASM&& !INITIALIZER */
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ASSEMBLER&& !INITIALIZER */
 end_comment
 
 begin_endif

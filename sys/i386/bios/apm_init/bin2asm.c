@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * LP (Laptop Package)  *  * Copyright (C) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in   * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id$  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep., 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: bin2asm.c,v 1.2 1994/10/01 05:12:30 davidg Exp $  */
 end_comment
 
 begin_include
@@ -33,6 +33,8 @@ name|int
 name|c
 decl_stmt|,
 name|col
+decl_stmt|,
+name|lastline
 decl_stmt|;
 name|FILE
 modifier|*
@@ -163,6 +165,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|lastline
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -221,6 +227,10 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|lastline
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -231,9 +241,51 @@ argument_list|,
 literal|", "
 argument_list|)
 expr_stmt|;
+name|lastline
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|col
 operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|lastline
+condition|)
+block|{
+do|do
+block|{
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"0x00, "
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|col
+operator|++
+operator|)
+operator|%
+name|NCOLS
+operator|<
+name|NCOLS
+operator|-
+literal|2
+condition|)
+do|;
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"0x00\n"
+argument_list|)
 expr_stmt|;
 block|}
 name|fprintf
