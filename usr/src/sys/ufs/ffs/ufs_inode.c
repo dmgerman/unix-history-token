@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.22	82/08/03	*/
+comment|/*	ufs_inode.c	4.23	82/08/10	*/
 end_comment
 
 begin_include
@@ -1139,6 +1139,8 @@ block|{
 name|itrunc
 argument_list|(
 name|ip
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mode
@@ -1525,13 +1527,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Free all the disk blocks associated  * with the specified inode structure.  * The blocks of the file are removed  * in reverse order.  */
+comment|/*  * Truncate the inode ip to at most  * length size.  Free affected disk  * blocks -- the blocks of the file  * are removed in reverse order.  */
 end_comment
 
 begin_expr_stmt
 name|itrunc
 argument_list|(
 name|ip
+argument_list|,
+name|length
 argument_list|)
 specifier|register
 expr|struct
@@ -1540,6 +1544,13 @@ operator|*
 name|ip
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|length
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1601,6 +1612,15 @@ operator|!=
 name|IFLNK
 condition|)
 return|return;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_size
+operator|<=
+name|length
+condition|)
+return|return;
 comment|/* 	 * Clean inode on disk before freeing blocks 	 * to insure no duplicates if system crashes. 	 */
 name|itmp
 operator|=
@@ -1611,7 +1631,7 @@ name|itmp
 operator|.
 name|i_size
 operator|=
-literal|0
+name|length
 expr_stmt|;
 for|for
 control|(
