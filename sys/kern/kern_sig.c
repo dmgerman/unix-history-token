@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sig.c	8.7 (Berkeley) 4/18/94  * $Id: kern_sig.c,v 1.49 1998/11/11 10:03:55 truckman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sig.c	8.7 (Berkeley) 4/18/94  * $Id: kern_sig.c,v 1.50 1998/12/02 01:53:48 eivind Exp $  */
 end_comment
 
 begin_include
@@ -548,6 +548,9 @@ name|sa_flags
 operator||=
 name|SA_NODEFER
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|signum
@@ -560,12 +563,34 @@ name|p_flag
 operator|&
 name|P_NOCLDSTOP
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|signum
+operator|==
+name|SIGCHLD
+operator|&&
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&
+name|P_NOCLDSTOP
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|sa
 operator|->
 name|sa_flags
 operator||=
 name|SA_NOCLDSTOP
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|signum
@@ -578,6 +603,25 @@ name|p_flag
 operator|&
 name|P_NOCLDWAIT
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|signum
+operator|==
+name|SIGCHLD
+operator|&&
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&
+name|P_NOCLDWAIT
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|sa
 operator|->
 name|sa_flags
@@ -909,6 +953,9 @@ name|sa_flags
 operator|&
 name|SA_NOCLDSTOP
 condition|)
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|p
 operator|->
 name|p_flag
@@ -923,6 +970,29 @@ operator|&=
 operator|~
 name|P_NOCLDSTOP
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator||=
+name|P_NOCLDSTOP
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&=
+operator|~
+name|P_NOCLDSTOP
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 if|if
 condition|(
 name|sa
@@ -941,6 +1011,9 @@ name|p_pid
 operator|==
 literal|1
 condition|)
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|p
 operator|->
 name|p_flag
@@ -955,8 +1028,34 @@ name|p_flag
 operator||=
 name|P_NOCLDWAIT
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&=
+operator|~
+name|P_NOCLDWAIT
+expr_stmt|;
+else|else
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator||=
+name|P_NOCLDWAIT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 block|}
 else|else
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|p
 operator|->
 name|p_flag
@@ -964,6 +1063,20 @@ operator|&=
 operator|~
 name|P_NOCLDWAIT
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&=
+operator|~
+name|P_NOCLDWAIT
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 block|}
 comment|/* 	 * Set bit in p_sigignore for signals that are set to SIG_IGN, 	 * and for signals set to SIG_DFL where the default is to ignore. 	 * However, don't put SIGCONT in p_sigignore, 	 * as we have to restart the process. 	 */
 if|if
@@ -1717,6 +1830,9 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|COMPAT_SUNOS
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|signum
@@ -1729,6 +1845,25 @@ name|p_flag
 operator|&
 name|P_NOCLDSTOP
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|signum
+operator|==
+name|SIGCHLD
+operator|&&
+name|p
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&
+name|P_NOCLDSTOP
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|sv
 operator|->
 name|sv_flags
@@ -2108,6 +2243,9 @@ operator|->
 name|p_sigacts
 decl_stmt|;
 comment|/* 	 * When returning from sigpause, we want 	 * the old mask to be restored after the 	 * signal handler has finished.  Thus, we 	 * save it here and mark the sigacts structure 	 * to indicate this. 	 */
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|ps
 operator|->
 name|ps_oldmask
@@ -2122,6 +2260,19 @@ name|ps_flags
 operator||=
 name|SAS_OLDMASK
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_oldsigmask
+operator|=
+name|p
+operator|->
+name|p_sigmask
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|p
 operator|->
 name|p_sigmask
@@ -3588,6 +3739,9 @@ block|}
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|ps
 operator|->
 name|ps_code
@@ -3602,6 +3756,25 @@ operator|=
 name|signum
 expr_stmt|;
 comment|/* XXX to verify code */
+else|#
+directive|else
+name|p
+operator|->
+name|p_code
+operator|=
+name|code
+expr_stmt|;
+comment|/* XXX for core dump/debugger */
+name|p
+operator|->
+name|p_sig
+operator|=
+name|signum
+expr_stmt|;
+comment|/* XXX to verify code */
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|psignal
 argument_list|(
 name|p
@@ -3716,6 +3889,9 @@ expr_stmt|;
 else|else
 block|{
 comment|/* 		 * If the signal is being ignored, 		 * then we forget about it immediately. 		 * (Note: we don't set SIGCONT in p_sigignore, 		 * and if it is set to SIG_IGN, 		 * action will be SIG_DFL here.) 		 */
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|p
@@ -3724,6 +3900,29 @@ name|p_sigignore
 operator|&
 name|mask
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_sigignore
+operator|&
+name|mask
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 return|return;
 if|if
 condition|(
@@ -3978,6 +4177,9 @@ name|p_xstat
 operator|=
 name|signum
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 operator|(
@@ -3992,6 +4194,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&
+name|P_NOCLDSTOP
+operator|)
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|psignal
 argument_list|(
 name|p
@@ -4571,6 +4794,9 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 operator|(
@@ -4585,6 +4811,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_procsig
+operator|->
+name|ps_flag
+operator|&
+name|P_NOCLDSTOP
+operator|)
+operator|==
+literal|0
+condition|)
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|psignal
 argument_list|(
 name|p
@@ -4817,6 +5064,9 @@ name|p
 operator|->
 name|p_tracep
 argument_list|,
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|signum
 argument_list|,
 name|action
@@ -4838,8 +5088,44 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|signum
+operator|,
+name|action
+operator|,
+name|p
+operator|->
+name|p_oldsigmask
+condition|?
+name|p
+operator|->
+name|p_oldsigmask
+else|:
+name|p
+operator|->
+name|p_sigmask
+operator|,
+literal|0
+block|)
+function|;
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* COMPAT_LINUX_THREADS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
 name|STOPEVENT
 argument_list|(
 name|p
@@ -4849,6 +5135,9 @@ argument_list|,
 name|signum
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|action
@@ -4900,6 +5189,9 @@ operator|)
 name|splhigh
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|ps
@@ -4922,6 +5214,30 @@ operator|&=
 operator|~
 name|SAS_OLDMASK
 expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_oldsigmask
+condition|)
+block|{
+name|returnmask
+operator|=
+name|p
+operator|->
+name|p_oldsigmask
+expr_stmt|;
+name|p
+operator|->
+name|p_oldsigmask
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 block|}
 else|else
 name|returnmask
@@ -5015,6 +5331,9 @@ operator|.
 name|ru_nsignals
 operator|++
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 name|ps
@@ -5024,6 +5343,20 @@ operator|!=
 name|signum
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|p
+operator|->
+name|p_sig
+operator|!=
+name|signum
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 name|code
 operator|=
 literal|0
@@ -5031,6 +5364,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|code
 operator|=
 name|ps
@@ -5049,6 +5385,29 @@ name|ps_sig
 operator|=
 literal|0
 expr_stmt|;
+else|#
+directive|else
+name|code
+operator|=
+name|p
+operator|->
+name|p_code
+expr_stmt|;
+name|p
+operator|->
+name|p_code
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_sig
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 block|}
 call|(
 modifier|*
@@ -5070,13 +5429,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*  * Kill the current process for stated reason.  */
-end_comment
-
-begin_function
 name|void
 name|killproc
 parameter_list|(
@@ -5136,13 +5489,7 @@ name|SIGKILL
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Force the current process to exit with the specified signal, dumping core  * if appropriate.  We bypass the normal tests for masked and caught signals,  * allowing unrecoverable failures to terminate the process without changing  * signal state.  Mark the accounting record with the signal termination.  * If dumping core, save the signal number for the debugger.  Calls exit and  * does not return.  */
-end_comment
-
-begin_function
 name|void
 name|sigexit
 parameter_list|(
@@ -5176,6 +5523,9 @@ operator|&
 name|SA_CORE
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 name|p
 operator|->
 name|p_sigacts
@@ -5184,6 +5534,17 @@ name|ps_sig
 operator|=
 name|signum
 expr_stmt|;
+else|#
+directive|else
+name|p
+operator|->
+name|p_sig
+operator|=
+name|signum
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 comment|/* 		 * Log signals which would cause core dumps 		 * (Log as LOG_INFO to appease those who don't want 		 * these messages.) 		 * XXX : Todo, as well as euid, write out ruid too 		 */
 if|if
 condition|(
@@ -5277,9 +5638,6 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_function
-
-begin_decl_stmt
 specifier|static
 name|char
 name|corefilename
@@ -5293,9 +5651,6 @@ block|{
 literal|"%N.core"
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
 name|_kern
@@ -5316,13 +5671,7 @@ argument_list|,
 literal|"process corefile name format string"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * expand_name(name, uid, pid)  * Expand the name described in corefilename, using name, uid, and pid.  * corefilename is a printf-like string, with three format specifiers:  *	%N	name of process ("name")  *	%P	process id (pid)  *	%U	user id (uid)  * For example, "%N.core" is the default; they can be disabled completely  * by using "/dev/null", or all core files can be stored in "/cores/%U/%N-%P".  * This is controlled by the sysctl variable kern.corefile (see above).  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|expand_name
@@ -5710,19 +6059,10 @@ return|return
 name|temp
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Nonexistent system call-- signal process (may want to handle it).  * Flag error in case process won't see signal immediately (blocked or ignored).  */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_SYS_SYSPROTO_H_
-end_ifndef
-
-begin_struct
 struct|struct
 name|nosys_args
 block|{
@@ -5731,18 +6071,9 @@ name|dummy
 decl_stmt|;
 block|}
 struct|;
-end_struct
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* ARGSUSED */
-end_comment
-
-begin_function
 name|int
 name|nosys
 parameter_list|(
@@ -5774,13 +6105,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Send a signal to a SIGIO or SIGURG to a process or process group using  * stored credentials rather than those of the current process.  */
-end_comment
-
-begin_function
 name|void
 name|pgsigio
 parameter_list|(
@@ -5921,7 +6246,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_if
 
 end_unit
 

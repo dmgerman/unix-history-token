@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: keyword.c,v 1.19 1998/05/25 05:07:17 steve Exp $"
+literal|"$Id: keyword.c,v 1.20 1998/09/14 08:32:20 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1453,6 +1453,9 @@ block|,
 literal|"x"
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|COMPAT_LINUX_THREADS
 block|{
 literal|"sigcatch"
 block|,
@@ -1503,6 +1506,9 @@ block|,
 literal|"x"
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* COMPAT_LINUX_THREADS */
 block|{
 literal|"sigmask"
 block|,
