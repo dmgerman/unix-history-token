@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.11 (Berkeley) %G%"
+literal|"@(#)iso.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 3.3 88/12/08 14:44:49 hagens Exp $  * $Source: /usr/argo/src/ucb/netstat/RCS/iso.c,v $  */
+comment|/*  * $Header: iso.c,v 1.5 92/06/04 00:36:32 leres Exp $  * $Source: /usr/src/usr.bin/netstat/RCS/iso.c,v $  */
 end_comment
 
 begin_comment
@@ -246,6 +246,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -259,6 +265,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -312,6 +324,26 @@ name|int
 operator|,
 name|char
 operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|inetprint
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|,
+name|int
 operator|,
 name|char
 operator|*
@@ -1017,22 +1049,20 @@ block|}
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|iso_protopr1
-argument_list|(
-argument|kern_addr
-argument_list|,
-argument|istp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|kern_addr
+parameter_list|,
+name|istp
+parameter_list|)
 name|off_t
 name|kern_addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|istp
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1109,14 +1139,16 @@ operator|.
 name|so_pcb
 condition|?
 operator|(
-name|off_t
+name|void
+operator|*
 operator|)
 name|sockb
 operator|.
 name|so_pcb
 else|:
 operator|(
-name|off_t
+name|void
+operator|*
 operator|)
 name|kern_addr
 operator|)
@@ -1346,31 +1378,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|tp_protopr
-argument_list|(
-argument|off
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|off
+parameter_list|,
+name|name
+parameter_list|)
 name|off_t
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|tp_ref
@@ -1553,6 +1577,9 @@ name|IN_CLNS
 case|:
 name|tp_inproto
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|tpkerninfo
 operator|.
 name|tpr_base
@@ -1571,6 +1598,9 @@ argument_list|)
 expr_stmt|;
 name|iso_protopr1
 argument_list|(
+operator|(
+name|off_t
+operator|)
 name|tpcb
 operator|.
 name|tp_npcb
@@ -1617,22 +1647,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|tp_inproto
-argument_list|(
-argument|pcb
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pcb
+parameter_list|)
 name|off_t
 name|pcb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|inpcb
@@ -1721,7 +1746,7 @@ literal|"tp"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Pretty print an iso address (net address + port).  * If the nflag was specified, use numbers instead of names.  */

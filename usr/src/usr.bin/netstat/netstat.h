@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)netstat.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -57,6 +57,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* show interfaces */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show multicast tables (or multicast stats) */
 end_comment
 
 begin_decl_stmt
@@ -195,6 +205,19 @@ begin_decl_stmt
 name|char
 modifier|*
 name|plural
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|plurales
 name|__P
 argument_list|(
 operator|(
@@ -511,20 +534,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ns_erputil
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|intpr
 name|__P
 argument_list|(
@@ -613,6 +622,47 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|iso_protopr1
+name|__P
+argument_list|(
+operator|(
+name|off_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tp_protopr
+name|__P
+argument_list|(
+operator|(
+name|off_t
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tp_inproto
+name|__P
+argument_list|(
+operator|(
+name|off_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|tp_stats
 name|__P
 argument_list|(
@@ -620,6 +670,36 @@ operator|(
 name|caddr_t
 operator|,
 name|caddr_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|mroutepr
+name|__P
+argument_list|(
+operator|(
+name|off_t
+operator|,
+name|off_t
+operator|,
+name|off_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|mrt_stats
+name|__P
+argument_list|(
+operator|(
+name|off_t
+operator|,
+name|off_t
 operator|)
 argument_list|)
 decl_stmt|;

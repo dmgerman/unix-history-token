@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.14 (Berkeley) %G%"
+literal|"@(#)ns.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,21 @@ operator|(
 expr|struct
 name|ns_addr
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|ns_erputil
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

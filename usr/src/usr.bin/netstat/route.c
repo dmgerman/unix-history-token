@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.23 (Berkeley) %G%"
+literal|"@(#)route.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +133,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netstat.h"
 end_include
 
@@ -145,7 +151,6 @@ name|p
 parameter_list|,
 name|d
 parameter_list|)
-define|\
 value|(kread((off_t)(p), (char *)&(d), sizeof (d)))
 end_define
 
@@ -187,6 +192,12 @@ literal|'H'
 block|}
 block|,
 block|{
+name|RTF_REJECT
+block|,
+literal|'R'
+block|}
+block|,
+block|{
 name|RTF_DYNAMIC
 block|,
 literal|'D'
@@ -198,6 +209,20 @@ block|,
 literal|'M'
 block|}
 block|,
+block|{
+name|RTF_DONE
+block|,
+literal|'d'
+block|}
+block|,
+comment|/* Completed -- for routing messages only */
+block|{
+name|RTF_MASK
+block|,
+literal|'m'
+block|}
+block|,
+comment|/* Mask Present -- for routing messages only */
 block|{
 name|RTF_CLONING
 block|,
@@ -217,15 +242,21 @@ literal|'L'
 block|}
 block|,
 block|{
-name|RTF_REJECT
-block|,
-literal|'R'
-block|}
-block|,
-block|{
 name|RTF_STATIC
 block|,
 literal|'S'
+block|}
+block|,
+block|{
+name|RTF_PROTO1
+block|,
+literal|'1'
+block|}
+block|,
+block|{
+name|RTF_PROTO2
+block|,
+literal|'2'
 block|}
 block|,
 block|{

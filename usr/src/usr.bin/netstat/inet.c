@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.17 (Berkeley) %G%"
+literal|"@(#)inet.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

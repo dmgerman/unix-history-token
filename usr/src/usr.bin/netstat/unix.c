@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.12 (Berkeley) %G%"
+literal|"@(#)unix.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +108,18 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -594,6 +606,9 @@ name|m
 operator|->
 name|m_len
 operator|-
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sa
