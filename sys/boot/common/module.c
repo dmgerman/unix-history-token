@@ -492,6 +492,11 @@ name|loadaddr
 operator|=
 literal|0
 expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"kernelname"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|CMD_OK
