@@ -5851,7 +5851,7 @@ operator|->
 name|snscb_res3
 argument_list|)
 expr_stmt|;
-name|ISP_IOXPUT_16
+name|ISP_IOXPUT_32
 argument_list|(
 name|isp
 argument_list|,
