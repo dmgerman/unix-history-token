@@ -945,6 +945,20 @@ end_endif
 
 begin_function_decl
 name|int
+name|nosys
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nosys
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|setgid
 parameter_list|()
 function_decl|;
@@ -3039,19 +3053,19 @@ block|}
 block|,
 comment|/* 174 = nosys */
 block|{
-literal|0
+literal|1
 block|,
 name|nosys
 block|}
 block|,
-comment|/* 175 = nosys */
+comment|/* 175 = ntp_gettime */
 block|{
-literal|0
+literal|1
 block|,
 name|nosys
 block|}
 block|,
-comment|/* 176 = nosys */
+comment|/* 176 = ntp_adjtime */
 block|{
 literal|0
 block|,
