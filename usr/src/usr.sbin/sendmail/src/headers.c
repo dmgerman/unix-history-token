@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|4.4.1.1
+literal|4.5
 operator|%
 name|G
 operator|%
@@ -2690,6 +2690,12 @@ name|char
 modifier|*
 name|oldp
 decl_stmt|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
+index|]
+decl_stmt|;
 specifier|extern
 name|bool
 name|isatword
@@ -2714,6 +2720,8 @@ condition|?
 literal|' '
 else|:
 literal|','
+argument_list|,
+name|pvpbuf
 argument_list|)
 expr_stmt|;
 name|p

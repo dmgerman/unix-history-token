@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.13
+literal|4.14
 operator|%
 name|G
 operator|%
@@ -1995,13 +1995,6 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
 name|DelimChar
 decl_stmt|;
 name|printf
@@ -2084,6 +2077,19 @@ literal|'\0'
 expr_stmt|;
 do|do
 block|{
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|prescan
+parameter_list|()
+function_decl|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
+index|]
+decl_stmt|;
 name|pvp
 operator|=
 name|prescan
@@ -2092,6 +2098,8 @@ operator|++
 name|p
 argument_list|,
 literal|','
+argument_list|,
+name|pvpbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -2826,11 +2834,11 @@ block|,
 name|CONDFI
 block|,
 comment|/* and finally the hostname lookup characters */
-literal|'{'
+literal|'['
 block|,
 name|HOSTBEGIN
 block|,
-literal|'}'
+literal|']'
 block|,
 name|HOSTEND
 block|,

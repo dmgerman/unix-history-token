@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -2009,6 +2009,12 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
+index|]
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -2616,6 +2622,8 @@ argument_list|(
 name|from
 argument_list|,
 literal|'\0'
+argument_list|,
+name|pvpbuf
 argument_list|)
 expr_stmt|;
 if|if

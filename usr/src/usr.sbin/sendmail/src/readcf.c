@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.7
+literal|4.8
 operator|%
 name|G
 operator|%
@@ -105,6 +105,12 @@ name|char
 name|exbuf
 index|[
 name|MAXLINE
+index|]
+decl_stmt|;
+name|char
+name|pvpbuf
+index|[
+name|PSBUFSIZE
 index|]
 decl_stmt|;
 specifier|extern
@@ -380,6 +386,8 @@ argument_list|(
 name|exbuf
 argument_list|,
 literal|'\t'
+argument_list|,
+name|pvpbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -462,6 +470,8 @@ argument_list|(
 name|exbuf
 argument_list|,
 literal|'\t'
+argument_list|,
+name|pvpbuf
 argument_list|)
 expr_stmt|;
 if|if
