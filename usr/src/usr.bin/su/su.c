@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.12 (Berkeley) %G%"
+literal|"@(#)su.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -528,6 +528,9 @@ operator|*
 name|g
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -556,6 +559,15 @@ argument_list|)
 condition|)
 break|break;
 block|}
+name|openlog
+argument_list|(
+literal|"su"
+argument_list|,
+name|LOG_CONS
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* if target requires a password, verify it */
 if|if
 condition|(
@@ -610,11 +622,11 @@ literal|0
 condition|)
 name|syslog
 argument_list|(
-name|LOG_CRIT
-operator||
 name|LOG_AUTH
+operator||
+name|LOG_CRIT
 argument_list|,
-literal|"su: BAD SU %s on %s"
+literal|"BAD SU %s on %s"
 argument_list|,
 name|username
 argument_list|,
@@ -993,7 +1005,7 @@ name|LOG_NOTICE
 operator||
 name|LOG_AUTH
 argument_list|,
-literal|"su: %s on %s"
+literal|"%s on %s"
 argument_list|,
 name|username
 argument_list|,
