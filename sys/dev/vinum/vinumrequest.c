@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.25 1999/10/12 04:38:20 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.26 1999/12/30 07:38:33 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1308,6 +1308,10 @@ name|drive
 modifier|*
 name|drive
 decl_stmt|;
+name|int
+name|rcount
+decl_stmt|;
+comment|/* request count */
 comment|/*      * First find out whether we're reviving, and the      * request contains a conflict.  If so, we hang      * the request off plex->waitlist of the first      * plex we find which is reviving      */
 if|if
 condition|(
@@ -1408,15 +1412,12 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Revive conflict sd %d: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Revive conflict sd %d: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
 name|rq
 operator|->
 name|sdno
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|rq
 argument_list|,
 name|rq
@@ -1489,11 +1490,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"Request: %x\n%s dev %d.%d, offset 0x%x, length %ld\n"
+literal|"Request: %p\n%s dev %d.%d, offset 0x%x, length %ld\n"
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|rq
 argument_list|,
 name|rq
@@ -1543,9 +1541,6 @@ name|vinum_conf
 operator|.
 name|lastrq
 operator|=
-operator|(
-name|int
-operator|)
 name|rq
 expr_stmt|;
 name|vinum_conf
@@ -1668,12 +1663,6 @@ expr_stmt|;
 comment|/* one more active request group */
 block|}
 comment|/* Now fire off the requests */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
-comment|/* lock out the interrupt routines */
 for|for
 control|(
 name|rqg
@@ -1686,14 +1675,49 @@ name|rqg
 operator|!=
 name|NULL
 condition|;
-name|rqg
-operator|=
-name|rqg
-operator|->
-name|next
 control|)
 block|{
 comment|/* through the whole request chain */
+if|if
+condition|(
+name|rqg
+operator|->
+name|lockbase
+operator|>=
+literal|0
+condition|)
+comment|/* this rqg needs a lock first */
+name|rqg
+operator|->
+name|lock
+operator|=
+name|lockrange
+argument_list|(
+name|rqg
+operator|->
+name|lockbase
+argument_list|,
+name|rqg
+operator|->
+name|rq
+operator|->
+name|bp
+argument_list|,
+operator|&
+name|PLEX
+index|[
+name|rqg
+operator|->
+name|plexno
+index|]
+argument_list|)
+expr_stmt|;
+name|rcount
+operator|=
+name|rqg
+operator|->
+name|count
+expr_stmt|;
 for|for
 control|(
 name|rqno
@@ -1702,12 +1726,8 @@ literal|0
 init|;
 name|rqno
 operator|<
-name|rqg
-operator|->
-name|count
+name|rcount
 condition|;
-name|rqno
-operator|++
 control|)
 block|{
 name|rqe
@@ -1719,6 +1739,20 @@ name|rqe
 index|[
 name|rqno
 index|]
+expr_stmt|;
+comment|/* 	     * Point to next rqg before the bottom end 	     * changes the structures. 	     */
+if|if
+condition|(
+operator|++
+name|rqno
+operator|>=
+name|rcount
+condition|)
+name|rqg
+operator|=
+name|rqg
+operator|->
+name|next
 expr_stmt|;
 if|if
 condition|(
@@ -1746,6 +1780,12 @@ name|driveno
 index|]
 expr_stmt|;
 comment|/* look at drive */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
+comment|/* lock out the interrupt routines */
 while|while
 condition|(
 operator|(
@@ -1772,13 +1812,15 @@ operator|&
 name|launch_requests
 argument_list|,
 name|PRIBIO
+operator||
+name|PCATCH
 argument_list|,
 literal|"vinbuf"
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* wait for it to subside, XXX: should PCATCH */
+comment|/* wait for it to subside */
 name|drive
 operator|->
 name|active
@@ -1824,6 +1866,11 @@ operator|=
 name|vinum_conf
 operator|.
 name|active
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -2002,11 +2049,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -4886,6 +4928,14 @@ name|elements
 expr_stmt|;
 comment|/* number of requests in the group */
 block|}
+name|rqg
+operator|->
+name|lockbase
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* no lock required yet */
 return|return
 name|rqg
 return|;
