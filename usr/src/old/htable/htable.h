@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)htable.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)htable.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -135,14 +135,6 @@ name|struct
 name|name
 modifier|*
 name|newname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
