@@ -4,7 +4,7 @@ comment|/*  *   * packet.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copy
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: packet.h,v 1.9 2000/01/04 16:54:58 markus Exp $"); */
+comment|/* RCSID("$Id: packet.h,v 1.10 2000/03/16 20:56:14 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -445,10 +445,6 @@ unit|)))
 empty_stmt|;
 end_empty_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * Sends a diagnostic message to the other side.  This message can be sent at  * any time (but not while constructing another message). The message is  * printed immediately, but only if the client is being executed in verbose  * mode.  These messages are primarily intended to ease debugging  * authentication problems.  The total length of the message must not exceed  * 1024 bytes.  This will automatically call packet_write_wait.  If the  * remote side protocol flags do not indicate that it supports SSH_MSG_DEBUG,  * this will do nothing.  */
 end_comment
@@ -477,10 +473,6 @@ end_function_decl
 
 begin_empty_stmt
 unit|)))
-empty_stmt|;
-end_empty_stmt
-
-begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh.c,v 1.41 2000/02/28 19:51:58 markus Exp $"
+literal|"$Id: ssh.c,v 1.43 2000/03/23 21:52:02 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -699,6 +699,11 @@ init|=
 literal|0
 decl_stmt|,
 name|dummy
+decl_stmt|;
+name|int
+name|have_pty
+init|=
+literal|0
 decl_stmt|;
 name|uid_t
 name|original_effective_uid
@@ -2507,11 +2512,6 @@ name|host_private_key
 argument_list|)
 expr_stmt|;
 comment|/* Destroys contents safely */
-comment|/* Close connection cleanly after attack. */
-name|cipher_attack_detected
-operator|=
-name|packet_disconnect
-expr_stmt|;
 comment|/* Enable compression if requested. */
 if|if
 condition|(
@@ -2741,10 +2741,16 @@ name|type
 operator|==
 name|SSH_SMSG_SUCCESS
 condition|)
+block|{
 name|interactive
 operator|=
 literal|1
 expr_stmt|;
+name|have_pty
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -3384,7 +3390,7 @@ name|exit_status
 operator|=
 name|client_loop
 argument_list|(
-name|tty_flag
+name|have_pty
 argument_list|,
 name|tty_flag
 condition|?

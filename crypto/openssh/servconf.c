@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: servconf.c,v 1.30 2000/02/24 18:22:16 markus Exp $"
+literal|"$Id: servconf.c,v 1.31 2000/03/07 20:40:41 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -558,7 +558,7 @@ name|options
 operator|->
 name|x11_forwarding
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(

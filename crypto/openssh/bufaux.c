@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bufaux.c,v 1.7 1999/11/24 19:53:44 markus Exp $"
+literal|"$Id: bufaux.c,v 1.8 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,6 +84,7 @@ operator|/
 literal|8
 decl_stmt|;
 name|char
+name|unsigned
 modifier|*
 name|buf
 init|=
@@ -148,6 +149,10 @@ name|buffer_append
 argument_list|(
 name|buffer
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|oi
@@ -250,6 +255,11 @@ argument_list|)
 expr_stmt|;
 name|bin
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|buffer_ptr
 argument_list|(
 name|buffer

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsa.c,v 1.12 2000/02/21 21:47:31 markus Exp $"
+literal|"$Id: rsa.c,v 1.13 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -370,6 +370,7 @@ modifier|*
 name|key
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|inbuf
@@ -550,6 +551,7 @@ modifier|*
 name|key
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|inbuf

@@ -4,7 +4,7 @@ comment|/*  *   * cipher.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copy
 end_comment
 
 begin_comment
-comment|/* RCSID("$Id: cipher.h,v 1.10 1999/11/24 19:53:46 markus Exp $"); */
+comment|/* RCSID("$Id: cipher.h,v 1.11 2000/03/22 09:55:10 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -329,28 +329,6 @@ parameter_list|,
 name|unsigned
 name|int
 name|len
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * If and CRC-32 attack is detected this function is called. Defaults to  * fatal, changed to packet_disconnect in sshd and ssh.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|cipher_attack_detected
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.88 2000/02/15 16:52:57 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.94 2000/03/23 22:15:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2233,11 +2233,6 @@ name|chdir
 argument_list|(
 literal|"/"
 argument_list|)
-expr_stmt|;
-comment|/* Close connection cleanly after attack. */
-name|cipher_attack_detected
-operator|=
-name|packet_disconnect
 expr_stmt|;
 comment|/* Start listening for a socket, unless started from inetd. */
 if|if
@@ -5438,7 +5433,9 @@ name|pwcopy
 decl_stmt|;
 name|int
 name|plen
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|ulen
 decl_stmt|;
 name|char
@@ -6028,12 +6025,9 @@ name|unsigned
 name|int
 name|bits
 decl_stmt|;
-name|BIGNUM
+name|RSA
 modifier|*
-name|client_host_key_e
-decl_stmt|,
-modifier|*
-name|client_host_key_n
+name|client_host_key
 decl_stmt|;
 name|BIGNUM
 modifier|*
@@ -6052,16 +6046,20 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
+name|unsigned
+name|int
+name|dlen
+decl_stmt|;
 name|int
 name|plen
 decl_stmt|,
-name|dlen
-decl_stmt|,
 name|nlen
 decl_stmt|,
-name|ulen
-decl_stmt|,
 name|elen
+decl_stmt|;
+name|unsigned
+name|int
+name|ulen
 decl_stmt|;
 name|int
 name|type
@@ -6638,15 +6636,54 @@ name|ulen
 argument_list|)
 expr_stmt|;
 comment|/* Get the client host key. */
-name|client_host_key_e
+name|client_host_key
+operator|=
+name|RSA_new
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|client_host_key
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"RSA_new failed"
+argument_list|)
+expr_stmt|;
+name|client_host_key
+operator|->
+name|e
 operator|=
 name|BN_new
 argument_list|()
 expr_stmt|;
-name|client_host_key_n
+name|client_host_key
+operator|->
+name|n
 operator|=
 name|BN_new
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|client_host_key
+operator|->
+name|e
+operator|==
+name|NULL
+operator|||
+name|client_host_key
+operator|->
+name|n
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"BN_new failed"
+argument_list|)
 expr_stmt|;
 name|bits
 operator|=
@@ -6655,7 +6692,9 @@ argument_list|()
 expr_stmt|;
 name|packet_get_bignum
 argument_list|(
-name|client_host_key_e
+name|client_host_key
+operator|->
+name|e
 argument_list|,
 operator|&
 name|elen
@@ -6663,7 +6702,9 @@ argument_list|)
 expr_stmt|;
 name|packet_get_bignum
 argument_list|(
-name|client_host_key_n
+name|client_host_key
+operator|->
+name|n
 argument_list|,
 operator|&
 name|nlen
@@ -6675,7 +6716,9 @@ name|bits
 operator|!=
 name|BN_num_bits
 argument_list|(
-name|client_host_key_n
+name|client_host_key
+operator|->
+name|n
 argument_list|)
 condition|)
 name|error
@@ -6685,7 +6728,9 @@ literal|"actual %d, announced %d"
 argument_list|,
 name|BN_num_bits
 argument_list|(
-name|client_host_key_n
+name|client_host_key
+operator|->
+name|n
 argument_list|)
 argument_list|,
 name|bits
@@ -6718,19 +6763,12 @@ name|pw
 argument_list|,
 name|client_user
 argument_list|,
-name|client_host_key_e
-argument_list|,
-name|client_host_key_n
+name|client_host_key
 argument_list|)
 expr_stmt|;
-name|BN_clear_free
+name|RSA_free
 argument_list|(
-name|client_host_key_e
-argument_list|)
-expr_stmt|;
-name|BN_clear_free
-argument_list|(
-name|client_host_key_n
+name|client_host_key
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -7072,6 +7110,50 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Check if the user is logging in as root and root logins 		 * are disallowed. 		 * Note that root login is allowed for forced commands. 		 */
+if|if
+condition|(
+name|authenticated
+operator|&&
+name|pw
+operator|->
+name|pw_uid
+operator|==
+literal|0
+operator|&&
+operator|!
+name|options
+operator|.
+name|permit_root_login
+condition|)
+block|{
+if|if
+condition|(
+name|forced_command
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Root login accepted for forced command."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+name|log
+argument_list|(
+literal|"ROOT LOGIN REFUSED FROM %.200s"
+argument_list|,
+name|get_canonical_hostname
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Raise logging level */
 if|if
 condition|(
@@ -7232,6 +7314,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SKEY
+name|unsigned
 name|int
 name|dlen
 decl_stmt|;
@@ -7564,6 +7647,13 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
+name|plen
+decl_stmt|;
+name|unsigned
+name|int
+name|dlen
+decl_stmt|;
+name|int
 name|n_bytes
 decl_stmt|;
 comment|/* 	 * Cancel the alarm we set to limit the time taken for 	 * authentication. 	 */
@@ -7587,11 +7677,6 @@ condition|(
 literal|1
 condition|)
 block|{
-name|int
-name|plen
-decl_stmt|,
-name|dlen
-decl_stmt|;
 comment|/* Get a packet from the client. */
 name|type
 operator|=
@@ -7907,6 +7992,7 @@ literal|"Protocol error: X11 display already set."
 argument_list|)
 expr_stmt|;
 block|{
+name|unsigned
 name|int
 name|proto_len
 decl_stmt|,
@@ -8044,9 +8130,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|restore_uid
-argument_list|()
-expr_stmt|;
 name|strlcat
 argument_list|(
 name|xauthfile
@@ -8055,6 +8138,22 @@ literal|"/cookies"
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
+expr_stmt|;
+name|open
+argument_list|(
+name|xauthfile
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_EXCL
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+name|restore_uid
+argument_list|()
 expr_stmt|;
 name|fatal_add_cleanup
 argument_list|(
@@ -8265,6 +8364,7 @@ name|do_forced_command
 goto|;
 comment|/* Get command from the packet. */
 block|{
+name|unsigned
 name|int
 name|dlen
 decl_stmt|;
@@ -12443,7 +12543,7 @@ argument_list|,
 name|auth_data
 argument_list|)
 expr_stmt|;
-name|fclose
+name|pclose
 argument_list|(
 name|f
 argument_list|)

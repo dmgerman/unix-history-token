@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: fingerprint.c,v 1.4 1999/11/24 16:15:25 markus Exp $"
+literal|"$Id: fingerprint.c,v 1.5 2000/03/16 20:56:14 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,6 +77,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|buf

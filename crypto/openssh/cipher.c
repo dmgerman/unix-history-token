@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: cipher.c,v 1.19 2000/02/22 15:19:29 markus Exp $"
+literal|"$Id: cipher.c,v 1.20 2000/03/22 09:55:10 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -472,56 +472,6 @@ operator|.
 name|i
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_function_decl
-name|void
-function_decl|(
-modifier|*
-name|cipher_attack_detected
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-init|=
-name|fatal
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|detect_cbc_attack
-parameter_list|(
-specifier|const
-name|unsigned
-name|char
-modifier|*
-name|src
-parameter_list|,
-name|unsigned
-name|int
-name|len
-parameter_list|)
-block|{
-return|return;
-name|log
-argument_list|(
-literal|"CRC-32 CBC insertion attack detected"
-argument_list|)
-expr_stmt|;
-name|cipher_attack_detected
-argument_list|(
-literal|"CRC-32 CBC insertion attack detected"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1389,7 +1339,6 @@ break|break;
 case|case
 name|SSH_CIPHER_3DES
 case|:
-comment|/* CRC-32 attack? */
 name|SSH_3CBC_DECRYPT
 argument_list|(
 name|context
@@ -1450,13 +1399,6 @@ break|break;
 case|case
 name|SSH_CIPHER_BLOWFISH
 case|:
-name|detect_cbc_attack
-argument_list|(
-name|src
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
 name|swap_bytes
 argument_list|(
 name|src
