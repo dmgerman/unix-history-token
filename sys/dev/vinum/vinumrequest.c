@@ -319,6 +319,10 @@ case|case
 name|loginfo_sdiol
 case|:
 comment|/* subdisk I/O launch */
+case|case
+name|loginfo_sdiodone
+case|:
+comment|/* subdisk I/O complete */
 name|bcopy
 argument_list|(
 name|info
@@ -1467,36 +1471,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* nothing yet */
-comment|/* XXX This is probably due to a bug */
-if|if
-condition|(
-name|rq
-operator|->
-name|rqg
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* no request */
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: null rqg\n"
-argument_list|)
-expr_stmt|;
-name|abortrequest
-argument_list|(
-name|rq
-argument_list|,
-name|EINVAL
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
 if|#
 directive|if
 name|VINUMDEBUG
@@ -3883,6 +3857,7 @@ operator|->
 name|driveno
 index|]
 expr_stmt|;
+comment|/*      * We allow access to any kind of subdisk as long as we can expect      * to get the I/O performed.      */
 if|if
 condition|(
 name|sd
@@ -4360,19 +4335,15 @@ operator|(
 expr|union
 name|rqinfou
 operator|)
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
+operator|&
 name|sbp
+operator|->
+name|b
 argument_list|,
-operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
+operator|&
 name|sbp
+operator|->
+name|b
 argument_list|)
 expr_stmt|;
 endif|#
