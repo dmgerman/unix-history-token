@@ -1768,6 +1768,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|device_printf
 argument_list|(
 name|dev
@@ -1787,6 +1790,8 @@ argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fwohci_pci_init
 argument_list|(
 name|dev

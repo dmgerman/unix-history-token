@@ -744,6 +744,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -754,6 +760,11 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1718,6 +1729,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -1843,6 +1860,11 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -2040,11 +2062,16 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|fxp_powerstate_d0
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Figure out which we should try first - memory mapping or i/o mapping? 	 * We default to memory mapping. Then we accept an override from the 	 * command line. Then we check to see which one is enabled. 	 */
 name|m1
 operator|=
@@ -4967,11 +4994,16 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
 name|fxp_powerstate_d0
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* better way to do this? */
 for|for
 control|(
