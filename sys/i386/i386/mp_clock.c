@@ -7,10 +7,6 @@ begin_comment
 comment|/* #include "opt_bus.h" */
 end_comment
 
-begin_comment
-comment|/* #include "opt_pci.h" */
-end_comment
-
 begin_include
 include|#
 directive|include
