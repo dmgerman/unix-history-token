@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stab.c	1.7 (Berkeley) %G%"
+literal|"@(#)stab.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2122,6 +2122,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|int
+name|stabtype
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -2198,6 +2201,14 @@ break|break;
 case|case
 name|STATIC
 case|:
+name|stabtype
+operator|=
+name|stabLCSYM
+condition|?
+name|N_LCSYM
+else|:
+name|N_STSYM
+expr_stmt|;
 if|if
 condition|(
 name|ISFTN
@@ -2239,7 +2250,7 @@ name|printf
 argument_list|(
 literal|"\",0x%x,0,%d,L%d\n"
 argument_list|,
-name|N_LCSYM
+name|stabtype
 argument_list|,
 name|bsize
 argument_list|(
@@ -2258,7 +2269,7 @@ name|printf
 argument_list|(
 literal|"\",0x%x,0,%d,_%s\n"
 argument_list|,
-name|N_LCSYM
+name|stabtype
 argument_list|,
 name|bsize
 argument_list|(
