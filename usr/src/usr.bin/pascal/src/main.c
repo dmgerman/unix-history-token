@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.7 %G%"
+literal|"@(#)main.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -427,11 +427,6 @@ directive|ifdef
 name|OBJ
 name|opt
 argument_list|(
-literal|'g'
-argument_list|)
-operator|=
-name|opt
-argument_list|(
 literal|'p'
 argument_list|)
 operator|=
@@ -447,6 +442,20 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
+comment|/* pdx is currently supported only on the vax */
+name|opt
+argument_list|(
+literal|'g'
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+endif|vax
 while|while
 condition|(
 name|argc
