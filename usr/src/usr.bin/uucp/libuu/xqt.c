@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xqt.c	5.2 (Berkeley) %G%"
+literal|"@(#)xqt.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,13 +23,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"uucp.h"
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|"uucp.h"
 end_include
 
 begin_decl_stmt
@@ -39,6 +39,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	start up uucico for rmtname  *  *	return codes:  none  */
@@ -171,7 +175,7 @@ name|sprintf
 argument_list|(
 name|opt
 argument_list|,
-literal|"-s%.7s"
+literal|"-s%s"
 argument_list|,
 name|rmtname
 argument_list|)
