@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	2.1 (Berkeley) %G%"
+literal|"@(#)cmds.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,13 +280,13 @@ name|ack
 operator|.
 name|tv_sec
 operator|=
-literal|1
+literal|10
 expr_stmt|;
 name|ack
 operator|.
 name|tv_usec
 operator|=
-literal|500000
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -300,8 +300,6 @@ name|ack
 argument_list|,
 operator|&
 name|server
-argument_list|,
-name|OFF
 argument_list|)
 operator|)
 operator|<
