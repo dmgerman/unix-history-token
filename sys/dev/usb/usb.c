@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.c,v 1.61 2001/12/31 15:55:51 augustss Exp $	*/
+comment|/*	$NetBSD: usb.c,v 1.63 2002/01/02 20:58:12 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1515,7 +1515,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a task to be performed by the event thread.  This function can be  * called from any context and the task will be executed in a process  * context ASAP.  */
+comment|/*  * Add a task to be performed by the task thread.  This function can be  * called from any context and the task will be executed in a process  * context ASAP.  */
 end_comment
 
 begin_function
@@ -1576,6 +1576,7 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|DPRINTFN
 argument_list|(
 literal|3
@@ -1587,6 +1588,7 @@ name|task
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|wakeup
 argument_list|(
 operator|&
@@ -1688,7 +1690,7 @@ literal|"usb_event_thread: start\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the 	 * EHCI controller has grabbed the port. 	 */
+comment|/* 	 * In case this controller is a companion controller to an 	 * EHCI controller we need to wait until the 	 * EHCI controller has grabbed the port. 	 * XXX It would be nicer to do this with a tsleep(), but I don't 	 * know how to synchronize the creation of the threads so it 	 * will work. 	 */
 name|usb_delay_ms
 argument_list|(
 name|sc
@@ -3911,14 +3913,20 @@ expr_stmt|;
 if|if
 condition|(
 name|dev
+operator|!=
+name|NULL
 operator|&&
 name|dev
 operator|->
 name|cdesc
+operator|!=
+name|NULL
 operator|&&
 name|dev
 operator|->
 name|subdevs
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -4008,6 +4016,8 @@ operator|->
 name|sc_port
 operator|.
 name|device
+operator|!=
+name|NULL
 condition|)
 name|usb_disconnect_port
 argument_list|(
@@ -4025,6 +4035,8 @@ condition|(
 name|sc
 operator|->
 name|sc_event_thread
+operator|!=
+name|NULL
 condition|)
 block|{
 name|wakeup
