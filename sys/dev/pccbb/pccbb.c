@@ -723,7 +723,7 @@ name|int
 name|pccbb_probe
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -747,7 +747,7 @@ name|int
 name|pccbb_attach
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -758,7 +758,7 @@ name|int
 name|pccbb_detach
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -769,7 +769,7 @@ name|void
 name|pccbb_driver_added
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|driver_t
 modifier|*
@@ -784,7 +784,7 @@ name|void
 name|pccbb_child_detached
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -873,7 +873,7 @@ name|int
 name|pccbb_detect_voltage
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -884,7 +884,7 @@ name|int
 name|pccbb_power
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|volts
@@ -898,7 +898,7 @@ name|void
 name|pccbb_cardbus_reset
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -909,7 +909,7 @@ name|int
 name|pccbb_cardbus_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -923,7 +923,7 @@ name|void
 name|pccbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -937,7 +937,7 @@ name|int
 name|pccbb_cardbus_io_open
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|win
@@ -957,7 +957,7 @@ name|int
 name|pccbb_cardbus_mem_open
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|win
@@ -993,7 +993,7 @@ name|int
 name|pccbb_cardbus_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1018,7 +1018,7 @@ name|int
 name|pccbb_cardbus_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1045,7 +1045,7 @@ modifier|*
 name|pccbb_cardbus_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1078,7 +1078,7 @@ name|int
 name|pccbb_cardbus_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1103,7 +1103,7 @@ name|int
 name|pccbb_pcic_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1117,7 +1117,7 @@ name|void
 name|pccbb_pcic_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1264,7 +1264,7 @@ name|int
 name|pccbb_pcic_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1289,7 +1289,7 @@ name|int
 name|pccbb_pcic_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1316,7 +1316,7 @@ modifier|*
 name|pccbb_pcic_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1349,7 +1349,7 @@ name|int
 name|pccbb_pcic_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1374,7 +1374,7 @@ name|int
 name|pccbb_pcic_set_res_flags
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1397,7 +1397,7 @@ name|int
 name|pccbb_pcic_set_memory_offset
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1406,7 +1406,7 @@ name|int
 name|rid
 parameter_list|,
 name|u_int32_t
-name|offset
+name|cardaddr
 parameter_list|,
 name|u_int32_t
 modifier|*
@@ -1421,7 +1421,7 @@ name|int
 name|pccbb_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1435,7 +1435,7 @@ name|void
 name|pccbb_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1449,7 +1449,7 @@ name|int
 name|pccbb_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1474,7 +1474,7 @@ name|int
 name|pccbb_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1501,7 +1501,7 @@ modifier|*
 name|pccbb_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1534,7 +1534,7 @@ name|int
 name|pccbb_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -1556,10 +1556,51 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|pccbb_read_ivar
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|which
+parameter_list|,
+name|uintptr_t
+modifier|*
+name|result
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pccbb_write_ivar
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|which
+parameter_list|,
+name|uintptr_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|pccbb_maxslots
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1570,7 +1611,7 @@ name|u_int32_t
 name|pccbb_read_config
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -1596,7 +1637,7 @@ name|void
 name|pccbb_write_config
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -1762,7 +1803,7 @@ name|int
 name|pccbb_probe
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 specifier|const
@@ -1776,7 +1817,7 @@ name|cb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|,
 operator|&
@@ -1792,7 +1833,7 @@ name|ENXIO
 return|;
 name|device_set_desc
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|name
 argument_list|)
@@ -2211,7 +2252,7 @@ name|int
 name|pccbb_attach
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 name|struct
@@ -2226,7 +2267,7 @@ operator|*
 operator|)
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -2261,7 +2302,7 @@ name|sc_mtx
 argument_list|,
 name|device_get_nameunit
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|,
 name|MTX_DEF
@@ -2275,7 +2316,7 @@ name|cb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|,
 name|NULL
@@ -2290,7 +2331,7 @@ name|sc
 operator|->
 name|sc_dev
 operator|=
-name|dev
+name|brdev
 expr_stmt|;
 name|sc
 operator|->
@@ -2310,7 +2351,7 @@ name|sc_secbus
 operator|=
 name|pci_read_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|PCIR_SECBUS_2
 argument_list|,
@@ -2323,7 +2364,7 @@ name|sc_subbus
 operator|=
 name|pci_read_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|PCIR_SUBBUS_2
 argument_list|,
@@ -2361,7 +2402,7 @@ name|sc_base_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2386,7 +2427,7 @@ operator|->
 name|sc_base_res
 condition|)
 block|{
-comment|/* 		 * XXX eVILE HACK BAD THING! XXX 		 * The pci bus device should do this for us. 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
+comment|/* 		 * XXX EVILE HACK BAD THING! XXX 		 * The pci bus device should do this for us. 		 * Some BIOSes doesn't assign a memory space properly. 		 * So we try to manually put one in... 		 */
 name|u_int32_t
 name|sockbase
 decl_stmt|;
@@ -2394,7 +2435,7 @@ name|sockbase
 operator|=
 name|pci_read_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|rid
 argument_list|,
@@ -2414,7 +2455,7 @@ condition|)
 block|{
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|rid
 argument_list|,
@@ -2427,7 +2468,7 @@ name|sockbase
 operator|=
 name|pci_read_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|rid
 argument_list|,
@@ -2457,10 +2498,10 @@ name|bus_generic_alloc_resource
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|,
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2491,7 +2532,7 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"Could not grab register memory\n"
 argument_list|)
@@ -2510,7 +2551,7 @@ return|;
 block|}
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|PCCBBR_SOCKBASE
 argument_list|,
@@ -2527,7 +2568,7 @@ expr_stmt|;
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"PCI Memory allocated: %08lx\n"
 operator|,
@@ -2545,7 +2586,7 @@ else|else
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"Could not map register memory\n"
 argument_list|)
@@ -2621,7 +2662,7 @@ name|sc_irq_res
 operator|=
 name|bus_alloc_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
@@ -2656,7 +2697,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2683,7 +2724,7 @@ if|if
 condition|(
 name|bus_setup_intr
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|sc
 operator|->
@@ -2706,14 +2747,14 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"couldn't establish interrupt"
 argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
@@ -2726,7 +2767,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2756,7 +2797,7 @@ name|sc_cbdev
 operator|=
 name|device_add_child
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"cardbus"
 argument_list|,
@@ -2775,7 +2816,7 @@ condition|)
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"WARNING: cannot add cardbus bus.\n"
 operator|)
@@ -2797,7 +2838,7 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"WARNING: cannot attach cardbus bus!\n"
 operator|)
@@ -2816,7 +2857,7 @@ name|sc_pccarddev
 operator|=
 name|device_add_child
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"pccard"
 argument_list|,
@@ -2835,7 +2876,7 @@ condition|)
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"WARNING: cannot add pccard bus.\n"
 operator|)
@@ -2857,7 +2898,7 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"WARNING: cannot attach pccard bus.\n"
 operator|)
@@ -2890,14 +2931,14 @@ condition|)
 block|{
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"ERROR: Failed to attach cardbus/pccard bus!\n"
 argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|sc
 operator|->
@@ -2910,7 +2951,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
@@ -2923,7 +2964,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -2998,7 +3039,7 @@ name|int
 name|pccbb_detach
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 name|struct
@@ -3008,7 +3049,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -3026,7 +3067,7 @@ name|error
 decl_stmt|;
 name|device_get_children
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 operator|&
 name|devlist
@@ -3067,7 +3108,7 @@ literal|0
 condition|)
 name|device_delete_child
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|devlist
 index|[
@@ -3106,7 +3147,7 @@ argument_list|)
 expr_stmt|;
 name|bus_teardown_intr
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|sc
 operator|->
@@ -3148,7 +3189,7 @@ expr_stmt|;
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"waiting for kthread exit..."
 operator|)
@@ -3200,7 +3241,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
@@ -3213,7 +3254,7 @@ argument_list|)
 expr_stmt|;
 name|bus_release_resource
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
@@ -3244,7 +3285,7 @@ name|void
 name|pccbb_driver_added
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|driver_t
 modifier|*
@@ -3258,7 +3299,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|device_t
@@ -3275,12 +3316,12 @@ name|DEVICE_IDENTIFY
 argument_list|(
 name|driver
 argument_list|,
-name|dev
+name|brdev
 argument_list|)
 expr_stmt|;
 name|device_get_children
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 operator|&
 name|devlist
@@ -3464,7 +3505,7 @@ block|}
 else|else
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"Unsupported child bus: %s\n"
 argument_list|,
@@ -3491,7 +3532,7 @@ name|void
 name|pccbb_child_detached
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -3504,7 +3545,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -3539,7 +3580,7 @@ expr_stmt|;
 else|else
 name|device_printf
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 literal|"Unknown child detached: %s %p/%p\n"
 argument_list|,
@@ -4315,7 +4356,7 @@ name|int
 name|pccbb_detect_voltage
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 name|struct
@@ -4325,7 +4366,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|u_int32_t
@@ -4404,7 +4445,7 @@ name|int
 name|pccbb_power
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|volts
@@ -4422,7 +4463,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|DEVPRINTF
@@ -4973,7 +5014,7 @@ name|void
 name|pccbb_cardbus_reset
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 name|struct
@@ -4983,7 +5024,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -5007,7 +5048,7 @@ literal|1000
 expr_stmt|;
 name|PCI_MASK_CONFIG
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|PCCBBR_BRIDGECTRL
 argument_list|,
@@ -5040,7 +5081,7 @@ condition|)
 block|{
 name|PCI_MASK_CONFIG
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|PCCBBR_BRIDGECTRL
 argument_list|,
@@ -5066,7 +5107,7 @@ name|int
 name|pccbb_cardbus_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -5079,7 +5120,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -5106,12 +5147,12 @@ name|voltage
 operator|=
 name|pccbb_detect_voltage
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 expr_stmt|;
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_0V
 operator||
@@ -5126,7 +5167,7 @@ name|CARD_5V_CARD
 condition|)
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_5V
 operator||
@@ -5142,7 +5183,7 @@ name|CARD_3V_CARD
 condition|)
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_3V
 operator||
@@ -5153,7 +5194,7 @@ else|else
 block|{
 name|device_printf
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 literal|"Unknown card voltage\n"
 argument_list|)
@@ -5164,7 +5205,7 @@ return|;
 block|}
 name|pccbb_cardbus_reset
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 expr_stmt|;
 return|return
@@ -5179,7 +5220,7 @@ name|void
 name|pccbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -5187,7 +5228,7 @@ parameter_list|)
 block|{
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_0V
 operator||
@@ -5196,7 +5237,7 @@ argument_list|)
 expr_stmt|;
 name|pccbb_cardbus_reset
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 expr_stmt|;
 block|}
@@ -5220,7 +5261,7 @@ name|int
 name|pccbb_cardbus_io_open
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|win
@@ -5256,7 +5297,7 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"pccbb_cardbus_io_open: window out of range %d\n"
 operator|,
@@ -5286,7 +5327,7 @@ name|PCCBBR_IOLIMIT0
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|basereg
 argument_list|,
@@ -5297,7 +5338,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|limitreg
 argument_list|,
@@ -5318,7 +5359,7 @@ name|int
 name|pccbb_cardbus_mem_open
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|win
@@ -5354,7 +5395,7 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|brdev
 operator|,
 literal|"pccbb_cardbus_mem_open: window out of range %d\n"
 operator|,
@@ -5384,7 +5425,7 @@ name|PCCBBR_MEMLIMIT0
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|basereg
 argument_list|,
@@ -5395,7 +5436,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|dev
+name|brdev
 argument_list|,
 name|limitreg
 argument_list|,
@@ -6135,7 +6176,7 @@ name|int
 name|pccbb_cardbus_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6159,7 +6200,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -6210,7 +6251,7 @@ condition|)
 return|return
 name|bus_generic_activate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6303,7 +6344,7 @@ block|}
 return|return
 name|bus_generic_activate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6323,7 +6364,7 @@ name|int
 name|pccbb_cardbus_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6347,7 +6388,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -6429,7 +6470,7 @@ block|}
 return|return
 name|bus_generic_deactivate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6451,7 +6492,7 @@ modifier|*
 name|pccbb_cardbus_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6490,7 +6531,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -6515,7 +6556,7 @@ block|}
 return|return
 name|bus_generic_alloc_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6589,7 +6630,7 @@ block|}
 return|return
 name|bus_generic_alloc_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6616,7 +6657,7 @@ name|int
 name|pccbb_cardbus_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6636,7 +6677,7 @@ block|{
 return|return
 name|bus_generic_release_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -6668,7 +6709,7 @@ name|int
 name|pccbb_pcic_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6681,7 +6722,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|DPRINTF
@@ -6698,12 +6739,12 @@ name|voltage
 init|=
 name|pccbb_detect_voltage
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_0V
 operator||
@@ -6718,7 +6759,7 @@ name|CARD_5V_CARD
 condition|)
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_5V
 operator||
@@ -6734,7 +6775,7 @@ name|CARD_3V_CARD
 condition|)
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_3V
 operator||
@@ -6745,7 +6786,7 @@ else|else
 block|{
 name|device_printf
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 literal|"Unknown card voltage\n"
 argument_list|)
@@ -6961,7 +7002,7 @@ name|void
 name|pccbb_pcic_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -6974,7 +7015,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|DPRINTF
@@ -7017,7 +7058,7 @@ argument_list|)
 expr_stmt|;
 name|pccbb_power
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|CARD_VCC_0V
 operator||
@@ -7139,7 +7180,7 @@ name|PCIC_MEMINFO
 parameter_list|(
 name|NUM
 parameter_list|)
-value|{ \ 	PCIC_SYSMEM_ADDR ## NUM ## _START_LSB, \ 	PCIC_SYSMEM_ADDR ## NUM ## _START_MSB, \ 	PCIC_SYSMEM_ADDR ## NUM ## _STOP_LSB, \ 	PCIC_SYSMEM_ADDR ## NUM ## _STOP_MSB, \ 	PCIC_SYSMEM_ADDR ## NUM ## _WIN, \ 	PCIC_CARDMEM_ADDR ## NUM ## _LSB, \ 	PCIC_CARDMEM_ADDR ## NUM ## _MSB, \ 	PCIC_ADDRWIN_ENABLE_MEM ## NUM ## , \ }
+value|{						\ 	PCIC_SYSMEM_ADDR ## NUM ## _START_LSB,				\ 	PCIC_SYSMEM_ADDR ## NUM ## _START_MSB,				\ 	PCIC_SYSMEM_ADDR ## NUM ## _STOP_LSB,				\ 	PCIC_SYSMEM_ADDR ## NUM ## _STOP_MSB,				\ 	PCIC_SYSMEM_ADDR ## NUM ## _WIN,				\ 	PCIC_CARDMEM_ADDR ## NUM ## _LSB,				\ 	PCIC_CARDMEM_ADDR ## NUM ## _MSB,				\ 	PCIC_ADDRWIN_ENABLE_MEM ## NUM ##,				\ }
 end_define
 
 begin_struct
@@ -8086,7 +8127,7 @@ name|PCIC_IOINFO
 parameter_list|(
 name|NUM
 parameter_list|)
-value|{ \ 	PCIC_IOADDR ## NUM ## _START_LSB, \ 	PCIC_IOADDR ## NUM ## _START_MSB, \ 	PCIC_IOADDR ## NUM ## _STOP_LSB, \ 	PCIC_IOADDR ## NUM ## _STOP_MSB, \ 	PCIC_ADDRWIN_ENABLE_IO ## NUM ## , \ 	PCIC_IOCTL_IO ## NUM ## _WAITSTATE \ 	| PCIC_IOCTL_IO ## NUM ## _ZEROWAIT \ 	| PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_MASK \ 	| PCIC_IOCTL_IO ## NUM ## _DATASIZE_MASK, \ 	{ \ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_CARD, \ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE \ 		| PCIC_IOCTL_IO ## NUM ## _DATASIZE_8BIT, \ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE \ 		| PCIC_IOCTL_IO ## NUM ## _DATASIZE_16BIT, \ 	} \ }
+value|{						\ 	PCIC_IOADDR ## NUM ## _START_LSB,				\ 	PCIC_IOADDR ## NUM ## _START_MSB,				\ 	PCIC_IOADDR ## NUM ## _STOP_LSB,				\ 	PCIC_IOADDR ## NUM ## _STOP_MSB,				\ 	PCIC_ADDRWIN_ENABLE_IO ## NUM ##,				\ 	PCIC_IOCTL_IO ## NUM ## _WAITSTATE				\ 	| PCIC_IOCTL_IO ## NUM ## _ZEROWAIT				\ 	| PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_MASK			\ 	| PCIC_IOCTL_IO ## NUM ## _DATASIZE_MASK,			\ 	{								\ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_CARD,		\ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| PCIC_IOCTL_IO ## NUM ## _DATASIZE_8BIT,		\ 		PCIC_IOCTL_IO ## NUM ## _IOCS16SRC_DATASIZE		\ 		| PCIC_IOCTL_IO ## NUM ## _DATASIZE_16BIT,		\ 	}								\ }
 end_define
 
 begin_struct
@@ -8833,7 +8874,7 @@ name|int
 name|pccbb_pcic_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -8868,7 +8909,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -8988,7 +9029,7 @@ name|err
 operator|=
 name|bus_generic_activate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -9013,7 +9054,7 @@ name|int
 name|pccbb_pcic_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9037,7 +9078,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -9142,7 +9183,7 @@ block|}
 return|return
 name|bus_generic_deactivate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -9164,7 +9205,7 @@ modifier|*
 name|pccbb_pcic_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9203,7 +9244,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -9224,6 +9265,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* XXX: how do we do this? */
 name|panic
 argument_list|(
 literal|"PCCBB bridge cannot handle non MEM_32 bridges\n"
@@ -9329,7 +9371,7 @@ name|r
 operator|=
 name|bus_generic_alloc_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -9455,7 +9497,7 @@ condition|)
 block|{
 name|BUS_RELEASE_RESOURCE
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -9484,7 +9526,7 @@ name|int
 name|pccbb_pcic_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9508,7 +9550,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|struct
@@ -9630,7 +9672,7 @@ block|}
 return|return
 name|bus_generic_release_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -9662,7 +9704,7 @@ name|int
 name|pccbb_pcic_set_res_flags
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9684,7 +9726,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -9728,7 +9770,7 @@ name|int
 name|pccbb_pcic_set_memory_offset
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9751,7 +9793,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -9951,7 +9993,7 @@ name|int
 name|pccbb_power_enable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -9964,7 +10006,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -9978,7 +10020,7 @@ condition|)
 return|return
 name|pccbb_pcic_power_enable_socket
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|)
@@ -9987,7 +10029,7 @@ else|else
 return|return
 name|pccbb_cardbus_power_enable_socket
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|)
@@ -10001,7 +10043,7 @@ name|void
 name|pccbb_power_disable_socket
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10014,7 +10056,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -10027,7 +10069,7 @@ name|PCCBB_16BIT_CARD
 condition|)
 name|pccbb_pcic_power_disable_socket
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|)
@@ -10035,7 +10077,7 @@ expr_stmt|;
 else|else
 name|pccbb_cardbus_power_disable_socket
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|)
@@ -10061,7 +10103,7 @@ name|int
 name|pccbb_activate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10085,7 +10127,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -10099,7 +10141,7 @@ condition|)
 return|return
 name|pccbb_pcic_activate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10114,7 +10156,7 @@ else|else
 return|return
 name|pccbb_cardbus_activate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10134,7 +10176,7 @@ name|int
 name|pccbb_deactivate_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10158,7 +10200,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -10172,7 +10214,7 @@ condition|)
 return|return
 name|pccbb_pcic_deactivate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10187,7 +10229,7 @@ else|else
 return|return
 name|pccbb_cardbus_deactivate_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10209,7 +10251,7 @@ modifier|*
 name|pccbb_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10241,7 +10283,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -10255,7 +10297,7 @@ condition|)
 return|return
 name|pccbb_pcic_alloc_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10276,7 +10318,7 @@ else|else
 return|return
 name|pccbb_cardbus_alloc_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10302,7 +10344,7 @@ name|int
 name|pccbb_release_resource
 parameter_list|(
 name|device_t
-name|self
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10326,7 +10368,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|self
+name|brdev
 argument_list|)
 decl_stmt|;
 if|if
@@ -10340,7 +10382,7 @@ condition|)
 return|return
 name|pccbb_pcic_release_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10355,7 +10397,7 @@ else|else
 return|return
 name|pccbb_cardbus_release_resource
 argument_list|(
-name|self
+name|brdev
 argument_list|,
 name|child
 argument_list|,
@@ -10375,7 +10417,7 @@ name|int
 name|pccbb_read_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10395,7 +10437,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 switch|switch
@@ -10433,7 +10475,7 @@ name|int
 name|pccbb_write_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|device_t
 name|child
@@ -10452,7 +10494,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 decl_stmt|;
 switch|switch
@@ -10497,7 +10539,7 @@ name|int
 name|pccbb_maxslots
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|)
 block|{
 return|return
@@ -10512,7 +10554,7 @@ name|u_int32_t
 name|pccbb_read_config
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -10538,7 +10580,7 @@ name|device_get_parent
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|)
 argument_list|,
@@ -10562,7 +10604,7 @@ name|void
 name|pccbb_write_config
 parameter_list|(
 name|device_t
-name|dev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -10590,7 +10632,7 @@ name|device_get_parent
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|brdev
 argument_list|)
 argument_list|)
 argument_list|,

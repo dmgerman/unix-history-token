@@ -480,7 +480,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* PCI Clock/2 */
+comment|/* PCI Clk/2 */
 end_comment
 
 begin_define
@@ -491,7 +491,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* PCI Clock */
+comment|/* PCI Clk */
 end_comment
 
 begin_define

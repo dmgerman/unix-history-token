@@ -125,12 +125,6 @@ end_if
 begin_define
 define|#
 directive|define
-name|STATIC
-end_define
-
-begin_define
-define|#
-directive|define
 name|DPRINTF
 parameter_list|(
 name|a
@@ -152,13 +146,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_define
-define|#
-directive|define
-name|STATIC
-value|static
-end_define
 
 begin_define
 define|#
@@ -255,7 +242,7 @@ name|int
 name|cardbus_probe
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -266,7 +253,18 @@ name|int
 name|cardbus_attach
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|cardbus_detach
+parameter_list|(
+name|device_t
+name|cbdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -277,7 +275,7 @@ name|void
 name|device_setup_regs
 parameter_list|(
 name|device_t
-name|cbdev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -301,7 +299,7 @@ name|int
 name|cardbus_attach_card
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -312,10 +310,25 @@ name|int
 name|cardbus_detach_card
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|cardbus_driver_added
+parameter_list|(
+name|device_t
+name|cbdev
+parameter_list|,
+name|driver_t
+modifier|*
+name|driver
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -328,7 +341,7 @@ modifier|*
 name|cardbus_read_device
 parameter_list|(
 name|device_t
-name|pcib
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -348,7 +361,7 @@ name|void
 name|cardbus_hdrtypedata
 parameter_list|(
 name|device_t
-name|pcib
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -398,7 +411,7 @@ name|int
 name|cardbus_set_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -424,7 +437,7 @@ name|int
 name|cardbus_get_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -452,7 +465,7 @@ name|void
 name|cardbus_delete_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -472,7 +485,7 @@ name|int
 name|cardbus_set_resource_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -498,7 +511,7 @@ name|int
 name|cardbus_get_resource_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -522,11 +535,31 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|cardbus_delete_resource_method
+parameter_list|(
+name|device_t
+name|cbdev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|cardbus_add_map
 parameter_list|(
 name|device_t
-name|bdev
+name|cbdev
 parameter_list|,
 name|device_t
 name|dev
@@ -562,7 +595,7 @@ name|void
 name|cardbus_release_all_resources
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|struct
 name|resource_list
@@ -580,7 +613,7 @@ modifier|*
 name|cardbus_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -613,7 +646,7 @@ name|int
 name|cardbus_release_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -664,7 +697,7 @@ name|int
 name|cardbus_print_child
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -678,7 +711,7 @@ name|void
 name|cardbus_probe_nomatch
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -692,7 +725,7 @@ name|int
 name|cardbus_read_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -713,7 +746,7 @@ name|int
 name|cardbus_write_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -733,7 +766,7 @@ name|u_int32_t
 name|cardbus_read_config_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -753,7 +786,7 @@ name|void
 name|cardbus_write_config_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -788,12 +821,12 @@ name|int
 name|cardbus_probe
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 block|{
 name|device_set_desc
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 literal|"Cardbus bus (newcard)"
 argument_list|)
@@ -810,7 +843,7 @@ name|int
 name|cardbus_attach
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 block|{
 return|return
@@ -825,12 +858,12 @@ name|int
 name|cardbus_detach
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 block|{
 name|cardbus_detach_card
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|DETACH_FORCE
 argument_list|)
@@ -859,7 +892,7 @@ name|void
 name|device_setup_regs
 parameter_list|(
 name|device_t
-name|bdev
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -877,7 +910,7 @@ parameter_list|)
 block|{
 name|PCIB_WRITE_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -891,7 +924,7 @@ name|pci_get_irq
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|bdev
+name|brdev
 argument_list|)
 argument_list|)
 argument_list|,
@@ -904,7 +937,7 @@ name|intline
 operator|=
 name|PCIB_READ_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -919,7 +952,7 @@ argument_list|)
 expr_stmt|;
 name|PCIB_WRITE_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -940,7 +973,7 @@ name|cachelnsz
 operator|=
 name|PCIB_READ_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -955,7 +988,7 @@ argument_list|)
 expr_stmt|;
 name|PCIB_WRITE_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -976,7 +1009,7 @@ name|lattimer
 operator|=
 name|PCIB_READ_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -991,7 +1024,7 @@ argument_list|)
 expr_stmt|;
 name|PCIB_WRITE_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -1012,7 +1045,7 @@ name|mingnt
 operator|=
 name|PCIB_READ_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -1027,7 +1060,7 @@ argument_list|)
 expr_stmt|;
 name|PCIB_WRITE_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -1048,7 +1081,7 @@ name|maxlat
 operator|=
 name|PCIB_READ_CONFIG
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -1070,15 +1103,15 @@ name|int
 name|cardbus_attach_card
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|)
 block|{
 name|device_t
-name|bdev
+name|brdev
 init|=
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1102,7 +1135,7 @@ name|func
 decl_stmt|;
 name|cardbus_detach_card
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|DETACH_NOWARN
 argument_list|)
@@ -1110,16 +1143,16 @@ expr_stmt|;
 comment|/* detach existing cards */
 name|POWER_ENABLE_SOCKET
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 name|bus
 operator|=
 name|pcib_get_bus
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1136,7 +1169,7 @@ name|curr_bus_number
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|PCIR_SECBUS_2
 argument_list|,
@@ -1147,7 +1180,7 @@ argument_list|)
 expr_stmt|;
 name|pci_write_config
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|PCIR_SUBBUS_2
 argument_list|,
@@ -1163,6 +1196,7 @@ operator|+=
 literal|3
 expr_stmt|;
 block|}
+comment|/* For each function, set it up and try to attach a driver to it */
 for|for
 control|(
 name|slot
@@ -1203,7 +1237,7 @@ name|dinfo
 init|=
 name|cardbus_read_device
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|bus
 argument_list|,
@@ -1233,7 +1267,7 @@ name|CARDBUS_FUNCMAX
 expr_stmt|;
 name|device_setup_regs
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
 name|bus
 argument_list|,
@@ -1260,7 +1294,7 @@ name|dev
 operator|=
 name|device_add_child
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|NULL
 argument_list|,
@@ -1281,7 +1315,7 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|cbdev
 operator|,
 literal|"Cannot add child!\n"
 operator|)
@@ -1329,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|cardbus_do_cis
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|dinfo
 operator|->
@@ -1352,6 +1386,7 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* when fail, release all resources */
 name|cardbus_release_all_resources
 argument_list|(
 name|dinfo
@@ -1384,9 +1419,9 @@ literal|0
 return|;
 name|POWER_DISABLE_SOCKET
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 return|return
@@ -1401,7 +1436,7 @@ name|int
 name|cardbus_detach_card
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|int
 name|flags
@@ -1424,7 +1459,7 @@ literal|0
 decl_stmt|;
 name|device_get_children
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 operator|&
 name|devlist
@@ -1453,9 +1488,9 @@ block|{
 name|DEVPRINTF
 argument_list|(
 operator|(
-name|dev
+name|cbdev
 operator|,
-literal|"Detaching card: no cards to detach!\n"
+literal|"detach_card: no card to detach!\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1463,10 +1498,10 @@ name|POWER_DISABLE_SOCKET
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 block|}
@@ -1564,7 +1599,7 @@ argument_list|)
 expr_stmt|;
 name|device_delete_child
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|devlist
 index|[
@@ -1589,7 +1624,7 @@ else|else
 block|{
 name|device_delete_child
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|devlist
 index|[
@@ -1609,10 +1644,10 @@ name|POWER_DISABLE_SOCKET
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 name|free
@@ -1634,7 +1669,7 @@ name|void
 name|cardbus_driver_added
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|driver_t
 modifier|*
@@ -1649,11 +1684,11 @@ modifier|*
 name|devlist
 decl_stmt|;
 name|device_t
-name|bdev
+name|brdev
 init|=
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 decl_stmt|;
 name|int
@@ -1663,7 +1698,7 @@ name|cardattached
 decl_stmt|;
 name|device_get_children
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 operator|&
 name|devlist
@@ -1714,16 +1749,16 @@ literal|0
 condition|)
 name|POWER_ENABLE_SOCKET
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 name|DEVICE_IDENTIFY
 argument_list|(
 name|driver
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 for|for
@@ -1792,7 +1827,7 @@ argument_list|)
 expr_stmt|;
 name|cardbus_do_cis
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|dinfo
 operator|->
@@ -1844,9 +1879,9 @@ literal|0
 condition|)
 name|POWER_DISABLE_SOCKET
 argument_list|(
-name|bdev
+name|brdev
 argument_list|,
-name|dev
+name|cbdev
 argument_list|)
 expr_stmt|;
 name|free
@@ -1883,7 +1918,7 @@ modifier|*
 name|cardbus_read_device
 parameter_list|(
 name|device_t
-name|pcib
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -1903,7 +1938,7 @@ name|n
 parameter_list|,
 name|w
 parameter_list|)
-value|PCIB_READ_CONFIG(pcib, b, s, f, n, w)
+value|PCIB_READ_CONFIG(brdev, b, s, f, n, w)
 name|pcicfgregs
 modifier|*
 name|cfg
@@ -1921,7 +1956,7 @@ if|if
 condition|(
 name|PCIB_READ_CONFIG
 argument_list|(
-name|pcib
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -2302,7 +2337,7 @@ name|PCIM_MFDEV
 expr_stmt|;
 name|cardbus_hdrtypedata
 argument_list|(
-name|pcib
+name|brdev
 argument_list|,
 name|b
 argument_list|,
@@ -2461,7 +2496,7 @@ name|void
 name|cardbus_hdrtypedata
 parameter_list|(
 name|device_t
-name|pcib
+name|brdev
 parameter_list|,
 name|int
 name|b
@@ -2485,7 +2520,7 @@ name|n
 parameter_list|,
 name|w
 parameter_list|)
-value|PCIB_READ_CONFIG(pcib, b, s, f, n, w)
+value|PCIB_READ_CONFIG(brdev, b, s, f, n, w)
 switch|switch
 condition|(
 name|cfg
@@ -2698,7 +2733,8 @@ directive|ifdef
 name|CARDBUS_DEBUG
 name|printf
 argument_list|(
-literal|"\tcmdreg=0x%04x, statreg=0x%04x, cachelnsz=%d (dwords)\n"
+literal|"\tcmdreg=0x%04x, statreg=0x%04x, "
+literal|"cachelnsz=%d (dwords)\n"
 argument_list|,
 name|cfg
 operator|->
@@ -2715,7 +2751,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tlattimer=0x%02x (%d ns), mingnt=0x%02x (%d ns), maxlat=0x%02x (%d ns)\n"
+literal|"\tlattimer=0x%02x (%d ns), mingnt=0x%02x (%d ns), "
+literal|"maxlat=0x%02x (%d ns)\n"
 argument_list|,
 name|cfg
 operator|->
@@ -2798,7 +2835,7 @@ name|int
 name|cardbus_set_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -2862,7 +2899,7 @@ argument_list|(
 name|child
 argument_list|)
 operator|==
-name|dev
+name|cbdev
 condition|)
 name|pci_write_config
 argument_list|(
@@ -2887,7 +2924,7 @@ name|int
 name|cardbus_get_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -2985,7 +3022,7 @@ name|void
 name|cardbus_delete_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -3046,7 +3083,7 @@ name|res
 condition|)
 name|bus_generic_release_resource
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -3076,7 +3113,7 @@ argument_list|(
 name|child
 argument_list|)
 operator|==
-name|dev
+name|cbdev
 condition|)
 name|pci_write_config
 argument_list|(
@@ -3098,7 +3135,7 @@ name|int
 name|cardbus_set_resource_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -3123,7 +3160,7 @@ name|ret
 operator|=
 name|cardbus_set_resource
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -3150,7 +3187,7 @@ name|BUS_SET_RESOURCE
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
 name|child
@@ -3173,7 +3210,7 @@ name|int
 name|cardbus_get_resource_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -3200,7 +3237,7 @@ name|ret
 operator|=
 name|cardbus_get_resource
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -3227,7 +3264,7 @@ name|BUS_GET_RESOURCE
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
 name|child
@@ -3250,7 +3287,7 @@ name|void
 name|cardbus_delete_resource_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -3264,7 +3301,7 @@ parameter_list|)
 block|{
 name|cardbus_delete_resource
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -3277,7 +3314,7 @@ name|BUS_DELETE_RESOURCE
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
 name|child
@@ -3945,7 +3982,7 @@ name|void
 name|cardbus_release_all_resources
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|struct
 name|resource_list
@@ -3978,10 +4015,10 @@ name|bus_generic_release_resource
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
-name|dev
+name|cbdev
 argument_list|,
 name|rle
 operator|->
@@ -4009,7 +4046,7 @@ modifier|*
 name|cardbus_alloc_resource
 parameter_list|(
 name|device_t
-name|self
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -4073,11 +4110,11 @@ argument_list|(
 name|child
 argument_list|)
 operator|==
-name|self
+name|cbdev
 operator|||
 name|child
 operator|==
-name|self
+name|cbdev
 condition|)
 name|rle
 operator|=
@@ -4180,7 +4217,7 @@ name|res
 operator|=
 name|bus_generic_alloc_resource
 argument_list|(
-name|self
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -4218,7 +4255,7 @@ argument_list|)
 expr_stmt|;
 name|cardbus_set_resource
 argument_list|(
-name|self
+name|cbdev
 argument_list|,
 name|child
 argument_list|,
@@ -4262,7 +4299,7 @@ else|else
 block|{
 name|device_printf
 argument_list|(
-name|self
+name|cbdev
 argument_list|,
 literal|"Resource Allocation Failed!\n"
 argument_list|)
@@ -4281,7 +4318,7 @@ name|int
 name|cardbus_release_resource
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -4516,7 +4553,7 @@ name|int
 name|cardbus_print_child
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -4566,7 +4603,7 @@ name|retval
 operator|+=
 name|bus_print_child_header
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|)
@@ -4614,7 +4651,7 @@ if|if
 condition|(
 name|device_get_flags
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 condition|)
 name|retval
@@ -4625,7 +4662,7 @@ literal|" flags %#x"
 argument_list|,
 name|device_get_flags
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4650,7 +4687,7 @@ name|retval
 operator|+=
 name|bus_print_child_footer
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 name|child
 argument_list|)
@@ -4669,7 +4706,7 @@ name|void
 name|cardbus_probe_nomatch
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -4700,7 +4737,7 @@ name|cfg
 expr_stmt|;
 name|device_printf
 argument_list|(
-name|dev
+name|cbdev
 argument_list|,
 literal|"<unknown card>"
 argument_list|)
@@ -4773,7 +4810,7 @@ name|int
 name|cardbus_read_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -4993,7 +5030,7 @@ name|int
 name|cardbus_write_ivar
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -5108,7 +5145,7 @@ name|u_int32_t
 name|cardbus_read_config_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -5144,7 +5181,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
 name|cfg
@@ -5173,7 +5210,7 @@ name|void
 name|cardbus_write_config_method
 parameter_list|(
 name|device_t
-name|dev
+name|cbdev
 parameter_list|,
 name|device_t
 name|child
@@ -5211,7 +5248,7 @@ name|PCIB_WRITE_CONFIG
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|dev
+name|cbdev
 argument_list|)
 argument_list|,
 name|cfg
