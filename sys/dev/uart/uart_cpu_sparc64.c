@@ -88,6 +88,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Determine which channel of a SCC a device referenced by an alias is.  * The information present in the OF device tree only allows to do this  * for "ttyX" aliases. If a device is a channel of a SCC its property  * in the /aliases node looks like one of these:  * ttya:  '/central/fhc/zs@0,902000:a'  * ttyc:  '/pci@1f,0/pci@1,1/ebus@1/se@14,400000:a'  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -243,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the address of the UART that is selected as the console, if the  * console is an UART of course. Note that we enforce that both stdin and  * stdout are selected.  * Note that the currently active console (i.e. /chosen/stdout and  * /chosen/stdin) may not be the same as the device selected in the  * environment (ie /options/output-device and /options/input-device) because  * keyboard and screen were selected but the keyboard was unplugged or the  * user has changed the environment. In the latter case I would assume that  * the user expects that FreeBSD uses the new console setting.  * For weirder configurations, use ofw_console(4).  */
+comment|/*  * Get the package handle of the UART that is selected as the console, if  * the console is an UART of course. Note that we enforce that both stdin  * and stdout are selected.  * Note that the currently active console (i.e. /chosen/stdout and  * /chosen/stdin) may not be the same as the device selected in the  * environment (ie /options/output-device and /options/input-device) because  * keyboard and screen were selected but the keyboard was unplugged or the  * user has changed the environment. In the latter case I would assume that  * the user expects that FreeBSD uses the new console setting.  * For weirder configurations, use ofw_console(4).  */
 end_comment
 
 begin_function
@@ -548,7 +552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the address of the UART that's selected as the debug port. Since  * there's no place for this in the OF, we use the kernel environment  * variable "hw.uart.dbgport". Note however that the variable is not a  * list of attributes. It's single device name or alias, as known by  * the OF.  */
+comment|/*  * Get the package handle of the UART that's selected as the debug port.  * Since there's no place for this in the OF, we use the kernel environment  * variable "hw.uart.dbgport". Note however that the variable is not a  * list of attributes. It's single device name or alias, as known by  * the OF.  */
 end_comment
 
 begin_function
@@ -663,6 +667,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Get the package handle of the device that is selected as the keyboard  * port.  * XXX this also matches PS/2 keyboard controllers and most likely also  * USB keyboards.  */
+end_comment
 
 begin_function
 specifier|static
@@ -1072,6 +1080,10 @@ name|ops
 operator|=
 name|uart_sab82532_ops
 expr_stmt|;
+comment|/* SAB82532 are only known to be used for TTYs. */
+if|if
+condition|(
+operator|(
 name|di
 operator|->
 name|bas
@@ -1082,7 +1094,15 @@ name|uart_cpu_channel
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|addr
 operator|+=
 literal|64
@@ -1116,6 +1136,9 @@ name|ops
 operator|=
 name|uart_z8530_ops
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|di
 operator|->
 name|bas
@@ -1126,7 +1149,33 @@ name|uart_cpu_channel
 argument_list|(
 name|dev
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * There's no way to determine from OF which 			 * channel has the keyboard. Should always be 			 * on channel 1 however. 			 */
+if|if
+condition|(
+name|devtype
+operator|==
+name|UART_DEV_KEYBOARD
+condition|)
+name|di
+operator|->
+name|bas
+operator|.
+name|chan
+operator|=
+literal|1
 expr_stmt|;
+else|else
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|di
 operator|->
 name|bas
