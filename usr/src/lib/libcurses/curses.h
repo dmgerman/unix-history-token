@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.36 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -2284,6 +2284,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Private functions that are needed for user programs prototypes. */
+end_comment
+
 begin_decl_stmt
 name|void
 name|__cputchar
@@ -2296,8 +2300,49 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|__mvcur
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__waddbytes
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Public: backward compatibility */
+comment|/* Private functions. */
 end_comment
 
 begin_ifdef
@@ -2305,10 +2350,6 @@ ifdef|#
 directive|ifdef
 name|_CURSES_PRIVATE
 end_ifdef
-
-begin_comment
-comment|/* Private function prototypes. */
-end_comment
 
 begin_decl_stmt
 name|void
@@ -2349,26 +2390,6 @@ argument_list|(
 operator|(
 name|WINDOW
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|__mvcur
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2471,27 +2492,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|__waddbytes
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
 operator|,
 name|int
 operator|)
