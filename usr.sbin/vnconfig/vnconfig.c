@@ -478,6 +478,20 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: vnconfig and the vn driver is being phased out.\n"
+literal|"WARNING: You should use mdconfig and the md driver instead.\n"
+literal|"WARNING: Continuing in 15 seconds...\n"
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+literal|15
+argument_list|)
+expr_stmt|;
 name|configfile
 operator|=
 name|_PATH_VNTAB
