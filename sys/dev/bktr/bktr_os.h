@@ -123,7 +123,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__XFreeBSD__
+name|__FreeBSD__
 argument_list|)
 end_if
 
