@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SBUF_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_comment
 comment|/*  * Structure definition  */
 end_comment
@@ -28,12 +34,11 @@ modifier|*
 name|s_buf
 decl_stmt|;
 comment|/* storage buffer */
-name|struct
-name|sbuf
+name|void
 modifier|*
-name|s_next
+name|s_unused
 decl_stmt|;
-comment|/* next in chain */
+comment|/* binary compatibility. */
 name|int
 name|s_size
 decl_stmt|;
@@ -44,9 +49,19 @@ decl_stmt|;
 comment|/* current length of string */
 define|#
 directive|define
+name|SBUF_FIXEDLEN
+value|0x00000000
+comment|/* fixed length buffer (default) */
+define|#
+directive|define
 name|SBUF_AUTOEXTEND
 value|0x00000001
 comment|/* automatically extend buffer */
+define|#
+directive|define
+name|SBUF_USRFLAGMSK
+value|0x0000ffff
+comment|/* mask of flags the user may specify */
 define|#
 directive|define
 name|SBUF_DYNAMIC
@@ -204,6 +219,32 @@ parameter_list|(
 function_decl|2
 operator|,
 function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|int
+name|sbuf_vprintf
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|_BSD_VA_LIST_
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
 end_function_decl
 
 begin_empty_stmt
