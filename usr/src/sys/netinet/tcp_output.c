@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_output.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tcp_output.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1689,11 +1689,33 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|ENOBUFS
+condition|)
+block|{
+name|tcp_quench
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|tcpstat
 operator|.
 name|tcps_sndtotal
