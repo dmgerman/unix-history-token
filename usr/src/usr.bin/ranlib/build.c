@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.4 (Berkeley) %G%"
+literal|"@(#)build.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -691,12 +691,6 @@ argument_list|)
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|(
-name|off_t
-operator|)
-operator|-
-literal|1
 condition|)
 goto|goto
 name|bad2
@@ -970,12 +964,6 @@ name|SARMAG
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|(
-name|long
-operator|)
-operator|-
-literal|1
 condition|)
 name|error
 argument_list|(
