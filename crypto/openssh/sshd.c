@@ -240,26 +240,6 @@ directive|include
 file|<krb5.h>
 end_include
 
-begin_decl_stmt
-name|krb5_context
-name|ssh_context
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|krb5_principal
-name|tkt_client
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Principal from the received ticket.  Also is used as an indication of succesful krb5 authentization. */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

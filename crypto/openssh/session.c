@@ -160,6 +160,24 @@ begin_comment
 comment|/* LOGIN_CAP */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|krb5_context
+name|ssh_context
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* types */
 end_comment

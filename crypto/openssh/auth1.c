@@ -83,6 +83,36 @@ directive|include
 file|"session.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB5
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|krb5_context
+name|ssh_context
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|krb5_principal
+name|tkt_client
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Principal from the received ticket.  Also is used as an indication of succesful krb5 authentization. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* import */
 end_comment
@@ -1627,7 +1657,6 @@ argument_list|,
 name|tkt_client
 argument_list|)
 condition|)
-block|{
 name|verbose
 argument_list|(
 literal|"Kerberos V5 TGT refused for %.100s"
@@ -1637,17 +1666,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|xfree
-argument_list|(
-name|tgt
-operator|.
-name|data
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|xfree
 argument_list|(
 name|tgt
