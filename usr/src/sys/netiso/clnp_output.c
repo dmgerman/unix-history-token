@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_output.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_output.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -205,6 +205,41 @@ name|CLNP_TTL
 block|,
 comment|/* ttl */
 name|CLNP_EC
+operator||
+name|CNF_SEG_OK
+operator||
+name|CNF_ERR_OK
+block|,
+comment|/* type */
+literal|0
+block|,
+comment|/* segment length */
+literal|0
+comment|/* checksum */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|clnp_fixed
+name|echor_template
+init|=
+block|{
+name|ISO8473_CLNP
+block|,
+comment|/* network identifier */
+literal|0
+block|,
+comment|/* length */
+name|ISO8473_V1
+block|,
+comment|/* version */
+name|CLNP_TTL
+block|,
+comment|/* ttl */
+name|CLNP_ECR
 operator||
 name|CNF_SEG_OK
 operator||
@@ -1231,6 +1266,20 @@ operator|*
 name|clnp
 operator|=
 name|echo_template
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|flags
+operator|&
+name|CLNP_ECHOR
+condition|)
+block|{
+operator|*
+name|clnp
+operator|=
+name|echor_template
 expr_stmt|;
 block|}
 else|else

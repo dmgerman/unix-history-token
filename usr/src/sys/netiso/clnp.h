@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /var/src/sys/netiso/RCS/clnp.h,v 5.1 89/02/09 16:17:22 hagens Exp $ */
+comment|/* $Header: /big/BSD4.4/isis-usr/src/sys/netiso/RCS/clnp.h,v 1.1 1992/02/07 18:14:59 hagens Exp hagens $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/src/sys/netiso/RCS/clnp.h,v $ */
+comment|/* $Source: /big/BSD4.4/isis-usr/src/sys/netiso/RCS/clnp.h,v $ */
 end_comment
 
 begin_ifndef
@@ -859,7 +859,7 @@ value|0x200
 end_define
 
 begin_comment
-comment|/* fake echo function */
+comment|/* send echo request */
 end_comment
 
 begin_define
@@ -873,6 +873,17 @@ begin_comment
 comment|/* don't store cache information */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLNP_ECHOR
+value|0x800
+end_define
+
+begin_comment
+comment|/* send echo reply */
+end_comment
+
 begin_comment
 comment|/* valid clnp flags */
 end_comment
@@ -881,7 +892,7 @@ begin_define
 define|#
 directive|define
 name|CLNP_VFLAGS
-value|(CLNP_SEND_RAW|CLNP_NO_SEG|CLNP_NO_ER|CLNP_NO_CKSUM\ 	|CLNP_ECHO|CLNP_NOCACHE)
+value|(CLNP_SEND_RAW|CLNP_NO_SEG|CLNP_NO_ER|CLNP_NO_CKSUM\ 	|CLNP_ECHO|CLNP_NOCACHE|CLNP_ECHOR)
 end_define
 
 begin_comment
