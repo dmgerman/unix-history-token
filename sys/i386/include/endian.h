@@ -165,11 +165,11 @@ name|__GNUC__
 specifier|static
 name|__inline
 name|unsigned
-name|int
+name|long
 name|__uint16_swap_uint32
 parameter_list|(
 name|unsigned
-name|int
+name|long
 name|__x
 parameter_list|)
 block|{
@@ -184,11 +184,11 @@ begin_function
 specifier|static
 name|__inline
 name|unsigned
-name|int
+name|long
 name|__uint8_swap_uint32
 parameter_list|(
 name|unsigned
-name|int
+name|long
 name|__x
 parameter_list|)
 block|{
