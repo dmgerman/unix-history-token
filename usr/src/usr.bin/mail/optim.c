@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	2.3 %G%"
+literal|"@(#)optim.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2151,6 +2151,13 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|name
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the address ultimately points back to us, 	 * just return a null network path. 	 */
 if|if
 condition|(
@@ -2174,13 +2181,6 @@ operator|==
 name|LOCAL
 condition|)
 return|return;
-name|strcpy
-argument_list|(
-name|name
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
