@@ -1619,7 +1619,7 @@ name|provider
 argument_list|)
 condition|)
 block|{
-name|g_std_spoiled
+name|g_slice_spoiled
 argument_list|(
 name|cp
 argument_list|)
