@@ -1884,6 +1884,7 @@ name|proc
 operator|*
 name|p
 operator|,
+specifier|const
 name|char
 operator|*
 name|type

@@ -649,6 +649,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fstype
