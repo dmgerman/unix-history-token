@@ -10417,7 +10417,9 @@ operator|->
 name|ti_mtx
 argument_list|)
 argument_list|,
+operator|(
 literal|"ti mutex not initialized"
+operator|)
 argument_list|)
 expr_stmt|;
 name|TI_LOCK
