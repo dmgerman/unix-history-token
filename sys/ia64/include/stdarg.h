@@ -80,6 +80,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+define|\
+value|__builtin_va_copy((dest), (src))
+end_define
+
+begin_define
+define|#
+directive|define
 name|va_end
 parameter_list|(
 name|ap
