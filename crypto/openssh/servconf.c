@@ -1349,7 +1349,7 @@ name|options
 operator|->
 name|challenge_response_authentication
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(
