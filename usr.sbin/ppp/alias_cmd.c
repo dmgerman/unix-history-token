@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.22 1999/03/25 23:36:23 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.23 1999/04/26 08:54:32 brian Exp $  */
 end_comment
 
 begin_include
@@ -78,13 +78,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__OpenBSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"alias.h"
+file|<alias.h>
 end_include
 
 begin_else
@@ -95,7 +95,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<alias.h>
+file|"alias.h"
 end_include
 
 begin_endif
