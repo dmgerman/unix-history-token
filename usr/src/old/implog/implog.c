@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.4 (Berkeley) %G%"
+literal|"@(#)implog.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1192,9 +1192,6 @@ name|il_imp
 operator|=
 name|ntohs
 argument_list|(
-operator|(
-name|u_short
-operator|)
 name|ip
 operator|->
 name|il_imp
@@ -1303,6 +1300,27 @@ name|sin_time
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f
+operator|->
+name|sin_cc
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|control_leader
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"(truncated header, %d bytes): "
+argument_list|,
+name|f
+operator|->
+name|sin_cc
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|fn
@@ -1323,6 +1341,12 @@ name|fn
 operator|!=
 name|impundef
 condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'\t'
+argument_list|)
+expr_stmt|;
 name|impundef
 argument_list|(
 name|ip
@@ -1332,6 +1356,7 @@ operator|->
 name|sin_cc
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2403,6 +2428,8 @@ begin_expr_stmt
 name|impundef
 argument_list|(
 name|ip
+argument_list|,
+name|len
 argument_list|)
 specifier|register
 expr|struct
@@ -2433,7 +2460,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%x, htype=%x, host=%x, imp=%x, link="
+literal|"%x, htype=%x,\n\t host=%d(x%x), imp=%d(x%x), link="
 argument_list|,
 name|ip
 operator|->
@@ -2446,6 +2473,14 @@ argument_list|,
 name|ip
 operator|->
 name|il_host
+argument_list|,
+name|ip
+operator|->
+name|il_host
+argument_list|,
+name|ip
+operator|->
+name|il_imp
 argument_list|,
 name|ip
 operator|->
@@ -2468,7 +2503,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%d,"
+literal|"%d (x%x),"
+argument_list|,
+name|ip
+operator|->
+name|il_link
 argument_list|,
 name|ip
 operator|->
@@ -2477,11 +2516,47 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" subtype=%x>\n"
+literal|" subtype=%x"
 argument_list|,
 name|ip
 operator|->
 name|il_subtype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|imp_leader
+argument_list|)
+operator|&&
+name|ip
+operator|->
+name|il_length
+condition|)
+name|printf
+argument_list|(
+literal|" len=%d bytes"
+argument_list|,
+name|ntohs
+argument_list|(
+operator|(
+name|u_short
+operator|)
+name|ip
+operator|->
+name|il_length
+argument_list|)
+operator|>>
+literal|3
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|">\n"
 argument_list|)
 expr_stmt|;
 block|}
