@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.208 1999/05/02 23:56:10 alc Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.209 1999/05/06 17:06:41 phk Exp $  */
 end_comment
 
 begin_comment
@@ -11310,15 +11310,7 @@ return|return;
 block|}
 name|db_printf
 argument_list|(
-literal|"b_proc = %p,\nb_flags = 0x%b\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|bp
-operator|->
-name|b_proc
+literal|"b_flags = 0x%b\n"
 argument_list|,
 operator|(
 name|u_int
