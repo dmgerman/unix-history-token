@@ -635,6 +635,20 @@ name|really_quiet
 condition|)
 block|{
 comment|/* 	     * Now see if there is any reason not to allow a "Release" This 	     * is "popen()" instead of "Popen()" since we don't want "-n" to 	     * stop it. 	     */
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+name|fp
+operator|=
+name|popen
+argument_list|(
+literal|"ncvs -n -q update"
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fp
 operator|=
 name|popen
@@ -644,6 +658,9 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 name|c
 operator|=
 literal|0

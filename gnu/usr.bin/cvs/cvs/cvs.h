@@ -1140,6 +1140,32 @@ begin_comment
 comment|/* Don't write history entry */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|freebsd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Assume option defaults for FreBSD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_DEVELOPER */
+end_comment
+
 begin_comment
 comment|/* Externs that are included directly in the CVS sources */
 end_comment

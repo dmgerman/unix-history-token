@@ -808,6 +808,23 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FREEBSD_DEVELOPER
+if|if
+condition|(
+operator|!
+name|K_flag
+operator|&&
+name|freebsd
+condition|)
+name|K_flag
+operator|=
+literal|"-KeAuthor,eDate,eHeader,eId,eLocker,eLog,eRCSfile,eRevision,eSource,eState,iFreeBSD"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_DEVELOPER */
 comment|/*      * If we are updating the entire directory (for real) and building dirs      * as we go, we make sure there is no static entries file and write the      * tag file as appropriate      */
 if|if
 condition|(
