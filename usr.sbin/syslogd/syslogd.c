@@ -7643,8 +7643,8 @@ literal|0
 index|]
 operator|=
 operator|*
-name|p
 operator|++
+name|p
 expr_stmt|;
 while|while
 condition|(
