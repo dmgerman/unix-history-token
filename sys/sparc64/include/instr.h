@@ -2950,6 +2950,20 @@ comment|/* s, d, q */
 end_comment
 
 begin_comment
+comment|/* Decode 5-bit register field into 6-bit number (for doubles and quads). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSFPdq_RN
+parameter_list|(
+name|rn
+parameter_list|)
+value|(((rn)& ~1) | (((rn)& 1)<< 5))
+end_define
+
+begin_comment
 comment|/* IMPLDEP1 for Sun UltraSparc */
 end_comment
 
