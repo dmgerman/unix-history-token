@@ -50,13 +50,16 @@ name|profrate
 decl_stmt|;
 comment|/* profiling clock rate */
 name|int
+name|histcounter_type
+decl_stmt|;
+comment|/* size (in bits) and sign of HISTCOUNTER */
+name|int
 name|spare
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 comment|/* reserved */
-comment|/* XXX should record counter size and density */
 block|}
 struct|;
 end_struct
@@ -310,6 +313,9 @@ name|mexitcount_post_overhead
 decl_stmt|;
 name|int
 name|mexitcount_pre_overhead
+decl_stmt|;
+name|int
+name|histcounter_type
 decl_stmt|;
 block|}
 struct|;
