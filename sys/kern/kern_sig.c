@@ -7809,6 +7809,31 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* uses schedlock */
+comment|/* 	 * Defer further processing for signals which are held, 	 * except that stopped processes must be continued by SIGCONT. 	 */
+if|if
+condition|(
+name|action
+operator|==
+name|SIG_HOLD
+operator|&&
+operator|!
+operator|(
+operator|(
+name|prop
+operator|&
+name|SA_CONT
+operator|)
+operator|&&
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_STOPPED_SIG
+operator|)
+operator|)
+condition|)
+return|return;
 comment|/* 	 * Some signals have a process-wide effect and a per-thread 	 * component.  Most processing occurs when the process next 	 * tries to cross the user boundary, however there are some 	 * times when processing needs to be done immediatly, such as 	 * waking up threads so that they can cross the user boundary. 	 * We try do the per-process part here. 	 */
 if|if
 condition|(
@@ -8327,16 +8352,6 @@ operator|=
 name|PUSER
 expr_stmt|;
 block|}
-block|}
-comment|/* 	 * Defer further processing for signals which are held, 	 * except that stopped processes must be continued by SIGCONT. 	 */
-if|if
-condition|(
-name|action
-operator|==
-name|SIG_HOLD
-condition|)
-block|{
-return|return;
 block|}
 if|if
 condition|(
