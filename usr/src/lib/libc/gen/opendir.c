@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.5 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,34 +216,6 @@ operator|->
 name|dd_seek
 operator|=
 literal|0
-expr_stmt|;
-name|dirp
-operator|->
-name|dd_loccnt
-operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NDIRHASH
-condition|;
-name|i
-operator|++
-control|)
-name|dirp
-operator|->
-name|dd_hash
-index|[
-name|i
-index|]
-operator|=
-name|NULL
 expr_stmt|;
 return|return
 name|dirp
