@@ -2384,13 +2384,11 @@ parameter_list|)
 function_decl|;
 comment|/* ** Dictionary on-demand resizing */
 specifier|extern
-name|unsigned
-name|int
+name|CELL
 name|dictThreshold
 decl_stmt|;
 specifier|extern
-name|unsigned
-name|int
+name|CELL
 name|dictIncrease
 decl_stmt|;
 comment|/* ** Various FreeBSD goodies */
