@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.13.2.1 1995/06/04 16:12:49 davidg Exp $ */
+comment|/* $Id: if_ppp.c,v 1.14 1995/06/11 19:31:41 rgrimes Exp $ */
 end_comment
 
 begin_comment
@@ -3711,6 +3711,22 @@ operator|->
 name|sc_fastq
 expr_stmt|;
 block|}
+comment|/*        * Most high-priority services set IPTOS_LOWDELAY.  This is a much more        * generic mechanism than specific port numbers.  This same mechanism        * is used by slip.        */
+if|if
+condition|(
+name|ip
+operator|->
+name|ip_tos
+operator|&
+name|IPTOS_LOWDELAY
+condition|)
+name|ifq
+operator|=
+operator|&
+name|sc
+operator|->
+name|sc_fastq
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
