@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.119 2002/01/21 15:13:51 markus Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.125 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -139,6 +139,10 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* import */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|Options
@@ -154,6 +158,20 @@ name|__progname
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|original_real_uid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|original_effective_uid
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 specifier|const
@@ -165,76 +183,25 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+parameter_list|,
+name|socklen_t
+name|salen
 parameter_list|)
 block|{
-name|void
-modifier|*
-name|addr
-decl_stmt|;
 specifier|static
 name|char
 name|addrbuf
 index|[
-name|INET6_ADDRSTRLEN
+name|NI_MAXHOST
 index|]
 decl_stmt|;
-switch|switch
+if|if
 condition|(
-name|sa
-operator|->
-name|sa_family
-condition|)
-block|{
-case|case
-name|AF_INET
-case|:
-name|addr
-operator|=
-operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|sa
-operator|)
-operator|->
-name|sin_addr
-expr_stmt|;
-break|break;
-case|case
-name|AF_INET6
-case|:
-name|addr
-operator|=
-operator|&
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|sa
-operator|)
-operator|->
-name|sin6_addr
-expr_stmt|;
-break|break;
-default|default:
-comment|/* This case should be protected against elsewhere */
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* XXX abort is bad -- do something else */
-block|}
-name|inet_ntop
+name|getnameinfo
 argument_list|(
 name|sa
-operator|->
-name|sa_family
 argument_list|,
-name|addr
+name|salen
 argument_list|,
 name|addrbuf
 argument_list|,
@@ -242,6 +209,19 @@ sizeof|sizeof
 argument_list|(
 name|addrbuf
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|NI_NUMERICHOST
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"sockaddr_ntop: getnameinfo NI_NUMERICHOST failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -266,11 +246,6 @@ name|host
 parameter_list|,
 name|u_short
 name|port
-parameter_list|,
-name|struct
-name|passwd
-modifier|*
-name|pw
 parameter_list|,
 specifier|const
 name|char
@@ -530,9 +505,14 @@ literal|10
 index|]
 decl_stmt|;
 comment|/* Child.  Permanently give up superuser privileges. */
-name|permanently_set_uid
+name|seteuid
 argument_list|(
-name|pw
+name|original_real_uid
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|original_real_uid
 argument_list|)
 expr_stmt|;
 comment|/* Redirect stdin and stdout. */
@@ -743,11 +723,6 @@ specifier|static
 name|int
 name|ssh_create_socket
 parameter_list|(
-name|struct
-name|passwd
-modifier|*
-name|pw
-parameter_list|,
 name|int
 name|privileged
 parameter_list|,
@@ -780,6 +755,8 @@ name|IPPORT_RESERVED
 operator|-
 literal|1
 decl_stmt|;
+name|PRIV_START
+expr_stmt|;
 name|sock
 operator|=
 name|rresvport_af
@@ -789,6 +766,8 @@ name|p
 argument_list|,
 name|family
 argument_list|)
+expr_stmt|;
+name|PRIV_END
 expr_stmt|;
 if|if
 condition|(
@@ -820,12 +799,6 @@ return|return
 name|sock
 return|;
 block|}
-comment|/* 	 * Just create an ordinary socket on arbitrary port.  We use 	 * the user's uid to create the socket. 	 */
-name|temporarily_use_uid
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
 name|sock
 operator|=
 name|socket
@@ -852,9 +825,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|restore_uid
-argument_list|()
 expr_stmt|;
 comment|/* Bind the socket to an alternative local IP address */
 if|if
@@ -1004,7 +974,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  * Return values:  *    0 for OK  *    ECONNREFUSED if we got a "Connection Refused" by the peer on any address  *    ECONNABORTED if we failed without a "Connection refused"  * Suitable error messages for the connection failure will already have been  * printed.  */
+comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If needpriv is true,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if needpriv is true.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  * Return values:  *    0 for OK  *    ECONNREFUSED if we got a "Connection Refused" by the peer on any address  *    ECONNABORTED if we failed without a "Connection refused"  * Suitable error messages for the connection failure will already have been  * printed.  */
 end_comment
 
 begin_function
@@ -1031,12 +1001,7 @@ name|int
 name|connection_attempts
 parameter_list|,
 name|int
-name|anonymous
-parameter_list|,
-name|struct
-name|passwd
-modifier|*
-name|pw
+name|needpriv
 parameter_list|,
 specifier|const
 name|char
@@ -1098,21 +1063,9 @@ literal|1
 decl_stmt|;
 name|debug
 argument_list|(
-literal|"ssh_connect: getuid %u geteuid %u anon %d"
+literal|"ssh_connect: needpriv %d"
 argument_list|,
-operator|(
-name|u_int
-operator|)
-name|getuid
-argument_list|()
-argument_list|,
-operator|(
-name|u_int
-operator|)
-name|geteuid
-argument_list|()
-argument_list|,
-name|anonymous
+name|needpriv
 argument_list|)
 expr_stmt|;
 comment|/* Get default port if port has not been set. */
@@ -1164,8 +1117,6 @@ argument_list|(
 name|host
 argument_list|,
 name|port
-argument_list|,
-name|pw
 argument_list|,
 name|proxy_command
 argument_list|)
@@ -1352,15 +1303,7 @@ name|sock
 operator|=
 name|ssh_create_socket
 argument_list|(
-name|pw
-argument_list|,
-operator|!
-name|anonymous
-operator|&&
-name|geteuid
-argument_list|()
-operator|==
-literal|0
+name|needpriv
 argument_list|,
 name|ai
 operator|->
@@ -1375,12 +1318,6 @@ literal|0
 condition|)
 comment|/* Any error is already output */
 continue|continue;
-comment|/* Connect to the host.  We use the user's uid in the 			 * hope that it will help with tcp_wrappers showing 			 * the remote uid as root. 			 */
-name|temporarily_use_uid
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|connect
@@ -1413,9 +1350,6 @@ operator|->
 name|ai_addrlen
 argument_list|)
 expr_stmt|;
-name|restore_uid
-argument_list|()
-expr_stmt|;
 break|break;
 block|}
 else|else
@@ -1439,6 +1373,10 @@ argument_list|(
 name|ai
 operator|->
 name|ai_addr
+argument_list|,
+name|ai
+operator|->
+name|ai_addrlen
 argument_list|)
 argument_list|,
 name|strport
@@ -1448,9 +1386,6 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|restore_uid
-argument_list|()
 expr_stmt|;
 comment|/* 				 * Close the failed socket; there appear to 				 * be some problems when reusing a socket for 				 * which connect() has already returned an 				 * error. 				 */
 name|close
@@ -3564,13 +3499,9 @@ begin_function
 name|void
 name|ssh_login
 parameter_list|(
-name|Key
+name|Sensitive
 modifier|*
-modifier|*
-name|keys
-parameter_list|,
-name|int
-name|nkeys
+name|sensitive
 parameter_list|,
 specifier|const
 name|char
@@ -3690,9 +3621,7 @@ name|server_user
 argument_list|,
 name|host
 argument_list|,
-name|keys
-argument_list|,
-name|nkeys
+name|sensitive
 argument_list|)
 expr_stmt|;
 block|}
@@ -3713,9 +3642,7 @@ name|server_user
 argument_list|,
 name|host
 argument_list|,
-name|keys
-argument_list|,
-name|nkeys
+name|sensitive
 argument_list|)
 expr_stmt|;
 block|}

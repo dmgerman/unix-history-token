@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb4.c,v 1.25 2001/12/19 07:18:56 deraadt Exp $"
+literal|"$OpenBSD: auth-krb4.c,v 1.27 2002/06/11 05:46:20 mpech Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -192,7 +192,7 @@ name|krb4_ticket_file
 argument_list|,
 name|MAXPATHLEN
 argument_list|,
-literal|"%s%u_%d"
+literal|"%s%u_%ld"
 argument_list|,
 name|tkt_root
 argument_list|,
@@ -202,6 +202,9 @@ name|pw
 operator|->
 name|pw_uid
 argument_list|,
+operator|(
+name|long
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -1165,6 +1168,11 @@ argument_list|(
 operator|*
 name|client
 argument_list|)
+expr_stmt|;
+operator|*
+name|client
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(

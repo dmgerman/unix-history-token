@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.31 2002/02/27 21:23:13 stevesk Exp $"
+literal|"$OpenBSD: canohost.c,v 1.32 2002/06/11 08:11:45 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -173,21 +173,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|from
-operator|.
-name|ss_family
-operator|==
-name|AF_INET
-condition|)
-name|check_ip_options
-argument_list|(
-name|socket
-argument_list|,
-name|ntop
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|getnameinfo
 argument_list|(
 operator|(
@@ -219,6 +204,21 @@ condition|)
 name|fatal
 argument_list|(
 literal|"get_remote_hostname: getnameinfo NI_NUMERICHOST failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|from
+operator|.
+name|ss_family
+operator|==
+name|AF_INET
+condition|)
+name|check_ip_options
+argument_list|(
+name|socket
+argument_list|,
+name|ntop
 argument_list|)
 expr_stmt|;
 name|debug3

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: servconf.h,v 1.54 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: servconf.h,v 1.58 2002/06/20 23:05:55 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -365,6 +365,10 @@ name|int
 name|use_login
 decl_stmt|;
 comment|/* If true, login(1) is used */
+name|int
+name|compression
+decl_stmt|;
+comment|/* If true, compression is allowed */
 name|int
 name|allow_tcp_forwarding
 decl_stmt|;

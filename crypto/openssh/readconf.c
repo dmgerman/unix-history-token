@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: readconf.c,v 1.95 2002/02/04 12:15:25 markus Exp $"
+literal|"$OpenBSD: readconf.c,v 1.100 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,7 +92,7 @@ file|"mac.h"
 end_include
 
 begin_comment
-comment|/* Format of the configuration file:     # Configuration data is parsed as follows:    #  1. command line options    #  2. user-specific file    #  3. system-wide file    # Any configuration value is only changed the first time it is set.    # Thus, host-specific definitions should be at the beginning of the    # configuration file, and defaults at the end.     # Host-specific declarations.  These may override anything above.  A single    # host may match multiple declarations; these are processed in the order    # that they are given in.     Host *.ngs.fi ngs.fi      FallBackToRsh no     Host fake.com      HostName another.host.name.real.org      User blaah      Port 34289      ForwardX11 no      ForwardAgent no     Host books.com      RemoteForward 9999 shadows.cs.hut.fi:9999      Cipher 3des     Host fascist.blob.com      Port 23123      User tylonen      RhostsAuthentication no      PasswordAuthentication no     Host puukko.hut.fi      User t35124p      ProxyCommand ssh-proxy %h %p     Host *.fr      UseRsh yes     Host *.su      Cipher none      PasswordAuthentication no     # Defaults for various options    Host *      ForwardAgent no      ForwardX11 no      RhostsAuthentication yes      PasswordAuthentication yes      RSAAuthentication yes      RhostsRSAAuthentication yes      FallBackToRsh no      UseRsh no      StrictHostKeyChecking yes      KeepAlives no      IdentityFile ~/.ssh/identity      Port 22      EscapeChar ~  */
+comment|/* Format of the configuration file:     # Configuration data is parsed as follows:    #  1. command line options    #  2. user-specific file    #  3. system-wide file    # Any configuration value is only changed the first time it is set.    # Thus, host-specific definitions should be at the beginning of the    # configuration file, and defaults at the end.     # Host-specific declarations.  These may override anything above.  A single    # host may match multiple declarations; these are processed in the order    # that they are given in.     Host *.ngs.fi ngs.fi      User foo     Host fake.com      HostName another.host.name.real.org      User blaah      Port 34289      ForwardX11 no      ForwardAgent no     Host books.com      RemoteForward 9999 shadows.cs.hut.fi:9999      Cipher 3des     Host fascist.blob.com      Port 23123      User tylonen      RhostsAuthentication no      PasswordAuthentication no     Host puukko.hut.fi      User t35124p      ProxyCommand ssh-proxy %h %p     Host *.fr      PublicKeyAuthentication no     Host *.su      Cipher none      PasswordAuthentication no     # Defaults for various options    Host *      ForwardAgent no      ForwardX11 no      RhostsAuthentication yes      PasswordAuthentication yes      RSAAuthentication yes      RhostsRSAAuthentication yes      StrictHostKeyChecking yes      KeepAlives no      IdentityFile ~/.ssh/identity      Port 22      EscapeChar ~  */
 end_comment
 
 begin_comment
@@ -116,10 +116,6 @@ block|,
 name|oPasswordAuthentication
 block|,
 name|oRSAAuthentication
-block|,
-name|oFallBackToRsh
-block|,
-name|oUseRsh
 block|,
 name|oChallengeResponseAuthentication
 block|,
@@ -243,6 +239,8 @@ block|,
 name|oNoHostAuthenticationForLocalhost
 block|,
 name|oVersionAddendum
+block|,
+name|oDeprecated
 block|}
 name|OpCodes
 typedef|;
@@ -426,13 +424,13 @@ directive|endif
 block|{
 literal|"fallbacktorsh"
 block|,
-name|oFallBackToRsh
+name|oDeprecated
 block|}
 block|,
 block|{
 literal|"usersh"
 block|,
-name|oUseRsh
+name|oDeprecated
 block|}
 block|,
 block|{
@@ -1508,32 +1506,6 @@ name|parse_flag
 goto|;
 endif|#
 directive|endif
-case|case
-name|oFallBackToRsh
-case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|fallback_to_rsh
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
-case|case
-name|oUseRsh
-case|:
-name|intptr
-operator|=
-operator|&
-name|options
-operator|->
-name|use_rsh
-expr_stmt|;
-goto|goto
-name|parse_flag
-goto|;
 case|case
 name|oBatchMode
 case|:
@@ -3226,6 +3198,23 @@ literal|'\0'
 condition|)
 do|;
 break|break;
+case|case
+name|oDeprecated
+case|:
+name|debug
+argument_list|(
+literal|"%s line %d: Deprecated option \"%s\""
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|,
+name|keyword
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 name|fatal
 argument_list|(
@@ -3596,20 +3585,6 @@ literal|1
 expr_stmt|;
 name|options
 operator|->
-name|fallback_to_rsh
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|options
-operator|->
-name|use_rsh
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|options
-operator|->
 name|batch_mode
 operator|=
 operator|-
@@ -3919,7 +3894,7 @@ name|options
 operator|->
 name|rhosts_authentication
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4085,7 +4060,7 @@ name|options
 operator|->
 name|rhosts_rsa_authentication
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4099,36 +4074,6 @@ condition|)
 name|options
 operator|->
 name|hostbased_authentication
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|->
-name|fallback_to_rsh
-operator|==
-operator|-
-literal|1
-condition|)
-name|options
-operator|->
-name|fallback_to_rsh
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|->
-name|use_rsh
-operator|==
-operator|-
-literal|1
-condition|)
-name|options
-operator|->
-name|use_rsh
 operator|=
 literal|0
 expr_stmt|;

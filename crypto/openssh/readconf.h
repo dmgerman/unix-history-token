@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readconf.h,v 1.42 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: readconf.h,v 1.43 2002/06/08 05:17:01 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -164,14 +164,6 @@ modifier|*
 name|kbd_interactive_devices
 decl_stmt|;
 comment|/* Keyboard-interactive auth devices. */
-name|int
-name|fallback_to_rsh
-decl_stmt|;
-comment|/* Use rsh if cannot connect with ssh. */
-name|int
-name|use_rsh
-decl_stmt|;
-comment|/* Always use rsh (don\'t try ssh). */
 name|int
 name|batch_mode
 decl_stmt|;

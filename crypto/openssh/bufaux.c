@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.22 2002/01/18 18:14:17 stevesk Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.25 2002/04/20 09:14:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -527,8 +527,45 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns an integer from the buffer (4 bytes, msb first).  */
+comment|/*  * Returns integers from the buffer (msb first).  */
 end_comment
+
+begin_function
+name|u_short
+name|buffer_get_short
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+name|u_char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|buffer_get
+argument_list|(
+name|buffer
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+return|return
+name|GET_16BIT
+argument_list|(
+name|buf
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|u_int
@@ -605,8 +642,45 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Stores an integer in the buffer in 4 bytes, msb first.  */
+comment|/*  * Stores integers in the buffer, msb first.  */
 end_comment
+
+begin_function
+name|void
+name|buffer_put_short
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|u_short
+name|value
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|PUT_16BIT
+argument_list|(
+name|buf
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+name|buffer
+argument_list|,
+name|buf
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -725,7 +799,7 @@ literal|1024
 condition|)
 name|fatal
 argument_list|(
-literal|"Received packet with bad string length %d"
+literal|"buffer_get_string: bad string length %d"
 argument_list|,
 name|len
 argument_list|)
@@ -828,6 +902,17 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+if|if
+condition|(
+name|s
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"buffer_put_cstring: s == NULL"
+argument_list|)
+expr_stmt|;
 name|buffer_put_string
 argument_list|(
 name|buffer

@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -32,7 +40,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<skey.h>
+file|<opie.h>
 end_include
 
 begin_endif
@@ -3144,8 +3152,8 @@ name|m
 parameter_list|)
 block|{
 name|struct
-name|skey
-name|skey
+name|opie
+name|opie
 decl_stmt|;
 name|char
 name|challenge
@@ -3158,10 +3166,10 @@ name|res
 decl_stmt|;
 name|res
 operator|=
-name|skeychallenge
+name|opiechallenge
 argument_list|(
 operator|&
-name|skey
+name|opie
 argument_list|,
 name|authctxt
 operator|->
@@ -3261,7 +3269,7 @@ name|authctxt
 operator|->
 name|valid
 operator|&&
-name|skey_haskey
+name|opie_haskey
 argument_list|(
 name|authctxt
 operator|->
@@ -3272,7 +3280,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|skey_passcheck
+name|opie_passverify
 argument_list|(
 name|authctxt
 operator|->

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-skey.c,v 1.16 2002/01/12 13:10:29 markus Exp $"
+literal|"$OpenBSD: auth-skey.c,v 1.19 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -49,6 +49,12 @@ directive|include
 file|"auth.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"monitor_wrap.h"
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -66,15 +72,7 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|PROMPT
-value|"\nOPIE Password: "
-end_define
-
 begin_function
-specifier|static
 name|int
 name|skey_query
 parameter_list|(
@@ -235,7 +233,7 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|PROMPT
+name|SKEY_PROMPT
 argument_list|)
 operator|+
 literal|1
@@ -260,7 +258,7 @@ name|strlcat
 argument_list|(
 name|p
 argument_list|,
-name|PROMPT
+name|SKEY_PROMPT
 argument_list|,
 name|len
 argument_list|)
@@ -282,7 +280,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|skey_respond
 parameter_list|(
@@ -379,6 +376,24 @@ block|,
 name|skey_query
 block|,
 name|skey_respond
+block|,
+name|skey_free_ctx
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|KbdintDevice
+name|mm_skey_device
+init|=
+block|{
+literal|"skey"
+block|,
+name|skey_init_ctx
+block|,
+name|mm_skey_query
+block|,
+name|mm_skey_respond
 block|,
 name|skey_free_ctx
 block|}

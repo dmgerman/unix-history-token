@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sshconnect.h,v 1.13 2001/10/08 19:05:05 markus Exp $	*/
+comment|/*	$OpenBSD: sshconnect.h,v 1.17 2002/06/19 00:27:55 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,33 @@ directive|define
 name|SSHCONNECT_H
 end_define
 
+begin_typedef
+typedef|typedef
+name|struct
+name|Sensitive
+name|Sensitive
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|Sensitive
+block|{
+name|Key
+modifier|*
+modifier|*
+name|keys
+decl_stmt|;
+name|int
+name|nkeys
+decl_stmt|;
+name|int
+name|external_keysign
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 name|int
 name|ssh_connect
@@ -43,10 +70,6 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|passwd
-modifier|*
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -58,11 +81,8 @@ begin_function_decl
 name|void
 name|ssh_login
 parameter_list|(
-name|Key
+name|Sensitive
 modifier|*
-modifier|*
-parameter_list|,
-name|int
 parameter_list|,
 specifier|const
 name|char
@@ -139,11 +159,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|Key
+name|Sensitive
 modifier|*
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -163,11 +180,8 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|Key
+name|Sensitive
 modifier|*
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -181,6 +195,24 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Macros to raise/lower permissions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_START
+value|do {				\ 	int save_errno = errno;			\ 	(void)seteuid(original_effective_uid);	\ 	errno = save_errno;			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_END
+value|do {				\ 	int save_errno = errno;			\ 	(void)seteuid(original_real_uid);	\ 	errno = save_errno;			\ } while (0)
+end_define
 
 begin_endif
 endif|#

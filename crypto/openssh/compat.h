@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: compat.h,v 1.30 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: compat.h,v 1.32 2002/04/10 08:21:47 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -189,6 +189,20 @@ define|#
 directive|define
 name|SSH_BUG_DUMMYCHAN
 value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_EXTEOF
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_BUG_K5USER
+value|0x00400000
 end_define
 
 begin_function_decl

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth1.c,v 1.35 2002/02/03 17:53:25 markus Exp $"
+literal|"$OpenBSD: auth1.c,v 1.41 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -106,13 +106,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"misc.h"
+file|"uidswap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uidswap.h"
+file|"monitor_wrap.h"
 end_include
 
 begin_include
@@ -423,6 +423,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_PAM
+comment|/* XXX PRIVSEP */
 name|auth_pam_password
 argument_list|(
 name|authctxt
@@ -433,11 +434,14 @@ condition|)
 block|{
 else|#
 directive|else
+name|PRIVSEP
+argument_list|(
 name|auth_password
 argument_list|(
 name|authctxt
 argument_list|,
 literal|""
+argument_list|)
 argument_list|)
 block|)
 block|{
@@ -1009,6 +1013,7 @@ name|USE_PAM
 comment|/* Do PAM auth with password */
 name|authenticated
 operator|=
+comment|/* XXX PRIVSEP */
 name|auth_pam_password
 argument_list|(
 name|authctxt
@@ -1022,11 +1027,14 @@ comment|/* !USE_PAM */
 comment|/* Try authentication with the password. */
 name|authenticated
 operator|=
+name|PRIVSEP
+argument_list|(
 name|auth_password
 argument_list|(
 name|authctxt
 argument_list|,
 name|password
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1678,7 +1686,8 @@ comment|/*  * Performs authentication of an incoming connection.  Session key ha
 end_comment
 
 begin_function
-name|void
+name|Authctxt
+modifier|*
 name|do_authentication
 parameter_list|(
 name|void
@@ -1688,18 +1697,10 @@ name|Authctxt
 modifier|*
 name|authctxt
 decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|pw
-decl_stmt|;
 name|u_int
 name|ulen
 decl_stmt|;
 name|char
-modifier|*
-name|p
-decl_stmt|,
 modifier|*
 name|user
 decl_stmt|,
@@ -1747,7 +1748,27 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KRB5
 comment|/* XXX - SSH.com Kerberos v5 braindeath. */
+if|if
+condition|(
+operator|(
+name|datafellows
+operator|&
+name|SSH_BUG_K5USER
+operator|)
+operator|&&
+name|options
+operator|.
+name|kerberos_authentication
+condition|)
+block|{
+name|char
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1768,6 +1789,9 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|authctxt
 operator|=
 name|authctxt_new
@@ -1786,39 +1810,31 @@ operator|=
 name|style
 expr_stmt|;
 comment|/* Verify that the user is a valid user. */
+if|if
+condition|(
+operator|(
+name|authctxt
+operator|->
 name|pw
 operator|=
-name|getpwnam
+name|PRIVSEP
+argument_list|(
+name|getpwnamallow
 argument_list|(
 name|user
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pw
-operator|&&
-name|allowed_user
-argument_list|(
-name|pw
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
 name|authctxt
 operator|->
 name|valid
 operator|=
 literal|1
 expr_stmt|;
-name|pw
-operator|=
-name|pwcopy
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
-block|}
 else|else
-block|{
 name|debug
 argument_list|(
 literal|"do_authentication: illegal user %s"
@@ -1826,28 +1842,21 @@ argument_list|,
 name|user
 argument_list|)
 expr_stmt|;
-name|pw
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|authctxt
-operator|->
-name|pw
-operator|=
-name|pw
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_PAM
 if|if
 condition|(
+name|authctxt
+operator|->
 name|pw
 operator|!=
 name|NULL
 condition|)
 name|start_pam
 argument_list|(
+name|authctxt
+operator|->
 name|pw
 argument_list|)
 expr_stmt|;
@@ -1855,25 +1864,40 @@ endif|#
 directive|endif
 name|setproctitle
 argument_list|(
-literal|"%s"
+literal|"%s%s"
 argument_list|,
+name|authctxt
+operator|->
 name|pw
 condition|?
 name|user
 else|:
 literal|"unknown"
+argument_list|,
+name|use_privsep
+condition|?
+literal|" [net]"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are not running as root, the user must have the same uid as 	 * the server. 	 */
 if|if
 condition|(
+operator|!
+name|use_privsep
+operator|&&
 name|getuid
 argument_list|()
 operator|!=
 literal|0
 operator|&&
+name|authctxt
+operator|->
 name|pw
 operator|&&
+name|authctxt
+operator|->
 name|pw
 operator|->
 name|pw_uid
@@ -1904,12 +1928,11 @@ expr_stmt|;
 name|packet_write_wait
 argument_list|()
 expr_stmt|;
-comment|/* Perform session preparation. */
-name|do_authenticated
-argument_list|(
+return|return
+operator|(
 name|authctxt
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 

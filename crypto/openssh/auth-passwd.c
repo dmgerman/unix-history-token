@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-passwd.c,v 1.24 2002/03/04 12:43:06 markus Exp $"
+literal|"$OpenBSD: auth-passwd.c,v 1.27 2002/05/24 16:45:16 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -82,10 +82,6 @@ init|=
 name|authctxt
 operator|->
 name|pw
-decl_stmt|;
-name|char
-modifier|*
-name|encrypted_password
 decl_stmt|;
 comment|/* deny if no user. */
 if|if
@@ -241,8 +237,8 @@ else|else
 return|return
 literal|1
 return|;
-endif|#
-directive|endif
+else|#
+directive|else
 comment|/* Check for users with no password. */
 if|if
 condition|(
@@ -269,9 +265,13 @@ condition|)
 return|return
 literal|1
 return|;
+else|else
+block|{
 comment|/* Encrypt the candidate password using the proper salt. */
+name|char
+modifier|*
 name|encrypted_password
-operator|=
+init|=
 name|crypt
 argument_list|(
 name|password
@@ -298,8 +298,8 @@ name|pw_passwd
 else|:
 literal|"xx"
 argument_list|)
-expr_stmt|;
-comment|/* Authentication is accepted if the encrypted passwords are identical. */
+decl_stmt|;
+comment|/* 		 * Authentication is accepted if the encrypted passwords 		 * are identical. 		 */
 return|return
 operator|(
 name|strcmp
@@ -314,6 +314,9 @@ operator|==
 literal|0
 operator|)
 return|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
