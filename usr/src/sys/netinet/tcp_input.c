@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.33 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUBA_INCLUDE
+end_ifndef
 
 begin_include
 include|#
@@ -187,6 +193,31 @@ name|tcb
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|struct
+name|tcpcb
+modifier|*
+name|tcp_newtcpcb
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|sb_max
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TUBA_INCLUDE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -222,22 +253,6 @@ parameter_list|)
 value|((int)((a)-(b))>= 0)
 end_define
 
-begin_function_decl
-name|struct
-name|tcpcb
-modifier|*
-name|tcp_newtcpcb
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|sb_max
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Insert segment ti into reassembly queue of tcp with  * control block tp.  Return TH_FIN if reassembly now includes  * a segment with FIN.  The macro form does the common case inline  * (segment is the next to be received on an established connection,  * and the queue is empty), avoiding linkage into and removal  * from the queue and repetition of various conversions.  * Set DELACK for segments received in order, but ack immediately  * when segments are out of order (so fast retransmit can work).  */
 end_comment
@@ -259,6 +274,12 @@ name|flags
 parameter_list|)
 value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUBA_INCLUDE
+end_ifndef
 
 begin_expr_stmt
 name|tcp_reass
@@ -1079,6 +1100,9 @@ goto|goto
 name|drop
 goto|;
 block|}
+endif|#
+directive|endif
+comment|/* TUBA_INCLUDE */
 comment|/* 	 * Check that TCP offset makes sense, 	 * pull out TCP options and adjust length.		XXX 	 */
 name|off
 operator|=
@@ -5323,6 +5347,9 @@ name|so
 argument_list|)
 expr_stmt|;
 return|return;
+ifndef|#
+directive|ifndef
+name|TUBA_INCLUDE
 block|}
 end_block
 
@@ -6686,6 +6713,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TUBA_INCLUDE */
+end_comment
 
 begin_if
 if|#

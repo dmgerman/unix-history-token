@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_timer.c	7.21 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUBA_INCLUDE
+end_ifndef
 
 begin_include
 include|#
@@ -150,6 +156,15 @@ name|int
 name|tcp_maxidle
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TUBA_INCLUDE */
+end_comment
 
 begin_comment
 comment|/*  * Fast timeout routine for processing delayed acks  */
@@ -498,6 +513,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TUBA_INCLUDE
+end_ifndef
 
 begin_comment
 comment|/*  * Cancel all timers for TCP tp.  */
@@ -1077,6 +1098,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TUBA_INCLUDE */
+end_comment
 
 end_unit
 

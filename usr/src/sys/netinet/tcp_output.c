@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1935,6 +1935,28 @@ name|hdrlen
 operator|+
 name|len
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TUBA
+if|if
+condition|(
+name|tp
+operator|->
+name|t_tuba_pcb
+condition|)
+name|error
+operator|=
+name|tuba_output
+argument_list|(
+name|m
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+block|{
 operator|(
 operator|(
 expr|struct
@@ -2061,6 +2083,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 else|#
 directive|else
 name|error

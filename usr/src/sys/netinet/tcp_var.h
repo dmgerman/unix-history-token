@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_var.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -434,6 +434,11 @@ comment|/* when last updated */
 name|tcp_seq
 name|last_ack_sent
 decl_stmt|;
+comment|/* TUBA stuff */
+name|caddr_t
+name|t_tuba_pcb
+decl_stmt|;
+comment|/* next level down pcb for TCP over z */
 block|}
 struct|;
 end_struct
