@@ -4,6 +4,10 @@ comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 199
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Common FreeBSD configuration.     All FreeBSD architectures should include this file, which will specify    their commonalities.    Adapted from gcc/config/freebsd.h by     David O'Brien<obrien@FreeBSD.org>    Loren J. Rittle<ljrittle@acm.org>.  */
 end_comment
 
@@ -49,6 +53,16 @@ parameter_list|)
 define|\
 value|(DEFAULT_WORD_SWITCH_TAKES_ARG (STR)					\    || !strcmp ((STR), "rpath") || !strcmp ((STR), "rpath-link")		\    || !strcmp ((STR), "soname") || !strcmp ((STR), "defsym") 		\    || !strcmp ((STR), "assert") || !strcmp ((STR), "dynamic-linker"))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FREEBSD_NATIVE
+end_ifndef
+
+begin_comment
+comment|/* these bits are here to reduce merge diffs, but I don't want to acutally use the bits right now */
+end_comment
 
 begin_if
 if|#
@@ -153,6 +167,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* FREEBSD_NATIVE */
+end_comment
+
+begin_comment
+comment|/* Place spaces around this string.  We depend on string splicing to produce    the final CPP_PREDEFINES value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBSD_CPP_PREDEFINES
+define|\
+value|"-D__FreeBSD__=5 -D__FreeBSD_cc_version=500003 -Dunix -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! FREEBSD_NATIVE */
+end_comment
+
 begin_comment
 comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC     option `-posix', and PIC issues.  */
 end_comment
@@ -161,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_CPP_SPEC
-value|"							\   %(cpp_cpu)								\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{posix:-D_POSIX_SOURCE}"
+value|"							\   %(cpp_cpu)								\   %{!maout: -D__ELF__}							\   %{munderscores: -D__UNDERSCORES__}					\   %{maout: %{!mno-underscores: -D__UNDERSCORES__}}			\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -214,12 +258,18 @@ else|#
 directive|else
 end_else
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_if
 if|#
 directive|if
-name|FBSD_MAJOR
+name|__FreeBSD_version
 operator|>=
-literal|5
+literal|500016
 end_if
 
 begin_define
