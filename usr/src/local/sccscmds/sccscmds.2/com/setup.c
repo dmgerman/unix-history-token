@@ -5,18 +5,15 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|setup
-literal|2.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)setup.c	1.3	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|setup
@@ -53,8 +50,9 @@ name|rap
 decl_stmt|;
 name|int
 name|first_app
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 name|pkt
 operator|->
 name|p_apply
@@ -434,8 +432,7 @@ condition|)
 name|ap
 operator|->
 name|a_reason
-operator|=
-operator||
+operator||=
 name|reason
 expr_stmt|;
 elseif|else
@@ -457,8 +454,7 @@ expr_stmt|;
 name|ap
 operator|->
 name|a_reason
-operator|=
-operator||
+operator||=
 name|reason
 expr_stmt|;
 block|}

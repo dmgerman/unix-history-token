@@ -5,18 +5,15 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|getline
-literal|2.1.1.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)getline.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Routine to read a line into the packet.  The main reason for 	it is to make sure that pkt->p_wrttn gets turned off, 	and to increment pkt->p_slnno. */
@@ -114,8 +111,7 @@ control|)
 name|pkt
 operator|->
 name|p_chash
-operator|=
-operator|+
+operator|+=
 operator|*
 name|p
 operator|++

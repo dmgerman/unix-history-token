@@ -5,18 +5,15 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|dohist
-literal|2.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)dohist.c	1.3	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -913,8 +910,7 @@ literal|"out of space (co22)"
 argument_list|)
 expr_stmt|;
 name|stind
-operator|=
-operator|+
+operator|+=
 name|n
 expr_stmt|;
 return|return

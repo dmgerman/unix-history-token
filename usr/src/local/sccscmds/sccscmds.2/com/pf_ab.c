@@ -5,23 +5,15 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|pf_ab
-operator|.
-name|c
-literal|1.3
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)pf_ab.c	1.4	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|pf_ab
@@ -257,8 +249,7 @@ name|p
 condition|)
 return|return;
 name|p
-operator|=
-operator|+
+operator|+=
 literal|2
 expr_stmt|;
 name|xp

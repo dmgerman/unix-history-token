@@ -17,27 +17,25 @@ parameter_list|)
 value|fprintf(pkt->p_stdout,msgstr,s,pkt->p_glnno,help)
 end_define
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|rdmod
-literal|2.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)rdmod.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|msgstr
 index|[]
+init|=
 literal|"Inex conflict %s at line %u (%s)\n"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|readmod

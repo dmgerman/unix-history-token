@@ -5,18 +5,15 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|putline
-literal|2.1.1.1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)putline.c	1.2	%G%"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* 	Routine to write out either the current line in the packet 	(if newline is zero) or the line specified by newline. 	A line is actually written (and the x-file is only 	opened) if pkt->p_upd is non-zero.  When the current line from  	the packet is written, pkt->p_wrttn is set non-zero, and 	further attempts to write it are ignored.  When a line is 	read into the packet, pkt->p_wrttn must be turned off. */
@@ -197,8 +194,7 @@ condition|)
 name|pkt
 operator|->
 name|p_nhash
-operator|=
-operator|+
+operator|+=
 operator|*
 name|p
 operator|++
@@ -337,8 +333,7 @@ control|)
 name|pkt
 operator|->
 name|p_nhash
-operator|=
-operator|+
+operator|+=
 operator|(
 operator|*
 name|p
@@ -361,8 +356,7 @@ control|)
 name|pkt
 operator|->
 name|p_nhash
-operator|=
-operator|+
+operator|+=
 operator|(
 operator|*
 name|p
@@ -385,8 +379,7 @@ control|)
 name|pkt
 operator|->
 name|p_nhash
-operator|=
-operator|+
+operator|+=
 operator|(
 operator|*
 name|p

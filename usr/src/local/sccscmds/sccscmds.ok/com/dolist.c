@@ -5,29 +5,25 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|dolist
-operator|.
-name|c
-literal|4.2
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_decl_stmt
+specifier|static
+name|char
+name|Sccsid
+index|[]
+init|=
+literal|"@(#)dolist.c	4.3	%G%"
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|br
 index|[]
+init|=
 literal|"bad range (co12)"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|dolist
@@ -403,14 +399,15 @@ block|}
 block|}
 end_block
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 name|char
 name|dls
 index|[]
+init|=
 literal|"delta list syntax (co13)"
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|getasid
