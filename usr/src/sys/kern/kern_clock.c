@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.2	%H%	*/
+comment|/*	kern_clock.c	3.3	%H%	*/
 end_comment
 
 begin_include
@@ -93,6 +93,7 @@ name|KPROF
 end_ifdef
 
 begin_decl_stmt
+name|unsigned
 name|short
 name|kcount
 index|[
@@ -1028,7 +1029,7 @@ operator|&
 literal|0x7fffffff
 operator|)
 operator|/
-literal|8
+literal|4
 decl_stmt|;
 if|if
 condition|(
@@ -1040,11 +1041,21 @@ name|indx
 operator|<
 literal|20000
 condition|)
+if|if
+condition|(
+operator|++
 name|kcount
 index|[
 name|indx
 index|]
-operator|++
+operator|==
+literal|0
+condition|)
+operator|--
+name|kcount
+index|[
+name|indx
+index|]
 expr_stmt|;
 block|}
 endif|#
