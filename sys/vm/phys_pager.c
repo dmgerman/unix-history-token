@@ -224,6 +224,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|phys_pager_alloc_lock
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 		 * Look up pager, creating as necessary. 		 */
 name|object
 operator|=
@@ -322,6 +326,9 @@ block|}
 if|if
 condition|(
 name|phys_pager_alloc_lock
+operator|==
+operator|-
+literal|1
 condition|)
 name|wakeup
 argument_list|(
