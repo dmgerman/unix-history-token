@@ -236,7 +236,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_edreg.h>
+file|<dev/ed/if_edreg.h>
 end_include
 
 begin_include
