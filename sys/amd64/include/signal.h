@@ -56,15 +56,23 @@ begin_comment
 comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|osigset_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
-name|sigcontext
+name|osigcontext
 block|{
 name|int
 name|sc_onstack
 decl_stmt|;
 comment|/* sigstack state to restore */
-name|int
+name|osigset_t
 name|sc_mask
 decl_stmt|;
 comment|/* signal mask to restore */

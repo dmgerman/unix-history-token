@@ -16,12 +16,6 @@ name|_MACHINE_FRAME_H_
 value|1
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
-end_include
-
 begin_comment
 comment|/*  * System stack frames.  */
 end_comment
@@ -328,52 +322,6 @@ name|cf_esp
 decl_stmt|;
 name|int
 name|cf_ss
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Signal frame, arguments passed to application signal handlers.  */
-end_comment
-
-begin_struct
-struct|struct
-name|sigframe
-block|{
-comment|/*  	 * The first three members may be used by applications. 	 */
-name|register_t
-name|sf_signum
-decl_stmt|;
-comment|/*  	 * Either 'int' for old-style FreeBSD handler or 'siginfo_t *' 	 * pointing to sf_siginfo for SA_SIGINFO handlers.  	 */
-name|register_t
-name|sf_arg2
-decl_stmt|;
-comment|/* Points to sf_siginfo.si_sc. */
-name|register_t
-name|sf_scp
-decl_stmt|;
-comment|/*  	 * The following arguments are not constrained  by the  	 * function call protocol. 	 * Applications are not supposed to access these members, 	 * except using the pointers we provide in the first three 	 * arguments.  	 */
-name|char
-modifier|*
-name|sf_addr
-decl_stmt|;
-union|union
-block|{
-name|__siginfohandler_t
-modifier|*
-name|sf_action
-decl_stmt|;
-name|__sighandler_t
-modifier|*
-name|sf_handler
-decl_stmt|;
-block|}
-name|sf_ahu
-union|;
-comment|/* In the SA_SIGINFO case, sf_arg2 points here. */
-name|siginfo_t
-name|sf_siginfo
 decl_stmt|;
 block|}
 struct|;

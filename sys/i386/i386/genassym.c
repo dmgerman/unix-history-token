@@ -198,6 +198,12 @@ directive|include
 file|<machine/vm86.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sigframe.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -866,11 +872,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tSIGF_SC %#x\n"
+literal|"#define\tSIGF_SIGRET %#x\n"
 argument_list|,
 name|OS
 argument_list|(
 name|sigframe
+argument_list|,
+name|sf_sigreturn
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSIGF_SC %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|osigframe
 argument_list|,
 name|sf_siginfo
 operator|.
@@ -880,11 +898,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tSIGF_UC %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|sigframe
+argument_list|,
+name|sf_uc
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tSC_PS %#x\n"
 argument_list|,
 name|OS
 argument_list|(
-name|sigcontext
+name|osigcontext
 argument_list|,
 name|sc_ps
 argument_list|)
@@ -896,7 +926,7 @@ literal|"#define\tSC_FS %#x\n"
 argument_list|,
 name|OS
 argument_list|(
-name|sigcontext
+name|osigcontext
 argument_list|,
 name|sc_fs
 argument_list|)
@@ -908,9 +938,39 @@ literal|"#define\tSC_GS %#x\n"
 argument_list|,
 name|OS
 argument_list|(
-name|sigcontext
+name|osigcontext
 argument_list|,
 name|sc_gs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tUC_EFLAGS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|__ucontext
+argument_list|,
+name|uc_mcontext
+operator|.
+name|mc_tf
+operator|.
+name|tf_eflags
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tUC_GS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|__ucontext
+argument_list|,
+name|uc_mcontext
+operator|.
+name|mc_gs
 argument_list|)
 argument_list|)
 expr_stmt|;

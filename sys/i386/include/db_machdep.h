@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/trap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/psl.h>
 end_include
 
