@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -107,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|"ktrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/cpu.h"
 end_include
 
 begin_include
@@ -3176,8 +3182,10 @@ name|p
 operator|==
 name|curproc
 condition|)
-name|aston
-argument_list|()
+name|signotify
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -4242,8 +4250,10 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_kproc
 operator|.
 name|kp_proc
@@ -4260,8 +4270,10 @@ argument_list|(
 name|p
 argument_list|,
 operator|&
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_kproc
 operator|.
 name|kp_eproc
@@ -4273,8 +4285,10 @@ name|HPUXCOMPAT
 comment|/* 	 * BLETCH!  If we loaded from an HPUX format binary file 	 * we have to dump an HPUX style user struct so that the 	 * HPUX debuggers can grok it. 	 */
 if|if
 condition|(
-name|u
-operator|.
+name|p
+operator|->
+name|p_addr
+operator|->
 name|u_pcb
 operator|.
 name|pcb_flags
@@ -4304,7 +4318,6 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-operator|&
 name|p
 operator|->
 name|p_addr
@@ -4331,14 +4344,9 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -4389,7 +4397,7 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)
@@ -4408,6 +4416,9 @@ name|UIO_WRITE
 argument_list|,
 name|vp
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|trunc_page
 argument_list|(
 name|USRSTACK
@@ -4457,7 +4468,7 @@ operator|(
 name|int
 operator|*
 operator|)
-literal|0
+name|NULL
 argument_list|,
 name|p
 argument_list|)
