@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All
 end_comment
 
 begin_comment
-comment|/*	@(#)globals.h	2.3	(Berkeley)	%G%	*/
+comment|/*	@(#)globals.h	2.4	(Berkeley)	%G%	*/
 end_comment
 
 begin_include
@@ -78,9 +78,39 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|SAMPLEINTVL
+value|240
+end_define
+
+begin_comment
+comment|/* synch() freq for master, sec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXADJ
+value|20
+end_define
+
+begin_comment
+comment|/* max correction (sec) for adjtime */
+end_comment
+
+begin_comment
+comment|/*  * Parameters for network time measurement  * of each host using ICMP timestamp requests.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RANGE
 value|20
 end_define
+
+begin_comment
+comment|/* best expected round-trip time, ms */
+end_comment
 
 begin_define
 define|#
@@ -89,6 +119,10 @@ name|MSGS
 value|5
 end_define
 
+begin_comment
+comment|/* # of timestamp replies to average */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -96,19 +130,9 @@ name|TRIALS
 value|10
 end_define
 
-begin_define
-define|#
-directive|define
-name|SAMPLEINTVL
-value|240
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXSEQ
-value|30000
-end_define
+begin_comment
+comment|/* max # of timestamp echos sent */
+end_comment
 
 begin_define
 define|#
@@ -166,6 +190,21 @@ name|ON
 value|1
 end_define
 
+begin_comment
+comment|/*  * Global and per-network states.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOMASTER
+value|0
+end_define
+
+begin_comment
+comment|/* no master on any network */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -205,7 +244,7 @@ begin_define
 define|#
 directive|define
 name|NHOSTS
-value|30
+value|100
 end_define
 
 begin_comment
