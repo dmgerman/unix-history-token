@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chgrp.c	4.4 83/01/20"
+literal|"@(#)chgrp.c	4.5 83/04/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,12 @@ name|status
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* VARARGS */
 end_comment
@@ -150,13 +156,42 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
+operator|>
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"-f"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|fflag
+operator|++
+expr_stmt|;
+name|argv
+operator|++
+operator|,
+name|argc
+operator|--
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
 operator|<
 literal|2
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usage: chgrp gid file ...\n"
+literal|"usage: chgrp [-f] gid file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -342,6 +377,15 @@ condition|)
 goto|goto
 name|ok
 goto|;
+if|if
+condition|(
+name|fflag
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -411,6 +455,11 @@ operator|.
 name|st_uid
 condition|)
 block|{
+if|if
+condition|(
+name|fflag
+condition|)
+continue|continue;
 name|fprintf
 argument_list|(
 name|stderr
