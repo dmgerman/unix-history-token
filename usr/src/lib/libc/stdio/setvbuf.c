@@ -143,7 +143,7 @@ operator|(
 name|EOF
 operator|)
 return|;
-comment|/* 	 * Write current buffer, if any.  Discard unread input, cancel 	 * line buffering, and free old buffer if malloc()ed. 	 */
+comment|/* 	 * Write current buffer, if any.  Discard unread input (including 	 * ungetc data), cancel line buffering, and free old buffer if 	 * malloc()ed.  We also clear any eof condition, as if this were 	 * a seek. 	 */
 name|ret
 operator|=
 literal|0
@@ -152,6 +152,18 @@ operator|(
 name|void
 operator|)
 name|__sflush
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|HASUB
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|FREEUB
 argument_list|(
 name|fp
 argument_list|)
@@ -204,6 +216,8 @@ operator||
 name|__SOPT
 operator||
 name|__SNPT
+operator||
+name|__SEOF
 operator|)
 expr_stmt|;
 comment|/* If setting unbuffered mode, skip all the hard work. */
@@ -362,7 +376,7 @@ name|flags
 operator||=
 name|__SNPT
 expr_stmt|;
-comment|/* 	 * Fix up the FILE fields, and set __cleanup for output flush on 	 * exit (since we are buffered in some way).  If in r/w mode, go 	 * to the intermediate state, so that everyone has to call 	 * __srefill or __swsetup on the first operation -- it is more 	 * trouble than it is worth to set things up correctly here. 	 */
+comment|/* 	 * Fix up the FILE fields, and set __cleanup for output flush on 	 * exit (since we are buffered in some way). 	 */
 if|if
 condition|(
 name|mode
@@ -372,27 +386,6 @@ condition|)
 name|flags
 operator||=
 name|__SLBF
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|__SRW
-condition|)
-name|flags
-operator|&=
-operator|~
-operator|(
-name|__SRD
-operator||
-name|__SWR
-operator|)
-expr_stmt|;
-name|fp
-operator|->
-name|_w
-operator|=
-literal|0
 expr_stmt|;
 name|fp
 operator|->
@@ -425,12 +418,58 @@ name|_size
 operator|=
 name|size
 expr_stmt|;
+comment|/* fp->_lbfsize is still 0 */
+if|if
+condition|(
+name|flags
+operator|&
+name|__SWR
+condition|)
+block|{
+comment|/* 		 * Begin or continue writing: see __swsetup().  Note 		 * that __SNBF is impossible (it was handled earlier). 		 */
+if|if
+condition|(
+name|flags
+operator|&
+name|__SLBF
+condition|)
+block|{
+name|fp
+operator|->
+name|_w
+operator|=
+literal|0
+expr_stmt|;
 name|fp
 operator|->
 name|_lbfsize
 operator|=
+operator|-
+name|fp
+operator|->
+name|_bf
+operator|.
+name|_size
+expr_stmt|;
+block|}
+else|else
+name|fp
+operator|->
+name|_w
+operator|=
+name|size
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* begin/continue reading, or stay in intermediate state */
+name|fp
+operator|->
+name|_w
+operator|=
 literal|0
 expr_stmt|;
+block|}
 name|__cleanup
 operator|=
 name|_cleanup
