@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diacrit.c	2.1 (CWI) 85/07/18"
+literal|"@(#)diacrit.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,8 +30,51 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|Dvshift
+decl_stmt|,
+name|Dhshift
+decl_stmt|,
+name|Dh2shift
+decl_stmt|,
+name|Dheight
+decl_stmt|,
+name|Barv
+decl_stmt|,
+name|Barh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Vec
+decl_stmt|,
+modifier|*
+name|Dyad
+decl_stmt|,
+modifier|*
+name|Hat
+decl_stmt|,
+modifier|*
+name|Tilde
+decl_stmt|,
+modifier|*
+name|Dot
+decl_stmt|,
+modifier|*
+name|Dotdot
+decl_stmt|,
+modifier|*
+name|Utilde
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|diacrit
@@ -104,24 +147,56 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* vert shift if high */
+if|if
+condition|(
+name|type
+operator|==
+name|HIGHBAR
+condition|)
 name|printf
 argument_list|(
-literal|".if \\n(ct>1 .nr 10 \\n(10+.25m\n"
+literal|".nr 10 \\n(10+%gm\n"
+argument_list|,
+name|Dvshift
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|LOWBAR
+condition|)
+name|printf
+argument_list|(
+literal|".nr 10 0\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|".if \\n(ct>1 .nr 10 \\n(10+%gm\n"
+argument_list|,
+name|Dvshift
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".nr %d .025m\n"
+literal|".nr %d %gm\n"
 argument_list|,
 name|t
+argument_list|,
+name|Dhshift
 argument_list|)
 expr_stmt|;
 comment|/* horiz shift if high */
 name|printf
 argument_list|(
-literal|".if \\n(ct>1 .nr %d .05m\n"
+literal|".if \\n(ct>1 .nr %d %gm\n"
 argument_list|,
 name|t
+argument_list|,
+name|Dh2shift
 argument_list|)
 expr_stmt|;
 comment|/* was .1 and .15 */
@@ -135,9 +210,11 @@ name|VEC
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.45m'\\s-1\\(->\\s0\\v'.45m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Vec
 argument_list|)
 expr_stmt|;
 break|break;
@@ -146,9 +223,11 @@ name|DYAD
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.45m'\\s-1\\z\\(<-\\|\\(->\\s0\\v'.45m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Dyad
 argument_list|)
 expr_stmt|;
 break|break;
@@ -157,9 +236,11 @@ name|HAT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.1m'\\s+1^\\s0\\v'.1m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Hat
 argument_list|)
 expr_stmt|;
 break|break;
@@ -168,9 +249,11 @@ name|TILDE
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.1m'\\s+1~\\s0\\v'.1m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Tilde
 argument_list|)
 expr_stmt|;
 break|break;
@@ -179,9 +262,11 @@ name|DOT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.67m'.\\v'.67m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Dot
 argument_list|)
 expr_stmt|;
 break|break;
@@ -190,22 +275,43 @@ name|DOTDOT
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.67m'..\\v'.67m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Dotdot
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BAR
 case|:
+case|case
+name|LOWBAR
+case|:
+case|case
+name|HIGHBAR
+case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'-.68m'\\h'.05m'\\l'\\n(%du-.1m'\\h'.05m'\\v'.68m'\n"
+literal|".ds %d \\v'%gm'\\h'%gm'\\l'\\n(%du-%gm'\\h'%gm'\\v'%gm'\n"
 argument_list|,
 name|c
 argument_list|,
+operator|-
+name|Barv
+argument_list|,
+name|Barh
+argument_list|,
 name|p1
+argument_list|,
+literal|2
+operator|*
+name|Barh
+argument_list|,
+name|Barh
+argument_list|,
+name|Barv
 argument_list|)
 expr_stmt|;
 break|break;
@@ -254,9 +360,11 @@ name|UTILDE
 case|:
 name|printf
 argument_list|(
-literal|".ds %d \\v'1.0m'\\s+2~\\s-2\\v'-1.0m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|c
+argument_list|,
+name|Utilde
 argument_list|)
 expr_stmt|;
 name|printf
@@ -283,7 +391,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".if \\n(ct%%2=1 .nr 10 0\\n(10-.25m\n"
+literal|".if \\n(ct%%2=1 .nr 10 0\\n(10-%gm\n"
+argument_list|,
+name|Dvshift
 argument_list|)
 expr_stmt|;
 break|break;
@@ -356,7 +466,7 @@ index|]
 operator|+=
 name|EM
 argument_list|(
-literal|0.25
+name|Dheight
 argument_list|,
 name|ps
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)paren.c	2.1 (CWI) 85/07/18"
+literal|"@(#)paren.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,10 @@ decl_stmt|,
 name|b1
 decl_stmt|,
 name|v
+decl_stmt|;
+specifier|extern
+name|float
+name|Parenbase
 decl_stmt|;
 name|h1
 operator|=
@@ -190,7 +194,7 @@ literal|2
 operator|-
 name|EM
 argument_list|(
-literal|0.4
+name|Parenbase
 argument_list|,
 name|ps
 argument_list|)

@@ -122,6 +122,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|dps_set
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => -p option used */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|gsize
 decl_stmt|;
 end_decl_stmt
@@ -173,17 +184,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* typesetter name for -T... */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|res
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resolution of output device */
 end_comment
 
 begin_decl_stmt
@@ -582,14 +582,18 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|DPS
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+modifier|*
+name|ABSPS
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

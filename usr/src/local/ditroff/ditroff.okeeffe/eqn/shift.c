@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shift.c	2.1 (CWI) 85/07/18"
+literal|"@(#)shift.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
 
 begin_macro
@@ -109,6 +109,40 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|Subbase
+decl_stmt|,
+name|Supshift
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Sub1space
+decl_stmt|,
+modifier|*
+name|Sup1space
+decl_stmt|,
+modifier|*
+name|Sub2space
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|SS1space
+decl_stmt|,
+modifier|*
+name|SS2space
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|bshiftb
@@ -216,7 +250,7 @@ name|b1
 operator|+
 name|EM
 argument_list|(
-literal|0.2
+name|Subbase
 argument_list|,
 name|ps
 argument_list|)
@@ -266,7 +300,7 @@ name|ROM
 condition|)
 name|sh1
 operator|=
-literal|"\\|"
+name|Sub1space
 expr_stmt|;
 block|}
 else|else
@@ -277,7 +311,7 @@ name|d1
 operator|=
 name|EM
 argument_list|(
-literal|0.2
+name|Subbase
 argument_list|,
 name|subps
 argument_list|)
@@ -293,7 +327,7 @@ name|shval
 operator|=
 operator|-
 operator|(
-literal|0.4
+name|Supshift
 operator|*
 operator|(
 name|h1
@@ -306,7 +340,7 @@ name|b2
 expr_stmt|;
 if|if
 condition|(
-literal|0.4
+name|Supshift
 operator|*
 operator|(
 name|h1
@@ -349,7 +383,11 @@ literal|0
 argument_list|,
 name|h2
 operator|-
-literal|0.6
+operator|(
+literal|1
+operator|-
+name|Supshift
+operator|)
 operator|*
 operator|(
 name|h1
@@ -369,7 +407,7 @@ name|ITAL
 condition|)
 name|sh1
 operator|=
-literal|"\\|"
+name|Sup1space
 expr_stmt|;
 block|}
 name|dprintf
@@ -401,7 +439,7 @@ argument_list|)
 expr_stmt|;
 name|sh2
 operator|=
-literal|"\\^"
+name|Sub2space
 expr_stmt|;
 name|printf
 argument_list|(
@@ -575,7 +613,7 @@ name|subsh
 operator|=
 name|EM
 argument_list|(
-literal|0.2
+name|Subbase
 argument_list|,
 name|ps
 argument_list|)
@@ -614,7 +652,7 @@ expr_stmt|;
 name|supsh
 operator|=
 operator|-
-literal|0.4
+name|Supshift
 operator|*
 operator|(
 name|h1
@@ -628,7 +666,7 @@ name|d2
 operator|=
 name|EM
 argument_list|(
-literal|0.2
+name|Subbase
 argument_list|,
 name|subps
 argument_list|)
@@ -637,7 +675,11 @@ if|if
 condition|(
 name|h3
 operator|<
-literal|0.6
+operator|(
+literal|1
+operator|-
+name|Supshift
+operator|)
 operator|*
 operator|(
 name|h1
@@ -692,7 +734,11 @@ literal|0
 argument_list|,
 name|h3
 operator|-
-literal|0.6
+operator|(
+literal|1
+operator|-
+name|Supshift
+operator|)
 operator|*
 operator|(
 name|h1
@@ -728,18 +774,17 @@ name|yyval
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* if (rfont[p1] == ITAL&& lfont[p2] == ROM) */
-comment|/* if (lfont[p2] == ROM) */
 name|printf
 argument_list|(
-literal|".ds %d \\^\\*(%d\n"
+literal|".ds %d %s\\*(%d\n"
 argument_list|,
 name|p2
+argument_list|,
+name|SS1space
 argument_list|,
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* if (rfont[p2] == ITAL) 		printf(".as %d \\^\n", p2); */
 name|nrwid
 argument_list|(
 name|p2
@@ -751,9 +796,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\^\\*(%d\n"
+literal|".ds %d %s\\*(%d\n"
 argument_list|,
 name|p3
+argument_list|,
+name|SS2space
 argument_list|,
 name|p3
 argument_list|)
@@ -791,16 +838,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".as %d \\v'%gm'%s\\*(%d\\h'-\\n(%du'\\v'%gm'\\\n"
+literal|".as %d %s\\v'%gm'\\*(%d\\v'%gm'\\h'-\\n(%du'\\\n"
 argument_list|,
 name|p1
-argument_list|,
-name|REL
-argument_list|(
-name|subsh
-argument_list|,
-name|ps
-argument_list|)
 argument_list|,
 name|DPS
 argument_list|(
@@ -809,7 +849,12 @@ argument_list|,
 name|subps
 argument_list|)
 argument_list|,
-name|p2
+name|REL
+argument_list|(
+name|subsh
+argument_list|,
+name|subps
+argument_list|)
 argument_list|,
 name|p2
 argument_list|,
@@ -817,18 +862,33 @@ name|REL
 argument_list|(
 operator|-
 name|subsh
-operator|+
-name|supsh
 argument_list|,
 name|subps
 argument_list|)
+argument_list|,
+name|p2
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\\*(%d\\h'-\\n(%du+\\n(%du'%s\\v'%gm'\\^\n"
+literal|"\\v'%gm'\\*(%d\\v'%gm'\\h'-\\n(%du+\\n(%du'%s%s\n"
+argument_list|,
+name|REL
+argument_list|(
+name|supsh
+argument_list|,
+name|subps
+argument_list|)
 argument_list|,
 name|p3
+argument_list|,
+name|REL
+argument_list|(
+operator|-
+name|supsh
+argument_list|,
+name|subps
+argument_list|)
 argument_list|,
 name|p3
 argument_list|,
@@ -841,13 +901,7 @@ argument_list|,
 name|ps
 argument_list|)
 argument_list|,
-name|REL
-argument_list|(
-operator|-
-name|supsh
-argument_list|,
-name|ps
-argument_list|)
+name|Sub2space
 argument_list|)
 expr_stmt|;
 if|if

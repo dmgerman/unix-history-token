@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	2.1 (CWI) 85/07/18"
+literal|"@(#)input.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -1142,11 +1142,13 @@ name|ep
 operator|=
 name|ebuf
 expr_stmt|;
-return|return
 operator|*
 name|ep
 operator|++
 operator|=
+name|c
+expr_stmt|;
+return|return
 name|c
 return|;
 block|}
@@ -1458,7 +1460,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 else|else
-name|eqnexit
+name|exit
 argument_list|(
 literal|1
 argument_list|)
@@ -1499,6 +1501,14 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+name|ep
+operator|==
+name|ebuf
+condition|)
+return|return;
+comment|/* no context */
 name|p
 operator|=
 name|ep

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	2.1 (CWI) 85/07/18"
+literal|"@(#)glob.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* default change in ps */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dps_set
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => -p option used */
 end_comment
 
 begin_decl_stmt
@@ -286,10 +298,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  *	char	*typesetter = "202";  *	int	ttype	= DEV202;	/* type of typesetter today  *	int	res	= 972;		/* resolution of typesetter; dflt = 202  *	int	minsize	= 5;		/* min size it can handle; ditto */
-end_comment
-
 begin_decl_stmt
 name|int
 name|synerr
@@ -309,6 +317,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* height in ems at gsize */
+end_comment
+
 begin_decl_stmt
 name|float
 name|ebase
@@ -318,6 +330,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* base: where one enters above bottom */
+end_comment
+
 begin_decl_stmt
 name|int
 name|eps
@@ -326,6 +342,10 @@ literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* unused right now */
+end_comment
 
 begin_decl_stmt
 name|int

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)font.c	2.1 (CWI) 85/07/18"
+literal|"@(#)font.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,21 +467,25 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|float
+name|Fatshift
+decl_stmt|;
 name|yyval
 operator|=
 name|p
 expr_stmt|;
-comment|/* nrwid(p, ps, p); */
-comment|/* printf(".ds %d \\*(%d\\h'-\\n(%du+0.05m'\\*(%d\n", p, p, p, p); */
 name|printf
 argument_list|(
-literal|".ds %d \\*(%d\\h'-\\w'\\*(%d'u+0.05m'\\*(%d\n"
+literal|".ds %d \\*(%d\\h'-\\w'\\*(%d'u+%gm'\\*(%d\n"
 argument_list|,
 name|p
 argument_list|,
 name|p
 argument_list|,
 name|p
+argument_list|,
+name|Fatshift
 argument_list|,
 name|p
 argument_list|)

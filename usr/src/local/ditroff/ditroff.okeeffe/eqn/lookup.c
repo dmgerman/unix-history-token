@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	2.1 (CWI) 85/07/18"
+literal|"@(#)lookup.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
 
 begin_define
@@ -148,6 +148,14 @@ block|,
 literal|"bar"
 block|,
 name|BAR
+block|,
+literal|"lowbar"
+block|,
+name|LOWBAR
+block|,
+literal|"highbar"
+block|,
+name|HIGHBAR
 block|,
 literal|"tilde"
 block|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)integral.c	2.1 (CWI) 85/07/18"
+literal|"@(#)integral.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,8 +30,40 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|Intps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|Intht
+decl_stmt|,
+name|Intbase
+decl_stmt|,
+name|Int1h
+decl_stmt|,
+name|Int1v
+decl_stmt|,
+name|Int2h
+decl_stmt|,
+name|Int2v
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Integral
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|integral
@@ -54,11 +86,19 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|".ds %d \\h'-0.4m'\\v'0.2m'\\*(%d\\v'-0.2m'\n"
+literal|".ds %d \\h'%gm'\\v'%gm'\\*(%d\\v'%gm'\n"
 argument_list|,
 name|p1
 argument_list|,
+operator|-
+name|Int1h
+argument_list|,
+name|Int1v
+argument_list|,
 name|p1
+argument_list|,
+operator|-
+name|Int1v
 argument_list|)
 expr_stmt|;
 if|if
@@ -69,11 +109,18 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|".ds %d \\v'-0.1m'\\^\\*(%d\\v'0.1m'\n"
+literal|".ds %d \\v'%gm'\\h'%gm'\\*(%d\\v'%gm'\n"
 argument_list|,
 name|p2
 argument_list|,
+operator|-
+name|Int2v
+argument_list|,
+name|Int2h
+argument_list|,
 name|p2
+argument_list|,
+name|Int2v
 argument_list|)
 expr_stmt|;
 if|if
@@ -168,9 +215,11 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|".ds %d \\v'.1m'\\s+4\\(is\\s-4\\v'-.1m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|yyval
+argument_list|,
+name|Integral
 argument_list|)
 expr_stmt|;
 name|eht
@@ -180,11 +229,11 @@ index|]
 operator|=
 name|EM
 argument_list|(
-literal|1.15
+name|Intht
 argument_list|,
 name|ps
 operator|+
-literal|4
+name|Intps
 argument_list|)
 expr_stmt|;
 name|ebase
@@ -194,7 +243,7 @@ index|]
 operator|=
 name|EM
 argument_list|(
-literal|0.3
+name|Intbase
 argument_list|,
 name|ps
 argument_list|)

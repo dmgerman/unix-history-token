@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)text.c	2.1 (CWI) 85/07/18"
+literal|"@(#)text.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
 
 begin_include
@@ -800,21 +800,16 @@ break|break;
 case|case
 literal|'/'
 case|:
-if|if
-condition|(
-name|rf
-operator|==
-name|ITAL
-condition|)
-name|shim
+name|halfshim
 argument_list|()
 expr_stmt|;
-name|name4
+name|cadd
 argument_list|(
-literal|'s'
-argument_list|,
-literal|'l'
+literal|'/'
 argument_list|)
+expr_stmt|;
+name|halfshim
+argument_list|()
 expr_stmt|;
 break|break;
 case|case

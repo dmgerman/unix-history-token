@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eqnbox.c	2.1 (CWI) 85/07/18"
+literal|"@(#)eqnbox.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|sh
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|IRspace
 decl_stmt|;
 name|yyval
 operator|=
@@ -140,7 +145,7 @@ name|ROM
 condition|)
 name|sh
 operator|=
-literal|"\\^"
+name|IRspace
 expr_stmt|;
 comment|/* was \| */
 else|else

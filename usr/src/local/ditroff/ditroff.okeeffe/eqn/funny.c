@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)funny.c	2.1 (CWI) 85/07/18"
+literal|"@(#)funny.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,8 +30,41 @@ end_include
 begin_include
 include|#
 directive|include
-file|"e.def"
+file|"y.tab.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|Funnyps
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|float
+name|Funnyht
+decl_stmt|,
+name|Funnybase
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|Sum
+decl_stmt|,
+modifier|*
+name|Union
+decl_stmt|,
+modifier|*
+name|Inter
+decl_stmt|,
+modifier|*
+name|Prod
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|funny
@@ -67,7 +100,7 @@ name|SUM
 case|:
 name|f
 operator|=
-literal|"\\(*S"
+name|Sum
 expr_stmt|;
 break|break;
 case|case
@@ -75,7 +108,7 @@ name|UNION
 case|:
 name|f
 operator|=
-literal|"\\(cu"
+name|Union
 expr_stmt|;
 break|break;
 case|case
@@ -84,7 +117,7 @@ case|:
 comment|/* intersection */
 name|f
 operator|=
-literal|"\\(ca"
+name|Inter
 expr_stmt|;
 break|break;
 case|case
@@ -92,7 +125,7 @@ name|PROD
 case|:
 name|f
 operator|=
-literal|"\\(*P"
+name|Prod
 expr_stmt|;
 break|break;
 default|default:
@@ -108,7 +141,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|".ds %d \\v'.3m'\\s+5%s\\s-5\\v'-.3m'\n"
+literal|".ds %d %s\n"
 argument_list|,
 name|yyval
 argument_list|,
@@ -126,12 +159,12 @@ literal|1.0
 argument_list|,
 name|ps
 operator|+
-literal|5
+name|Funnyps
 argument_list|)
 operator|-
 name|EM
 argument_list|(
-literal|0.2
+name|Funnyht
 argument_list|,
 name|ps
 argument_list|)
@@ -143,7 +176,7 @@ index|]
 operator|=
 name|EM
 argument_list|(
-literal|0.3
+name|Funnybase
 argument_list|,
 name|ps
 argument_list|)

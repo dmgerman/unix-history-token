@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)matrix.c	2.1 (CWI) 85/07/18"
+literal|"@(#)matrix.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,9 +244,14 @@ name|char
 modifier|*
 name|space
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|Matspace
+decl_stmt|;
 name|space
 operator|=
-literal|"\\ \\ "
+name|Matspace
 expr_stmt|;
 comment|/* between columns of matrix */
 name|nrow

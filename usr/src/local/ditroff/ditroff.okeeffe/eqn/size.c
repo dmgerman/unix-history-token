@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)size.c	2.1 (CWI) 85/07/18"
+literal|"@(#)size.c	2.2 (CWI) 87/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,38 @@ name|p
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|szstack
+index|[
+name|nszstack
+operator|-
+literal|1
+index|]
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|".nr %d \\n(.s\n"
+argument_list|,
+literal|99
+operator|-
+name|nszstack
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|".nr %d %d\n"
+argument_list|,
+literal|99
+operator|-
+name|nszstack
+argument_list|,
+name|ps
+argument_list|)
+expr_stmt|;
 name|szstack
 index|[
 name|nszstack
@@ -158,15 +190,6 @@ operator|=
 name|atoi
 argument_list|(
 name|p
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|".nr %d \\n(.s\n"
-argument_list|,
-literal|99
-operator|-
-name|nszstack
 argument_list|)
 expr_stmt|;
 block|}
@@ -252,14 +275,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* sizes ought to be generated from macro as \s(dd */
 name|printf
 argument_list|(
-literal|".ds %d \\s%d\\*(%d\\s\\n(%d\n"
+literal|".ds %d %s\\*(%d\\s\\n(%d\n"
 argument_list|,
 name|yyval
 argument_list|,
+name|ABSPS
+argument_list|(
 name|ps
+argument_list|)
 argument_list|,
 name|p2
 argument_list|,
@@ -459,6 +484,9 @@ condition|(
 name|gsize
 operator|<
 literal|12
+operator|&&
+operator|!
+name|dps_set
 condition|)
 comment|/* sub and sup size change */
 name|deltaps
