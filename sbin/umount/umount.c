@@ -1000,8 +1000,8 @@ operator|!=
 name|NULL
 operator|&&
 name|type
-operator|!=
-name|MOUNT_UNION
+operator|==
+name|MOUNT_NFS
 condition|)
 block|{
 name|hostp
@@ -1045,8 +1045,8 @@ operator|!=
 name|NULL
 operator|&&
 name|type
-operator|!=
-name|MOUNT_UNION
+operator|==
+name|MOUNT_NFS
 condition|)
 block|{
 operator|*
