@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 119 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
 end_include
 
 begin_define
@@ -478,6 +484,9 @@ case|:
 case|case
 name|AML_DEBUG_OP
 case|:
+case|case
+name|AML_LOAD_OP
+case|:
 comment|/* Just leave the object as-is */
 break|break;
 default|default:
@@ -486,9 +495,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown Reference opcode %X in %p\n"
+literal|"Unknown Reference opcode %X (%s) in %p\n"
 operator|,
 name|Opcode
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Opcode
+argument_list|)
 operator|,
 name|StackDesc
 operator|)
@@ -676,6 +690,20 @@ operator|!=
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiExResolveMultiple: Not a NS node %p [%s]\n"
+operator|,
+name|Node
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|Node
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL
@@ -782,6 +810,20 @@ operator|!=
 name|ACPI_DESC_TYPE_NAMED
 condition|)
 block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiExResolveMultiple: Not a NS node %p [%s]\n"
+operator|,
+name|Node
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|Node
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INTERNAL

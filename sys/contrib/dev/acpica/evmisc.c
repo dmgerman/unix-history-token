@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - Miscellaneous event manager support functions  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -410,11 +410,10 @@ name|ACPI_DB_INFO
 operator|,
 literal|"No notify handler for [%4.4s] node %p\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|Node
 operator|)

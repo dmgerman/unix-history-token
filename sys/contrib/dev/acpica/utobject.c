@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 84 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -401,62 +401,17 @@ operator|(
 name|TRUE
 operator|)
 return|;
-case|case
-name|ACPI_DESC_TYPE_NAMED
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"**** Obj %p is a named obj, not ACPI obj\n"
-operator|,
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_PARSER
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"**** Obj %p is a parser obj, not ACPI obj\n"
-operator|,
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DESC_TYPE_CACHED
-case|:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"**** Obj %p has already been released to internal cache\n"
-operator|,
-name|Object
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
+name|ACPI_DB_INFO
 operator|,
-literal|"**** Obj %p has unknown descriptor type %X\n"
+literal|"%p is not not an ACPI operand obj [%s]\n"
 operator|,
 name|Object
 operator|,
-name|ACPI_GET_DESCRIPTOR_TYPE
+name|AcpiUtGetDescriptorName
 argument_list|(
 name|Object
 argument_list|)
@@ -605,9 +560,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Obj %p is not an ACPI object\n"
+literal|"%p is not an ACPI Operand object [%s]\n"
 operator|,
 name|Object
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|Object
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

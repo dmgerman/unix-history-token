@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 122 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 125 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -51,6 +51,340 @@ literal|"exprep"
 argument_list|)
 end_macro
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_UNDER_DEVELOPMENT
+end_ifdef
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGenerateAccess  *  * PARAMETERS:  FieldBitOffset      - Start of field within parent region/buffer  *              FieldBitLength      - Length of field in bits  *              RegionLength        - Length of parent in bytes  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Generate an optimal access width for fields defined with the  *              AnyAcc keyword.  *  * NOTE: Need to have the RegionLength in order to check for boundary  *       conditions (end-of-region).  However, the RegionLength is a deferred  *       operation.  Therefore, to complete this implementation, the generation  *       of this access width must be deferred until the region length has  *       been evaluated.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT32
+name|AcpiExGenerateAccess
+parameter_list|(
+name|UINT32
+name|FieldBitOffset
+parameter_list|,
+name|UINT32
+name|FieldBitLength
+parameter_list|,
+name|UINT32
+name|RegionLength
+parameter_list|)
+block|{
+name|UINT32
+name|FieldByteLength
+decl_stmt|;
+name|UINT32
+name|FieldByteOffset
+decl_stmt|;
+name|UINT32
+name|FieldByteEndOffset
+decl_stmt|;
+name|UINT32
+name|AccessByteWidth
+decl_stmt|;
+name|UINT32
+name|FieldStartOffset
+decl_stmt|;
+name|UINT32
+name|FieldEndOffset
+decl_stmt|;
+name|UINT32
+name|MinimumAccessWidth
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
+name|UINT32
+name|MinimumAccesses
+init|=
+literal|0xFFFFFFFF
+decl_stmt|;
+name|UINT32
+name|Accesses
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+literal|"ExGenerateAccess"
+argument_list|)
+expr_stmt|;
+comment|/* Round Field start offset and length to "minimal" byte boundaries */
+name|FieldByteOffset
+operator|=
+name|ACPI_DIV_8
+argument_list|(
+name|ACPI_ROUND_DOWN
+argument_list|(
+name|FieldBitOffset
+argument_list|,
+literal|8
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|FieldByteEndOffset
+operator|=
+name|ACPI_DIV_8
+argument_list|(
+name|ACPI_ROUND_UP
+argument_list|(
+name|FieldBitLength
+operator|+
+name|FieldBitOffset
+argument_list|,
+literal|8
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|FieldByteLength
+operator|=
+name|FieldByteEndOffset
+operator|-
+name|FieldByteOffset
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Bit length %d, Bit offset %d\n"
+operator|,
+name|FieldBitLength
+operator|,
+name|FieldBitOffset
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Byte Length %d, Byte Offset %d, End Offset %d\n"
+operator|,
+name|FieldByteLength
+operator|,
+name|FieldByteOffset
+operator|,
+name|FieldByteEndOffset
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/*      * Iterative search for the maximum access width that is both aligned      * and does not go beyond the end of the region      *      * Start at ByteAcc and work upwards to QwordAcc max. (1,2,4,8 bytes)      */
+for|for
+control|(
+name|AccessByteWidth
+operator|=
+literal|1
+init|;
+name|AccessByteWidth
+operator|<=
+literal|8
+condition|;
+name|AccessByteWidth
+operator|<<=
+literal|1
+control|)
+block|{
+comment|/*          * 1) Round end offset up to next access boundary and make sure that this          *    does not go beyond the end of the parent region.          * 2) When the Access width is greater than the FieldByteLength, we are done.          *    (This does not optimize for the perfectly aligned case yet).          */
+if|if
+condition|(
+name|ACPI_ROUND_UP
+argument_list|(
+name|FieldByteEndOffset
+argument_list|,
+name|AccessByteWidth
+argument_list|)
+operator|<=
+name|RegionLength
+condition|)
+block|{
+name|FieldStartOffset
+operator|=
+name|ACPI_ROUND_DOWN
+argument_list|(
+name|FieldByteOffset
+argument_list|,
+name|AccessByteWidth
+argument_list|)
+operator|/
+name|AccessByteWidth
+expr_stmt|;
+name|FieldEndOffset
+operator|=
+name|ACPI_ROUND_UP
+argument_list|(
+operator|(
+name|FieldByteLength
+operator|+
+name|FieldByteOffset
+operator|)
+argument_list|,
+name|AccessByteWidth
+argument_list|)
+operator|/
+name|AccessByteWidth
+expr_stmt|;
+name|Accesses
+operator|=
+name|FieldEndOffset
+operator|-
+name|FieldStartOffset
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"AccessWidth %d end is within region\n"
+operator|,
+name|AccessByteWidth
+operator|)
+argument_list|)
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Field Start %d, Field End %d -- requires %d accesses\n"
+operator|,
+name|FieldStartOffset
+operator|,
+name|FieldEndOffset
+operator|,
+name|Accesses
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Single access is optimal */
+if|if
+condition|(
+name|Accesses
+operator|<=
+literal|1
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Entire field can be accessed with one operation of size %d\n"
+operator|,
+name|AccessByteWidth
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|AccessByteWidth
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*              * Fits in the region, but requires more than one read/write.              * try the next wider access on next iteration              */
+if|if
+condition|(
+name|Accesses
+operator|<
+name|MinimumAccesses
+condition|)
+block|{
+name|MinimumAccesses
+operator|=
+name|Accesses
+expr_stmt|;
+name|MinimumAccessWidth
+operator|=
+name|AccessByteWidth
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"AccessWidth %d end is NOT within region\n"
+operator|,
+name|AccessByteWidth
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|AccessByteWidth
+operator|==
+literal|1
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Field goes beyond end-of-region!\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Field does not fit in the region at all */
+block|}
+comment|/* This width goes beyond the end-of-region, back off to previous access */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Backing off to previous optimal access width of %d\n"
+operator|,
+name|MinimumAccessWidth
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|MinimumAccessWidth
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Could not read/write field with one operation, just use max access width */
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_BFIELD
+operator|,
+literal|"Cannot access field in one operation, using width 8\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_UNDER_DEVELOPMENT */
+end_comment
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDecodeFieldAccess  *  * PARAMETERS:  Access          - Encoded field access bits  *              Length          - Field length.  *  * RETURN:      Field granularity (8, 16, 32 or 64) and  *              ByteAlignment (1, 2, 3, or 4)  *  * DESCRIPTION: Decode the AccessType bits of a field definition.  *  ******************************************************************************/
 end_comment
@@ -75,14 +409,13 @@ block|{
 name|UINT32
 name|Access
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|ByteAlignment
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|BitLength
 decl_stmt|;
-comment|/*    UINT32                  Length; */
-name|ACPI_FUNCTION_NAME
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExDecodeFieldAccess"
 argument_list|)
@@ -103,6 +436,37 @@ block|{
 case|case
 name|AML_FIELD_ACCESS_ANY
 case|:
+ifdef|#
+directive|ifdef
+name|ACPI_UNDER_DEVELOPMENT
+name|ByteAlignment
+operator|=
+name|AcpiExGenerateAccess
+argument_list|(
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|StartFieldBitOffset
+argument_list|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+argument_list|,
+literal|0xFFFFFFFF
+comment|/* Temp until we pass RegionLength as param */
+argument_list|)
+expr_stmt|;
+name|BitLength
+operator|=
+name|ByteAlignment
+operator|*
+literal|8
+expr_stmt|;
+endif|#
+directive|endif
 name|ByteAlignment
 operator|=
 literal|1
@@ -111,16 +475,6 @@ name|BitLength
 operator|=
 literal|8
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/*          * TBD: optimize          *          * Any attempt to optimize the access size to the size of the field          * must take into consideration the length of the region and take          * care that an access to the field will not attempt to access          * beyond the end of the region.          */
-comment|/* Use the length to set the access type */
-block|Length = ObjDesc->CommonField.BitLength;          if (Length<= 8)         {             BitLength = 8;         }         else if (Length<= 16)         {             BitLength = 16;         }         else if (Length<= 32)         {             BitLength = 32;         }         else if (Length<= 64)         {             BitLength = 64;         }         else         {
-comment|/* Larger than Qword - just use byte-size chunks */
-block|BitLength = 8;         }
-endif|#
-directive|endif
 break|break;
 case|case
 name|AML_FIELD_ACCESS_BYTE
@@ -188,11 +542,11 @@ name|Access
 operator|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 literal|0
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -215,11 +569,11 @@ name|ReturnByteAlignment
 operator|=
 name|ByteAlignment
 expr_stmt|;
-return|return
-operator|(
+name|return_VALUE
+argument_list|(
 name|BitLength
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -342,6 +696,9 @@ name|CommonField
 operator|.
 name|BaseByteOffset
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_ROUND_DOWN
 argument_list|(
 name|NearestByteAddress
@@ -550,7 +907,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Needed Region, found type %X %s\n"
+literal|"Needed Region, found type %X (%s)\n"
 operator|,
 name|Type
 operator|,
@@ -682,7 +1039,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"RegionField: Bitoff=%X Off=%X Gran=%X Region %p\n"
+literal|"RegionField: BitOff %X, Off %X, Gran %X, Region %p\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -774,7 +1131,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Bank Field: BitOff=%X Off=%X Gran=%X Region %p BankReg %p\n"
+literal|"Bank Field: BitOff %X, Off %X, Gran %X, Region %p, BankReg %p\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -918,7 +1275,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"IndexField: bitoff=%X off=%X gran=%X Index %p Data %p\n"
+literal|"IndexField: BitOff %X, Off %X, Value %X, Gran %X, Index %p, Data %p\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -931,6 +1288,12 @@ operator|->
 name|IndexField
 operator|.
 name|BaseByteOffset
+operator|,
+name|ObjDesc
+operator|->
+name|IndexField
+operator|.
+name|Value
 operator|,
 name|ObjDesc
 operator|->
@@ -981,19 +1344,18 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"set NamedObj %p (%4.4s) val = %p\n"
+literal|"Set NamedObj %p [%4.4s], ObjDesc %p\n"
 operator|,
 name|Info
 operator|->
 name|FieldNode
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Info
 operator|->
 name|FieldNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ObjDesc
 operator|)

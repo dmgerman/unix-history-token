@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,11 +62,6 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|!=
-literal|64
 if|if
 condition|(
 name|RSDP
@@ -85,8 +80,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 block|{
 name|PointerSize
 operator|=
@@ -199,8 +192,6 @@ argument_list|)
 expr_stmt|;
 name|NewTable
 operator|->
-name|Header
-operator|.
 name|Length
 operator|=
 operator|(
@@ -1226,8 +1217,6 @@ if|if
 condition|(
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|<
 sizeof|sizeof
@@ -1243,8 +1232,6 @@ literal|"Invalid FADT table length: 0x%X\n"
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|)
 argument_list|)
@@ -1259,8 +1246,6 @@ if|if
 condition|(
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Revision
 operator|>=
 name|FADT2_REVISION_ID
@@ -1270,8 +1255,6 @@ if|if
 condition|(
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|<
 sizeof|sizeof
@@ -1288,14 +1271,10 @@ literal|"Inconsistent FADT length (0x%X) and revision (0x%X), using FADT V1.0 po
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Revision
 operator|)
 argument_list|)
@@ -1346,8 +1325,6 @@ name|LocalFadt
 expr_stmt|;
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|=
 sizeof|sizeof
@@ -1406,14 +1383,10 @@ literal|"Hex dump of common internal FADT, size %d (%X)\n"
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 operator|)
 argument_list|)
@@ -1430,8 +1403,6 @@ operator|)
 argument_list|,
 name|AcpiGbl_FADT
 operator|->
-name|Header
-operator|.
 name|Length
 argument_list|)
 expr_stmt|;

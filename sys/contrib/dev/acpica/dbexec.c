@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 54 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 55 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -603,11 +603,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"[%4.4s] returned %s\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|AcpiFormatException
 argument_list|(

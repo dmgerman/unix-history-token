@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 149 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: hwregs - Read/write access functions for the various ACPI  *                       control and status registers.  *              $Revision: 152 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -898,7 +898,7 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/*      * Decode the Register ID      * Register id = Register block id | bit id      *      * Check bit id to fine locate Register offset.      * Check Mask to determine Register offset, and then read-write.      */
+comment|/*      * Decode the Register ID      * Register ID = [Register block ID] | [bit ID]      *      * Check bit ID to fine locate Register offset.      * Check Mask to determine Register offset, and then read-write.      */
 switch|switch
 condition|(
 name|BitRegInfo
@@ -909,7 +909,7 @@ block|{
 case|case
 name|ACPI_REGISTER_PM1_STATUS
 case|:
-comment|/*          * Status Registers are different from the rest.  Clear by          * writing 1, writing 0 has no effect.  So, the only relevant          * information is the single bit we're interested in, all others should          * be written as 0 so they will be left unchanged          */
+comment|/*          * Status Registers are different from the rest.  Clear by          * writing 1, and writing 0 has no effect.  So, the only relevant          * information is the single bit we're interested in, all others should          * be written as 0 so they will be left unchanged.          */
 name|Value
 operator|=
 name|ACPI_REGISTER_PREPARE_BITS
@@ -986,7 +986,7 @@ break|break;
 case|case
 name|ACPI_REGISTER_PM1_CONTROL
 case|:
-comment|/*          * Read the PM1 Control register.          * Note that at this level, the fact that there are actually TWO          * registers (A and B - and that B may not exist) is abstracted.          */
+comment|/*          * Write the PM1 Control register.          * Note that at this level, the fact that there are actually TWO          * registers (A and B - and B may not exist) is abstracted.          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1064,19 +1064,7 @@ literal|"PM2 control: Read %X from %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
-operator|.
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
@@ -1114,19 +1102,7 @@ literal|"About to write %4.4X to %8.8X%8.8X\n"
 operator|,
 name|RegisterValue
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|AcpiGbl_FADT
-operator|->
-name|XPm2CntBlk
-operator|.
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
@@ -1947,7 +1923,7 @@ name|Value
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * Three address spaces supported:      * Memory, Io, or PCI config.      */
+comment|/*      * Three address spaces supported:      * Memory, IO, or PCI_Config.      */
 switch|switch
 condition|(
 name|Reg
@@ -2106,17 +2082,7 @@ name|Value
 operator|,
 name|Width
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
@@ -2201,7 +2167,7 @@ name|AE_OK
 operator|)
 return|;
 block|}
-comment|/*      * Three address spaces supported:      * Memory, Io, or PCI config.      */
+comment|/*      * Three address spaces supported:      * Memory, IO, or PCI_Config.      */
 switch|switch
 condition|(
 name|Reg
@@ -2362,17 +2328,7 @@ name|Value
 operator|,
 name|Width
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|Reg
-operator|->
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(

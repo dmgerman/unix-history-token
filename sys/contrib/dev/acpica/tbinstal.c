@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -537,8 +537,6 @@ name|AE_ALREADY_EXISTS
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-comment|/*      * Link the new table in to the list of tables of this type.      * Just insert at the start of the list, order unimportant.      *      * TableDesc->Prev is already NULL from calloc()      */
 name|TableDesc
 operator|->
 name|Next
@@ -574,6 +572,84 @@ operator|->
 name|Count
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*          * Link the new table in to the list of tables of this type.          * Insert at the end of the list, order IS IMPORTANT.          *          * TableDesc->Prev& Next are already NULL from calloc()          */
+name|ListHead
+operator|->
+name|Count
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ListHead
+operator|->
+name|Next
+condition|)
+block|{
+name|ListHead
+operator|->
+name|Next
+operator|=
+name|TableDesc
+expr_stmt|;
+block|}
+else|else
+block|{
+name|TableDesc
+operator|->
+name|Next
+operator|=
+name|ListHead
+operator|->
+name|Next
+expr_stmt|;
+while|while
+condition|(
+name|TableDesc
+operator|->
+name|Next
+operator|->
+name|Next
+condition|)
+block|{
+name|TableDesc
+operator|->
+name|Next
+operator|=
+name|TableDesc
+operator|->
+name|Next
+operator|->
+name|Next
+expr_stmt|;
+block|}
+name|TableDesc
+operator|->
+name|Next
+operator|->
+name|Next
+operator|=
+name|TableDesc
+expr_stmt|;
+name|TableDesc
+operator|->
+name|Prev
+operator|=
+name|TableDesc
+operator|->
+name|Next
+expr_stmt|;
+name|TableDesc
+operator|->
+name|Next
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
 comment|/* Finish initialization of the table descriptor */
 name|TableDesc
 operator|->
@@ -854,8 +930,7 @@ case|:
 default|default:
 break|break;
 block|}
-comment|/* Free the table */
-comment|/* Get the head of the list */
+comment|/*      * Free the table      * 1) Get the head of the list      */
 name|TableDesc
 operator|=
 name|AcpiGbl_TableLists
@@ -874,7 +949,7 @@ index|]
 operator|.
 name|Count
 expr_stmt|;
-comment|/*      * Walk the entire list, deleting both the allocated tables      * and the table descriptors      */
+comment|/*      * 2) Walk the entire list, deleting both the allocated tables      *    and the table descriptors      */
 for|for
 control|(
 name|i

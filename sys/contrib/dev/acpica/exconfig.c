@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -121,6 +121,25 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Install the new table into the local data structures */
+name|ACPI_MEMSET
+argument_list|(
+operator|&
+name|TableInfo
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_DESC
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TableInfo
+operator|.
+name|Type
+operator|=
+literal|5
+expr_stmt|;
 name|TableInfo
 operator|.
 name|Pointer
@@ -370,7 +389,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Not found, return an Integer=0 and AE_OK */
+comment|/* Table not found, return an Integer=0 and AE_OK */
 name|DdbHandle
 operator|=
 name|AcpiUtCreateInternalObject
@@ -638,8 +657,18 @@ argument_list|(
 name|DdbHandle
 argument_list|)
 expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 block|}
+operator|*
+name|ReturnDesc
+operator|=
+name|DdbHandle
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1152,7 +1181,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 init|=
-name|AE_NOT_IMPLEMENTED
+name|AE_OK
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*

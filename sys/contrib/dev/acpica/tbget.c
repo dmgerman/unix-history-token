@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -230,7 +230,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|Header
@@ -249,16 +248,7 @@ argument_list|(
 operator|(
 literal|"Could not map memory at %8.8X%8.8X for length %X\n"
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|->
-name|Pointer
-operator|.
-name|Physical
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|->
@@ -716,7 +706,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|FullTable
@@ -739,16 +728,7 @@ name|Header
 operator|->
 name|Signature
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|->
-name|Pointer
-operator|.
-name|Physical
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|->
@@ -870,16 +850,7 @@ name|FullTable
 operator|->
 name|Signature
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|->
-name|Pointer
-operator|.
-name|Physical
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|->
@@ -966,6 +937,11 @@ literal|1
 condition|)
 block|{
 comment|/* Get the first */
+operator|*
+name|TablePtrLoc
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|AcpiGbl_TableLists

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 70 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -366,7 +366,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|AcpiGbl_RSDP
@@ -465,16 +464,7 @@ literal|"RSDP located at %p, RSDT physical=%8.8X%8.8X \n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|.
-name|Pointer
-operator|.
-name|Value
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|.
@@ -1049,7 +1039,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|TablePtr
@@ -1143,7 +1132,6 @@ name|ACPI_HI_RSDP_WINDOW_SIZE
 argument_list|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&

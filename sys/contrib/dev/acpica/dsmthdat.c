@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 71 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 74 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -766,7 +766,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Increment ref count so object can't be deleted while installed.      * NOTE: We do not copy the object in order to preserve the call by      * reference semantics of ACPI Control Method invocation.      * (See ACPI Specification 2.0C)      */
+comment|/*      * Increment ref count so object can't be deleted while installed.      * NOTE: We do not copy the object in order to preserve the call by      * reference semantics of ACPI Control Method invocation.      * (See ACPI Specification 2.0C)      */
 name|AcpiUtAddReference
 argument_list|(
 name|Object
@@ -1204,6 +1204,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|CurrentObjDesc
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|NewObjDesc
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"DsStoreObjectToLocal"
@@ -1297,6 +1301,51 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * If the reference count on the object is more than one, we must      * take a copy of the object before we store.      */
+name|NewObjDesc
+operator|=
+name|ObjDesc
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|>
+literal|1
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtCopyIobjectToIobject
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|NewObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+name|NewObjDesc
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/*      * If there is an object already in this slot, we either      * have to delete it, or if this is an argument and there      * is an object reference stored there, we have to do      * an indirect store!      */
 if|if
 condition|(
@@ -1325,13 +1374,12 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"Invalid descriptor type while storing to method arg: %X\n"
+literal|"Invalid descriptor type while storing to method arg: [%s]\n"
 operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
 name|CurrentObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1372,7 +1420,7 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"Arg (%p) is an ObjRef(Node), storing in node %p\n"
 operator|,
-name|ObjDesc
+name|NewObjDesc
 operator|,
 name|CurrentObjDesc
 operator|)
@@ -1383,7 +1431,7 @@ name|Status
 operator|=
 name|AcpiExStoreObjectToNode
 argument_list|(
-name|ObjDesc
+name|NewObjDesc
 argument_list|,
 name|CurrentObjDesc
 operator|->
@@ -1394,6 +1442,20 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+comment|/* Remove local reference if we copied the object above */
+if|if
+condition|(
+name|NewObjDesc
+operator|!=
+name|ObjDesc
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|NewObjDesc
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1412,7 +1474,7 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Install the ObjStack descriptor (*ObjDesc) into      * the descriptor for the Arg or Local.      * Install the new object in the stack entry      * (increments the object reference count by one)      */
+comment|/*      * Install the Obj descriptor (*NewObjDesc) into      * the descriptor for the Arg or Local.      * (increments the object reference count by one)      */
 name|Status
 operator|=
 name|AcpiDsMethodDataSetValue
@@ -1421,11 +1483,25 @@ name|Opcode
 argument_list|,
 name|Index
 argument_list|,
-name|ObjDesc
+name|NewObjDesc
 argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+comment|/* Remove local reference if we copied the object above */
+if|if
+condition|(
+name|NewObjDesc
+operator|!=
+name|ObjDesc
+condition|)
+block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|NewObjDesc
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

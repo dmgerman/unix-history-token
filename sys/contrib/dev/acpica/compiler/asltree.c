@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: asltree - parse tree management  *              $Revision: 53 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: asltree - parse tree management  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -736,12 +736,7 @@ argument_list|(
 name|ParseOpcode
 argument_list|)
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Value
 argument_list|)

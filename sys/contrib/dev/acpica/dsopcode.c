@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 87 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecuteArguments  *  * PARAMETERS:  Node                - Parent NS node  *              AmlLength           - Length of executable AML  *              AmlStart            - Pointer to the AML  *  * RETURN:      Status.  *  * DESCRIPTION: Late execution of region or field arguments  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecuteArguments  *  * PARAMETERS:  Node                - Parent NS node  *              AmlLength           - Length of executable AML  *              AmlStart            - Pointer to the AML  *  * RETURN:      Status.  *  * DESCRIPTION: Late (deferred) execution of region or field arguments  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -208,11 +208,18 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Mark this parse as a deferred opcode */
 name|WalkState
 operator|->
 name|ParseFlags
 operator|=
 name|ACPI_PARSE_DEFERRED_OP
+expr_stmt|;
+name|WalkState
+operator|->
+name|DeferredNode
+operator|=
+name|Node
 expr_stmt|;
 comment|/* Pass1: Parse the entire declaration */
 name|Status
@@ -273,7 +280,7 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
-comment|/* Evaluate the address and length arguments for the Buffer Field */
+comment|/* Evaluate the deferred arguments */
 name|Op
 operator|=
 name|AcpiPsAllocOp
@@ -327,6 +334,7 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Execute the opcode and arguments */
 name|Status
 operator|=
 name|AcpiDsInitAmlWalk
@@ -367,6 +375,13 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Mark this execution as a deferred opcode */
+name|WalkState
+operator|->
+name|DeferredNode
+operator|=
+name|Node
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiPsParseAml
@@ -468,13 +483,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[%4.4s] BufferField JIT Init\n"
+literal|"[%4.4s] BufferField Arg Init\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -512,7 +526,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetBufferArguments  *  * PARAMETERS:  ObjDesc         - A valid Bufferobject  *  * RETURN:      Status.  *  * DESCRIPTION: Get Buffer length and initializer byte list.  This implements  *              the late evaluation of these attributes.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetBufferArguments  *  * PARAMETERS:  ObjDesc         - A valid Buffer object  *  * RETURN:      Status.  *  * DESCRIPTION: Get Buffer length and initializer byte list.  This implements  *              the late evaluation of these attributes.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -592,7 +606,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Buffer JIT Init\n"
+literal|"Buffer Arg Init\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -627,7 +641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetPackageArguments  *  * PARAMETERS:  ObjDesc         - A valid Packageobject  *  * RETURN:      Status.  *  * DESCRIPTION: Get Package length and initializer byte list.  This implements  *              the late evaluation of these attributes.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsGetPackageArguments  *  * PARAMETERS:  ObjDesc         - A valid Package object  *  * RETURN:      Status.  *  * DESCRIPTION: Get Package length and initializer byte list.  This implements  *              the late evaluation of these attributes.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -707,7 +721,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Package JIT Init\n"
+literal|"Package Arg Init\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -834,13 +848,12 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[%4.4s] OpRegion Init at AML %p\n"
+literal|"[%4.4s] OpRegion Arg Init at AML %p\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ExtraDesc
 operator|->
@@ -850,6 +863,7 @@ name|AmlStart
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Execute the argument AML */
 name|Status
 operator|=
 name|AcpiDsExecuteArguments
@@ -1029,11 +1043,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"(%s) destination must be a NS Node\n"
+literal|"(%s) destination not a NS Node [%s]\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|AmlOpcode
+argument_list|)
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ResultDesc
 argument_list|)
 operator|)
 argument_list|)
@@ -1228,11 +1247,25 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Field size %d exceeds Buffer size %d (bits)\n"
+literal|"Field [%4.4s] size %d exceeds Buffer [%4.4s] size %d (bits)\n"
+operator|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|ResultDesc
+argument_list|)
 operator|,
 name|BitOffset
 operator|+
 name|BitCount
+operator|,
+name|AcpiUtGetNodeName
+argument_list|(
+name|BufferDesc
+operator|->
+name|Buffer
+operator|.
+name|Node
+argument_list|)
 operator|,
 literal|8
 operator|*
@@ -1896,16 +1929,7 @@ literal|"RgnObj %p Addr %8.8X%8.8X Len %X\n"
 operator|,
 name|ObjDesc
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Address
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->

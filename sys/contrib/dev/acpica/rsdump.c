@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 36 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsdump - Functions to display the resource structures.  *              $Revision: 37 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1969,14 +1969,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Granularity: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address64Data
-operator|->
-name|Granularity
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address64Data
 operator|->
@@ -1988,14 +1981,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Address range min: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address64Data
-operator|->
-name|MinAddressRange
-argument_list|)
-argument_list|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address64Data
 operator|->
@@ -2007,14 +1993,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Address range max: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address64Data
-operator|->
-name|MaxAddressRange
-argument_list|)
-argument_list|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address64Data
 operator|->
@@ -2026,14 +2005,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Address translation offset: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address64Data
-operator|->
-name|AddressTranslationOffset
-argument_list|)
-argument_list|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address64Data
 operator|->
@@ -2045,14 +2017,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Address Length: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address64Data
-operator|->
-name|AddressLength
-argument_list|)
-argument_list|,
-name|ACPI_HIDWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address64Data
 operator|->
@@ -2614,14 +2579,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Address: %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|PrtElement
-operator|->
-name|Address
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|PrtElement
 operator|->

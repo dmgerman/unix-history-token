@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 8 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -480,16 +480,7 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|.
-name|Pointer
-operator|.
-name|Value
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|.

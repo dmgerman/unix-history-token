@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsinit - Object initialization namespace walk  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsinit - Object initialization namespace walk  *              $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -161,17 +161,10 @@ literal|"Region %p [%4.4s] - Init failure, %s\n"
 operator|,
 name|ObjHandle
 operator|,
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjHandle
-operator|)
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -243,7 +236,7 @@ operator||=
 name|ANOBJ_DATA_WIDTH_32
 expr_stmt|;
 block|}
-comment|/*          * Always parse methods to detect errors, we may delete          * the parse tree below          */
+comment|/*          * Always parse methods to detect errors, we will delete          * the parse tree below          */
 name|Status
 operator|=
 name|AcpiDsParseMethod
@@ -268,17 +261,10 @@ literal|"Method %p [%4.4s] - parse failure, %s\n"
 operator|,
 name|ObjHandle
 operator|,
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjHandle
-operator|)
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -290,7 +276,7 @@ expr_stmt|;
 comment|/* This parse failed, but we will continue parsing more methods */
 break|break;
 block|}
-comment|/*          * Delete the parse tree.  We simple re-parse the method          * for every execution since there isn't much overhead          */
+comment|/*          * Delete the parse tree.  We simply re-parse the method          * for every execution since there isn't much overhead          */
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
 name|ObjHandle

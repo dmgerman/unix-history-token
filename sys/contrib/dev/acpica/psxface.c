@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -218,11 +218,13 @@ operator|!
 name|Op
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup1
+goto|;
 block|}
 comment|/*      * Get a new OwnerId for objects created by this method.  Namespace      * objects (such as Operation Regions) can be created during the      * first pass parse.      */
 name|ObjDesc
@@ -260,11 +262,13 @@ operator|!
 name|WalkState
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup2
+goto|;
 block|}
 name|Status
 operator|=
@@ -303,16 +307,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiDsDeleteWalkState
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup3
+goto|;
 block|}
 comment|/* Parse the AML */
 name|Status
@@ -327,6 +324,19 @@ argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|Cleanup1
+goto|;
+comment|/* Walk state is already deleted */
+block|}
 comment|/*      * 2) Execute the method.  Performs second pass parse simultaneously      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -353,11 +363,13 @@ operator|!
 name|Op
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup1
+goto|;
 block|}
 comment|/* Init new op with the method name and pointer back to the NS node */
 name|AcpiPsSetName
@@ -399,11 +411,13 @@ operator|!
 name|WalkState
 condition|)
 block|{
-name|return_ACPI_STATUS
-argument_list|(
+name|Status
+operator|=
 name|AE_NO_MEMORY
-argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup2
+goto|;
 block|}
 name|Status
 operator|=
@@ -442,16 +456,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiDsDeleteWalkState
-argument_list|(
-name|WalkState
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
+goto|goto
+name|Cleanup3
+goto|;
 block|}
 comment|/*      * The walk of the parse tree is where we actually execute the method      */
 name|Status
@@ -461,11 +468,26 @@ argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+goto|goto
+name|Cleanup2
+goto|;
+comment|/* Walk state already deleted */
+name|Cleanup3
+label|:
+name|AcpiDsDeleteWalkState
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
+name|Cleanup2
+label|:
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+name|Cleanup1
+label|:
 if|if
 condition|(
 name|Params
@@ -502,6 +524,20 @@ name|REF_DECREMENT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * If the method has returned an object, signal this to the caller with      * a control exception code      */
 if|if

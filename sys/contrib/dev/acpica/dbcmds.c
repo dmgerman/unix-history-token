@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 105 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 109 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -218,11 +218,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Object is a Node [%4.4s]\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -243,11 +242,10 @@ literal|"Reference at Node->Object %p [%4.4s]\n"
 argument_list|,
 name|Node
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -895,9 +893,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Address %p is not a valid Named object\n"
+literal|"Address %p is not a valid NS node [%s]\n"
 argument_list|,
 name|SubtreeEntry
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|SubtreeEntry
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1619,16 +1622,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"  Value %8.8X%8.8X"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1673,16 +1667,7 @@ name|Region
 operator|.
 name|Length
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Address
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -2757,11 +2742,11 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Invalid Descriptor Type for Node %p, Type = %X\n"
+literal|"Invalid Descriptor Type for Node %p [%s]\n"
 argument_list|,
 name|Node
 argument_list|,
-name|ACPI_GET_DESCRIPTOR_TYPE
+name|AcpiUtGetDescriptorName
 argument_list|(
 name|Node
 argument_list|)
@@ -2839,11 +2824,11 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Invalid Descriptor Type for Object %p, Type = %X\n"
+literal|"Invalid Descriptor Type for Object %p [%s]\n"
 argument_list|,
 name|Object
 argument_list|,
-name|ACPI_GET_DESCRIPTOR_TYPE
+name|AcpiUtGetDescriptorName
 argument_list|(
 name|Object
 argument_list|)
@@ -2972,11 +2957,10 @@ name|GpeEventInfo
 operator|=
 name|AcpiEvGetGpeEventInfo
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|ACPI_TO_POINTER
+argument_list|(
 name|BlockNumber
+argument_list|)
 argument_list|,
 name|GpeNumber
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 167 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 171 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -135,10 +135,10 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*          * This usually indicates that something serious is wrong --          * since most (if not all)          * code that dumps the stack expects something to be there!          */
+comment|/*          * This usually indicates that something serious is wrong          */
 name|AcpiOsPrintf
 argument_list|(
-literal|"Null stack entry ptr\n"
+literal|"Null Object Descriptor\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -158,7 +158,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%p NS Node: "
+literal|"%p is a NS Node: "
 operator|,
 name|ObjDesc
 operator|)
@@ -188,9 +188,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"%p is not a local object\n"
+literal|"%p is not a node or operand object: [%s]\n"
 operator|,
 name|ObjDesc
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -206,7 +211,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  ObjDesc is a valid object  */
+comment|/* ObjDesc is a valid object */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -331,21 +336,12 @@ operator|==
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-comment|/* Value is a Number */
+comment|/* Value is an Integer */
 name|AcpiOsPrintf
 argument_list|(
 literal|" value is [%8.8X%8.8x]"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -386,21 +382,12 @@ operator|==
 name|ACPI_TYPE_INTEGER
 condition|)
 block|{
-comment|/* Value is a Number */
+comment|/* Value is an Integer */
 name|AcpiOsPrintf
 argument_list|(
 literal|" value is [%8.8X%8.8x]"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -437,7 +424,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/*  unknown opcode  */
+comment|/* Unknown opcode */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Unknown Reference opcode=%X\n"
@@ -547,16 +534,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Integer %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -700,16 +678,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" base %8.8X%8.8X Length %X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Address
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1278,12 +1247,7 @@ literal|"%20s : %8.8X%8.8X\n"
 argument_list|,
 name|Title
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Value
 argument_list|)
@@ -1346,11 +1310,10 @@ literal|"%20s : %4.4s\n"
 argument_list|,
 literal|"Name"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AcpiExOutString
@@ -1550,9 +1513,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"ExDumpObjectDescriptor: %p is not a valid ACPI object\n"
+literal|"ExDumpObjectDescriptor: %p is not an ACPI operand object: [%s]\n"
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|return_VOID
@@ -1609,16 +1577,7 @@ literal|"%20s : %8.8X%8.8X\n"
 argument_list|,
 literal|"Value"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1844,13 +1803,13 @@ name|ACPI_TYPE_DEVICE
 case|:
 name|AcpiExOutPointer
 argument_list|(
-literal|"AddressSpace"
+literal|"Handler"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 name|AcpiExOutPointer
@@ -2058,13 +2017,13 @@ argument_list|)
 expr_stmt|;
 name|AcpiExOutPointer
 argument_list|(
-literal|"AddressSpace"
+literal|"Handler"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Region
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 name|AcpiExOutPointer
@@ -2190,13 +2149,13 @@ argument_list|)
 expr_stmt|;
 name|AcpiExOutPointer
 argument_list|(
-literal|"AddressSpace"
+literal|"Handler"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2227,13 +2186,13 @@ argument_list|)
 expr_stmt|;
 name|AcpiExOutPointer
 argument_list|(
-literal|"AddressSpace"
+literal|"Handler"
 argument_list|,
 name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|AddressSpace
+name|Handler
 argument_list|)
 expr_stmt|;
 break|break;

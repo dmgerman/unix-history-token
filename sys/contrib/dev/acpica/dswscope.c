@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswscope - Scope stack manipulation  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -188,7 +188,9 @@ block|{
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"DsScopeStackPush: type code out of range\n"
+literal|"DsScopeStackPush: Invalid object type: 0x%X\n"
+operator|,
+name|Type
 operator|)
 argument_list|)
 expr_stmt|;
@@ -276,17 +278,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[%4.4s] (%10s)"
+literal|"[%4.4s] (%s)"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|OldScopeInfo
 operator|->
 name|Scope
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -307,7 +308,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[\\___] (%10s)"
+literal|"[\\___] (%s)"
 operator|,
 literal|"ROOT"
 operator|)
@@ -321,15 +322,14 @@ name|ACPI_DB_EXEC
 operator|,
 literal|", New scope -> [%4.4s] (%s)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ScopeInfo
 operator|->
 name|Scope
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -420,7 +420,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"[%.2d] Popped scope [%4.4s] (%10s), New scope -> "
+literal|"[%.2d] Popped scope [%4.4s] (%s), New scope -> "
 operator|,
 operator|(
 name|UINT32
@@ -429,15 +429,14 @@ name|WalkState
 operator|->
 name|ScopeDepth
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ScopeInfo
 operator|->
 name|Scope
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -468,15 +467,14 @@ name|ACPI_DB_EXEC
 operator|,
 literal|"[%4.4s] (%s)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|NewScopeInfo
 operator|->
 name|Scope
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|AcpiUtGetTypeName
 argument_list|(

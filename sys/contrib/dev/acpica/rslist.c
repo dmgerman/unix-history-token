@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 32 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rslist - Linked list utilities  *              $Revision: 33 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -572,6 +572,9 @@ name|Resource
 operator|->
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_ALIGN_RESOURCE_SIZE
 argument_list|(
 name|Resource

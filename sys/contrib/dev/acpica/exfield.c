@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 118 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 119 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -353,7 +353,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
+literal|"FieldRead [TO]:   Obj %p, Type %X, Buf %p, ByteLen %X\n"
 operator|,
 name|ObjDesc
 operator|,
@@ -376,7 +376,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"FieldWrite: BitLen=%X BitOff=%X ByteOff=%X\n"
+literal|"FieldRead [FROM]: BitLen %X, BitOff %X, ByteOff %X\n"
 operator|,
 name|ObjDesc
 operator|->
@@ -922,13 +922,21 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
+literal|"FieldWrite [FROM]: Obj %p (%s:%X), Buf %p, ByteLen %X\n"
 operator|,
-name|ObjDesc
+name|SourceDesc
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|SourceDesc
+argument_list|)
+argument_list|)
 operator|,
 name|ACPI_GET_OBJECT_TYPE
 argument_list|(
-name|ObjDesc
+name|SourceDesc
 argument_list|)
 operator|,
 name|Buffer
@@ -942,7 +950,22 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|"FieldRead: BitLen=%X BitOff=%X ByteOff=%X\n"
+literal|"FieldWrite [TO]:   Obj %p (%s:%X), BitLen %X, BitOff %X, ByteOff %X\n"
+operator|,
+name|ObjDesc
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
+argument_list|)
+operator|,
+name|ACPI_GET_OBJECT_TYPE
+argument_list|(
+name|ObjDesc
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -524,7 +524,7 @@ argument_list|(
 literal|"ExCreateRegion"
 argument_list|)
 expr_stmt|;
-comment|/* Get the Node from the object stack  */
+comment|/* Get the Namespace Node */
 name|Node
 operator|=
 name|WalkState

@@ -231,6 +231,7 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
+comment|/* TODO: Add table-getting code here */
 operator|*
 name|NewTable
 operator|=
@@ -238,7 +239,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|AE_OK
+name|AE_NO_ACPI_TABLES
 operator|)
 return|;
 block|}
@@ -540,14 +541,10 @@ block|{
 operator|*
 name|there
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|uintptr_t
-operator|)
+name|ACPI_TO_POINTER
+argument_list|(
 name|where
+argument_list|)
 expr_stmt|;
 return|return
 name|AE_OK
@@ -948,6 +945,17 @@ name|UINT32
 name|microseconds
 parameter_list|)
 block|{
+if|if
+condition|(
+name|microseconds
+condition|)
+block|{
+name|usleep
+argument_list|(
+name|microseconds
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -967,21 +975,31 @@ name|UINT32
 name|milliseconds
 parameter_list|)
 block|{
+name|sleep
+argument_list|(
+name|seconds
+operator|+
+operator|(
+name|milliseconds
+operator|/
+literal|1000
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Sleep for whole seconds */
+comment|/*       * Arg to usleep() must be less than 1,000,000 (1 second)      */
 name|usleep
 argument_list|(
 operator|(
-operator|(
-name|seconds
-operator|*
-literal|1000
-operator|)
-operator|+
 name|milliseconds
+operator|%
+literal|1000
 operator|)
 operator|*
 literal|1000
 argument_list|)
 expr_stmt|;
+comment|/* Sleep for remaining usecs */
 return|return;
 block|}
 end_function

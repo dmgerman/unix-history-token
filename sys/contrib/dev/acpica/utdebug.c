@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 109 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -665,12 +665,7 @@ literal|"%s %8.8X%8.8X\n"
 argument_list|,
 name|AcpiGbl_FnExitStr
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Value
 argument_list|)

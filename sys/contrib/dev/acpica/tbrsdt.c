@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbrsdt - ACPI RSDT table utilities  *              $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -107,7 +107,6 @@ argument_list|)
 argument_list|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&
@@ -594,16 +593,7 @@ literal|"RSDP located at %p, points to RSDT physical=%8.8X%8.8X \n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|Address
-operator|.
-name|Pointer
-operator|.
-name|Value
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 operator|.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 98 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -396,11 +396,10 @@ name|Buffer
 operator|->
 name|Pointer
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|ACPI_NAME_SIZE
 argument_list|)
@@ -639,7 +638,7 @@ operator|==
 name|ACPI_TYPE_DEVICE
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Devices objects only:          * Run the Device _HID, _UID, _CID, _STA, and _ADR methods.           *           * Note: none of these methods are required, so they may or may          * not be present for this device.  The Info.Valid bitfield is used          * to indicate which methods were found and ran successfully.          */
+comment|/*          * Get extra info for ACPI Devices objects only:          * Run the Device _HID, _UID, _CID, _STA, and _ADR methods.          *          * Note: none of these methods are required, so they may or may          * not be present for this device.  The Info.Valid bitfield is used          * to indicate which methods were found and ran successfully.          */
 comment|/* Execute the Device._HID method */
 name|Status
 operator|=

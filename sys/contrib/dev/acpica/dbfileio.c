@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 74 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 75 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -319,7 +319,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*       * Entire table scanned, each CR is part of a CR/LF pair --      * meaning that the table was treated as a text file somewhere.      *      * NOTE: We can't "fix" the table, because any existing CR/LF pairs in the      * original table are left untouched by the text conversion process --       * meaning that we cannot simply replace CR/LF pairs with LFs.      */
+comment|/*      * Entire table scanned, each CR is part of a CR/LF pair --      * meaning that the table was treated as a text file somewhere.      *      * NOTE: We can't "fix" the table, because any existing CR/LF pairs in the      * original table are left untouched by the text conversion process --      * meaning that we cannot simply replace CR/LF pairs with LFs.      */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Table has been corrupted by text mode conversion\n"

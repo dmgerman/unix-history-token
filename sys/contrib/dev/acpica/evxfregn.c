@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -332,7 +332,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 expr_stmt|;
 comment|/* Walk the handler list for this device */
 while|while
@@ -510,11 +510,10 @@ argument_list|)
 operator|,
 name|SpaceId
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|Node
 operator|,
@@ -615,14 +614,14 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 expr_stmt|;
 comment|/*      * The Device object is the first reference on the HandlerObj.      * Each region that uses the handler adds a reference.      */
 name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 operator|=
 name|HandlerObj
 expr_stmt|;
@@ -640,6 +639,26 @@ argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
 name|AcpiEvInstallHandler
+argument_list|,
+name|HandlerObj
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/*       * Now we can run the _REG methods for all Regions for this      * space ID.  This is a separate walk in order to handle any      * interdependencies between regions and _REG methods.  (i.e. handlers      * must be installed for all regions of this Space ID before we      * can run any _REG methods.      */
+name|Status
+operator|=
+name|AcpiNsWalkNamespace
+argument_list|(
+name|ACPI_TYPE_ANY
+argument_list|,
+name|Device
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|ACPI_NS_WALK_UNLOCK
+argument_list|,
+name|AcpiEvRegRun
 argument_list|,
 name|HandlerObj
 argument_list|,
@@ -796,7 +815,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 expr_stmt|;
 name|LastObjPtr
 operator|=
@@ -805,7 +824,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|Handler
 expr_stmt|;
 while|while
 condition|(

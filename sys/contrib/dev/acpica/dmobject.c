@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmobject - ACPI object decode and display  *              $Revision: 1 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmobject - ACPI object decode and display  *              $Revision: 6 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"acdisasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
 end_include
 
 begin_ifdef
@@ -103,6 +109,21 @@ condition|)
 block|{
 return|return;
 block|}
+comment|/* We may be executing a deferred opcode */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|DeferredNode
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Executing subtree for Buffer/Package/Region\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Display exception and method name */
 name|AcpiOsPrintf
 argument_list|(
@@ -151,13 +172,12 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"    Method [%4.4s] executing: "
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|NextWalkState
 operator|->
 name|MethodNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* First method is the currently executing method */
@@ -307,9 +327,14 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" %p"
+literal|" %p [%s]"
 argument_list|,
 name|ObjDesc
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -339,16 +364,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" %8.8X%8.8X"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -491,11 +507,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"<Node>            Name %4.4s"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -806,6 +821,15 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|AML_LOAD_OP
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"[DdbHandle]  "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|AML_REF_OF_OP
 case|:
 name|AcpiOsPrintf
@@ -859,13 +883,22 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Unknown Reference opcode %X\n"
+literal|"Unknown Reference opcode %X (%s)\n"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Opcode
+argument_list|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -893,7 +926,12 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"<Not a valid ACPI Object Descriptor> "
+literal|"<Not a valid ACPI Object Descriptor> [%s]"
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -955,15 +993,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|Node
+operator|->
+name|Type
+operator|!=
+name|ACPI_TYPE_METHOD
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Executing subtree for Buffer/Package/Region\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"Local Variables for method [%4.4s]:\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1064,6 +1117,22 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|Node
+operator|->
+name|Type
+operator|!=
+name|ACPI_TYPE_METHOD
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Executing subtree for Buffer/Package/Region\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|NumArgs
 operator|=
 name|ObjDesc
@@ -1084,11 +1153,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Arguments for Method [%4.4s]:  (%X arguments defined, max concurrency = %X)\n"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|NumArgs
 argument_list|,

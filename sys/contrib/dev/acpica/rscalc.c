@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 48 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 49 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1331,7 +1331,7 @@ name|BytesParsed
 expr_stmt|;
 break|break;
 default|default:
-comment|/*              * If we get here, everything is out of sync,              *  so exit with an error              */
+comment|/*              * If we get here, everything is out of sync,              * exit with an error              */
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_AML_INVALID_RESOURCE_TYPE
@@ -1341,6 +1341,9 @@ block|}
 comment|/*          * Update the return value and counter          */
 name|BufferSize
 operator|+=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_ALIGN_RESOURCE_SIZE
 argument_list|(
 name|StructureSize

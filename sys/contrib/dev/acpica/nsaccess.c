@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 173 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 175 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -775,9 +775,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"[%p] Not a namespace node\n"
+literal|"%p Not a namespace node [%s]\n"
 operator|,
 name|PrefixNode
+operator|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|PrefixNode
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -900,11 +905,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Searching relative to prefix scope [%4.4s] (%p)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|PrefixNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|PrefixNode
 operator|)
@@ -985,11 +989,10 @@ name|ACPI_DB_NAMES
 operator|,
 literal|"Search scope is [%4.4s], path has %d carat(s)\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ThisNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|NumCarats
 operator|)

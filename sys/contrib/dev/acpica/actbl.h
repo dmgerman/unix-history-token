@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 60 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -174,42 +174,6 @@ comment|/* Ownership of global lock is bit 1 */
 end_comment
 
 begin_comment
-comment|/* values of Mapic.Model */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DUAL_PIC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MULTIPLE_APIC
-value|1
-end_define
-
-begin_comment
-comment|/* values of Type in APIC_HEADER */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|APIC_PROC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|APIC_IO
-value|1
-end_define
-
-begin_comment
 comment|/*  * Common table types.  The base code can remain  * constant if the underlying tables are changed  */
 end_comment
 
@@ -251,7 +215,7 @@ name|)
 end_pragma
 
 begin_comment
-comment|/*  * Architecture-independent tables  * The architecture dependent tables are in separate files  */
+comment|/*  * ACPI Version-independent tables  *  * NOTE: The tables that are specific to ACPI versions (1.0, 2.0, etc.)  * are in separate files.  */
 end_comment
 
 begin_typedef
@@ -313,65 +277,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_table_header
-comment|/* ACPI common table header */
-block|{
-name|char
-name|Signature
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* ACPI signature (4 ASCII characters) */
-name|UINT32
-name|Length
-decl_stmt|;
-comment|/* Length of table, in bytes, including header */
-name|UINT8
-name|Revision
-decl_stmt|;
-comment|/* ACPI Specification minor version # */
-name|UINT8
-name|Checksum
-decl_stmt|;
-comment|/* To make sum of entire table == 0 */
-name|char
-name|OemId
-index|[
-literal|6
-index|]
-decl_stmt|;
-comment|/* OEM identification */
-name|char
-name|OemTableId
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* OEM table identification */
-name|UINT32
-name|OemRevision
-decl_stmt|;
-comment|/* OEM revision number */
-name|char
-name|AslCompilerId
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* ASL compiler vendor ID */
-name|UINT32
-name|AslCompilerRevision
-decl_stmt|;
-comment|/* ASL compiler revision number */
-block|}
-name|ACPI_TABLE_HEADER
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
 name|acpi_common_facs
 comment|/* Common FACS for internal use */
 block|{
@@ -391,93 +296,315 @@ name|ACPI_COMMON_FACS
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
+define|\
+value|char                    Signature [4];
+comment|/* ACPI signature (4 ASCII characters) */
+value|\     UINT32                  Length;
+comment|/* Length of table, in bytes, including header */
+value|\     UINT8                   Revision;
+comment|/* ACPI Specification minor version # */
+value|\     UINT8                   Checksum;
+comment|/* To make sum of entire table == 0 */
+value|\     char                    OemId [6];
+comment|/* OEM identification */
+value|\     char                    OemTableId [8];
+comment|/* OEM table identification */
+value|\     UINT32                  OemRevision;
+comment|/* OEM revision number */
+value|\     char                    AslCompilerId [4];
+comment|/* ASL compiler vendor ID */
+value|\     UINT32                  AslCompilerRevision;
+end_define
+
+begin_comment
+comment|/* ASL compiler revision number */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-name|apic_table
+name|acpi_table_header
+comment|/* ACPI common table header */
 block|{
+name|ACPI_TABLE_HEADER_DEF
+block|}
 name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-comment|/* ACPI table header */
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * MADT values and structures  */
+end_comment
+
+begin_comment
+comment|/* Values for MADT PCATCompat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DUAL_PIC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MULTIPLE_APIC
+value|1
+end_define
+
+begin_comment
+comment|/* Master MADT */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|multiple_apic_table
+block|{
+name|ACPI_TABLE_HEADER_DEF
+comment|/* ACPI common table header */
 name|UINT32
 name|LocalApicAddress
 decl_stmt|;
-comment|/* Physical address for accessing local APICs */
+comment|/* Physical address of local APIC */
 name|UINT32_BIT
 name|PCATCompat
 range|:
 literal|1
 decl_stmt|;
-comment|/* a one indicates system also has dual 8259s */
+comment|/* A one indicates system also has dual 8259s */
 name|UINT32_BIT
 name|Reserved1
 range|:
 literal|31
 decl_stmt|;
 block|}
-name|APIC_TABLE
+name|MULTIPLE_APIC_TABLE
 typedef|;
 end_typedef
+
+begin_comment
+comment|/* Values for Type in APIC_HEADER_DEF */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_PROCESSOR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_XRUPT_OVERRIDE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_NMI
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_LOCAL_NMI
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_ADDRESS_OVERRIDE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_IO_SAPIC
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_LOCAL_SAPIC
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_XRUPT_SOURCE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|APIC_RESERVED
+value|9
+end_define
+
+begin_comment
+comment|/* 9 and greater are reserved */
+end_comment
+
+begin_comment
+comment|/*   * MADT sub-structures (Follow MULTIPLE_APIC_DESCRIPTION_TABLE)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APIC_HEADER_DEF
+comment|/* Common APIC sub-structure header */
+define|\
+value|UINT8                   Type; \     UINT8                   Length;
+end_define
+
+begin_comment
+comment|/* Values for MPS INTI flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POLARITY_CONFORMS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLARITY_ACTIVE_HIGH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLARITY_RESERVED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|POLARITY_ACTIVE_LOW
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRIGGER_CONFORMS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRIGGER_EDGE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRIGGER_RESERVED
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRIGGER_LEVEL
+value|3
+end_define
+
+begin_comment
+comment|/* Common flag definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPS_INTI_FLAGS
+define|\
+value|UINT16_BIT              Polarity        : 2;
+comment|/* Polarity of APIC I/O input signals */
+value|\     UINT16_BIT              TriggerMode     : 2;
+comment|/* Trigger mode of APIC input signals */
+value|\     UINT16_BIT              Reserved1       : 12;
+end_define
+
+begin_comment
+comment|/* Reserved, must be zero */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCAL_APIC_FLAGS
+define|\
+value|UINT32_BIT              ProcessorEnabled: 1;
+comment|/* Processor is usable if set */
+value|\     UINT32_BIT              Reserved2       : 31;
+end_define
+
+begin_comment
+comment|/* Reserved, must be zero */
+end_comment
+
+begin_comment
+comment|/* Sub-structures for MADT */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|apic_header
+name|madt_processor_apic
 block|{
+name|APIC_HEADER_DEF
 name|UINT8
-name|Type
-decl_stmt|;
-comment|/* APIC type.  Either APIC_PROC or APIC_IO */
-name|UINT8
-name|Length
-decl_stmt|;
-comment|/* Length of APIC structure */
-block|}
-name|APIC_HEADER
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|processor_apic
-block|{
-name|APIC_HEADER
-name|Header
-decl_stmt|;
-name|UINT8
-name|ProcessorApicId
+name|ProcessorId
 decl_stmt|;
 comment|/* ACPI processor id */
 name|UINT8
 name|LocalApicId
 decl_stmt|;
 comment|/* Processor's local APIC id */
-name|UINT32_BIT
-name|ProcessorEnabled
-range|:
-literal|1
-decl_stmt|;
-comment|/* Processor is usable if set */
-name|UINT32_BIT
-name|Reserved1
-range|:
-literal|31
-decl_stmt|;
+name|LOCAL_APIC_FLAGS
 block|}
-name|PROCESSOR_APIC
+name|MADT_PROCESSOR_APIC
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|io_apic
+name|madt_io_apic
 block|{
-name|APIC_HEADER
-name|Header
-decl_stmt|;
+name|APIC_HEADER_DEF
 name|UINT8
 name|IoApicId
 decl_stmt|;
@@ -487,34 +614,201 @@ name|Reserved
 decl_stmt|;
 comment|/* Reserved - must be zero */
 name|UINT32
-name|IoApicAddress
+name|Address
 decl_stmt|;
-comment|/* APIC's physical address */
+comment|/* APIC physical address */
 name|UINT32
-name|Vector
+name|Interrupt
 decl_stmt|;
-comment|/* Interrupt vector index where INTI                                                      * lines start */
+comment|/* Global system interrupt where INTI                                                      * lines start */
 block|}
-name|IO_APIC
+name|MADT_IO_APIC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_interrupt_override
+block|{
+name|APIC_HEADER_DEF
+name|UINT8
+name|Bus
+decl_stmt|;
+comment|/* 0 - ISA */
+name|UINT8
+name|Source
+decl_stmt|;
+comment|/* Interrupt source (IRQ) */
+name|UINT32
+name|Interrupt
+decl_stmt|;
+comment|/* Global system interrupt */
+name|MPS_INTI_FLAGS
+block|}
+name|MADT_INTERRUPT_OVERRIDE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_nmi_source
+block|{
+name|APIC_HEADER_DEF
+name|MPS_INTI_FLAGS
+name|UINT32
+name|Interrupt
+decl_stmt|;
+comment|/* Global system interrupt */
+block|}
+name|MADT_NMI_SOURCE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_local_apic_nmi
+block|{
+name|APIC_HEADER_DEF
+name|UINT8
+name|ProcessorId
+decl_stmt|;
+comment|/* ACPI processor id */
+name|MPS_INTI_FLAGS
+name|UINT8
+name|Lint
+decl_stmt|;
+comment|/* LINTn to which NMI is connected */
+block|}
+name|MADT_LOCAL_APIC_NMI
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_address_override
+block|{
+name|APIC_HEADER_DEF
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|UINT32
+name|Address
+decl_stmt|;
+comment|/* APIC physical address */
+block|}
+name|MADT_ADDRESS_OVERRIDE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_io_sapic
+block|{
+name|APIC_HEADER_DEF
+name|UINT8
+name|IoSapicId
+decl_stmt|;
+comment|/* I/O SAPIC ID */
+name|UINT8
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|UINT32
+name|InterruptBase
+decl_stmt|;
+comment|/* Glocal interrupt for SAPIC start */
+name|UINT64
+name|Address
+decl_stmt|;
+comment|/* SAPIC physical address */
+block|}
+name|MADT_IO_SAPIC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_local_sapic
+block|{
+name|APIC_HEADER_DEF
+name|UINT8
+name|ProcessorId
+decl_stmt|;
+comment|/* ACPI processor id */
+name|UINT8
+name|LocalSapicId
+decl_stmt|;
+comment|/* SAPIC ID */
+name|UINT8
+name|LocalSapicEid
+decl_stmt|;
+comment|/* SAPIC EID */
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|LOCAL_APIC_FLAGS
+block|}
+name|MADT_LOCAL_SAPIC
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|madt_interrupt_source
+block|{
+name|APIC_HEADER_DEF
+name|MPS_INTI_FLAGS
+name|UINT8
+name|InterruptType
+decl_stmt|;
+comment|/* 1=PMI, 2=INIT, 3=corrected */
+name|UINT8
+name|ProcessorId
+decl_stmt|;
+comment|/* Processor ID */
+name|UINT8
+name|ProcessorEid
+decl_stmt|;
+comment|/* Processor EID */
+name|UINT8
+name|IoSapicVector
+decl_stmt|;
+comment|/* Vector value for PMI interrupts */
+name|UINT32
+name|Interrupt
+decl_stmt|;
+comment|/* Global system interrupt */
+name|UINT32
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+block|}
+name|MADT_INTERRUPT_SOURCE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  *  IA64 TBD:  Add SAPIC Tables  */
-end_comment
-
-begin_comment
-comment|/*  *  IA64 TBD:   Modify Smart Battery Description to comply with ACPI IA64  *              extensions.  */
+comment|/*   * Smart Battery   */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|smart_battery_description_table
+name|smart_battery_table
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
+name|ACPI_TABLE_HEADER_DEF
 name|UINT32
 name|WarningLevel
 decl_stmt|;
@@ -525,18 +819,20 @@ name|UINT32
 name|CriticalLevel
 decl_stmt|;
 block|}
-name|SMART_BATTERY_DESCRIPTION_TABLE
+name|SMART_BATTERY_TABLE
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*   * High performance timer  */
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|hpet_description_table
+name|hpet_table
 block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
+name|ACPI_TABLE_HEADER_DEF
 name|UINT32
 name|HardwareId
 decl_stmt|;
@@ -556,7 +852,7 @@ name|UINT8
 name|Attributes
 decl_stmt|;
 block|}
-name|HPET_DESCRIPTION_TABLE
+name|HPET_TABLE
 typedef|;
 end_typedef
 
@@ -687,7 +983,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Get the architecture-specific tables  */
+comment|/*  * Get the ACPI version-specific tables  */
 end_comment
 
 begin_include

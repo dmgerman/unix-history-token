@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -464,6 +464,10 @@ case|:
 case|case
 name|AML_LOCAL_OP
 case|:
+case|case
+name|AML_LOAD_OP
+case|:
+comment|/* DdbHandle from LOAD_OP or LOAD_TABLE_OP */
 name|ACPI_DEBUG_ONLY_MEMBERS
 argument_list|(
 name|ACPI_DEBUG_PRINT
@@ -487,13 +491,26 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown Reference Opcode %X\n"
+literal|"Unknown Reference Opcode %X [%s]\n"
 operator|,
 name|ObjDesc
 operator|->
 name|Reference
 operator|.
 name|Opcode
+operator|,
+operator|(
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|ObjDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
+operator|)
+operator|->
+name|Name
 operator|)
 argument_list|)
 expr_stmt|;
@@ -512,14 +529,14 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Bad descriptor type %X in Obj %p\n"
+literal|"Invalid descriptor %p [%s]\n"
 operator|,
-name|ACPI_GET_DESCRIPTOR_TYPE
+name|ObjDesc
+operator|,
+name|AcpiUtGetDescriptorName
 argument_list|(
 name|ObjDesc
 argument_list|)
-operator|,
-name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
@@ -799,6 +816,15 @@ comment|/* Any operand type will do */
 name|TypeNeeded
 operator|=
 name|ACPI_TYPE_ANY
+expr_stmt|;
+break|break;
+case|case
+name|ARGI_DDBHANDLE
+case|:
+comment|/* Need an operand of type ACPI_TYPE_DDB_HANDLE */
+name|TypeNeeded
+operator|=
+name|ACPI_TYPE_LOCAL_REFERENCE
 expr_stmt|;
 break|break;
 comment|/*          * The more complex cases allow multiple resolved object types          */

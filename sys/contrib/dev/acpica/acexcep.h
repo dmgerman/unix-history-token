@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -664,6 +664,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_BAD_RESOURCE_LENGTH
+value|(ACPI_STATUS) (0x0021 | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
 value|0x0020
 end_define
@@ -960,6 +967,8 @@ block|,
 literal|"AE_AML_BAD_RESOURCE_VALUE"
 block|,
 literal|"AE_AML_CIRCULAR_REFERENCE"
+block|,
+literal|"AE_AML_BAD_RESOURCE_LENGTH"
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
 end_include
 
 begin_define
@@ -538,19 +550,53 @@ comment|/* Cannot be AE_TYPE */
 case|case
 name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
+switch|switch
+condition|(
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_LOAD_OP
+case|:
+comment|/* This is a DdbHandle */
+comment|/* Return an additional reference to the object */
+name|ObjDesc
+operator|=
+name|SourceDesc
+expr_stmt|;
+name|AcpiUtAddReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
 comment|/* No named references are allowed here */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unsupported Reference opcode %X\n"
+literal|"Unsupported Reference opcode %X (%s)\n"
 operator|,
 name|SourceDesc
 operator|->
 name|Reference
 operator|.
 name|Opcode
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|SourceDesc
+operator|->
+name|Reference
+operator|.
+name|Opcode
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -559,6 +605,8 @@ argument_list|(
 name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
+block|}
+break|break;
 comment|/* Default case is for unknown types */
 default|default:
 name|ACPI_DEBUG_PRINT

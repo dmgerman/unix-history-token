@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 65 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -134,11 +134,9 @@ operator|->
 name|SmiCmd
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_ERROR
-operator|,
 literal|"No SMI_CMD in FADT, mode transition failed.\n"
 operator|)
 argument_list|)
@@ -163,12 +161,10 @@ operator|->
 name|AcpiDisable
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"No mode transition supported in this system.\n"
+literal|"No ACPI mode transition supported in this system (enable/disable both zero)\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -262,6 +258,18 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not write mode change, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -278,10 +286,6 @@ condition|(
 name|Retry
 condition|)
 block|{
-name|Status
-operator|=
-name|AE_NO_HARDWARE_RESPONSE
-expr_stmt|;
 if|if
 condition|(
 name|AcpiHwGetMode
@@ -301,11 +305,11 @@ name|Mode
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_OK
+argument_list|)
 expr_stmt|;
-break|break;
 block|}
 name|AcpiOsStall
 argument_list|(
@@ -316,9 +320,16 @@ name|Retry
 operator|--
 expr_stmt|;
 block|}
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Hardware never changed modes\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|Status
+name|AE_NO_HARDWARE_RESPONSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -346,6 +357,21 @@ argument_list|(
 literal|"HwGetMode"
 argument_list|)
 expr_stmt|;
+comment|/*      * ACPI 2.0 clarified that if SMI_CMD in FADT is zero,      * system does not support mode transition.      */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_FADT
+operator|->
+name|SmiCmd
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+name|ACPI_SYS_MODE_ACPI
+argument_list|)
+expr_stmt|;
+block|}
 name|Status
 operator|=
 name|AcpiGetRegister

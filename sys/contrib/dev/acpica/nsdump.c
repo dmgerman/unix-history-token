@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 151 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 156 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -431,11 +431,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%4.4s %-12s %p "
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ThisNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|AcpiUtGetTypeName
 argument_list|(
@@ -533,7 +532,7 @@ name|ACPI_TYPE_DEVICE
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"Notify object: %p"
+literal|"Notify Object: %p\n"
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -576,16 +575,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"= %8.8X%8.8X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -791,16 +781,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Addr %8.8X%8.8X Len %.4X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Region
-operator|.
-name|Address
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -870,6 +851,8 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Buf [%4.4s]"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|BufferField
@@ -879,10 +862,7 @@ operator|->
 name|Buffer
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -894,6 +874,8 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Rgn [%4.4s]"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|CommonField
@@ -903,10 +885,7 @@ operator|->
 name|Region
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -917,6 +896,8 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Rgn [%4.4s] Bnk [%4.4s]"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|CommonField
@@ -926,11 +907,10 @@ operator|->
 name|Region
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|BankField
@@ -940,10 +920,7 @@ operator|->
 name|CommonField
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -954,6 +931,8 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Idx [%4.4s] Dat [%4.4s]"
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|IndexField
@@ -963,11 +942,10 @@ operator|->
 name|CommonField
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|IndexField
@@ -977,10 +955,7 @@ operator|->
 name|CommonField
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -991,17 +966,10 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Target %4.4s (%p)\n"
 argument_list|,
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
-operator|)
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 argument_list|,
 name|ObjDesc
 argument_list|)
@@ -1037,7 +1005,7 @@ name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" Off %.2X Len %.2X Acc %.2hd\n"
+literal|" Off %.3X Len %.2X Acc %.2hd\n"
 argument_list|,
 operator|(
 name|ObjDesc
@@ -1144,18 +1112,9 @@ name|ACPI_TYPE_INTEGER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|" N:%X%X\n"
+literal|" I:%8.8X8.8%X\n"
 argument_list|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-argument_list|)
-argument_list|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1359,7 +1318,12 @@ break|break;
 default|default:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(String or Buffer ptr - not an object descriptor)\n"
+literal|"(String or Buffer ptr - not an object descriptor) [%s]\n"
+argument_list|,
+name|AcpiUtGetDescriptorName
+argument_list|(
+name|ObjDesc
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|BytesToDump

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslanalyze.c - check for semantic errors  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2030,6 +2030,39 @@ argument_list|(
 name|ASL_ERROR
 argument_list|,
 name|ASL_MSG_NO_WHILE
+argument_list|,
+name|Op
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|PARSEOP_STALL
+case|:
+if|if
+condition|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|Integer
+operator|>
+name|ACPI_UINT8_MAX
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_INVALID_TIME
 argument_list|,
 name|Op
 argument_list|,

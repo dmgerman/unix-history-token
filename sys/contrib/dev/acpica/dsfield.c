@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -156,7 +156,27 @@ name|AE_AML_NO_OPERAND
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * During the load phase, we want to enter the name of the field into      * the namespace.  During the execute phase (when we evaluate the size      * operand), we want to lookup the name      */
+if|if
+condition|(
+name|WalkState
+operator|->
+name|DeferredNode
+condition|)
+block|{
+name|Node
+operator|=
+name|WalkState
+operator|->
+name|DeferredNode
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/*          * During the load phase, we want to enter the name of the field into          * the namespace.  During the execute phase (when we evaluate the size          * operand), we want to lookup the name          */
 if|if
 condition|(
 name|WalkState
@@ -184,7 +204,7 @@ operator||
 name|ACPI_NS_ERROR_IF_FOUND
 expr_stmt|;
 block|}
-comment|/*      * Enter the NameString into the namespace      */
+comment|/*          * Enter the NameString into the namespace          */
 name|Status
 operator|=
 name|AcpiNsLookup
@@ -241,6 +261,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* We could put the returned object (Node) on the object stack for later, but      * for now, we will put it in the "op" object that the parser uses, so we      * can get it again at the end of this scope      */
 name|Op

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 261 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 262 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -634,6 +634,13 @@ end_endif
 begin_comment
 comment|/*  * Miscellaneous common types  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT16
+name|UINT16_BIT
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

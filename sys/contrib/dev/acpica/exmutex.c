@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 18 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 19 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -268,15 +268,14 @@ argument_list|(
 operator|(
 literal|"Cannot acquire Mutex [%4.4s], null thread info\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -307,15 +306,14 @@ argument_list|(
 operator|(
 literal|"Cannot acquire Mutex [%4.4s], incorrect SyncLevel\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -494,15 +492,14 @@ argument_list|(
 operator|(
 literal|"Cannot release Mutex [%4.4s], not acquired\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -526,15 +523,14 @@ argument_list|(
 operator|(
 literal|"Cannot release Mutex [%4.4s], null thread info\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -573,15 +569,14 @@ name|Thread
 operator|->
 name|ThreadId
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->
@@ -620,15 +615,14 @@ argument_list|(
 operator|(
 literal|"Cannot release Mutex [%4.4s], incorrect SyncLevel\n"
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
 name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

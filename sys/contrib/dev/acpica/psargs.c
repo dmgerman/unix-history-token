@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1125,6 +1125,9 @@ block|{
 name|UINT32
 name|AmlOffset
 init|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|ParserState
@@ -1598,6 +1601,9 @@ name|Value
 operator|.
 name|Size
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_PTR_DIFF
 argument_list|(
 name|ParserState

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 147 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -266,7 +266,25 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * Extract a byte of data using a pointer.  Any more than a byte and we   * get into potential aligment issues -- see the STORE macros below   */
+comment|/*  * printf() format helpers  */
+end_comment
+
+begin_comment
+comment|/* Split 64-bit integer into two 32-bit values. Use with %8,8X%8.8X */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_FORMAT_UINT64
+parameter_list|(
+name|i
+parameter_list|)
+value|ACPI_HIDWORD(i),ACPI_LODWORD(i)
+end_define
+
+begin_comment
+comment|/*  * Extract a byte of data using a pointer.  Any more than a byte and we  * get into potential aligment issues -- see the STORE macros below  */
 end_comment
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 120 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 122 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ value|union acpi_operand_object       *SystemNotify;
 comment|/* Handler for system notifies */
 value|\     union acpi_operand_object       *DeviceNotify;
 comment|/* Handler for driver notifies */
-value|\     union acpi_operand_object       *AddressSpace;
+value|\     union acpi_operand_object       *Handler;
 end_define
 
 begin_comment
@@ -392,7 +392,7 @@ decl_stmt|;
 name|union
 name|acpi_operand_object
 modifier|*
-name|AddressSpace
+name|Handler
 decl_stmt|;
 comment|/* Handler for region access */
 name|ACPI_NAMESPACE_NODE
@@ -921,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_CACHED
-value|0x11
+value|0x01
 end_define
 
 begin_comment
@@ -932,98 +932,105 @@ begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE
-value|0x20
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_UPDATE
-value|0x21
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_PACKAGE
-value|0x22
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_CONTROL
-value|0x23
+value|0x05
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_RPSCOPE
-value|0x24
+value|0x06
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_PSCOPE
-value|0x25
+value|0x07
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_WSCOPE
-value|0x26
+value|0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_RESULT
-value|0x27
+value|0x09
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_NOTIFY
-value|0x28
+value|0x0A
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE_THREAD
-value|0x29
+value|0x0B
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_WALK
-value|0x44
+value|0x0C
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_PARSER
-value|0x66
+value|0x0D
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_OPERAND
-value|0x88
+value|0x0E
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_NAMED
-value|0xAA
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_MAX
+value|0x0F
 end_define
 
 begin_typedef

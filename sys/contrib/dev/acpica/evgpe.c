@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evgpe - General Purpose Event handling and dispatch  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -266,9 +266,6 @@ decl_stmt|;
 name|UINT8
 name|EnabledStatusByte
 decl_stmt|;
-name|UINT8
-name|BitMask
-decl_stmt|;
 name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|GpeRegisterInfo
@@ -282,9 +279,6 @@ decl_stmt|;
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
 name|GpeBlock
-decl_stmt|;
-name|UINT32
-name|GpeNumber
 decl_stmt|;
 name|UINT32
 name|i
@@ -425,19 +419,7 @@ name|ACPI_DB_INTERRUPTS
 operator|,
 literal|"GPE pair: Status %8.8X%8.8X = %02X, Enable %8.8X%8.8X = %02X\n"
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|StatusAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
@@ -453,19 +435,7 @@ name|GpeRegisterInfo
 operator|->
 name|Status
 operator|,
-name|ACPI_HIDWORD
-argument_list|(
-name|ACPI_GET_ADDRESS
-argument_list|(
-name|GpeRegisterInfo
-operator|->
-name|EnableAddress
-operator|.
-name|Address
-argument_list|)
-argument_list|)
-operator|,
-name|ACPI_LODWORD
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ACPI_GET_ADDRESS
 argument_list|(
@@ -514,10 +484,6 @@ control|(
 name|j
 operator|=
 literal|0
-operator|,
-name|BitMask
-operator|=
-literal|1
 init|;
 name|j
 operator|<
@@ -525,10 +491,6 @@ name|ACPI_GPE_REGISTER_WIDTH
 condition|;
 name|j
 operator|++
-operator|,
-name|BitMask
-operator|<<=
-literal|1
 control|)
 block|{
 comment|/* Examine one GPE bit */
@@ -536,20 +498,13 @@ if|if
 condition|(
 name|EnabledStatusByte
 operator|&
-name|BitMask
+name|AcpiGbl_DecodeTo8bit
+index|[
+name|j
+index|]
 condition|)
 block|{
 comment|/*                      * Found an active GPE. Dispatch the event to a handler                      * or method.                      */
-name|GpeNumber
-operator|=
-operator|(
-name|i
-operator|*
-name|ACPI_GPE_REGISTER_WIDTH
-operator|)
-operator|+
-name|j
-expr_stmt|;
 name|IntStatus
 operator||=
 name|AcpiEvGpeDispatch
@@ -559,18 +514,19 @@ name|GpeBlock
 operator|->
 name|EventInfo
 index|[
-name|GpeNumber
+operator|(
+name|i
+operator|*
+name|ACPI_GPE_REGISTER_WIDTH
+operator|)
+operator|+
+name|j
 index|]
 argument_list|,
-name|GpeNumber
+name|j
 operator|+
-name|GpeBlock
+name|GpeRegisterInfo
 operator|->
-name|RegisterInfo
-index|[
-name|GpeNumber
-index|]
-operator|.
 name|BaseGpeNumber
 argument_list|)
 expr_stmt|;
@@ -751,13 +707,12 @@ argument_list|(
 name|Status
 argument_list|)
 operator|,
+name|AcpiUtGetNodeName
+argument_list|(
 name|LocalGpeEventInfo
 operator|.
 name|MethodNode
-operator|->
-name|Name
-operator|.
-name|Ascii
+argument_list|)
 operator|,
 name|GpeNumber
 operator|)
@@ -893,6 +848,47 @@ operator|->
 name|Context
 argument_list|)
 expr_stmt|;
+comment|/* It is now safe to clear level-triggered events. */
+if|if
+condition|(
+name|GpeEventInfo
+operator|->
+name|Flags
+operator|&
+name|ACPI_EVENT_LEVEL_TRIGGERED
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiHwClearGpe
+argument_list|(
+name|GpeEventInfo
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2X]\n"
+operator|,
+name|GpeNumber
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_VALUE
+argument_list|(
+name|ACPI_INTERRUPT_NOT_HANDLED
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
@@ -933,7 +929,7 @@ name|ACPI_INTERRUPT_NOT_HANDLED
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Execute the method associated with the GPE. */
+comment|/*           * Execute the method associated with the GPE          * NOTE: Level-triggered GPEs are cleared after the method completes.          */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -972,7 +968,7 @@ name|GpeNumber
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Disable the GPE.  The GPE will remain disabled until the ACPI          * Core Subsystem is restarted, or the handler is reinstalled.          */
+comment|/*          * Disable the GPE.  The GPE will remain disabled until the ACPI          * Core Subsystem is restarted, or a handler is installed.          */
 name|Status
 operator|=
 name|AcpiHwDisableGpe
@@ -992,47 +988,6 @@ name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
 literal|"AcpiEvGpeDispatch: Unable to disable GPE[%2X]\n"
-operator|,
-name|GpeNumber
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_VALUE
-argument_list|(
-name|ACPI_INTERRUPT_NOT_HANDLED
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* It is now safe to clear level-triggered events. */
-if|if
-condition|(
-name|GpeEventInfo
-operator|->
-name|Flags
-operator|&
-name|ACPI_EVENT_LEVEL_TRIGGERED
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiHwClearGpe
-argument_list|(
-name|GpeEventInfo
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"AcpiEvGpeDispatch: Unable to clear GPE[%2X]\n"
 operator|,
 name|GpeNumber
 operator|)

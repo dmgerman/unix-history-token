@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: aslcompile - top level compile module  *              $Revision: 72 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s\n%s%s\n%s%s version %X [%s]\n%s%s\n%sSupports ACPI Specification Revision 2.0b\n%s\n"
+literal|"%s\n%s%s\n%s%s version %X [%s]\n%s%s\n%sSupports ACPI Specification Revision 2.0c\n%s\n"
 argument_list|,
 name|Prefix
 argument_list|,
@@ -351,6 +351,137 @@ block|}
 end_function
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  FileInfo        - Points to an open input file  *  * RETURN:      Status (0 = OK)  *  * DESCRIPTION: Verify that the input file is entirely ASCII.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|FlCheckForAscii
+parameter_list|(
+name|ASL_FILE_INFO
+modifier|*
+name|FileInfo
+parameter_list|)
+block|{
+name|UINT8
+name|Byte
+decl_stmt|;
+name|ACPI_SIZE
+name|BadBytes
+init|=
+literal|0
+decl_stmt|;
+name|ACPI_SIZE
+name|Offset
+init|=
+literal|0
+decl_stmt|;
+comment|/* Read the entire file */
+while|while
+condition|(
+name|fread
+argument_list|(
+operator|&
+name|Byte
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|FileInfo
+operator|->
+name|Handle
+argument_list|)
+condition|)
+block|{
+comment|/* Check for an ASCII character */
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+name|Byte
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|BadBytes
+operator|<
+literal|10
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Non-ASCII character: 0x%2.2X at offset 0x%X\n"
+argument_list|,
+name|Byte
+argument_list|,
+name|Offset
+argument_list|)
+expr_stmt|;
+block|}
+name|BadBytes
+operator|++
+expr_stmt|;
+block|}
+name|Offset
+operator|++
+expr_stmt|;
+block|}
+comment|/* Were there any non-ASCII characters in the file? */
+if|if
+condition|(
+name|BadBytes
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%d non-ASCII characters found in input file, appears to be binary\n"
+argument_list|,
+name|BadBytes
+argument_list|)
+expr_stmt|;
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_NON_ASCII
+argument_list|,
+name|NULL
+argument_list|,
+name|FileInfo
+operator|->
+name|Filename
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_BAD_CHARACTER
+operator|)
+return|;
+block|}
+comment|/* File is OK, seek back to the beginning */
+name|fseek
+argument_list|(
+name|FileInfo
+operator|->
+name|Handle
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    CmDoCompile  *  * PARAMETERS:  None  *  * RETURN:      Status (0 = OK)  *  * DESCRIPTION: This procedure performs the entire compile  *  ******************************************************************************/
 end_comment
 
@@ -394,6 +525,36 @@ name|ASL_FILE_INPUT
 index|]
 operator|.
 name|Filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AePrintErrorLog
+argument_list|(
+name|ASL_FILE_STDERR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/* Ensure that the input file is 100% ASCII text */
+name|Status
+operator|=
+name|FlCheckForAscii
+argument_list|(
+operator|&
+name|Gbl_Files
+index|[
+name|ASL_FILE_INPUT
+index|]
 argument_list|)
 expr_stmt|;
 if|if

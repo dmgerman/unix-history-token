@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 99 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 100 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -847,7 +847,52 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*          * All prefixes have been handled, and the name is          * in NameString          */
-comment|/*          * Differentiate between a namespace "create" operation          * versus a "lookup" operation (IMODE_LOAD_PASS2 vs.          * IMODE_EXECUTE) in order to support the creation of          * namespace objects during the execution of control methods.          */
+comment|/*          * Special handling for BufferField declarations.  This is a deferred          * opcode that unfortunately defines the field name as the last          * parameter instead of the first.  We get here when we are performing          * the deferred execution, so the actual name of the field is already          * in the namespace.  We don't want to attempt to look it up again          * because we may be executing in a different scope than where the          * actual opcode exists.          */
+if|if
+condition|(
+operator|(
+name|WalkState
+operator|->
+name|DeferredNode
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|DeferredNode
+operator|->
+name|Type
+operator|==
+name|ACPI_TYPE_BUFFER_FIELD
+operator|)
+operator|&&
+operator|(
+name|ArgIndex
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|ObjDesc
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_OPERAND_OBJECT
+argument_list|,
+name|WalkState
+operator|->
+name|DeferredNode
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+block|}
+else|else
+comment|/* All other opcodes */
+block|{
+comment|/*              * Differentiate between a namespace "create" operation              * versus a "lookup" operation (IMODE_LOAD_PASS2 vs.              * IMODE_EXECUTE) in order to support the creation of              * namespace objects during the execution of control methods.              */
 name|ParentOp
 operator|=
 name|Arg
@@ -951,7 +996,7 @@ name|ObjDesc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*          * The only case where we pass through (ignore) a NOT_FOUND          * error is for the CondRefOf opcode.          */
+comment|/*              * The only case where we pass through (ignore) a NOT_FOUND              * error is for the CondRefOf opcode.              */
 if|if
 condition|(
 name|Status
@@ -970,7 +1015,7 @@ operator|==
 name|AML_COND_REF_OF_OP
 condition|)
 block|{
-comment|/*                  * For the Conditional Reference op, it's OK if                  * the name is not found;  We just need a way to                  * indicate this to the interpreter, set the                  * object to the root                  */
+comment|/*                      * For the Conditional Reference op, it's OK if                      * the name is not found;  We just need a way to                      * indicate this to the interpreter, set the                      * object to the root                      */
 name|ObjDesc
 operator|=
 name|ACPI_CAST_PTR
@@ -987,7 +1032,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*                  * We just plain didn't find it -- which is a                  * very serious error at this point                  */
+comment|/*                      * We just plain didn't find it -- which is a                      * very serious error at this point                      */
 name|Status
 operator|=
 name|AE_AML_NAME_NOT_FOUND
@@ -1009,6 +1054,7 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Free the namestring created above */
 name|ACPI_MEM_FREE

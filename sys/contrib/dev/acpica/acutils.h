@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 155 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 157 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -237,6 +237,30 @@ name|AcpiUtGetTypeName
 parameter_list|(
 name|ACPI_OBJECT_TYPE
 name|Type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|AcpiUtGetNodeName
+parameter_list|(
+name|void
+modifier|*
+name|Object
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|AcpiUtGetDescriptorName
+parameter_list|(
+name|void
+modifier|*
+name|Object
 parameter_list|)
 function_decl|;
 end_function_decl
