@@ -47,13 +47,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NG_SR_HOOK_CONTROL
-value|"control"
-end_define
-
-begin_define
-define|#
-directive|define
 name|NG_SR_HOOK_RAW
 value|"rawdata"
 end_define

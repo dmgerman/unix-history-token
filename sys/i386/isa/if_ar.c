@@ -10081,7 +10081,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * give our ok for a hook to be added...  * If we are not running this should kick the device into life.  * We allow hooks called "control" and dlci[1-1023]  * The hook's private info points to our stash of info about that  * channel.  */
+comment|/*  * give our ok for a hook to be added...  * If we are not running this should kick the device into life.  * The hook's private info points to our stash of info about that  * channel.  */
 end_comment
 
 begin_function
