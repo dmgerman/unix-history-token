@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.8 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,12 +84,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sysexits.h>
 end_include
 
 begin_include
@@ -385,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -415,7 +409,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -447,7 +441,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -474,7 +468,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -488,7 +482,7 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -516,7 +510,7 @@ operator|)
 condition|)
 name|exit
 argument_list|(
-name|EX_SOFTWARE
+literal|1
 argument_list|)
 expr_stmt|;
 name|cur
@@ -578,7 +572,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -730,7 +724,7 @@ argument_list|()
 condition|)
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -835,7 +829,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -945,7 +939,7 @@ name|tome
 condition|)
 name|exit
 argument_list|(
-name|EX_OK
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -964,7 +958,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_DATAERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1476,7 +1470,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_NOINPUT
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1504,7 +1498,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1570,7 +1564,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1623,7 +1617,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
