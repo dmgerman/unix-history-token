@@ -269,13 +269,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KTR_IDLELOOP
+name|KTR_WITNESS
 value|0x00200000
 end_define
-
-begin_comment
-comment|/* checks done in the idle process */
-end_comment
 
 begin_define
 define|#
@@ -389,6 +385,24 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KTRDESCSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|KTRDESCSIZE
+value|80
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|ktr_entry
@@ -397,18 +411,12 @@ name|struct
 name|timespec
 name|ktr_tv
 decl_stmt|;
+name|int
+name|ktr_cpu
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTR_EXTEND
-ifndef|#
-directive|ifndef
-name|KTRDESCSIZE
-define|#
-directive|define
-name|KTRDESCSIZE
-value|80
-endif|#
-directive|endif
 name|char
 name|ktr_desc
 index|[
@@ -422,9 +430,6 @@ name|ktr_filename
 decl_stmt|;
 name|int
 name|ktr_line
-decl_stmt|;
-name|int
-name|ktr_cpu
 decl_stmt|;
 else|#
 directive|else
@@ -524,24 +529,6 @@ ifdef|#
 directive|ifdef
 name|KTR
 end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KTR_ENTRIES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KTR_ENTRIES
-value|1024
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
