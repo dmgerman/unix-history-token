@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	5.6 (Berkeley) %G%"
+literal|"@(#)sleep.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -192,7 +193,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: sleep time\n"
+literal|"usage: sleep seconds\n"
 argument_list|)
 expr_stmt|;
 name|exit
