@@ -1096,13 +1096,6 @@ block|;
 asm|__asm __volatile (
 literal|"1:\tldl_l %0, %4\n\t"
 comment|/* load old value */
-ifdef|#
-directive|ifdef
-name|notyet
-literal|"zapnot  %0,0xf,%0\n\t"
-comment|/* Chop of signed bits */
-endif|#
-directive|endif
 literal|"cmpeq %0, %2, %0\n\t"
 comment|/* compare */
 literal|"beq %0, 2f\n\t"
@@ -1136,6 +1129,12 @@ operator|)
 operator|:
 literal|"r"
 operator|(
+operator|(
+name|long
+operator|)
+operator|(
+name|int
+operator|)
 name|cmpval
 operator|)
 block|,
