@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.25 (Berkeley) %G%"
+literal|"@(#)main.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5368,6 +5368,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|checkfd012
+argument_list|(
+literal|"disconnect"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|LOG

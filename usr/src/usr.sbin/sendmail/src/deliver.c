@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.20 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3324,6 +3324,40 @@ name|SmtpPhase
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+block|{
+name|char
+name|wbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+comment|/* make absolutely certain 0, 1, and 2 are in use */
+name|sprintf
+argument_list|(
+name|wbuf
+argument_list|,
+literal|"%s... openmailer(%s)"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+name|checkfd012
+argument_list|(
+name|wbuf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* check for Local Person Communication -- not for mortals!!! */
 if|if
 condition|(
@@ -3849,38 +3883,6 @@ comment|/* DAEMON */
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|char
-name|wbuf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
-comment|/* make absolutely certain 0, 1, and 2 are in use */
-name|sprintf
-argument_list|(
-name|wbuf
-argument_list|,
-literal|"%s... openmailer(%s)"
-argument_list|,
-name|e
-operator|->
-name|e_to
-argument_list|,
-name|m
-operator|->
-name|m_name
-argument_list|)
-expr_stmt|;
-name|checkfd012
-argument_list|(
-name|wbuf
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|TrafficLogFile
@@ -5577,6 +5579,40 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	**  Restore state and return. 	*/
+ifdef|#
+directive|ifdef
+name|XDEBUG
+block|{
+name|char
+name|wbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+comment|/* make absolutely certain 0, 1, and 2 are in use */
+name|sprintf
+argument_list|(
+name|wbuf
+argument_list|,
+literal|"%s... end of deliver(%s)"
+argument_list|,
+name|e
+operator|->
+name|e_to
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
+name|checkfd012
+argument_list|(
+name|wbuf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|errno
 operator|=
 literal|0

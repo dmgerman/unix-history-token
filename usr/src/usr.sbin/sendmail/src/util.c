@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.9 (Berkeley) %G%"
+literal|"@(#)util.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2690,6 +2690,29 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+if|if
+condition|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+operator|==
+literal|1
+condition|)
+name|syserr
+argument_list|(
+literal|"xfclose(%s %s): fd = 1"
+argument_list|,
+name|a
+argument_list|,
+name|b
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|fclose
