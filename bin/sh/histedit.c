@@ -486,6 +486,13 @@ argument_list|,
 literal|"emacs"
 argument_list|)
 expr_stmt|;
+name|el_source
+argument_list|(
+name|el
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 else|else
