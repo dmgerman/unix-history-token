@@ -529,7 +529,7 @@ name|pt
 operator|)
 return|;
 block|}
-comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NULL. 		 */
+comment|/* 		 * Build pointer to the parent directory, allocating memory 		 * as necessary.  Max length is 3 for "../", the largest 		 * possible component name, plus a trailing NUL. 		 */
 if|if
 condition|(
 name|bup
