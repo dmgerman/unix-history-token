@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ktrace.h	1.2 (Berkeley) %G%  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -14,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -38,15 +42,15 @@ end_include
 begin_define
 define|#
 directive|define
-name|DEF_FACS
-value|(KTRFAC_SYSCALL | KTRFAC_SYSRET | KTRFAC_NAMEI)
+name|ALL_POINTS
+value|(KTRFAC_SYSCALL | KTRFAC_SYSRET | KTRFAC_NAMEI | \ 		  KTRFAC_GENIO | KTRFAC_PSIG)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DEF_TRACEFILE
-value|"ktrace.data"
+value|"ktrace.out"
 end_define
 
 end_unit
