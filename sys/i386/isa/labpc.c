@@ -63,6 +63,13 @@ directive|include
 file|<sys/buf.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|b_actf
+value|b_act.tqe_next
+end_define
+
 begin_include
 include|#
 directive|include
