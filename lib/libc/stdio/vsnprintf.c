@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vsnprintf.c,v 1.5 1997/02/22 15:02:45 peter Exp $"
+literal|"$Id: vsnprintf.c,v 1.6 1997/12/24 12:31:32 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,17 +90,6 @@ decl_stmt|;
 name|FILE
 name|f
 decl_stmt|;
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 if|if
 condition|(
 operator|(
