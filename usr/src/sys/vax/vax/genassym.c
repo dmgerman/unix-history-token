@@ -95,6 +95,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/text.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vax/rpb.h"
 end_include
 
@@ -204,6 +210,18 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
+name|struct
+name|text
+modifier|*
+name|tp
+init|=
+operator|(
+expr|struct
+name|text
+operator|*
+operator|)
+literal|0
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"#ifdef LOCORE\n"
@@ -227,6 +245,16 @@ operator|&
 name|p
 operator|->
 name|p_rlink
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tP_XLINK %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_xlink
 argument_list|)
 expr_stmt|;
 name|printf
@@ -321,6 +349,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tP_FLAG %d\n"
+argument_list|,
+operator|&
+name|p
+operator|->
+name|p_flag
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tSSLEEP %d\n"
 argument_list|,
 name|SSLEEP
@@ -381,6 +419,16 @@ operator|&
 name|rp
 operator|->
 name|rp_flag
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tX_CADDR %d\n"
+argument_list|,
+operator|&
+name|tp
+operator|->
+name|x_caddr
 argument_list|)
 expr_stmt|;
 name|printf
