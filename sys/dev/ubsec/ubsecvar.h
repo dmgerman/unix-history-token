@@ -693,11 +693,6 @@ name|sc_dev
 decl_stmt|;
 comment|/* device backpointer */
 name|struct
-name|mtx
-name|sc_mtx
-decl_stmt|;
-comment|/* per-driver lock */
-name|struct
 name|resource
 modifier|*
 name|sc_irq
@@ -744,6 +739,11 @@ name|int32_t
 name|sc_cid
 decl_stmt|;
 comment|/* crypto tag */
+name|struct
+name|mtx
+name|sc_mcr1lock
+decl_stmt|;
+comment|/* mcr1 operation lock */
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
@@ -768,6 +768,11 @@ name|int
 name|sc_nqchip
 decl_stmt|;
 comment|/* count on chip, mcr1 */
+name|struct
+name|mtx
+name|sc_freeqlock
+decl_stmt|;
+comment|/* freequeue lock */
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
@@ -776,6 +781,11 @@ argument_list|)
 name|sc_freequeue
 expr_stmt|;
 comment|/* list of free queue elements */
+name|struct
+name|mtx
+name|sc_mcr2lock
+decl_stmt|;
+comment|/* mcr2 operation lock */
 name|SIMPLEQ_HEAD
 argument_list|(
 argument_list|,
@@ -867,26 +877,6 @@ comment|/* free list */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|UBSEC_LOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_lock(&(_sc)->sc_mtx)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UBSEC_UNLOCK
-parameter_list|(
-name|_sc
-parameter_list|)
-value|mtx_unlock(&(_sc)->sc_mtx)
-end_define
 
 begin_define
 define|#
