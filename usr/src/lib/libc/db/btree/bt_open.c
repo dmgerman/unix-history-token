@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.11 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -840,7 +840,7 @@ condition|(
 name|m
 operator|.
 name|m_flags
-operator||
+operator|&
 operator|~
 name|SAVEMETA
 condition|)
