@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -18,13 +24,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)svc_auth_unix.c 1.28 88/02/08 Copyr 1984 Sun Micro";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)svc_auth_unix.c 1.28 88/02/08 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)svc_auth_unix.c	2.3 88/08/01 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)svc_auth_unix.c	2.3 88/08/01 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -48,6 +66,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -63,6 +93,12 @@ directive|include
 file|<rpc/rpc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_comment
 comment|/*  * Unix longhand authenticator  */
 end_comment
@@ -76,20 +112,17 @@ name|rqst
 parameter_list|,
 name|msg
 parameter_list|)
-specifier|register
 name|struct
 name|svc_req
 modifier|*
 name|rqst
 decl_stmt|;
-specifier|register
 name|struct
 name|rpc_msg
 modifier|*
 name|msg
 decl_stmt|;
 block|{
-specifier|register
 name|enum
 name|auth_stat
 name|stat
@@ -97,13 +130,11 @@ decl_stmt|;
 name|XDR
 name|xdrs
 decl_stmt|;
-specifier|register
 name|struct
 name|authunix_parms
 modifier|*
 name|aup
 decl_stmt|;
-specifier|register
 name|int32_t
 modifier|*
 name|buf
@@ -136,15 +167,28 @@ struct|;
 name|u_int
 name|auth_len
 decl_stmt|;
-name|int
+name|size_t
 name|str_len
 decl_stmt|,
 name|gid_len
 decl_stmt|;
-specifier|register
-name|int
+name|u_int
 name|i
 decl_stmt|;
+name|assert
+argument_list|(
+name|rqst
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|msg
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|area
 operator|=
 operator|(
@@ -231,14 +275,17 @@ name|aup
 operator|->
 name|aup_time
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_INT32
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
 name|str_len
 operator|=
-name|IXDR_GET_U_LONG
+operator|(
+name|size_t
+operator|)
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -258,20 +305,14 @@ goto|goto
 name|done
 goto|;
 block|}
-name|memcpy
+name|memmove
 argument_list|(
 name|aup
 operator|->
 name|aup_machname
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|buf
 argument_list|,
-operator|(
-name|u_int
-operator|)
 name|str_len
 argument_list|)
 expr_stmt|;
@@ -304,7 +345,10 @@ name|aup
 operator|->
 name|aup_uid
 operator|=
-name|IXDR_GET_LONG
+operator|(
+name|int
+operator|)
+name|IXDR_GET_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -313,14 +357,20 @@ name|aup
 operator|->
 name|aup_gid
 operator|=
-name|IXDR_GET_LONG
+operator|(
+name|int
+operator|)
+name|IXDR_GET_INT32
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
 name|gid_len
 operator|=
-name|IXDR_GET_U_LONG
+operator|(
+name|size_t
+operator|)
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -367,7 +417,10 @@ index|[
 name|i
 index|]
 operator|=
-name|IXDR_GET_LONG
+operator|(
+name|int
+operator|)
+name|IXDR_GET_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -394,10 +447,16 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"bad auth_len gid %d str %d auth %d\n"
+literal|"bad auth_len gid %ld str %ld auth %u\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|gid_len
 argument_list|,
+operator|(
+name|long
+operator|)
 name|str_len
 argument_list|,
 name|auth_len

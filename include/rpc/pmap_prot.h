@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)pmap_prot.h 1.14 88/02/08 SMI  *	from: @(#)pmap_prot.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
+comment|/*	$NetBSD: pmap_prot.h,v 1.8 2000/06/02 22:57:55 fvdl Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)pmap_prot.h 1.14 88/02/08 SMI   *	from: @(#)pmap_prot.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -10,13 +14,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_RPC_PMAPPROT_H
+name|_RPC_PMAP_PROT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_RPC_PMAPPROT_H
+name|_RPC_PMAP_PROT_H
 end_define
 
 begin_include
@@ -181,6 +185,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_pmaplist_ptr
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+expr|struct
+name|pmaplist
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|__END_DECLS
 end_macro
@@ -191,7 +213,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_RPC_PMAPPROT_H */
+comment|/* !_RPC_PMAP_PROT_H */
 end_comment
 
 end_unit

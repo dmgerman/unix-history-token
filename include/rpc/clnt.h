@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
+comment|/*	$NetBSD: clnt.h,v 1.14 2000/06/02 22:57:55 fvdl Exp $	*/
+end_comment
+
+begin_comment
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 94/04/29 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -22,7 +26,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|<rpc/clnt_stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netconfig.h>
 end_include
 
 begin_include
@@ -32,109 +48,29 @@ file|<sys/un.h>
 end_include
 
 begin_comment
-comment|/*  * Rpc calls return an enum clnt_stat.  This should be looked at more,  * since each implementation is required to live with this (implementation  * independent) list of errors.  */
+comment|/*  * Well-known IPV6 RPC broadcast address.  */
 end_comment
 
-begin_enum
-enum|enum
-name|clnt_stat
-block|{
-name|RPC_SUCCESS
-init|=
-literal|0
-block|,
-comment|/* call succeeded */
-comment|/* 	 * local errors 	 */
-name|RPC_CANTENCODEARGS
-init|=
-literal|1
-block|,
-comment|/* can't encode arguments */
-name|RPC_CANTDECODERES
-init|=
-literal|2
-block|,
-comment|/* can't decode results */
-name|RPC_CANTSEND
-init|=
-literal|3
-block|,
-comment|/* failure in sending call */
-name|RPC_CANTRECV
-init|=
-literal|4
-block|,
-comment|/* failure in receiving result */
-name|RPC_TIMEDOUT
-init|=
-literal|5
-block|,
-comment|/* call timed out */
-comment|/* 	 * remote errors 	 */
-name|RPC_VERSMISMATCH
-init|=
-literal|6
-block|,
-comment|/* rpc versions not compatible */
-name|RPC_AUTHERROR
-init|=
-literal|7
-block|,
-comment|/* authentication error */
-name|RPC_PROGUNAVAIL
-init|=
-literal|8
-block|,
-comment|/* program not available */
-name|RPC_PROGVERSMISMATCH
-init|=
-literal|9
-block|,
-comment|/* program version mismatched */
-name|RPC_PROCUNAVAIL
-init|=
-literal|10
-block|,
-comment|/* procedure unavailable */
-name|RPC_CANTDECODEARGS
-init|=
-literal|11
-block|,
-comment|/* decode arguments error */
-name|RPC_SYSTEMERROR
-init|=
-literal|12
-block|,
-comment|/* generic "other problem" */
-comment|/* 	 * callrpc& clnt_create errors 	 */
-name|RPC_UNKNOWNHOST
-init|=
-literal|13
-block|,
-comment|/* unknown host name */
-name|RPC_UNKNOWNPROTO
-init|=
-literal|17
-block|,
-comment|/* unkown protocol */
-comment|/* 	 * _ create errors 	 */
-name|RPC_PMAPFAILURE
-init|=
-literal|14
-block|,
-comment|/* the pmapper failed in its call */
-name|RPC_PROGNOTREGISTERED
-init|=
-literal|15
-block|,
-comment|/* remote program is not registered */
-comment|/* 	 * unspecified error 	 */
-name|RPC_FAILED
-init|=
-literal|16
-block|}
-enum|;
-end_enum
+begin_define
+define|#
+directive|define
+name|RPCB_MULTICAST_ADDR
+value|"ff02::202"
+end_define
+
+begin_comment
+comment|/*  * the following errors are in general unrecoverable.  The caller  * should give up rather than retry.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_UNRECOVERABLE_RPC
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s) == RPC_AUTHERROR) || \ 	((s) == RPC_CANTENCODEARGS) || \ 	((s) == RPC_CANTDECODERES) || \ 	((s) == RPC_VERSMISMATCH) || \ 	((s) == RPC_PROCUNAVAIL) || \ 	((s) == RPC_PROGUNAVAIL) || \ 	((s) == RPC_PROGVERSMISMATCH) || \ 	((s) == RPC_CANTDECODEARGS))
+end_define
 
 begin_comment
 comment|/*  * Error info.  */
@@ -161,14 +97,14 @@ decl_stmt|;
 comment|/* why the auth error occurred */
 struct|struct
 block|{
-name|u_int32_t
+name|rpcvers_t
 name|low
 decl_stmt|;
-comment|/* lowest verion supported */
-name|u_int32_t
+comment|/* lowest version supported */
+name|rpcvers_t
 name|high
 decl_stmt|;
-comment|/* highest verion supported */
+comment|/* highest version supported */
 block|}
 name|RE_vers
 struct|;
@@ -209,7 +145,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Client rpc handle.  * Created by individual implementations, see e.g. rpc_udp.c.  * Client is responsible for initializing auth, see e.g. auth_none.c.  */
+comment|/*  * Client rpc handle.  * Created by individual implementations  * Client is responsible for initializing auth, see e.g. auth_none.c.  */
 end_comment
 
 begin_typedef
@@ -239,7 +175,7 @@ expr|struct
 name|__rpc_client
 operator|*
 operator|,
-name|u_long
+name|rpcproc_t
 operator|,
 name|xdrproc_t
 operator|,
@@ -332,7 +268,7 @@ operator|*
 operator|,
 name|u_int
 operator|,
-name|void
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -341,21 +277,111 @@ block|}
 modifier|*
 name|cl_ops
 struct|;
-name|caddr_t
+name|void
+modifier|*
 name|cl_private
 decl_stmt|;
 comment|/* private stuff */
+name|char
+modifier|*
+name|cl_netid
+decl_stmt|;
+comment|/* network token */
+name|char
+modifier|*
+name|cl_tp
+decl_stmt|;
+comment|/* device name */
 block|}
 name|CLIENT
 typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Timers used for the pseudo-transport protocol when using datagrams  */
+end_comment
+
+begin_struct
+struct|struct
+name|rpc_timers
+block|{
+name|u_short
+name|rt_srtt
+decl_stmt|;
+comment|/* smoothed round-trip time */
+name|u_short
+name|rt_deviate
+decl_stmt|;
+comment|/* estimated deviation */
+name|u_long
+name|rt_rtxcur
+decl_stmt|;
+comment|/* current (backed-off) rto */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*        * Feedback values used for possible congestion and rate control  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEEDBACK_REXMIT1
+value|1
+end_define
+
+begin_comment
+comment|/* first retransmit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FEEDBACK_OK
+value|2
+end_define
+
+begin_comment
+comment|/* no retransmits */
+end_comment
+
+begin_comment
+comment|/* Used to set version of portmapper used in broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLCR_SET_LOWVERS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLCR_GET_LOWVERS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|RPCSMALLMSGSIZE
+value|400
+end_define
+
+begin_comment
+comment|/* a more reasonable packet size */
+end_comment
+
+begin_comment
 comment|/*  * client side rpc interface ops  *  * Parameter types are:  *  */
 end_comment
 
 begin_comment
-comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	u_long proc;  *	xdrproc_t xargs;  *	caddr_t argsp;  *	xdrproc_t xres;  *	caddr_t resp;  *	struct timeval timeout;  */
+comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	caddr_t argsp;  *	xdrproc_t xres;  *	caddr_t resp;  *	struct timeval timeout;  */
 end_comment
 
 begin_define
@@ -378,7 +404,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		(caddr_t)(void *)argsp,	xres, (caddr_t)(void *)resp, secs))
 end_define
 
 begin_define
@@ -401,7 +427,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, (caddr_t)argsp, \ 		xres, (caddr_t)resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		(caddr_t)(void *)argsp, xres, (caddr_t)(void *)resp, secs))
 end_define
 
 begin_comment
@@ -521,7 +547,7 @@ value|((*(cl)->cl_ops->cl_control)(cl,rq,in))
 end_define
 
 begin_comment
-comment|/*  * control operations that apply to udp, tcp and unix transports  *  * Note: options marked XXX are no-ops in this implementation of RPC.  * The are present in TI-RPC but can't be implemented here since they  * depend on the presence of STREAMS/TLI, which we don't have.  *  */
+comment|/*  * control operations that apply to both udp and tcp transports  */
 end_comment
 
 begin_define
@@ -576,7 +602,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* get server's address (netbuf)         XXX */
+comment|/* get server's address (netbuf) */
 end_comment
 
 begin_define
@@ -675,7 +701,7 @@ value|16
 end_define
 
 begin_comment
-comment|/* get server's address (netbuf)         XXX */
+comment|/* get server's address (netbuf) */
 end_comment
 
 begin_define
@@ -686,7 +712,7 @@ value|17
 end_define
 
 begin_comment
-comment|/* push timod if not already present     XXX */
+comment|/* push timod if not already present */
 end_comment
 
 begin_define
@@ -697,11 +723,11 @@ value|18
 end_define
 
 begin_comment
-comment|/* pop timod                             XXX */
+comment|/* pop timod */
 end_comment
 
 begin_comment
-comment|/*  * udp only control operations  */
+comment|/*  * Connectionless only control operations  */
 end_comment
 
 begin_define
@@ -724,21 +750,6 @@ end_define
 
 begin_comment
 comment|/* get retry timeout (timeval) */
-end_comment
-
-begin_comment
-comment|/*  * Operations which GSSAPI needs. (Bletch.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLGET_LOCAL_ADDR
-value|19
-end_define
-
-begin_comment
-comment|/* get local addr (sockaddr) */
 end_comment
 
 begin_comment
@@ -773,28 +784,28 @@ begin_define
 define|#
 directive|define
 name|RPCTEST_PROGRAM
-value|((u_long)1)
+value|((rpcprog_t)1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RPCTEST_VERSION
-value|((u_long)1)
+value|((rpcvers_t)1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RPCTEST_NULL_PROC
-value|((u_long)2)
+value|((rpcproc_t)2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|RPCTEST_NULL_BATCH_PROC
-value|((u_long)3)
+value|((rpcproc_t)3)
 end_define
 
 begin_comment
@@ -805,7 +816,7 @@ begin_define
 define|#
 directive|define
 name|NULLPROC
-value|((u_long)0)
+value|((rpcproc_t)0)
 end_define
 
 begin_comment
@@ -813,29 +824,10 @@ comment|/*  * Below are the client handle creation routines for the various  * i
 end_comment
 
 begin_comment
-comment|/*  * Memory based rpc (for speed check and testing)  * CLIENT *  * clntraw_create(prog, vers)  *	u_long prog;  *	u_long vers;  */
+comment|/*  * Generic client creation routine. Supported protocols are those that  * belong to the nettype namespace (/etc/netconfig).  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	const char *host; 	-- hostname  *	const rpcprog_t prog;	-- program number  *	const rpcvers_t vers;	-- version number  *	const char *prot;	-- protocol  */
 end_comment
 
 begin_decl_stmt
-name|__BEGIN_DECLS
-specifier|extern
-name|CLIENT
-modifier|*
-name|clntraw_create
-name|__P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|__END_DECLS
-comment|/*  * Generic client creation routine. Supported protocols are "udp", "tcp"  * and "unix".  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	char *host; 	-- hostname  *	u_long prog;	-- program number  *	u_long vers;	-- version number  *	char *prot;	-- protocol  */
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
@@ -844,13 +836,17 @@ name|clnt_create
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
-name|u_long
+specifier|const
+name|rpcprog_t
 operator|,
-name|u_long
+specifier|const
+name|rpcvers_t
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -858,120 +854,225 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|__END_DECLS
-comment|/*  * TCP based rpc  * CLIENT *  * clnttcp_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-name|__BEGIN_DECLS
-specifier|extern
-name|CLIENT
-modifier|*
-name|clnttcp_create
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|,
-name|u_long
-operator|,
-name|u_long
-operator|,
-name|int
-operator|*
-operator|,
-name|u_int
-operator|,
-name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  *  * 	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const char *nettype;			-- network type  */
+end_comment
+
+begin_comment
+comment|/*  * Generic client creation routine. Supported protocols are which belong  * to the nettype name space.  */
+end_comment
 
 begin_decl_stmt
-name|__END_DECLS
-comment|/*  * UDP based rpc.  * CLIENT *  * clntudp_create(raddr, program, version, wait, sockp)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *  * Same as above, but you specify max packet sizes.  * CLIENT *  * clntudp_bufcreate(raddr, program, version, wait, sockp, sendsz, recvsz)  *	struct sockaddr_in *raddr;  *	u_long program;  *	u_long version;  *	struct timeval wait;  *	int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
-name|clntudp_create
+name|clnt_create_vers
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|sockaddr_in
+specifier|const
+name|char
 operator|*
 operator|,
-name|u_long
+specifier|const
+name|rpcprog_t
 operator|,
-name|u_long
+name|rpcvers_t
+operator|*
 operator|,
-expr|struct
-name|timeval
+specifier|const
+name|rpcvers_t
 operator|,
-name|int
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
+name|char
 operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  *	const char *host;		-- hostname  *	const rpcprog_t prog;		-- program number  *	rpcvers_t *vers_out;		-- servers highest available version  *	const rpcvers_t vers_low;	-- low version number  *	const rpcvers_t vers_high;	-- high version number  *	const char *nettype;		-- network type  */
+end_comment
+
+begin_comment
+comment|/*  * Generic client creation routine. It takes a netconfig structure  * instead of nettype  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|CLIENT
 modifier|*
-name|clntudp_bufcreate
+name|clnt_tp_create
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|sockaddr_in
+specifier|const
+name|char
 operator|*
 operator|,
-name|u_long
+specifier|const
+name|rpcprog_t
 operator|,
-name|u_long
+specifier|const
+name|rpcvers_t
 operator|,
+specifier|const
 expr|struct
-name|timeval
-operator|,
+name|netconfig
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  *	const char *hostname;			-- hostname  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const struct netconfig *netconf; 	-- network config structure  */
+end_comment
+
+begin_comment
+comment|/*  * Generic TLI create routine. Only provided for compatibility.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_tli_create
+name|__P
+argument_list|(
+operator|(
+specifier|const
 name|int
+operator|,
+specifier|const
+expr|struct
+name|netconfig
 operator|*
 operator|,
+specifier|const
+expr|struct
+name|netbuf
+operator|*
+operator|,
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
 name|u_int
 operator|,
+specifier|const
 name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  *	const register int fd;		-- fd  *	const struct netconfig *nconf;	-- netconfig structure  *	const struct netbuf *svcaddr;		-- servers address  *	const u_long prog;			-- program number  *	const u_long vers;			-- version number  *	const u_int sendsz;			-- send size  *	const u_int recvsz;			-- recv size  */
+end_comment
+
+begin_comment
+comment|/*  * Low level clnt create routine for connectionful transports, e.g. tcp.  */
+end_comment
+
 begin_decl_stmt
-name|__END_DECLS
-comment|/*  * AF_UNIX based rpc  * CLIENT *  * clntunix_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_un *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
-name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
 modifier|*
-name|clntunix_create
+name|clnt_vc_create
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|sockaddr_un
-operator|*
-operator|,
-name|u_long
-operator|,
-name|u_long
-operator|,
+specifier|const
 name|int
+operator|,
+specifier|const
+expr|struct
+name|netbuf
 operator|*
 operator|,
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
 name|u_int
 operator|,
+specifier|const
 name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  *	const int fd;				-- open file descriptor  *	const struct netbuf *svcaddr;		-- servers address  *	const rpcprog_t prog;			-- program number  *	const rpcvers_t vers;			-- version number  *	const u_int sendsz;			-- buffer recv size  *	const u_int recvsz;			-- buffer send size  */
+end_comment
+
+begin_comment
+comment|/*  * Low level clnt create routine for connectionless transports, e.g. udp.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_dg_create
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|int
+operator|,
+specifier|const
+expr|struct
+name|netbuf
+operator|*
+operator|,
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
+name|u_int
+operator|,
+specifier|const
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  *	const int fd;				-- open file descriptor  *	const struct netbuf *svcaddr;		-- servers address  *	const rpcprog_t program;		-- program number  *	const rpcvers_t version;		-- version number  *	const u_int sendsz;			-- buffer recv size  *	const u_int recvsz;			-- buffer send size  */
+end_comment
+
+begin_comment
+comment|/*  * Memory based rpc (for speed check and testing)  * CLIENT *  * clnt_raw_create(prog, vers)  *	u_long prog;  *	u_long vers;  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|CLIENT
+modifier|*
+name|clnt_raw_create
+name|__P
+argument_list|(
+operator|(
+name|rpcprog_t
+operator|,
+name|rpcvers_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -987,6 +1088,7 @@ name|clnt_pcreateerror
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1006,6 +1108,7 @@ name|clnt_spcreateerror
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1070,6 +1173,7 @@ operator|(
 name|CLIENT
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1092,6 +1196,7 @@ operator|(
 name|CLIENT
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1128,35 +1233,42 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_THREAD_SAFE
+end_ifdef
+
+begin_expr_stmt
+name|__BEGIN_DECLS
 specifier|extern
-name|struct
+expr|struct
 name|rpc_createerr
-name|rpc_createerr
-decl_stmt|;
-end_decl_stmt
+operator|*
+name|__rpc_createerr
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_define
+begin_expr_stmt
+name|__END_DECLS
 define|#
 directive|define
-name|UDPMSGSIZE
-value|8800
-end_define
-
-begin_comment
-comment|/* rpc imposed limit on udp msg size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RPCSMALLMSGSIZE
-value|400
-end_define
-
-begin_comment
-comment|/* a more reasonable packet size */
-end_comment
+name|rpc_createerr
+value|(*(__rpc_createerr()))
+else|#
+directive|else
+specifier|extern
+expr|struct
+name|rpc_createerr
+name|rpc_createerr
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1164,7 +1276,185 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_RPC_CLNT_H */
+comment|/* _THREAD_SAFE */
+end_comment
+
+begin_comment
+comment|/*  * The simplified interface:  * enum clnt_stat  * rpc_call(host, prognum, versnum, procnum, inproc, in, outproc, out, nettype)  *	const char *host;  *	const rpcprog_t prognum;  *	const rpcvers_t versnum;  *	const rpcproc_t procnum;  *	const xdrproc_t inproc, outproc;  *	const char *in;  *	char *out;  *	const char *nettype;  */
+end_comment
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+specifier|extern
+name|enum
+name|clnt_stat
+name|rpc_call
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
+name|rpcproc_t
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
+
+begin_comment
+comment|/*  * RPC broadcast interface  * The call is broadcasted to all locally connected nets.  *  * extern enum clnt_stat  * rpc_broadcast(prog, vers, proc, xargs, argsp, xresults, resultsp,  *			eachresult, nettype)  *	const rpcprog_t		prog;		-- program number  *	const rpcvers_t		vers;		-- version number  *	const rpcproc_t		proc;		-- procedure number  *	const xdrproc_t	xargs;		-- xdr routine for args  *	caddr_t		argsp;		-- pointer to args  *	const xdrproc_t	xresults;	-- xdr routine for results  *	caddr_t		resultsp;	-- pointer to results  *	const resultproc_t	eachresult;	-- call with each result  *	const char		*nettype;	-- Transport type  *  * For each valid response received, the procedure eachresult is called.  * Its form is:  *		done = eachresult(resp, raddr, nconf)  *			bool_t done;  *			caddr_t resp;  *			struct netbuf *raddr;  *			struct netconfig *nconf;  * where resp points to the results of the call and raddr is the  * address if the responder to the broadcast.  nconf is the transport  * on which the response was received.  *  * extern enum clnt_stat  * rpc_broadcast_exp(prog, vers, proc, xargs, argsp, xresults, resultsp,  *			eachresult, inittime, waittime, nettype)  *	const rpcprog_t		prog;		-- program number  *	const rpcvers_t		vers;		-- version number  *	const rpcproc_t		proc;		-- procedure number  *	const xdrproc_t	xargs;		-- xdr routine for args  *	caddr_t		argsp;		-- pointer to args  *	const xdrproc_t	xresults;	-- xdr routine for results  *	caddr_t		resultsp;	-- pointer to results  *	const resultproc_t	eachresult;	-- call with each result  *	const int 		inittime;	-- how long to wait initially  *	const int 		waittime;	-- maximum time to wait  *	const char		*nettype;	-- Transport type  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|bool_t
+argument_list|(
+argument|*resultproc_t
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|caddr_t
+operator|,
+operator|...
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|__BEGIN_DECLS
+specifier|extern
+name|enum
+name|clnt_stat
+name|rpc_broadcast
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
+name|rpcproc_t
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+specifier|const
+name|resultproc_t
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|clnt_stat
+name|rpc_broadcast_exp
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|rpcprog_t
+operator|,
+specifier|const
+name|rpcvers_t
+operator|,
+specifier|const
+name|rpcproc_t
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+specifier|const
+name|xdrproc_t
+operator|,
+name|caddr_t
+operator|,
+specifier|const
+name|resultproc_t
+operator|,
+specifier|const
+name|int
+operator|,
+specifier|const
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
+
+begin_comment
+comment|/* For backward compatibility */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<rpc/clnt_soc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_RPC_CLNT_H_ */
 end_comment
 
 end_unit

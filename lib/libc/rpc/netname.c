@@ -40,6 +40,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -112,6 +118,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_ifndef
@@ -294,9 +306,11 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|uid_t
 name|uid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|domain
@@ -414,10 +428,12 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|host
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|domain

@@ -14,6 +14,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"reentrant.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -93,6 +105,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/svc_auth.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
 end_include
 
 begin_if
@@ -778,6 +796,10 @@ name|adc_nickname
 expr_stmt|;
 if|if
 condition|(
+name|sid
+operator|<
+literal|0
+operator|||
 name|sid
 operator|>=
 name|AUTHDES_CACHESZ

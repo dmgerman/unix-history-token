@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: rpc_callmsg.c,v 1.16 2000/07/14 08:40:42 fvdl Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -18,13 +28,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)rpc_callmsg.c 1.4 87/08/11 Copyr 1984 Sun Micro";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)rpc_callmsg.c 1.4 87/08/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)rpc_callmsg.c	2.1 88/07/29 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)rpc_callmsg.c	2.1 88/07/29 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -48,7 +70,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -69,6 +97,12 @@ directive|include
 file|<rpc/rpc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_comment
 comment|/*  * XDR a call message  */
 end_comment
@@ -81,29 +115,39 @@ name|xdrs
 parameter_list|,
 name|cmsg
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|struct
 name|rpc_msg
 modifier|*
 name|cmsg
 decl_stmt|;
 block|{
-specifier|register
 name|int32_t
 modifier|*
 name|buf
 decl_stmt|;
-specifier|register
 name|struct
 name|opaque_auth
 modifier|*
 name|oa
 decl_stmt|;
+name|assert
+argument_list|(
+name|xdrs
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|cmsg
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|xdrs
@@ -195,7 +239,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -228,7 +272,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -256,7 +300,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -267,7 +311,7 @@ operator|.
 name|cb_prog
 argument_list|)
 expr_stmt|;
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -278,7 +322,7 @@ operator|.
 name|cb_vers
 argument_list|)
 expr_stmt|;
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -307,7 +351,7 @@ operator|->
 name|oa_flavor
 argument_list|)
 expr_stmt|;
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -323,11 +367,8 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|buf
 argument_list|,
 name|oa
@@ -372,7 +413,7 @@ operator|->
 name|oa_flavor
 argument_list|)
 expr_stmt|;
-name|IXDR_PUT_LONG
+name|IXDR_PUT_INT32
 argument_list|(
 name|buf
 argument_list|,
@@ -388,11 +429,8 @@ operator|->
 name|oa_length
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|buf
 argument_list|,
 name|oa
@@ -444,7 +482,7 @@ name|cmsg
 operator|->
 name|rm_xid
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -482,7 +520,7 @@ name|rm_call
 operator|.
 name|cb_rpcvers
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -510,7 +548,7 @@ name|rm_call
 operator|.
 name|cb_prog
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -521,7 +559,7 @@ name|rm_call
 operator|.
 name|cb_vers
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -532,7 +570,7 @@ name|rm_call
 operator|.
 name|cb_proc
 operator|=
-name|IXDR_GET_LONG
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -561,7 +599,10 @@ name|oa
 operator|->
 name|oa_length
 operator|=
-name|IXDR_GET_LONG
+operator|(
+name|u_int
+operator|)
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -611,6 +652,19 @@ operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|oa
+operator|->
+name|oa_base
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 name|buf
 operator|=
@@ -660,15 +714,12 @@ block|}
 block|}
 else|else
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 name|oa
 operator|->
 name|oa_base
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|buf
 argument_list|,
 name|oa
@@ -757,7 +808,10 @@ name|oa
 operator|->
 name|oa_length
 operator|=
-name|IXDR_GET_LONG
+operator|(
+name|u_int
+operator|)
+name|IXDR_GET_U_INT32
 argument_list|(
 name|buf
 argument_list|)
@@ -808,6 +862,19 @@ operator|->
 name|oa_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|oa
+operator|->
+name|oa_base
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
 name|buf
 operator|=
@@ -857,15 +924,12 @@ block|}
 block|}
 else|else
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 name|oa
 operator|->
 name|oa_base
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|buf
 argument_list|,
 name|oa

@@ -3651,6 +3651,9 @@ operator|)
 operator|&
 name|out
 argument_list|,
+operator|(
+name|resultproc_t
+operator|)
 name|broadcast_result
 argument_list|)
 expr_stmt|;

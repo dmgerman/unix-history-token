@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rpc/auth_des.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/key_prot.h>
 end_include
 

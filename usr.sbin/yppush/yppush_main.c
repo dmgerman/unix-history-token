@@ -1600,7 +1600,7 @@ name|sock
 operator|=
 name|xprt
 operator|->
-name|xp_sock
+name|xp_fd
 expr_stmt|;
 comment|/*XXX: Evil!! EEEEEEEVIL!!! */
 name|job
@@ -1650,7 +1650,7 @@ name|fcntl
 argument_list|(
 name|xprt
 operator|->
-name|xp_sock
+name|xp_fd
 argument_list|,
 name|F_SETOWN
 argument_list|,
@@ -1665,7 +1665,7 @@ name|fcntl
 argument_list|(
 name|xprt
 operator|->
-name|xp_sock
+name|xp_fd
 argument_list|,
 name|F_SETFL
 argument_list|,

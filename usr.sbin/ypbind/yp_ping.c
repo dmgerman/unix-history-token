@@ -1279,6 +1279,9 @@ argument_list|(
 name|cl
 operator|->
 name|cl_auth
+argument_list|,
+operator|&
+name|reply_msg
 argument_list|)
 condition|)
 block|{
@@ -2210,6 +2213,10 @@ name|clnt
 argument_list|,
 name|CLSET_TIMEOUT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tv
 argument_list|)

@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: xdr_array.c,v 1.12 2000/01/22 22:19:18 mycroft Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -48,6 +58,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -75,12 +97,11 @@ directive|include
 file|<rpc/xdr.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|LASTUNSIGNED
-value|((u_int) 0-1)
-end_define
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_comment
 comment|/*  * XDR an array of arbitrary elements  * *addrp is a pointer to the array, *sizep is the number of elements.  * If addrp is NULL (*sizep * elsize) bytes are allocated.  * elsize is the size (in bytes) of each element, and elproc is the  * xdr procedure to call to handle each element of the array.  */
@@ -102,7 +123,6 @@ name|elsize
 parameter_list|,
 name|elproc
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
@@ -130,29 +150,24 @@ name|elproc
 decl_stmt|;
 comment|/* xdr routine to handle each element */
 block|{
-specifier|register
 name|u_int
 name|i
 decl_stmt|;
-specifier|register
 name|caddr_t
 name|target
 init|=
 operator|*
 name|addrp
 decl_stmt|;
-specifier|register
 name|u_int
 name|c
 decl_stmt|;
 comment|/* the actual element count */
-specifier|register
 name|bool_t
 name|stat
 init|=
 name|TRUE
 decl_stmt|;
-specifier|register
 name|u_int
 name|nodesize
 decl_stmt|;
@@ -253,14 +268,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"xdr_array: out of memory\n"
+literal|"xdr_array: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -287,6 +297,10 @@ operator|(
 name|TRUE
 operator|)
 return|;
+case|case
+name|XDR_ENCODE
+case|:
+break|break;
 block|}
 comment|/* 	 * now we xdr each element of array 	 */
 for|for
@@ -317,8 +331,6 @@ argument_list|(
 name|xdrs
 argument_list|,
 name|target
-argument_list|,
-name|LASTUNSIGNED
 argument_list|)
 expr_stmt|;
 name|target
@@ -376,34 +388,27 @@ name|elemsize
 parameter_list|,
 name|xdr_elem
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|basep
 decl_stmt|;
-specifier|register
 name|u_int
 name|nelem
 decl_stmt|;
-specifier|register
 name|u_int
 name|elemsize
 decl_stmt|;
-specifier|register
 name|xdrproc_t
 name|xdr_elem
 decl_stmt|;
 block|{
-specifier|register
 name|u_int
 name|i
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|elptr
@@ -437,8 +442,6 @@ argument_list|(
 name|xdrs
 argument_list|,
 name|elptr
-argument_list|,
-name|LASTUNSIGNED
 argument_list|)
 condition|)
 block|{

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: xdr.h,v 1.19 2000/07/17 05:00:45 matt Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)xdr.h 1.19 87/04/22 SMI  *	from: @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
 end_comment
 
@@ -87,6 +91,7 @@ name|xdr_op
 name|x_op
 decl_stmt|;
 comment|/* operation; fast additional param */
+specifier|const
 struct|struct
 name|xdr_ops
 block|{
@@ -107,7 +112,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* put a long to underlying stream */
+comment|/* put a long to " */
 name|bool_t
 argument_list|(
 argument|*x_putlong
@@ -119,12 +124,13 @@ expr|struct
 name|__rpc_xdr
 operator|*
 operator|,
+specifier|const
 name|long
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* get some bytes from underlying stream */
+comment|/* get some bytes from " */
 name|bool_t
 argument_list|(
 argument|*x_getbytes
@@ -136,13 +142,14 @@ expr|struct
 name|__rpc_xdr
 operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|,
 name|u_int
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* put some bytes to underlying stream */
+comment|/* put some bytes to " */
 name|bool_t
 argument_list|(
 argument|*x_putbytes
@@ -154,7 +161,9 @@ expr|struct
 name|__rpc_xdr
 operator|*
 operator|,
-name|caddr_t
+specifier|const
+name|char
+operator|*
 operator|,
 name|u_int
 operator|)
@@ -222,19 +231,40 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+name|bool_t
+argument_list|(
+argument|*x_control
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|__rpc_xdr
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 modifier|*
 name|x_ops
 struct|;
-name|caddr_t
+name|char
+modifier|*
 name|x_public
 decl_stmt|;
 comment|/* users' data */
-name|caddr_t
+name|void
+modifier|*
 name|x_private
 decl_stmt|;
 comment|/* pointer to private data */
-name|caddr_t
+name|char
+modifier|*
 name|x_base
 decl_stmt|;
 comment|/* private used for position info */
@@ -248,43 +278,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|bool_t
-argument_list|(
-argument|*xdrproc_t
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|XDR
-operator|*
-operator|,
-name|void
-operator|*
-operator|,
-name|u_int
-operator|)
-argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * XXX can't actually prototype it, because some take two args!!!  */
+comment|/*  * A xdrproc_t exists for each data type which is to be encoded or decoded.  *  * The second argument to the xdrproc_t is a pointer to an opaque pointer.  * The opaque pointer generally points to a structure of the data type  * to be decoded.  If this pointer is 0, then the type routines should  * allocate dynamic storage of the appropriate size and return it.  *  * XXX can't actually prototype it, because some take three args!!!  */
 end_comment
 
 begin_typedef
@@ -302,13 +296,8 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Operations defined on a XDR handle  *  * XDR		*xdrs;  * long		*longp;  * caddr_t	 addr;  * u_int	 len;  * u_int	 pos;  */
+comment|/*  * Operations defined on a XDR handle  *  * XDR		*xdrs;  * long		*longp;  * char *	 addr;  * u_int	 len;  * u_int	 pos;  */
 end_comment
 
 begin_define
@@ -361,6 +350,118 @@ name|longp
 parameter_list|)
 define|\
 value|(*(xdrs)->x_ops->x_putlong)(xdrs, longp)
+end_define
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|xdr_getint32
+parameter_list|(
+name|XDR
+modifier|*
+name|xdrs
+parameter_list|,
+name|int32_t
+modifier|*
+name|ip
+parameter_list|)
+block|{
+name|long
+name|l
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|xdr_getlong
+argument_list|(
+name|xdrs
+argument_list|,
+operator|&
+name|l
+argument_list|)
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+operator|*
+name|ip
+operator|=
+operator|(
+name|int32_t
+operator|)
+name|l
+expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|xdr_putint32
+parameter_list|(
+name|XDR
+modifier|*
+name|xdrs
+parameter_list|,
+name|int32_t
+modifier|*
+name|ip
+parameter_list|)
+block|{
+name|long
+name|l
+decl_stmt|;
+name|l
+operator|=
+operator|(
+name|long
+operator|)
+operator|*
+name|ip
+expr_stmt|;
+return|return
+name|xdr_putlong
+argument_list|(
+name|xdrs
+argument_list|,
+operator|&
+name|l
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|XDR_GETINT32
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|int32p
+parameter_list|)
+value|xdr_getint32(xdrs, int32p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XDR_PUTINT32
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|int32p
+parameter_list|)
+value|xdr_putint32(xdrs, int32p)
 end_define
 
 begin_define
@@ -519,6 +620,99 @@ define|\
 value|if ((xdrs)->x_ops->x_destroy) 			\ 		(*(xdrs)->x_ops->x_destroy)(xdrs)
 end_define
 
+begin_define
+define|#
+directive|define
+name|XDR_CONTROL
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|req
+parameter_list|,
+name|op
+parameter_list|)
+define|\
+value|if ((xdrs)->x_ops->x_control)			\ 		(*(xdrs)->x_ops->x_control)(xdrs, req, op)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xdr_control
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|req
+parameter_list|,
+name|op
+parameter_list|)
+value|XDR_CONTROL(xdrs, req, op)
+end_define
+
+begin_comment
+comment|/*  * Solaris strips the '_t' from these types -- not sure why.  * But, let's be compatible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|xdr_rpcvers
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|versp
+parameter_list|)
+value|xdr_u_int32(xdrs, versp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xdr_rpcprog
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|progp
+parameter_list|)
+value|xdr_u_int32(xdrs, progp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xdr_rpcproc
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|procp
+parameter_list|)
+value|xdr_u_int32(xdrs, procp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xdr_rpcprot
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|protp
+parameter_list|)
+value|xdr_u_int32(xdrs, protp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|xdr_rpcport
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|portp
+parameter_list|)
+value|xdr_u_int32(xdrs, portp)
+end_define
+
 begin_comment
 comment|/*  * Support struct for discriminated unions.  * You create an array of xdrdiscrim structures, terminated with  * a entry with a null procedure pointer.  The xdr_union routine gets  * the discriminant value and then searches the array of structures  * for a matching value.  If a match is found the associated xdr routine  * is called to handle that part of the union.  If there is  * no match, then a default routine may be called.  * If there is no match and no default routine it is an error.  */
 end_comment
@@ -551,11 +745,55 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXDR_GET_INT32
+parameter_list|(
+name|buf
+parameter_list|)
+value|((int32_t)ntohl((u_int32_t)*(buf)++))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXDR_PUT_INT32
+parameter_list|(
+name|buf
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(buf)++ =(int32_t)htonl((u_int32_t)v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXDR_GET_U_INT32
+parameter_list|(
+name|buf
+parameter_list|)
+value|((u_int32_t)IXDR_GET_INT32(buf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXDR_PUT_U_INT32
+parameter_list|(
+name|buf
+parameter_list|,
+name|v
+parameter_list|)
+value|IXDR_PUT_INT32((buf), ((int32_t)(v)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXDR_GET_LONG
 parameter_list|(
 name|buf
 parameter_list|)
-value|((long)ntohl((u_long)*(buf)++))
+value|((long)ntohl((u_int32_t)*(buf)++))
 end_define
 
 begin_define
@@ -567,7 +805,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|(*(buf)++ = (long)htonl((u_long)v))
+value|(*(buf)++ =(int32_t)htonl((u_int32_t)v))
 end_define
 
 begin_define
@@ -631,7 +869,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|IXDR_PUT_LONG((buf), ((long)(v)))
+value|IXDR_PUT_LONG((buf), (v))
 end_define
 
 begin_define
@@ -643,7 +881,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|IXDR_PUT_LONG((buf), ((long)(v)))
+value|IXDR_PUT_LONG((buf), (v))
 end_define
 
 begin_define
@@ -655,7 +893,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|IXDR_PUT_LONG((buf), ((long)(v)))
+value|IXDR_PUT_LONG((buf), (v))
 end_define
 
 begin_define
@@ -667,7 +905,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|IXDR_PUT_LONG((buf), ((long)(v)))
+value|IXDR_PUT_LONG((buf), (v))
 end_define
 
 begin_define
@@ -679,7 +917,7 @@ name|buf
 parameter_list|,
 name|v
 parameter_list|)
-value|IXDR_PUT_LONG((buf), ((long)(v)))
+value|IXDR_PUT_LONG((buf), (v))
 end_define
 
 begin_comment
@@ -998,7 +1236,8 @@ operator|(
 name|XDR
 operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|,
 name|u_int
 operator|)
@@ -1042,28 +1281,12 @@ operator|,
 name|char
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|xdr_discrim
 operator|*
 operator|,
 name|xdrproc_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|long
-name|xdr_sizeof
-name|__P
-argument_list|(
-operator|(
-name|xdrproc_t
-operator|,
-name|void
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1163,6 +1386,24 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool_t
+name|xdr_quadruple
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|long
+name|double
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
 name|xdr_reference
 name|__P
 argument_list|(
@@ -1170,7 +1411,8 @@ operator|(
 name|XDR
 operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|*
 operator|,
 name|u_int
@@ -1191,7 +1433,8 @@ operator|(
 name|XDR
 operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|*
 operator|,
 name|u_int
@@ -1230,6 +1473,74 @@ operator|(
 name|xdrproc_t
 operator|,
 name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_hyper
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|quad_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_u_hyper
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|u_quad_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_longlong_t
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|quad_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_u_longlong_t
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|u_quad_t
 operator|*
 operator|)
 argument_list|)
@@ -1320,15 +1631,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XDR using stdio library */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_STDIO_H_
 end_ifdef
-
-begin_comment
-comment|/* XDR using stdio library */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -1383,9 +1694,11 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|char
+operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|,
 name|int
 operator|)
@@ -1398,9 +1711,11 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|caddr_t
+name|char
+operator|*
 operator|,
-name|caddr_t
+name|char
+operator|*
 operator|,
 name|int
 operator|)
@@ -1461,6 +1776,24 @@ argument_list|(
 operator|(
 name|XDR
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|xdrrec_readbytes
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|caddr_t
+operator|,
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;

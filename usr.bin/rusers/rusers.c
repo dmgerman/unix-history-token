@@ -295,8 +295,7 @@ begin_function
 name|int
 name|rusers_reply
 parameter_list|(
-name|char
-modifier|*
+name|caddr_t
 name|replyp
 parameter_list|,
 name|struct
@@ -969,8 +968,7 @@ expr_stmt|;
 name|rusers_reply
 argument_list|(
 operator|(
-name|char
-operator|*
+name|caddr_t
 operator|)
 operator|&
 name|up

@@ -1769,7 +1769,7 @@ name|rqstp
 operator|->
 name|rq_xprt
 operator|->
-name|xp_sock
+name|xp_fd
 argument_list|,
 name|SOL_SOCKET
 argument_list|,
@@ -2068,7 +2068,7 @@ name|rqstp
 operator|->
 name|rq_xprt
 operator|->
-name|xp_sock
+name|xp_fd
 argument_list|,
 name|SOL_SOCKET
 argument_list|,

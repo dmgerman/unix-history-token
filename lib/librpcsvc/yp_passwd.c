@@ -204,6 +204,10 @@ name|yppasswd
 argument_list|,
 name|xdr_int
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|result
 argument_list|)

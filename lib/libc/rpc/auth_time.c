@@ -94,6 +94,12 @@ directive|include
 file|<rpc/rpc_com.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<rpc/rpcb_prot.h>
+end_include
+
 begin_undef
 undef|#
 directive|undef
@@ -111,31 +117,6 @@ include|#
 directive|include
 file|"un-namespace.h"
 end_include
-
-begin_comment
-comment|/*  * FreeBSD currently uses RPC 4.0, which uses portmap rather than  * rpcbind. Consequently, we need to fake up these values here.  * Luckily, the RPCB_GETTIME procedure uses only base XDR data types  * so we don't need anything besides these magic numbers.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RPCBPROG
-value|(u_long)100000
-end_define
-
-begin_define
-define|#
-directive|define
-name|RPCBVERS
-value|(u_long)3
-end_define
-
-begin_define
-define|#
-directive|define
-name|RPCBPROC_GETTIME
-value|(u_long)6
-end_define
 
 begin_ifdef
 ifdef|#

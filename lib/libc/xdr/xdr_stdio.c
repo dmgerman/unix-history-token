@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: xdr_stdio.c,v 1.14 2000/01/22 22:19:19 mycroft Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -48,7 +58,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<rpc/types.h>
+file|"namespace.h"
 end_include
 
 begin_include
@@ -60,73 +70,155 @@ end_include
 begin_include
 include|#
 directive|include
+file|<rpc/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/xdr.h>
 end_include
 
-begin_function_decl
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|xdrstdio_destroy
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|bool_t
 name|xdrstdio_getlong
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|bool_t
 name|xdrstdio_putlong
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+specifier|const
+name|long
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|bool_t
 name|xdrstdio_getbytes
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|bool_t
 name|xdrstdio_putbytes
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|u_int
 name|xdrstdio_getpos
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|bool_t
 name|xdrstdio_setpos
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int32_t
 modifier|*
 name|xdrstdio_inline
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|xdrstdio_destroy
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Ops vector for stdio type XDR  */
@@ -134,6 +226,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|xdr_ops
 name|xdrstdio_ops
@@ -180,7 +273,6 @@ name|file
 parameter_list|,
 name|op
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
@@ -211,9 +303,6 @@ name|xdrs
 operator|->
 name|x_private
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|file
 expr_stmt|;
 name|xdrs
@@ -242,7 +331,6 @@ name|xdrstdio_destroy
 parameter_list|(
 name|xdrs
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
@@ -262,7 +350,7 @@ operator|->
 name|x_private
 argument_list|)
 expr_stmt|;
-comment|/* xx should we close the file ?? */
+comment|/* XXX: should we close the file ?? */
 block|}
 end_function
 
@@ -279,7 +367,6 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|long
 modifier|*
 name|lp
@@ -289,9 +376,6 @@ if|if
 condition|(
 name|fread
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|lp
 argument_list|,
 sizeof|sizeof
@@ -326,7 +410,7 @@ operator|)
 name|ntohl
 argument_list|(
 operator|(
-name|int32_t
+name|u_int32_t
 operator|)
 operator|*
 name|lp
@@ -353,6 +437,7 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
+specifier|const
 name|long
 modifier|*
 name|lp
@@ -367,7 +452,7 @@ operator|)
 name|htonl
 argument_list|(
 operator|(
-name|int32_t
+name|u_int32_t
 operator|)
 operator|*
 name|lp
@@ -377,9 +462,6 @@ if|if
 condition|(
 name|fwrite
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|mycopy
 argument_list|,
@@ -429,7 +511,8 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-name|caddr_t
+name|char
+modifier|*
 name|addr
 decl_stmt|;
 name|u_int
@@ -450,7 +533,7 @@ argument_list|(
 name|addr
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|len
 argument_list|,
@@ -496,7 +579,9 @@ name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-name|caddr_t
+specifier|const
+name|char
+modifier|*
 name|addr
 decl_stmt|;
 name|u_int
@@ -517,7 +602,7 @@ argument_list|(
 name|addr
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|len
 argument_list|,
@@ -628,6 +713,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static

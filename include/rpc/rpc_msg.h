@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: rpc_msg.h,v 1.11 2000/06/02 22:57:56 fvdl Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)rpc_msg.h 1.7 86/07/16 SMI  *	from: @(#)rpc_msg.h	2.1 88/07/29 4.0 RPCSRC  * $FreeBSD$  */
 end_comment
 
@@ -10,20 +14,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_RPC_RPCMSG_H
+name|_RPC_RPC_MSG_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_RPC_RPCMSG_H
+name|_RPC_RPC_MSG_H
 end_define
 
 begin_define
 define|#
 directive|define
 name|RPC_MSG_VERSION
-value|((u_long) 2)
+value|((u_int32_t) 2)
 end_define
 
 begin_define
@@ -137,10 +141,10 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|rpcvers_t
 name|low
 decl_stmt|;
-name|u_int32_t
+name|rpcvers_t
 name|high
 decl_stmt|;
 block|}
@@ -189,10 +193,10 @@ union|union
 block|{
 struct|struct
 block|{
-name|u_int32_t
+name|rpcvers_t
 name|low
 decl_stmt|;
-name|u_int32_t
+name|rpcvers_t
 name|high
 decl_stmt|;
 block|}
@@ -263,17 +267,17 @@ begin_struct
 struct|struct
 name|call_body
 block|{
-name|u_int32_t
+name|rpcvers_t
 name|cb_rpcvers
 decl_stmt|;
 comment|/* must be equal to two */
-name|u_int32_t
+name|rpcprog_t
 name|cb_prog
 decl_stmt|;
-name|u_int32_t
+name|rpcvers_t
 name|cb_vers
 decl_stmt|;
-name|u_int32_t
+name|rpcproc_t
 name|cb_proc
 decl_stmt|;
 name|struct
@@ -408,14 +412,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Fills in the error part of a reply message.  * _seterr_reply(msg, error)  * 	struct rpc_msg *msg;  * 	struct rpc_err *error;  */
+comment|/*  * XDR routine to handle a accepted rpc reply.  * xdr_accepted_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct accepted_reply *rej;  */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|rpc_err
-struct_decl|;
-end_struct_decl
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_accepted_reply
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+expr|struct
+name|accepted_reply
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * XDR routine to handle a rejected rpc reply.  * xdr_rejected_reply(xdrs, rej)  * 	XDR *xdrs;  * 	struct rejected_reply *rej;  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool_t
+name|xdr_rejected_reply
+name|__P
+argument_list|(
+operator|(
+name|XDR
+operator|*
+operator|,
+expr|struct
+name|rejected_reply
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Fills in the error part of a reply message.  * _seterr_reply(msg, error)  * 	struct rpc_msg *msg;  * 	struct rpc_err *error;  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -446,7 +488,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_RPC_RPCMSG_H */
+comment|/* !_RPC_RPC_MSG_H */
 end_comment
 
 end_unit

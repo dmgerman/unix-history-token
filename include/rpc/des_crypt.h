@@ -7,6 +7,26 @@ begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *   * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *   * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *   * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *   * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *   * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 1986 - 1991 by Sun Microsystems, Inc.  */
+end_comment
+
+begin_comment
+comment|/*  * des_crypt.h, des library routine interface  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DES_DES_CRYPT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DES_DES_CRYPT_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -153,9 +173,6 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|int
 name|cbc_crypt
 name|__P
@@ -179,93 +196,36 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|cbc_crypt
-argument_list|(
-comment|/* key, buf, len, mode, ivec */
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 	char *key;	 	char *buf; 	unsigned len; 	unsigned mode; 	char *ivec;	 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Electronic Code Book mode  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|ecb_crypt
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|unsigned
-name|int
-operator|,
-name|unsigned
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|ecb_crypt
-argument_list|(
-comment|/* key, buf, len, mode */
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 	char *key;	 	char *buf; 	unsigned len; 	unsigned mode; */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|__END_DECLS
-ifndef|#
-directive|ifndef
-name|_KERNEL
+comment|/*  * Electronic Code Book mode  */
+name|__BEGIN_DECLS
+name|int
+name|ecb_crypt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__END_DECLS
 comment|/*   * Set des parity for a key.  * DES parity is odd and in the low bit of each byte  */
 name|__BEGIN_DECLS
-ifdef|#
-directive|ifdef
-name|__STDC__
 name|void
 name|des_setparity
 name|__P
@@ -277,29 +237,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|void
-name|des_setparity
-parameter_list|(
-comment|/* key */
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* 	char *key;	 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__END_DECLS
@@ -309,6 +246,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _DES_DES_CRYPT_H */
+end_comment
 
 end_unit
 

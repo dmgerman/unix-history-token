@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: pmap_prot2.c,v 1.14 2000/07/06 03:10:34 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -18,13 +28,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)pmap_prot2.c 1.3 87/08/11 Copyr 1984 Sun Micro";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)pmap_prot2.c 1.3 87/08/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)pmap_prot2.c	2.1 88/07/29 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)pmap_prot2.c	2.1 88/07/29 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -48,6 +70,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/types.h>
 end_include
 
@@ -63,6 +97,12 @@ directive|include
 file|<rpc/pmap_prot.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_comment
 comment|/*  * What is going on with linked lists? (!)  * First recall the link list declaration from pmap_prot.h:  *  * struct pmaplist {  *	struct pmap pml_map;  *	struct pmaplist *pml_map;  * };  *  * Compare that declaration with a corresponding xdr declaration that  * is (a) pointer-less, and (b) recursive:  *  * typedef union switch (bool_t) {  *  *	case TRUE: struct {  *		struct pmap;  * 		pmaplist_t foo;  *	};  *  *	case FALSE: struct {};  * } pmaplist_t;  *  * Notice that the xdr declaration has no nxt pointer while  * the C declaration has no bool_t variable.  The bool_t can be  * interpreted as ``more data follows me''; if FALSE then nothing  * follows this bool_t; if TRUE then the bool_t is followed by  * an actual struct pmap, and then (recursively) by the  * xdr union, pamplist_t.  *  * This could be implemented via the xdr_union primitive, though this  * would cause a one recursive call per element in the list.  Rather than do  * that we can ``unwind'' the recursion  * into a while loop and do the union arms in-place.  *  * The head of the list is what the C programmer wishes to past around  * the net, yet is the data that the pointer points to which is interesting;  * this sounds like a job for xdr_reference!  */
 end_comment
@@ -75,12 +115,10 @@ name|xdrs
 parameter_list|,
 name|rp
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|struct
 name|pmaplist
 modifier|*
@@ -92,19 +130,9 @@ comment|/* 	 * more_elements is pre-computed in case the direction is 	 * XDR_EN
 name|bool_t
 name|more_elements
 decl_stmt|;
-specifier|register
 name|int
 name|freeing
-init|=
-operator|(
-name|xdrs
-operator|->
-name|x_op
-operator|==
-name|XDR_FREE
-operator|)
 decl_stmt|;
-specifier|register
 name|struct
 name|pmaplist
 modifier|*
@@ -113,10 +141,36 @@ name|next
 init|=
 name|NULL
 decl_stmt|;
-while|while
-condition|(
-name|TRUE
-condition|)
+comment|/* pacify gcc */
+name|assert
+argument_list|(
+name|xdrs
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|rp
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|freeing
+operator|=
+operator|(
+name|xdrs
+operator|->
+name|x_op
+operator|==
+name|XDR_FREE
+operator|)
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|more_elements
 operator|=
@@ -196,6 +250,9 @@ expr|struct
 name|pmaplist
 argument_list|)
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_pmap
 argument_list|)
 condition|)
@@ -223,6 +280,49 @@ name|pml_next
 operator|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * xdr_pmaplist_ptr() is specified to take a PMAPLIST *, but is identical in  * functionality to xdr_pmaplist().  */
+end_comment
+
+begin_function
+name|bool_t
+name|xdr_pmaplist_ptr
+parameter_list|(
+name|xdrs
+parameter_list|,
+name|rp
+parameter_list|)
+name|XDR
+modifier|*
+name|xdrs
+decl_stmt|;
+name|struct
+name|pmaplist
+modifier|*
+name|rp
+decl_stmt|;
+block|{
+return|return
+name|xdr_pmaplist
+argument_list|(
+name|xdrs
+argument_list|,
+operator|(
+expr|struct
+name|pmaplist
+operator|*
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+name|rp
+argument_list|)
+return|;
 block|}
 end_function
 

@@ -1,4 +1,26 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	$NetBSD: test.c,v 1.2 1997/10/18 04:01:21 lukem Exp $	*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpcsvc/nlm_prot.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,11 +33,19 @@ directive|if
 literal|0
 end_if
 
-begin_endif
+begin_else
 unit|static char sccsid[] = "from: @(#)nlm_prot.x 1.8 87/09/21 Copyr 1987 Sun Micro"; static char sccsid[] = "from: * @(#)nlm_prot.x	2.1 88/08/01 4.0 RPCSRC";
-endif|#
-directive|endif
-end_endif
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: test.c,v 1.2 1997/10/18 04:01:21 lukem Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -33,21 +63,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<rpc/rpc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<rpcsvc/nlm_prot.h>
-end_include
 
 begin_comment
 comment|/* Default timeout can be changed using clnt_control() */
@@ -1635,16 +1658,14 @@ operator|!
 name|cli
 condition|)
 block|{
-name|printf
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Failed to create client\n"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|clnt_control
 argument_list|(
@@ -1855,7 +1876,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (nlm_lock_res_1(&res_block, cli)) printf("Success!\n");   else printf("Fail\n");
+block|if (nlm_lock_res_1(&res_block, cli)) 		printf("Success!\n"); 	else 		printf("Fail\n");
 else|#
 directive|else
 if|if

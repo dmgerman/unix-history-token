@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: bindresvport.c,v 1.19 2000/07/06 03:03:59 christos Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -64,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -82,7 +86,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<rpc/rpc.h>
 end_include
 
 begin_include
@@ -135,7 +157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Bind a socket to a privileged port for whatever protocol.  */
+comment|/*  * Bind a socket to a privileged IP port  */
 end_comment
 
 begin_function
@@ -171,11 +193,16 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 modifier|*
 name|sin6
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|proto
 decl_stmt|,
@@ -184,9 +211,10 @@ decl_stmt|,
 name|portlow
 decl_stmt|;
 name|u_int16_t
-name|port
+modifier|*
+name|portp
 decl_stmt|;
-name|int
+name|socklen_t
 name|salen
 decl_stmt|;
 if|if
@@ -241,8 +269,7 @@ name|sa_family
 expr_stmt|;
 name|memset
 argument_list|(
-operator|&
-name|myaddr
+name|sa
 argument_list|,
 literal|0
 argument_list|,
@@ -257,13 +284,14 @@ name|sa
 operator|->
 name|sa_family
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|af
-operator|==
-name|AF_INET
 condition|)
 block|{
+case|case
+name|AF_INET
+case|:
 name|proto
 operator|=
 name|IPPROTO_IP
@@ -293,21 +321,20 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 expr_stmt|;
-name|port
+name|portp
 operator|=
+operator|&
 name|sin
 operator|->
 name|sin_port
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|af
-operator|==
+break|break;
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
 name|AF_INET6
-condition|)
-block|{
+case|:
 name|proto
 operator|=
 name|IPPROTO_IPV6
@@ -337,15 +364,17 @@ expr|struct
 name|sockaddr_in6
 argument_list|)
 expr_stmt|;
-name|port
+name|portp
 operator|=
+operator|&
 name|sin6
 operator|->
 name|sin6_port
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+endif|#
+directive|endif
+default|default:
 name|errno
 operator|=
 name|EPFNOSUPPORT
@@ -371,12 +400,13 @@ name|salen
 expr_stmt|;
 if|if
 condition|(
-name|port
+operator|*
+name|portp
 operator|==
 literal|0
 condition|)
 block|{
-name|int
+name|socklen_t
 name|oldlen
 init|=
 sizeof|sizeof
@@ -456,7 +486,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|port
+operator|*
+name|portp
 operator|==
 literal|0
 condition|)
@@ -469,6 +500,8 @@ decl_stmt|;
 if|if
 condition|(
 name|error
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -515,7 +548,7 @@ operator|&
 name|myaddr
 condition|)
 block|{
-comment|/* Hmm, what did the kernel assign... */
+comment|/* Hmm, what did the kernel assign? */
 if|if
 condition|(
 name|_getsockname

@@ -34,8 +34,18 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*	$FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * rpcdname.c  * Gets the default domain name  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"namespace.h"
+end_include
 
 begin_include
 include|#
@@ -53,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_decl_stmt

@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: getrpcent.c,v 1.17 2000/01/22 22:19:17 mycroft Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user or with the express written consent of  * Sun Microsystems, Inc.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -18,9 +28,15 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)getrpcent.c 1.14 91/03/11 Copyr 1984 Sun Micro";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)getrpcent.c 1.14 91/03/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -44,6 +60,42 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -51,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -94,11 +140,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
+
 begin_comment
 comment|/*  * Internet version.  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|rpcdata
 block|{
@@ -154,6 +207,26 @@ name|rpcdata
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|rpcent
+modifier|*
+name|interpret
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|val
+operator|,
+name|size_t
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -190,40 +263,25 @@ begin_comment
 comment|/* YP */
 end_comment
 
-begin_function_decl
-specifier|static
-name|struct
-name|rpcent
-modifier|*
-name|interpret
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|hostent
-modifier|*
-name|gethostent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|RPCDB
+value|"/etc/rpc"
+end_define
 
 begin_decl_stmt
 specifier|static
-name|char
-name|RPCDB
-index|[]
-init|=
-literal|"/etc/rpc"
+name|struct
+name|rpcdata
+modifier|*
+name|_rpcdata
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -235,7 +293,6 @@ modifier|*
 name|_rpcdata
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|rpcdata
 modifier|*
@@ -289,26 +346,10 @@ name|getrpcbynumber
 parameter_list|(
 name|number
 parameter_list|)
-specifier|register
 name|int
 name|number
 decl_stmt|;
 block|{
-specifier|register
-name|struct
-name|rpcdata
-modifier|*
-name|d
-init|=
-name|_rpcdata
-argument_list|()
-decl_stmt|;
-specifier|register
-name|struct
-name|rpcent
-modifier|*
-name|p
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|YP
@@ -323,6 +364,19 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|rpcent
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|rpcdata
+modifier|*
+name|d
+init|=
+name|_rpcdata
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|d
@@ -472,6 +526,8 @@ operator|=
 name|getrpcent
 argument_list|()
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -520,6 +576,13 @@ modifier|*
 modifier|*
 name|rp
 decl_stmt|;
+name|assert
+argument_list|(
+name|name
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|setrpcent
 argument_list|(
 literal|0
@@ -533,6 +596,8 @@ operator|=
 name|getrpcent
 argument_list|()
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -608,7 +673,6 @@ name|int
 name|f
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|rpcdata
 modifier|*
@@ -713,7 +777,6 @@ name|void
 name|endrpcent
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|rpcdata
 modifier|*
@@ -818,7 +881,6 @@ modifier|*
 name|getrpcent
 parameter_list|()
 block|{
-specifier|register
 name|struct
 name|rpcdata
 modifier|*
@@ -1107,11 +1169,10 @@ name|char
 modifier|*
 name|val
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|rpcdata
 modifier|*
@@ -1124,7 +1185,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -1133,6 +1193,13 @@ modifier|*
 modifier|*
 name|q
 decl_stmt|;
+name|assert
+argument_list|(
+name|val
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|d

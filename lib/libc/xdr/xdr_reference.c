@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*	$NetBSD: xdr_reference.c,v 1.13 2000/01/22 22:19:18 mycroft Exp	$  /*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -48,6 +54,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -75,12 +93,11 @@ directive|include
 file|<rpc/xdr.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|LASTUNSIGNED
-value|((u_int) 0-1)
-end_define
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
 
 begin_comment
 comment|/*  * XDR an indirect pointer  * xdr_reference is for recursively translating a structure that is  * referenced by a pointer inside the structure that is currently being  * translated.  pp references a pointer to storage. If *pp is null  * the  necessary storage is allocated.  * size is the sizeof the referneced structure.  * proc is the routine to handle the referenced structure.  */
@@ -98,7 +115,6 @@ name|size
 parameter_list|,
 name|proc
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
@@ -117,14 +133,12 @@ name|proc
 decl_stmt|;
 comment|/* xdr routine to handle the object */
 block|{
-specifier|register
 name|caddr_t
 name|loc
 init|=
 operator|*
 name|pp
 decl_stmt|;
-specifier|register
 name|bool_t
 name|stat
 decl_stmt|;
@@ -172,14 +186,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"xdr_reference: out of memory\n"
+literal|"xdr_reference: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -194,12 +203,13 @@ name|loc
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|int
-operator|)
 name|size
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|XDR_ENCODE
+case|:
 break|break;
 block|}
 name|stat
@@ -212,8 +222,6 @@ argument_list|(
 name|xdrs
 argument_list|,
 name|loc
-argument_list|,
-name|LASTUNSIGNED
 argument_list|)
 expr_stmt|;
 if|if
@@ -262,7 +270,6 @@ name|obj_size
 parameter_list|,
 name|xdr_obj
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs

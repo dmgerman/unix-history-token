@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$NetBSD: xdr_float.c,v 1.23 2000/07/17 04:59:51 matt Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_if
 if|#
@@ -18,13 +28,25 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro"
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/*static char *sccsid = "from: @(#)xdr_float.c	2.1 88/07/29 4.0 RPCSRC";*/
-end_comment
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|sccsid
+init|=
+literal|"@(#)xdr_float.c	2.1 88/07/29 4.0 RPCSRC"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -42,13 +64,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * xdr_float.c, Generic XDR routines impelmentation.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * These are the "floating point" xdr routines used to (de)serialize  * most common data items.  See xdr.h for more info on the interface to  * xdr.  */
+comment|/*  * xdr_float.c, Generic XDR routines implementation.  *  * Copyright (C) 1984, Sun Microsystems, Inc.  *  * These are the "floating point" xdr routines used to (de)serialize  * most common data items.  See xdr.h for more info on the interface to  * xdr.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"namespace.h"
 end_include
 
 begin_include
@@ -66,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/types.h>
 end_include
 
@@ -73,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<rpc/xdr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_comment
@@ -128,6 +162,12 @@ name|defined
 argument_list|(
 name|__ia64__
 argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__arm26__
+argument_list|)
 end_if
 
 begin_include
@@ -147,11 +187,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__vax__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* What IEEE single precision floating point looks like on a Vax */
@@ -317,28 +360,18 @@ name|xdrs
 parameter_list|,
 name|fp
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
 decl_stmt|;
-specifier|register
 name|float
 modifier|*
 name|fp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|IEEEFP
-name|bool_t
-name|rv
-decl_stmt|;
-name|long
-name|tmpl
-decl_stmt|;
-else|#
-directive|else
 name|struct
 name|ieee_single
 name|is
@@ -373,23 +406,17 @@ case|:
 ifdef|#
 directive|ifdef
 name|IEEEFP
-name|tmpl
-operator|=
-operator|*
+return|return
+operator|(
+name|XDR_PUTINT32
+argument_list|(
+name|xdrs
+argument_list|,
 operator|(
 name|int32_t
 operator|*
 operator|)
 name|fp
-expr_stmt|;
-return|return
-operator|(
-name|XDR_PUTLONG
-argument_list|(
-name|xdrs
-argument_list|,
-operator|&
-name|tmpl
 argument_list|)
 operator|)
 return|;
@@ -527,12 +554,12 @@ name|sign
 expr_stmt|;
 return|return
 operator|(
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -548,28 +575,18 @@ case|:
 ifdef|#
 directive|ifdef
 name|IEEEFP
-name|rv
-operator|=
-name|XDR_GETLONG
+return|return
+operator|(
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
-argument_list|)
-expr_stmt|;
-operator|*
 operator|(
 name|int32_t
 operator|*
 operator|)
 name|fp
-operator|=
-name|tmpl
-expr_stmt|;
-return|return
-operator|(
-name|rv
+argument_list|)
 operator|)
 return|;
 else|#
@@ -586,12 +603,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -730,6 +747,7 @@ name|TRUE
 operator|)
 return|;
 block|}
+comment|/* NOTREACHED */
 return|return
 operator|(
 name|FALSE
@@ -738,11 +756,14 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__vax__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* What IEEE double precision floating point looks like on a Vax */
@@ -948,7 +969,6 @@ name|xdrs
 parameter_list|,
 name|dp
 parameter_list|)
-specifier|register
 name|XDR
 modifier|*
 name|xdrs
@@ -961,7 +981,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|IEEEFP
-specifier|register
 name|int32_t
 modifier|*
 name|i32p
@@ -969,13 +988,9 @@ decl_stmt|;
 name|bool_t
 name|rv
 decl_stmt|;
-name|long
-name|tmpl
-decl_stmt|;
 else|#
 directive|else
-specifier|register
-name|long
+name|int32_t
 modifier|*
 name|lp
 decl_stmt|;
@@ -987,7 +1002,6 @@ name|struct
 name|vax_double
 name|vd
 decl_stmt|;
-specifier|register
 name|struct
 name|dbl_limits
 modifier|*
@@ -1017,6 +1031,10 @@ operator|(
 name|int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|dp
 expr_stmt|;
 if|#
@@ -1024,20 +1042,13 @@ directive|if
 name|BYTE_ORDER
 operator|==
 name|BIG_ENDIAN
-name|tmpl
-operator|=
-operator|*
-name|i32p
-operator|++
-expr_stmt|;
 name|rv
 operator|=
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
+name|i32p
 argument_list|)
 expr_stmt|;
 if|if
@@ -1050,40 +1061,28 @@ operator|(
 name|rv
 operator|)
 return|;
-name|tmpl
-operator|=
-operator|*
-name|i32p
-expr_stmt|;
 name|rv
 operator|=
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
+name|i32p
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|tmpl
-operator|=
-operator|*
-operator|(
-name|i32p
-operator|+
-literal|1
-operator|)
-expr_stmt|;
 name|rv
 operator|=
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
+name|i32p
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1096,19 +1095,13 @@ operator|(
 name|rv
 operator|)
 return|;
-name|tmpl
-operator|=
-operator|*
-name|i32p
-expr_stmt|;
 name|rv
 operator|=
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
+name|i32p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1323,7 +1316,7 @@ expr_stmt|;
 name|lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -1331,7 +1324,7 @@ name|id
 expr_stmt|;
 return|return
 operator|(
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1339,7 +1332,7 @@ name|lp
 operator|++
 argument_list|)
 operator|&&
-name|XDR_PUTLONG
+name|XDR_PUTINT32
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1361,6 +1354,10 @@ operator|(
 name|int32_t
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|dp
 expr_stmt|;
 if|#
@@ -1370,19 +1367,12 @@ operator|==
 name|BIG_ENDIAN
 name|rv
 operator|=
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
-argument_list|)
-expr_stmt|;
-operator|*
 name|i32p
-operator|++
-operator|=
-name|tmpl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1396,39 +1386,27 @@ operator|)
 return|;
 name|rv
 operator|=
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
-argument_list|)
-expr_stmt|;
-operator|*
 name|i32p
-operator|=
-name|tmpl
+operator|+
+literal|1
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
 name|rv
 operator|=
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
 name|i32p
 operator|+
 literal|1
-operator|)
-operator|=
-name|tmpl
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1442,18 +1420,12 @@ operator|)
 return|;
 name|rv
 operator|=
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
-operator|&
-name|tmpl
-argument_list|)
-expr_stmt|;
-operator|*
 name|i32p
-operator|=
-name|tmpl
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1467,7 +1439,7 @@ directive|else
 name|lp
 operator|=
 operator|(
-name|long
+name|int32_t
 operator|*
 operator|)
 operator|&
@@ -1476,7 +1448,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1485,7 +1457,7 @@ operator|++
 argument_list|)
 operator|||
 operator|!
-name|XDR_GETLONG
+name|XDR_GETINT32
 argument_list|(
 name|xdrs
 argument_list|,
@@ -1691,6 +1663,7 @@ name|TRUE
 operator|)
 return|;
 block|}
+comment|/* NOTREACHED */
 return|return
 operator|(
 name|FALSE
