@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)curses.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)curses.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_define
@@ -1053,7 +1053,7 @@ define|#
 directive|define
 name|raw
 parameter_list|()
-value|(_tty.sg_flags|=RAW, _pfast=_rawmode=TRUE, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags|=RAW, _pfast=_rawmode=TRUE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1061,7 +1061,7 @@ define|#
 directive|define
 name|noraw
 parameter_list|()
-value|(_tty.sg_flags&=~RAW,_rawmode=FALSE,_pfast=!(_tty.sg_flags&CRMOD),stty(_tty_ch,&_tty))
+value|(_tty.sg_flags&=~RAW,_rawmode=FALSE,\ 	_pfast=!(_tty.sg_flags&CRMOD),ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1069,7 +1069,7 @@ define|#
 directive|define
 name|cbreak
 parameter_list|()
-value|(_tty.sg_flags |= CBREAK, _rawmode = TRUE, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags |= CBREAK, _rawmode = TRUE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1077,7 +1077,7 @@ define|#
 directive|define
 name|nocbreak
 parameter_list|()
-value|(_tty.sg_flags&= ~CBREAK,_rawmode=FALSE,stty(_tty_ch,&_tty))
+value|(_tty.sg_flags&= ~CBREAK,_rawmode=FALSE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1109,7 +1109,7 @@ define|#
 directive|define
 name|echo
 parameter_list|()
-value|(_tty.sg_flags |= ECHO, _echoit = TRUE, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags |= ECHO, _echoit = TRUE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1117,7 +1117,7 @@ define|#
 directive|define
 name|noecho
 parameter_list|()
-value|(_tty.sg_flags&= ~ECHO, _echoit = FALSE, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags&= ~ECHO, _echoit = FALSE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1125,7 +1125,7 @@ define|#
 directive|define
 name|nl
 parameter_list|()
-value|(_tty.sg_flags |= CRMOD,_pfast = _rawmode,stty(_tty_ch,&_tty))
+value|(_tty.sg_flags |= CRMOD,_pfast = _rawmode, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1133,7 +1133,7 @@ define|#
 directive|define
 name|nonl
 parameter_list|()
-value|(_tty.sg_flags&= ~CRMOD, _pfast = TRUE, stty(_tty_ch,&_tty))
+value|(_tty.sg_flags&= ~CRMOD, _pfast = TRUE, \ 	ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define
@@ -1141,7 +1141,7 @@ define|#
 directive|define
 name|savetty
 parameter_list|()
-value|((void) gtty(_tty_ch,&_tty), _res_flg = _tty.sg_flags)
+value|((void) ioctl(_tty_ch, TIOCGETP,&_tty), \ 	_res_flg = _tty.sg_flags)
 end_define
 
 begin_define
@@ -1149,7 +1149,7 @@ define|#
 directive|define
 name|resetty
 parameter_list|()
-value|(_tty.sg_flags = _res_flg, (void) stty(_tty_ch,&_tty))
+value|(_tty.sg_flags = _res_flg, \ 	(void) ioctl(_tty_ch, TIOCSETP,&_tty))
 end_define
 
 begin_define

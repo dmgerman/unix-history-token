@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setterm.c	5.5 (Berkeley) %G%"
+literal|"@(#)setterm.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,9 +370,11 @@ begin_block
 block|{
 if|if
 condition|(
-name|gtty
+name|ioctl
 argument_list|(
 name|_tty_ch
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|_tty
@@ -386,9 +388,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|stty
+name|ioctl
 argument_list|(
 name|_tty_ch
+argument_list|,
+name|TIOCSETP
 argument_list|,
 operator|&
 name|_tty
@@ -461,9 +465,11 @@ operator|&=
 operator|~
 name|XTABS
 expr_stmt|;
-name|stty
+name|ioctl
 argument_list|(
 name|_tty_ch
+argument_list|,
+name|TIOCSETP
 argument_list|,
 operator|&
 name|_tty

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	5.3 (Berkeley) %G%"
+literal|"@(#)tstp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  * handle stop and start signals  *  * @(#)tstp.c	5.3 (Berkeley) %G%  */
+comment|/*  * handle stop and start signals  *  * @(#)tstp.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -158,9 +158,11 @@ name|_tty
 operator|=
 name|tty
 expr_stmt|;
-name|stty
+name|ioctl
 argument_list|(
 name|_tty_ch
+argument_list|,
+name|TIOCSETP
 argument_list|,
 operator|&
 name|_tty
