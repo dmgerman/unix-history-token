@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.59	82/12/17	*/
+comment|/*	hp.c	4.60	83/01/01	*/
 end_comment
 
 begin_ifdef
@@ -674,7 +674,7 @@ block|,
 literal|19
 block|,
 comment|/* B=cyl 19 thru 58 */
-literal|723991
+literal|724120
 block|,
 literal|0
 block|,
@@ -1066,7 +1066,7 @@ literal|43
 operator|*
 literal|20
 block|,
-literal|843
+literal|842
 block|,
 name|hpfj_sizes
 block|,
@@ -1293,6 +1293,9 @@ name|mi
 operator|->
 name|mi_drv
 decl_stmt|;
+name|int
+name|ntracks
+decl_stmt|;
 switch|switch
 condition|(
 name|mi
@@ -1463,8 +1466,8 @@ name|hphr
 operator|=
 name|HPHR_MAXTRAK
 expr_stmt|;
-if|if
-condition|(
+name|ntracks
+operator|=
 operator|(
 name|hpaddr
 operator|->
@@ -1472,8 +1475,14 @@ name|hphr
 operator|&
 literal|0xffff
 operator|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|ntracks
 operator|==
-literal|15
+literal|16
 condition|)
 block|{
 name|printf
@@ -1492,7 +1501,13 @@ operator|=
 name|HPDT_CAPRICORN
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ntracks
+operator|==
+literal|20
+condition|)
 block|{
 name|printf
 argument_list|(
@@ -1510,6 +1525,14 @@ operator|=
 name|HPDT_EAGLE
 expr_stmt|;
 block|}
+else|else
+name|printf
+argument_list|(
+literal|"hp%d: ntracks %d: unknown device\n"
+argument_list|,
+name|ntracks
+argument_list|)
+expr_stmt|;
 name|hpaddr
 operator|->
 name|hpcs1
