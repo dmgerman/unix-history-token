@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)namei.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -33,11 +33,11 @@ name|uio_seg
 name|ni_segflg
 decl_stmt|;
 comment|/* location of pathname */
-comment|/* u_long	ni_nameiop;		/* namei operation */
-comment|/* u_long	ni_flags;		/* flags to namei */
-comment|/* struct	proc *ni_proc;		/* process requesting lookup */
+comment|/* u_long	ni_nameiop;		   namei operation */
+comment|/* u_long	ni_flags;		   flags to namei */
+comment|/* struct	proc *ni_proc;		   process requesting lookup */
 comment|/* 	 * Arguments to lookup. 	 */
-comment|/* struct	ucred *ni_cred;		/* credentials */
+comment|/* struct	ucred *ni_cred;		   credentials */
 name|struct
 name|vnode
 modifier|*
