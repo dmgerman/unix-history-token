@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)kdb.c	7.3 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
+comment|/*  *	@(#)kdb.c	7.4 (Berkeley) %G%  *  * KDB50/MSCP device driver  */
 end_comment
 
 begin_comment
@@ -974,6 +974,13 @@ block|,
 name|UNITSHIFT
 block|,
 name|kdbutab
+block|,
+operator|(
+expr|struct
+name|disklabel
+operator|*
+operator|)
+literal|0
 block|,
 name|kdbdinfo
 block|,
