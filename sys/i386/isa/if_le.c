@@ -667,30 +667,26 @@ name|le_ac
 decl_stmt|;
 comment|/* Common Ethernet/ARP Structure */
 name|void
-argument_list|(
-argument|*if_init
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|if_init
+function_decl|)
+parameter_list|(
 name|le_softc_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Interface init routine */
 name|void
-argument_list|(
-argument|*if_reset
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|if_reset
+function_decl|)
+parameter_list|(
 name|le_softc_t
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Interface reset routine */
 name|caddr_t
 name|le_membase

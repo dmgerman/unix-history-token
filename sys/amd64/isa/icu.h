@@ -29,29 +29,23 @@ begin_comment
 comment|/*  * Note:  *	Most of the SMP equivilants of the icu macros are coded  *	elsewhere in an MP-safe fashion.  *	In particular note that the 'imen' variable is opaque.  *	DO NOT access imen directly, use INTREN()/INTRDIS().  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|INTREN
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|INTRDIS
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#

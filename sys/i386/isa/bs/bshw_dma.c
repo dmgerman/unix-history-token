@@ -23,35 +23,29 @@ begin_comment
 comment|/*********************************************************  * static declare.  *********************************************************/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bshw_dmastart
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bs_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bshw_dmadone
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bs_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**********************************************  * UPPER INTERFACE FUNCS (all funcs exported)  **********************************************/

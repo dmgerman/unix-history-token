@@ -94,20 +94,17 @@ begin_comment
 comment|/**************************************************  * DECLARATION  **************************************************/
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bshw_force_bsmode
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bs_softc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/**************************************************  * STATIC VAL  **************************************************/
@@ -1092,24 +1089,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|bshw_set_vsp
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|bs_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|u_int8_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static

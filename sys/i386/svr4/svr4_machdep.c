@@ -201,26 +201,23 @@ name|_ucodesel
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|svr4_getsiginfo
-name|__P
-argument_list|(
-operator|(
-expr|union
+parameter_list|(
+name|union
 name|svr4_siginfo
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_long
-operator|,
+parameter_list|,
 name|caddr_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#

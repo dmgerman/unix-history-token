@@ -54,30 +54,24 @@ name|ELINK_509_POLY
 value|0xcf
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|elink_reset
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|elink_idseq
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_char
 name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
