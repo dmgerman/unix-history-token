@@ -308,6 +308,22 @@ operator|(
 name|ESRCH
 operator|)
 return|;
+comment|/* Can't trace a process that's currently exec'ing. */
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_INEXEC
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|EAGAIN
+return|;
 comment|/* 	 * Permissions check 	 */
 switch|switch
 condition|(
