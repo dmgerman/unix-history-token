@@ -4306,6 +4306,13 @@ argument_list|,
 name|TSB_PAGES
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|pm
+operator|->
+name|pm_tsb_obj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4389,6 +4396,13 @@ operator|=
 name|m
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|pm
+operator|->
+name|pm_tsb_obj
+argument_list|)
+expr_stmt|;
 name|pmap_qenter
 argument_list|(
 operator|(
