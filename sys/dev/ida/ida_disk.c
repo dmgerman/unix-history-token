@@ -988,15 +988,20 @@ if|if
 condition|(
 name|cncheckc
 argument_list|()
-operator|!=
-operator|-
-literal|1
+operator|==
+literal|0x03
 condition|)
 return|return
 operator|(
 name|EINTR
 operator|)
 return|;
+else|else
+name|printf
+argument_list|(
+literal|"[CTRL-C to abort] "
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
