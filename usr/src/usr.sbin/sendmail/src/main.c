@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.57 (Berkeley) %G%"
+literal|"@(#)main.c	5.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2891,12 +2891,28 @@ operator|==
 name|MD_TEST
 condition|)
 block|{
+name|bool
+name|terminal
+init|=
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|char
 name|buf
 index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|terminal
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ADDRESS TEST MODE (ruleset 3 NOT automatically invoked)\n"
@@ -2907,6 +2923,7 @@ argument_list|(
 literal|"Enter<ruleset><address>\n"
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -2928,6 +2945,10 @@ name|char
 modifier|*
 name|DelimChar
 decl_stmt|;
+if|if
+condition|(
+name|terminal
+condition|)
 name|printf
 argument_list|(
 literal|"> "
@@ -2958,6 +2979,28 @@ condition|)
 name|finis
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terminal
+condition|)
+name|printf
+argument_list|(
+literal|"> %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+continue|continue;
 for|for
 control|(
 name|p
