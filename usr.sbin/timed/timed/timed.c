@@ -60,7 +60,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.2 $"
+empty|#ident "$Revision: 1.3 $"
 end_empty
 
 begin_endif
@@ -2196,9 +2196,12 @@ name|net
 operator|.
 name|s_addr
 operator|==
+name|htonl
+argument_list|(
 name|nt
 operator|->
 name|net
+argument_list|)
 condition|)
 break|break;
 block|}
