@@ -2748,6 +2748,17 @@ operator|==
 literal|1
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|sa
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sigemptyset
 argument_list|(
 operator|&
