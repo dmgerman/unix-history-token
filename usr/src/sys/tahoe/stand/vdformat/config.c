@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)config.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,7 +358,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|27720
+literal|28160
 block|,
 operator|(
 name|long
