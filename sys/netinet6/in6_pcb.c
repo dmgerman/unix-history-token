@@ -1313,7 +1313,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 *   Call inner routine, to assign local interface address. 	 */
+comment|/* 	 * Call inner routine, to assign local interface address. 	 * in6_pcbladdr() may automatically fill in sin6_scope_id. 	 */
 if|if
 condition|(
 operator|(
@@ -2306,6 +2306,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+comment|/* scope issues will be handled in in6_setsockaddr(). */
 name|error
 operator|=
 name|in6_setsockaddr
@@ -2390,6 +2391,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+comment|/* scope issues will be handled in in6_setpeeraddr(). */
 name|error
 operator|=
 name|in6_setpeeraddr

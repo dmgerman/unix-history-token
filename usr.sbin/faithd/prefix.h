@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: prefix.h,v 1.3 2000/11/19 11:45:38 itojun Exp $	*/
+comment|/*	$KAME: prefix.h,v 1.4 2001/09/05 03:04:21 itojun Exp $	*/
 end_comment
 
 begin_comment

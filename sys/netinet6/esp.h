@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: esp.h,v 1.16 2000/10/18 21:28:00 itojun Exp $	*/
+comment|/*	$KAME: esp.h,v 1.19 2001/09/04 08:43:19 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -61,19 +61,19 @@ name|u_int32_t
 name|esp_spi
 decl_stmt|;
 comment|/* ESP */
-comment|/*variable size, 32bit bound*/
+comment|/* variable size, 32bit bound */
 comment|/* Initialization Vector */
-comment|/*variable size*/
+comment|/* variable size */
 comment|/* Payload data */
-comment|/*variable size*/
+comment|/* variable size */
 comment|/* padding */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* pad size */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* next header */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* next header */
-comment|/*variable size, 32bit bound*/
+comment|/* variable size, 32bit bound */
 comment|/* Authentication data (new IPsec) */
 block|}
 struct|;
@@ -91,17 +91,17 @@ name|u_int32_t
 name|esp_seq
 decl_stmt|;
 comment|/* Sequence number */
-comment|/*variable size*/
+comment|/* variable size */
 comment|/* (IV and) Payload data */
-comment|/*variable size*/
+comment|/* variable size */
 comment|/* padding */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* pad size */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* next header */
-comment|/*8bit*/
+comment|/* 8bit */
 comment|/* next header */
-comment|/*variable size, 32bit bound*/
+comment|/* variable size, 32bit bound */
 comment|/* Authentication data */
 block|}
 struct|;
@@ -119,7 +119,7 @@ name|u_int8_t
 name|esp_nxt
 decl_stmt|;
 comment|/* Next header */
-comment|/*variable size, 32bit bound*/
+comment|/* variable size, 32bit bound */
 comment|/* Authentication data (new IPsec)*/
 block|}
 struct|;
@@ -468,7 +468,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_KERNEL*/
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
@@ -477,7 +477,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_ESP_H_*/
+comment|/* _NETINET6_ESP_H_ */
 end_comment
 
 end_unit

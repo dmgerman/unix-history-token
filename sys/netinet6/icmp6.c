@@ -1519,7 +1519,7 @@ name|ip6_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*header order: IPv6 - ICMPv6*/
+comment|/* header order: IPv6 - ICMPv6 */
 return|return;
 name|freeit
 label|:
@@ -1629,7 +1629,7 @@ argument_list|,
 name|IPPROTO_DONE
 argument_list|)
 expr_stmt|;
-comment|/* m might change if M_LOOP. So, call mtod after this */
+comment|/* m might change if M_LOOP.  So, call mtod after this */
 endif|#
 directive|endif
 comment|/* 	 * Locate icmp6 structure in mbuf, and check 	 * that not corrupted and of at least minimum length 	 */
@@ -2611,7 +2611,7 @@ case|:
 case|case
 name|MLD6_MTRACE
 case|:
-comment|/* XXX: these two are experimental. not officially defind. */
+comment|/* XXX: these two are experimental.  not officially defind. */
 comment|/* XXX: per-interface statistics? */
 break|break;
 comment|/* just pass it to applications */
@@ -2966,7 +2966,7 @@ argument_list|,
 name|maxhlen
 argument_list|)
 expr_stmt|;
-comment|/*meaningless TTL*/
+comment|/* meaningless TTL */
 name|noff
 operator|=
 sizeof|sizeof
@@ -2982,7 +2982,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* just for recvif */
+comment|/* just for rcvif */
 name|n
 operator|->
 name|m_pkthdr
@@ -3909,7 +3909,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* XXX: should avoid inf. loop explicitly? */
+comment|/* XXX: should avoid infinite loop explicitly? */
 name|struct
 name|ip6_ext
 modifier|*
@@ -4401,7 +4401,7 @@ name|ip6f_nxt
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 				 * This case includes ESP and the No Next 				 * Header. In such cases going to the notify 				 * label does not have any meaning 				 * (i.e. ctlfunc will be NULL), but we go 				 * anyway since we might have to update 				 * path MTU information. 				 */
+comment|/* 				 * This case includes ESP and the No Next 				 * Header.  In such cases going to the notify 				 * label does not have any meaning 				 * (i.e. ctlfunc will be NULL), but we go 				 * anyway since we might have to update 				 * path MTU information. 				 */
 goto|goto
 name|notify
 goto|;
@@ -5119,11 +5119,14 @@ if|if
 condition|(
 name|rt
 condition|)
+block|{
+comment|/* XXX: need braces to avoid conflict with else in RTFREE. */
 name|RTFREE
 argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6890,7 +6893,7 @@ argument_list|(
 literal|"should not reach here"
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 name|fail
 label|:
 if|if
@@ -7550,7 +7553,7 @@ break|break;
 default|default:
 continue|continue;
 block|}
-comment|/* 			 * check if anycast is okay. 			 * XXX: just experimental. not in the spec. 			 */
+comment|/* 			 * check if anycast is okay. 			 * XXX: just experimental.  not in the spec. 			 */
 if|if
 condition|(
 operator|(
@@ -9483,7 +9486,7 @@ name|M_LOOP
 operator|)
 condition|)
 block|{
-comment|/* 		 * This is the case if the dst is our link-local address 		 * and the sender is also ourseleves. 		 */
+comment|/* 		 * This is the case if the dst is our link-local address 		 * and the sender is also ourselves. 		 */
 name|src
 operator|=
 operator|&
@@ -9504,7 +9507,7 @@ name|struct
 name|route_in6
 name|ro
 decl_stmt|;
-comment|/* 		 * This case matches to multicasts, our anycast, or unicasts 		 * that we do not own. Select a source address based on the 		 * source address of the erroneous packet. 		 */
+comment|/* 		 * This case matches to multicasts, our anycast, or unicasts 		 * that we do not own.  Select a source address based on the 		 * source address of the erroneous packet. 		 */
 name|bzero
 argument_list|(
 operator|&
@@ -10726,7 +10729,7 @@ operator|!
 name|is_onlink
 condition|)
 block|{
-comment|/* better router case. perform rtredirect. */
+comment|/* better router case.  perform rtredirect. */
 comment|/* perform rtredirect */
 name|struct
 name|sockaddr_in6
@@ -11763,7 +11766,7 @@ operator|&
 operator|~
 literal|7
 expr_stmt|;
-comment|/*round by 8*/
+comment|/* round by 8 */
 comment|/* safety check */
 if|if
 condition|(
@@ -12901,7 +12904,7 @@ operator|&
 name|delta
 argument_list|)
 expr_stmt|;
-comment|/* 	 * check for 0,0 is so that the message will be seen at least once. 	 * if more than one second have passed since the last update of 	 * lasttime, reset the counter. 	 * 	 * we do increment *curpps even in *curpps< maxpps case, as some may 	 * try to use *curpps for stat purposes as well. 	 */
+comment|/* 	 * Check for 0,0 so that the message will be seen at least once. 	 * If more than one second has passed since the last update of 	 * lasttime, reset the counter. 	 * 	 * We do increment *curpps even in *curpps< maxpps case, as some may 	 * try to use *curpps for stat purposes as well. 	 */
 if|if
 condition|(
 operator|(
@@ -12971,7 +12974,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
-comment|/*DIAGNOSTIC?*/
+comment|/* DIAGNOSTIC? */
 comment|/* be careful about wrap-around */
 if|if
 condition|(
@@ -13057,7 +13060,7 @@ name|ret
 operator|=
 literal|0
 expr_stmt|;
-comment|/*okay to send*/
+comment|/* okay to send */
 comment|/* PPS limit */
 if|if
 condition|(

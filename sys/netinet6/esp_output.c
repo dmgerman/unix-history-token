@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: esp_output.c,v 1.43 2001/03/01 07:10:45 itojun Exp $	*/
+comment|/*	$KAME: esp_output.c,v 1.44 2001/07/26 06:53:15 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -591,7 +591,7 @@ decl_stmt|;
 name|size_t
 name|plen
 decl_stmt|;
-comment|/*payload length to be encrypted*/
+comment|/* payload length to be encrypted */
 name|size_t
 name|espoff
 decl_stmt|;
@@ -772,7 +772,7 @@ break|break;
 block|}
 endif|#
 directive|endif
-comment|/*INET*/
+comment|/* INET */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -807,7 +807,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/*INET6*/
+comment|/* INET6 */
 default|default:
 name|panic
 argument_list|(
@@ -923,17 +923,17 @@ directive|endif
 name|size_t
 name|esplen
 decl_stmt|;
-comment|/*sizeof(struct esp/newesp)*/
+comment|/* sizeof(struct esp/newesp) */
 name|size_t
 name|esphlen
 decl_stmt|;
-comment|/*sizeof(struct esp/newesp) + ivlen*/
+comment|/* sizeof(struct esp/newesp) + ivlen */
 name|size_t
 name|hlen
 init|=
 literal|0
 decl_stmt|;
-comment|/*ip header len*/
+comment|/* ip header len */
 if|if
 condition|(
 name|sav
@@ -2389,7 +2389,7 @@ name|n
 argument_list|)
 condition|)
 block|{
-comment|/*XXX*/
+comment|/* XXX */
 name|n
 operator|->
 name|m_len
@@ -2782,7 +2782,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET*/
+comment|/* INET */
 end_comment
 
 begin_ifdef
@@ -2877,7 +2877,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* INET6 */
 end_comment
 
 end_unit

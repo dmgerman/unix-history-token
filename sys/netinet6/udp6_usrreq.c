@@ -231,7 +231,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*IPSEC*/
+comment|/* IPSEC */
 end_comment
 
 begin_comment
@@ -665,7 +665,7 @@ name|uh
 operator|->
 name|uh_sport
 expr_stmt|;
-comment|/* 		 * KAME note: usually we drop udphdr from mbuf here. 		 * We need udphdr for IPsec processing so we do that later. 		 */
+comment|/* 		 * KAME note: traditionally we dropped udpiphdr from mbuf here. 		 * We need udphdr for IPsec processing so we do that later. 		 */
 comment|/* 		 * Locate pcb(s) for datagram. 		 * (Algorithm copied from raw_intr().) 		 */
 name|last
 operator|=
@@ -825,7 +825,7 @@ comment|/* do not inject data into pcb */
 elseif|else
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 if|if
 condition|(
 operator|(
@@ -1021,7 +1021,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 if|if
 condition|(
 name|last
@@ -1278,7 +1278,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 comment|/* 	 * Construct sockaddr format source address. 	 * Stuff source address and datagram in user buffer. 	 */
 name|init_sin6
 argument_list|(

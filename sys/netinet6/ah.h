@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah.h,v 1.13 2000/10/18 21:28:00 itojun Exp $	*/
+comment|/*	$KAME: ah.h,v 1.16 2001/09/04 08:43:19 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ name|void
 modifier|*
 name|foo
 decl_stmt|;
-comment|/*per algorithm data - maybe*/
+comment|/* per algorithm data - maybe */
 block|}
 struct|;
 end_struct
@@ -362,7 +362,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_KERNEL*/
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
@@ -371,7 +371,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*_NETINET6_AH_H_*/
+comment|/* _NETINET6_AH_H_ */
 end_comment
 
 end_unit

@@ -490,7 +490,7 @@ name|in6_addr
 modifier|*
 name|in6
 decl_stmt|;
-comment|/*upper 64bits are preserved */
+comment|/* upper 64bits are preserved */
 block|{
 name|MD5_CTX
 name|ctxt
@@ -741,6 +741,7 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
 name|bcopy
 argument_list|(
 name|seed0
@@ -750,6 +751,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* copy the right-most 64-bits of the given address */
 comment|/* XXX assumption on the size of IFID */
 name|bcopy
@@ -1006,7 +1008,7 @@ name|in6_addr
 modifier|*
 name|in6
 decl_stmt|;
-comment|/*upper 64bits are preserved */
+comment|/* upper 64bits are preserved */
 block|{
 name|struct
 name|ifaddr
@@ -1557,7 +1559,7 @@ name|ifnet
 modifier|*
 name|altifp
 decl_stmt|;
-comment|/*secondary EUI64 source*/
+comment|/* secondary EUI64 source */
 name|struct
 name|in6_addr
 modifier|*
@@ -2158,14 +2160,14 @@ name|ia6t_pltime
 operator|=
 name|ND6_INFINITE_LIFETIME
 expr_stmt|;
-comment|/* 	 * Do not let in6_update_ifa() do DAD, since we need a random delay 	 * before sending an NS at the first time the inteface becomes up. 	 * Instead, in6_if_up() will start DAD with a proper random delay. 	 */
+comment|/* 	 * Do not let in6_update_ifa() do DAD, since we need a random delay 	 * before sending an NS at the first time the interface becomes up. 	 * Instead, in6_if_up() will start DAD with a proper random delay. 	 */
 name|ifra
 operator|.
 name|ifra_flags
 operator||=
 name|IN6_IFF_NODAD
 expr_stmt|;
-comment|/* 	 * Now call in6_update_ifa() to do a bunch of procedures to configure 	 * a link-local address. We can set NULL to the 3rd argument, because 	 * we know there's no other link-local address on the interface. 	 */
+comment|/* 	 * Now call in6_update_ifa() to do a bunch of procedures to configure 	 * a link-local address. We can set NULL to the 3rd argument, because 	 * we know there's no other link-local address on the interface 	 * and therefore we are adding one (instead of updating one). 	 */
 if|if
 condition|(
 operator|(
@@ -2240,7 +2242,7 @@ argument_list|(
 literal|"ia == NULL in in6_ifattach_linklocal"
 argument_list|)
 expr_stmt|;
-comment|/*NOTREACHED*/
+comment|/* NOTREACHED */
 block|}
 endif|#
 directive|endif
@@ -2585,7 +2587,7 @@ name|ia6t_pltime
 operator|=
 name|ND6_INFINITE_LIFETIME
 expr_stmt|;
-comment|/* we don't need to perfrom DAD on loopback interfaces. */
+comment|/* we don't need to perform DAD on loopback interfaces. */
 name|ifra
 operator|.
 name|ifra_flags
@@ -2599,7 +2601,7 @@ name|ifra_flags
 operator||=
 name|IN6_IFF_NOPFX
 expr_stmt|;
-comment|/* 	 * We can set NULL to the 3rd arg. See comments in 	 * in6_ifattach_linklocal(). 	 */
+comment|/* 	 * We are sure that this is a newly assigned address, so we can set 	 * NULL to the 3rd arg. 	 */
 if|if
 condition|(
 operator|(
@@ -2764,7 +2766,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/*label too long*/
+comment|/* label too long */
 name|l
 operator|=
 name|p
@@ -3553,7 +3555,7 @@ name|IFT_STF
 case|case
 name|IFT_STF
 case|:
-comment|/* 		 * 6to4 interface is a very speical kind of beast. 		 * no multicast, no linklocal (based on 03 draft). 		 */
+comment|/* 		 * 6to4 interface is a very special kind of beast. 		 * no multicast, no linklocal.  RFC2529 specifies how to make 		 * linklocals for 6to4 interface, but there's no use and 		 * it is rather harmful to have one. 		 */
 goto|goto
 name|statinit
 goto|;

@@ -2296,7 +2296,7 @@ operator|->
 name|th_urp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Delay droping TCP, IP headers, IPv6 ext headers, and TCP options, 	 * until after ip6_savecontrol() is called and before other functions 	 * which don't want those proto headers. 	 * Because ip6_savecontrol() is going to parse the mbuf to 	 * search for data to be passed up to user-land, it wants mbuf 	 * parameters to be unchanged. 	 */
+comment|/* 	 * Delay droping TCP, IP headers, IPv6 ext headers, and TCP options, 	 * until after ip6_savecontrol() is called and before other functions 	 * which don't want those proto headers. 	 * Because ip6_savecontrol() is going to parse the mbuf to 	 * search for data to be passed up to user-land, it wants mbuf 	 * parameters to be unchanged. 	 * XXX: the call of ip6_savecontrol() has been obsoleted based on 	 * latest version of the advanced API (20020110). 	 */
 name|drop_hdrlen
 operator|=
 name|off0

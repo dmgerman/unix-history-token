@@ -1717,7 +1717,6 @@ name|llinfo_nd6
 operator|.
 name|ln_next
 expr_stmt|;
-comment|/* XXX BSD/OS separates this code -- itojun */
 while|while
 condition|(
 name|ln
@@ -2307,7 +2306,7 @@ name|regen
 init|=
 literal|0
 decl_stmt|;
-comment|/* 			 * If the expiring address is temporary, try 			 * regenerating a new one.  This would be useful when 			 * we suspended a laptop PC, then turned on after a 			 * period that could invalidate all temporary 			 * addresses.  Although we may have to restart the 			 * loop (see below), it must be after purging the 			 * address.  Otherwise, we'd see an infinite loop of 			 * regeneration.  			 */
+comment|/* 			 * If the expiring address is temporary, try 			 * regenerating a new one.  This would be useful when 			 * we suspended a laptop PC, then turned it on after a 			 * period that could invalidate all temporary 			 * addresses.  Although we may have to restart the 			 * loop (see below), it must be after purging the 			 * address.  Otherwise, we'd see an infinite loop of 			 * regeneration.  			 */
 if|if
 condition|(
 name|ip6_use_tempaddr
@@ -2409,7 +2408,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * A new temporary address is 					 * generated. 					 * XXX: this means the address chain 					 * has changed while we are still in 					 * the loop.  Although the change 					 * would not cause disaster (because 					 * it's not an addition, but a 					 * deletion,) we'd rather restart the 					 * loop just for safety.  Or does this  					 * significantly reduce performance?? 					 */
+comment|/* 					 * A new temporary address is 					 * generated. 					 * XXX: this means the address chain 					 * has changed while we are still in 					 * the loop.  Although the change 					 * would not cause disaster (because 					 * it's not a deletion, but an 					 * addition,) we'd rather restart the 					 * loop just for safety.  Or does this  					 * significantly reduce performance?? 					 */
 goto|goto
 name|addrloop
 goto|;
@@ -2440,7 +2439,7 @@ condition|(
 name|pr
 condition|)
 block|{
-comment|/* 		 * check prefix lifetime. 		 * since pltime is just for autoconf, pltime processing for 		 * prefix is not necessary. 		 * 		 * we offset expire time by NDPR_KEEP_EXPIRE, so that we 		 * can use the old prefix information to validate the 		 * next prefix information to come.  See prelist_update() 		 * for actual validation. 		 * 		 * I don't think such an offset is necessary. 		 * (jinmei@kame.net, 20010130). 		 */
+comment|/* 		 * check prefix lifetime. 		 * since pltime is just for autoconf, pltime processing for 		 * prefix is not necessary. 		 */
 if|if
 condition|(
 name|pr
@@ -3188,7 +3187,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-comment|/* 			 * Create a new route. RTF_LLINFO is necessary 			 * to create a Neighbor Cache entry for the 			 * destination in nd6_rtrequest which will be 			 * called in rtequest via ifa->ifa_rtrequest. 			 */
+comment|/* 			 * Create a new route.  RTF_LLINFO is necessary 			 * to create a Neighbor Cache entry for the 			 * destination in nd6_rtrequest which will be 			 * called in rtrequest via ifa->ifa_rtrequest. 			 */
 if|if
 condition|(
 operator|(
@@ -3733,7 +3732,7 @@ name|dr
 condition|)
 block|{
 comment|/* 			 * Unreachablity of a router might affect the default 			 * router selection and on-link detection of advertised 			 * prefixes. 			 */
-comment|/* 			 * Temporarily fake the state to choose a new default 			 * router and to perform on-link determination of 			 * prefixes coreectly. 			 * Below the state will be set correctly, 			 * or the entry itself will be deleted. 			 */
+comment|/* 			 * Temporarily fake the state to choose a new default 			 * router and to perform on-link determination of 			 * prefixes correctly. 			 * Below the state will be set correctly, 			 * or the entry itself will be deleted. 			 */
 name|ln
 operator|->
 name|ln_state
@@ -3787,7 +3786,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Before deleting the entry, remember the next entry as the 	 * return value.  We need this because pfxlist_onlink_check() above 	 * might have freed other entries (particularly the old next entry) as 	 * a side effect (XXX).  	 */
+comment|/* 	 * Before deleting the entry, remember the next entry as the 	 * return value.  We need this because pfxlist_onlink_check() above 	 * might have freed other entries (particularly the old next entry) as 	 * a side effect (XXX). 	 */
 name|next
 operator|=
 name|ln
@@ -4095,11 +4094,13 @@ name|ifa
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|rt
 operator|->
 name|rt_flags
 operator|&
 name|RTF_GATEWAY
+operator|)
 condition|)
 return|return;
 if|if
@@ -4190,7 +4191,7 @@ name|RTF_LLINFO
 operator|)
 condition|)
 block|{
-comment|/* 			 * Case 1: This route should come from 			 * a route to interface. RTF_LLINFO flag is set 			 * for a host route whose destination should be 			 * treated as on-link. 			 */
+comment|/* 			 * Case 1: This route should come from 			 * a route to interface.  RTF_LLINFO flag is set 			 * for a host route whose destination should be 			 * treated as on-link. 			 */
 name|rt_setgate
 argument_list|(
 name|rt
@@ -4265,7 +4266,7 @@ comment|/* kludge for desktops */
 if|#
 directive|if
 literal|0
-block|printf("nd6_request: time.tv_sec is zero; " 				       "treat it as 1\n");
+block|printf("nd6_rtequest: time.tv_sec is zero; " 				       "treat it as 1\n");
 endif|#
 directive|endif
 name|ln
@@ -4279,11 +4280,13 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|rt
 operator|->
 name|rt_flags
 operator|&
 name|RTF_CLONING
+operator|)
 condition|)
 break|break;
 block|}
@@ -4622,7 +4625,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 comment|/* 				 * Make sure rt_ifa be equal to the ifaddr 				 * corresponding to the address. 				 * We need this because when we refer 				 * rt_ifa->ia6_flags in ip6_input, we assume 				 * that the rt_ifa points to the address instead 				 * of the loopback address. 				 */
 if|if
 condition|(
@@ -6069,7 +6072,7 @@ operator|=
 name|ia_next
 control|)
 block|{
-comment|/* ia might be removed. keep the next ptr. */
+comment|/* ia might be removed.  keep the next ptr. */
 name|ia_next
 operator|=
 name|ia
@@ -6718,7 +6721,7 @@ condition|(
 name|lladdr
 condition|)
 block|{
-comment|/*(3-5) and (7)*/
+comment|/* (3-5) and (7) */
 comment|/* 		 * Record source link-layer address 		 * XXX is it dependent to ifp->if_type? 		 */
 name|sdl
 operator|->
@@ -6757,7 +6760,7 @@ name|olladdr
 operator|&&
 name|lladdr
 operator|)
-comment|/*(3)*/
+comment|/* (3) */
 operator|||
 operator|(
 name|olladdr
@@ -6768,7 +6771,7 @@ name|llchange
 operator|)
 condition|)
 block|{
-comment|/*(5)*/
+comment|/* (5) */
 name|do_update
 operator|=
 literal|1
@@ -6779,7 +6782,7 @@ name|ND6_LLINFO_STALE
 expr_stmt|;
 block|}
 else|else
-comment|/*(1-2,4)*/
+comment|/* (1-2,4) */
 name|do_update
 operator|=
 literal|0
@@ -6796,13 +6799,13 @@ condition|(
 operator|!
 name|lladdr
 condition|)
-comment|/*(6)*/
+comment|/* (6) */
 name|newstate
 operator|=
 name|ND6_LLINFO_NOSTATE
 expr_stmt|;
 else|else
-comment|/*(7)*/
+comment|/* (7) */
 name|newstate
 operator|=
 name|ND6_LLINFO_STALE
@@ -6912,7 +6915,7 @@ if|if
 condition|(
 name|is_newentry
 condition|)
-comment|/*(6-7)*/
+comment|/* (6-7) */
 name|ln
 operator|->
 name|ln_router
@@ -6941,7 +6944,7 @@ if|if
 condition|(
 name|is_newentry
 condition|)
-comment|/*(6-7)*/
+comment|/* (6-7) */
 name|ln
 operator|->
 name|ln_router
@@ -6976,7 +6979,7 @@ operator|||
 name|lladdr
 operator|)
 operator|)
-comment|/*(2-5)*/
+comment|/* (2-5) */
 operator|||
 operator|(
 name|is_newentry
@@ -6985,7 +6988,7 @@ name|lladdr
 operator|)
 condition|)
 block|{
-comment|/*(7)*/
+comment|/* (7) */
 name|ln
 operator|->
 name|ln_router
@@ -7246,7 +7249,7 @@ condition|)
 goto|goto
 name|sendpkt
 goto|;
-comment|/* 	 * next hop determination. This routine is derived from ether_outpout. 	 */
+comment|/* 	 * next hop determination.  This routine is derived from ether_outpout. 	 */
 if|if
 condition|(
 name|rt
@@ -7348,7 +7351,7 @@ name|rt
 operator|->
 name|rt_gateway
 expr_stmt|;
-comment|/* 			 * We skip link-layer address resolution and NUD 			 * if the gateway is not a neighbor from ND point 			 * of view, regardless the value of the 			 * nd_ifinfo.flags. 			 * The second condition is a bit tricky: we skip 			 * if the gateway is our own address, which is 			 * sometimes used to install a route to a p2p link. 			 */
+comment|/* 			 * We skip link-layer address resolution and NUD 			 * if the gateway is not a neighbor from ND point 			 * of view, regardless of the value of nd_ifinfo.flags. 			 * The second condition is a bit tricky; we skip 			 * if the gateway is our own address, which is 			 * sometimes used to install a route to a p2p link. 			 */
 if|if
 condition|(
 operator|!
@@ -7497,7 +7500,7 @@ name|rt_llinfo
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Since nd6_is_addr_neighbor() internally calls nd6_lookup(), 		 * the condition below is not very efficient. But we believe 		 * it is tolerable, because this should be a rare case. 		 */
+comment|/* 		 * Since nd6_is_addr_neighbor() internally calls nd6_lookup(), 		 * the condition below is not very efficient.  But we believe 		 * it is tolerable, because this should be a rare case. 		 */
 if|if
 condition|(
 name|nd6_is_addr_neighbor
@@ -7671,7 +7674,7 @@ operator|+
 name|nd6_delay
 expr_stmt|;
 block|}
-comment|/* 	 * If the neighbor cache entry has a state other than INCOMPLETE 	 * (i.e. its link-layer address is already reloved), just 	 * send the packet. 	 */
+comment|/* 	 * If the neighbor cache entry has a state other than INCOMPLETE 	 * (i.e. its link-layer address is already resolved), just 	 * send the packet. 	 */
 if|if
 condition|(
 name|ln
@@ -7683,7 +7686,7 @@ condition|)
 goto|goto
 name|sendpkt
 goto|;
-comment|/* 	 * There is a neighbor cache entry, but no ethernet address 	 * response yet. Replace the held mbuf (if any) with this 	 * latest one. 	 * 	 * XXX Does the code conform to rate-limiting rule? 	 * (RFC 2461 7.2.2) 	 */
+comment|/* 	 * There is a neighbor cache entry, but no ethernet address 	 * response yet.  Replace the held mbuf (if any) with this 	 * latest one. 	 * 	 * This code conforms to the rate-limiting rule described in Section 	 * 7.2.2 of RFC 2461, because the timer is set correctly after sending 	 * an NS below. 	 */
 if|if
 condition|(
 name|ln
@@ -8046,6 +8049,7 @@ return|;
 case|case
 name|IFT_IEEE1394
 case|:
+comment|/* 			 * netbsd can use if_broadcastaddr, but we don't do so 			 * to reduce # of ifdef. 			 */
 for|for
 control|(
 name|i

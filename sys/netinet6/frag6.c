@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: frag6.c,v 1.31 2001/05/17 13:45:34 jinmei Exp $	*/
+comment|/*	$KAME: frag6.c,v 1.33 2002/01/07 11:34:48 kjc Exp $	*/
 end_comment
 
 begin_comment

@@ -242,7 +242,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*IPSEC*/
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -1048,7 +1048,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 name|error
 operator|=
 name|ip6_output

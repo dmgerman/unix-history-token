@@ -445,7 +445,7 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*already freed*/
+comment|/* already freed */
 name|ipseclog
 argument_list|(
 operator|(
@@ -592,7 +592,7 @@ name|sav
 operator|->
 name|alg_enc
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 comment|/* other parameters to look at? */
 block|}
 block|}
@@ -1181,7 +1181,7 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*already freed*/
+comment|/* already freed */
 name|ipseclog
 argument_list|(
 operator|(
@@ -1302,7 +1302,7 @@ name|sav
 operator|->
 name|alg_enc
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 comment|/* other parameters to look at? */
 block|}
 block|}

@@ -150,7 +150,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*XXX nonstandard*/
+comment|/* XXX nonstandard */
 end_comment
 
 begin_define
@@ -251,7 +251,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*XXX nonstandard*/
+comment|/* XXX nonstandard */
 end_comment
 
 begin_define
@@ -374,7 +374,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*XXX nonstandard*/
+comment|/* XXX nonstandard */
 end_comment
 
 begin_if
@@ -753,7 +753,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*XXX nonstandard*/
+comment|/* XXX nonstandard */
 end_comment
 
 begin_define
@@ -891,7 +891,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*XXX nonstandard*/
+comment|/* XXX nonstandard */
 end_comment
 
 begin_define
@@ -935,7 +935,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*refers nonstandard items */
+comment|/* refers nonstandard items */
 end_comment
 
 begin_define
@@ -1065,7 +1065,7 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/*nonstandard*/
+comment|/* nonstandard */
 end_comment
 
 begin_comment
@@ -1451,7 +1451,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*IPSEC*/
+comment|/* IPSEC */
 end_comment
 
 begin_define
@@ -1488,7 +1488,7 @@ literal|1
 end_if
 
 begin_comment
-comment|/*IPV6FIREWALL*/
+comment|/* IPV6FIREWALL */
 end_comment
 
 begin_define
@@ -1600,7 +1600,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* normally limit m'casts to 1 hop  */
+comment|/* normally limit m'casts to 1 hop */
 end_comment
 
 begin_define
@@ -1611,7 +1611,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* normally hear sends if a member  */
+comment|/* normally hear sends if a member */
 end_comment
 
 begin_comment
@@ -1953,7 +1953,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*obsolete*/
+comment|/* obsolete */
 end_comment
 
 begin_define

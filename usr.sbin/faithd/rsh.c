@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rsh.c,v 1.5 2001/02/15 17:28:04 itojun Exp $	*/
+comment|/*	$KAME: rsh.c,v 1.7 2001/09/05 01:10:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -204,7 +204,10 @@ literal|"select %d: %s"
 argument_list|,
 name|s_src
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -374,7 +377,12 @@ literal|1
 case|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 case|case
@@ -865,7 +873,10 @@ name|exit_failure
 argument_list|(
 literal|"select 4 sockets: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -998,7 +1009,12 @@ name|bad
 label|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

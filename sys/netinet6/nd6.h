@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: nd6.h,v 1.55 2001/04/27 15:09:49 itojun Exp $	*/
+comment|/*	$KAME: nd6.h,v 1.76 2001/12/18 02:10:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -205,7 +205,7 @@ comment|/* CurHopLimit */
 name|u_int8_t
 name|receivedra
 decl_stmt|;
-comment|/* the followings are for privacy extension for addrconf */
+comment|/* the following 3 members are for privacy extension for addrconf */
 name|u_int8_t
 name|randomseed0
 index|[
@@ -376,13 +376,13 @@ decl_stmt|;
 name|u_char
 name|origin
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|vltime
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|pltime
 decl_stmt|;
-name|u_long
+name|time_t
 name|expire
 decl_stmt|;
 name|u_short
@@ -585,7 +585,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*1sec*/
+comment|/* 1sec */
 end_comment
 
 begin_define
@@ -596,7 +596,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*4sec*/
+comment|/* 4sec */
 end_comment
 
 begin_define
@@ -760,6 +760,7 @@ decl_stmt|;
 name|u_char
 name|flags
 decl_stmt|;
+comment|/* flags on RA message */
 name|u_short
 name|rtlifetime
 decl_stmt|;
@@ -1218,7 +1219,7 @@ index|[
 literal|9
 index|]
 decl_stmt|;
-comment|/*max = home agent info*/
+comment|/* max = home agent info */
 struct|struct
 block|{
 name|struct

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_output.c,v 1.180 2001/05/21 05:37:50 jinmei Exp $	*/
+comment|/*	$KAME: ip6_output.c,v 1.279 2002/01/26 06:12:30 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -1129,7 +1129,7 @@ name|mprev
 init|=
 name|m
 decl_stmt|;
-comment|/* 		 * we treat dest2 specially.  this makes IPsec processing 		 * much easier. 		 * 		 * result: IPv6 dest2 payload 		 * m and mprev will point to IPv6 header. 		 */
+comment|/* 		 * we treat dest2 specially.  this makes IPsec processing 		 * much easier.  the goal here is to make mprev point the 		 * mbuf prior to dest2. 		 * 		 * result: IPv6 dest2 payload 		 * m and mprev will point to IPv6 header. 		 */
 if|if
 condition|(
 name|exthdrs
@@ -1390,7 +1390,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/*fall through*/
+comment|/* fall through */
 case|case
 name|ENOENT
 case|:
@@ -1978,7 +1978,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/*fall through*/
+comment|/* fall through */
 case|case
 name|ENOENT
 case|:
@@ -2002,7 +2002,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 if|if
 condition|(
 operator|!
@@ -2917,7 +2917,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * If source or destination address is a scoped address, and 		 * the packet is going to be sent to a loopback interface, 		 * we should keep the original interface. 		 */
-comment|/* 		 * XXX: this is a very experimental and temporary solution. 		 * We eventually have sockaddr_in6 and use the sin6_scope_id 		 * field of the structure here. 		 * We rely on the consistency between two scope zone ids 		 * of source add destination, which should already be assured 		 * larger scopes than link will be supported in the near 		 * future. 		 */
+comment|/* 		 * XXX: this is a very experimental and temporary solution. 		 * We eventually have sockaddr_in6 and use the sin6_scope_id 		 * field of the structure here. 		 * We rely on the consistency between two scope zone ids 		 * of source and destination, which should already be assured. 		 * Larger scopes than link will be supported in the future.  		 */
 name|origifp
 operator|=
 name|NULL
@@ -3037,7 +3037,7 @@ name|rcvif
 operator|=
 name|NULL
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 comment|/* If ipfw says divert, we have to just drop packet */
 if|if
 condition|(
@@ -3650,7 +3650,7 @@ operator|=
 name|IPPROTO_FRAGMENT
 expr_stmt|;
 block|}
-comment|/* 		 * Loop through length of segment after first fragment, 		 * make new header and copy data of each part and link onto chain. 		 */
+comment|/* 		 * Loop through length of segment after first fragment, 		 * make new header and copy data of each part and link onto 		 * chain. 		 */
 name|m0
 operator|=
 name|m
@@ -8660,7 +8660,7 @@ argument_list|,
 name|MT_HEADER
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 switch|switch
 condition|(
 name|optname

@@ -340,7 +340,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*IPSEC*/
+comment|/* IPSEC */
 end_comment
 
 begin_include
@@ -840,7 +840,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/*INET*/
+comment|/* INET */
 block|{
 name|SOCK_RAW
 block|,

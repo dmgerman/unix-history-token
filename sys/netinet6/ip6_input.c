@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_input.c,v 1.194 2001/05/27 13:28:35 itojun Exp $	*/
+comment|/*	$KAME: ip6_input.c,v 1.259 2002/01/21 04:58:09 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -189,7 +189,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET*/
+comment|/* INET */
 end_comment
 
 begin_include
@@ -1020,7 +1020,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * mbuf statistics by kazu 	 */
+comment|/* 	 * mbuf statistics 	 */
 if|if
 condition|(
 name|m
@@ -1083,7 +1083,7 @@ name|if_index
 index|]
 operator|++
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 block|}
 elseif|else
 if|if
@@ -1242,8 +1242,9 @@ block|}
 block|}
 if|if
 condition|(
-operator|!
 name|n
+operator|==
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -2351,7 +2352,7 @@ name|ro_rt
 operator|->
 name|rt_ifp
 expr_stmt|;
-comment|/*faith*/
+comment|/* faith */
 goto|goto
 name|hbhcheck
 goto|;
@@ -2502,7 +2503,7 @@ name|ip6_hdr
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 		 * if the payload length field is 0 and the next header field   		 * indicates Hop-by-Hop Options header, then a Jumbo Payload 		 * option MUST be included. 		 */
+comment|/* 		 * if the payload length field is 0 and the next header field 		 * indicates Hop-by-Hop Options header, then a Jumbo Payload 		 * option MUST be included. 		 */
 if|if
 condition|(
 name|ip6

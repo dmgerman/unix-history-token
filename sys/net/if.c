@@ -5384,7 +5384,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/* XXX: temporal workaround for fxp issue*/
+comment|/* XXX: temporary workaround for fxp issue*/
 if|if
 condition|(
 name|ifp

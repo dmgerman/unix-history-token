@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: faithd.h,v 1.6 2000/10/05 22:20:37 itojun Exp $	*/
+comment|/*	$KAME: faithd.h,v 1.8 2001/09/05 03:04:21 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -308,13 +308,6 @@ parameter_list|(
 name|b
 parameter_list|)
 value|(((int)b)&0xff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ERRSTR
-value|strerror(errno)
 end_define
 
 begin_define

@@ -1799,7 +1799,7 @@ block|}
 block|}
 name|skip
 label|:
-comment|/* 	 * Src linkaddress 	 */
+comment|/* 	 * Source link layer address 	 */
 block|{
 name|char
 modifier|*

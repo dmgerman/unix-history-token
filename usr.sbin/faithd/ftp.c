@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ftp.c,v 1.10 2000/09/14 00:23:39 itojun Exp $	*/
+comment|/*	$KAME: ftp.c,v 1.11 2001/07/02 14:36:49 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -489,7 +489,10 @@ name|exit_failure
 argument_list|(
 literal|"select: %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -803,7 +806,12 @@ name|bad
 label|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1449,7 +1457,12 @@ name|bad
 label|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -2334,7 +2347,10 @@ name|exit_failure
 argument_list|(
 literal|"setsockopt(IPV6_FAITH): %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3093,7 +3109,10 @@ name|exit_error
 argument_list|(
 literal|"setsockopt(IP_FAITH): %s"
 argument_list|,
-name|ERRSTR
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3416,7 +3435,12 @@ name|bad
 label|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -6101,7 +6125,12 @@ name|bad
 label|:
 name|exit_failure
 argument_list|(
-name|ERRSTR
+literal|"%s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

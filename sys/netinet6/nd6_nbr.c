@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: nd6_nbr.c,v 1.64 2001/05/17 03:48:30 itojun Exp $	*/
+comment|/*	$KAME: nd6_nbr.c,v 1.86 2002/01/21 02:33:04 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -630,7 +630,7 @@ literal|0
 index|]
 operator|==
 name|IPV6_ADDR_INT16_MLL
-comment|/*don't check ifindex portion*/
+comment|/* don't check ifindex portion */
 operator|&&
 name|daddr6
 operator|.
@@ -661,7 +661,7 @@ literal|0xff
 condition|)
 block|{
 empty_stmt|;
-comment|/*good*/
+comment|/* good */
 block|}
 else|else
 block|{
@@ -1134,17 +1134,19 @@ name|saddr6
 argument_list|)
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
+operator|,
 literal|"nd6_ns_input: duplicate IP6 address %s\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
 name|saddr6
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1684,7 +1686,7 @@ name|m_data
 operator|+=
 name|max_linkhdr
 expr_stmt|;
-comment|/*or MH_ALIGN() equivalent?*/
+comment|/* or MH_ALIGN() equivalent? */
 comment|/* fill neighbor solicitation packet */
 name|ip6
 operator|=
@@ -1840,7 +1842,7 @@ name|ip6_hdr
 modifier|*
 name|hip6
 decl_stmt|;
-comment|/*hold ip6*/
+comment|/* hold ip6 */
 name|struct
 name|in6_addr
 modifier|*
@@ -1954,7 +1956,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
 return|return;
 block|}
 name|ip6
@@ -2746,7 +2747,7 @@ goto|goto
 name|freeit
 goto|;
 block|}
-comment|/* Just for safety, maybe unnecessery. */
+comment|/* Just for safety, maybe unnecessary. */
 if|if
 condition|(
 name|ifa
@@ -3258,6 +3259,7 @@ operator|)
 operator|->
 name|sin6_addr
 expr_stmt|;
+comment|/* 			 * Lock to protect the default router list. 			 * XXX: this might be unnecessary, since this function 			 * is only called under the network software interrupt 			 * context.  However, we keep it just for safety.   			 */
 name|s
 operator|=
 name|splnet
@@ -3339,7 +3341,7 @@ operator|->
 name|ln_hold
 condition|)
 block|{
-comment|/* 		 * we assume ifp is not a p2p here, so just set the 2nd 		 * argument as the 1st one. 		 */
+comment|/* 		 * we assume ifp is not a loopback here, so just set the 2nd 		 * argument as the 1st one. 		 */
 name|nd6_output
 argument_list|(
 name|ifp
@@ -3694,7 +3696,7 @@ name|m_data
 operator|+=
 name|max_linkhdr
 expr_stmt|;
-comment|/*or MH_ALIGN() equivalent?*/
+comment|/* or MH_ALIGN() equivalent? */
 comment|/* fill neighbor advertisement packet */
 name|ip6
 operator|=
@@ -4772,7 +4774,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-comment|/*just for safety*/
+comment|/* just for safety */
 name|dp
 operator|->
 name|dad_count
@@ -4801,8 +4803,9 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|tick
+operator|==
+name|NULL
 condition|)
 block|{
 name|nd6_dad_ns_output
@@ -5007,7 +5010,7 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 comment|/* Sanity check */
 if|if
 condition|(
@@ -5278,7 +5281,7 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/*heuristics*/
+comment|/* heuristics */
 comment|/* 			 * if 			 * - we have sent many(?) DAD NS, and 			 * - the number of NS we sent equals to the 			 *   number of NS we've got, and 			 * - we've got no NA 			 * we may have a faulty network card/driver which 			 * loops back multicasts to myself. 			 */
 block|if (3< dp->dad_count&& dp->dad_ns_icount == dp->dad_count&& dp->dad_na_icount == 0) { 				log(LOG_INFO, "DAD questionable for %s(%s): " 					"network card loops back multicast?\n", 					ip6_sprintf(&ia->ia_addr.sin6_addr), 					if_name(ifa->ifa_ifp));
 comment|/* XXX consider it a duplicate or not? */

@@ -1440,7 +1440,7 @@ decl_stmt|;
 name|u_int32_t
 name|nd_opt_rti_lifetime
 decl_stmt|;
-comment|/* followed by prefix */
+comment|/* prefix follows */
 block|}
 name|__attribute__
 argument_list|(
@@ -2536,10 +2536,10 @@ name|u_quad_t
 name|icp6s_badlen
 decl_stmt|;
 comment|/* calculated bound mismatch */
+comment|/* 	 * number of responses: this member is inherited from netinet code, but 	 * for netinet6 code, it is already available in icp6s_outhist[]. 	 */
 name|u_quad_t
 name|icp6s_reflect
 decl_stmt|;
-comment|/* number of responses */
 name|u_quad_t
 name|icp6s_inhist
 index|[

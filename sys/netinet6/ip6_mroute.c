@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_mroute.c,v 1.46 2001/04/04 05:17:30 itojun Exp $	*/
+comment|/*	$KAME: ip6_mroute.c,v 1.58 2001/12/18 02:36:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -372,7 +372,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_char
-name|nexpire
+name|n6expire
 index|[
 name|MF6CTBLSIZ
 index|]
@@ -1582,11 +1582,11 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|nexpire
+name|n6expire
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|nexpire
+name|n6expire
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2598,7 +2598,7 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_m6fc update o %s g %s p %x\n"
+literal|"add_m6fc no upcall h %d o %s g %s p %x\n"
 argument_list|,
 name|ip6_sprintf
 argument_list|(
@@ -2893,7 +2893,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Don't clean this guy up */
-name|nexpire
+name|n6expire
 index|[
 name|hash
 index|]
@@ -3143,7 +3143,7 @@ name|rt
 operator|->
 name|mf6c_expire
 condition|)
-name|nexpire
+name|n6expire
 index|[
 name|hash
 index|]
@@ -4630,7 +4630,7 @@ name|mf6c_expire
 operator|=
 name|UPCALL_EXPIRE
 expr_stmt|;
-name|nexpire
+name|n6expire
 index|[
 name|hash
 index|]
@@ -4845,7 +4845,7 @@ control|)
 block|{
 if|if
 condition|(
-name|nexpire
+name|n6expire
 index|[
 name|i
 index|]
@@ -4981,7 +4981,7 @@ operator|.
 name|mrt6s_cache_cleanups
 operator|++
 expr_stmt|;
-name|nexpire
+name|n6expire
 index|[
 name|i
 index|]
@@ -6504,7 +6504,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"register_send: ip_mrouter socket queue full\n"
+literal|"register_send: ip6_mrouter socket queue full\n"
 argument_list|)
 expr_stmt|;
 endif|#

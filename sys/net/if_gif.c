@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if_gif.c,v 1.47 2001/05/01 05:28:42 itojun Exp $	*/
+comment|/*	$KAME: if_gif.c,v 1.87 2001/10/19 08:50:27 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -615,7 +615,7 @@ name|MAX_GIF_NEST
 end_ifndef
 
 begin_comment
-comment|/*  * This macro controls the default upper limitation on nesting of gif tunnels.  * Since, setting a large value to this macro with a careless configuration  * may introduce system crash, we don't allow any nestings by default.  * If you need to configure nested gif tunnels, you can define this macro  * in your kernel configuration file. However, if you do so, please be  * careful to configure the tunnels so that it won't make a loop.  */
+comment|/*  * This macro controls the default upper limitation on nesting of gif tunnels.  * Since, setting a large value to this macro with a careless configuration  * may introduce system crash, we don't allow any nestings by default.  * If you need to configure nested gif tunnels, you can define this macro  * in your kernel configuration file.  However, if you do so, please be  * careful to configure the tunnels so that it won't make a loop.  */
 end_comment
 
 begin_define
@@ -2156,7 +2156,7 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Put the packet to the network layer input queue according to the 	 * specified address family. 	 * Note: older versions of gif_input directly called network layer 	 * input functions, e.g. ip6_input, here. We changed the policy to 	 * prevent too many recursive calls of such input functions, which 	 * might cause kernel panic. But the change may introduce another 	 * problem; if the input queue is full, packets are discarded. 	 * We believed it rarely occurs and changed the policy. If we find 	 * it occurs more times than we thought, we may change the policy 	 * again. 	 */
+comment|/* 	 * Put the packet to the network layer input queue according to the 	 * specified address family. 	 * Note: older versions of gif_input directly called network layer 	 * input functions, e.g. ip6_input, here.  We changed the policy to 	 * prevent too many recursive calls of such input functions, which 	 * might cause kernel panic.  But the change may introduce another 	 * problem; if the input queue is full, packets are discarded. 	 * The kernel stack overflow really happened, and we believed 	 * queue-full rarely occurs, so we changed the policy. 	 */
 switch|switch
 condition|(
 name|af

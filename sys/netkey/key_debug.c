@@ -2998,7 +2998,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sin4
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3046,7 +3046,7 @@ block|{
 case|case
 name|AF_INET
 case|:
-name|sin
+name|sin4
 operator|=
 operator|(
 expr|struct
@@ -3061,7 +3061,7 @@ literal|" port=%u\n"
 argument_list|,
 name|ntohs
 argument_list|(
-name|sin
+name|sin4
 operator|->
 name|sin_port
 argument_list|)
@@ -3073,13 +3073,13 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|sin4
 operator|->
 name|sin_addr
 argument_list|)

@@ -382,7 +382,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*IPSEC*/
+comment|/* IPSEC */
 comment|/* 	 * Do not forward packets to multicast destination (should be handled 	 * by ip6_mforward(). 	 * Do not forward packets with unspecified source.  It was discussed 	 * in July 2000, on ipngwg mailing list. 	 */
 if|if
 condition|(
@@ -837,7 +837,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/*fall through*/
+comment|/* fall through */
 case|case
 name|ENOENT
 case|:
@@ -1160,7 +1160,7 @@ name|ip6_forward_rt
 operator|.
 name|ro_rt
 expr_stmt|;
-comment|/* 	 * Scope check: if a packet can't be delivered to its destination 	 * for the reason that the destination is beyond the scope of the 	 * source address, discard the packet and return an icmp6 destination 	 * unreachable error with Code 2 (beyond scope of source address). 	 * [draft-ietf-ipngwg-icmp-v3-00.txt, Section 3.1] 	 */
+comment|/* 	 * Scope check: if a packet can't be delivered to its destination 	 * for the reason that the destination is beyond the scope of the 	 * source address, discard the packet and return an icmp6 destination 	 * unreachable error with Code 2 (beyond scope of source address). 	 * [draft-ietf-ipngwg-icmp-v3-02.txt, Section 3.1] 	 */
 if|if
 condition|(
 name|in6_addr2scopeid

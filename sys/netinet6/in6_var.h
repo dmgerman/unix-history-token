@@ -32,7 +32,7 @@ comment|/*  * Interface address, Internet version.  One of these structures  * i
 end_comment
 
 begin_comment
-comment|/*  * pltime/vltime are just for future reference (required to implements 2  * hour rule for hosts).  they should never be modified by nd6_timeout or  * anywhere else.  *	userland -> kernel: accept pltime/vltime  *	kernel -> userland: throuw up everything  *	in kernel: modify preferred/expire only  */
+comment|/*  * pltime/vltime are just for future reference (required to implements 2  * hour rule for hosts).  they should never be modified by nd6_timeout or  * anywhere else.  *	userland -> kernel: accept pltime/vltime  *	kernel -> userland: throw up everything  *	in kernel: modify preferred/expire only  */
 end_comment
 
 begin_struct
@@ -1618,7 +1618,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Structure used by macros below to remember position when stepping through  * all of eht in6_multi records.  */
+comment|/*  * Structure used by macros below to remember position when stepping through  * all of the in6_multi records.  */
 end_comment
 
 begin_struct
