@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.3 82/12/05"
+literal|"@(#)main.c	4.4 82/12/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
