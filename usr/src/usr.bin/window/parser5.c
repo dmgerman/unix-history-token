@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser5.c	3.9 %G%"
+literal|"@(#)parser5.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California,  * All rights reserved.  Redistribution permitted subject to  * the terms of the Berkeley Software License Agreement.  */
+comment|/* not lint */
 end_comment
 
 begin_include
