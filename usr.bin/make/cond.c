@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * cond.c --  *	Functions to handle conditionals in a makefile.  *  * Interface:  *	Cond_Eval 	Evaluate the conditional in the passed line.  *  */
+comment|/*  * Functions to handle conditionals in a makefile.  *  * Interface:  *	Cond_Eval	Evaluate the conditional in the passed line.  */
 end_comment
 
 begin_include
@@ -377,22 +377,17 @@ begin_comment
 comment|/* Invert the default function */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|Boolean
-function_decl|(
+name|CondProc
 modifier|*
 name|condDefProc
-function_decl|)
-comment|/* Default function to apply */
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default function to apply */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -416,7 +411,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Single push-back token used in 					 * parsing */
+comment|/* Single push-back token in parsing */
 end_comment
 
 begin_define
@@ -512,7 +507,7 @@ comment|/* Whether the parse module is skipping 					 * lines */
 end_comment
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondPushBack --  *	Push back the most recent token read. We only need one level of  *	this, so the thing is just stored in 'condPushback'.  *  * Results:  *	None.  *  * Side Effects:  *	condPushback is overwritten.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondPushBack  *	Push back the most recent token read. We only need one level of  *	this, so the thing is just stored in 'condPushback'.  *  * Side Effects:  *	condPushback is overwritten.  */
 end_comment
 
 begin_function
@@ -532,7 +527,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondGetArg --  *	Find the argument of a built-in function.  parens is set to TRUE  *	if the arguments are bounded by parens.  *  * Results:  *	The length of the argument and the address of the argument.  *  * Side Effects:  *	The pointer is set to point to the closing parenthesis of the  *	function call.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondGetArg  *	Find the argument of a built-in function.  parens is set to TRUE  *	if the arguments are bounded by parens.  *  * Results:  *	The length of the argument and the address of the argument.  *  * Side Effects:  *	The pointer is set to point to the closing parenthesis of the  *	function call.  */
 end_comment
 
 begin_function
@@ -618,7 +613,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 	 * No arguments whatsoever. Because 'make' and 'defined' aren't really 	 * "reserved words", we don't print a message. I think this is better 	 * than hitting the user with a warning message every time s/he uses 	 * the word 'make' or 'defined' at the beginning of a symbol... 	 */
+comment|/* 		 * No arguments whatsoever. Because 'make' and 'defined' 		 * aren't really "reserved words", we don't print a message. 		 * I think this is better than hitting the user with a warning 		 * message every time s/he uses the word 'make' or 'defined' 		 * at the beginning of a symbol... 		 */
 operator|*
 name|argPtr
 operator|=
@@ -647,7 +642,7 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
-comment|/*      * Create a buffer for the argument and start it out at 16 characters      * long. Why 16? Why not?      */
+comment|/* 	 * Create a buffer for the argument and start it out at 16 characters 	 * long. Why 16? Why not? 	 */
 name|buf
 operator|=
 name|Buf_Init
@@ -685,7 +680,7 @@ operator|==
 literal|'$'
 condition|)
 block|{
-comment|/* 	     * Parse the variable spec and install it as part of the argument 	     * if it's valid. We tell Var_Parse to complain on an undefined 	     * variable, so we don't do it too. Nor do we return an error, 	     * though perhaps we should... 	     */
+comment|/* 			 * Parse the variable spec and install it as part of 			 * the argument if it's valid. We tell Var_Parse to 			 * complain on an undefined variable, so we don't do 			 * it too. Nor do we return an error, though perhaps 			 * we should... 			 */
 name|char
 modifier|*
 name|cp2
@@ -836,7 +831,7 @@ condition|(
 name|parens
 condition|)
 block|{
-comment|/* 	 * Advance pointer past close parenthesis. 	 */
+comment|/* 		 * Advance pointer past close parenthesis. 		 */
 name|cp
 operator|++
 expr_stmt|;
@@ -855,7 +850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondDoDefined --  *	Handle the 'defined' function for conditionals.  *  * Results:  *	TRUE if the given variable is defined.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondDoDefined  *	Handle the 'defined' function for conditionals.  *  * Results:  *	TRUE if the given variable is defined.  */
 end_comment
 
 begin_function
@@ -941,7 +936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondDoMake --  *	Handle the 'make' function for conditionals.  *  * Results:  *	TRUE if the given target is being made.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondDoMake  *	Handle the 'make' function for conditionals.  *  * Results:  *	TRUE if the given target is being made.  */
 end_comment
 
 begin_function
@@ -1027,7 +1022,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondDoExists --  *	See if the given file exists.  *  * Results:  *	TRUE if the file exists and FALSE if it does not.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondDoExists  *	See if the given file exists.  *  * Results:  *	TRUE if the file exists and FALSE if it does not.  */
 end_comment
 
 begin_function
@@ -1115,7 +1110,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondDoTarget --  *	See if the given node exists and is an actual target.  *  * Results:  *	TRUE if the node exists as a target and FALSE if it does not.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondDoTarget  *	See if the given node exists and is an actual target.  *  * Results:  *	TRUE if the node exists as a target and FALSE if it does not.  */
 end_comment
 
 begin_function
@@ -1207,7 +1202,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondCvtArg --  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns address of the first character after the last valid  *	character of the converted number.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  *  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondCvtArg  *	Convert the given number into a double. If the number begins  *	with 0x, it is interpreted as a hexadecimal integer  *	and converted to a double from there. All other strings just have  *	strtod called on them.  *  * Results:  *	Sets 'value' to double value of string.  *	Returns address of the first character after the last valid  *	character of the converted number.  *  * Side Effects:  *	Can change 'value' even if string is not a valid number.  */
 end_comment
 
 begin_function
@@ -1373,7 +1368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondToken --  *	Return the next token from the input.  *  * Results:  *	A Token for the next lexical token in the stream.  *  * Side Effects:  *	condPushback will be set back to None if it is used.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondToken  *	Return the next token from the input.  *  * Results:  *	A Token for the next lexical token in the stream.  *  * Side Effects:  *	condPushback will be set back to None if it is used.  */
 end_comment
 
 begin_function
@@ -1537,7 +1532,7 @@ decl_stmt|;
 name|Boolean
 name|doFree
 decl_stmt|;
-comment|/* 		 * Parse the variable spec and skip over it, saving its 		 * value in lhs. 		 */
+comment|/* 			 * Parse the variable spec and skip over it, saving its 			 * value in lhs. 			 */
 name|t
 operator|=
 name|Err
@@ -1566,7 +1561,7 @@ operator|==
 name|var_Error
 condition|)
 block|{
-comment|/* 		     * Even if !doEval, we still report syntax errors, which 		     * is what getting var_Error back with !doEval means. 		     */
+comment|/* 				 * Even if !doEval, we still report syntax 				 * errors, which is what getting var_Error 				 * back with !doEval means. 				 */
 return|return
 operator|(
 name|Err
@@ -1695,7 +1690,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 		 * Skip whitespace to get to the operator 		 */
+comment|/* 			 * Skip whitespace to get to the operator 			 */
 while|while
 condition|(
 name|isspace
@@ -1711,7 +1706,7 @@ condition|)
 name|condExpr
 operator|++
 expr_stmt|;
-comment|/* 		 * Make sure the operator is a valid one. If it isn't a 		 * known relational operator, pretend we got a 		 * != 0 comparison. 		 */
+comment|/* 			 * Make sure the operator is a valid one. If it isn't a 			 * known relational operator, pretend we got a 			 * != 0 comparison. 			 */
 name|op
 operator|=
 name|condExpr
@@ -1820,7 +1815,7 @@ operator|==
 literal|'"'
 condition|)
 block|{
-comment|/* 		     * Doing a string comparison. Only allow == and != for 		     * operators. 		     */
+comment|/* 				 * Doing a string comparison. Only allow == and 				 * != for * operators. 				 */
 name|char
 modifier|*
 name|string
@@ -1873,7 +1868,8 @@ name|Parse_Error
 argument_list|(
 name|PARSE_WARNING
 argument_list|,
-literal|"String comparison operator should be either == or !="
+literal|"String comparison operator should "
+literal|"be either == or !="
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1966,7 +1962,7 @@ literal|'\0'
 operator|)
 condition|)
 block|{
-comment|/* 			     * Backslash escapes things -- skip over next 			     * character, if it exists. 			     */
+comment|/* 						 * Backslash escapes things -- 						 * skip over next character,							 * if it exists. 						 */
 name|cp
 operator|++
 expr_stmt|;
@@ -2090,7 +2086,8 @@ argument_list|(
 name|COND
 argument_list|,
 operator|(
-literal|"lhs = \"%s\", rhs = \"%s\", op = %.2s\n"
+literal|"lhs = \"%s\", rhs = \"%s\", "
+literal|"op = %.2s\n"
 operator|,
 name|lhs
 operator|,
@@ -2100,7 +2097,7 @@ name|op
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		     * Null-terminate rhs and perform the comparison. 		     * t is set to the result. 		     */
+comment|/* 				 * Null-terminate rhs and perform the 				 * comparison. t is set to the result. 				 */
 if|if
 condition|(
 operator|*
@@ -2176,7 +2173,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		     * rhs is either a float or an integer. Convert both the 		     * lhs and the rhs to a double and compare the two. 		     */
+comment|/* 				 * rhs is either a float or an integer. 				 * Convert both the lhs and the rhs to a 				 * double and compare the two. 				 */
 name|double
 name|left
 decl_stmt|,
@@ -2327,7 +2324,7 @@ operator|==
 name|condExpr
 condition|)
 block|{
-comment|/* 			     * Skip over the right-hand side 			     */
+comment|/* 						 * Skip over the right-hand side 						 */
 name|condExpr
 operator|=
 name|c
@@ -2339,7 +2336,8 @@ argument_list|(
 name|COND
 argument_list|,
 operator|(
-literal|"left = %f, right = %f, op = %.2s\n"
+literal|"left = %f, right = %f, "
+literal|"op = %.2s\n"
 operator|,
 name|left
 operator|,
@@ -2564,7 +2562,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * Use CondDoDefined to evaluate the argument and 		     * CondGetArg to extract the argument from the 'function 		     * call'. 		     */
+comment|/* 				 * Use CondDoDefined to evaluate the argument 				 * and CondGetArg to extract the argument from 				 * the 'function call'. 				 */
 name|evalProc
 operator|=
 name|CondDoDefined
@@ -2619,7 +2617,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * Use CondDoMake to evaluate the argument and 		     * CondGetArg to extract the argument from the 'function 		     * call'. 		     */
+comment|/* 				 * Use CondDoMake to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
 name|evalProc
 operator|=
 name|CondDoMake
@@ -2674,7 +2672,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * Use CondDoExists to evaluate the argument and 		     * CondGetArg to extract the argument from the 		     * 'function call'. 		     */
+comment|/* 				 * Use CondDoExists to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
 name|evalProc
 operator|=
 name|CondDoExists
@@ -2729,7 +2727,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * Use Var_Parse to parse the spec in parens and return 		     * True if the resulting string is empty. 		     */
+comment|/* 				 * Use Var_Parse to parse the spec in parens and 				 * return True if the resulting string is empty. 				 */
 name|size_t
 name|length
 decl_stmt|;
@@ -2820,7 +2818,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			     * A variable is empty when it just contains 			     * spaces... 4/15/92, christos 			     */
+comment|/* 						 * A variable is empty when it 						 * just contains spaces... 						 * 4/15/92, christos 						 */
 name|char
 modifier|*
 name|p
@@ -2873,7 +2871,7 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * Advance condExpr to beyond the closing ). Note that 			 * we subtract one from arglen + length b/c length 			 * is calculated from condExpr[arglen - 1]. 			 */
+comment|/* 					 * Advance condExpr to beyond the 					 * closing ). Note that we subtract 					 * one from arglen + length b/c length 					 * is calculated from 					 * condExpr[arglen - 1]. 					 */
 name|condExpr
 operator|+=
 name|arglen
@@ -2910,7 +2908,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		     * Use CondDoTarget to evaluate the argument and 		     * CondGetArg to extract the argument from the 		     * 'function call'. 		     */
+comment|/* 				 * Use CondDoTarget to evaluate the argument and 				 * CondGetArg to extract the argument from the 				 * 'function call'. 				 */
 name|evalProc
 operator|=
 name|CondDoTarget
@@ -2952,7 +2950,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		     * The symbol is itself the argument to the default 		     * function. We advance condExpr to the end of the symbol 		     * by hand (the next whitespace, closing paren or 		     * binary operator) and set to invert the evaluation 		     * function if condInvert is TRUE. 		     */
+comment|/* 				 * The symbol is itself the argument to the 				 * default function. We advance condExpr to 				 * the end of the symbol by hand (the next 				 * whitespace, closing paren or binary operator) 				 * and set to invert the evaluation 				 * function if condInvert is TRUE. 				 */
 name|use_default
 label|:
 name|invert
@@ -2979,7 +2977,7 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Evaluate the argument using the set function. If invert 		 * is TRUE, we invert the sense of the function. 		 */
+comment|/* 			 * Evaluate the argument using the set function. If 			 * invert is TRUE, we invert the sense of the function. 			 */
 name|t
 operator|=
 operator|(
@@ -3042,7 +3040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondT --  *	Parse a single term in the expression. This consists of a terminal  *	symbol or Not and a terminal symbol (not including the binary  *	operators):  *	    T -> defined(variable) | make(target) | exists(file) | symbol  *	    T -> ! T | ( E )  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are consumed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondT  *	Parse a single term in the expression. This consists of a terminal  *	symbol or Not and a terminal symbol (not including the binary  *	operators):  *	    T -> defined(variable) | make(target) | exists(file) | symbol  *	    T -> ! T | ( E )  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are consumed.  */
 end_comment
 
 begin_function
@@ -3071,7 +3069,7 @@ operator|==
 name|EndOfFile
 condition|)
 block|{
-comment|/* 	 * If we reached the end of the expression, the expression 	 * is malformed... 	 */
+comment|/* 		 * If we reached the end of the expression, the expression 		 * is malformed... 		 */
 name|t
 operator|=
 name|Err
@@ -3085,7 +3083,7 @@ operator|==
 name|LParen
 condition|)
 block|{
-comment|/* 	 * T -> ( E ) 	 */
+comment|/* 		 * T -> ( E ) 		 */
 name|t
 operator|=
 name|CondE
@@ -3167,7 +3165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondF --  *	Parse a conjunctive factor (nice name, wot?)  *	    F -> T&& F | T  *  * Results:  *	True, False or Err  *  * Side Effects:  *	Tokens are consumed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondF --  *	Parse a conjunctive factor (nice name, wot?)  *	    F -> T&& F | T  *  * Results:  *	True, False or Err  *  * Side Effects:  *	Tokens are consumed.  */
 end_comment
 
 begin_function
@@ -3212,7 +3210,7 @@ operator|==
 name|And
 condition|)
 block|{
-comment|/* 	     * F -> T&& F 	     * 	     * If T is False, the whole thing will be False, but we have to 	     * parse the r.h.s. anyway (to throw it away). 	     * If T is True, the result is the r.h.s., be it an Err or no. 	     */
+comment|/* 			 * F -> T&& F 			 * 			 * If T is False, the whole thing will be False, but 			 * we have to parse the r.h.s. anyway (to throw it 			 * away). If T is True, the result is the r.h.s., 			 * be it an Err or no. 			 */
 if|if
 condition|(
 name|l
@@ -3239,7 +3237,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * F -> T 	     */
+comment|/* 			 * F -> T 			 */
 name|CondPushBack
 argument_list|(
 name|o
@@ -3256,7 +3254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * CondE --  *	Main expression production.  *	    E -> F || E | F  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are, of course, consumed.  *  *-----------------------------------------------------------------------  */
+comment|/**  * CondE --  *	Main expression production.  *	    E -> F || E | F  *  * Results:  *	True, False or Err.  *  * Side Effects:  *	Tokens are, of course, consumed.  */
 end_comment
 
 begin_function
@@ -3301,7 +3299,7 @@ operator|==
 name|Or
 condition|)
 block|{
-comment|/* 	     * E -> F || E 	     * 	     * A similar thing occurs for ||, except that here we make sure 	     * the l.h.s. is False before we bother to evaluate the r.h.s. 	     * Once again, if l is False, the result is the r.h.s. and once 	     * again if l is True, we parse the r.h.s. to throw it away. 	     */
+comment|/* 			 * E -> F || E 			 * 			 * A similar thing occurs for ||, except that here we 			 * make sure the l.h.s. is False before we bother to 			 * evaluate the r.h.s. Once again, if l is False, the 			 * result is the r.h.s. and once again if l is True, 			 * we parse the r.h.s. to throw it away. 			 */
 if|if
 condition|(
 name|l
@@ -3328,7 +3326,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * E -> F 	     */
+comment|/* 			 * E -> F 			 */
 name|CondPushBack
 argument_list|(
 name|o
@@ -3345,7 +3343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Cond_Eval --  *	Evaluate the conditional in the passed line. The line  *	looks like this:  *	    #<cond-type><expr>  *	where<cond-type> is any of if, ifmake, ifnmake, ifdef,  *	ifndef, elif, elifmake, elifnmake, elifdef, elifndef  *	and<expr> consists of&&, ||, !, make(target), defined(variable)  *	and parenthetical groupings thereof.  *  * Results:  *	COND_PARSE	if should parse lines after the conditional  *	COND_SKIP	if should skip lines after the conditional  *	COND_INVALID  	if not a valid conditional.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Cond_Eval --  *	Evaluate the conditional in the passed line. The line  *	looks like this:  *	    .<cond-type><expr>  *	where<cond-type> is any of if, ifmake, ifnmake, ifdef,  *	ifndef, elif, elifmake, elifnmake, elifdef, elifndef  *	and<expr> consists of&&, ||, !, make(target), defined(variable)  *	and parenthetical groupings thereof.  *  * Results:  *	COND_PARSE	if should parse lines after the conditional  *	COND_SKIP	if should skip lines after the conditional  *	COND_INVALID  	if not a valid conditional.  */
 end_comment
 
 begin_function
@@ -3402,7 +3400,7 @@ control|)
 block|{
 continue|continue;
 block|}
-comment|/*      * Find what type of if we're dealing with. The result is left      * in ifp and isElse is set TRUE if it's an elif line.      */
+comment|/* 	 * Find what type of if we're dealing with. The result is left 	 * in ifp and isElse is set TRUE if it's an elif line. 	 */
 if|if
 condition|(
 name|line
@@ -3444,7 +3442,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	 * End of a conditional section. If skipIfLevel is non-zero, that 	 * conditional was skipped, so lines following it should also be 	 * skipped. Hence, we return COND_SKIP. Otherwise, the conditional 	 * was read so succeeding lines should be parsed (think about it...) 	 * so we return COND_PARSE, unless this endif isn't paired with 	 * a decent if. 	 */
+comment|/* 		 * End of a conditional section. If skipIfLevel is non-zero, 		 * that conditional was skipped, so lines following it should 		 * also be skipped. Hence, we return COND_SKIP. Otherwise, 		 * the conditional was read so succeeding lines should be 		 * parsed (think about it...) so we return COND_PARSE, unless 		 * this endif isn't paired with a decent if. 		 */
 if|if
 condition|(
 name|skipIfLevel
@@ -3509,7 +3507,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/*      * Figure out what sort of conditional it is -- what its default      * function is, etc. -- by looking in the table of valid "ifs"      */
+comment|/* 	 * Figure out what sort of conditional it is -- what its default 	 * function is, etc. -- by looking in the table of valid "ifs" 	 */
 for|for
 control|(
 name|ifp
@@ -3556,7 +3554,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Nothing fit. If the first word on the line is actually 	 * "else", it's a valid conditional whose value is the inverse 	 * of the previous if we parsed. 	 */
+comment|/* 		 * Nothing fit. If the first word on the line is actually 		 * "else", it's a valid conditional whose value is the inverse 		 * of the previous if we parsed. 		 */
 if|if
 condition|(
 name|isElse
@@ -3635,7 +3633,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * Not a valid conditional type. No error... 	     */
+comment|/* 			 * Not a valid conditional type. No error... 			 */
 return|return
 operator|(
 name|COND_INVALID
@@ -3678,7 +3676,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * If skipping this conditional, just ignore the whole thing. 		 * If we don't, the user might be employing a variable that's 		 * undefined, for which there's an enclosing ifdef that 		 * we're skipping... 		 */
+comment|/* 				 * If skipping this conditional, just ignore 				 * the whole thing. If we don't, the user 				 * might be employing a variable that's 				 * undefined, for which there's an enclosing 				 * ifdef that we're skipping... 				 */
 name|skipIfLineno
 index|[
 name|skipIfLevel
@@ -3701,7 +3699,7 @@ condition|(
 name|skipLine
 condition|)
 block|{
-comment|/* 	     * Don't even try to evaluate a conditional that's not an else if 	     * we're skipping things... 	     */
+comment|/* 			 * Don't even try to evaluate a conditional that's 			 * not an else if we're skipping things... 			 */
 name|skipIfLineno
 index|[
 name|skipIfLevel
@@ -3719,7 +3717,7 @@ name|COND_SKIP
 operator|)
 return|;
 block|}
-comment|/* 	 * Initialize file-global variables for parsing 	 */
+comment|/* 		 * Initialize file-global variables for parsing 		 */
 name|condDefProc
 operator|=
 name|ifp
@@ -3863,7 +3861,7 @@ name|condTop
 index|]
 condition|)
 block|{
-comment|/* 	 * If this is an else-type conditional, it should only take effect 	 * if its corresponding if was evaluated and FALSE. If its if was 	 * TRUE or skipped, we return COND_SKIP (and start skipping in case 	 * we weren't already), leaving the stack unmolested so later elif's 	 * don't screw up... 	 */
+comment|/* 		 * If this is an else-type conditional, it should only take 		 * effect if its corresponding if was evaluated and FALSE. 		 * If its if was TRUE or skipped, we return COND_SKIP (and 		 * start skipping in case we weren't already), leaving the 		 * stack unmolested so later elif's don't screw up... 		 */
 name|skipLine
 operator|=
 name|TRUE
@@ -3881,7 +3879,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 	 * This is the one case where we can definitely proclaim a fatal 	 * error. If we don't, we're hosed. 	 */
+comment|/* 		 * This is the one case where we can definitely proclaim a fatal 		 * error. If we don't, we're hosed. 		 */
 name|Parse_Error
 argument_list|(
 name|PARSE_FATAL
@@ -3932,7 +3930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Cond_End --  *	Make sure everything's clean at the end of a makefile.  *  * Results:  *	None.  *  * Side Effects:  *	Parse_Error will be called if open conditionals are around.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Cond_End  *	Make sure everything's clean at the end of a makefile.  *  * Side Effects:  *	Parse_Error will be called if open conditionals are around.  */
 end_comment
 
 begin_function
