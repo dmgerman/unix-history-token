@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.39 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3005,6 +3005,17 @@ name|mode
 argument_list|)
 operator|)
 return|;
+operator|(
+name|void
+operator|)
+name|seteuid
+argument_list|(
+operator|(
+name|uid_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|socket
@@ -3022,22 +3033,9 @@ name|s
 operator|<
 literal|0
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-operator|(
-name|void
-operator|)
-name|seteuid
-argument_list|(
-operator|(
-name|uid_t
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|setsockopt
