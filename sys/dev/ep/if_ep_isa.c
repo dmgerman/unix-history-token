@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/pnpvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ep/if_epreg.h>
 end_include
 

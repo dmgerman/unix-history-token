@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -112,18 +106,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -137,12 +119,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ep/if_epvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/elink.h>
 end_include
 
 begin_comment
