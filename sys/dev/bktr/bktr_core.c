@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: brooktree848.c,v 1.84 1999/06/04 13:24:54 roger Exp $ */
+comment|/* $Id: brooktree848.c,v 1.85 1999/06/12 14:54:54 roger Exp $ */
 end_comment
 
 begin_comment
@@ -4863,33 +4863,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBKTR
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"brooktree%d: attach: only %d units configured.\n"
-argument_list|,
-name|unit
-argument_list|,
-name|NBKTR
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"brooktree%d: attach: invalid unit number.\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-return|return
-name|ENXIO
-return|;
-block|}
 comment|/* 	 * Enable bus mastering and Memory Mapped device 	 */
 name|val
 operator|=
@@ -6943,18 +6916,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBKTR
-condition|)
-comment|/* unit out of range */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Get the device data */
 name|bktr
 operator|=
@@ -7995,18 +7956,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBKTR
-condition|)
-comment|/* unit out of range */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Get the device data */
 name|bktr
 operator|=
@@ -8310,18 +8259,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBKTR
-condition|)
-comment|/* unit out of range */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Get the device data */
 name|bktr
 operator|=
@@ -8909,18 +8846,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|unit
-operator|>=
-name|NBKTR
-condition|)
-comment|/* unit out of range */
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
 comment|/* Get the device data */
 name|bktr
 operator|=
@@ -14338,10 +14263,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|unit
-operator|>=
-name|NBKTR
-operator|||
 name|MINOR
 argument_list|(
 name|minor
@@ -14352,7 +14273,7 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-comment|/* could this happen here? */
+comment|/* only allow mmap on /dev/bktr[n] */
 return|return
 operator|(
 operator|-
