@@ -92,11 +92,24 @@ begin_comment
 comment|/*  * Minimum partition sizes  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -3258,11 +3271,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * If there isn't a freebsd chunk already (i.e. there is no label),  * dedicate the disk.  */
@@ -3380,9 +3401,17 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 name|int
 name|i
 decl_stmt|;
@@ -3447,9 +3476,17 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 for|for
 control|(
 name|i
@@ -6646,9 +6683,17 @@ index|]
 operator|->
 name|private
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 name|maybe_dedicate
 argument_list|(
 name|d

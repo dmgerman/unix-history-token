@@ -2282,9 +2282,17 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2400,9 +2408,17 @@ expr_stmt|;
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|msgConfirm
 argument_list|(
 literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
@@ -2460,13 +2476,21 @@ goto|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|__alpha__
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|msgConfirm
 argument_list|(
-literal|"Now you need to create BSD partitions on the disk which you are\n"
-literal|"installing to.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
+literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
 literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"
@@ -2477,8 +2501,8 @@ else|#
 directive|else
 name|msgConfirm
 argument_list|(
-literal|"Now you need to create BSD partitions inside of the fdisk partition(s)\n"
-literal|"just created.  If you have a reasonable amount of disk space (200MB or more)\n"
+literal|"Now you need to create BSD partitions on the disk which you are\n"
+literal|"installing to.  If you have a reasonable amount of disk space (200MB or more)\n"
 literal|"and don't have any special requirements, simply use the (A)uto command to\n"
 literal|"allocate space automatically.  If you have more specific needs or just don't\n"
 literal|"care for the layout chosen by (A)uto, press F1 for more information on\n"

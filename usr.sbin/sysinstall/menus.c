@@ -7509,9 +7509,17 @@ block|,
 name|optionsEditor
 block|}
 block|,
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__alpha__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
 block|{
 literal|"3 Label"
 block|,
@@ -8314,9 +8322,6 @@ block|,
 literal|"lpd_enable=YES"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|__i386__
 block|{
 literal|" linux"
 block|,
@@ -8332,20 +8337,9 @@ name|VAR_LINUX_ENABLE
 literal|"=YES"
 block|}
 block|,
-block|{
-literal|" SVR4"
-block|,
-literal|"This host wants to be able to run SVR4 binaries."
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuToggleVariable
-block|,
-name|NULL
-block|,
-literal|"svr4_enable=YES"
-block|}
-block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|" SCO"
 block|,
@@ -8360,8 +8354,37 @@ block|,
 literal|"ibcs2_enable=YES"
 block|}
 block|,
-elif|#
-directive|elif
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+block|{
+literal|" SVR4"
+block|,
+literal|"This host wants to be able to run SVR4 binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"svr4_enable=YES"
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|__alpha__
 block|{
 literal|" OSF/1"
