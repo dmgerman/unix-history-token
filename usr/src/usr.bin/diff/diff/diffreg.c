@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.21 %G%"
+literal|"@(#)diffreg.c 4.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2215,8 +2215,8 @@ end_block
 
 begin_decl_stmt
 name|char
-modifier|*
 name|tempfile
+index|[]
 init|=
 name|_PATH_TMP
 decl_stmt|;
