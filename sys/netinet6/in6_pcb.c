@@ -114,7 +114,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_zone.h>
+file|<vm/uma.h>
 end_include
 
 begin_include
@@ -1809,7 +1809,7 @@ name|inp_vflag
 operator|=
 literal|0
 expr_stmt|;
-name|zfree
+name|uma_zfree
 argument_list|(
 name|ipi
 operator|->
