@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)GETNAME.c 1.8 %G%"
+literal|"@(#)GETNAME.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"h00vars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libpc.h"
 end_include
 
 begin_comment
@@ -92,20 +98,48 @@ condition|(
 name|filep
 operator|->
 name|fblk
-operator|>=
+operator|<
 name|MAXFILES
-operator|||
+operator|&&
 name|_actfile
 index|[
 name|filep
 operator|->
 name|fblk
 index|]
-operator|!=
+operator|==
 name|filep
 condition|)
 block|{
-comment|/* 		 * initialize a new filerecord 		 */
+comment|/*  		 * Close and immediately reactivate the file. 		 */
+name|PFCLOSE
+argument_list|(
+name|filep
+argument_list|)
+expr_stmt|;
+name|_actfile
+index|[
+name|filep
+operator|->
+name|fblk
+index|]
+operator|=
+name|filep
+expr_stmt|;
+name|filep
+operator|->
+name|funit
+operator|&=
+operator|(
+name|TEMP
+operator||
+name|FTEXT
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Initialize a new file record. 		 */
 name|filep
 operator|->
 name|funit
@@ -166,7 +200,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* 		 * check to see if file is global, or allocated in 		 * the stack by checking its address against the 		 * address of one of our routine's local variables. 		 */
+comment|/* 		 * Check to see if file is global, or allocated in 		 * the stack by checking its address against the 		 * address of one of our routine's local variables. 		 */
 if|if
 condition|(
 name|filep
@@ -259,7 +293,7 @@ index|]
 operator|=
 name|filep
 expr_stmt|;
-comment|/* 		 * link the newrecord into the file chain 		 */
+comment|/* 		 * Link the newrecord into the file chain. 		 */
 name|prev
 operator|=
 operator|(
@@ -298,6 +332,42 @@ operator|->
 name|fchain
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|filep
+operator|->
+name|flev
+operator|==
+name|GLVL
+condition|)
+comment|/* 			 * Must order global files so that all dynamic files 			 * within a record are grouped together. 			 */
+while|while
+condition|(
+name|next
+operator|!=
+name|FILNIL
+operator|&&
+operator|(
+expr|struct
+name|iorec
+operator|*
+operator|)
+name|filep
+operator|>
+name|next
+condition|)
+block|{
+name|prev
+operator|=
+name|next
+expr_stmt|;
+name|next
+operator|=
+name|next
+operator|->
+name|fchain
+expr_stmt|;
+block|}
 name|filep
 operator|->
 name|fchain
@@ -311,133 +381,7 @@ operator|=
 name|filep
 expr_stmt|;
 block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-name|filep
-operator|->
-name|funit
-operator|&
-name|FDEF
-operator|)
-operator|==
-literal|0
-operator|&&
-name|filep
-operator|->
-name|fbuf
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 			 * have a previous buffer, close associated file 			 */
-if|if
-condition|(
-name|filep
-operator|->
-name|fblk
-operator|>
-name|PREDEF
-condition|)
-block|{
-name|fflush
-argument_list|(
-name|filep
-operator|->
-name|fbuf
-argument_list|)
-expr_stmt|;
-name|setbuf
-argument_list|(
-name|filep
-operator|->
-name|fbuf
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-name|fclose
-argument_list|(
-name|filep
-operator|->
-name|fbuf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|filep
-operator|->
-name|fbuf
-argument_list|)
-condition|)
-block|{
-name|ERROR
-argument_list|(
-literal|"%s: Close failed\n"
-argument_list|,
-name|filep
-operator|->
-name|pfname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 			 * renamed temporary files are discarded 			 */
-if|if
-condition|(
-operator|(
-name|filep
-operator|->
-name|funit
-operator|&
-name|TEMP
-operator|)
-operator|&&
-name|name
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|unlink
-argument_list|(
-name|filep
-operator|->
-name|pfname
-argument_list|)
-condition|)
-block|{
-name|PERROR
-argument_list|(
-literal|"Could not remove "
-argument_list|,
-name|filep
-operator|->
-name|pfname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-block|}
-name|filep
-operator|->
-name|funit
-operator|&=
-operator|(
-name|TEMP
-operator||
-name|FTEXT
-operator|)
-expr_stmt|;
-block|}
-comment|/* 	 * get the filename associated with the buffer 	 */
+comment|/* 	 * Get the filename associated with the buffer. 	 */
 if|if
 condition|(
 name|name
@@ -461,7 +405,7 @@ name|filep
 operator|)
 return|;
 block|}
-comment|/* 		 * no name given and no previous name, so generate 		 * a new one of the form #tmp.xxxxxx 		 */
+comment|/* 		 * No name given and no previous name, so generate 		 * a new one of the form #tmp.xxxxxx. 		 */
 name|filep
 operator|->
 name|funit
@@ -505,7 +449,7 @@ name|filep
 operator|)
 return|;
 block|}
-comment|/* 	 * trim trailing blanks, and insure that the name  	 * will fit into the file structure 	 */
+comment|/* 	 * Trim trailing blanks, and insure that the name  	 * will fit into the file structure. 	 */
 for|for
 control|(
 name|cnt
@@ -563,7 +507,7 @@ operator|&=
 operator|~
 name|TEMP
 expr_stmt|;
-comment|/* 	 * put the new name into the structure 	 */
+comment|/* 	 * Put the new name into the structure. 	 */
 for|for
 control|(
 name|cnt
