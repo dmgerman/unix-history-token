@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.29 1998/05/02 01:57:39 kato Exp $"
+literal|"$Id: mkmakefile.c,v 1.30 1998/06/09 14:02:07 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1268,9 +1268,30 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"version required = %d\n"
+literal|"version required = %d\n\n"
 argument_list|,
 name|versreq
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Make sure that /usr/src/usr.sbin/config is in sync\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"with your /usr/src/sys and install a new config binary\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"before trying this again.\n\n"
 argument_list|)
 expr_stmt|;
 block|}
