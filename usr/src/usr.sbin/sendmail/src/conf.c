@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.26	%G%"
+literal|"@(#)conf.c	3.27	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +738,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and FALSE should **	be returned. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		TRUE -- ok to send. **		FALSE -- not ok. ** **	Side Effects: **		none (unless you include the usrerr stuff) */
+comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and FALSE should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		TRUE -- ok to send. **		FALSE -- not ok. ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
 begin_function
@@ -753,22 +753,33 @@ modifier|*
 name|to
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|ADDRESS
-modifier|*
-name|x
-init|=
+if|if
+condition|(
 name|to
-decl_stmt|;
-name|to
-operator|=
-name|x
+operator|->
+name|q_mailer
+operator|!=
+name|MN_LOCAL
+operator|&&
+name|MsgSize
+operator|>
+literal|100000
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Message exceeds 100000 bytes"
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|lint
+name|NoReturn
+operator|++
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|TRUE

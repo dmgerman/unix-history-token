@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.15	%G%"
+literal|"@(#)savemail.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -787,6 +787,18 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NoReturn
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\n   ----- Return message suppressed -----\n\n"
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|TempFile

@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.30	%G%"
+literal|"@(#)main.c	3.31	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -197,6 +197,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* mark recipients as QDONTSEND */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|NoReturn
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't return content of letter to sender */
 end_comment
 
 begin_decl_stmt
