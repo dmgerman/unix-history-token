@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.15 1997/09/01 10:38:30 kato Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, [92/04/03  16:51:14  rvb]  *	$Id: boot.c,v 1.16 1998/02/02 07:56:14 kato Exp $  */
 end_comment
 
 begin_comment
@@ -241,6 +241,18 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+name|int
+name|i
+decl_stmt|;
+name|unsigned
+name|char
+name|disk_equips
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* Pick up the story from the Bios on geometry of disks */
 ifdef|#
 directive|ifdef
@@ -384,12 +396,70 @@ operator|>>
 literal|3
 expr_stmt|;
 comment|/* a good first bet */
+if|if
+condition|(
+name|maj
+operator|==
+literal|4
+condition|)
+block|{
+comment|/* sd */
+name|disk_equips
+operator|=
+operator|*
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+name|V
+argument_list|(
+literal|0xA1482
+argument_list|)
+expr_stmt|;
+name|unit
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+operator|(
+name|drive
+operator|&
+literal|0x0f
+operator|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|unit
+operator|+=
+operator|(
+name|disk_equips
+operator|>>
+name|i
+operator|)
+operator|&
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|unit
 operator|=
 name|drive
 operator|&
 literal|0x0f
 expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* IBM-PC */
