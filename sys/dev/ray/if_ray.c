@@ -15378,11 +15378,8 @@ name|RAY_RECERR
 argument_list|(
 name|sc
 argument_list|,
-literal|"freeing free ccs 0x%02x"
+literal|"freeing free ccs 0x%02zx"
 argument_list|,
-operator|(
-name|uint8_t
-operator|)
 name|RAY_CCS_INDEX
 argument_list|(
 name|ccs
@@ -15424,7 +15421,7 @@ name|sc
 argument_list|,
 name|RAY_DBG_CCS
 argument_list|,
-literal|"freed 0x%02x"
+literal|"freed 0x%02zx"
 argument_list|,
 name|RAY_CCS_INDEX
 argument_list|(
