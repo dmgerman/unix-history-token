@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)at.c	4.12	(Berkeley)	%G%"
+literal|"@(#)at.c	4.13	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1281,6 +1281,24 @@ name|spoolfile
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If the inputfile is not from a tty then turn off standardin 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|inputfile
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+name|standardin
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Now that we have all the files set up, we can start reading in 	 * the job. (I added the prompt "at>" so that the user could tell 	 * when/if he/she was supposed to enter commands from standard 	 * input. The old "at" just sat there and didn't send any kind of  	 * message that said it was waiting for input if it was reading 	 * form standard input). 	 */
 while|while
 condition|(
@@ -1296,6 +1314,8 @@ literal|""
 argument_list|,
 name|stdout
 argument_list|)
+operator|!=
+name|EOF
 operator|&&
 operator|(
 name|fgets
