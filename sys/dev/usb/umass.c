@@ -2336,6 +2336,49 @@ operator|->
 name|idVendor
 argument_list|)
 operator|==
+name|USB_VENDOR_INSYSTEM
+operator|&&
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idProduct
+argument_list|)
+operator|==
+name|USB_PRODUCT_INSYSTEM_USBCABLE
+condition|)
+block|{
+name|sc
+operator|->
+name|proto
+operator|=
+name|PROTO_ATAPI
+operator||
+name|PROTO_CBI
+expr_stmt|;
+name|sc
+operator|->
+name|quirks
+operator||=
+name|NO_TEST_UNIT_READY
+operator||
+name|NO_START_STOP
+expr_stmt|;
+return|return
+operator|(
+name|UMATCH_VENDOR_PRODUCT
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|UGETW
+argument_list|(
+name|dd
+operator|->
+name|idVendor
+argument_list|)
+operator|==
 name|USB_VENDOR_YEDATA
 operator|&&
 name|UGETW
@@ -8767,7 +8810,7 @@ block|{
 name|printf
 argument_list|(
 literal|"%s:%d:%d:%d:func_code 0x%04x: "
-literal|"Invalid target\n"
+literal|"Invalid target (target needed)\n"
 argument_list|,
 name|DEVNAME_SIM
 argument_list|,
@@ -8839,7 +8882,7 @@ name|UDMASS_SCSI
 argument_list|,
 operator|(
 literal|"%s:%d:%d:%d:func_code 0x%04x: "
-literal|"Invalid target\n"
+literal|"Invalid target (no wildcard)\n"
 operator|,
 name|DEVNAME_SIM
 operator|,
