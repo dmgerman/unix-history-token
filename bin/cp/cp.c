@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Hitz of Auspex Systems Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cp.c,v 1.4 1995/01/25 07:31:01 davidg Exp $  */
+comment|/*  * Copyright (c) 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * David Hitz of Auspex Systems Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cp.c,v 1.5 1995/04/02 00:49:16 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Cp copies source files to target files.  *   * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-realative.  *   * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
+comment|/*  * Cp copies source files to target files.  *  * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-realative.  *  * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
 end_comment
 
 begin_include
@@ -956,7 +956,7 @@ case|:
 comment|/* Ignore, continue. */
 continue|continue;
 block|}
-comment|/* 		 * If we are in case (2) or (3) above, we need to append the                   * source name to the target name.                    */
+comment|/* 		 * If we are in case (2) or (3) above, we need to append the                  * source name to the target name.                  */
 if|if
 condition|(
 name|type
@@ -1380,7 +1380,7 @@ name|p_path
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * If not -p and directory didn't exist, set it to be 			 * the same as the from directory, umodified by the                           * umask; arguably wrong, but it's been that way                           * forever. 			 */
+comment|/* 			 * If not -p and directory didn't exist, set it to be 			 * the same as the from directory, umodified by the                          * umask; arguably wrong, but it's been that way                          * forever. 			 */
 if|if
 condition|(
 name|pflag

@@ -4,7 +4,7 @@ comment|/* main.c: This file contains the main control and user-interface routin
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.3 1994/09/24 02:55:28 davidg Exp $  */
+comment|/*-  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.4 1995/03/19 13:28:34 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -57,7 +57,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * CREDITS  *  *	This program is based on the editor algorithm described in  *	Brian W. Kernighan and P. J. Plauger's book "Software Tools   *	in Pascal," Addison-Wesley, 1981.  *  *	The buffering algorithm is attributed to Rodney Ruddock of  *	the University of Guelph, Guelph, Ontario.  *  *	The cbc.c encryption code is adapted from  *	the bdes program by Matt Bishop of Dartmouth College,  *	Hanover, NH.  *  */
+comment|/*  * CREDITS  *  *	This program is based on the editor algorithm described in  *	Brian W. Kernighan and P. J. Plauger's book "Software Tools  *	in Pascal," Addison-Wesley, 1981.  *  *	The buffering algorithm is attributed to Rodney Ruddock of  *	the University of Guelph, Guelph, Ontario.  *  *	The cbc.c encryption code is adapted from  *	the bdes program by Matt Bishop of Dartmouth College,  *	Hanover, NH.  *  */
 end_comment
 
 begin_include
@@ -1201,7 +1201,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* extract_addr_range: get line addresses from the command buffer until an     illegal address is seen; return status */
+comment|/* extract_addr_range: get line addresses from the command buffer until an    illegal address is seen; return status */
 end_comment
 
 begin_function
@@ -4161,7 +4161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* get_matching_node_addr: return the address of the next line matching a     pattern in a given direction.  wrap around begin/end of editor buffer if    necessary */
+comment|/* get_matching_node_addr: return the address of the next line matching a    pattern in a given direction.  wrap around begin/end of editor buffer if    necessary */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ar_io.c,v 1.2 1994/09/24 02:56:11 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -1030,7 +1030,7 @@ name|MAXBLK
 expr_stmt|;
 break|break;
 default|default:
-comment|/* 		 * should never happen, worse case, slow...  		 */
+comment|/* 		 * should never happen, worse case, slow... 		 */
 name|blksz
 operator|=
 name|rdblksz
@@ -1397,7 +1397,7 @@ comment|/* 	 * we must make sure the trailer is rewritten on append, ar_next() 	
 argument|wr_trail =
 literal|0
 argument|;
-comment|/*  	 * Add any device dependent code as required here 	 */
+comment|/* 	 * Add any device dependent code as required here 	 */
 argument|if (artyp != ISREG) 		return(
 literal|0
 argument|);
@@ -1417,7 +1417,7 @@ literal|1
 argument|); 	} 	return(
 literal|0
 argument|); }
-comment|/*  * ar_app_ok()  *	check if the last volume in the archive allows appends. We cannot check  *	this until we are ready to write since there is no spec that says all   *	volumes in a single archive have to be of the same type...  * Return:  *	0 if we can append, -1 otherwise.  */
+comment|/*  * ar_app_ok()  *	check if the last volume in the archive allows appends. We cannot check  *	this until we are ready to write since there is no spec that says all  *	volumes in a single archive have to be of the same type...  * Return:  *	0 if we can append, -1 otherwise.  */
 if|#
 directive|if
 name|__STDC__
@@ -1565,9 +1565,9 @@ argument|)) { 		warn(
 literal|1
 argument|,
 literal|"Unable to append, trailer re-write failed. Quitting."
-argument|); 		return(res); 	} 		 	if (res ==
+argument|); 		return(res); 	}  	if (res ==
 literal|0
-argument|)  		warn(
+argument|) 		warn(
 literal|0
 argument|,
 literal|"End of archive volume %d reached"
@@ -1638,7 +1638,7 @@ argument|, SEEK_CUR))<
 literal|0
 argument|) 			break; 		mpos = fsbz - (cpos % (off_t)fsbz); 		if (lseek(arfd, mpos, SEEK_CUR)<
 literal|0
-argument|)  			break; 		lstrval =
+argument|) 			break; 		lstrval =
 literal|1
 argument|; 		break; 	case ISPIPE: 	default:
 comment|/* 		 * cannot recover on these archive device types 		 */
@@ -1681,7 +1681,7 @@ argument|if (lstrval<=
 literal|0
 argument|) 		return(lstrval);
 comment|/* 	 * Safer to read forward on devices where it is hard to find the end of 	 * the media without reading to it. With tapes we cannot be sure of the 	 * number of physical blocks to skip (we do not know physical block 	 * size at this point), so we must only read foward on tapes! 	 */
-argument|if (artyp != ISREG)  		return(
+argument|if (artyp != ISREG) 		return(
 literal|0
 argument|);
 comment|/* 	 * figure out where we are in the archive 	 */
@@ -1690,7 +1690,7 @@ literal|0L
 argument|, SEEK_CUR))>=
 literal|0
 argument|) {
-comment|/*  	 	 * we can be asked to move farther than there are bytes in this 		 * volume, if so, just go to file end and let normal buf_fill() 		 * deal with the end of file (it will go to next volume by 		 * itself) 	 	 */
+comment|/* 	 	 * we can be asked to move farther than there are bytes in this 		 * volume, if so, just go to file end and let normal buf_fill() 		 * deal with the end of file (it will go to next volume by 		 * itself) 	 	 */
 argument|if ((mpos = cpos + sksz)> arsb.st_size) { 			*skipped = arsb.st_size - cpos; 			mpos = arsb.st_size; 		} else 			*skipped = sksz; 		if (lseek(arfd, mpos, SEEK_SET)>=
 literal|0
 argument|) 			return(
@@ -1720,7 +1720,7 @@ argument|if (lstrval<
 literal|0
 argument|) 		return(lstrval);  	switch(artyp) { 	case ISPIPE: 		if (sksz<=
 literal|0
-argument|)  			break;
+argument|) 			break;
 comment|/* 		 * cannot go backwards on these critters 		 */
 argument|warn(
 literal|1
@@ -1815,7 +1815,7 @@ literal|1
 argument|; 	return(
 literal|0
 argument|); }
-comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with   *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
+comment|/*  * get_phys()  *	Determine the physical block size on a tape drive. We need the physical  *	block size so we know how many bytes we skip over when we move with  *	mtio commands. We also make sure we are BEFORE THE TAPE FILEMARK when  *	return.  *	This is one really SLOW routine...  * Return:  *	physical block size if ok (ok> 0), -1 otherwise  */
 if|#
 directive|if
 name|__STDC__
@@ -2012,7 +2012,7 @@ argument|:
 comment|/* 				 * we are to continue with the same device 				 */
 argument|if (ar_open(arcname)>=
 literal|0
-argument|)  					return(
+argument|) 					return(
 literal|0
 argument|); 				tty_prnt(
 literal|"Cannot re-open %s, try again\n"

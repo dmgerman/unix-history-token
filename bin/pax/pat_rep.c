@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pat_rep.c,v 1.2 1994/09/24 02:56:24 davidg Exp $  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pat_rep.c,v 1.3 1995/03/19 13:28:56 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -364,7 +364,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rep_add()  *	parses the -s replacement string; compiles the regular expression  *	and stores the compiled value and it's replacement string together in  *	replacement string list. Input to this function is of the form:  *		/old/new/pg   *	The first char in the string specifies the delimiter used by this  *	replacement string. "Old" is a regular expression in "ed" format which  *	is compiled by regcomp() and is applied to filenames. "new" is the  *	substitution string; p and g are options flags for printing and global  *	replacement (over the single filename)  * Return:  *	0 if a proper replacement string and regular expression was added to  *	the list of replacement patterns; -1 otherwise.  */
+comment|/*  * rep_add()  *	parses the -s replacement string; compiles the regular expression  *	and stores the compiled value and it's replacement string together in  *	replacement string list. Input to this function is of the form:  *		/old/new/pg  *	The first char in the string specifies the delimiter used by this  *	replacement string. "Old" is a regular expression in "ed" format which  *	is compiled by regcomp() and is applied to filenames. "new" is the  *	substitution string; p and g are options flags for printing and global  *	replacement (over the single filename)  * Return:  *	0 if a proper replacement string and regular expression was added to  *	the list of replacement patterns; -1 otherwise.  */
 end_comment
 
 begin_if
@@ -1238,7 +1238,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * we reach this point only when we allow a single selected match per 	 * pattern, if the pattern matches a directory and we do not have -d  	 * (dflag) we are done with this pattern. We may also be handed a file 	 * in the subtree of a directory. in that case when we are operating 	 * with -d, this pattern was already selected and we are done 	 */
+comment|/* 	 * we reach this point only when we allow a single selected match per 	 * pattern, if the pattern matches a directory and we do not have -d 	 * (dflag) we are done with this pattern. We may also be handed a file 	 * in the subtree of a directory. in that case when we are operating 	 * with -d, this pattern was already selected and we are done 	 */
 if|if
 condition|(
 name|pt
@@ -1538,7 +1538,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  * pat_match()  *	see if this archive member matches any supplied pattern, if a match  *	is found, arcn->pat is set to point at the potential pattern. Later if  *	this archive member is "selected" we process and mark the pattern as  *	one which matched a selected archive member (see pat_sel())  * Return:  *	0 if this archive member should be processed, 1 if it should be   *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  */
+comment|/*  * pat_match()  *	see if this archive member matches any supplied pattern, if a match  *	is found, arcn->pat is set to point at the potential pattern. Later if  *	this archive member is "selected" we process and mark the pattern as  *	one which matched a selected archive member (see pat_sel())  * Return:  *	0 if this archive member should be processed, 1 if it should be  *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  */
 if|#
 directive|if
 name|__STDC__
@@ -1751,7 +1751,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/*  * fn_match()  * Return:  *	0 if this archive member should be processed, 1 if it should be   *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  *	Note: *pend may be changed to show where the prefix ends.  */
+comment|/*  * fn_match()  * Return:  *	0 if this archive member should be processed, 1 if it should be  *	skipped and -1 if we are done with all patterns (and pax should quit  *	looking for more members)  *	Note: *pend may be changed to show where the prefix ends.  */
 if|#
 directive|if
 name|__STDC__
@@ -1910,7 +1910,7 @@ operator|=
 operator|*
 name|pattern
 expr_stmt|;
-comment|/* 			 * Collapse multiple *'s.  			 */
+comment|/* 			 * Collapse multiple *'s. 			 */
 while|while
 condition|(
 name|c
@@ -2211,7 +2211,7 @@ name|pattern
 operator|)
 return|;
 block|}
-comment|/*  * mod_name()  *	modify a selected file name. first attempt to apply replacement string  *	expressions, then apply interactive file rename. We apply replacement  *	string expressions to both filenames and file links (if we didn't the  *	links would point to the wrong place, and we could never be able to  *	move an archive that has a file link in it). When we rename files  *	interactively, we store that mapping (old name to user input name) so  *	if we spot any file links to the old file name in the future, we will  *	know exactly how to fix the file link.  * Return:  *	0 continue to  process file, 1 skip this file, -1 pax is finished   */
+comment|/*  * mod_name()  *	modify a selected file name. first attempt to apply replacement string  *	expressions, then apply interactive file rename. We apply replacement  *	string expressions to both filenames and file links (if we didn't the  *	links would point to the wrong place, and we could never be able to  *	move an archive that has a file link in it). When we rename files  *	interactively, we store that mapping (old name to user input name) so  *	if we spot any file links to the old file name in the future, we will  *	know exactly how to fix the file link.  * Return:  *	0 continue to  process file, 1 skip this file, -1 pax is finished  */
 if|#
 directive|if
 name|__STDC__
@@ -2926,7 +2926,7 @@ name|or_len
 operator|=
 name|len
 expr_stmt|;
-comment|/* 	 * enough space, shift  	 */
+comment|/* 	 * enough space, shift 	 */
 while|while
 condition|(
 name|src

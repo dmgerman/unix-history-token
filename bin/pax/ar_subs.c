@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright (c) 1992 Keith Muller.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Keith Muller of the University of California, San Diego.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ar_subs.c,v 1.2 1994/09/24 02:56:12 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -1571,7 +1571,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * unable to obtain the crc we need, close the file, 			 * purge link table entry  			 */
+comment|/* 			 * unable to obtain the crc we need, close the file, 			 * purge link table entry 			 */
 name|rdfile_close
 argument_list|(
 name|arcn
@@ -1651,7 +1651,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*  			 * format write says no file data needs to be stored 			 * so we are done messing with this file 			 */
+comment|/* 			 * format write says no file data needs to be stored 			 * so we are done messing with this file 			 */
 if|if
 condition|(
 name|vflag
@@ -1834,7 +1834,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * append()  *	Add file to previously written archive. Archive format specified by the  *	user must agree with archive. The archive is read first to collect  *	modification times (if -u) and locate the archive trailer. The archive  *	is positioned in front of the record with the trailer and wr_archive()  *	is called to add the new members.  *	PAX IMPLEMENTATION DETAIL NOTE:  *	-u is implemented by adding the new members to the end of the archive.  *	Care is taken so that these do not end up as links to the older   *	version of the same file already stored in the archive. It is expected  *	when extraction occurs these newer versions will over-write the older  *	ones stored "earlier" in the archive (this may be a bad assumption as  *	it depends on the implementation of the program doing the extraction).  *	It is really difficult to splice in members without either re-writing  *	the entire archive (from the point were the old version was), or having  *	assistance of the format specification in terms of a special update  *	header that invalidates a previous archive record. The posix spec left  *	the method used to implement -u unspecified. This pax is able to  *	over write existing files that it creates.  */
+comment|/*  * append()  *	Add file to previously written archive. Archive format specified by the  *	user must agree with archive. The archive is read first to collect  *	modification times (if -u) and locate the archive trailer. The archive  *	is positioned in front of the record with the trailer and wr_archive()  *	is called to add the new members.  *	PAX IMPLEMENTATION DETAIL NOTE:  *	-u is implemented by adding the new members to the end of the archive.  *	Care is taken so that these do not end up as links to the older  *	version of the same file already stored in the archive. It is expected  *	when extraction occurs these newer versions will over-write the older  *	ones stored "earlier" in the archive (this may be a bad assumption as  *	it depends on the implementation of the program doing the extraction).  *	It is really difficult to splice in members without either re-writing  *	the entire archive (from the point were the old version was), or having  *	assistance of the format specification in terms of a special update  *	header that invalidates a previous archive record. The posix spec left  *	the method used to implement -u unspecified. This pax is able to  *	over write existing files that it creates.  */
 end_comment
 
 begin_if
@@ -2438,7 +2438,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * start up the hard link table; file traversal routines and the 	 * modification time and access mode database  	 */
+comment|/* 	 * start up the hard link table; file traversal routines and the 	 * modification time and access mode database 	 */
 if|if
 condition|(
 operator|(
@@ -3818,7 +3818,7 @@ index|]
 index|]
 operator|)
 expr_stmt|;
-comment|/*  			 * yuck, to avoid slow special case code in the extract 			 * routines, just push this header back as if it was 			 * not seen. We have left extra space at start of the 			 * buffer for this purpose. This is a bit ugly, but 			 * adding all the special case code is far worse. 			 */
+comment|/* 			 * yuck, to avoid slow special case code in the extract 			 * routines, just push this header back as if it was 			 * not seen. We have left extra space at start of the 			 * buffer for this purpose. This is a bit ugly, but 			 * adding all the special case code is far worse. 			 */
 name|pback
 argument_list|(
 name|hdbuf
