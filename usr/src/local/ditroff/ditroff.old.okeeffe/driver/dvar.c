@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dvar.c	1.12	84/05/24  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dvar.c	1.13	84/09/28  *  * Varian driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dvar.c	1.12	84/05/24"
+literal|"dvar.c	1.13	84/09/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -6090,16 +6090,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|error
 argument_list|(
-name|stderr
+operator|!
+name|FATAL
 argument_list|,
-literal|"Internal error: illegal font %d name %s size\n"
-argument_list|,
-name|fontname
-index|[
-name|fnum
-index|]
+literal|"error: illegal font %d, size %d\n"
 argument_list|,
 name|fnum
 argument_list|,
@@ -7310,6 +7306,12 @@ name|bits
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|curfont
+operator|>=
+literal|0
+condition|)
 name|vloadfont
 argument_list|(
 name|curfont
