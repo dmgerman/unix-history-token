@@ -176,6 +176,28 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|int
+name|g_ctl_config_geom_t
+parameter_list|(
+name|struct
+name|gctl_req
+modifier|*
+parameter_list|,
+name|struct
+name|g_geom
+modifier|*
+name|gp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|verb
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|struct
 name|g_geom
 modifier|*
@@ -331,6 +353,10 @@ decl_stmt|;
 name|g_ctl_destroy_geom_t
 modifier|*
 name|destroy_geom
+decl_stmt|;
+name|g_ctl_config_geom_t
+modifier|*
+name|config_geom
 decl_stmt|;
 comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITIALIZER macro to initialize them.          */
 name|LIST_ENTRY
