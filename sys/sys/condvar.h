@@ -229,7 +229,7 @@ name|cv_waitq_empty
 parameter_list|(
 name|cvp
 parameter_list|)
-value|(TAILQ_EMPTY(&cvp->cv_waitq))
+value|(TAILQ_EMPTY(&(cvp)->cv_waitq))
 end_define
 
 begin_define
