@@ -69,6 +69,17 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * SMBus spec 2.0 says block transfers may be at most 32 bytes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_MAXBLOCKSIZE
+value|32
+end_define
+
 begin_define
 define|#
 directive|define
@@ -94,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|SMB_RECVB
-value|_IOW('i', 4, struct smbcmd)
+value|_IOWR('i', 4, struct smbcmd)
 end_define
 
 begin_define
