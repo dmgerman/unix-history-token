@@ -400,7 +400,7 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
-name|TC_DEVICEID_TORNATO_10_100BT_SERV
+name|TC_DEVICEID_TORNADO_10_100BT_SERV
 block|,
 literal|"3Com 3c980C Fast Etherlink XL"
 block|}
