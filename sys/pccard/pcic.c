@@ -998,28 +998,8 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|1
-name|printf
-argument_list|(
-literal|"card offs = 0x%x, sys_addr = 0x%x\n"
-argument_list|,
-operator|(
-operator|(
-name|mp
-operator|->
-name|card
-operator|>>
-literal|12
-operator|)
-operator|-
-name|sys_addr
-operator|)
-operator|&
-literal|0x3FFF
-argument_list|,
-name|sys_addr
-argument_list|)
-expr_stmt|;
+literal|0
+block|printf("card offs = card_adr = 0x%x 0x%x, sys_addr = 0x%x\n",  			mp->card, ((mp->card>> 12) - sys_addr)& 0x3FFF, 			sys_addr);
 endif|#
 directive|endif
 comment|/*  *	Each 16 bit register has some flags in the upper bits.  */
@@ -2078,6 +2058,13 @@ literal|"pcic: failed to allocate IRQ\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|INTREN
+argument_list|(
+literal|1
+operator|<<
+name|pcic_irq
+argument_list|)
+expr_stmt|;
 comment|/*  *	Check for a card in this slot.  */
 name|setb
 argument_list|(

@@ -1765,6 +1765,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|maskp
+condition|)
+name|INTRMASK
+argument_list|(
+operator|*
+name|maskp
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|register_intr
 argument_list|(
 name|irq
@@ -1788,26 +1800,6 @@ argument_list|(
 literal|"IRQ=%d yes!\n"
 argument_list|,
 name|irq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maskp
-condition|)
-name|INTRMASK
-argument_list|(
-operator|*
-name|maskp
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
-name|update_intr_masks
-argument_list|()
-expr_stmt|;
-name|INTREN
-argument_list|(
-name|mask
 argument_list|)
 expr_stmt|;
 return|return
@@ -2017,6 +2009,7 @@ block|}
 comment|/*  *	Attempt to allocate an interrupt.  XXX We lose at the moment  *	if the second device relies on a different interrupt mask.  */
 else|else
 block|{
+comment|/* XXX ED.C dp->imask =&net_imask; */
 name|irq
 operator|=
 name|pccard_alloc_intr
@@ -2274,6 +2267,13 @@ operator|->
 name|running
 operator|=
 literal|1
+expr_stmt|;
+name|INTREN
+argument_list|(
+literal|1
+operator|<<
+name|irq
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
