@@ -54,7 +54,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Source: mit/rsh/RCS/rsh.c,v $  * $Header: mit/rsh/RCS/rsh.c,v 5.1 89/07/31 19:28:59 kfall Exp Locker: kfall $  */
+comment|/*  * $Source: /home/ncvs/src/usr.bin/rsh/rsh.c,v $  * $Header: /home/ncvs/src/usr.bin/rsh/rsh.c,v 1.1.1.1 1994/05/27 12:32:35 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -602,15 +602,6 @@ name|doencrypt
 operator|=
 literal|1
 expr_stmt|;
-name|des_set_key
-argument_list|(
-name|cred
-operator|.
-name|session
-argument_list|,
-name|schedule
-argument_list|)
-expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -908,6 +899,7 @@ if|if
 condition|(
 name|doencrypt
 condition|)
+block|{
 name|rem
 operator|=
 name|krcmd_mutual
@@ -934,6 +926,16 @@ argument_list|,
 name|schedule
 argument_list|)
 expr_stmt|;
+name|des_set_key
+argument_list|(
+name|cred
+operator|.
+name|session
+argument_list|,
+name|schedule
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
