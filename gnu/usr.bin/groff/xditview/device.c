@@ -103,19 +103,9 @@ begin_comment
 comment|/* Minimum and maximum values a `signed int' can hold.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INT_MIN
-value|(-INT_MAX-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT_MAX
-value|2147483647
-end_define
+begin_comment
+comment|/* #define INT_MIN (-INT_MAX-1) #define INT_MAX 2147483647 */
+end_comment
 
 begin_define
 define|#
