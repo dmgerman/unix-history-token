@@ -1495,7 +1495,7 @@ name|i
 operator|=
 name|SIGFPE
 expr_stmt|;
-name|code
+name|ucode
 operator|=
 literal|0
 expr_stmt|;
@@ -1844,7 +1844,7 @@ name|i
 operator|=
 name|SIGFPE
 expr_stmt|;
-name|code
+name|ucode
 operator|=
 literal|0
 expr_stmt|;
