@@ -1059,6 +1059,8 @@ operator|->
 name|el_line
 operator|.
 name|cursor
+operator|&
+literal|0xFF
 expr_stmt|;
 if|if
 condition|(

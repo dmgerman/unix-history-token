@@ -2521,6 +2521,10 @@ decl_stmt|,
 name|ch
 decl_stmt|;
 block|{
+name|ch
+operator|&=
+literal|0xFF
+expr_stmt|;
 if|if
 condition|(
 name|ch
