@@ -10222,6 +10222,9 @@ modifier|*
 name|fin
 decl_stmt|;
 name|int
+name|atstart
+decl_stmt|;
+name|int
 name|c
 decl_stmt|;
 name|char
@@ -10265,6 +10268,10 @@ literal|"status of %s:"
 argument_list|,
 name|filename
 argument_list|)
+expr_stmt|;
+name|atstart
+operator|=
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -10353,6 +10360,26 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * RFC 959 says neutral text should be prepended before 		 * a leading 3-digit number followed by whitespace, but 		 * many ftp clients can be confused by any leading digits, 		 * as a matter of fact. 		 */
+if|if
+condition|(
+name|atstart
+operator|&&
+name|isdigit
+argument_list|(
+name|c
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|' '
+argument_list|,
+name|stdout
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -10362,6 +10389,14 @@ name|c
 argument_list|,
 name|stdout
 argument_list|)
+expr_stmt|;
+name|atstart
+operator|=
+operator|(
+name|c
+operator|==
+literal|'\n'
+operator|)
 expr_stmt|;
 block|}
 operator|(
