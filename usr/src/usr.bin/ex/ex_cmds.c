@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	7.2	%G%"
+literal|"@(#)ex_cmds.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|"ex_tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ex_vis.h"
 end_include
 
 begin_decl_stmt
