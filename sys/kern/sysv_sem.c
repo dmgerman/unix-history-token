@@ -959,7 +959,7 @@ name|semmap
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of entries in the semaphore map"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -982,7 +982,7 @@ name|semmni
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of semaphore identifiers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1005,7 +1005,7 @@ name|semmns
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of semaphores in the system"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1028,7 +1028,7 @@ name|semmnu
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of undo structures in the system"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1051,7 +1051,7 @@ name|semmsl
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max semaphores per id"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1074,7 +1074,7 @@ name|semopm
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max operations per semop call"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1097,7 +1097,7 @@ name|semume
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max undo entries per process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1120,7 +1120,7 @@ name|semusz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size in bytes of undo structure"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1143,7 +1143,7 @@ name|semvmx
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Semaphore maximum value"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1166,7 +1166,7 @@ name|semaem
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Adjust on exit max value"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

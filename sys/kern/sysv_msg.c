@@ -5968,7 +5968,7 @@ name|msgmax
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum message size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5991,7 +5991,7 @@ name|msgmni
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of message queue identifiers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6014,7 +6014,7 @@ name|msgmnb
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of bytes in a queue"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6037,7 +6037,7 @@ name|msgtql
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of messages in the system"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6060,7 +6060,7 @@ name|msgssz
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Size of a message segment"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6083,7 +6083,7 @@ name|msgseg
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of message segments"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
