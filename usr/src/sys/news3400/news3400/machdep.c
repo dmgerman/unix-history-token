@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -420,6 +420,49 @@ name|pmap_attributes
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Save parameters into kernel work area. 	 */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|MACH_CACHED_TO_UNCACHED
+argument_list|(
+name|MACH_MAXMEMSIZE_ADDR
+argument_list|)
+operator|)
+operator|=
+name|x_maxmem
+expr_stmt|;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|MACH_CACHED_TO_UNCACHED
+argument_list|(
+name|MACH_BOOTDEV_ADDR
+argument_list|)
+operator|)
+operator|=
+name|x_bootdev
+expr_stmt|;
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|MACH_CACHED_TO_UNCACHED
+argument_list|(
+name|MACH_BOOTSW_ADDR
+argument_list|)
+operator|)
+operator|=
+name|x_boothowto
+expr_stmt|;
 comment|/* clear the BSS segment */
 name|v
 operator|=
@@ -2814,11 +2857,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|howto
-operator||=
-name|RB_HALT
-expr_stmt|;
-comment|/* XXX */
 name|boothowto
 operator|=
 name|howto
@@ -4105,36 +4143,6 @@ end_endif
 begin_comment
 comment|/* CPU_SINGLE */
 end_comment
-
-begin_expr_stmt
-name|_delay
-argument_list|(
-name|time
-argument_list|)
-specifier|register
-name|int
-name|time
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|extern
-name|int
-name|cpuspeed
-decl_stmt|;
-name|time
-operator|*=
-name|cpuspeed
-expr_stmt|;
-while|while
-condition|(
-name|time
-operator|--
-condition|)
-empty_stmt|;
-block|}
-end_block
 
 end_unit
 
