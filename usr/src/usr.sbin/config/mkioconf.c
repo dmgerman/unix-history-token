@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkioconf.c	5.18 (Berkeley) %G%"
+literal|"@(#)mkioconf.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3547,13 +3547,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#include \"sys/vm.h\"\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -3561,7 +3554,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#define V(s)	V/**/s\n"
+literal|"#define V(s)	__CONCAT(V,s)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
