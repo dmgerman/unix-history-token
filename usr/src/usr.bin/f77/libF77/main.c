@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)main.c	5.3	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)main.c	5.4	%G%  */
 end_comment
 
 begin_include
@@ -73,17 +73,11 @@ modifier|*
 name|arge
 decl_stmt|;
 block|{
-name|int
+name|sig_t
 name|sigdie
-parameter_list|()
-function_decl|;
-name|long
-name|int
-argument_list|(
-operator|*
+decl_stmt|;
+name|sig_t
 name|sigf
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|int
 name|signum
