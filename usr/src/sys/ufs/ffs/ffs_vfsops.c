@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1322,6 +1322,10 @@ name|size
 decl_stmt|,
 name|error
 decl_stmt|;
+name|long
+modifier|*
+name|lp
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1495,6 +1499,7 @@ argument_list|)
 operator|->
 name|um_fs
 expr_stmt|;
+comment|/* 	 * Copy pointer fields back into superblock before copying in	XXX 	 * new superblock. These should really be in the ufsmount.	XXX 	 * Note that important parameters (eg fs_ncg) are unchanged. 	 */
 name|bcopy
 argument_list|(
 operator|&
@@ -1703,6 +1708,46 @@ name|brelse
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * We no longer know anything about clusters per cylinder group. 	 */
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_contigsumsize
+operator|>
+literal|0
+condition|)
+block|{
+name|lp
+operator|=
+name|fs
+operator|->
+name|fs_maxcluster
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|fs
+operator|->
+name|fs_ncg
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|lp
+operator|++
+operator|=
+name|fs
+operator|->
+name|fs_contigsumsize
 expr_stmt|;
 block|}
 name|loop
