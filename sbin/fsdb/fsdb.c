@@ -280,6 +280,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|sblock_init
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

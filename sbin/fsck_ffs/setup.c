@@ -2605,12 +2605,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|sblock_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|disklabel
@@ -2718,7 +2716,7 @@ operator|=
 name|DEV_BSIZE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Calculate a prototype superblock based on information in the disk label.  * When done the cgsblock macro can be calculated and the fs_ncg field  * can be used. Do NOT attempt to use other macros without verifying that  * their needed information is available!  */

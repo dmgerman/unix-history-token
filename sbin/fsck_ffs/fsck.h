@@ -2140,6 +2140,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|sblock_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|setinodebuf
 name|__P
 argument_list|(
