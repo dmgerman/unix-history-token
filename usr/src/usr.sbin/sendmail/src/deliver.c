@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	1.5	%G%"
+literal|"@(#)deliver.c	1.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,25 @@ return|;
 block|}
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VFORK
+end_ifdef
+
+begin_expr_stmt
+name|pid
+operator|=
+name|vfork
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_expr_stmt
 name|pid
 operator|=
@@ -581,6 +600,11 @@ name|fork
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|if
@@ -728,9 +752,15 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
+ifndef|#
+directive|ifndef
+name|VFORK
+comment|/* 		 * We have to be careful with vfork - we can't mung up the 		 * memory but we don't want the mailer to inherit any extra 		 * open files.  Chances are the mailer won't 		 * care about an extra file, but then again you never know. 		 * Actually, we would like to close(fileno(pwf)), but it's 		 * declared static so we can't.  But if we fclose(pwf), which 		 * is what endpwent does, it closes it in the parent too and 		 * the next getpwnam will be slower.  If you have a weird mailer 		 * that chokes on the extra file you should do the endpwent(). 		 */
 name|endpwent
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|execv
 argument_list|(
 name|m

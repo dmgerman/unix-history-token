@@ -29,12 +29,12 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	1.3	%G%"
+literal|"@(#)alias.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/mailaliases for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. **		ALIASFILE -- the pathname of the alias file. ** **	Called By: **		main ** **	Files: **		ALIASFILE -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
+comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file ALIASFILE for a set of aliases. **	If found, it arranges to deliver to them by inserting the **	new names onto the SendQ queue.  Uses libdbm database if -DDBM. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Aliases found on SendQ are removed and put onto **		AliasQ; replacements are added to SendQ.  This is **		done until no such replacement occurs. ** **	Defined Constants: **		MAXRCRSN -- the maximum recursion depth. **		ALIASFILE -- the pathname of the alias file. ** **	Called By: **		main ** **	Files: **		ALIASFILE -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		ALIASFILE.pag, ALIASFILE.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
 end_comment
 
 begin_define
@@ -50,6 +50,49 @@ directive|define
 name|MAXRCRSN
 value|10
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBM
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+modifier|*
+name|dptr
+decl_stmt|;
+name|int
+name|dsize
+decl_stmt|;
+block|}
+name|datum
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|datum
+name|lhs
+decl_stmt|,
+name|rhs
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|datum
+name|fetch
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|DBM
+end_endif
 
 begin_macro
 name|alias
@@ -125,6 +168,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* open alias file if not already open */
+ifndef|#
+directive|ifndef
+name|DBM
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -191,15 +237,22 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	**  Scan alias file. 	**	If we find any user that any line matches any user, we 	**	will send to the line rather than to the user. 	** 	**	We pass through the file several times.  Didalias tells 	**	us if we took some alias on this pass through the file; 	**	when it goes false at the top of the loop we don't have 	**	to scan any more.  Gotmatch tells the same thing, but 	**	on a line-by-line basis; it is used for processing 	**	continuation lines. 	*/
-name|didalias
-operator|=
-name|TRUE
+else|#
+directive|else
+else|DBM
+name|dbminit
+argument_list|(
+name|ALIASFILE
+argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|didalias
-condition|)
+endif|#
+directive|endif
+endif|DBM
+ifndef|#
+directive|ifndef
+name|DBM
+comment|/* 	**  Scan alias file. 	**	If we find any user that any line matches any user, we 	**	will send to the line rather than to the user. 	** 	**	We pass through the file several times.  Didalias tells 	**	us if we took some alias on this pass through the file; 	**	when it goes false at the top of the loop we don't have 	**	to scan any more.  Gotmatch tells the same thing, but 	**	on a line-by-line basis; it is used for processing 	**	continuation lines. 	*/
+do|do
 block|{
 name|didalias
 operator|=
@@ -257,22 +310,6 @@ condition|(
 name|gotmatch
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"   ... also aliased to %s"
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|sendto
 argument_list|(
 name|line
@@ -412,6 +449,80 @@ operator|!=
 name|NULL
 condition|)
 block|{
+else|#
+directive|else
+else|DBM
+comment|/* 	**  Scan SendQ 	**	We pass through the queue several times.  Didalias tells 	**	us if we took some alias on this pass through the queue; 	**	when it goes false at the top of the loop we don't have 	**	to scan any more. 	*/
+do|do
+block|{
+name|didalias
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/*  Scan SendQ for that canonical form. */
+for|for
+control|(
+name|q
+operator|=
+operator|&
+name|SendQ
+init|;
+operator|(
+name|q
+operator|=
+name|nxtinq
+argument_list|(
+name|q
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
+name|lhs
+operator|.
+name|dptr
+operator|=
+name|q
+operator|->
+name|q_paddr
+expr_stmt|;
+name|lhs
+operator|.
+name|dsize
+operator|=
+name|strlen
+argument_list|(
+name|lhs
+operator|.
+name|dptr
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+name|rhs
+operator|=
+name|fetch
+argument_list|(
+name|lhs
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|rhs
+operator|.
+name|dptr
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+block|{
+endif|#
+directive|endif
 comment|/* 				**  Match on Alias. 				**	Deliver to the target list. 				**	Remove the alias from the send queue 				**	  and put it on the Alias queue. 				*/
 ifdef|#
 directive|ifdef
@@ -485,22 +596,23 @@ expr_stmt|;
 block|}
 block|}
 block|}
+do|while
+condition|(
+name|didalias
+condition|)
+do|;
+ifndef|#
+directive|ifndef
+name|DBM
 name|fclose
 argument_list|(
 name|af
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  FORWARD -- Try to forward mail ** **	This is similar but not identical to aliasing. ** **	Currently it is undefined, until the protocol for userinfo **	databases is finalized. ** **	Parameters: **		user -- the name of the user who's mail we **			would like to forward to. ** **	Returns: **		TRUE -- we have forwarded it somewhere. **		FALSE -- not forwarded; go ahead& deliver. ** **	Side Effects: **		New names are added to SendQ. ** **	Called By: **		recipient */
-end_comment
-
-begin_function
 name|bool
 name|forward
 parameter_list|(
@@ -517,7 +629,7 @@ name|FALSE
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
