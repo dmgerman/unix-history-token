@@ -351,7 +351,8 @@ literal|"ade3"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -1425,7 +1426,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: showmount [-ade] host\n"
+literal|"usage: showmount [-ade3] host\n"
 argument_list|)
 expr_stmt|;
 name|exit
