@@ -564,6 +564,7 @@ argument_list|,
 literal|"could not access consumer"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 name|pass
 operator|=
