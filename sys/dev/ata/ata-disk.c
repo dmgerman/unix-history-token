@@ -1234,6 +1234,9 @@ name|struct
 name|ad_softc
 modifier|*
 name|adp
+parameter_list|,
+name|int
+name|flush
 parameter_list|)
 block|{
 name|struct
@@ -1251,6 +1254,15 @@ operator|->
 name|flags
 operator||=
 name|AD_F_DETACHING
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nad%d: being removed from configuration"
+argument_list|,
+name|adp
+operator|->
+name|lun
+argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1371,6 +1383,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|flush
+condition|)
+block|{
+if|if
+condition|(
 name|ata_command
 argument_list|(
 name|adp
@@ -1405,6 +1422,7 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
+block|}
 name|ata_free_lun
 argument_list|(
 operator|&

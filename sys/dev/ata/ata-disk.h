@@ -224,6 +224,8 @@ parameter_list|(
 name|struct
 name|ad_softc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

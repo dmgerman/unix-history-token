@@ -539,6 +539,15 @@ name|flags
 operator||=
 name|ATAPI_F_DETACHING
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n%s: being removed from configuration"
+argument_list|,
+name|atp
+operator|->
+name|devname
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ATP_PARAM
