@@ -491,6 +491,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 default|default:
+empty_stmt|;
 block|}
 comment|/* ln target1 target2 directory */
 name|sourcedir
