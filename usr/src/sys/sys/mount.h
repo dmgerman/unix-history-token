@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -733,6 +733,29 @@ argument_list|)
 expr_stmt|;
 name|int
 argument_list|(
+argument|*vfs_vget
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|mp
+operator|,
+name|ino_t
+name|ino
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
+name|vpp
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
 argument|*vfs_fhtovp
 argument_list|)
 name|__P
@@ -895,6 +918,20 @@ parameter_list|,
 name|P
 parameter_list|)
 value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, C, P)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_VGET
+parameter_list|(
+name|MP
+parameter_list|,
+name|INO
+parameter_list|,
+name|VPP
+parameter_list|)
+value|(*(MP)->mnt_op->vfs_vget)(MP, INO, VPP)
 end_define
 
 begin_define
