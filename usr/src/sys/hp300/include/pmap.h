@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.6 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,7 @@ parameter_list|,
 name|iscurproc
 parameter_list|)
 define|\
-value|if ((pmapp) != NULL&& (pmapp)->pm_stchanged) { \ 		(pcbp)->pcb_ustp = \ 		    hp300_btop(pmap_extract(kernel_pmap, (pmapp)->pm_stab)); \ 		if (iscurproc) \ 			loadustp((pcbp)->pcb_ustp); \ 		(pmapp)->pm_stchanged = FALSE; \ 	}
+value|if ((pmapp) != NULL&& (pmapp)->pm_stchanged) { \ 		(pcbp)->pcb_ustp = \ 		    hp300_btop(pmap_extract(kernel_pmap, \ 			((vm_offset_t)(pmapp)->pm_stab))); \ 		if (iscurproc) \ 			loadustp((pcbp)->pcb_ustp); \ 		(pmapp)->pm_stchanged = FALSE; \ 	}
 end_define
 
 begin_define
