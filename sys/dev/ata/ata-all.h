@@ -1890,11 +1890,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ata_dma
-decl_stmt|,
 name|ata_wc
-decl_stmt|,
-name|atapi_dma
 decl_stmt|;
 end_decl_stmt
 

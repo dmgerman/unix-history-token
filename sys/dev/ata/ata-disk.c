@@ -742,36 +742,6 @@ operator|*
 name|DEV_BSIZE
 expr_stmt|;
 block|}
-comment|/* use DMA if allowed and if drive/controller supports it */
-if|if
-condition|(
-name|ata_dma
-operator|&&
-name|atadev
-operator|->
-name|channel
-operator|->
-name|dma
-condition|)
-name|atadev
-operator|->
-name|setmode
-argument_list|(
-name|atadev
-argument_list|,
-name|ATA_DMA_MAX
-argument_list|)
-expr_stmt|;
-else|else
-name|atadev
-operator|->
-name|setmode
-argument_list|(
-name|atadev
-argument_list|,
-name|ATA_PIO_MAX
-argument_list|)
-expr_stmt|;
 comment|/* setup the function ptrs */
 name|atadev
 operator|->
