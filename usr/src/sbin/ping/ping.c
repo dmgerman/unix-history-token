@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	8.2 (Berkeley) %G%"
+literal|"@(#)ping.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2960,12 +2960,8 @@ operator|+
 literal|2
 operator|&&
 operator|!
-name|bcmp
+name|memcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|cp
 argument_list|,
 name|old_rr
