@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: exec.c,v 1.7 1997/11/20 15:09:38 bde Exp $"
+literal|"$Id: exec.c,v 1.8 1998/10/14 18:53:36 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +401,7 @@ endif|#
 directive|endif
 name|n
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -478,7 +478,14 @@ endif|#
 directive|endif
 name|n
 operator|=
+literal|1
+expr_stmt|;
+name|argv
+index|[
 literal|0
+index|]
+operator|=
+name|arg
 expr_stmt|;
 while|while
 condition|(
