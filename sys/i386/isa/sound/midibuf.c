@@ -9,6 +9,20 @@ directive|include
 file|"sound_config.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|drain_midi_queue
+name|__P
+argument_list|(
+operator|(
+name|int
+name|dev
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if

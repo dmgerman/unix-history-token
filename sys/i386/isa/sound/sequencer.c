@@ -21,6 +21,19 @@ directive|include
 file|"midi_ctrl.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|seq_drain_midi_queues
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
