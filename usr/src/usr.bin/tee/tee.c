@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tee.c	5.11 (Berkeley) %G%"
+literal|"@(#)tee.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,6 +186,10 @@ name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
+define|#
+directive|define
+name|BSIZE
+value|(8 * 1024)
 name|append
 operator|=
 literal|0
@@ -276,9 +280,7 @@ argument_list|(
 operator|(
 name|u_int
 operator|)
-literal|8
-operator|*
-literal|1024
+name|BSIZE
 argument_list|)
 operator|)
 condition|)
@@ -387,10 +389,7 @@ name|STDIN_FILENO
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|BSIZE
 argument_list|)
 operator|)
 operator|>
