@@ -8498,8 +8498,6 @@ operator|->
 name|fg_num
 operator|=
 name|num
-operator|&
-literal|0xffff
 expr_stmt|;
 name|fg
 operator|->

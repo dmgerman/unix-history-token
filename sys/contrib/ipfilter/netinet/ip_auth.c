@@ -2160,6 +2160,12 @@ operator|&
 name|ipf_auth
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+name|au
+operator|->
+name|fra_index
+expr_stmt|;
 if|if
 condition|(
 operator|(

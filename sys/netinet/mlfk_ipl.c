@@ -929,12 +929,6 @@ name|IPL_LOGAUTH
 index|]
 argument_list|)
 expr_stmt|;
-name|cdevsw_remove
-argument_list|(
-operator|&
-name|ipl_cdevsw
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ipldetach
@@ -960,7 +954,7 @@ name|moduledata_t
 name|ipfiltermod
 init|=
 block|{
-literal|"ipfilter"
+name|IPL_VERSION
 block|,
 name|ipfilter_modevent
 block|,
