@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.13 1999/06/22 10:31:30 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: xrpu.c,v 1.14 1999/07/03 08:23:00 phk Exp $  *  * A very simple device driver for PCI cards based on Xilinx 6200 series  * FPGA/RPU devices.  Current Functionality is to allow you to open and  * mmap the entire thing into your program.  *  * Hardware currently supported:  *	www.vcc.com HotWorks 1 6216 based card.  *  */
 end_comment
 
 begin_include
@@ -620,6 +620,29 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|softc
+modifier|*
+name|sc
+init|=
+name|softc
+index|[
+name|dev2unit
+argument_list|(
+name|dev
+argument_list|)
+index|]
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 return|return
 operator|(
 literal|0
