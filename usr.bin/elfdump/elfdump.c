@@ -2564,7 +2564,10 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"%s"
+argument_list|,
+operator|*
+name|av
 argument_list|)
 expr_stmt|;
 name|e
@@ -6871,7 +6874,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: elfdump [-acdeiGhnprs] [-w file] filename\n"
+literal|"usage: elfdump -a | -cdeGhinprs [-w file] file\n"
 argument_list|)
 expr_stmt|;
 name|exit
