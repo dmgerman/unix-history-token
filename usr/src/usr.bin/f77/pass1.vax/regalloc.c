@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regalloc.c	5.1 (Berkeley) %G%"
+literal|"@(#)regalloc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8699,6 +8699,32 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|FAMILY
+operator|==
+name|PCC
+operator|&&
+name|SZSHORT
+operator|<
+name|SZINT
+comment|/*    * Handle PCC bogosity that values in registers must be at least INT width.    */
+if|if
+condition|(
+name|ap
+operator|->
+name|vtype
+operator|==
+name|TYSHORT
+condition|)
+name|ap
+operator|->
+name|vtype
+operator|=
+name|TYINT
+expr_stmt|;
+endif|#
+directive|endif
 name|ap
 operator|->
 name|istemp
