@@ -881,7 +881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check that this operation is being done in the kernel.  * longjmp out if not.  op the name of the operation. */
+comment|/* Check that this operation is being done in the kernel.  * longjmp out if not.  op is the name of the operation. */
 end_comment
 
 begin_function
@@ -895,11 +895,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|vinum_conf
 operator|.
 name|flags
 operator|&
 name|VF_KERNELOP
+operator|)
 operator|==
 literal|0
 condition|)
@@ -993,11 +995,13 @@ operator|)
 comment|/* we have other plexes */
 operator|&&
 operator|(
+operator|(
 name|vol
 operator|->
 name|flags
 operator|&
 name|VF_CONFIG_SETUPSTATE
+operator|)
 operator|==
 literal|0
 operator|)
