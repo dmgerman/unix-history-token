@@ -345,8 +345,7 @@ decl_stmt|;
 name|long
 name|val
 decl_stmt|;
-name|long
-name|long
+name|int64_t
 name|val64
 decl_stmt|;
 name|char
@@ -381,7 +380,7 @@ parameter_list|,
 name|cap
 parameter_list|)
 define|\
-value|do {								\ 	int t;								\ 	if ((t = agetnum(cap))< 0) {					\ 		fprintf(stderr, "rtadvd: need %s for interface %s\n",	\ 			cap, intface);					\ 		exit(1);						\ 	}								\ 	var = t;							\      } while (0)
+value|do {								\ 	int64_t t;							\ 	if ((t = agetnum(cap))< 0) {					\ 		fprintf(stderr, "rtadvd: need %s for interface %s\n",	\ 			cap, intface);					\ 		exit(1);						\ 	}								\ 	var = t;							\      } while (0)
 define|#
 directive|define
 name|MAYHAVE

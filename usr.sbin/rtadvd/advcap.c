@@ -299,8 +299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|long
+name|int64_t
 name|tgetnum
 name|__P
 argument_list|(
@@ -1189,8 +1188,7 @@ comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li
 end_comment
 
 begin_function
-name|long
-name|long
+name|int64_t
 name|tgetnum
 parameter_list|(
 name|id
@@ -1200,8 +1198,7 @@ modifier|*
 name|id
 decl_stmt|;
 block|{
-name|long
-name|long
+name|int64_t
 name|i
 decl_stmt|;
 name|int
