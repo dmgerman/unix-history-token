@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/sound/sound_config.h>
 end_include
 
@@ -7718,22 +7724,13 @@ name|target
 decl_stmt|;
 name|sizeof_patch
 operator|=
-operator|(
-name|long
-operator|)
-operator|&
-name|patch
-operator|.
+name|offsetof
+argument_list|(
+expr|struct
+name|patch_info
+argument_list|,
 name|data
-index|[
-literal|0
-index|]
-operator|-
-operator|(
-name|long
-operator|)
-operator|&
-name|patch
+argument_list|)
 expr_stmt|;
 comment|/* Header size */
 if|if

@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * sound/awe_wave.c  *  * The low level driver for the AWE32/Sound Blaster 32 wave table synth.  *   version 0.4.2c; Oct. 7, 1997  *  * Copyright (C) 1996,1997 Takashi Iwai  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -17730,26 +17736,12 @@ name|rc
 decl_stmt|;
 name|sizeof_patch
 operator|=
-call|(
-name|int
-call|)
+name|offsetof
 argument_list|(
-operator|(
-name|long
-operator|)
-operator|&
-name|patch
-operator|.
+expr|struct
+name|patch_info
+argument_list|,
 name|data
-index|[
-literal|0
-index|]
-operator|-
-operator|(
-name|long
-operator|)
-operator|&
-name|patch
 argument_list|)
 expr_stmt|;
 comment|/* header size */
