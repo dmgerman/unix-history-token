@@ -175,7 +175,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_dump_t
+name|dumper_t
 name|aac_disk_dump
 decl_stmt|;
 end_decl_stmt
@@ -908,8 +908,9 @@ specifier|static
 name|int
 name|aac_disk_dump
 parameter_list|(
-name|dev_t
-name|dev
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*
@@ -961,9 +962,20 @@ name|first
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|disk
+modifier|*
+name|dp
+decl_stmt|;
+name|dp
+operator|=
+name|arg
+expr_stmt|;
 name|ad
 operator|=
-name|dev
+name|dp
+operator|->
+name|d_dev
 operator|->
 name|si_drv1
 expr_stmt|;

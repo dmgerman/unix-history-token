@@ -292,8 +292,9 @@ begin_function
 name|int
 name|nodump
 parameter_list|(
-name|dev_t
-name|dev
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*

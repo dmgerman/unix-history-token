@@ -175,7 +175,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_dump_t
+name|dumper_t
 name|idad_dump
 decl_stmt|;
 end_decl_stmt
@@ -651,8 +651,9 @@ specifier|static
 name|int
 name|idad_dump
 parameter_list|(
-name|dev_t
-name|dev
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*
@@ -678,11 +679,22 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|disk
+modifier|*
+name|dp
+decl_stmt|;
+name|dp
+operator|=
+name|arg
+expr_stmt|;
 name|drv
 operator|=
 name|idad_getsoftc
 argument_list|(
-name|dev
+name|dp
+operator|->
+name|d_dev
 argument_list|)
 expr_stmt|;
 if|if

@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|dead_dump
-value|(d_dump_t *)enxio
+value|(dumper_t *)enxio
 end_define
 
 begin_function

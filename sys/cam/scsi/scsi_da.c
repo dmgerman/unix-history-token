@@ -1255,7 +1255,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_dump_t
+name|dumper_t
 name|dadump
 decl_stmt|;
 end_decl_stmt
@@ -2873,8 +2873,9 @@ specifier|static
 name|int
 name|dadump
 parameter_list|(
-name|dev_t
-name|dev
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*
@@ -2907,6 +2908,15 @@ name|struct
 name|ccb_scsiio
 name|csio
 decl_stmt|;
+name|struct
+name|disk
+modifier|*
+name|dp
+decl_stmt|;
+name|dp
+operator|=
+name|arg
+expr_stmt|;
 name|periph
 operator|=
 operator|(
@@ -2914,7 +2924,9 @@ expr|struct
 name|cam_periph
 operator|*
 operator|)
-name|dev
+name|dp
+operator|->
+name|d_dev
 operator|->
 name|si_drv1
 expr_stmt|;

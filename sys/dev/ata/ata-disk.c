@@ -162,7 +162,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_dump_t
+name|dumper_t
 name|addump
 decl_stmt|;
 end_decl_stmt
@@ -1789,8 +1789,9 @@ specifier|static
 name|int
 name|addump
 parameter_list|(
-name|dev_t
-name|dev
+name|void
+modifier|*
+name|arg
 parameter_list|,
 name|void
 modifier|*
@@ -1810,10 +1811,6 @@ name|struct
 name|ad_softc
 modifier|*
 name|adp
-init|=
-name|dev
-operator|->
-name|si_drv1
 decl_stmt|;
 name|struct
 name|ad_request
@@ -1823,6 +1820,23 @@ specifier|static
 name|int
 name|once
 decl_stmt|;
+name|struct
+name|disk
+modifier|*
+name|dp
+decl_stmt|;
+name|dp
+operator|=
+name|arg
+expr_stmt|;
+name|adp
+operator|=
+name|dp
+operator|->
+name|d_dev
+operator|->
+name|si_drv1
+expr_stmt|;
 if|if
 condition|(
 operator|!

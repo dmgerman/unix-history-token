@@ -730,8 +730,6 @@ operator|.
 name|priv
 operator|=
 name|dp
-operator|->
-name|d_dev
 expr_stmt|;
 name|di
 operator|.
@@ -1740,10 +1738,6 @@ name|dp
 operator|->
 name|d_dump
 operator|=
-operator|(
-name|dumper_t
-operator|*
-operator|)
 name|cdevsw
 operator|->
 name|d_dump

@@ -491,30 +491,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|int
-name|d_dump_t
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|void
-modifier|*
-name|virtual
-parameter_list|,
-name|vm_offset_t
-name|physical
-parameter_list|,
-name|off_t
-name|offset
-parameter_list|,
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
 name|d_psize_t
 parameter_list|(
 name|dev_t
@@ -759,6 +735,39 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|dumper_t
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+comment|/* Private to the driver. */
+name|void
+modifier|*
+name|virtual
+parameter_list|,
+comment|/* Virtual (mapped) address. */
+name|vm_offset_t
+name|physical
+parameter_list|,
+comment|/* Physical address of virtual. */
+name|off_t
+name|offset
+parameter_list|,
+comment|/* Byte-offset to write at. */
+name|size_t
+name|length
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Number of bytes to dump. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -954,7 +963,7 @@ comment|/* base device name, e.g. 'vn' */
 name|int
 name|d_maj
 decl_stmt|;
-name|d_dump_t
+name|dumper_t
 modifier|*
 name|d_dump
 decl_stmt|;
@@ -1142,7 +1151,7 @@ value|seltrue
 end_define
 
 begin_decl_stmt
-name|d_dump_t
+name|dumper_t
 name|nodump
 decl_stmt|;
 end_decl_stmt
@@ -1650,39 +1659,6 @@ end_expr_stmt
 
 begin_comment
 comment|/* Stuff relating to kernel-dump */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-name|dumper_t
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-comment|/* Private to the driver. */
-name|void
-modifier|*
-name|virtual
-parameter_list|,
-comment|/* Virtual (mapped) address. */
-name|vm_offset_t
-name|physical
-parameter_list|,
-comment|/* Physical address of virtual. */
-name|off_t
-name|offset
-parameter_list|,
-comment|/* Byte-offset to write at. */
-name|size_t
-name|length
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* Number of bytes to dump. */
 end_comment
 
 begin_struct
