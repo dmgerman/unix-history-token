@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.8 1998/10/17 09:01:13 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.9 1998/10/17 09:16:01 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -253,13 +253,6 @@ define|#
 directive|define
 name|NOPT
 value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|XOPT
-value|2
 end_define
 
 begin_define
@@ -1168,6 +1161,12 @@ sizeof|sizeof
 argument_list|(
 name|cmd
 argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|autoboot
@@ -2200,24 +2199,8 @@ return|return
 operator|-
 literal|1
 return|;
-if|if
-condition|(
-name|i
-operator|<
-name|XOPT
-condition|)
 name|opts
 operator|^=
-literal|1
-operator|<<
-name|flags
-index|[
-name|i
-index|]
-expr_stmt|;
-else|else
-name|opts
-operator||=
 literal|1
 operator|<<
 name|flags
