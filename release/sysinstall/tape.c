@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: tape.c,v 1.6.2.2 1995/09/30 19:13:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: tape.c,v 1.6.2.3 1995/10/03 23:36:56 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"ft | cpio -idum %s -H tar --block-size %s"
+literal|"ft | cpio -idum %s --block-size %s"
 argument_list|,
 name|CPIO_VERBOSITY
 argument_list|,
@@ -138,7 +138,7 @@ name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"cpio -idum %s -H tar --block-size %s -I %s"
+literal|"cpio -idum %s --block-size %s -I %s"
 argument_list|,
 name|CPIO_VERBOSITY
 argument_list|,
@@ -201,6 +201,9 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|buf
@@ -225,14 +228,17 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
-return|return
+name|fd
+operator|=
 name|open
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDONLY
 argument_list|)
-return|;
+expr_stmt|;
+else|else
+block|{
 name|sprintf
 argument_list|(
 name|buf
@@ -250,13 +256,31 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-return|return
+name|fd
+operator|=
 name|open
 argument_list|(
 name|buf
 argument_list|,
 name|O_RDONLY
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Nuke the files behind us to save space */
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|unlink
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+name|fd
 return|;
 block|}
 end_function
@@ -278,14 +302,11 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
-name|access
+name|file_executable
 argument_list|(
 name|dev
 operator|->
 name|private
-argument_list|,
-name|X_OK
 argument_list|)
 condition|)
 block|{

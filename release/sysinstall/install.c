@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.13 1995/10/03 23:36:45 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.14 1995/10/04 07:54:47 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -922,11 +922,10 @@ expr_stmt|;
 comment|/* Try to leach a big /tmp off the fixit floppy */
 if|if
 condition|(
-name|access
+operator|!
+name|file_executable
 argument_list|(
 literal|"/tmp"
-argument_list|,
-name|X_OK
 argument_list|)
 condition|)
 operator|(
@@ -1026,6 +1025,22 @@ argument_list|)
 expr_stmt|;
 return|return
 name|FALSE
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|installUpgrade
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+comment|/* Storyboard:        1. Verify that user has mounted/newfs flagged all desired directories        for upgrading.  Should have selected a / at the very least, with        warning for no /usr.  If not, throw into partition/disklabel editors        with appropriate popup info in-between.         2. If BIN distribution selected, backup /etc to some location -        prompt user for this location.         3. Extract distributions.  Warn if BIN distribution not among those           selected.         4. If BIN extracted, do fixups - read in old sysconfig and try to        intelligently merge the old values into the new sysconfig (only replace        something if set in old and still defaulted or disabled in new).         Some fixups might be:  copy these files back from old:  passwd files, group file, fstab, exports, hosts,        make.conf, host.conf, ???         Spawn a shell and invite user to look around before exiting.        */
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -1251,19 +1266,15 @@ decl_stmt|;
 comment|/* XXX At some point maybe we want to make the selection of kernel configurable here XXX */
 if|if
 condition|(
-name|access
+operator|!
+name|file_readable
 argument_list|(
 literal|"/kernel"
-argument_list|,
-name|R_OK
 argument_list|)
 operator|&&
-operator|!
-name|access
+name|file_readable
 argument_list|(
 literal|"/kernel.GENERIC"
-argument_list|,
-name|R_OK
 argument_list|)
 condition|)
 block|{
@@ -2477,17 +2488,18 @@ name|cp
 decl_stmt|;
 if|if
 condition|(
-name|access
+operator|!
+name|file_readable
 argument_list|(
 literal|"/usr/share/misc/termcap"
-argument_list|,
-name|R_OK
 argument_list|)
 condition|)
 block|{
-name|system
+name|Mkdir
 argument_list|(
-literal|"mkdir -p /usr/share/misc"
+literal|"/usr/share/misc"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|fp
