@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.14 89/08/14$  *  *	@(#)vmparam.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vmparam.h 1.16 91/01/18$  *  *	@(#)vmparam.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -201,17 +201,6 @@ begin_comment
 comment|/* largest potential swap allocation */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DMTEXT
-value|1024
-end_define
-
-begin_comment
-comment|/* swap allocation for text */
-end_comment
-
 begin_comment
 comment|/*  * Sizes of the system and user portions of the system page table.  */
 end_comment
@@ -227,6 +216,10 @@ name|SYSPTSIZE
 value|(2 * NPTEPG)
 end_define
 
+begin_comment
+comment|/* 8mb */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -235,8 +228,18 @@ value|(1 * NPTEPG)
 end_define
 
 begin_comment
-comment|/*  * PTEs for mapping user space into kernel for phyio operations.  * One page is enough to handle 4Mb of simultaneous raw IO operations.  */
+comment|/* 4mb */
 end_comment
+
+begin_comment
+comment|/*  * PTEs for mapping user space into the kernel for phyio operations.  * One page is enough to handle 4Mb of simultaneous raw IO operations.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USRIOSIZE
+end_ifndef
 
 begin_define
 define|#
@@ -246,8 +249,23 @@ value|(1 * NPTEPG)
 end_define
 
 begin_comment
+comment|/* 4mb */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * PTEs for system V style shared memory.  * This is basically slop for kmempt which we actually allocate (malloc) from.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHMMAXPGS
+end_ifndef
 
 begin_define
 define|#
@@ -255,6 +273,41 @@ directive|define
 name|SHMMAXPGS
 value|1024
 end_define
+
+begin_comment
+comment|/* 4mb */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * External IO space map size.  * By default we make it large enough to map up to 3 DIO-II devices and  * the complete DIO space.  For a 320-only configuration (which has no  * DIO-II) you could define a considerably smaller region.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EIOMAPSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|EIOMAPSIZE
+value|3584
+end_define
+
+begin_comment
+comment|/* 14mb */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Boundary at which to place first MAPMEM segment if not explicitly  * specified.  Should be a power of two.  This allows some slop for  * the data segment to grow underneath the first mapped segment.  */
@@ -490,6 +543,13 @@ define|#
 directive|define
 name|VM_MIN_ADDRESS
 value|((vm_offset_t)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS
+value|((vm_offset_t)0xFFF00000)
 end_define
 
 begin_define
