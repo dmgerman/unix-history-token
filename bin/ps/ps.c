@@ -11,8 +11,8 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
-name|char
 specifier|const
+name|char
 name|copyright
 index|[]
 init|=
@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)ps.c	8.4 (Berkeley) 4/2/94";
@@ -47,25 +47,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -124,12 +127,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -166,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -190,18 +193,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ps.h"
 end_include
 
@@ -217,6 +208,7 @@ comment|/* username separators */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|KINFO
 modifier|*
 name|kinfo
@@ -295,6 +287,16 @@ comment|/* calculated width of requested variables */
 end_comment
 
 begin_decl_stmt
+name|time_t
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current time(3) value */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|needuser
@@ -323,13 +325,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PS_ARGS
-value|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvwx"
-end_define
-
 begin_else
 else|#
 directive|else
@@ -344,19 +339,13 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PS_ARGS
-value|"aCceghjLlM:mN:O:o:p:rSTt:U:uvwx"
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_enum
+specifier|static
 enum|enum
 name|sort
 block|{
@@ -372,144 +361,121 @@ name|DEFAULT
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fmt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-call|(
 modifier|*
-call|)
-argument_list|(
+modifier|*
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|kvm_t
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 specifier|const
-expr|struct
+name|struct
 name|kinfo_proc
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|)
-operator|,
+parameter_list|)
+parameter_list|,
 name|KINFO
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|kludge_oldps_options
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|pscomp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|saveuser
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|KINFO
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|scanvars
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dynsizevars
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|KINFO
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sizevars
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -528,33 +494,37 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 name|dfmt
 index|[]
 init|=
-literal|"pid tt state time command"
+literal|"pid,tt,state,time,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|jfmt
 index|[]
 init|=
-literal|"user pid ppid pgid sess jobc state tt time command"
+literal|"user,pid,ppid,pgid,sess,jobc,state,tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|lfmt
 index|[]
 init|=
-literal|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
+literal|"uid,pid,ppid,cpu,pri,nice,vsz,rss,wchan,state,tt,time,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|o1
 index|[]
@@ -564,55 +534,88 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|o2
 index|[]
 init|=
-literal|"tt state time command"
+literal|"tt,state,time,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ufmt
 index|[]
 init|=
-literal|"user pid %cpu %mem vsz rss tt state start time command"
+literal|"user,pid,%cpu,%mem,vsz,rss,tt,state,start,time,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|vfmt
 index|[]
 init|=
-literal|"pid state time sl re pagein vsz rss lim tsiz %cpu %mem command"
+literal|"pid,state,time,sl,re,pagein,vsz,rss,lim,tsiz,%cpu,%mem,command"
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LAZY_PS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PS_ARGS
+value|"aCcefghjLlM:mN:O:o:p:rSTt:U:uvwx"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PS_ARGS
+value|"aCceghjLlM:mN:O:o:p:rSTt:U:uvwx"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|argv
 index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|kinfo_proc
@@ -647,7 +650,7 @@ name|flag
 decl_stmt|,
 name|i
 decl_stmt|,
-name|fmt
+name|_fmt
 decl_stmt|,
 name|lineno
 decl_stmt|,
@@ -671,6 +674,13 @@ decl_stmt|,
 name|nuids
 decl_stmt|;
 name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|cp
 decl_stmt|,
@@ -679,11 +689,6 @@ name|nlistf
 decl_stmt|,
 modifier|*
 name|memf
-decl_stmt|,
-name|errbuf
-index|[
-name|_POSIX2_LINE_MAX
-index|]
 decl_stmt|;
 operator|(
 name|void
@@ -693,6 +698,13 @@ argument_list|(
 name|LC_ALL
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+comment|/* Set the time to what it is right now. */
+name|time
+argument_list|(
+operator|&
+name|now
 argument_list|)
 expr_stmt|;
 if|if
@@ -865,7 +877,7 @@ expr_stmt|;
 block|}
 name|all
 operator|=
-name|fmt
+name|_fmt
 operator|=
 name|prtheader
 operator|=
@@ -992,7 +1004,7 @@ argument_list|(
 name|jfmt
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1023,7 +1035,7 @@ argument_list|(
 name|lfmt
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1097,7 +1109,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1110,7 +1122,7 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1228,7 +1240,10 @@ literal|0
 condition|)
 name|ttypath
 operator|=
+name|strdup
+argument_list|(
 name|_PATH_CONSOLE
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -1343,7 +1358,7 @@ name|sortby
 operator|=
 name|SORTCPU
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1367,7 +1382,7 @@ name|sortby
 operator|=
 name|SORTMEM
 expr_stmt|;
-name|fmt
+name|_fmt
 operator|=
 literal|1
 expr_stmt|;
@@ -1514,7 +1529,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fmt
+name|_fmt
 condition|)
 name|parsefmt
 argument_list|(
@@ -1561,12 +1576,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|nuids
@@ -1668,6 +1678,10 @@ argument_list|)
 operator|)
 operator|==
 literal|0
+operator|||
+name|nentries
+operator|<
+literal|0
 condition|)
 name|errx
 argument_list|(
@@ -1700,11 +1714,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2009,9 +2023,7 @@ block|{
 name|char
 name|name
 index|[
-name|UT_NAMESIZE
-operator|+
-literal|1
+name|MAXLOGNAME
 index|]
 decl_stmt|;
 name|struct
@@ -2027,9 +2039,10 @@ modifier|*
 name|moreuids
 decl_stmt|;
 name|int
-name|l
-decl_stmt|,
 name|alloc
+decl_stmt|;
+name|size_t
+name|l
 decl_stmt|;
 name|alloc
 operator|=
@@ -2086,6 +2099,9 @@ name|warnx
 argument_list|(
 literal|"%.*s: name too long"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|,
 name|arg
@@ -2181,12 +2197,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"realloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"realloc failed"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2235,7 +2246,9 @@ begin_function
 specifier|static
 name|void
 name|scanvars
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|varent
@@ -2324,12 +2337,10 @@ specifier|static
 name|void
 name|dynsizevars
 parameter_list|(
-name|ki
-parameter_list|)
 name|KINFO
 modifier|*
 name|ki
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|varent
@@ -2427,7 +2438,9 @@ begin_function
 specifier|static
 name|void
 name|sizevars
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|varent
@@ -2501,66 +2514,45 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|fmt
-argument_list|(
-name|fn
-argument_list|,
-name|ki
-argument_list|,
-name|comm
-argument_list|,
-name|maxlen
-argument_list|)
+parameter_list|(
 name|char
 modifier|*
 modifier|*
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|fn
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|)
+parameter_list|(
 name|kvm_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
-expr|struct
+name|struct
 name|kinfo_proc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|)
+parameter_list|,
 name|KINFO
 modifier|*
 name|ki
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 name|comm
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|int
 name|maxlen
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -2607,7 +2599,7 @@ name|s
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2624,12 +2616,10 @@ specifier|static
 name|void
 name|saveuser
 parameter_list|(
-name|ki
-parameter_list|)
 name|KINFO
 modifier|*
 name|ki
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|usave
@@ -2737,6 +2727,8 @@ name|ki
 operator|->
 name|ki_args
 operator|=
+name|strdup
+argument_list|(
 name|fmt
 argument_list|(
 name|kvm_getargv
@@ -2751,6 +2743,7 @@ operator|->
 name|p_comm
 argument_list|,
 name|MAXCOMLEN
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2779,8 +2772,9 @@ operator|+
 literal|3
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|asprintf
 argument_list|(
+operator|&
 name|ki
 operator|->
 name|ki_args
@@ -2819,6 +2813,8 @@ name|ki
 operator|->
 name|ki_env
 operator|=
+name|strdup
+argument_list|(
 name|fmt
 argument_list|(
 name|kvm_getenvv
@@ -2832,6 +2828,7 @@ operator|)
 name|NULL
 argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2877,21 +2874,16 @@ specifier|static
 name|int
 name|pscomp
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2914,6 +2906,7 @@ operator|(
 name|getpcpu
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2923,6 +2916,7 @@ operator|-
 name|getpcpu
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2941,6 +2935,7 @@ operator|(
 name|VSIZE
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2950,6 +2945,7 @@ operator|-
 name|VSIZE
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2959,9 +2955,13 @@ operator|)
 return|;
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|KI_EPROC
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2970,9 +2970,13 @@ argument_list|)
 operator|->
 name|e_tdev
 operator|-
+operator|(
+name|int
+operator|)
 name|KI_EPROC
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -2992,6 +2996,7 @@ operator|=
 name|KI_PROC
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -3003,6 +3008,7 @@ operator|-
 name|KI_PROC
 argument_list|(
 operator|(
+specifier|const
 name|KINFO
 operator|*
 operator|)
@@ -3017,7 +3023,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ICK (all for getopt), would rather hide the ugliness  * here than taint the main code.  *  *  ps foo -> ps -foo  *  ps 34 -> ps -p34  *  * The old convention that 't' with no trailing tty arg means the users  * tty, is only supported if argv[1] doesn't begin with a '-'.  This same  * feature is available with the option 'T', which takes no argument.  */
@@ -3029,12 +3035,10 @@ name|char
 modifier|*
 name|kludge_oldps_options
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|size_t
 name|len
@@ -3073,11 +3077,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * options begin with '-' 	 */
@@ -3254,7 +3258,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void

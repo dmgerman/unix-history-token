@@ -145,16 +145,19 @@ typedef|typedef
 struct|struct
 name|var
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* name(s) of variable */
+specifier|const
 name|char
 modifier|*
 name|header
 decl_stmt|;
 comment|/* default header */
+specifier|const
 name|char
 modifier|*
 name|alias
@@ -185,42 +188,38 @@ name|flag
 decl_stmt|;
 comment|/* output routine */
 name|void
-argument_list|(
-argument|*oproc
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|oproc
+function_decl|)
+parameter_list|(
+name|struct
 name|kinfo
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|varent
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* sizing routine*/
 name|int
-argument_list|(
-argument|*sproc
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sproc
+function_decl|)
+parameter_list|(
+name|struct
 name|kinfo
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 name|short
 name|width
 decl_stmt|;
 comment|/* printing width */
 comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routines: pvar, evar, uvar (those which print 	 * simple elements from well known structures: proc, eproc, usave) 	 */
-name|int
+name|size_t
 name|off
 decl_stmt|;
 comment|/* offset in structure */
@@ -229,6 +228,7 @@ name|type
 name|type
 decl_stmt|;
 comment|/* type of element */
+specifier|const
 name|char
 modifier|*
 name|fmt
