@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.11	%G%"
+literal|"@(#)main.c	2.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,7 @@ directive|endif
 name|f_init
 argument_list|()
 expr_stmt|;
-name|MAIN__
+name|MAIN_
 argument_list|()
 expr_stmt|;
 name|f_exit
