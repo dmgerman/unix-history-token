@@ -4,8 +4,32 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.20 1996/08/31 22:03:05 jkh Exp $ */
+comment|/* $Id: main.c,v 1.21 1996/09/10 19:49:41 jkh Exp $ */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_include
 include|#
@@ -40,18 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -64,13 +76,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -88,25 +112,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -154,11 +184,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
-name|progname
+name|__progname
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* from crt0.o */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -367,7 +402,7 @@ argument_list|(
 name|char
 operator|*
 argument_list|,
-name|int
+name|off_t
 operator|*
 argument_list|,
 name|time_t
@@ -431,7 +466,7 @@ name|stderr
 argument_list|,
 literal|"usage: %s [-DHINPMTVLqlmnprv] [-o outputfile]<-f file -h host [-c dir]| URL>\n"
 argument_list|,
-name|progname
+name|__progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -469,22 +504,18 @@ name|stderr
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
-name|progname
+name|__progname
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|e
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Interrupted by signal %d\n"
-argument_list|,
-name|progname
+literal|"Interrupted by signal %d"
 argument_list|,
 name|sig
 argument_list|)
@@ -622,33 +653,6 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|s
-init|=
-name|strrchr
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-decl_stmt|;
-name|progname
-operator|=
-name|s
-condition|?
-name|s
-operator|+
-literal|1
-else|:
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -664,7 +668,8 @@ literal|"D:HINPMT:V:Lqc:f:h:o:plmnrv"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch
@@ -943,7 +948,7 @@ name|stderr
 argument_list|,
 literal|"\n%s: Timeout\n"
 argument_list|,
-name|progname
+name|__progname
 argument_list|)
 expr_stmt|;
 name|rm
@@ -1164,7 +1169,7 @@ name|status
 decl_stmt|,
 name|n
 decl_stmt|;
-name|ssize_t
+name|off_t
 name|size
 decl_stmt|,
 name|size0
@@ -2220,13 +2225,9 @@ operator|!
 name|p
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no filename??\n"
-argument_list|,
-name|progname
+literal|"no filename??"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2277,13 +2278,9 @@ operator|!
 name|p
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no filename??\n"
-argument_list|,
-name|progname
+literal|"no filename??"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2360,13 +2357,9 @@ operator|!
 name|p
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no filename??\n"
-argument_list|,
-name|progname
+literal|"no filename??"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -2491,7 +2484,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
+name|off_t
 modifier|*
 name|size
 parameter_list|,
@@ -2824,13 +2817,9 @@ block|{
 case|case
 literal|0
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Timeout\n"
-argument_list|,
-name|progname
+literal|"Timeout"
 argument_list|)
 expr_stmt|;
 name|rm
@@ -3578,7 +3567,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|0
+literal|"socket"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -3672,7 +3661,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"connection failed."
+literal|"connection failed"
 argument_list|)
 expr_stmt|;
 return|return
