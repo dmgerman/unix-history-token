@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.17 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,12 +223,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|herror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unknown host\n"
-argument_list|,
 operator|*
 name|ahost
 argument_list|)
