@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)aux.c	5.11 (Berkeley) %G%"
+literal|"@(#)aux.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,9 +1087,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|ssp
-init|=
-operator|-
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1203,7 +1200,7 @@ name|ssp
 operator|>=
 name|NOFILE
 operator|-
-literal|2
+literal|1
 condition|)
 block|{
 name|printf
@@ -1224,7 +1221,6 @@ return|;
 block|}
 name|sstack
 index|[
-operator|++
 name|ssp
 index|]
 operator|.
@@ -1249,6 +1245,9 @@ operator|.
 name|s_loading
 operator|=
 name|loading
+expr_stmt|;
+name|ssp
+operator|++
 expr_stmt|;
 name|loading
 operator|=
@@ -1287,7 +1286,7 @@ block|{
 if|if
 condition|(
 name|ssp
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1322,6 +1321,9 @@ argument_list|(
 literal|"Unmatched \"if\"\n"
 argument_list|)
 expr_stmt|;
+name|ssp
+operator|--
+expr_stmt|;
 name|cond
 operator|=
 name|sstack
@@ -1345,7 +1347,6 @@ operator|=
 name|sstack
 index|[
 name|ssp
-operator|--
 index|]
 operator|.
 name|s_file
@@ -1353,7 +1354,7 @@ expr_stmt|;
 if|if
 condition|(
 name|ssp
-operator|<
+operator|==
 literal|0
 condition|)
 name|sourcing

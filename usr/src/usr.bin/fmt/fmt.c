@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fmt.c	5.6 (Berkeley) %G%"
+literal|"@(#)fmt.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,11 +87,23 @@ begin_comment
 comment|/* LIZ@UOM 6/18/85 --New variables goal_length and max_length */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|GOAL_LENGTH
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_LENGTH
+value|75
+end_define
+
 begin_decl_stmt
 name|int
 name|goal_length
-init|=
-literal|65
 decl_stmt|;
 end_decl_stmt
 
@@ -102,8 +114,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|max_length
-init|=
-literal|75
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +216,14 @@ name|int
 name|number
 decl_stmt|;
 comment|/* LIZ@UOM 6/18/85 */
+name|goal_length
+operator|=
+name|GOAL_LENGTH
+expr_stmt|;
+name|max_length
+operator|=
+name|MAX_LENGTH
+expr_stmt|;
 name|setout
 argument_list|()
 expr_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.10 (Berkeley) %G%"
+literal|"@(#)fio.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1731,8 +1731,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|sigdepth
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1744,8 +1742,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|omask
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

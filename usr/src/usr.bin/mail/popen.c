@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.10 (Berkeley) %G%"
+literal|"@(#)popen.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,8 +65,6 @@ specifier|static
 name|int
 modifier|*
 name|pid
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +105,7 @@ if|if
 condition|(
 name|pid
 operator|==
-name|NULL
+literal|0
 condition|)
 name|pid
 operator|=
