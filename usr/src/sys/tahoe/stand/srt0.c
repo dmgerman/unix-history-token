@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.8	90/12/16	*/
+comment|/*	srt0.c	7.1	91/05/05	*/
 end_comment
 
 begin_include
@@ -31,7 +31,7 @@ name|globl
 name|__rtt
 operator|.
 name|globl
-name|_openfirst
+name|_firstopen
 operator|.
 name|globl
 name|_start
@@ -197,7 +197,7 @@ name|_bootdev
 name|movl
 name|$1
 decl_stmt|,
-name|_openfirst
+name|_firstopen
 name|callf
 name|$4
 decl_stmt|,
