@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	signal.h	6.1	83/08/08	*/
+comment|/*	signal.h	4.4	83/08/14	*/
 end_comment
 
 begin_ifndef
@@ -547,6 +547,10 @@ name|int
 name|sc_mask
 decl_stmt|;
 comment|/* signal mask to restore */
+name|int
+name|sc_sp
+decl_stmt|;
+comment|/* sp to restore */
 name|int
 name|sc_pc
 decl_stmt|;
