@@ -805,6 +805,13 @@ condition|)
 goto|goto
 name|memfree
 goto|;
+comment|/* XXX - override the tag, ok since we never free it */
+name|p
+operator|->
+name|tag
+operator|=
+name|tag
+expr_stmt|;
 operator|*
 name|dmap
 operator|=
