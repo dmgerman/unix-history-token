@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993, 1994 John S. Dyson  * Copyright (c) 1995, David Greenman  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.104 1999/02/27 23:39:28 alc Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  * Copyright (c) 1993, 1994 John S. Dyson  * Copyright (c) 1995, David Greenman  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vnode_pager.c	7.5 (Berkeley) 4/20/91  *	$Id: vnode_pager.c,v 1.105 1999/03/27 02:39:01 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -2498,7 +2498,7 @@ index|]
 argument_list|)
 return|;
 block|}
-comment|/* 	 * if ANY DEV_BSIZE blocks are valid on a large filesystem block 	 * then, the entire page is valid -- 	 * XXX no it isn't 	 */
+comment|/* 	 * If we have a completely valid page available to us, we can 	 * clean up and return.  Otherwise we have to re-read the 	 * media. 	 */
 if|if
 condition|(
 name|m
@@ -2507,37 +2507,10 @@ name|reqpage
 index|]
 operator|->
 name|valid
-operator|!=
+operator|==
 name|VM_PAGE_BITS_ALL
-condition|)
-name|m
-index|[
-name|reqpage
-index|]
-operator|->
-name|valid
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|m
-index|[
-name|reqpage
-index|]
-operator|->
-name|valid
 condition|)
 block|{
-name|m
-index|[
-name|reqpage
-index|]
-operator|->
-name|valid
-operator|=
-name|VM_PAGE_BITS_ALL
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2571,6 +2544,15 @@ return|return
 name|VM_PAGER_OK
 return|;
 block|}
+name|m
+index|[
+name|reqpage
+index|]
+operator|->
+name|valid
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * here on direct device I/O 	 */
 name|firstaddr
 operator|=
@@ -3219,6 +3201,7 @@ operator|<=
 name|size
 condition|)
 block|{
+comment|/* 			 * Read filled up entire page. 			 */
 name|mt
 operator|->
 name|valid
@@ -3242,35 +3225,23 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|int
-name|nvalid
-init|=
-operator|(
-operator|(
-name|size
-operator|+
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-operator|-
-name|tfoff
-operator|)
-operator|&
-operator|~
-operator|(
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-decl_stmt|;
+comment|/* 			 * Read did not fill up entire page.  Since this 			 * is getpages, the page may be mapped, so we have 			 * to zero the invalid portions of the page even 			 * though we aren't setting them valid. 			 * 			 * Currently we do not set the entire page valid, 			 * we just try to clear the piece that we couldn't 			 * read. 			 */
 name|vm_page_set_validclean
 argument_list|(
 name|mt
 argument_list|,
 literal|0
 argument_list|,
-name|nvalid
+name|size
+operator|-
+name|tfoff
+argument_list|)
+expr_stmt|;
+name|vm_page_zero_invalid
+argument_list|(
+name|mt
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.202 1999/03/12 02:24:56 julian Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.203 1999/03/19 10:17:44 bde Exp $  */
 end_comment
 
 begin_comment
@@ -10222,6 +10222,7 @@ name|soff
 decl_stmt|,
 name|eoff
 decl_stmt|;
+comment|/* 	 * Start and end offsets in buffer.  eoff - soff may not cross a 	 * page boundry or cross the end of the buffer. 	 */
 name|soff
 operator|=
 name|off
@@ -10302,9 +10303,15 @@ name|soff
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * bp->b_validoff and bp->b_validend restrict the valid range 		 * that we can set.  Note that these offsets are not DEV_BSIZE 		 * aligned.  vm_page_set_validclean() must know what  		 * sub-DEV_BSIZE ranges to clear. 		 */
+if|#
+directive|if
+literal|0
+block|sv = (bp->b_offset + bp->b_validoff + DEV_BSIZE - 1)& ~(DEV_BSIZE - 1); 		ev = (bp->b_offset + bp->b_validend + (DEV_BSIZE - 1))&  		    ~(DEV_BSIZE - 1);
+endif|#
+directive|endif
 name|sv
 operator|=
-operator|(
 name|bp
 operator|->
 name|b_offset
@@ -10312,22 +10319,9 @@ operator|+
 name|bp
 operator|->
 name|b_validoff
-operator|+
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-operator|&
-operator|~
-operator|(
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|ev
 operator|=
-operator|(
 name|bp
 operator|->
 name|b_offset
@@ -10335,20 +10329,6 @@ operator|+
 name|bp
 operator|->
 name|b_validend
-operator|+
-operator|(
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
-operator|)
-operator|&
-operator|~
-operator|(
-name|DEV_BSIZE
-operator|-
-literal|1
-operator|)
 expr_stmt|;
 name|soff
 operator|=
