@@ -1188,6 +1188,26 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|bpf_mtap2
+parameter_list|(
+name|struct
+name|bpf_if
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|bpfattach
 parameter_list|(
 name|struct
@@ -1283,7 +1303,23 @@ name|_ifp
 parameter_list|,
 name|_m
 parameter_list|)
-value|do {					\ 	if ((_ifp)->if_bpf)					\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ } while (0)
+value|do {					\ 	if ((_ifp)->if_bpf) {					\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ 	}							\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BPF_MTAP2
+parameter_list|(
+name|_ifp
+parameter_list|,
+name|_data
+parameter_list|,
+name|_dlen
+parameter_list|,
+name|_m
+parameter_list|)
+value|do {			\ 	if ((_ifp)->if_bpf) {					\ 		M_ASSERTVALID(_m);				\ 		bpf_mtap2((_ifp)->if_bpf,(_data),(_dlen),(_m));	\ 	}							\ } while (0)
 end_define
 
 begin_endif
