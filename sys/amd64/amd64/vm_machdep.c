@@ -1396,7 +1396,7 @@ comment|/*  * Convert kernel VA to physical address  */
 end_comment
 
 begin_function
-name|u_long
+name|vm_paddr_t
 name|kvtop
 parameter_list|(
 name|void
@@ -1404,10 +1404,10 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
-name|vm_offset_t
-name|va
+name|vm_paddr_t
+name|pa
 decl_stmt|;
-name|va
+name|pa
 operator|=
 name|pmap_kextract
 argument_list|(
@@ -1419,7 +1419,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|va
+name|pa
 operator|==
 literal|0
 condition|)
@@ -1430,10 +1430,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
-name|int
-operator|)
-name|va
+name|pa
 operator|)
 return|;
 block|}

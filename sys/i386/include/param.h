@@ -420,7 +420,7 @@ name|trunc_4mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)& ~PDRMASK)
+value|((x)& ~PDRMASK)
 end_define
 
 begin_define
@@ -430,7 +430,7 @@ name|round_4mpage
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned)(x)) + PDRMASK)& ~PDRMASK)
+value|((((x)) + PDRMASK)& ~PDRMASK)
 end_define
 
 begin_define
@@ -440,7 +440,7 @@ name|atop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -450,7 +450,7 @@ name|ptoa
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -460,7 +460,7 @@ name|i386_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)>> PAGE_SHIFT)
+value|((x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -470,7 +470,7 @@ name|i386_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned)(x)<< PAGE_SHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define

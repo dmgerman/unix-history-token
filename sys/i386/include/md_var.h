@@ -581,7 +581,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_long
+name|vm_paddr_t
 name|kvtop
 parameter_list|(
 name|void

@@ -543,9 +543,9 @@ name|vm_page_alloc_contig
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_offset_t
 parameter_list|)

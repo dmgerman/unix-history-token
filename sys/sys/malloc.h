@@ -335,12 +335,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|low
 parameter_list|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|high
 parameter_list|,
 name|unsigned

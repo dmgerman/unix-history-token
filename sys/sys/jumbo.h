@@ -74,6 +74,9 @@ call|)
 argument_list|(
 name|ptoa
 argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
 name|pg
 operator|->
 name|pindex

@@ -855,7 +855,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[
 literal|10
@@ -947,15 +947,21 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %u (%u MB)\n"
+literal|"real memory  = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|Maxmem
 argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|Maxmem
 argument_list|)
 operator|/
@@ -996,11 +1002,10 @@ operator|+=
 literal|2
 control|)
 block|{
-name|unsigned
-name|int
-name|size1
+name|vm_paddr_t
+name|size
 decl_stmt|;
-name|size1
+name|size
 operator|=
 name|phys_avail
 index|[
@@ -1016,13 +1021,19 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%08x - 0x%08x, %u bytes (%u pages)\n"
+literal|"0x%016jx - 0x%016jx, %ju bytes (%ju pages)\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|phys_avail
 index|[
 name|indx
 index|]
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|phys_avail
 index|[
 name|indx
@@ -1032,9 +1043,15 @@ index|]
 operator|-
 literal|1
 argument_list|,
-name|size1
+operator|(
+name|uintmax_t
+operator|)
+name|size
 argument_list|,
-name|size1
+operator|(
+name|uintmax_t
+operator|)
+name|size
 operator|/
 name|PAGE_SIZE
 argument_list|)
@@ -1049,10 +1066,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail memory = %u (%u MB)\n"
+literal|"avail memory = %ju (%ju MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|cnt
 operator|.
 name|v_free_count
@@ -1060,6 +1080,9 @@ argument_list|)
 argument_list|,
 name|ptoa
 argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|cnt
 operator|.
 name|v_free_count
@@ -6870,7 +6893,7 @@ value|(2 * 8)
 end_define
 
 begin_comment
-comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  */
+comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
 
 begin_function
@@ -6905,7 +6928,7 @@ name|struct
 name|vm86context
 name|vmc
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|,
 name|physmap
@@ -7212,58 +7235,16 @@ name|RB_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"SMAP type=%02x base=%08x %08x len=%08x %08x\n"
+literal|"SMAP type=%02x base=%016llx len=%016llx\n"
 argument_list|,
 name|smap
 operator|->
 name|type
 argument_list|,
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|smap
-operator|->
-name|base
-operator|+
-literal|4
-operator|)
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|smap
 operator|->
 name|base
 argument_list|,
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|smap
-operator|->
-name|length
-operator|+
-literal|4
-operator|)
-argument_list|,
-operator|(
-name|u_int32_t
-operator|)
 name|smap
 operator|->
 name|length
@@ -7979,6 +7960,9 @@ index|]
 operator|=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 expr_stmt|;
@@ -8044,13 +8028,16 @@ operator|+=
 literal|2
 control|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|end
 decl_stmt|;
 name|end
 operator|=
 name|ptoa
 argument_list|(
+operator|(
+name|vm_paddr_t
+operator|)
 name|Maxmem
 argument_list|)
 expr_stmt|;

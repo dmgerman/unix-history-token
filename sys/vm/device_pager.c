@@ -221,7 +221,7 @@ specifier|static
 name|vm_page_t
 name|dev_pager_getfake
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -356,10 +356,11 @@ name|unsigned
 name|int
 name|npages
 decl_stmt|;
+name|vm_paddr_t
+name|paddr
+decl_stmt|;
 name|vm_offset_t
 name|off
-decl_stmt|,
-name|paddr
 decl_stmt|;
 comment|/* 	 * Offset should be page aligned. 	 */
 if|if
@@ -741,7 +742,7 @@ block|{
 name|vm_pindex_t
 name|offset
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 name|vm_page_t
@@ -1025,7 +1026,7 @@ name|dev_pager_getfake
 parameter_list|(
 name|paddr
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 block|{

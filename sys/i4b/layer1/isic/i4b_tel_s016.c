@@ -768,7 +768,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"isic%d: Error, invalid memory address 0x%lx for Teles S0/16!\n"
+literal|"isic%d: Error, invalid memory address 0x%x for Teles S0/16!\n"
 argument_list|,
 name|unit
 argument_list|,

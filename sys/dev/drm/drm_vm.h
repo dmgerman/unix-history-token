@@ -30,7 +30,7 @@ argument_list|,
 name|vm_offset_t
 name|offset
 argument_list|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|*
 name|paddr
 argument_list|,
@@ -210,7 +210,7 @@ argument_list|,
 name|vm_offset_t
 name|offset
 argument_list|,
-name|vm_offset_t
+name|vm_paddr_t
 operator|*
 name|paddr
 argument_list|,

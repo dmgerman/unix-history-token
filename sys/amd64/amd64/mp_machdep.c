@@ -10862,11 +10862,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PTD[MPPTDI] = %p\n"
+literal|"PTD[MPPTDI] = %#jx\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|PTD
 index|[

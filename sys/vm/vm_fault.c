@@ -3025,10 +3025,11 @@ decl_stmt|,
 name|end
 decl_stmt|;
 block|{
+name|vm_paddr_t
+name|pa
+decl_stmt|;
 name|vm_offset_t
 name|va
-decl_stmt|,
-name|pa
 decl_stmt|;
 name|pmap_t
 name|pmap
@@ -3075,9 +3076,6 @@ if|if
 condition|(
 name|pa
 operator|!=
-operator|(
-name|vm_offset_t
-operator|)
 literal|0
 condition|)
 block|{

@@ -638,7 +638,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"isic%d: Error, mem addr 0x%lx outside 0xA0000-0xDF000 for Teles S0/8!\n"
+literal|"isic%d: Error, mem addr 0x%x outside 0xA0000-0xDF000 for Teles S0/8!\n"
 argument_list|,
 name|unit
 argument_list|,

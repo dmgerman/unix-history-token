@@ -409,7 +409,7 @@ begin_function
 name|vm_page_t
 name|vm_pageq_add_new_page
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{

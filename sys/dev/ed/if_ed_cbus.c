@@ -3919,7 +3919,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"failed to clear shared memory "
-literal|"at %lx - check configuration\n"
+literal|"at %x - check configuration\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4611,7 +4611,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Please change window address(0x%lx)\n"
+literal|"Please change window address(0x%x)\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -4666,7 +4666,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Please change iobase address(0x%lx) "
-literal|"or window address(0x%lx)\n"
+literal|"or window address(0x%x)\n"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -4831,7 +4831,7 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"failed to clear shared memory "
-literal|"at %lx - check configuration\n"
+literal|"at %x - check configuration\n"
 argument_list|,
 name|kvtop
 argument_list|(

@@ -190,7 +190,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap_t
@@ -215,9 +215,9 @@ begin_function_decl
 name|void
 name|pmap_init
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -249,9 +249,9 @@ parameter_list|(
 name|vm_offset_t
 modifier|*
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|int
 parameter_list|)

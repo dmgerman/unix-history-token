@@ -2545,7 +2545,8 @@ name|vm_offset_t
 name|addr
 decl_stmt|,
 name|endaddr
-decl_stmt|,
+decl_stmt|;
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 name|GIANT_REQUIRED

@@ -2395,7 +2395,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to clear shared memory at %lx - check configuration\n"
+literal|"failed to clear shared memory at %x - check configuration\n"
 argument_list|,
 name|kvtop
 argument_list|(
@@ -3509,7 +3509,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"failed to clear shared memory at %lx - check configuration\n"
+literal|"failed to clear shared memory at %x - check configuration\n"
 argument_list|,
 name|kvtop
 argument_list|(

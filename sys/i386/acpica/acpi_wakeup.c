@@ -458,7 +458,7 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|oldphys
 decl_stmt|;
 name|struct

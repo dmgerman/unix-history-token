@@ -491,7 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_start
 decl_stmt|;
 end_decl_stmt
@@ -501,7 +501,7 @@ comment|/* PA of first available physical page */
 end_comment
 
 begin_decl_stmt
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
@@ -1231,10 +1231,10 @@ name|firstaddr
 parameter_list|,
 name|loadaddr
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|firstaddr
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|loadaddr
 decl_stmt|;
 block|{
@@ -2006,7 +2006,7 @@ name|phys_start
 parameter_list|,
 name|phys_end
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_start
 decl_stmt|,
 name|phys_end
@@ -3185,7 +3185,7 @@ comment|/*  *	Routine:	pmap_extract  *	Function:  *		Extract the physical page a
 end_comment
 
 begin_function
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_extract
 parameter_list|(
 name|pmap
@@ -3200,10 +3200,9 @@ name|vm_offset_t
 name|va
 decl_stmt|;
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|rtval
 decl_stmt|;
-comment|/* XXX FIXME */
 name|vm_offset_t
 name|pdirindex
 decl_stmt|;
@@ -3331,7 +3330,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 block|{
@@ -3404,10 +3403,10 @@ name|vm_offset_t
 modifier|*
 name|virt
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|start
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|end
 parameter_list|,
 name|int
@@ -4876,7 +4875,7 @@ index|[
 name|NPGPTD
 index|]
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|int
@@ -5228,12 +5227,12 @@ name|unsigned
 name|ptepindex
 decl_stmt|;
 block|{
-name|vm_offset_t
-name|pteva
-decl_stmt|,
+name|vm_paddr_t
 name|ptepa
 decl_stmt|;
-comment|/* XXXPA */
+name|vm_offset_t
+name|pteva
+decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
@@ -5919,7 +5918,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|ptppaddr
 decl_stmt|;
 name|vm_page_t
@@ -7765,7 +7764,7 @@ name|boolean_t
 name|wired
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 specifier|register
@@ -7773,7 +7772,7 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|opa
 decl_stmt|;
 name|pt_entry_t
@@ -7884,11 +7883,10 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_enter: invalid page directory, pdir=%p, va=0x%x\n"
+literal|"pmap_enter: invalid page directory pdir=%#jx, va=%#x\n"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|pmap
 operator|->
@@ -8322,7 +8320,7 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 comment|/* 	 * In the case that a page table page is not 	 * resident, we are creating it here. 	 */
@@ -11192,14 +11190,20 @@ name|PG_FRAME
 operator|)
 argument_list|,
 operator|(
-literal|"vm_page_t %p phys_addr mismatch %08x %08x"
+literal|"vm_page_t %p phys_addr mismatch %016jx %016jx"
 operator|,
 name|m
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|m
 operator|->
 name|phys_addr
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tpte
 operator|)
 argument_list|)
@@ -11215,8 +11219,11 @@ name|vm_page_array_size
 index|]
 argument_list|,
 operator|(
-literal|"pmap_remove_pages: bad tpte %x"
+literal|"pmap_remove_pages: bad tpte %#jx"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|tpte
 operator|)
 argument_list|)
@@ -12222,7 +12229,7 @@ name|pa
 parameter_list|,
 name|size
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|vm_size_t
@@ -12504,7 +12511,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 name|val
@@ -13179,7 +13186,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|va
 decl_stmt|;
 name|pt_entry_t
@@ -13302,7 +13309,7 @@ name|pmap_pvdump
 parameter_list|(
 name|pa
 parameter_list|)
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 block|{

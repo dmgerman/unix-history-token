@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|PG_FRAME
-value|(~PAGE_MASK)
+value|(~((vm_paddr_t)PAGE_MASK))
 end_define
 
 begin_define
@@ -586,14 +586,14 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 decl_stmt|;
 if|if
@@ -920,14 +920,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_end
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|avail_start
 decl_stmt|;
 end_decl_stmt
@@ -948,7 +948,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vm_offset_t
+name|vm_paddr_t
 name|phys_avail
 index|[]
 decl_stmt|;
@@ -984,9 +984,9 @@ begin_function_decl
 name|void
 name|pmap_bootstrap
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -998,7 +998,7 @@ parameter_list|(
 name|vm_offset_t
 name|va
 parameter_list|,
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
@@ -1018,7 +1018,7 @@ name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 parameter_list|,
 name|vm_size_t
 parameter_list|)

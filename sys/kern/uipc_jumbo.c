@@ -766,7 +766,7 @@ name|jumbo_kmap
 modifier|*
 name|entry
 decl_stmt|;
-name|vm_offset_t
+name|vm_paddr_t
 name|paddr
 decl_stmt|;
 name|vm_page_t

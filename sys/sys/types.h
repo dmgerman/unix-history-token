@@ -1096,6 +1096,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|__vm_paddr_t
+name|vm_paddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__vm_pindex_t
 name|vm_pindex_t
 typedef|;
