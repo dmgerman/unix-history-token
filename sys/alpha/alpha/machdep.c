@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.12 1998/08/22 10:32:38 dfr Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: machdep.c,v 1.13 1998/09/14 22:43:19 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -848,7 +848,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %d (%dK bytes)\n"
+literal|"real memory  = %ld (%ldK bytes)\n"
 argument_list|,
 name|alpha_ptob
 argument_list|(
@@ -1572,7 +1572,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"avail memory = %d (%dK bytes)\n"
+literal|"avail memory = %ld (%ldK bytes)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -2722,7 +2722,7 @@ name|PAGE_SIZE
 condition|)
 name|panic
 argument_list|(
-literal|"page size %d != 8192?!"
+literal|"page size %ld != 8192?!"
 argument_list|,
 name|hwrpb
 operator|->
@@ -2859,7 +2859,7 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"WARNING: weird number of mem clusters: %d\n"
+literal|"WARNING: weird number of mem clusters: %ld\n"
 argument_list|,
 name|mddtp
 operator|->
@@ -3447,7 +3447,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: %d bytes not available for msgbuf in last cluster (%d used)\n"
+literal|"WARNING: %ld bytes not available for msgbuf in last cluster (%ld used)\n"
 argument_list|,
 name|round_page
 argument_list|(
