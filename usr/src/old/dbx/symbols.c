@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c 1.8 %G%"
+literal|"@(#)symbols.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2149,7 +2149,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|not
 name|getbound
 argument_list|(
 name|t
@@ -2174,13 +2174,16 @@ operator|&
 name|lower
 argument_list|)
 condition|)
+block|{
 name|error
 argument_list|(
-literal|" dynamic bounds not currently available "
+literal|"dynamic bounds not currently available"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|lower
 operator|=
 name|t
@@ -2191,6 +2194,7 @@ name|rangev
 operator|.
 name|lower
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|t
@@ -2216,7 +2220,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|not
 name|getbound
 argument_list|(
 name|t
@@ -2241,13 +2245,16 @@ operator|&
 name|upper
 argument_list|)
 condition|)
+block|{
 name|error
 argument_list|(
-literal|" dynamic bounds not currently available "
+literal|"dynamic bounds nor currently available"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|upper
 operator|=
 name|t
@@ -2258,6 +2265,7 @@ name|rangev
 operator|.
 name|upper
 expr_stmt|;
+block|}
 name|nel
 operator|*=
 operator|(
@@ -2433,35 +2441,14 @@ break|break;
 case|case
 name|SCAL
 case|:
-if|if
-condition|(
-name|t
-operator|->
-name|symvalue
-operator|.
-name|iconval
-operator|>
-literal|255
-condition|)
-block|{
 name|r
 operator|=
 sizeof|sizeof
 argument_list|(
-name|short
+name|Word
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|r
-operator|=
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 	     * 	    if (t->symvalue.iconval> 255) { 		r = sizeof(short); 	    } else { 		r = sizeof(char); 	    } 	     * 	     */
 break|break;
 case|case
 name|FPROC
