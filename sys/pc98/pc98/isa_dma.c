@@ -138,7 +138,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<i386/isa/ic/i8237.h>
+file|<dev/ic/i8237.h>
 end_include
 
 begin_include
