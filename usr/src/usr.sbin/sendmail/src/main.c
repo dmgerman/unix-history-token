@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.64
+literal|3.65
 operator|%
 name|G
 operator|%
@@ -367,6 +367,10 @@ expr_stmt|;
 name|from
 operator|=
 name|NULL
+expr_stmt|;
+name|OldStyle
+operator|=
+name|TRUE
 expr_stmt|;
 name|initmacros
 argument_list|()
@@ -1025,10 +1029,10 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* take old-style headers (no commas) */
+comment|/* take new-style headers (with commas) */
 name|OldStyle
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 break|break;
 default|default:
@@ -1332,24 +1336,6 @@ condition|)
 name|ExitStat
 operator|=
 name|EX_USAGE
-expr_stmt|;
-comment|/* 	**  Hack attack! 	**	If the sender is local, we will default to old style 	**	headers.  Ugh ugh ugh.  But oh-so-necessary under the 	**	circumstances. 	*/
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|M_LOCAL
-argument_list|,
-name|From
-operator|.
-name|q_mailer
-operator|->
-name|m_flags
-argument_list|)
-condition|)
-name|OldStyle
-operator|=
-name|TRUE
 expr_stmt|;
 comment|/* 	**  Read the input mail. 	*/
 name|DontSend
