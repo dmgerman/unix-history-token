@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	1.4	(Berkeley)	%G%"
+literal|"@(#)machdep.c	1.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -973,6 +973,8 @@ literal|'\0'
 expr_stmt|;
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"blank line to rewrite?\n"
 argument_list|)
 expr_stmt|;
@@ -1768,6 +1770,8 @@ literal|'\0'
 expr_stmt|;
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"blank line to rewrite?\n"
 argument_list|)
 expr_stmt|;
