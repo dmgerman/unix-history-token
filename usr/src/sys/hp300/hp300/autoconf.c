@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.36 92/12/20$  *  *	@(#)autoconf.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.36 92/12/20$  *  *	@(#)autoconf.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1122,7 +1122,11 @@ name|find_busslaves
 argument_list|(
 name|hc
 argument_list|,
+literal|0
+argument_list|,
 name|MAXSLAVES
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1137,15 +1141,36 @@ argument_list|,
 literal|"scsi"
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|SCSI_REVPRI
+comment|/* 		 * Later releases of the HP boot ROM start searching for 		 * boot devices starting with slave 6 and working down. 		 * This is apparently the order in which priority is given 		 * to slaves on the host adaptor. 		 */
 name|find_busslaves
 argument_list|(
 name|hc
 argument_list|,
 name|MAXSLAVES
 operator|-
-literal|1
+literal|2
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|find_busslaves
+argument_list|(
+name|hc
+argument_list|,
+literal|0
+argument_list|,
+name|MAXSLAVES
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1158,7 +1183,9 @@ name|find_busslaves
 argument_list|(
 name|hc
 argument_list|,
-name|maxslaves
+name|startslave
+argument_list|,
+name|endslave
 argument_list|)
 specifier|register
 expr|struct
@@ -1170,7 +1197,9 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|maxslaves
+name|startslave
+decl_stmt|,
+name|endslave
 decl_stmt|;
 end_decl_stmt
 
@@ -1203,6 +1232,20 @@ decl_stmt|;
 name|int
 name|rescan
 decl_stmt|;
+define|#
+directive|define
+name|NEXTSLAVE
+parameter_list|(
+name|s
+parameter_list|)
+value|(startslave< endslave ? (s)++ : (s)--)
+define|#
+directive|define
+name|LASTSLAVE
+parameter_list|(
+name|s
+parameter_list|)
+value|(startslave< endslave ? (s)-- : (s)++)
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1227,18 +1270,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|NEXTSLAVE
+argument_list|(
+name|endslave
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|s
 operator|=
-literal|0
+name|startslave
 init|;
 name|s
-operator|<
-name|maxslaves
+operator|!=
+name|endslave
 condition|;
+name|NEXTSLAVE
+argument_list|(
 name|s
-operator|++
+argument_list|)
 control|)
 block|{
 name|rescan
@@ -1741,8 +1791,10 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+name|LASTSLAVE
+argument_list|(
 name|s
-operator|--
+argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
@@ -1777,6 +1829,12 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+undef|#
+directive|undef
+name|NEXTSLAVE
+undef|#
+directive|undef
+name|LASTSLAVE
 block|}
 end_block
 
