@@ -346,6 +346,8 @@ define|#
 directive|define
 name|PFS_PROCDIR
 parameter_list|(
+name|flags
+parameter_list|,
 name|uid
 parameter_list|,
 name|gid
@@ -355,7 +357,7 @@ parameter_list|,
 name|nodes
 parameter_list|)
 define|\
-value|PFS_NODE("", pfstype_procdir, 0, uid, gid, mode, nodes)
+value|PFS_NODE("", pfstype_procdir, flags, 0, uid, gid, mode, nodes)
 end_define
 
 begin_define
