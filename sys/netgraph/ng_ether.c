@@ -163,6 +163,10 @@ name|u_char
 name|promisc
 decl_stmt|;
 comment|/* promiscuous mode enabled */
+name|u_long
+name|hwassist
+decl_stmt|;
+comment|/* hardware checksum capabilities */
 block|}
 struct|;
 end_struct
@@ -1140,6 +1144,14 @@ name|autoSrcAddr
 operator|=
 literal|1
 expr_stmt|;
+name|priv
+operator|->
+name|hwassist
+operator|=
+name|ifp
+operator|->
+name|if_hwassist
+expr_stmt|;
 comment|/* Try to give the node the same name as the interface */
 if|if
 condition|(
@@ -1704,6 +1716,24 @@ operator|(
 name|EISCONN
 operator|)
 return|;
+comment|/* Disable hardware checksums while 'upper' hook is connected */
+if|if
+condition|(
+name|hookptr
+operator|==
+operator|&
+name|priv
+operator|->
+name|upper
+condition|)
+name|priv
+operator|->
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+literal|0
+expr_stmt|;
 comment|/* OK */
 operator|*
 name|hookptr
@@ -2777,12 +2807,25 @@ name|priv
 operator|->
 name|upper
 condition|)
+block|{
 name|priv
 operator|->
 name|upper
 operator|=
 name|NULL
 expr_stmt|;
+name|priv
+operator|->
+name|ifp
+operator|->
+name|if_hwassist
+operator|=
+name|priv
+operator|->
+name|hwassist
+expr_stmt|;
+comment|/* restore h/w csum */
+block|}
 elseif|else
 if|if
 condition|(
