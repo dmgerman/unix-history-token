@@ -7321,6 +7321,10 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+name|vp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * Do argument checking. Must be a regular file in, stream 	 * type and connected socket out, positive offset. 	 */
 if|if
 condition|(
@@ -7398,6 +7402,11 @@ operator|)
 name|fp
 operator|->
 name|f_data
+expr_stmt|;
+name|vref
+argument_list|(
+name|vp
+argument_list|)
 expr_stmt|;
 name|obj
 operator|=
@@ -8515,6 +8524,15 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vp
+condition|)
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error

@@ -203,6 +203,11 @@ name|cred
 operator|,
 name|int
 name|flags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -232,6 +237,11 @@ name|cred
 operator|,
 name|int
 name|flags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1398,6 +1408,8 @@ parameter_list|,
 name|cred
 parameter_list|,
 name|flags
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|file
@@ -1413,6 +1425,11 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|flags
@@ -2991,6 +3008,8 @@ parameter_list|,
 name|cred
 parameter_list|,
 name|flags
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|file
@@ -3006,6 +3025,11 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|flags

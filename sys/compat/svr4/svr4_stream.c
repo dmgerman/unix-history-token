@@ -6398,14 +6398,7 @@ condition|(
 operator|(
 name|error
 operator|=
-call|(
-modifier|*
-name|fp
-operator|->
-name|f_ops
-operator|->
 name|fo_ioctl
-call|)
 argument_list|(
 name|fp
 argument_list|,

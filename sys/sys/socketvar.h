@@ -889,6 +889,11 @@ name|cred
 operator|,
 name|int
 name|flags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
@@ -917,6 +922,11 @@ name|cred
 operator|,
 name|int
 name|flags
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
