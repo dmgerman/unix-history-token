@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	5.9 (Berkeley) %G%"
+literal|"@(#)clock.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,7 @@ comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tick
 parameter_list|()
