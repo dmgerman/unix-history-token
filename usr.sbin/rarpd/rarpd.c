@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -dfsv ] [-t directory] [ hostname ]  *		rarpd [ -dfsv ] [-t directory] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [-dfsv] [-t directory] [hostname]  *		rarpd [-dfsv] [-t directory] interface [hostname]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -700,7 +700,6 @@ operator|!=
 operator|-
 literal|1
 condition|)
-block|{
 switch|switch
 condition|(
 name|op
@@ -755,14 +754,28 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 name|ifname
 operator|=
+operator|(
+name|aflag
+operator|==
+literal|0
+operator|)
+condition|?
 name|argv
 index|[
-name|optind
-operator|++
+literal|0
 index|]
+else|:
+name|NULL
 expr_stmt|;
 name|hostname
 operator|=
@@ -770,10 +783,13 @@ name|ifname
 condition|?
 name|argv
 index|[
-name|optind
+literal|1
 index|]
 else|:
-name|NULL
+name|argv
+index|[
+literal|0
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -795,16 +811,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|aflag
-condition|)
-name|init
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-else|else
 name|init
 argument_list|(
 name|ifname
@@ -1450,7 +1456,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [-adfsv] [-t directory] [interface]\n"
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: rarpd -a [-dfsv] [-t directory]"
+argument_list|,
+literal|"       rarpd [-dfsv] [-t directory] interface"
 argument_list|)
 expr_stmt|;
 name|exit
