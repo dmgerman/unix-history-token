@@ -105,6 +105,16 @@ directive|include
 file|<termios.h>
 end_include
 
+begin_comment
+comment|/* Hack for rsaref package add, which displays interactive license.  * Used by package.c  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|_interactiveHack
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -2386,6 +2396,10 @@ block|{
 name|dialog_clear
 argument_list|()
 expr_stmt|;
+name|_interactiveHack
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2412,6 +2426,10 @@ expr_stmt|;
 block|}
 name|dialog_clear
 argument_list|()
+expr_stmt|;
+name|_interactiveHack
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}
