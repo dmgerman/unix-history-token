@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)bmap.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)bmap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -187,7 +187,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bn ovf %D\n"
+literal|"bn ovf %ld\n"
 argument_list|,
 name|bn
 argument_list|)
@@ -222,7 +222,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bn void %D\n"
+literal|"bn void %ld\n"
 argument_list|,
 name|bn
 argument_list|)
@@ -323,7 +323,7 @@ name|i_error
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bn %D: read error\n"
+literal|"bn %ld: read error\n"
 argument_list|,
 name|io
 operator|->
@@ -400,7 +400,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bn void %D\n"
+literal|"bn void %ld\n"
 argument_list|,
 name|bn
 argument_list|)
