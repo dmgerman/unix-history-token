@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: exc.c,v 1.47 2002/01/09 18:51:43 ca Exp $"
+literal|"@(#)$Id: exc.c,v 1.47.2.1 2003/12/05 22:44:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1686,6 +1686,7 @@ end_comment
 
 begin_function
 name|void
+name|SM_DEAD_D
 name|sm_exc_raise_x
 parameter_list|(
 name|exc
@@ -1789,6 +1790,7 @@ end_comment
 
 begin_function
 name|void
+name|SM_DEAD_D
 if|#
 directive|if
 name|SM_VA_STD

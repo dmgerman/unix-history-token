@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.64.2.10 2003/01/23 22:34:24 ca Exp $"
+literal|"@(#)$Id: main.c,v 8.64.2.13 2003/10/20 22:27:13 ca Exp $"
 argument_list|)
 end_macro
 
@@ -246,7 +246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  default values for some variables. **	Most of these can be changed with the functions below. */
+comment|/* **  Default values for some variables. **	Most of these can be changed with the functions below. */
 end_comment
 
 begin_decl_stmt
@@ -293,13 +293,18 @@ name|_FFR_SMFI_OPENSOCKET
 end_if
 
 begin_comment
-comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **		able to start up ** **	Parameters: **		None. ** **	Return: **		MI_SUCCESS/MI_FAILURE */
+comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **		able to start up ** **	Parameters: **		rmsocket -- if true, instructs libmilter to attempt **			to remove the socket before creating it; **			only applies for "local:" or "unix:" sockets ** **	Return: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function
 name|int
 name|smfi_opensocket
-parameter_list|()
+parameter_list|(
+name|rmsocket
+parameter_list|)
+name|bool
+name|rmsocket
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -322,6 +327,8 @@ argument_list|,
 name|backlog
 argument_list|,
 name|dbg
+argument_list|,
+name|rmsocket
 argument_list|,
 name|smfi
 argument_list|)

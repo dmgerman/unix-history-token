@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.31 2003/07/01 17:30:01 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.34 2004/01/14 19:13:46 ca Exp $"
 argument_list|)
 end_macro
 
@@ -5287,6 +5287,9 @@ case|:
 case|case
 name|CMDRSET
 case|:
+case|case
+name|CMDERROR
+case|:
 comment|/* process normally */
 break|break;
 case|case
@@ -9216,6 +9219,56 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|BadRcptThrottle
+operator|>
+literal|0
+operator|&&
+name|n_badrcpts
+operator|>=
+name|BadRcptThrottle
+condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+operator|&&
+name|n_badrcpts
+operator|==
+name|BadRcptThrottle
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"%s: Possible SMTP RCPT flood, throttling."
+argument_list|,
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
+comment|/* To avoid duplicated message */
+name|n_badrcpts
+operator|++
+expr_stmt|;
+block|}
+comment|/* 				**  Don't use exponential backoff for now. 				**  Some servers will open more connections 				**  and actually overload the receiver even 				**  more. 				*/
+operator|(
+name|void
+operator|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|smtp
 operator|.
@@ -9371,56 +9424,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|BadRcptThrottle
-operator|>
-literal|0
-operator|&&
-name|n_badrcpts
-operator|>=
-name|BadRcptThrottle
-condition|)
-block|{
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|5
-operator|&&
-name|n_badrcpts
-operator|==
-name|BadRcptThrottle
-condition|)
-block|{
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"%s: Possible SMTP RCPT flood, throttling."
-argument_list|,
-name|CurSmtpClient
-argument_list|)
-expr_stmt|;
-comment|/* To avoid duplicated message */
-name|n_badrcpts
-operator|++
-expr_stmt|;
-block|}
-comment|/* 				**  Don't use exponential backoff for now. 				**  Some servers will open more connections 				**  and actually overload the receiver even 				**  more. 				*/
-operator|(
-name|void
-operator|)
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|Errors
@@ -12471,7 +12474,18 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|aborting
+operator|||
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+operator|)
 operator|&&
 if|#
 directive|if
