@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.22 1995/05/30 08:09:44 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.25 1995/07/09 14:29:46 davidg Exp $  */
 end_comment
 
 begin_include
@@ -158,6 +158,20 @@ include|#
 directive|include
 file|<sys/socketvar.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|rsvp_on
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ip_rsvp_on
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1053,12 +1067,10 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is          * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
+comment|/* greedy RSVP, snatches any PATH packet of the RSVP protocol and no          * matter if it is destined to another node, or whether it is           * a multicast one, RSVP wants it! and prevents it from being forwarded          * anywhere else. Also checks if the rsvp daemon is running before 	 * grabbing the packet.          */
 if|if
 condition|(
-name|ip_rsvpd
-operator|!=
-name|NULL
+name|rsvp_on
 operator|&&
 name|ip
 operator|->
@@ -1421,7 +1433,7 @@ name|next
 goto|;
 name|ours
 label|:
-comment|/* 		 * If packet came to us we count it... 		 * This way we count all incoming packets which has 		 * not been forwarded... 		 * Do not convert ip_len to host byte order when 		 * counting,ppl already made it for us before.. 		 */
+comment|/* 		 * If packet came to us we count it... 		 * This way we count all incoming packets which has  		 * not been forwarded... 		 * Do not convert ip_len to host byte order when  		 * counting,ppl already made it for us before.. 		 */
 if|if
 condition|(
 name|ip_acct_cnt_ptr
@@ -5540,6 +5552,21 @@ name|ip_rsvpd
 operator|=
 name|so
 expr_stmt|;
+comment|/* 	 * This may seem silly, but we need to be sure we don't over-increment 	 * the RSVP counter, in case something slips up. 	 */
+if|if
+condition|(
+operator|!
+name|ip_rsvp_on
+condition|)
+block|{
+name|ip_rsvp_on
+operator|=
+literal|1
+expr_stmt|;
+name|rsvp_on
+operator|++
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;
@@ -5557,6 +5584,20 @@ name|ip_rsvpd
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * This may seem silly, but we need to be sure we don't over-decrement 	 * the RSVP counter, in case something slips up. 	 */
+if|if
+condition|(
+name|ip_rsvp_on
+condition|)
+block|{
+name|ip_rsvp_on
+operator|=
+literal|0
+expr_stmt|;
+name|rsvp_on
+operator|--
+expr_stmt|;
+block|}
 return|return
 literal|0
 return|;

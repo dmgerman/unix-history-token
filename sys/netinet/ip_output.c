@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  * $Id: ip_output.c,v 1.19 1995/05/30 08:09:49 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94  * $Id: ip_output.c,v 1.23 1995/07/26 18:05:13 wollman Exp $  */
 end_comment
 
 begin_include
@@ -768,6 +768,28 @@ name|imo
 operator|->
 name|imo_multicast_ifp
 expr_stmt|;
+if|if
+condition|(
+name|imo
+operator|->
+name|imo_multicast_vif
+operator|!=
+operator|-
+literal|1
+condition|)
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|=
+name|ip_mcast_src
+argument_list|(
+name|imo
+operator|->
+name|imo_multicast_vif
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|ip
@@ -777,6 +799,24 @@ operator|=
 name|IP_DEFAULT_MULTICAST_TTL
 expr_stmt|;
 comment|/* 		 * Confirm that the outgoing interface supports multicast. 		 */
+if|if
+condition|(
+operator|(
+name|imo
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|imo
+operator|->
+name|imo_multicast_vif
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -802,6 +842,7 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 comment|/* 		 * If source address not specified yet, use address 		 * of outgoing interface. 		 */
 if|if
@@ -916,9 +957,8 @@ block|{
 comment|/* 				 * Check if rsvp daemon is running. If not, don't 				 * set ip_moptions. This ensures that the packet 				 * is multicast and not just sent down one link 				 * as prescribed by rsvpd. 				 */
 if|if
 condition|(
-name|ip_rsvpd
-operator|==
-name|NULL
+operator|!
+name|rsvp_on
 condition|)
 name|imo
 operator|=
@@ -3589,7 +3629,8 @@ name|imo
 operator|->
 name|imo_multicast_vif
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 name|imo
 operator|->
@@ -3673,6 +3714,13 @@ name|legal_vif_num
 argument_list|(
 name|i
 argument_list|)
+operator|&&
+operator|(
+name|i
+operator|!=
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 name|error
@@ -3958,11 +4006,19 @@ operator|==
 name|INADDR_ANY
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
 name|ro
-operator|.
-name|ro_rt
-operator|=
-name|NULL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ro
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|dst
 operator|=
@@ -4475,7 +4531,8 @@ name|imo
 operator|->
 name|imo_multicast_vif
 operator|==
-literal|0
+operator|-
+literal|1
 operator|&&
 name|imo
 operator|->
@@ -4620,7 +4677,8 @@ operator|*
 argument_list|)
 operator|)
 operator|=
-literal|7890
+operator|-
+literal|1
 expr_stmt|;
 operator|(
 operator|*
