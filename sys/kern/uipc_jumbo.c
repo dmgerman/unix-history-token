@@ -336,7 +336,7 @@ expr_stmt|;
 comment|/* grab some kernel virtual address space */
 name|jumbo_basekva
 operator|=
-name|kmem_alloc_pageable
+name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
