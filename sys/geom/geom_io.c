@@ -968,6 +968,9 @@ literal|0
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"setattr on %s mode (%d,%d,%d)\n"
@@ -991,6 +994,8 @@ operator|->
 name|ace
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|g_io_deliver
 argument_list|(
 name|bp
