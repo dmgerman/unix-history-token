@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lastcomm.c	4.6 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,7 +57,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stat.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
