@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_run.c,v 1.4 1996/12/30 15:14:29 peter Exp $"
+literal|"$Id: svc_run.c,v 1.7 1997/02/22 15:01:32 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,7 +243,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-comment|/* XXX What the hell?? what if fds == NULL?? */
+comment|/* if fds == NULL, select() can't return a result */
 name|svc_getreqset2
 argument_list|(
 name|fds
