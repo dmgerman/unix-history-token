@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.8 1997/03/24 06:15:07 imp Exp $ */
+comment|/*	$Id: msgcat.c,v 1.9 1997/03/25 05:36:37 imp Exp $ */
 end_comment
 
 begin_comment
@@ -224,11 +224,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|nlspath
-decl_stmt|,
-modifier|*
-name|tmppath
-init|=
-name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -318,7 +313,6 @@ name|lang
 operator|=
 literal|"C"
 expr_stmt|;
-comment|/* XXX Should really be issetguid(), but we don't have that */
 if|if
 condition|(
 operator|(
@@ -336,24 +330,13 @@ operator|)
 operator|==
 name|NULL
 operator|||
-name|getuid
-argument_list|()
-operator|!=
-name|geteuid
-argument_list|()
-operator|||
-name|getgid
-argument_list|()
-operator|!=
-name|getegid
+name|issetugid
 argument_list|()
 condition|)
-block|{
 name|nlspath
 operator|=
 literal|"/usr/share/nls/%L/%N.cat:/usr/share/nls/%N/%L:/usr/local/share/nls/%L/%N.cat:/usr/local/share/nls/%N/%L"
 expr_stmt|;
-block|}
 name|len
 operator|=
 name|strlen
@@ -574,15 +557,6 @@ block|}
 name|free
 argument_list|(
 name|base
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tmppath
-condition|)
-name|free
-argument_list|(
-name|tmppath
 argument_list|)
 expr_stmt|;
 if|if
@@ -1299,7 +1273,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); return(0);}
+value|{fprintf(stderr, "%s: corrupt file.\n", ERRNAME); free(cat); return(0);}
 end_define
 
 begin_define
@@ -1307,7 +1281,7 @@ define|#
 directive|define
 name|NOSPACE
 parameter_list|()
-value|{fprintf(stderr, "%s: no more memory.\n", ERRNAME); return(NLERR);}
+value|{fprintf(stderr, "%s: no more memory.\n", ERRNAME); free(cat); return(NLERR);}
 end_define
 
 begin_function
@@ -1393,12 +1367,20 @@ operator|<
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|cat
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|fcntl
 argument_list|(
 name|cat
@@ -1462,6 +1444,11 @@ operator|!=
 name|MCMajorVer
 condition|)
 block|{
+name|free
+argument_list|(
+name|cat
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1494,6 +1481,11 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|cat
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1591,9 +1583,18 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|free
+argument_list|(
+name|cat
+operator|->
+name|sets
+argument_list|)
+expr_stmt|;
 name|CORRUPT
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* read in the set header */
 name|set
 operator|=
@@ -1626,9 +1627,18 @@ operator|*
 name|set
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|cat
+operator|->
+name|sets
+argument_list|)
+expr_stmt|;
 name|CORRUPT
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* if it's invalid, skip over it (and backup 'i') */
 if|if
 condition|(
@@ -1676,6 +1686,13 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|cat
+operator|->
+name|sets
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -1843,11 +1860,22 @@ name|set
 operator|->
 name|dataLen
 condition|)
+block|{
+name|free
+argument_list|(
+name|set
+operator|->
+name|data
+operator|.
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* Get the messages */
 if|if
 condition|(
@@ -1869,11 +1897,22 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|free
+argument_list|(
+name|set
+operator|->
+name|data
+operator|.
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1902,12 +1941,23 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|set
+operator|->
+name|data
+operator|.
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 for|for
 control|(
 name|i
@@ -1957,11 +2007,31 @@ operator|*
 name|msg
 argument_list|)
 condition|)
+block|{
+name|free
+argument_list|(
+name|set
+operator|->
+name|u
+operator|.
+name|msgs
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|set
+operator|->
+name|data
+operator|.
+name|str
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|msg
