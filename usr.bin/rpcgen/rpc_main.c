@@ -32,7 +32,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rpc_main.c,v 1.6 1997/08/06 06:47:40 charnier Exp $"
+literal|"$Id: rpc_main.c,v 1.7 1998/01/09 06:32:54 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,11 +759,19 @@ begin_comment
 comment|/* errors */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -839,11 +847,19 @@ begin_comment
 comment|/* Support for MT */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -960,11 +976,19 @@ begin_comment
 comment|/* generate all files */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -1545,9 +1569,17 @@ begin_function
 specifier|static
 name|char
 modifier|*
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|extendfile
 parameter_list|(
 name|path
@@ -1585,9 +1617,17 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|char
 modifier|*
 name|file
@@ -3464,9 +3504,17 @@ argument_list|,
 literal|"#include<memory.h>\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 if|if
 condition|(
 name|tirpcflag
@@ -4692,9 +4740,17 @@ literal|"\nCPPFLAGS += -D_REENTRANT\nCFLAGS += -g \nLDLIBS += -lnsl -lthread\n"
 argument_list|)
 expr_stmt|;
 else|else
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -4769,9 +4825,17 @@ argument_list|,
 literal|"$(CLIENT) : $(OBJECTS_CLNT) \n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -4797,9 +4861,17 @@ argument_list|,
 literal|"$(SERVER) : $(OBJECTS_SVC) \n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|f_print
 argument_list|(
 name|fout
@@ -5634,9 +5706,17 @@ case|case
 literal|'b'
 case|:
 comment|/* 					 *  Turn TIRPC flag off for 					 *  generating backward compatible 					 *  code 					 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|tirpcflag
 operator|=
 literal|1
@@ -6084,9 +6164,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* set pmflag only in tirpcmode */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|inetdflag
 operator|=
 literal|1
