@@ -141,6 +141,10 @@ argument_list|,
 name|EINTR
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|PS_SLEEP_WAIT
+case|:
 name|thread
 operator|->
 name|interrupted
@@ -150,9 +154,6 @@ expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
 name|PS_SIGTHREAD
-case|:
-case|case
-name|PS_SLEEP_WAIT
 case|:
 case|case
 name|PS_WAIT_WAIT
