@@ -102,6 +102,35 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98_device.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/icu.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -119,6 +148,15 @@ include|#
 directive|include
 file|<i386/isa/icu.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_include
 include|#
@@ -2139,6 +2177,7 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+comment|/* BUCHI */
 name|dp
 operator|=
 name|find_driver
@@ -2214,6 +2253,13 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 	 *	If an interrupt mask has been given, then check it 	 *	against the slot interrupt (if one has been allocated). 	 */
+comment|/* BUCHI */
+if|#
+directive|if
+literal|0
+block|printf("drvp->irqmask=0x%x, dp->imask=0x%x, sp->irq=0x%x, sp->ctrl->irqs=0x%x\n", drvp->irqmask, dp->imask, sp->irq, sp->ctrl->irqs); printf("name=%s, unit=%d, mem=0x%x, memsz=%d, iobase=0x%x, irqmask=0x%x\n", drvp->name, drvp->unit, drvp->mem, drvp->memsize, drvp->iobase, drvp->irqmask);
+endif|#
+directive|endif
 if|if
 condition|(
 name|drvp

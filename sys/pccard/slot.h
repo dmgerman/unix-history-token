@@ -262,11 +262,23 @@ modifier|*
 name|next
 decl_stmt|;
 comment|/* List of drivers */
+ifdef|#
+directive|ifdef
+name|PC98
+name|struct
+name|pc98_device
+name|isahd
+decl_stmt|;
+comment|/* Device details */
+else|#
+directive|else
 name|struct
 name|isa_device
 name|isahd
 decl_stmt|;
 comment|/* Device details */
+endif|#
+directive|endif
 name|struct
 name|pccard_drv
 modifier|*

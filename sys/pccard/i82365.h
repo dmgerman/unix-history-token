@@ -101,6 +101,24 @@ begin_comment
 comment|/* IBM KING PCMCIA Controller */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCIC_PC98
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	Address of the controllers. Each controller can manage  *	two PCMCIA slots. Up to 8 slots are supported in total.  *	The PCIC controller is accessed via an index port and a  *	data port. The index port has the 8 bit address of the  *	register accessed via the data port. How I long for  *	real memory mapped I/O!  *	The top two bits of the index address are used to  *	identify the port number, and the lower 6 bits  *	select one of the 64 possible data registers.  */
 end_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.2 (Berkeley) 7/10/94  * $Id: disklabel.h,v 1.20 1996/03/11 02:06:30 hsu Exp $  */
+comment|/*  * Copyright (c) 1987, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)disklabel.h	8.2 (Berkeley) 7/10/94  * $Id: disklabel.h,v 1.21 1996/05/03 05:38:34 asami Exp $  */
 end_comment
 
 begin_ifndef
@@ -550,6 +550,16 @@ value|11
 comment|/* concatenated disk */
 ifdef|#
 directive|ifdef
+name|PC98
+define|#
+directive|define
+name|DSTYPE_SEC256
+value|0x80
+comment|/* physical sector size=256*/
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|DKTYPENAMES
 specifier|static
 name|char
@@ -1013,6 +1023,162 @@ begin_comment
 comment|/* DOS partition table -- located in boot block */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DOSBBSECTOR
+value|0
+end_define
+
+begin_comment
+comment|/* DOS boot block relative sector number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSLABELSECTOR
+value|1
+end_define
+
+begin_comment
+comment|/* 0: 256b/s, 1: 512b/s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPARTOFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDOSPART
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_386BSD
+value|0x94
+end_define
+
+begin_comment
+comment|/* 386BSD partition type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBR_PTYPE_FreeBSD
+value|0x94
+end_define
+
+begin_comment
+comment|/* FreeBSD partition type */
+end_comment
+
+begin_struct
+struct|struct
+name|dos_partition
+block|{
+name|unsigned
+name|char
+name|dp_mid
+decl_stmt|;
+define|#
+directive|define
+name|DOSMID_386BSD
+value|(0x14|0x80)
+comment|/* 386bsd|bootable */
+name|unsigned
+name|char
+name|dp_sid
+decl_stmt|;
+define|#
+directive|define
+name|DOSSID_386BSD
+value|(0x44|0x80)
+comment|/* 386bsd|active */
+name|unsigned
+name|char
+name|dp_dum1
+decl_stmt|;
+name|unsigned
+name|char
+name|dp_dum2
+decl_stmt|;
+name|unsigned
+name|char
+name|dp_ipl_sct
+decl_stmt|;
+name|unsigned
+name|char
+name|dp_ipl_head
+decl_stmt|;
+name|unsigned
+name|short
+name|dp_ipl_cyl
+decl_stmt|;
+name|unsigned
+name|char
+name|dp_ssect
+decl_stmt|;
+comment|/* starting sector */
+name|unsigned
+name|char
+name|dp_shd
+decl_stmt|;
+comment|/* starting head */
+name|unsigned
+name|short
+name|dp_scyl
+decl_stmt|;
+comment|/* starting cylinder */
+name|unsigned
+name|char
+name|dp_esect
+decl_stmt|;
+comment|/* end sector */
+name|unsigned
+name|char
+name|dp_ehd
+decl_stmt|;
+comment|/* end head */
+name|unsigned
+name|short
+name|dp_ecyl
+decl_stmt|;
+comment|/* end cylinder */
+name|unsigned
+name|char
+name|dp_name
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* IBMPC */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1106,6 +1272,11 @@ comment|/* partition size in sectors */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

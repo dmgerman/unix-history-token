@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.29 1995/12/03 16:42:02 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.30 1995/12/07 12:47:20 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -2741,6 +2741,26 @@ name|lbn
 operator|+
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 			 * 1024byte/sector support 			 */
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_BytesPerSec
+operator|==
+literal|1024
+condition|)
+name|vp
+operator|->
+name|v_flag
+operator||=
+literal|0x10000
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vp
@@ -3279,6 +3299,26 @@ name|dep
 operator|->
 name|de_FileSize
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 	 * 1024byte/sector support 	 */
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_BytesPerSec
+operator|==
+literal|1024
+condition|)
+name|thisvp
+operator|->
+name|v_flag
+operator||=
+literal|0x10000
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If we write beyond the end of the file, extend it to its ultimate 	 * size ahead of the time to hopefully get a contiguous area. 	 */
 if|if
 condition|(

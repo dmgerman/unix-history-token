@@ -168,6 +168,24 @@ name|SNDCARD_TRXPRO_MPU
 value|18
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SNDCARD_PCM86
+value|19
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/***********************************  * IOCTL Commands for /dev/sequencer  */
 end_comment

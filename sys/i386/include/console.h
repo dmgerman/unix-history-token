@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.19 1995/05/30 08:00:28 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: console.h,v 1.20 1996/01/30 22:54:15 mpp Exp $  */
 end_comment
 
 begin_ifndef
@@ -314,6 +314,32 @@ name|CONS_GETVERS
 value|_IOR('c', 74, int)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ADJUST_CLOCK
+value|_IO('t',100)
+end_define
+
+begin_comment
+comment|/* for 98note resume */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* for PC98 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -537,6 +563,24 @@ end_define
 begin_comment
 comment|/* video graphics adapter    	*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KD_PC98
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1376,6 +1420,72 @@ begin_comment
 comment|/* backtab (ESC [ Z)		*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KB_DATA
+value|0x41
+end_define
+
+begin_comment
+comment|/* kbd data port 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_STAT
+value|0x43
+end_define
+
+begin_comment
+comment|/* kbd status port 		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_BUF_FULL
+value|0x02
+end_define
+
+begin_comment
+comment|/* kbd has char pending 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_READY
+value|0x02
+end_define
+
+begin_comment
+comment|/* kbd ready for command 	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KB_WRITE
+value|0x43
+end_define
+
+begin_comment
+comment|/* kbd write command 		*/
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -1519,9 +1629,47 @@ begin_comment
 comment|/* kbd reset 			*/
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* video mode definitions */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|M_PC98_80x25
+value|98
+end_define
+
+begin_comment
+comment|/* PC98 80x25 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_PC98_80x30
+value|99
+end_define
+
+begin_comment
+comment|/* PC98 80x30 */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1929,6 +2077,36 @@ begin_comment
 comment|/* monochrome adapter mode */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SW_PC98_80x25
+value|_IO('S', M_PC98_80x25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_PC98_80x30
+value|_IO('S', M_PC98_80x30)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -2180,6 +2358,11 @@ directive|define
 name|SW_VGA_CG320
 value|_IO('S', M_VGA13)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

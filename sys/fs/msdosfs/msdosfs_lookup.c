@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_lookup.c,v 1.5 1995/11/07 14:06:43 phk Exp $ */
+comment|/*	$Id: msdosfs_lookup.c,v 1.6 1995/12/03 16:42:01 bde Exp $ */
 end_comment
 
 begin_comment
@@ -518,6 +518,26 @@ name|dp
 operator|->
 name|de_Name
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 			 * 1024 byte/sector support 			 */
+if|if
+condition|(
+name|pmp
+operator|->
+name|pm_BytesPerSec
+operator|==
+literal|1024
+condition|)
+name|vdp
+operator|->
+name|v_flag
+operator||=
+literal|0x10000
 expr_stmt|;
 endif|#
 directive|endif

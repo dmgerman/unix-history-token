@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.91 1996/05/24 05:21:58 dyson Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.92 1996/05/31 00:41:37 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -4871,6 +4871,30 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* 		 * 1024byte/sector support 		 */
+define|#
+directive|define
+name|B_XXX2
+value|0x8000000
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+literal|0x10000
+condition|)
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_XXX2
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|bp

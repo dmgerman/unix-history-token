@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.7 1996/06/12 19:24:03 gpalmer Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.8 1996/06/12 20:07:09 nate Exp $ */
 end_comment
 
 begin_comment
@@ -145,11 +145,33 @@ directive|include
 file|<machine/spl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/pc98/pc98_device.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/isa_device.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
