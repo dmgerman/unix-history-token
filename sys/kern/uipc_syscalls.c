@@ -1409,7 +1409,7 @@ literal|"accept1: so not SQ_COMP"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*          * Before changing the flags on the socket, we have to bump the 	 * reference count.  Otherwise, if the protocol calls sofree(),          * the socket will be released due to a zero refcount.          */
+comment|/* 	 * Before changing the flags on the socket, we have to bump the 	 * reference count.  Otherwise, if the protocol calls sofree(), 	 * the socket will be released due to a zero refcount. 	 */
 name|SOCK_LOCK
 argument_list|(
 name|so
