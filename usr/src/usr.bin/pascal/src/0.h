@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.11 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.12 %G%"; */
 end_comment
 
 begin_define
@@ -848,28 +848,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*      *	magic values for forvar -> value[ NL_FORV ]      *	value[ NL_FORV ] stores in its low byte      *	the nl_flags byte of the loop variable.      *	the top byte is another bunch of flags      *	FORBOUND 	means it is a loop variable      *	LOOPVAR		means it is a loop variable but it is not yet allocated      *	TEMPBOUND	means it is a loop variable and it is in a temporary.      */
+comment|/*  * used to mark value[ NL_FORV ] for loop variables  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LOOPVAR
-value|00400
-end_define
-
-begin_define
-define|#
-directive|define
-name|TEMPBOUND
-value|01000
-end_define
-
-begin_define
-define|#
-directive|define
-name|FORBOUND
-value|( LOOPVAR | TEMPBOUND )
+name|FORVAR
+value|1
 end_define
 
 begin_escape
@@ -940,13 +926,6 @@ define|#
 directive|define
 name|NL_FORV
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NL_SOFFS
-value|4
 end_define
 
 begin_define
