@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crt0.c	5.1 (Berkeley) %G%"
+literal|"@(#)crt0.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,13 @@ operator|*
 operator|*
 operator|)
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|fd
 decl_stmt|;
 end_decl_stmt
 
@@ -130,6 +137,10 @@ modifier|*
 modifier|*
 name|argv
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -197,6 +208,41 @@ expr_stmt|;
 asm|asm("eprol:");
 ifdef|#
 directive|ifdef
+name|paranoid
+comment|/* 	 * The standard I/O library assumes that file descriptors 0, 1, and 2 	 * are open. If one of these descriptors is closed prior to the start  	 * of the process, I/O gets very confused. To avoid this problem, we 	 * insure that the first three file descriptors are open before calling 	 * main(). Normally this is undefined, as it adds two unnecessary 	 * system calls. 	 */
+do|do
+block|{
+name|fd
+operator|=
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|fd
+operator|>=
+literal|0
+operator|&&
+name|fd
+operator|<
+literal|3
+condition|)
+do|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|paranoid
+ifdef|#
+directive|ifdef
 name|MCRT0
 name|monstartup
 argument_list|(
@@ -210,6 +256,10 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|MCRT0
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|exit
 argument_list|(
 name|main
