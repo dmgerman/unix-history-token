@@ -7,6 +7,16 @@ begin_comment
 comment|/* Figure out where the longjmp will land.  We expect that we have just entered    longjmp and haven't yet setup the stack frame, so the args are still in the    argument regs.  A0_REGNUM points at the jmp_buf structure from which we    extract the pc (JB_PC) that we will land at.  The pc is copied into ADDR.    This routine returns true on success */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -70,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|PTRACE_ARG3_TYPE
-value|char*
+value|caddr_t
 end_define
 
 begin_comment
