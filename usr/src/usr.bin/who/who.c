@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)who.c	5.4 (Berkeley) %G%"
+literal|"@(#)who.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -312,6 +312,20 @@ name|tp
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+operator|!
+name|utmp
+operator|.
+name|ut_name
+index|[
+literal|0
+index|]
+condition|)
+name|guess
+argument_list|()
+expr_stmt|;
+else|else
 name|putline
 argument_list|()
 expr_stmt|;
