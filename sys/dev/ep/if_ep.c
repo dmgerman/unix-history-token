@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.41 1996/02/13 15:55:33 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.42 1996/02/26 01:05:34 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -1857,15 +1857,6 @@ decl_stmt|;
 name|int
 name|irq
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"ep%d: "
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|ep_connectors
@@ -1949,6 +1940,8 @@ name|BASE
 operator|+
 name|EP_W0_ADDRESS_CFG
 argument_list|)
+operator|>>
+name|ACF_CONNECTOR_BITS
 expr_stmt|;
 comment|/*      * Write IRQ value to board      */
 name|irq
@@ -1979,13 +1972,6 @@ return|return
 literal|0
 return|;
 block|}
-name|printf
-argument_list|(
-literal|" irq %d\n"
-argument_list|,
-name|irq
-argument_list|)
-expr_stmt|;
 name|GO_WINDOW
 argument_list|(
 literal|0
@@ -2156,8 +2142,6 @@ index|[
 name|sc
 operator|->
 name|ep_connector
-operator|>>
-name|ACF_CONNECTOR_BITS
 index|]
 argument_list|)
 expr_stmt|;
