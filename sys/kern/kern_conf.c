@@ -511,6 +511,8 @@ argument_list|,
 name|M_USE_RESERVE
 operator||
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}

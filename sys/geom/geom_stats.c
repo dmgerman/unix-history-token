@@ -218,6 +218,8 @@ expr|*
 name|spp
 argument_list|,
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -239,6 +241,8 @@ argument_list|(
 name|PAGE_SIZE
 argument_list|,
 name|M_ZERO
+operator||
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|spp
