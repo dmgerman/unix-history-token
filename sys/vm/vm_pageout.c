@@ -415,13 +415,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|vm_swap_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|vm_max_launder

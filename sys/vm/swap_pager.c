@@ -206,21 +206,6 @@ begin_comment
 comment|/* pop out			*/
 end_comment
 
-begin_comment
-comment|/*  * vm_swap_size is in page-sized chunks now.  It was DEV_BSIZE'd chunks  * in the old system.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_swap_size
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of free swap blocks, in pages */
-end_comment
-
 begin_decl_stmt
 name|int
 name|swap_pager_full
@@ -340,35 +325,6 @@ specifier|static
 name|struct
 name|sx
 name|sw_alloc_sx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from vm_swap.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|vnode
-modifier|*
-name|swapdev_vp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|swdevt
-modifier|*
-name|swdevt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nswdev
 decl_stmt|;
 end_decl_stmt
 
@@ -643,12 +599,7 @@ end_comment
 begin_decl_stmt
 name|int
 name|dmmax
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
+decl_stmt|,
 name|dmmax_mask
 decl_stmt|;
 end_decl_stmt
