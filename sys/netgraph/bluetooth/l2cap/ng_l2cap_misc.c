@@ -644,7 +644,7 @@ comment|/* ng_l2cap_con_unref */
 end_comment
 
 begin_comment
-comment|/*  * Set auto disconnect timeout  * XXX FIXME: check return code from ng_timeout  */
+comment|/*  * Set auto disconnect timeout  * XXX FIXME: check return code from ng_callout  */
 end_comment
 
 begin_function
@@ -697,7 +697,7 @@ name|flags
 operator||=
 name|NG_L2CAP_CON_AUTO_DISCON_TIMO
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|con
@@ -790,7 +790,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ng_untimeout
+name|ng_uncallout
 argument_list|(
 operator|&
 name|con
@@ -1743,7 +1743,7 @@ comment|/* ng_l2cap_cmd_by_ident */
 end_comment
 
 begin_comment
-comment|/*  * Set LP timeout  * XXX FIXME: check return code from ng_timeout  */
+comment|/*  * Set LP timeout  * XXX FIXME: check return code from ng_callout  */
 end_comment
 
 begin_function
@@ -1796,7 +1796,7 @@ name|flags
 operator||=
 name|NG_L2CAP_CON_LP_TIMO
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|con
@@ -1884,7 +1884,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ng_untimeout
+name|ng_uncallout
 argument_list|(
 operator|&
 name|con
@@ -1925,7 +1925,7 @@ comment|/* ng_l2cap_lp_untimeout */
 end_comment
 
 begin_comment
-comment|/*  * Set L2CAP command timeout  * XXX FIXME: check return code from ng_timeout  */
+comment|/*  * Set L2CAP command timeout  * XXX FIXME: check return code from ng_callout  */
 end_comment
 
 begin_function
@@ -2000,7 +2000,7 @@ name|flags
 operator||=
 name|NG_L2CAP_CMD_PENDING
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|cmd
@@ -2089,7 +2089,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ng_untimeout
+name|ng_uncallout
 argument_list|(
 operator|&
 name|cmd

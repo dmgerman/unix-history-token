@@ -286,7 +286,7 @@ name|UNI
 parameter_list|,
 name|FIELD
 parameter_list|)
-value|do {						\ 	ng_untimeout(&FIELD.c, (UNI)->arg);					\     } while (0)
+value|do {						\ 	ng_uncallout(&FIELD.c, (UNI)->arg);					\     } while (0)
 end_define
 
 begin_define
@@ -316,7 +316,7 @@ name|DUE
 parameter_list|,
 name|FUNC
 parameter_list|)
-value|do {			\ 	_TIMER_STOP(UNI, FIELD);					\ 	ng_timeout(&FIELD.c, (UNI)->arg, NULL,				\ 	    hz * (DUE) / 1000, FUNC, (ARG), 0);				\     } while (0)
+value|do {			\ 	_TIMER_STOP(UNI, FIELD);					\ 	ng_callout(&FIELD.c, (UNI)->arg, NULL,				\ 	    hz * (DUE) / 1000, FUNC, (ARG), 0);				\     } while (0)
 end_define
 
 begin_define

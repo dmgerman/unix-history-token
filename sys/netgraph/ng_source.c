@@ -1288,7 +1288,7 @@ operator|.
 name|startTime
 argument_list|)
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|sc
@@ -1428,7 +1428,7 @@ operator|.
 name|startTime
 argument_list|)
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|sc
@@ -2330,7 +2330,7 @@ operator|&
 name|NG_SOURCE_ACTIVE
 condition|)
 block|{
-name|ng_untimeout
+name|ng_uncallout
 argument_list|(
 operator|&
 name|sc
@@ -2551,7 +2551,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 else|else
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|sc

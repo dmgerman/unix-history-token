@@ -292,7 +292,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|do {						\ 	ng_untimeout(&(S)->t_##T, (S)->aarg);				\     } while (0)
+value|do {						\ 	ng_uncallout(&(S)->t_##T, (S)->aarg);				\     } while (0)
 end_define
 
 begin_define
@@ -304,7 +304,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|do {					\ 	TIMER_STOP(S, T);						\ 	ng_timeout(&(S)->t_##T, (S)->aarg, NULL,			\ 	    hz * (S)->timer##T / 1000, T##_func, (S), 0);		\     } while (0)
+value|do {					\ 	TIMER_STOP(S, T);						\ 	ng_callout(&(S)->t_##T, (S)->aarg, NULL,			\ 	    hz * (S)->timer##T / 1000, T##_func, (S), 0);		\     } while (0)
 end_define
 
 begin_define

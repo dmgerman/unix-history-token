@@ -5529,7 +5529,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ng_untimeout
+name|ng_uncallout
 parameter_list|(
 name|struct
 name|callout
@@ -5544,7 +5544,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ng_timeout
+name|ng_callout
 parameter_list|(
 name|struct
 name|callout

@@ -814,7 +814,7 @@ name|downstream
 argument_list|)
 expr_stmt|;
 comment|/* Start keepalives */
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|sc
@@ -1760,7 +1760,7 @@ operator|==
 literal|0xffff
 condition|)
 comment|/* If it is the downstream hook, stop the timers */
-name|ng_untimeout
+name|ng_uncallout
 argument_list|(
 operator|&
 name|sc
@@ -2447,7 +2447,7 @@ argument_list|,
 name|NGM_LINK_IS_DOWN
 argument_list|)
 expr_stmt|;
-name|ng_timeout
+name|ng_callout
 argument_list|(
 operator|&
 name|sc

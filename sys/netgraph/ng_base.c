@@ -13215,7 +13215,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|ng_timeout_trapoline
+name|ng_callout_trapoline
 parameter_list|(
 name|void
 modifier|*
@@ -13239,7 +13239,7 @@ end_function
 
 begin_function
 name|int
-name|ng_timeout
+name|ng_callout
 parameter_list|(
 name|struct
 name|callout
@@ -13353,7 +13353,7 @@ argument_list|,
 name|ticks
 argument_list|,
 operator|&
-name|ng_timeout_trapoline
+name|ng_callout_trapoline
 argument_list|,
 name|item
 argument_list|)
@@ -13372,7 +13372,7 @@ end_comment
 
 begin_function
 name|int
-name|ng_untimeout
+name|ng_uncallout
 parameter_list|(
 name|struct
 name|callout
@@ -13449,7 +13449,7 @@ operator|(
 name|c_func
 operator|==
 operator|&
-name|ng_timeout_trapoline
+name|ng_callout_trapoline
 operator|)
 operator|&&
 operator|(
