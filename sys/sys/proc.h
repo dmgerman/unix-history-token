@@ -583,18 +583,12 @@ comment|/* (k) Critical section nest level. */
 define|#
 directive|define
 name|td_endzero
-value|td_md
+value|td_base_pri
 comment|/* Copied during fork1() or thread_sched_upcall() */
 define|#
 directive|define
 name|td_startcopy
 value|td_endzero
-comment|/* XXXKSE just copying td_md needs checking! */
-name|struct
-name|mdthread
-name|td_md
-decl_stmt|;
-comment|/* (k) Any machine-dependent fields. */
 name|u_char
 name|td_base_pri
 decl_stmt|;
@@ -676,6 +670,11 @@ name|int
 name|td_altkstack_pages
 decl_stmt|;
 comment|/* Size of the alternate kstack */
+name|struct
+name|mdthread
+name|td_md
+decl_stmt|;
+comment|/* (k) Any machine-dependent fields. */
 block|}
 struct|;
 end_struct
