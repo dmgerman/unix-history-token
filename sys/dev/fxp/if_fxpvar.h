@@ -480,10 +480,10 @@ name|rx_idle_secs
 decl_stmt|;
 comment|/* # of seconds RX has been idle */
 name|struct
-name|callout_handle
+name|callout
 name|stat_ch
 decl_stmt|;
-comment|/* Handle for canceling our stat timeout */
+comment|/* stat callout */
 name|struct
 name|fxp_cb_mcs
 modifier|*
