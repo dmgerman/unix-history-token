@@ -8785,6 +8785,10 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Check to see if we need to initialize more inodes. 	 */
+name|ibp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|fs
@@ -8914,11 +8918,6 @@ name|dp2
 operator|++
 expr_stmt|;
 block|}
-name|bawrite
-argument_list|(
-name|ibp
-argument_list|)
-expr_stmt|;
 name|cgp
 operator|->
 name|cg_initediblk
@@ -8956,6 +8955,17 @@ expr_stmt|;
 name|bdwrite
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ibp
+operator|!=
+name|NULL
+condition|)
+name|bawrite
+argument_list|(
+name|ibp
 argument_list|)
 expr_stmt|;
 return|return
