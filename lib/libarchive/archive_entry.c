@@ -1645,13 +1645,13 @@ parameter_list|)
 block|{
 return|return
 operator|(
+name|ARCHIVE_STAT_MTIME_NANOS
+argument_list|(
+operator|&
 name|entry
 operator|->
 name|ae_stat
-operator|.
-name|st_mtimespec
-operator|.
-name|tv_nsec
+argument_list|)
 operator|)
 return|;
 block|}
