@@ -109,7 +109,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|acpifd
 operator|=
 name|open
@@ -119,7 +118,6 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|acpifd
@@ -127,7 +125,6 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|err
 argument_list|(
 name|EX_OSFILE
@@ -135,7 +132,6 @@ argument_list|,
 name|ACPIDEV
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
