@@ -589,6 +589,29 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* XXX unknown chipset, but working */
+case|case
+literal|0x00171166
+comment|/* FALLTHROUGH */
+case|case
+literal|0x01011166
+name|s
+operator|=
+literal|"ServerWorks host to PCI bridge(unknown chipset)"
+empty_stmt|;
+operator|*
+name|busnum
+operator|=
+name|pci_cfgread
+argument_list|(
+name|cfg
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* Integrated Micro Solutions -- vendor 0x10e0 */
 case|case
 literal|0x884910e0
