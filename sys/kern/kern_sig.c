@@ -6872,27 +6872,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|prop
-operator|&
-name|SA_CONT
-condition|)
-block|{
-comment|/* 			 * Already active, don't need to start again. 			 */
-name|SIGDELSET
-argument_list|(
-name|p
-operator|->
-name|p_siglist
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-if|if
-condition|(
 operator|(
 name|p
 operator|->
