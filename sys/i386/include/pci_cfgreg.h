@@ -176,15 +176,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pci_pir_parse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|pci_pir_probe
 parameter_list|(
