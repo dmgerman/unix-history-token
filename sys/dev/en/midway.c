@@ -3997,7 +3997,7 @@ operator|!=
 literal|0
 operator|||
 name|vci
-operator|>
+operator|>=
 name|MID_N_VC
 condition|)
 block|{
