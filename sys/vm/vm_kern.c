@@ -1046,6 +1046,11 @@ name|i
 operator|-=
 name|PAGE_SIZE
 expr_stmt|;
+name|vm_object_lock
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -1070,6 +1075,11 @@ argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|kmem_object
+argument_list|)
 expr_stmt|;
 block|}
 name|vm_map_delete
@@ -1195,6 +1205,11 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
+name|vm_object_lock
+argument_list|(
+name|kmem_object
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -1207,6 +1222,11 @@ name|offset
 operator|+
 name|i
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|vm_object_unlock
+argument_list|(
+name|kmem_object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
