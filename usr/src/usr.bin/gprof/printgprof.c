@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printgprof.c	5.2 (Berkeley) %G%"
+literal|"@(#)printgprof.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,9 @@ name|sortednlp
 decl_stmt|;
 name|int
 name|index
+decl_stmt|,
+name|timecmp
+argument_list|()
 decl_stmt|;
 name|actime
 operator|=
