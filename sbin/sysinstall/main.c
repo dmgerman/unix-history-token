@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.8 1994/10/26 02:53:09 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: main.c,v 1.9 1994/10/29 10:01:34 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This is the overall plan:  (phk's version)  *    * If (pid == 1)  *	reopen stdin, stdout, stderr, and do various other magic.  *  * If (file exists /this_is_boot.flp)  *	stage0:  *		present /README  *      stage1:  *		Ask about diskallocation and do the fdisk/disklabel stunt.  *	stage2:  *		Do newfs, mount and copy over a minimal world.  *		make /mnt/etc/fstab.  Install ourself as /mnt/sbin/init  * Else  *	stage3:  *		Read cpio.flp and fiddle around with the bits a bit.  *	stage4:  *		Read bin-tarballs:  *			Using ftp  *			Using NFS (?)  *			Using floppy  *			Using tape  *			Using shell-prompt  *	stage5:  *		Extract bin-tarballs  *	stage6:  *		Ask various questions and collect answers into system-config  *		files.  *	stage7:  *		execl("/sbin/init");  */
+comment|/*  * XXX: utils: Mkdir must do "-p".  * XXX: stage2: do mkdir for msdos-mounts.  * XXX: label: Import dos-slice.  * XXX: mbr: edit geometry  */
 end_comment
 
 begin_function_decl
@@ -172,7 +172,6 @@ argument_list|(
 literal|"root"
 argument_list|)
 expr_stmt|;
-block|}
 name|debug_fd
 operator|=
 name|open
@@ -182,6 +181,25 @@ argument_list|,
 name|O_WRONLY
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|debug_fd
+operator|=
+name|open
+argument_list|(
+literal|"sysinstall.debug"
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_CREAT
+operator||
+name|O_TRUNC
+argument_list|,
+literal|0644
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|set_termcap

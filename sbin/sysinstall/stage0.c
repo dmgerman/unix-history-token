@@ -41,7 +41,6 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|unsigned
 name|char
 modifier|*
 name|welcome
@@ -91,11 +90,9 @@ literal|"READ ME FIRST"
 argument_list|,
 name|README_FILE
 argument_list|,
-name|LINES
-operator|-
-literal|1
+literal|24
 argument_list|,
-name|COLS
+literal|80
 argument_list|)
 expr_stmt|;
 block|}
@@ -170,11 +167,9 @@ literal|"READ ME FIRST"
 argument_list|,
 name|README_FILE
 argument_list|,
-name|LINES
-operator|-
-literal|1
+literal|24
 argument_list|,
-name|COLS
+literal|80
 argument_list|)
 expr_stmt|;
 block|}
@@ -203,11 +198,9 @@ literal|"COPYRIGHT"
 argument_list|,
 name|COPYRIGHT_FILE
 argument_list|,
-name|LINES
-operator|-
-literal|1
+literal|24
 argument_list|,
-name|COLS
+literal|80
 argument_list|)
 expr_stmt|;
 block|}
