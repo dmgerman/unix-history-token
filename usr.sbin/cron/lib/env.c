@@ -194,6 +194,7 @@ sizeof|sizeof
 argument_list|(
 name|char
 operator|*
+operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -324,6 +325,10 @@ modifier|*
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|q
+decl_stmt|;
 comment|/* 	 * count the number of elements, including the null pointer; 	 * also set 'found' to -1 or index of entry if already in here. 	 */
 name|found
 operator|=
@@ -380,13 +385,12 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * it exists already, so just free the existing setting, 		 * save our new one there, and return the existing array. 		 */
-name|free
-argument_list|(
+name|q
+operator|=
 name|envp
 index|[
 name|found
 index|]
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -410,8 +414,9 @@ index|[
 name|found
 index|]
 operator|=
-literal|""
+name|q
 expr_stmt|;
+comment|/* XXX env_free(envp); */
 name|errno
 operator|=
 name|ENOMEM
@@ -420,6 +425,11 @@ return|return
 name|NULL
 return|;
 block|}
+name|free
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|envp
@@ -468,6 +478,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXX env_free(envp); */
 name|errno
 operator|=
 name|ENOMEM
@@ -507,6 +518,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|env_free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|ENOMEM
