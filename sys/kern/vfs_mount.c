@@ -1664,6 +1664,20 @@ decl_stmt|;
 name|u_int
 name|iovcnt
 decl_stmt|;
+comment|/* Kick out MNT_ROOTFS early as it is legal internally */
+if|if
+condition|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MNT_ROOTFS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|iovcnt
 operator|=
 name|uap
@@ -2815,6 +2829,20 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Kick out MNT_ROOTFS early as it is legal internally */
+if|if
+condition|(
+name|uap
+operator|->
+name|flags
+operator|&
+name|MNT_ROOTFS
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|fstype
 operator|=
 name|malloc
