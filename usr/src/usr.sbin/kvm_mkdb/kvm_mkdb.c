@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.13 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,7 @@ name|sprintf
 argument_list|(
 name|dbtemp
 argument_list|,
-literal|"%s/kvm_%s.tmp"
+literal|"%skvm_%s.tmp"
 argument_list|,
 name|_PATH_VARRUN
 argument_list|,
@@ -252,7 +252,7 @@ name|sprintf
 argument_list|(
 name|dbname
 argument_list|,
-literal|"%s/kvm_%s.db"
+literal|"%skvm_%s.db"
 argument_list|,
 name|_PATH_VARRUN
 argument_list|,
