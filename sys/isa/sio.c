@@ -3193,6 +3193,13 @@ block|}
 block|,
 comment|/* BRI3400 - Internal ACF Modem */
 block|{
+literal|0x0094490a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* BRI9400 - Boca K56Flex PnP */
+block|{
 literal|0x00b4490a
 block|,
 name|NULL
@@ -3549,6 +3556,13 @@ name|NULL
 block|}
 block|,
 comment|/* WCI0003 - Fax/Voice/Modem/Speakphone/Asvd */
+block|{
+literal|0x01a0896a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ZTIA001 - Zoom Internal V90 Faxmodem */
 block|{
 literal|0x61f7896a
 block|,
