@@ -6800,10 +6800,6 @@ name|soft
 operator|=
 name|soft
 expr_stmt|;
-name|status
-operator|=
-name|DITEM_SUCCESS
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -6879,7 +6875,7 @@ name|status
 operator|=
 name|DITEM_FAILURE
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 name|newfs
 operator|=
