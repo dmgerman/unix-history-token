@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tmreg.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tmreg.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -39,6 +39,15 @@ name|short
 name|tmmr
 decl_stmt|;
 comment|/* maintenance register */
+ifdef|#
+directive|ifdef
+name|AVIV
+name|short
+name|tmfsr
+decl_stmt|;
+comment|/* formatter status reading */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -437,6 +446,137 @@ directive|define
 name|TMER_SOFT
 value|(TMER_CRE|TMER_PAE|TMER_BGL|TMER_RLE|TMER_BTE|TMER_NXM)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AVIV
+end_ifdef
+
+begin_comment
+comment|/* bits in tmmr (formatter diagnostic reading) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTS
+value|000000
+end_define
+
+begin_comment
+comment|/* select dead track status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTS_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|DAB
+value|010000
+end_define
+
+begin_comment
+comment|/* select diagnostic aid bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DAB_MASK
+value|037
+end_define
+
+begin_comment
+comment|/* reject code only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RWERR
+value|020000
+end_define
+
+begin_comment
+comment|/* select read-write errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RWERR_MASK
+value|01777
+end_define
+
+begin_comment
+comment|/* include bit 9 (MAI) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RWERR_BITS
+define|\
+value|"\10\12MAI\11CRC ERR\10WTMCHK\7UCE\6PART REC\5MTE\3END DATA CHK\ \2VEL ERR\1DIAG MODE"
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRSENSE
+value|030000
+end_define
+
+begin_comment
+comment|/* select drive sense */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRSENSE_MASK
+value|0777
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRSENSE_BITS
+define|\
+value|"\10\11WRTS\10EOTS\7BOTS\6WNHB\5PROS\4BWDS\3HDNG\2RDYS\1ON LINE"
+end_define
+
+begin_define
+define|#
+directive|define
+name|CRCF
+value|040000
+end_define
+
+begin_comment
+comment|/* CRC-F Generator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSR_BITS
+define|\
+value|"\10\20REJ\17TMS\16OVRN\15DATACHK\14SSC\13EOTS\12WRTS\11ROMPS\10CRERR\ \7ONLS\6BOTS\5HDENS\4BUPER\3FPTS\2REWS\1RDYS"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|AVIV
+end_endif
 
 end_unit
 
