@@ -168,12 +168,6 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"faith.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4436,16 +4430,6 @@ operator|==
 name|lport
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NFAITH
-argument_list|)
-operator|&&
-name|NFAITH
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -4467,8 +4451,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-endif|#
-directive|endif
 if|if
 condition|(
 name|inp

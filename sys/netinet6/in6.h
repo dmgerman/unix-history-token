@@ -2341,6 +2341,21 @@ parameter_list|)
 value|((struct in6_ifaddr *)(ifa))
 end_define
 
+begin_function_decl
+specifier|extern
+name|int
+function_decl|(
+modifier|*
+name|faithprefix_p
+function_decl|)
+parameter_list|(
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
