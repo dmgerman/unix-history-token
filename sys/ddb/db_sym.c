@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.2 1993/10/16 16:47:25 rgrimes Exp $  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_sym.c,v 1.3 1993/11/25 01:30:12 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_comment
 comment|/*  * Multiple symbol tables  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXNOSYMTABS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -87,6 +93,11 @@ end_define
 begin_comment
 comment|/* mach, ux, emulator */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|db_symtab_t
@@ -1115,6 +1126,44 @@ argument_list|,
 name|linenum
 argument_list|,
 name|pc
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|db_sym_numargs
+parameter_list|(
+name|sym
+parameter_list|,
+name|nargp
+parameter_list|,
+name|argnames
+parameter_list|)
+name|db_sym_t
+name|sym
+decl_stmt|;
+name|int
+modifier|*
+name|nargp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argnames
+decl_stmt|;
+block|{
+return|return
+name|X_db_sym_numargs
+argument_list|(
+name|db_last_symtab
+argument_list|,
+name|sym
+argument_list|,
+name|nargp
+argument_list|,
+name|argnames
 argument_list|)
 return|;
 block|}
