@@ -220,7 +220,7 @@ block|{
 name|int
 name|number
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flags
 decl_stmt|;
 name|int
@@ -248,7 +248,7 @@ literal|4
 index|]
 struct|;
 comment|/* XXX this could be as high as 16 */
-name|u_int16_t
+name|uint16_t
 name|irqmask
 decl_stmt|;
 name|int
@@ -339,7 +339,7 @@ block|{
 name|int
 name|pfl_nidlen
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pfl_nid
 index|[
 literal|8
@@ -544,7 +544,7 @@ value|-1
 name|int16_t
 name|prodext
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|error
 decl_stmt|;
 define|#
@@ -722,15 +722,15 @@ comment|/* NULL if end of table */
 define|#
 directive|define
 name|PCCARD_VENDOR_ANY
-value|((u_int32_t) -1)
-name|u_int32_t
+value|(0xffffffff)
+name|uint32_t
 name|pp_vendor
 decl_stmt|;
 define|#
 directive|define
 name|PCCARD_PRODUCT_ANY
-value|((u_int32_t) -1)
-name|u_int32_t
+value|(0xffffffff)
+name|uint32_t
 name|pp_product
 decl_stmt|;
 name|int
@@ -1223,7 +1223,7 @@ argument|ether
 argument_list|,
 argument|ETHADDR
 argument_list|,
-argument|u_int8_t
+argument|uint8_t
 argument_list|)
 end_macro
 
@@ -1234,7 +1234,7 @@ argument|vendor
 argument_list|,
 argument|VENDOR
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1245,7 +1245,7 @@ argument|product
 argument_list|,
 argument|PRODUCT
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1256,7 +1256,7 @@ argument|prodext
 argument_list|,
 argument|PRODEXT
 argument_list|,
-argument|u_int16_t
+argument|uint16_t
 argument_list|)
 end_macro
 
@@ -1267,7 +1267,7 @@ argument|function_number
 argument_list|,
 argument|FUNCTION_NUMBER
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
@@ -1278,7 +1278,7 @@ argument|function
 argument_list|,
 argument|FUNCTION
 argument_list|,
-argument|u_int32_t
+argument|uint32_t
 argument_list|)
 end_macro
 
