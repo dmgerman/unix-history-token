@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.16.2.1 1995/06/02 10:57:50 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.16.2.2 1995/06/02 11:01:07 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -4237,6 +4237,14 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|cache_purge
+argument_list|(
+name|DETOV
+argument_list|(
+name|tddep
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
