@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.2 1996/12/22 06:57:55 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.3 1996/12/24 18:43:53 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -735,8 +735,6 @@ operator|=
 name|yp_async_lookup_name
 argument_list|(
 name|rqstp
-operator|->
-name|rq_xprt
 argument_list|,
 operator|(
 name|char
@@ -769,8 +767,6 @@ operator|=
 name|yp_async_lookup_addr
 argument_list|(
 name|rqstp
-operator|->
-name|rq_xprt
 argument_list|,
 operator|(
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dnslookup.c,v 1.4 1996/12/22 22:30:54 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995, 1996  *	Bill Paul<wpaul@ctr.columbia.edu>. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yp_dnslookup.c,v 1.9 1996/12/25 17:52:35 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_dnslookup.c,v 1.4 1996/12/22 22:30:54 wpaul Exp $"
+literal|"$Id: yp_dnslookup.c,v 1.9 1996/12/25 17:52:35 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,15 +391,15 @@ name|client_addr
 decl_stmt|;
 name|unsigned
 name|long
+name|ypvers
+decl_stmt|;
+name|unsigned
+name|long
 name|id
 decl_stmt|;
 name|unsigned
 name|long
 name|ttl
-decl_stmt|;
-name|unsigned
-name|long
-name|sent
 decl_stmt|;
 name|unsigned
 name|long
@@ -540,19 +540,6 @@ block|}
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|yp_dnsq_pending
-parameter_list|()
-block|{
-return|return
-operator|(
-name|pending
 operator|)
 return|;
 block|}
@@ -860,10 +847,10 @@ control|)
 block|{
 if|if
 condition|(
-name|q
-operator|->
 name|id
 operator|==
+name|q
+operator|->
 name|id
 condition|)
 return|return
@@ -899,8 +886,11 @@ modifier|*
 name|buf
 decl_stmt|;
 block|{
+name|ypresponse
+name|result_v1
+decl_stmt|;
 name|ypresp_val
-name|result
+name|result_v2
 decl_stmt|;
 name|unsigned
 name|long
@@ -910,6 +900,24 @@ name|struct
 name|sockaddr_in
 name|client_addr
 decl_stmt|;
+name|xdrproc_t
+name|xdrfunc
+decl_stmt|;
+name|char
+modifier|*
+name|result
+decl_stmt|;
+comment|/* 	 * Set up correct reply struct and 	 * XDR filter depending on ypvers. 	 */
+switch|switch
+condition|(
+name|q
+operator|->
+name|ypvers
+condition|)
+block|{
+case|case
+name|YPVERS
+case|:
 name|bzero
 argument_list|(
 operator|(
@@ -917,11 +925,11 @@ name|char
 operator|*
 operator|)
 operator|&
-name|result
+name|result_v2
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|result
+name|result_v2
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -931,7 +939,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|result
+name|result_v2
 operator|.
 name|stat
 operator|=
@@ -939,7 +947,7 @@ name|YP_NOKEY
 expr_stmt|;
 else|else
 block|{
-name|result
+name|result_v2
 operator|.
 name|val
 operator|.
@@ -950,7 +958,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|result
+name|result_v2
 operator|.
 name|val
 operator|.
@@ -958,12 +966,136 @@ name|valdat_val
 operator|=
 name|buf
 expr_stmt|;
-name|result
+name|result_v2
 operator|.
 name|stat
 operator|=
 name|YP_TRUE
 expr_stmt|;
+block|}
+name|result
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|result_v2
+expr_stmt|;
+name|xdrfunc
+operator|=
+operator|(
+name|xdrproc_t
+operator|)
+name|xdr_ypresp_val
+expr_stmt|;
+break|break;
+case|case
+name|YPOLDVERS
+case|:
+comment|/* 		 * The odds are we will _never_ execute this 		 * particular code, but we include it anyway 		 * for the sake of completeness. 		 */
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|result_v1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|result_v1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result_v1
+operator|.
+name|yp_resptype
+operator|=
+name|YPRESP_VAL
+expr_stmt|;
+define|#
+directive|define
+name|YPVAL
+value|ypresponse_u.yp_resp_valtype
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+name|result_v1
+operator|.
+name|YPVAL
+operator|.
+name|stat
+operator|=
+name|YP_NOKEY
+expr_stmt|;
+else|else
+block|{
+name|result_v1
+operator|.
+name|YPVAL
+operator|.
+name|val
+operator|.
+name|valdat_len
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|result_v1
+operator|.
+name|YPVAL
+operator|.
+name|val
+operator|.
+name|valdat_val
+operator|=
+name|buf
+expr_stmt|;
+name|result_v1
+operator|.
+name|YPVAL
+operator|.
+name|stat
+operator|=
+name|YP_TRUE
+expr_stmt|;
+block|}
+name|result
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|result_v1
+expr_stmt|;
+name|xdrfunc
+operator|=
+operator|(
+name|xdrproc_t
+operator|)
+name|xdr_ypresponse
+expr_stmt|;
+break|break;
+default|default:
+name|yp_error
+argument_list|(
+literal|"Bad YP program version (%lu)!"
+argument_list|,
+name|q
+operator|->
+name|ypvers
+argument_list|)
+expr_stmt|;
+return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -988,7 +1120,7 @@ name|id
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX This is disgusting. There's basically one transport 	 * handle for UDP, but we're holding off on replying to a 	 * client until we're ready, by which time we may have received 	 * several other queries from other clients with different 	 * transaction IDs. So to make the delayed response thing work, 	 * we have to save the transaction ID and client address of 	 * each request, then jam them into the transport handle when 	 * we're ready to send a reply. Then after we've send the reply, 	 * we put the old transaction ID and remote address back the 	 * way we found 'em. This is _INCREDIBLY_ non-portable; it's 	 * not even supported by the RPC library. 	 */
-comment|/* 	 * XXX Don't from the transaction ID for TCP handles. 	 */
+comment|/* 	 * XXX Don't frob the transaction ID for TCP handles. 	 */
 if|if
 condition|(
 name|q
@@ -1037,13 +1169,8 @@ name|q
 operator|->
 name|xprt
 argument_list|,
-name|xdr_ypresp_val
+name|xdrfunc
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|result
 argument_list|)
 condition|)
@@ -1052,6 +1179,7 @@ argument_list|(
 literal|"svc_sendreply failed"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Now that we sent the reply, 	 * put the handle back the way it was. 	 */
 if|if
 condition|(
 name|q
@@ -1080,6 +1208,10 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Decrement TTL on all queue entries, possibly nuking  * any that have been around too long without being serviced.  */
+end_comment
 
 begin_function
 name|void
@@ -1172,6 +1304,10 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Data is pending on the DNS socket; check for valid replies  * to our queries and dispatch them to waiting clients.  */
+end_comment
+
 begin_function
 name|void
 name|yp_run_dnsq
@@ -1192,6 +1328,12 @@ name|HEADER
 argument_list|)
 operator|+
 name|MAXPACKET
+index|]
+decl_stmt|;
+name|char
+name|retrybuf
+index|[
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
@@ -1287,6 +1429,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * We may have data left in the socket that represents 	 * replies to earlier queries that we don't care about 	 * anymore. If there are no lookups pending or the packet 	 * ID doesn't match any of the queue IDs, just drop it 	 * on the floor. 	 */
 name|hptr
 operator|=
 operator|(
@@ -1298,6 +1441,9 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pending
+operator|||
 operator|(
 name|q
 operator|=
@@ -1315,7 +1461,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* bogus id -- ignore */
+comment|/* ignore */
 return|return;
 block|}
 if|if
@@ -1351,6 +1497,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the lookup failed, try appending one of the domains 	 * from resolv.conf. If we have no domains to test, the 	 * query has failed. 	 */
 if|if
 condition|(
 name|hent
@@ -1358,12 +1505,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|char
-name|retrybuf
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|h_errno
@@ -1477,6 +1618,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Got an answer ready for a client -- send it off. */
 name|yp_send_dns_reply
 argument_list|(
 name|q
@@ -1512,6 +1654,7 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
+comment|/* Decrement TTLs on other entries while we're here. */
 name|yp_prune_dnsq
 argument_list|()
 expr_stmt|;
@@ -1519,17 +1662,22 @@ return|return;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Queue and transmit an asynchronous DNS hostname lookup.  */
+end_comment
+
 begin_function
 name|ypstat
 name|yp_async_lookup_name
 parameter_list|(
-name|xprt
+name|rqstp
 parameter_list|,
 name|name
 parameter_list|)
-name|SVCXPRT
+name|struct
+name|svc_req
 modifier|*
-name|xprt
+name|rqstp
 decl_stmt|;
 name|char
 modifier|*
@@ -1577,15 +1725,19 @@ name|DEF_TTL
 expr_stmt|;
 name|q
 operator|->
-name|sent
+name|xprt
 operator|=
-literal|1
+name|rqstp
+operator|->
+name|rq_xprt
 expr_stmt|;
 name|q
 operator|->
-name|xprt
+name|ypvers
 operator|=
-name|xprt
+name|rqstp
+operator|->
+name|rq_vers
 expr_stmt|;
 name|type
 operator|=
@@ -1603,6 +1755,8 @@ if|if
 condition|(
 name|getsockopt
 argument_list|(
+name|q
+operator|->
 name|xprt
 operator|->
 name|xp_sock
@@ -1658,6 +1812,8 @@ name|xid
 operator|=
 name|svcudp_get_xid
 argument_list|(
+name|q
+operator|->
 name|xprt
 argument_list|)
 expr_stmt|;
@@ -1665,6 +1821,8 @@ name|q
 operator|->
 name|client_addr
 operator|=
+name|q
+operator|->
 name|xprt
 operator|->
 name|xp_raddr
@@ -1775,17 +1933,22 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Queue and transmit an asynchronous DNS IP address lookup.  */
+end_comment
+
 begin_function
 name|ypstat
 name|yp_async_lookup_addr
 parameter_list|(
-name|xprt
+name|rqstp
 parameter_list|,
 name|addr
 parameter_list|)
-name|SVCXPRT
+name|struct
+name|svc_req
 modifier|*
-name|xprt
+name|rqstp
 decl_stmt|;
 name|char
 modifier|*
@@ -1909,15 +2072,19 @@ name|DEF_TTL
 expr_stmt|;
 name|q
 operator|->
-name|sent
+name|xprt
 operator|=
-literal|1
+name|rqstp
+operator|->
+name|rq_xprt
 expr_stmt|;
 name|q
 operator|->
-name|xprt
+name|ypvers
 operator|=
-name|xprt
+name|rqstp
+operator|->
+name|rq_vers
 expr_stmt|;
 name|q
 operator|->
@@ -1941,6 +2108,8 @@ if|if
 condition|(
 name|getsockopt
 argument_list|(
+name|q
+operator|->
 name|xprt
 operator|->
 name|xp_sock
@@ -1996,6 +2165,8 @@ name|xid
 operator|=
 name|svcudp_get_xid
 argument_list|(
+name|q
+operator|->
 name|xprt
 argument_list|)
 expr_stmt|;
@@ -2003,6 +2174,8 @@ name|q
 operator|->
 name|client_addr
 operator|=
+name|q
+operator|->
 name|xprt
 operator|->
 name|xp_raddr
