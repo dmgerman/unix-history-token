@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ4.c 1.6 %G%"
+literal|"@(#)READ4.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,6 +157,8 @@ condition|)
 block|{
 name|PERROR
 argument_list|(
+literal|"Error encountered on integer read "
+argument_list|,
 name|curfile
 operator|->
 name|pfname
