@@ -1471,6 +1471,7 @@ name|lk_lockholder
 operator|!=
 name|LK_KERNPROC
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"lockmgr: pid %d, not %s %d unlocking"
@@ -1484,8 +1485,18 @@ operator|->
 name|lk_lockholder
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|lkp
+operator|->
+name|lk_lockholder
+operator|!=
+name|LK_KERNPROC
+condition|)
+block|{
 name|COUNT
 argument_list|(
 name|p
@@ -1494,6 +1505,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|lkp
