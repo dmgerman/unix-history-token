@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.65 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7222,7 +7222,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|" ("
+literal|" ["
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7246,7 +7246,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|")"
+literal|"]"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7795,7 +7795,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|" ("
+literal|" ["
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7819,7 +7819,7 @@ name|strcat
 argument_list|(
 name|bp
 argument_list|,
-literal|")"
+literal|"]"
 argument_list|)
 expr_stmt|;
 endif|#
