@@ -219,8 +219,7 @@ operator|*
 operator|)
 name|devdata
 decl_stmt|;
-name|unsigned
-name|long
+name|daddr_t
 name|pos
 decl_stmt|;
 name|int
