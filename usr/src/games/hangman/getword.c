@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getword.c	5.3 (Berkeley) %G%"
+literal|"@(#)getword.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,35 +34,11 @@ directive|include
 file|"hangman.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|pdp11
-end_if
-
-begin_define
-define|#
-directive|define
-name|RN
-value|(((off_t) rand()<< 16) | (off_t) rand())
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RN
-value|rand()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_comment
 comment|/*  * getword:  *	Get a valid word out of the dictionary file  */
@@ -88,6 +64,10 @@ decl_stmt|,
 modifier|*
 name|gp
 decl_stmt|;
+specifier|register
+name|long
+name|pos
+decl_stmt|;
 name|inf
 operator|=
 name|Dict
@@ -98,16 +78,30 @@ init|;
 condition|;
 control|)
 block|{
+name|pos
+operator|=
+operator|(
+name|double
+operator|)
+name|rand
+argument_list|()
+operator|/
+operator|(
+name|RAND_MAX
+operator|+
+literal|1.0
+operator|)
+operator|*
+operator|(
+name|double
+operator|)
+name|Dict_size
+expr_stmt|;
 name|fseek
 argument_list|(
 name|inf
 argument_list|,
-name|abs
-argument_list|(
-name|RN
-operator|%
-name|Dict_size
-argument_list|)
+name|pos
 argument_list|,
 literal|0
 argument_list|)
@@ -222,43 +216,6 @@ literal|'\0'
 expr_stmt|;
 block|}
 end_block
-
-begin_comment
-comment|/*  * abs:  *	Return the absolute value of an integer  */
-end_comment
-
-begin_function
-name|off_t
-name|abs
-parameter_list|(
-name|i
-parameter_list|)
-name|off_t
-name|i
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-operator|(
-name|off_t
-operator|)
-name|i
-return|;
-else|else
-return|return
-operator|(
-name|off_t
-operator|)
-name|i
-return|;
-block|}
-end_function
 
 end_unit
 
