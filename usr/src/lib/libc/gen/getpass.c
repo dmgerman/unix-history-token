@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpass.c	5.3 (Berkeley) %G%"
+literal|"@(#)getpass.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ decl_stmt|;
 define|#
 directive|define
 name|PASSWD_LEN
-value|8
+value|128
 specifier|static
 name|char
 name|buf
@@ -189,6 +189,9 @@ operator|&
 name|ttyb
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 name|prompt
