@@ -2949,8 +2949,24 @@ expr_stmt|;
 name|aio_pipe_test
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|==
+literal|0
+condition|)
 name|aio_md_test
 argument_list|()
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: aio_md_test: skipped as euid "
+literal|"!= 0\n"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
