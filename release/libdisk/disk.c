@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.8 1995/04/30 11:04:13 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: disk.c,v 1.10 1995/05/01 04:05:25 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -292,53 +292,12 @@ return|return
 literal|0
 return|;
 block|}
-for|for
-control|(
-name|i
-operator|=
+if|#
+directive|if
 literal|0
-init|;
-name|i
-operator|<
-name|ds
-operator|.
-name|dss_nslices
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|ds
-operator|.
-name|dss_slices
-index|[
-name|i
-index|]
-operator|.
-name|ds_openmask
-condition|)
-name|printf
-argument_list|(
-literal|"  open(%d)=0x%2x"
-argument_list|,
-name|i
-argument_list|,
-name|ds
-operator|.
-name|dss_slices
-index|[
-name|i
-index|]
-operator|.
-name|ds_openmask
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|for(i=0;i<ds.dss_nslices;i++) 		if(ds.dss_slices[i].ds_openmask) 			printf("  open(%d)=0x%2x", 				i,ds.dss_slices[i].ds_openmask); 	printf("\n");
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
