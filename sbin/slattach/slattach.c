@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.10 1993/09/15 02:39:40 smace Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.11 1993/09/16 06:33:44 rich Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1644,6 +1644,19 @@ name|int
 name|ret
 parameter_list|)
 block|{
+comment|/* 	 * First close the slip line in case exit_cmd wants it (like to hang 	 * up a modem or something). 	 */
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 comment|/* invoke a shell for exit_cmd. */
 if|if
 condition|(
