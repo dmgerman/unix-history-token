@@ -1097,7 +1097,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"real memory  = %u (%uK bytes)\n"
+literal|"real memory  = %u (%u MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -1109,7 +1109,7 @@ argument_list|(
 name|Maxmem
 argument_list|)
 operator|/
-literal|1024
+literal|1048576
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
@@ -1199,7 +1199,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"avail memory = %u (%uK bytes)\n"
+literal|"avail memory = %u (%u MB)\n"
 argument_list|,
 name|ptoa
 argument_list|(
@@ -1215,7 +1215,7 @@ operator|.
 name|v_free_count
 argument_list|)
 operator|/
-literal|1024
+literal|1048576
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up buffers, so they can be used to read disk labels. 	 */
