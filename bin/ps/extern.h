@@ -53,19 +53,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|time_t
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|sumrusage
 decl_stmt|,
 name|termwidth
 decl_stmt|,
 name|totwidth
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|time_t
-name|now
 decl_stmt|;
 end_decl_stmt
 
