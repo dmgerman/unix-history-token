@@ -221,6 +221,10 @@ modifier|*
 name|v_cleanblkroot
 decl_stmt|;
 comment|/* i clean buf splay tree  */
+name|int
+name|v_cleanbufcnt
+decl_stmt|;
+comment|/* i number of clean buffers */
 name|struct
 name|buflists
 name|v_dirtyblkhd
@@ -232,6 +236,10 @@ modifier|*
 name|v_dirtyblkroot
 decl_stmt|;
 comment|/* i dirty buf splay tree */
+name|int
+name|v_dirtybufcnt
+decl_stmt|;
+comment|/* i number of dirty buffers */
 name|u_long
 name|v_vflag
 decl_stmt|;

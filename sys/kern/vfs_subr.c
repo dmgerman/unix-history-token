@@ -4184,12 +4184,38 @@ name|KASSERT
 argument_list|(
 name|vp
 operator|->
+name|v_cleanbufcnt
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"cleanbufcnt not 0"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
 name|v_cleanblkroot
 operator|==
 name|NULL
 argument_list|,
 operator|(
 literal|"cleanblkroot not NULL"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_dirtybufcnt
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"dirtybufcnt not 0"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6538,6 +6564,11 @@ argument_list|,
 name|b_vnbufs
 argument_list|)
 expr_stmt|;
+name|vp
+operator|->
+name|v_dirtybufcnt
+operator|--
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -6641,6 +6672,11 @@ name|bp
 argument_list|,
 name|b_vnbufs
 argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_cleanbufcnt
+operator|--
 expr_stmt|;
 block|}
 name|bp
@@ -6861,6 +6897,11 @@ expr_stmt|;
 block|}
 name|vp
 operator|->
+name|v_dirtybufcnt
+operator|++
+expr_stmt|;
+name|vp
+operator|->
 name|v_dirtyblkroot
 operator|=
 name|bp
@@ -7023,6 +7064,11 @@ name|b_vnbufs
 argument_list|)
 expr_stmt|;
 block|}
+name|vp
+operator|->
+name|v_cleanbufcnt
+operator|++
+expr_stmt|;
 name|vp
 operator|->
 name|v_cleanblkroot
