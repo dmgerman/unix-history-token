@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sed0.c	4.5	87/12/21	*/
+comment|/*	sed0.c	4.6	91/03/01	*/
 end_comment
 
 begin_include
@@ -4573,7 +4573,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|newstr

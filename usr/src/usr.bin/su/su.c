@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.23 (Berkeley) %G%"
+literal|"@(#)su.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1392,8 +1392,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|ontty
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|krb_get_phost
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|krb_get_lrealm

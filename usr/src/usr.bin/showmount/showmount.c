@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)showmount.c	6.4 (Berkeley) %G%"
+literal|"@(#)showmount.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1395,34 +1395,46 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|usage
 argument_list|()
+end_macro
+
+begin_block
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: showmount [-ade] host\n"
+literal|"usage: showmount [-ade] host\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Print the binary tree in inorder so that output is sorted.  */
+end_comment
+
+begin_macro
 name|print_dump
 argument_list|(
 argument|mp
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|mountlist
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.11 (Berkeley) %G%"
+literal|"@(#)script.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
-name|int
+name|void
 name|finish
 parameter_list|()
 function_decl|;
@@ -512,12 +512,10 @@ directive|include
 file|<sys/wait.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|finish
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|union
 name|wait
@@ -540,6 +538,10 @@ name|pid
 operator|=
 name|wait3
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|status
 argument_list|,
@@ -569,7 +571,7 @@ name|done
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|dooutput
