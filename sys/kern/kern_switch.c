@@ -303,13 +303,6 @@ argument_list|(
 name|idlethread
 argument_list|)
 expr_stmt|;
-comment|/* Simulate that it was on the run queue */
-name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_RUNQ
-expr_stmt|;
 name|td
 operator|->
 name|td_kse
@@ -328,6 +321,12 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
+name|td
+operator|->
+name|td_state
+operator|=
+name|TDS_RUNNING
+expr_stmt|;
 return|return
 operator|(
 name|td
