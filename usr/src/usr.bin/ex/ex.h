@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	7.3	%G%  */
+comment|/* sccs id:	@(#)ex.h	7.4	%G%  */
 end_comment
 
 begin_ifdef
@@ -361,12 +361,35 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|u370
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BUFSIZ
+value|4096
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|BUFSIZ
 value|512
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

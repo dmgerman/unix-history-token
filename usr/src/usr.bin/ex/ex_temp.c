@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	7.2	%G%"
+literal|"@(#)ex_temp.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1848,6 +1848,14 @@ decl_stmt|;
 block|}
 modifier|*
 name|rbuf
+struct|,
+name|KILLrbuf
+struct|,
+name|putrbuf
+struct|,
+name|YANKrbuf
+struct|,
+name|regrbuf
 struct|;
 end_struct
 
@@ -2269,10 +2277,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|struct
-name|rbuf
-name|arbuf
-decl_stmt|;
 specifier|register
 name|struct
 name|strreg
@@ -2282,7 +2286,7 @@ decl_stmt|;
 name|rbuf
 operator|=
 operator|&
-name|arbuf
+name|KILLrbuf
 expr_stmt|;
 name|sp
 operator|=
@@ -2457,10 +2461,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|rbuf
-name|arbuf
-decl_stmt|;
 specifier|register
 name|line
 modifier|*
@@ -2488,7 +2488,7 @@ expr_stmt|;
 name|rbuf
 operator|=
 operator|&
-name|arbuf
+name|putrbuf
 expr_stmt|;
 name|rnleft
 operator|=
@@ -2835,10 +2835,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|struct
-name|rbuf
-name|arbuf
-decl_stmt|;
 specifier|register
 name|line
 modifier|*
@@ -2900,7 +2896,7 @@ expr_stmt|;
 name|rbuf
 operator|=
 operator|&
-name|arbuf
+name|YANKrbuf
 expr_stmt|;
 if|if
 condition|(
@@ -3299,10 +3295,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|rbuf
-name|arbuf
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -3314,7 +3306,7 @@ decl_stmt|;
 name|rbuf
 operator|=
 operator|&
-name|arbuf
+name|regrbuf
 expr_stmt|;
 name|rnleft
 operator|=

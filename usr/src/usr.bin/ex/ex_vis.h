@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_vis.h	7.2	%G%  */
+comment|/* sccs id:	@(#)ex_vis.h	7.1	7/8/81  */
 end_comment
 
 begin_comment

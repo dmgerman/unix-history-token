@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vadj.c	7.1	%G%"
+literal|"@(#)ex_vadj.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1024,13 +1024,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|XV
+name|VA
 condition|)
 name|vputp
 argument_list|(
 name|tgoto
 argument_list|(
-name|AL
+name|VA
 argument_list|,
 literal|0
 argument_list|,
@@ -1083,13 +1083,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|XV
+name|VA
 condition|)
 name|vputp
 argument_list|(
 name|tgoto
 argument_list|(
-name|AL
+name|VA
 argument_list|,
 literal|0
 argument_list|,
@@ -3016,13 +3016,13 @@ operator|++
 control|)
 if|if
 condition|(
-name|XV
+name|VD
 condition|)
 name|vputp
 argument_list|(
 name|tgoto
 argument_list|(
-name|DL
+name|VD
 argument_list|,
 literal|0
 argument_list|,

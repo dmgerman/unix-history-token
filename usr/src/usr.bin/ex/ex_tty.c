@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	7.1	%G%"
+literal|"@(#)ex_tty.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -384,7 +384,13 @@ operator|&
 name|UP
 block|,
 operator|&
+name|VA
+block|,
+operator|&
 name|VB
+block|,
+operator|&
+name|VD
 block|,
 operator|&
 name|VS
@@ -449,9 +455,6 @@ name|XN
 block|,
 operator|&
 name|XT
-block|,
-operator|&
-name|XV
 block|,
 operator|&
 name|XX
@@ -791,6 +794,47 @@ operator|.
 name|descr
 operator|=
 literal|"home"
+expr_stmt|;
+comment|/* 	 * Handle funny termcap capabilities 	 */
+if|if
+condition|(
+name|VA
+condition|)
+name|AL
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|VD
+condition|)
+name|DL
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|IC
+operator|&&
+name|IM
+operator|==
+name|NULL
+condition|)
+name|IM
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|IC
+operator|&&
+name|EI
+operator|==
+name|NULL
+condition|)
+name|EI
+operator|=
+literal|""
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1171,7 +1215,7 @@ name|sp
 decl_stmt|;
 name|namp
 operator|=
-literal|"ambsdadbeohchzinmincnsosulxbxnxtxvxx"
+literal|"ambsdadbeohchzinmincnsosulxbxnxtxx"
 expr_stmt|;
 name|fp
 operator|=
@@ -1204,7 +1248,7 @@ condition|)
 do|;
 name|namp
 operator|=
-literal|"albcbtcdceclcmcrdcdldmdoedeik0k1k2k3k4k5k6k7k8k9hoicimipkdkekhklkrkskullndnlpcsesfsosrtatetiupvbvsve"
+literal|"albcbtcdceclcmcrdcdldmdoedeik0k1k2k3k4k5k6k7k8k9hoicimipkdkekhklkrkskullndnlpcsesfsosrtatetiupvavbvdvsve"
 expr_stmt|;
 name|sp
 operator|=

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_v.c	7.1	%G%"
+literal|"@(#)ex_v.c	7.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,28 @@ begin_comment
 comment|/*  * Enter open mode  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|u370
+end_ifdef
+
+begin_decl_stmt
+name|char
+name|atube
+index|[
+name|TUBESIZE
+operator|+
+name|LBSIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|oop
 argument_list|()
@@ -57,6 +79,9 @@ name|char
 modifier|*
 name|ic
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|u370
 name|char
 name|atube
 index|[
@@ -65,6 +90,8 @@ operator|+
 name|LBSIZE
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|ttymode
 name|f
 decl_stmt|;
@@ -427,6 +454,9 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|u370
 name|char
 name|atube
 index|[
@@ -435,6 +465,8 @@ operator|+
 name|LBSIZE
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|ttymode
 name|f
 decl_stmt|;

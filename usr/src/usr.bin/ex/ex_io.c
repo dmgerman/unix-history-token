@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.2	%G%"
+literal|"@(#)ex_io.c	7.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1322,6 +1322,13 @@ begin_comment
 comment|/*  * Parse one filename into file.  */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|glob
+name|G
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|getone
 argument_list|()
@@ -1333,10 +1340,6 @@ specifier|register
 name|char
 modifier|*
 name|str
-decl_stmt|;
-name|struct
-name|glob
-name|G
 decl_stmt|;
 if|if
 condition|(
@@ -2803,7 +2806,6 @@ comment|/*  * Extract the next line from the io stream.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|nextip
