@@ -7062,9 +7062,7 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|mc
-operator|->
-name|mc_data
+name|result
 operator|!=
 name|NULL
 operator|)
@@ -7072,9 +7070,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|mc
-operator|->
-name|mc_data
+name|result
 argument_list|,
 name|M_DEVBUF
 argument_list|)
