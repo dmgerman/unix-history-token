@@ -320,15 +320,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|umap_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

@@ -5274,7 +5274,8 @@ literal|"ext2fs"
 argument_list|,
 name|mp
 argument_list|,
-name|ext2_vnodeop_p
+operator|&
+name|ext2_vnodeops
 argument_list|,
 operator|&
 name|vp
@@ -5597,7 +5598,8 @@ name|ext2_vinit
 argument_list|(
 name|mp
 argument_list|,
-name|ext2_fifoop_p
+operator|&
+name|ext2_fifoops
 argument_list|,
 operator|&
 name|vp

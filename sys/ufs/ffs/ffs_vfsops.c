@@ -6300,7 +6300,8 @@ literal|"ufs"
 argument_list|,
 name|mp
 argument_list|,
-name|ffs_vnodeop_p
+operator|&
+name|ffs_vnodeops
 argument_list|,
 operator|&
 name|vp
@@ -6648,7 +6649,8 @@ name|ufs_vinit
 argument_list|(
 name|mp
 argument_list|,
-name|ffs_fifoop_p
+operator|&
+name|ffs_fifoops
 argument_list|,
 operator|&
 name|vp

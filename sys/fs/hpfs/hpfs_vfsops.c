@@ -2048,7 +2048,8 @@ name|hpmp
 operator|->
 name|hpm_mp
 argument_list|,
-name|hpfs_vnodeop_p
+operator|&
+name|hpfs_vnodeops
 argument_list|,
 operator|&
 name|vp

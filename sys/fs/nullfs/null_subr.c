@@ -741,7 +741,8 @@ literal|"null"
 argument_list|,
 name|mp
 argument_list|,
-name|null_vnodeop_p
+operator|&
+name|null_vnodeops
 argument_list|,
 operator|&
 name|vp

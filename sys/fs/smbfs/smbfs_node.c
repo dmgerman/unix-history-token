@@ -165,12 +165,15 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|smbfs_vnodeop_p
+name|struct
+name|vop_vector
+name|smbfs_vnodeops
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX -> .h file */
+end_comment
 
 begin_expr_stmt
 name|MALLOC_DEFINE
@@ -1111,7 +1114,8 @@ literal|"smbfs"
 argument_list|,
 name|mp
 argument_list|,
-name|smbfs_vnodeop_p
+operator|&
+name|smbfs_vnodeops
 argument_list|,
 operator|&
 name|vp

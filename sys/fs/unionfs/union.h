@@ -598,10 +598,9 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|union_vnodeop_p
+name|struct
+name|vop_vector
+name|union_vnodeops
 decl_stmt|;
 end_decl_stmt
 

@@ -122,17 +122,6 @@ begin_comment
 comment|/*  * Each underlying filesystem allocates its own private area and hangs  * it from v_data.  If non-null, this area is freed in getnewvnode().  */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|int
-name|vop_t
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_struct_decl
 struct_decl|struct
 name|namecache
@@ -321,8 +310,8 @@ modifier|*
 name|v_vnlock
 decl_stmt|;
 comment|/* u pointer to vnode lock */
-name|vop_t
-modifier|*
+name|struct
+name|vop_vector
 modifier|*
 name|v_op
 decl_stmt|;
@@ -1513,17 +1502,6 @@ name|NULLVP
 value|((struct vnode *)NULL)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VNODEOP_SET
-parameter_list|(
-name|f
-parameter_list|)
-define|\
-value|C_SYSINIT(f##init, SI_SUB_VFS, SI_ORDER_SECOND, vfs_add_vnodeops,&f); \ 	C_SYSUNINIT(f##uninit, SI_SUB_VFS, SI_ORDER_SECOND, vfs_rm_vnodeops,&f);
-end_define
-
 begin_comment
 comment|/*  * Global vnode data.  */
 end_comment
@@ -1899,50 +1877,6 @@ parameter_list|)
 define|\
 value|((s_type)(((char*)(struct_p)) + (s_offset)))
 end_define
-
-begin_comment
-comment|/*  * This structure is used to configure the new vnodeops vector.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vnodeopv_entry_desc
-block|{
-name|struct
-name|vnodeop_desc
-modifier|*
-name|opve_op
-decl_stmt|;
-comment|/* which operation this is */
-name|vop_t
-modifier|*
-name|opve_impl
-decl_stmt|;
-comment|/* code implementing this operation */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|vnodeopv_desc
-block|{
-comment|/* ptr to the ptr to the vector where op should go */
-name|vop_t
-modifier|*
-modifier|*
-modifier|*
-name|opv_desc_vector_p
-decl_stmt|;
-name|struct
-name|vnodeopv_entry_desc
-modifier|*
-name|opv_desc_ops
-decl_stmt|;
-comment|/* null terminated list */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * A generic structure.  * This can be used by bypass routines to identify generic arguments.  */
@@ -2389,24 +2323,6 @@ comment|/* DEBUG_VFS_LOCKS */
 end_comment
 
 begin_comment
-comment|/*  * VOCALL calls an op given an ops vector.  We break it out because BSD's  * vclean changes the ops vector and then wants to call ops with the old  * vector.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VOCALL
-parameter_list|(
-name|OPSV
-parameter_list|,
-name|OFF
-parameter_list|,
-name|AP
-parameter_list|)
-value|(( *((OPSV)[(OFF)])) (AP))
-end_define
-
-begin_comment
 comment|/*  * This call works for vnodes in the kernel.  */
 end_comment
 
@@ -2415,13 +2331,13 @@ define|#
 directive|define
 name|VCALL
 parameter_list|(
-name|VP
+name|a
 parameter_list|,
-name|OFF
+name|b
 parameter_list|,
-name|AP
+name|c
 parameter_list|)
-value|VOCALL((VP)->v_op,(OFF),(AP))
+value|vcall((a), (b), (c))
 end_define
 
 begin_define
@@ -2841,8 +2757,8 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
-name|vop_t
-modifier|*
+name|struct
+name|vop_vector
 modifier|*
 name|vops
 parameter_list|,
@@ -4029,18 +3945,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vop_defaultop
-parameter_list|(
-name|struct
-name|vop_generic_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|vop_null
 parameter_list|(
 name|struct
@@ -4093,6 +3997,25 @@ name|vop_stdgetvobject
 parameter_list|(
 name|struct
 name|vop_getvobject_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vcall
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|void
 modifier|*
 name|ap
 parameter_list|)
@@ -4184,30 +4107,77 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|default_vnodeop_p
+name|struct
+name|vop_vector
+name|devfs_specops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|dead_vnodeop_p
+name|struct
+name|vop_vector
+name|fifo_specops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|devfs_specop_p
+name|struct
+name|vop_vector
+name|dead_vnodeops
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|default_vnodeops
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VOP_PANIC
+value|((void*)(uintptr_t)vop_panic)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_NULL
+value|((void*)(uintptr_t)vop_null)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_EBADF
+value|((void*)(uintptr_t)vop_ebadf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_ENOTTY
+value|((void*)(uintptr_t)vop_enotty)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_EINVAL
+value|((void*)(uintptr_t)vop_einval)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOP_EOPNOTSUPP
+value|((void*)(uintptr_t)vop_eopnotsupp)
+end_define
 
 begin_endif
 endif|#

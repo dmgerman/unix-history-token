@@ -322,7 +322,8 @@ name|mnt_vnodecovered
 operator|->
 name|v_op
 operator|==
-name|null_vnodeop_p
+operator|&
+name|null_vnodeops
 operator|)
 operator|&&
 name|VOP_ISLOCKED

@@ -151,15 +151,6 @@ parameter_list|)
 value|(&nwhashtbl[(fhsum.f_id)& nwnodehash])
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|nwfs_vnodeop_p
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|LIST_HEAD
@@ -765,7 +756,8 @@ literal|"nwfs"
 argument_list|,
 name|mp
 argument_list|,
-name|nwfs_vnodeop_p
+operator|&
+name|nwfs_vnodeops
 argument_list|,
 operator|&
 name|vp

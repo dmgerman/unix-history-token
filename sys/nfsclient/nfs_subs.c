@@ -2462,7 +2462,8 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|fifo_nfsnodeop_p
+operator|&
+name|nfs_fifoops
 expr_stmt|;
 name|np
 operator|->

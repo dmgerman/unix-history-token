@@ -117,27 +117,21 @@ name|vop_reclaim_args
 struct_decl|;
 end_struct_decl
 
-begin_function_decl
-name|int
-name|ufs_vnoperate
-parameter_list|(
+begin_decl_stmt
+specifier|extern
 name|struct
-name|vop_generic_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|vop_vector
+name|ufs_fifoops
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
-name|ufs_vnoperatefifo
-parameter_list|(
+begin_decl_stmt
+specifier|extern
 name|struct
-name|vop_generic_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+name|vop_vector
+name|ufs_vnodeops
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -578,8 +572,8 @@ name|struct
 name|mount
 modifier|*
 parameter_list|,
-name|vop_t
-modifier|*
+name|struct
+name|vop_vector
 modifier|*
 parameter_list|,
 name|struct

@@ -391,7 +391,8 @@ literal|"portal"
 argument_list|,
 name|mp
 argument_list|,
-name|portal_vnodeop_p
+operator|&
+name|portal_vnodeops
 argument_list|,
 operator|&
 name|rvp

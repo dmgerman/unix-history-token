@@ -674,19 +674,17 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ffs_vnodeop_p
+name|struct
+name|vop_vector
+name|ffs_vnodeops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ffs_fifoop_p
+name|struct
+name|vop_vector
+name|ffs_fifoops
 decl_stmt|;
 end_decl_stmt
 

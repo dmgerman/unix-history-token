@@ -835,7 +835,8 @@ literal|"msdosfs"
 argument_list|,
 name|mntp
 argument_list|,
-name|msdosfs_vnodeop_p
+operator|&
+name|msdosfs_vnodeops
 argument_list|,
 operator|&
 name|nvp

@@ -452,10 +452,9 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|msdosfs_vnodeop_p
+name|struct
+name|vop_vector
+name|msdosfs_vnodeops
 decl_stmt|;
 end_decl_stmt
 

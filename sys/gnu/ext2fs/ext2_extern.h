@@ -470,8 +470,8 @@ name|struct
 name|mount
 modifier|*
 parameter_list|,
-name|vop_t
-modifier|*
+name|struct
+name|vop_vector
 modifier|*
 parameter_list|,
 name|struct
@@ -809,19 +809,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ext2_vnodeop_p
+name|struct
+name|vop_vector
+name|ext2_vnodeops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ext2_fifoop_p
+name|struct
+name|vop_vector
+name|ext2_fifoops
 decl_stmt|;
 end_decl_stmt
 

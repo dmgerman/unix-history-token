@@ -3391,7 +3391,8 @@ literal|"isofs"
 argument_list|,
 name|mp
 argument_list|,
-name|cd9660_vnodeop_p
+operator|&
+name|cd9660_vnodeops
 argument_list|,
 operator|&
 name|vp
@@ -4016,7 +4017,8 @@ name|vp
 operator|->
 name|v_op
 operator|=
-name|cd9660_fifoop_p
+operator|&
+name|cd9660_fifoops
 expr_stmt|;
 break|break;
 default|default:

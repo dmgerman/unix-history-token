@@ -3205,7 +3205,8 @@ name|ntmp
 operator|->
 name|ntm_mountp
 argument_list|,
-name|ntfs_vnodeop_p
+operator|&
+name|ntfs_vnodeops
 argument_list|,
 operator|&
 name|vp

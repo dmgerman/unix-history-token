@@ -1275,10 +1275,9 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|ntfs_vnodeop_p
+name|struct
+name|vop_vector
+name|ntfs_vnodeops
 decl_stmt|;
 end_decl_stmt
 

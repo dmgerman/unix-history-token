@@ -261,12 +261,15 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|pfs_vnodeop_p
+name|struct
+name|vop_vector
+name|pfs_vnodeops
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX -> .h file */
+end_comment
 
 begin_comment
 comment|/*  * Initialize vnode cache  */
@@ -535,7 +538,8 @@ literal|"pseudofs"
 argument_list|,
 name|mp
 argument_list|,
-name|pfs_vnodeop_p
+operator|&
+name|pfs_vnodeops
 argument_list|,
 name|vpp
 argument_list|)

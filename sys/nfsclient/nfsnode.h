@@ -643,19 +643,25 @@ end_function
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|fifo_nfsnodeop_p
+name|struct
+name|vop_vector
+name|nfs_fifoops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|nfs_vnodeop_p
+name|struct
+name|vop_vector
+name|nfs_vnodeops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|nfs4_vnodeops
 decl_stmt|;
 end_decl_stmt
 
@@ -664,15 +670,6 @@ specifier|extern
 name|struct
 name|buf_ops
 name|buf_ops_nfs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|nfs4_vnodeop_p
 decl_stmt|;
 end_decl_stmt
 

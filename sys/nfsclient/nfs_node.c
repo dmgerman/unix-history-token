@@ -967,7 +967,8 @@ literal|"nfs4"
 argument_list|,
 name|mntp
 argument_list|,
-name|nfs4_vnodeop_p
+operator|&
+name|nfs4_vnodeops
 argument_list|,
 operator|&
 name|nvp
@@ -982,7 +983,8 @@ literal|"nfs"
 argument_list|,
 name|mntp
 argument_list|,
-name|nfs_vnodeop_p
+operator|&
+name|nfs_vnodeops
 argument_list|,
 operator|&
 name|nvp

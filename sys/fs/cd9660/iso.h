@@ -1969,28 +1969,17 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|cd9660_vnodeop_p
+name|struct
+name|vop_vector
+name|cd9660_vnodeops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|cd9660_specop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
-name|cd9660_fifoop_p
+name|struct
+name|vop_vector
+name|cd9660_fifoops
 decl_stmt|;
 end_decl_stmt
 

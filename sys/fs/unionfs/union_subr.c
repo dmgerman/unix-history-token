@@ -1599,7 +1599,8 @@ name|scan
 operator|->
 name|v_op
 operator|==
-name|union_vnodeop_p
+operator|&
+name|union_vnodeops
 operator|&&
 name|scan
 operator|!=
@@ -2009,7 +2010,8 @@ literal|"union"
 argument_list|,
 name|mp
 argument_list|,
-name|union_vnodeop_p
+operator|&
+name|union_vnodeops
 argument_list|,
 name|vpp
 argument_list|)
@@ -4834,7 +4836,8 @@ name|vp
 operator|->
 name|v_op
 operator|!=
-name|union_vnodeop_p
+operator|&
+name|union_vnodeops
 condition|)
 block|{
 if|if
@@ -5382,7 +5385,8 @@ operator|)
 operator|->
 name|v_op
 operator|==
-name|union_vnodeop_p
+operator|&
+name|union_vnodeops
 condition|)
 block|{
 name|struct

@@ -281,6 +281,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|nwfs_vnodeops
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
