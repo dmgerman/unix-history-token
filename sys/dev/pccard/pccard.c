@@ -3177,7 +3177,7 @@ argument_list|(
 operator|(
 name|dev
 operator|,
-literal|"ccr_res == %lx-%lx, base=%lx\n"
+literal|"ccr_res == %lx-%lx, base=%x\n"
 operator|,
 name|rman_get_start
 argument_list|(

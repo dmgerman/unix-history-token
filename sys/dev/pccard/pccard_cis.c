@@ -2096,7 +2096,7 @@ break|break;
 block|}
 name|printf
 argument_list|(
-literal|", ccr addr %lx mask %lx\n"
+literal|", ccr addr %x mask %x\n"
 argument_list|,
 name|pf
 operator|->
