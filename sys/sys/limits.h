@@ -269,11 +269,9 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
+name|__POSIX_VISIBLE
+operator|||
+name|__XSI_VISIBLE
 end_if
 
 begin_define
@@ -284,23 +282,22 @@ value|__SSIZE_MAX
 end_define
 
 begin_comment
-comment|/* max value for a ssize_t */
+comment|/* max value for an ssize_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_XOPEN_SOURCE
-argument_list|)
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+operator|||
+name|__XSI_VISIBLE
 end_if
 
 begin_define
@@ -322,7 +319,7 @@ value|__OFF_MAX
 end_define
 
 begin_comment
-comment|/* max value for a off_t */
+comment|/* max value for an off_t */
 end_comment
 
 begin_define
@@ -333,8 +330,19 @@ value|__OFF_MIN
 end_define
 
 begin_comment
-comment|/* min value for a off_t */
+comment|/* min value for an off_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
 
 begin_define
 define|#
@@ -374,31 +382,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !_POSIX_SOURCE&& !_XOPEN_SOURCE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ANSI_SOURCE */
-end_comment
-
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__BSD_VISIBLE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__XSI_VISIBLE
-argument_list|)
 end_if
 
 begin_define
