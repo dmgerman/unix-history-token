@@ -550,8 +550,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|do_bridge
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -581,8 +579,6 @@ name|struct
 name|bdg_softc
 modifier|*
 name|ifp2sc
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
