@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.23	81/12/20	*/
+comment|/*	uipc_mbuf.c	1.24	81/12/21	*/
 end_comment
 
 begin_include
@@ -785,6 +785,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|m_more
 return|return
 operator|(
 name|m
