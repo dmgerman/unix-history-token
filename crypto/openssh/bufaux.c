@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * bufaux.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Mar 29 02:24:47 1995 ylo  *   * Auxiliary functions for storing and retrieving various data types to/from  * Buffers.  *  */
+comment|/*  *   * bufaux.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Mar 29 02:24:47 1995 ylo  *   * Auxiliary functions for storing and retrieving various data types to/from  * Buffers.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/bn.h>
+file|<openssl/bn.h>
 end_include
 
 begin_include

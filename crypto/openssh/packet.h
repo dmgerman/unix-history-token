@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * packet.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Mar 18 02:02:14 1995 ylo  *   * Interface for the packet protocol functions.  *   */
+comment|/*  *   * packet.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Sat Mar 18 02:02:14 1995 ylo  *   * Interface for the packet protocol functions.  *   * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ssl/bn.h>
+file|<openssl/bn.h>
 end_include
 
 begin_comment

@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<ssl/bn.h>
+file|<openssl/bn.h>
 end_include
 
 begin_include
@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/md5.h>
+file|<openssl/md5.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * cipher.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Apr 19 17:41:39 1995 ylo  *   */
+comment|/*  *   * cipher.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Apr 19 17:41:39 1995 ylo  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/md5.h>
+file|<openssl/md5.h>
 end_include
 
 begin_comment

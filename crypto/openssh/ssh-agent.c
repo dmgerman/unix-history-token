@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: ssh-agent.c,v 1.25 2000/01/02 21:51:03 markus Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Wed Mar 29 03:46:59 1995 ylo  * The authentication agent program.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Wed Mar 29 03:46:59 1995 ylo  * The authentication agent program.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/md5.h>
+file|<openssl/md5.h>
 end_include
 
 begin_typedef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * authfd.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Mar 29 01:30:28 1995 ylo  *   * Functions for connecting the local authentication agent.  *   */
+comment|/*  *   * authfd.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Mar 29 01:30:28 1995 ylo  *   * Functions for connecting the local authentication agent.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ssl/rsa.h>
+file|<openssl/rsa.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * cipher.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Apr 19 16:50:42 1995 ylo  *   */
+comment|/*  *   * cipher.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Wed Apr 19 16:50:42 1995 ylo  *   * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<ssl/des.h>
+file|<openssl/des.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ssl/blowfish.h>
+file|<openssl/blowfish.h>
 end_include
 
 begin_comment
