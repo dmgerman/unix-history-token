@@ -28,7 +28,7 @@ file|"opt_ipsec.h"
 end_include
 
 begin_comment
-comment|/* This code has derived from sys/net/rtsock.c on FreeBSD2.2.5 */
+comment|/* This code has derived from sys/net/rtsock.c on FreeBSD 2.2.5 */
 end_comment
 
 begin_include
@@ -1251,7 +1251,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|struct
@@ -1339,7 +1339,7 @@ name|so
 argument_list|,
 name|proto
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 name|kp
@@ -1479,7 +1479,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1502,7 +1502,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* xxx just EINVAL */
@@ -1539,7 +1539,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1562,7 +1562,7 @@ name|so
 argument_list|,
 name|nam
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* XXX just EINVAL */
@@ -1806,7 +1806,7 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
-name|td
+name|p
 parameter_list|)
 block|{
 name|int
@@ -1835,7 +1835,7 @@ name|nam
 argument_list|,
 name|control
 argument_list|,
-name|td
+name|p
 argument_list|)
 expr_stmt|;
 name|splx
