@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boggle.c	5.1 (Berkeley) %G%"
+literal|"@(#)boggle.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -389,7 +389,7 @@ name|char
 name|defname
 index|[]
 init|=
-literal|"/usr/games/bogdict"
+literal|"/usr/games/lib/bogdict"
 decl_stmt|;
 end_decl_stmt
 
