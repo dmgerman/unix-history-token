@@ -79,6 +79,14 @@ block|{
 name|daddr_t
 name|sn
 decl_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_dev
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"%s: %s "
@@ -89,6 +97,42 @@ name|bp
 operator|->
 name|bio_dev
 argument_list|)
+argument_list|,
+name|what
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_disk
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"%s%d: %s "
+argument_list|,
+name|bp
+operator|->
+name|bio_disk
+operator|->
+name|d_name
+argument_list|,
+name|bp
+operator|->
+name|bio_disk
+operator|->
+name|d_unit
+argument_list|,
+name|what
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"disk??: %s "
 argument_list|,
 name|what
 argument_list|)
