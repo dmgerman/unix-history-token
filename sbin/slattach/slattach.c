@@ -298,6 +298,29 @@ comment|/* path name of the tty (e.g. /dev/tty01) */
 end_comment
 
 begin_decl_stmt
+name|char
+modifier|*
+name|dvname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* basename of dev */
+end_comment
+
+begin_decl_stmt
+name|int
+name|locked
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* uucp lock */
+end_comment
+
+begin_decl_stmt
 name|int
 name|flow_control
 init|=
@@ -551,10 +574,6 @@ decl_stmt|;
 specifier|extern
 name|int
 name|optind
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 while|while
 condition|(
@@ -914,7 +933,7 @@ operator|=
 name|tty_path
 expr_stmt|;
 block|}
-name|cp
+name|dvname
 operator|=
 name|strrchr
 argument_list|(
@@ -924,7 +943,7 @@ literal|'/'
 argument_list|)
 expr_stmt|;
 comment|/* always succeeds */
-name|cp
+name|dvname
 operator|++
 expr_stmt|;
 comment|/* trailing tty pathname component */
@@ -936,7 +955,7 @@ literal|"%sslattach.%s.pid"
 argument_list|,
 name|_PATH_VARRUN
 argument_list|,
-name|cp
+name|dvname
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1164,6 +1183,8 @@ name|FILE
 modifier|*
 name|pidfile
 decl_stmt|;
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -1173,8 +1194,24 @@ argument_list|,
 operator|&
 name|ttydisc
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+block|{
 comment|/* reset to tty discipline */
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"ioctl(TIOCSETD): %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1222,14 +1259,30 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 comment|/* ignore HUP signal when parent dies. */
+if|if
+condition|(
 name|daemon
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 comment|/* fork, setsid, chdir /, and close std*. */
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"daemon(0,0): %m"
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 name|getppid
@@ -1296,6 +1349,34 @@ argument_list|,
 literal|"cannot install SIGHUP handler: %m"
 argument_list|)
 expr_stmt|;
+comment|/* unlock not needed here, always re-lock with new pid */
+if|if
+condition|(
+name|uu_lock
+argument_list|(
+name|dvname
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"can't lock %s"
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|locked
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1320,11 +1401,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"open(%s) fd=%d: %m"
+literal|"open(%s) %m"
 argument_list|,
 name|dev
-argument_list|,
-name|fd
 argument_list|)
 expr_stmt|;
 name|exit_handler
@@ -1395,13 +1474,20 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_ERR
 argument_list|,
-literal|"ioctl(TIOCSCTTY) failed: %m"
+literal|"ioctl(TIOCSCTTY): %m"
 argument_list|)
 expr_stmt|;
+name|exit_handler
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Make us the foreground process group associated with the 	   slip line which is our controlling terminal. */
 if|if
 condition|(
@@ -2524,6 +2610,15 @@ condition|)
 name|close
 argument_list|(
 name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
+name|uu_unlock
+argument_list|(
+name|dvname
 argument_list|)
 expr_stmt|;
 comment|/* Remove the PID file */
