@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t10.c	2.6 (Berkeley) %G%"
+literal|"@(#)t10.c	2.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,15 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nstips
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|xstip
+init|=
+operator|~
+name|STIP
 decl_stmt|;
 end_decl_stmt
 
@@ -2066,7 +2075,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -2076,7 +2085,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|3
+literal|2
 index|]
 argument_list|)
 condition|)
@@ -2091,7 +2100,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|4
+literal|3
 index|]
 argument_list|)
 expr_stmt|;
@@ -2101,7 +2110,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|4
+literal|3
 index|]
 argument_list|)
 condition|)
@@ -2109,6 +2118,10 @@ name|dy
 operator|=
 operator|-
 name|dy
+expr_stmt|;
+name|w
+operator|=
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -2125,26 +2138,35 @@ case|case
 name|DRAWCIRCLE
 case|:
 comment|/* circle */
+name|hpos
+operator|+=
+name|dx
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|DRAWTHICK
+case|:
+case|case
+name|DRAWSTYLE
+case|:
 name|fdprintf
 argument_list|(
 name|ptid
 argument_list|,
 literal|"D%c %d\n"
 argument_list|,
-name|DRAWCIRCLE
+name|cbits
+argument_list|(
+name|pi
+index|[
+literal|1
+index|]
+argument_list|)
 argument_list|,
 name|dx
 argument_list|)
 expr_stmt|;
 comment|/* dx is diameter */
-name|w
-operator|=
-literal|0
-expr_stmt|;
-name|hpos
-operator|+=
-name|dx
-expr_stmt|;
 break|break;
 case|case
 name|DRAWELLIPSE
@@ -2162,10 +2184,6 @@ argument_list|,
 name|dy
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -2175,21 +2193,11 @@ case|case
 name|DRAWLINE
 case|:
 comment|/* line */
-name|k
-operator|=
-name|cbits
-argument_list|(
-name|pi
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
 name|fdprintf
 argument_list|(
 name|ptid
 argument_list|,
-literal|"D%c %d %d "
+literal|"D%c %d %d\n"
 argument_list|,
 name|DRAWLINE
 argument_list|,
@@ -2197,44 +2205,6 @@ name|dx
 argument_list|,
 name|dy
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|k
-operator|<
-literal|128
-condition|)
-name|fdprintf
-argument_list|(
-name|ptid
-argument_list|,
-literal|"%c\n"
-argument_list|,
-name|k
-argument_list|)
-expr_stmt|;
-else|else
-name|fdprintf
-argument_list|(
-name|ptid
-argument_list|,
-literal|"%s\n"
-argument_list|,
-operator|&
-name|chname
-index|[
-name|chtab
-index|[
-name|k
-operator|-
-literal|128
-index|]
-index|]
-argument_list|)
-expr_stmt|;
-name|w
-operator|=
-literal|0
 expr_stmt|;
 name|hpos
 operator|+=
@@ -2255,7 +2225,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 expr_stmt|;
@@ -2265,7 +2235,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|5
+literal|4
 index|]
 argument_list|)
 condition|)
@@ -2280,7 +2250,7 @@ name|absmot
 argument_list|(
 name|pi
 index|[
-literal|6
+literal|5
 index|]
 argument_list|)
 expr_stmt|;
@@ -2290,7 +2260,7 @@ name|isnmot
 argument_list|(
 name|pi
 index|[
-literal|6
+literal|5
 index|]
 argument_list|)
 condition|)
@@ -2316,10 +2286,6 @@ argument_list|,
 name|dy2
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -2337,6 +2303,11 @@ case|case
 name|DRAWSPLINE
 case|:
 comment|/* spline */
+comment|/* case DRAWWIG:	/* wiggly line */
+case|case
+name|DRAWCURVE
+case|:
+comment|/* gremlin-style curve */
 default|default:
 comment|/* something else; copy it like spline */
 name|fdprintf
@@ -2358,10 +2329,6 @@ argument_list|,
 name|dy
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-literal|0
-expr_stmt|;
 name|hpos
 operator|+=
 name|dx
@@ -2370,44 +2337,13 @@ name|vpos
 operator|+=
 name|dy
 expr_stmt|;
-if|if
-condition|(
-name|cbits
-argument_list|(
-name|pi
-index|[
-literal|3
-index|]
-argument_list|)
-operator|==
-name|DRAWFCN
-operator|||
-name|cbits
-argument_list|(
-name|pi
-index|[
-literal|4
-index|]
-argument_list|)
-operator|==
-name|DRAWFCN
-condition|)
-block|{
-comment|/* it was somehow defective */
-name|fdprintf
-argument_list|(
-name|ptid
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
+name|writecoords
+label|:
 for|for
 control|(
 name|n
 operator|=
-literal|5
+literal|4
 init|;
 name|cbits
 argument_list|(
@@ -2417,7 +2353,7 @@ name|n
 index|]
 argument_list|)
 operator|!=
-name|DRAWFCN
+literal|'.'
 condition|;
 name|n
 operator|+=
@@ -2506,12 +2442,49 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|DRAWPOLY
+case|:
+comment|/* polygon with stipple */
+case|case
+name|DRAWUBPOLY
+case|:
+comment|/* polygon, stipple, no border */
+if|if
+condition|(
+name|xstip
+operator|!=
+name|stip
+condition|)
+name|ptstip
+argument_list|()
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"D%c %d"
+argument_list|,
+name|cbits
+argument_list|(
+name|pi
+index|[
+literal|1
+index|]
+argument_list|)
+argument_list|,
+name|dx
+argument_list|)
+expr_stmt|;
+goto|goto
+name|writecoords
+goto|;
 block|}
 for|for
 control|(
 name|n
 operator|=
-literal|3
+literal|2
 init|;
 name|cbits
 argument_list|(
@@ -2521,7 +2494,7 @@ name|n
 index|]
 argument_list|)
 operator|!=
-name|DRAWFCN
+literal|'.'
 condition|;
 name|n
 operator|++
@@ -2834,6 +2807,29 @@ comment|/* really should put out string rep of size */
 name|mpts
 operator|=
 name|i
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ptstip
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|xstip
+operator|=
+name|stip
+expr_stmt|;
+name|fdprintf
+argument_list|(
+name|ptid
+argument_list|,
+literal|"i%d\n"
+argument_list|,
+name|xstip
+argument_list|)
 expr_stmt|;
 block|}
 end_block

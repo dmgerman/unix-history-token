@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ni.c	2.4 (Berkeley) %G%"
+literal|"@(#)ni.c	2.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -645,6 +645,9 @@ operator|,
 name|caseam
 argument_list|()
 operator|,
+name|casest
+argument_list|()
+operator|,
 name|casede
 argument_list|()
 operator|,
@@ -1185,6 +1188,18 @@ literal|'m'
 argument_list|)
 argument_list|,
 name|caseam
+argument_list|)
+block|,
+name|C
+argument_list|(
+name|PAIR
+argument_list|(
+literal|'s'
+argument_list|,
+literal|'t'
+argument_list|)
+argument_list|,
+name|casest
 argument_list|)
 block|,
 name|C
@@ -2170,6 +2185,12 @@ literal|0
 block|,
 comment|/* int	lnsize	 */
 name|LNSIZE
+block|,
+comment|/* int	stip	 */
+name|STIP
+block|,
+comment|/* int	stip1	 */
+name|STIP
 block|, }
 block|, }
 decl_stmt|;

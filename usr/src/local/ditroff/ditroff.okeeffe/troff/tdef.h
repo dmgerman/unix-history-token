@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)tdef.h	2.4 (Berkeley) %G%  */
+comment|/*  * @(#)tdef.h	2.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -60,6 +60,17 @@ end_define
 
 begin_comment
 comment|/* default bold italic font */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STIP
+value|1
+end_define
+
+begin_comment
+comment|/* default stipple */
 end_comment
 
 begin_define
@@ -422,6 +433,14 @@ comment|/* next several chars describe arb drawing fcn */
 end_comment
 
 begin_comment
+comment|/* style: 's' m */
+end_comment
+
+begin_comment
+comment|/* thickness: 't' w */
+end_comment
+
+begin_comment
 comment|/* line: 'l' dx dy char */
 end_comment
 
@@ -440,6 +459,24 @@ end_comment
 begin_comment
 comment|/* wiggly line '~' x y x y ... */
 end_comment
+
+begin_comment
+comment|/*	or     'g' x y x y ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWTHICK
+value|'t'
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRAWSTYLE
+value|'s'
+end_define
 
 begin_define
 define|#
@@ -480,12 +517,56 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DRAWCURVE
+value|'g'
+end_define
+
+begin_comment
+comment|/* gremlin spline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWWIG
+value|'~'
+end_define
+
+begin_comment
+comment|/* wiggly line with spline */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DRAWSPLINE
 value|'~'
 end_define
 
 begin_comment
 comment|/* quadratic B spline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWPOLY
+value|'p'
+end_define
+
+begin_comment
+comment|/* polygon with stipples */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWUBPOLY
+value|'P'
+end_define
+
+begin_comment
+comment|/* polygon, stipples, no border */
 end_comment
 
 begin_define
@@ -2602,6 +2683,20 @@ name|word
 value|(env->_word)
 end_define
 
+begin_define
+define|#
+directive|define
+name|stip1
+value|(env->_stip1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|stip
+value|(env->_stip)
+end_define
+
 begin_comment
 comment|/*  * Note (jaap)  * If this structure changes in ni.c, you should change  * this as well  */
 end_comment
@@ -2824,6 +2919,12 @@ name|_itmac
 decl_stmt|;
 name|int
 name|_lnsize
+decl_stmt|;
+name|int
+name|_stip
+decl_stmt|;
+name|int
+name|_stip1
 decl_stmt|;
 name|tchar
 modifier|*

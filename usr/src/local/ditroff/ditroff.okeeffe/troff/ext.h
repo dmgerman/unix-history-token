@@ -648,6 +648,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|nstips
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|nx
 decl_stmt|;
 end_decl_stmt
@@ -826,6 +833,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|stdi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tchar
+modifier|*
+name|stiplab
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n9.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n9.c	2.2 (CWI) 93/02/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -471,6 +471,8 @@ decl_stmt|,
 name|o
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
@@ -479,6 +481,8 @@ decl_stmt|,
 name|w
 index|[
 name|NOV
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -1355,10 +1359,15 @@ comment|/* input is \D'f dx dy dx dy ... c' (or at least it had better be) */
 comment|/* this does drawing function f with character c and the */
 comment|/* specified dx,dy pairs interpreted as appropriate */
 comment|/* pairs are deltas from last point, except for radii */
+comment|/* t x		set line thickness to x */
+comment|/* s x		set line style to bit-map x (x BETTER be in "u")*/
 comment|/* l dx dy:	line from here by dx,dy */
 comment|/* c x:		circle of diameter x, left side here */
 comment|/* e x y:	ellipse of diameters x,y, left side here */
 comment|/* a dx1 dy1 dx2 dy2: 			ccw arc: ctr at dx1,dy1, then end at dx2,dy2 from there */
+comment|/* [Pp] s x y ...:	for polygons filled with stipple s */
+comment|/* ~ x y ...:	wiggly line  -or-  */
+comment|/* g x y ...:	for gremlin-style curves */
 comment|/* ~ dx1 dy1 dx2 dy2...: 			spline to dx1,dy1 to dx2,dy2 ... */
 comment|/* f dx dy ...:	f is any other char:  like spline */
 if|if
@@ -1401,6 +1410,11 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|nlflg
+condition|)
+break|break;
 name|c
 operator|=
 name|getch
@@ -1434,6 +1448,72 @@ name|vflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+operator|&&
+operator|(
+name|type
+operator|==
+name|DRAWPOLY
+operator|||
+name|type
+operator|==
+name|DRAWUBPOLY
+operator|)
+condition|)
+block|{
+name|dfact
+operator|=
+literal|1
+expr_stmt|;
+name|dx
+index|[
+literal|0
+index|]
+operator|=
+name|quant
+argument_list|(
+name|atoi
+argument_list|()
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dx
+index|[
+literal|0
+index|]
+operator|<
+literal|0
+operator|||
+name|dx
+index|[
+literal|0
+index|]
+operator|>
+name|MAXMOT
+condition|)
+name|dx
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|dy
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 name|dfact
 operator|=
 name|EM
@@ -1602,18 +1682,6 @@ name|chbits
 operator||
 name|ZBIT
 expr_stmt|;
-name|drawbuf
-index|[
-literal|2
-index|]
-operator|=
-literal|'.'
-operator||
-name|chbits
-operator||
-name|ZBIT
-expr_stmt|;
-comment|/* use default drawing character */
 for|for
 control|(
 name|k
@@ -1622,7 +1690,7 @@ literal|0
 operator|,
 name|j
 operator|=
-literal|3
+literal|2
 init|;
 name|k
 operator|<
@@ -1712,12 +1780,12 @@ condition|)
 block|{
 name|drawbuf
 index|[
-literal|5
+literal|4
 index|]
 operator|=
 name|drawbuf
 index|[
-literal|4
+literal|3
 index|]
 operator||
 name|NMOT
@@ -1725,8 +1793,34 @@ expr_stmt|;
 comment|/* so the net vertical is zero */
 name|j
 operator|=
-literal|6
+literal|5
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|DRAWTHICK
+operator|||
+name|type
+operator|==
+name|DRAWSTYLE
+condition|)
+block|{
+name|drawbuf
+index|[
+literal|3
+index|]
+operator|=
+name|drawbuf
+index|[
+literal|2
+index|]
+operator||
+name|NMOT
+expr_stmt|;
+comment|/* so net horizontal is zero */
 block|}
 name|drawbuf
 index|[
@@ -1734,7 +1828,7 @@ name|j
 operator|++
 index|]
 operator|=
-name|DRAWFCN
+literal|'.'
 operator||
 name|chbits
 operator||
