@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.43	82/10/23	*/
+comment|/*	autoconf.c	4.44	82/10/31	*/
 end_comment
 
 begin_comment
@@ -1762,6 +1762,13 @@ name|ualloc
 decl_stmt|,
 name|zmemall
 argument_list|()
+decl_stmt|;
+specifier|extern
+name|int
+name|catcher
+index|[
+literal|256
+index|]
 decl_stmt|;
 comment|/* 	 * Initialize the UNIBUS, by freeing the map 	 * registers and the buffered data path registers 	 */
 name|uhp
