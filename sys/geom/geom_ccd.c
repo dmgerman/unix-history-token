@@ -1327,9 +1327,15 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 break|break;
-default|default:
-comment|/* MOD_SHUTDOWN etc */
+case|case
+name|MOD_SHUTDOWN
+case|:
 break|break;
+default|default:
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
 block|}
 return|return
 operator|(
