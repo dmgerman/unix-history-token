@@ -88,11 +88,6 @@ decl_stmt|;
 name|struct
 name|proc
 modifier|*
-name|gd_prevproc
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
 name|gd_npxproc
 decl_stmt|;
 name|struct

@@ -834,6 +834,14 @@ argument|p_list
 argument_list|)
 block|{
 comment|/* 		 * Increment time in/out of memory and sleep time 		 * (if sleeping).  We ignore overflow; with 16-bit int's 		 * (remember them?) overflow takes 45 days. 		if (p->p_stat == SWAIT) 			continue; 		 */
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_swtime
@@ -881,20 +889,22 @@ name|p_slptime
 operator|>
 literal|1
 condition|)
-continue|continue;
-comment|/* 		 * prevent state changes and protect run queue 		 */
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-name|mtx_enter
+block|{
+name|mtx_exit
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * prevent state changes and protect run queue 		 */
+name|s
+operator|=
+name|splhigh
+argument_list|()
 expr_stmt|;
 comment|/* 		 * p_pctcpu is only for ps. 		 */
 if|#
@@ -1514,12 +1524,6 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|splx(safepri);
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -3759,14 +3763,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_exit
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MTX_SPIN
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -3826,6 +3822,14 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3851,6 +3855,14 @@ name|unsigned
 name|int
 name|newpriority
 decl_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -3901,6 +3913,14 @@ block|}
 name|maybe_resched
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

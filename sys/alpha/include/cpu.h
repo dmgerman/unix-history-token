@@ -63,17 +63,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|CLKF_BASEPRI
-parameter_list|(
-name|framep
-parameter_list|)
-define|\
-value|(((framep)->cf_tf.tf_regs[FRAME_PS]& ALPHA_PSL_IPL_MASK) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLKF_PC
 parameter_list|(
 name|framep

@@ -8307,14 +8307,6 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|prevproc
-argument_list|,
-operator|&
-name|proc0
-argument_list|)
-expr_stmt|;
 comment|/* make ldt memory segments */
 comment|/* 	 * The data segment limit must not cover the user area because we 	 * don't want the user area to be writable in copyout() etc. (page 	 * level protection is lost in kernel mode on 386's).  Also, we 	 * don't want the user area to be writable directly (page level 	 * protection of the user area is not available on 486's with 	 * CR0_WP set, because there is no user-read/kernel-write mode). 	 * 	 * XXX - VM_MAXUSER_ADDRESS is an end address, not a max.  And it 	 * should be spelled ...MAX_USER... 	 */
 define|#
@@ -8915,6 +8907,17 @@ operator|&
 name|r_idt
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We need this mutex before the console probe. 	 */
+name|mtx_init
+argument_list|(
+operator|&
+name|clock_lock
+argument_list|,
+literal|"clk interrupt lock"
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize the console before we print anything out. 	 */
 name|cninit
 argument_list|()
@@ -8932,7 +8935,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Giant is used early for at least debugger traps, unexpected traps, 	 * and vm86bios initialization. 	 */
+comment|/* 	 * Giant is used early for at least debugger traps and unexpected traps. 	 */
 name|mtx_init
 argument_list|(
 operator|&

@@ -8234,17 +8234,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* USE_COMLOCK */
-ifdef|#
-directive|ifdef
-name|USE_CLOCKLOCK
-comment|/* lock regions around the clock hardware */
-name|struct
-name|simplelock
-name|clock_lock
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* USE_CLOCKLOCK */
 comment|/* lock around the MP rendezvous */
 specifier|static
 name|struct
@@ -8371,23 +8360,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_COMLOCK */
-ifdef|#
-directive|ifdef
-name|USE_CLOCKLOCK
-name|s_lock_init
-argument_list|(
-operator|(
-expr|struct
-name|simplelock
-operator|*
-operator|)
-operator|&
-name|clock_lock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_CLOCKLOCK */
 name|s_lock_init
 argument_list|(
 operator|&
@@ -10114,13 +10086,6 @@ comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * some
 name|PCPU_SET
 argument_list|(
 name|curproc
-argument_list|,
-name|idleproc
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|prevproc
 argument_list|,
 name|idleproc
 argument_list|)

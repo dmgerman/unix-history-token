@@ -939,6 +939,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_NOLOAD
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Ignore during load avg calculations. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_PPWAIT
 value|0x00010
 end_define
@@ -1060,12 +1071,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_NOLOAD
+name|P_ALRMPEND
 value|0x08000
 end_define
 
 begin_comment
-comment|/* Ignore during load avg calculations. */
+comment|/* Pending SIGVTALRM needs to be posted. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_PROFPEND
+value|0x08000
+end_define
+
+begin_comment
+comment|/* Pending SIGPROF needs to be posted. */
 end_comment
 
 begin_comment

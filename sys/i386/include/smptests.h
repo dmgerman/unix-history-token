@@ -89,7 +89,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * COMLOCK protects the sio/cy drivers.  * CLOCKLOCK protects clock hardware and data  * known to be incomplete:  *	joystick lkm  *	?  */
+comment|/*  * These defines enable critical region locking of areas that were  * protected via cli/sti in the UP kernel.  *  * COMLOCK protects the sio/cy drivers.  * known to be incomplete:  *	joystick lkm  *	?  */
 end_comment
 
 begin_ifdef
@@ -102,12 +102,6 @@ begin_define
 define|#
 directive|define
 name|USE_COMLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|USE_CLOCKLOCK
 end_define
 
 begin_endif

@@ -633,6 +633,14 @@ name|Giant
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|clock_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Used to replace return with an exit Giant and return.  */
 end_comment

@@ -185,60 +185,6 @@ begin_comment
 comment|/* USE_COMLOCK */
 end_comment
 
-begin_comment
-comment|/*   * Clock hardware/struct lock.  * XXX pcaudio and friends still need this lock installed.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_CLOCKLOCK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|CLOCK_LOCK
-parameter_list|()
-value|s_lock(&clock_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_UNLOCK
-parameter_list|()
-value|s_unlock(&clock_lock)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CLOCK_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_UNLOCK
-parameter_list|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USE_CLOCKLOCK */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -259,20 +205,6 @@ begin_define
 define|#
 directive|define
 name|COM_UNLOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_LOCK
-parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLOCK_UNLOCK
 parameter_list|()
 end_define
 
@@ -461,14 +393,6 @@ specifier|extern
 name|struct
 name|simplelock
 name|intr_lock
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|simplelock
-name|clock_lock
 decl_stmt|;
 end_decl_stmt
 

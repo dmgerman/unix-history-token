@@ -116,46 +116,6 @@ parameter_list|)
 value|(intr_nesting_level>= 2)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * XXX splsoftclock() is very broken and barely worth fixing.  It doesn't  * turn off the clock bit in imen or in the icu.  (This is not a serious  * problem at 100 Hz but it is serious at 16000 Hz for pcaudio.  softclock()  * can take more than 62.5 usec so clock interrupts are lost.)  It doesn't  * check for pending interrupts being unmasked.  clkintr() and Xintr0()  * assume that the ipl is high when hardclock() returns.  Our SWI_CLOCK  * handling is efficient enough that little is gained by calling  * softclock() directly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLKF_BASEPRI
-parameter_list|(
-name|framep
-parameter_list|)
-value|((framep)->cf_ppl == 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|CLKF_BASEPRI
-parameter_list|(
-name|framep
-parameter_list|)
-value|(0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

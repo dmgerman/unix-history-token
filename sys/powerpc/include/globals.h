@@ -146,17 +146,6 @@ name|cpuid
 value|PCPU_GET(cpuno)
 end_define
 
-begin_define
-define|#
-directive|define
-name|prevproc
-value|PCPU_GET(curproc)
-end_define
-
-begin_comment
-comment|/* XXX - until ithreads */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

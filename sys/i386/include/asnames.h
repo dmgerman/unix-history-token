@@ -2047,13 +2047,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_prevproc
-value|FS(prevproc)
-end_define
-
-begin_define
-define|#
-directive|define
 name|_idleproc
 value|FS(idleproc)
 end_define

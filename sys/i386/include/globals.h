@@ -142,13 +142,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|prevproc
-value|GLOBAL_RVALUE_NV(prevproc, struct proc *)
-end_define
-
-begin_define
-define|#
-directive|define
 name|curpcb
 value|GLOBAL_RVALUE_NV(curpcb, struct pcb *)
 end_define
@@ -342,13 +335,6 @@ begin_macro
 name|GLOBAL_FUNC
 argument_list|(
 argument|curproc
-argument_list|)
-end_macro
-
-begin_macro
-name|GLOBAL_FUNC
-argument_list|(
-argument|prevproc
 argument_list|)
 end_macro
 
