@@ -271,6 +271,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LK_NOSHARE
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Only allow exclusive locks */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LK_TIMELOCK
 value|0x00000100
 end_define
