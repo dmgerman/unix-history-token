@@ -25,6 +25,18 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
 begin_enum
 enum|enum
 name|obj_type
@@ -59,6 +71,10 @@ begin_struct
 struct|struct
 name|vm_object
 block|{
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|vm_object
@@ -422,7 +438,8 @@ name|vm_object_lock
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_lock(&Giant)
+define|\
+value|mtx_lock((object) == kmem_object ?&kmem_object->mtx :&Giant)
 end_define
 
 begin_define
@@ -432,7 +449,8 @@ name|vm_object_unlock
 parameter_list|(
 name|object
 parameter_list|)
-value|mtx_unlock(&Giant)
+define|\
+value|mtx_unlock((object) == kmem_object ?&kmem_object->mtx :&Giant)
 end_define
 
 begin_function_decl
