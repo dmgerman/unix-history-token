@@ -41,19 +41,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"defs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"symtab.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"symtab.h"
 end_include
 
 begin_ifdef
@@ -598,12 +604,6 @@ argument_list|)
 expr_stmt|;
 do|do
 block|{
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 name|char
 modifier|*
 name|name
