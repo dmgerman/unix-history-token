@@ -1017,6 +1017,22 @@ block|}
 modifier|*
 name|freelist
 struct|;
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+name|char
+name|lockfilename
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* name of file from which we were locked */
+name|int
+name|lockline
+decl_stmt|;
+comment|/* and the line number */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
