@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.15 %G%"
+literal|"@(#)var.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,6 +1082,7 @@ operator|->
 name|type
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Sets are some multiple of longs 			 */
 return|return
 name|roundup
 argument_list|(
@@ -1104,7 +1105,10 @@ call|(
 name|long
 call|)
 argument_list|(
-name|A_SET
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
 argument_list|)
 argument_list|)
 return|;
@@ -1239,6 +1243,9 @@ name|nl
 modifier|*
 name|p
 decl_stmt|;
+name|long
+name|elementalign
+decl_stmt|;
 name|p
 operator|=
 name|np
@@ -1306,31 +1313,25 @@ block|}
 case|case
 name|ARRAY
 case|:
-comment|/* 			 * strings are structures, since they can get 			 * assigned form/to as structure assignments. 			 * other arrays are aligned as their component types 			 */
-if|if
-condition|(
+comment|/* 			 * arrays are structures, since they can get 			 * assigned form/to as structure assignments. 			 * preserve internal alignment if it is greater. 			 */
+name|elementalign
+operator|=
+name|align
+argument_list|(
 name|p
 operator|->
 name|type
-operator|==
-name|nl
-operator|+
-name|T1CHAR
-condition|)
-block|{
+argument_list|)
+expr_stmt|;
 return|return
+name|elementalign
+operator|>
+name|A_STRUCT
+condition|?
+name|elementalign
+else|:
 name|A_STRUCT
 return|;
-block|}
-name|p
-operator|=
-name|p
-operator|->
-name|type
-expr_stmt|;
-goto|goto
-name|alignit
-goto|;
 case|case
 name|PTR
 case|:
