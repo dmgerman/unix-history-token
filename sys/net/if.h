@@ -887,7 +887,7 @@ name|u_short
 name|ifa_flags
 decl_stmt|;
 comment|/* mostly rt_flags for cloning */
-name|short
+name|u_int
 name|ifa_refcnt
 decl_stmt|;
 comment|/* extra to malloc for link info */
