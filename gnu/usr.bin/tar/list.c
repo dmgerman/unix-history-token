@@ -2423,9 +2423,9 @@ argument_list|)
 argument_list|,
 name|d_first
 condition|?
-literal|"%e %b %H:%M %Y"
+literal|"%e %b %R %Y"
 else|:
-literal|"%b %e %H:%M %Y"
+literal|"%b %e %R %Y"
 argument_list|,
 name|localtime
 argument_list|(
