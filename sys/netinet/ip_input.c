@@ -7375,6 +7375,16 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+name|EACCES
+case|:
+comment|/* ipfw denied packet */
+name|m_freem
+argument_list|(
+name|mcopy
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|icmp_error
 argument_list|(
