@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	6.3	84/03/20	*/
+comment|/*	if.h	6.4	84/04/06	*/
 end_comment
 
 begin_comment
@@ -259,6 +259,17 @@ end_define
 
 begin_comment
 comment|/* no address resolution protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFF_LOCAL
+value|0x100
+end_define
+
+begin_comment
+comment|/* local network, host part encoded */
 end_comment
 
 begin_comment
