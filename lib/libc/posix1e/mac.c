@@ -1258,6 +1258,7 @@ modifier|*
 modifier|*
 name|mac
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|elements

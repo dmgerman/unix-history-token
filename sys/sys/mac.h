@@ -255,6 +255,7 @@ name|mac_t
 modifier|*
 name|_label
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|_elements
