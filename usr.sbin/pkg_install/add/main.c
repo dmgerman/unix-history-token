@@ -465,7 +465,7 @@ literal|'t'
 case|:
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|FirstPen
 argument_list|,
@@ -475,11 +475,6 @@ sizeof|sizeof
 argument_list|(
 name|FirstPen
 argument_list|)
-argument_list|)
-operator|>
-sizeof|sizeof
-argument_list|(
-name|FirstPen
 argument_list|)
 condition|)
 name|errx
@@ -612,7 +607,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|temppackageroot
 argument_list|,
@@ -622,11 +617,6 @@ sizeof|sizeof
 argument_list|(
 name|temppackageroot
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|temppackageroot
 argument_list|)
 condition|)
 name|errx
@@ -638,7 +628,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|temppackageroot
 argument_list|,
@@ -649,11 +639,6 @@ sizeof|sizeof
 argument_list|(
 name|temppackageroot
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|temppackageroot
 argument_list|)
 condition|)
 name|errx
@@ -712,7 +697,7 @@ operator|)
 condition|)
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|remotepkg
 argument_list|,
@@ -722,11 +707,6 @@ sizeof|sizeof
 argument_list|(
 name|temppackageroot
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|temppackageroot
 argument_list|)
 condition|)
 name|errx
@@ -769,7 +749,7 @@ block|{
 comment|/* preserve URLs */
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|pkgnames
 index|[
@@ -786,14 +766,6 @@ index|[
 name|ch
 index|]
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|pkgnames
-index|[
-name|ch
-index|]
 argument_list|)
 condition|)
 name|errx
@@ -829,7 +801,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|pkgnames
 index|[
@@ -845,14 +817,6 @@ index|[
 name|ch
 index|]
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|pkgnames
-index|[
-name|ch
-index|]
 argument_list|)
 condition|)
 name|errx
@@ -923,7 +887,7 @@ block|{
 comment|/* let pkg_do() fail later, so that error is reported */
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|pkgnames
 index|[
@@ -940,14 +904,6 @@ index|[
 name|ch
 index|]
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|pkgnames
-index|[
-name|ch
-index|]
 argument_list|)
 condition|)
 name|errx
@@ -972,7 +928,7 @@ else|else
 block|{
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|pkgnames
 index|[
@@ -988,14 +944,6 @@ index|[
 name|ch
 index|]
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|pkgnames
-index|[
-name|ch
-index|]
 argument_list|)
 condition|)
 name|errx
@@ -1145,7 +1093,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1159,11 +1107,6 @@ argument_list|(
 name|sitepath
 argument_list|)
 argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
-argument_list|)
 condition|)
 return|return
 name|NULL
@@ -1182,7 +1125,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlcpy
+name|s_strlcpy
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1195,11 +1138,6 @@ sizeof|sizeof
 argument_list|(
 name|sitepath
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
 argument_list|)
 condition|)
 return|return
@@ -1210,7 +1148,7 @@ else|else
 block|{
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1221,11 +1159,6 @@ argument_list|(
 name|sitepath
 argument_list|)
 argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
-argument_list|)
 condition|)
 return|return
 name|NULL
@@ -1233,7 +1166,7 @@ return|;
 block|}
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1243,11 +1176,6 @@ sizeof|sizeof
 argument_list|(
 name|sitepath
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
 argument_list|)
 condition|)
 return|return
@@ -1261,7 +1189,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1273,11 +1201,6 @@ sizeof|sizeof
 argument_list|(
 name|sitepath
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
 argument_list|)
 condition|)
 return|return
@@ -1330,7 +1253,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1346,11 +1269,6 @@ argument_list|(
 name|sitepath
 argument_list|)
 argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
-argument_list|)
 condition|)
 return|return
 name|NULL
@@ -1360,7 +1278,7 @@ block|}
 block|}
 if|if
 condition|(
-name|strlcat
+name|s_strlcat
 argument_list|(
 name|sitepath
 argument_list|,
@@ -1370,11 +1288,6 @@ sizeof|sizeof
 argument_list|(
 name|sitepath
 argument_list|)
-argument_list|)
-operator|>=
-sizeof|sizeof
-argument_list|(
-name|sitepath
 argument_list|)
 condition|)
 return|return
