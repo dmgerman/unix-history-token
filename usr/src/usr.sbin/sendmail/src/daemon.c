@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.38 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.39 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.38 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.39 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1369,33 +1369,28 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
-comment|/*  *  MAPHOSTNAME -- turn a hostname into canonical form  *  *	Parameters:  *		hbuf -- a buffer containing a hostname.  *		hbsize -- the size of hbuf.  *  *	Returns:  *		none.  *  *	Side Effects:  *		Looks up the host specified in hbuf.  If it is not  *		the canonical name for that host, replace it with  *		the canonical name.  If the name is unknown, or it  *		is already the canonical name, leave it unchanged.  */
+comment|/*  *  MAPHOSTNAME -- turn a hostname into canonical form  *  *	Parameters:  *		hbuf -- a buffer containing a hostname.  *		hbsize -- the size of hbuf.  *  *	Returns:  *		TRUE if the host name was mapped.  *		FALSE otherwise.  *  *	Side Effects:  *		Looks up the host specified in hbuf.  If it is not  *		the canonical name for that host, replace it with  *		the canonical name.  If the name is unknown, or it  *		is already the canonical name, leave it unchanged.  */
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|maphostname
-argument_list|(
-argument|hbuf
-argument_list|,
-argument|hbsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hbuf
+parameter_list|,
+name|hbsize
+parameter_list|)
 name|char
 modifier|*
 name|hbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|hbsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1429,16 +1424,16 @@ name|hbuf
 operator|!=
 literal|'['
 condition|)
-block|{
+return|return
+operator|(
 name|getcanonname
 argument_list|(
 name|hbuf
 argument_list|,
 name|hbsize
 argument_list|)
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1459,7 +1454,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 operator|*
 name|cp
 operator|=
@@ -1502,7 +1501,11 @@ name|hp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 if|if
 condition|(
 name|strlen
@@ -1537,8 +1540,13 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_else
 else|#
@@ -1640,40 +1648,36 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. ** **	Returns: **		none. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. ** **	Returns: **		TRUE if the hostname was mapped. **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
 end_comment
 
 begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|bool
 name|maphostname
-argument_list|(
-argument|hbuf
-argument_list|,
-argument|hbsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hbuf
+parameter_list|,
+name|hbsize
+parameter_list|)
 name|char
 modifier|*
 name|hbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|hbsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.28 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.29 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.28 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.29 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -843,29 +843,21 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|bool
 name|getcanonname
-argument_list|(
-argument|host
-argument_list|,
-argument|hbsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|hbsize
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|hbsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -901,6 +893,11 @@ decl_stmt|,
 name|qdcount
 decl_stmt|,
 name|loopcnt
+decl_stmt|;
+name|bool
+name|rval
+init|=
+name|FALSE
 decl_stmt|;
 name|char
 name|nbuf
@@ -967,7 +964,11 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 comment|/* find first satisfactory answer */
 name|hp
@@ -1016,7 +1017,11 @@ argument_list|,
 name|ancount
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 name|cp
 operator|=
@@ -1078,7 +1083,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 comment|/* 	 * just in case someone puts a CNAME record after another record, 	 * check all records for CNAME; otherwise, just take the first 	 * name found. 	 */
 for|for
 control|(
@@ -1134,6 +1143,10 @@ operator|<
 literal|0
 condition|)
 break|break;
+name|rval
+operator|=
+name|TRUE
+expr_stmt|;
 if|if
 condition|(
 name|first
@@ -1274,8 +1287,13 @@ name|loop
 goto|;
 block|}
 block|}
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_else
 else|#
@@ -1292,29 +1310,21 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_macro
+begin_function
+name|bool
 name|getcanonname
-argument_list|(
-argument|host
-argument_list|,
-argument|hbsize
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|hbsize
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|hbsize
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -1334,7 +1344,11 @@ name|hp
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 if|if
 condition|(
 name|strlen
@@ -1346,7 +1360,11 @@ argument_list|)
 operator|>=
 name|hbsize
 condition|)
-return|return;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -1359,8 +1377,13 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
