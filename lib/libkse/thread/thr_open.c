@@ -48,7 +48,7 @@ end_include
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_open
+name|__open
 argument_list|,
 name|open
 argument_list|)
