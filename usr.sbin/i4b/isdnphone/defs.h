@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/soundcard.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -109,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|<machine/i4b_tel_ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/soundcard.h>
 end_include
 
 begin_comment
