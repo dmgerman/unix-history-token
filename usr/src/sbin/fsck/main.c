@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2353,16 +2353,9 @@ name|stblock
 operator|.
 name|st_rdev
 condition|)
-block|{
 name|hotroot
 operator|++
 expr_stmt|;
-return|return
-operator|(
-name|name
-operator|)
-return|;
-block|}
 name|raw
 operator|=
 name|rawname
