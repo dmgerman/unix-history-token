@@ -427,6 +427,20 @@ define|#
 directive|define
 name|PL_EVENT_SIGNAL
 value|1
+name|int
+name|pl_flags
+decl_stmt|;
+comment|/* LWP flags. */
+define|#
+directive|define
+name|PL_FLAG_SA
+value|0x01
+comment|/* M:N thread */
+define|#
+directive|define
+name|PL_FLAG_BOUND
+value|0x02
+comment|/* M:N bound thread */
 block|}
 struct|;
 end_struct
