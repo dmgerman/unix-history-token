@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	4.17	83/01/17	*/
+comment|/*	mbuf.h	4.18	83/03/25	*/
 end_comment
 
 begin_comment
@@ -447,7 +447,7 @@ comment|/* times failed to find space */
 name|short
 name|m_mtypes
 index|[
-literal|32
+literal|256
 index|]
 decl_stmt|;
 comment|/* type specific mbuf allocations */
