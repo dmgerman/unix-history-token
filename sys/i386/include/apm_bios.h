@@ -470,6 +470,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PMDV_DISPALL
+value|0x01ff
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMDV_2NDSTORAGE0
 value|0x0200
 end_define
