@@ -3271,15 +3271,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_find_dead_thread
-parameter_list|(
-name|pthread_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|_find_thread
 parameter_list|(
 name|pthread_t
