@@ -32,7 +32,7 @@ file|"acl_support.h"
 end_include
 
 begin_comment
-comment|/*  * acl_valid: accepts an ACL, returns 0 on valid ACL, -1 for invalid,  * and errno set to EINVAL.  *  * Implemented by calling the acl_check routine in acl_support, which  * requires ordering.  We call acl_support's acl_sort to make this  * true.  *  * POSIX.1e allows acl_valid() to reorder the ACL as it sees fit.  *  * This call is deprecated, as it doesn't ask whether the ACL is valid  * for a particular target.  */
+comment|/*  * acl_valid: accepts an ACL, returns 0 on valid ACL, -1 for invalid,  * and errno set to EINVAL.  *  * Implemented by calling the acl_check routine in acl_support, which  * requires ordering.  We call acl_support's acl_sort to make this  * true.  POSIX.1e allows acl_valid() to reorder the ACL as it sees fit.  *  * This call is deprecated, as it doesn't ask whether the ACL is valid  * for a particular target.  However, this call is standardized, unlike  * the other two forms.  */
 end_comment
 
 begin_function
@@ -87,7 +87,7 @@ end_function
 
 begin_function
 name|int
-name|acl_valid_file
+name|acl_valid_file_np
 parameter_list|(
 specifier|const
 name|char
@@ -155,7 +155,7 @@ end_function
 
 begin_function
 name|int
-name|acl_valid_fd
+name|acl_valid_fd_np
 parameter_list|(
 name|int
 name|fd
