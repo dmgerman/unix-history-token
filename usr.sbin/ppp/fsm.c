@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.38 1999/01/28 01:56:31 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.39 1999/02/26 21:28:11 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1742,6 +1742,7 @@ break|break;
 case|case
 name|ST_CLOSING
 case|:
+comment|/* This TLF contradicts the RFC (1661), which ``misses it out'' ! */
 call|(
 modifier|*
 name|fp
@@ -4693,18 +4694,8 @@ name|ccp
 operator|.
 name|fsm
 expr_stmt|;
-call|(
-modifier|*
-name|fp
-operator|->
-name|fn
-operator|->
-name|LayerFinish
-call|)
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* Despite the RFC (1661), don't do an out-of-place TLF */
+comment|/* (*fp->fn->LayerFinish)(fp); */
 switch|switch
 condition|(
 name|fp
@@ -4735,24 +4726,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-call|(
-modifier|*
-name|fp
-operator|->
-name|parent
-operator|->
-name|LayerFinish
-call|)
-argument_list|(
-name|fp
-operator|->
-name|parent
-operator|->
-name|object
-argument_list|,
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* See above */
+comment|/* (*fp->parent->LayerFinish)(fp->parent->object, fp); */
 block|}
 break|break;
 case|case
