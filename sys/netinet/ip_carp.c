@@ -336,16 +336,18 @@ name|arpcom
 name|sc_ac
 decl_stmt|;
 comment|/* Interface clue */
+define|#
+directive|define
+name|sc_if
+value|sc_ac.ac_if
+define|#
+directive|define
+name|sc_carpdev
+value|sc_ac.ac_if.if_carpdev
 name|int
 name|if_flags
 decl_stmt|;
 comment|/* UP/DOWN */
-name|struct
-name|ifnet
-modifier|*
-name|sc_ifp
-decl_stmt|;
-comment|/* Parent */
 name|struct
 name|in_ifaddr
 modifier|*
@@ -479,13 +481,6 @@ comment|/* Interface clue */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|sc_if
-value|sc_ac.ac_if
-end_define
 
 begin_decl_stmt
 name|int
@@ -1756,7 +1751,7 @@ name|AF_INET
 operator|&&
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|!=
 name|NULL
 condition|)
@@ -1773,7 +1768,7 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 argument_list|,
@@ -2266,14 +2261,14 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|&&
 operator|(
 name|cif
 operator|=
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 operator|)
@@ -2307,7 +2302,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 operator|=
@@ -2329,7 +2324,7 @@ name|ifpromisc
 argument_list|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 argument_list|,
 literal|0
 argument_list|)
@@ -4183,6 +4178,12 @@ operator|->
 name|if_carp
 operator|==
 name|NULL
+operator|||
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_CARP
 condition|)
 continue|continue;
 name|cif
@@ -5390,12 +5391,12 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
-comment|/*		arprequest(sc->sc_ifp,&in,&in, sc->sc_ac.ac_enaddr); */
+comment|/*		arprequest(sc->sc_carpdev,&in,&in, sc->sc_ac.ac_enaddr); */
 name|arp_ifinit2
 argument_list|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 argument_list|,
 name|ifa
 argument_list|,
@@ -5486,7 +5487,7 @@ name|nd6_na_output
 argument_list|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 argument_list|,
 operator|&
 name|mcast
@@ -7429,7 +7430,7 @@ name|ia
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|=
 name|ifp
 expr_stmt|;
@@ -7662,7 +7663,7 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 decl_stmt|;
@@ -7751,7 +7752,7 @@ condition|)
 block|{
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 operator|=
@@ -8537,7 +8538,7 @@ name|ia
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|=
 name|ifp
 expr_stmt|;
@@ -8803,7 +8804,7 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 decl_stmt|;
@@ -8924,7 +8925,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 operator|=
@@ -9582,7 +9583,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 condition|)
 block|{
 name|struct
@@ -9599,7 +9600,7 @@ operator|*
 operator|)
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_carp
 expr_stmt|;
@@ -10671,7 +10672,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_link_state
 operator|!=
@@ -10681,7 +10682,7 @@ operator|!
 operator|(
 name|sc
 operator|->
-name|sc_ifp
+name|sc_carpdev
 operator|->
 name|if_flags
 operator|&

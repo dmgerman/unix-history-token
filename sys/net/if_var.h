@@ -301,12 +301,31 @@ name|int
 name|if_pcount
 decl_stmt|;
 comment|/* number of promiscuous listeners */
+union|union
+block|{
 name|struct
 name|carp_if
 modifier|*
-name|if_carp
+name|carp_s
 decl_stmt|;
-comment|/* carp interface structure */
+comment|/* carp structure (used by !carp ifs) */
+name|struct
+name|ifnet
+modifier|*
+name|carp_d
+decl_stmt|;
+comment|/* ptr to carpdev (used by carp ifs) */
+block|}
+name|if_carp_ptr
+union|;
+define|#
+directive|define
+name|if_carp
+value|if_carp_ptr.carp_s
+define|#
+directive|define
+name|if_carpdev
+value|if_carp_ptr.carp_d
 name|struct
 name|bpf_if
 modifier|*
