@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -259,6 +259,9 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|bmcconsole
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -291,6 +294,15 @@ name|x
 parameter_list|)
 value|minor(x)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *  probe routine  */
@@ -987,6 +999,15 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|int
+name|unit
+init|=
+name|bmcunit
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+specifier|register
 name|struct
 name|tty
 modifier|*
@@ -995,12 +1016,41 @@ init|=
 operator|&
 name|bmc_tty
 index|[
-name|bmcunit
-argument_list|(
-name|dev
-argument_list|)
+name|unit
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|unit
+operator|==
+name|bmcconsole
+operator|)
+operator|&&
+name|constty
+operator|&&
+operator|(
+name|constty
+operator|->
+name|t_state
+operator|&
+operator|(
+name|TS_CARR_ON
+operator||
+name|TS_ISOPEN
+operator|)
+operator|)
+operator|==
+operator|(
+name|TS_CARR_ON
+operator||
+name|TS_ISOPEN
+operator|)
+condition|)
+name|tp
+operator|=
+name|constty
+expr_stmt|;
 return|return
 operator|(
 operator|(
