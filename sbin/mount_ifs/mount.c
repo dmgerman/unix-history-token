@@ -2727,6 +2727,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|verbose
+condition|)
+block|{
+if|if
+condition|(
 name|sfp
 operator|->
 name|f_syncwrites
@@ -2785,6 +2790,7 @@ operator|->
 name|f_asyncreads
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
