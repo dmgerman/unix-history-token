@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)config.c	8.2 (Berkeley) %G%"
+literal|"@(#)config.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,23 +414,28 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-while|while
-condition|(
+for|for
+control|(
+operator|++
+name|t
+init|;
 operator|(
 name|p
 operator|=
 name|strtok
 argument_list|(
 name|t
-operator|+
-literal|1
 argument_list|,
 literal|" \t\n"
 argument_list|)
 operator|)
 operator|!=
 name|NULL
-condition|)
+condition|;
+name|t
+operator|=
+name|NULL
+control|)
 block|{
 if|if
 condition|(
@@ -482,10 +487,6 @@ operator|*
 argument_list|,
 name|list
 argument_list|)
-expr_stmt|;
-name|t
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 block|}
