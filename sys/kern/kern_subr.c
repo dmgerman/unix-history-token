@@ -355,7 +355,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vm_page_sleep_busy
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vm_page_sleep_if_busy
 argument_list|(
 name|user_pg
 argument_list|,
@@ -363,6 +369,9 @@ literal|1
 argument_list|,
 literal|"vm_pgmoveco"
 argument_list|)
+condition|)
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_remove
 argument_list|(
