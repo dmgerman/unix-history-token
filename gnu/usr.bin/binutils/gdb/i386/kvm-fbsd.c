@@ -1079,8 +1079,14 @@ operator|(
 name|CORE_ADDR
 operator|)
 name|td
-operator|->
+operator|+
+name|offsetof
+argument_list|(
+expr|struct
+name|thread
+argument_list|,
 name|td_proc
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
