@@ -471,7 +471,8 @@ name|int
 operator|,
 name|sig_t
 operator|,
-name|int
+name|sigset_t
+operator|*
 operator|,
 name|int
 operator|)
