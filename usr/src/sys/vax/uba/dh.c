@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.17	81/02/18	*/
+comment|/*	dh.c	4.18	81/02/18	*/
 end_comment
 
 begin_include
@@ -996,6 +996,47 @@ operator|-=
 literal|4
 expr_stmt|;
 comment|/* transmit -> receive */
+ifdef|#
+directive|ifdef
+name|notdef
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|=
+name|DH_RIE
+operator||
+name|DH_MM
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsrl
+operator||=
+name|DH_RI
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|dhaddr
+operator|->
+name|un
+operator|.
+name|dhcsr
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
