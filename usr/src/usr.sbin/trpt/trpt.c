@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.14 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -604,6 +604,13 @@ operator|++
 name|kflag
 expr_stmt|;
 block|}
+comment|/* 		 * Discard setgid privileges if not the running kernel so that 		 * bad guys can't print interesting stuff from kernel memory. 		 */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|system

@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.8 (Berkeley) %G%"
+literal|"@(#)trsp.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -609,6 +609,13 @@ expr_stmt|;
 name|mask
 operator|++
 expr_stmt|;
+comment|/* 		 * Discard setgid privileges if not the running kernel so that 		 * bad guys can't print interesting stuff from kernel memory. 		 */
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -630,6 +637,12 @@ operator|++
 expr_stmt|;
 name|mask
 operator|++
+expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
