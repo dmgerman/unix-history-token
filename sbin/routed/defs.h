@@ -2265,9 +2265,7 @@ specifier|extern
 name|char
 name|inittracename
 index|[
-name|MAXPATHLEN
-operator|+
-literal|1
+name|PATH_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
