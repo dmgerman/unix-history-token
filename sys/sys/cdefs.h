@@ -589,6 +589,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|alloca
+parameter_list|(
+name|sz
+parameter_list|)
+value|__builtin_alloca(sz)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|FreeBSD alloca support needed for this compiler
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* XXX: should use `#if __STDC_VERSION__< 199901'. */
 end_comment
