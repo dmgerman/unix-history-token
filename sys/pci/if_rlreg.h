@@ -875,7 +875,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|RL_HWREV_8110
+name|RL_HWREV_8169S
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RL_HWREV_8110S
 value|0x00800000
 end_define
 

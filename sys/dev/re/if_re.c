@@ -293,9 +293,19 @@ name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8169
 block|,
-name|RL_HWREV_8110
+name|RL_HWREV_8169S
 block|,
-literal|"RealTek 8169S/8110S Single-chip Gigabit Ethernet"
+literal|"RealTek 8169S Single-chip Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|RT_VENDORID
+block|,
+name|RT_DEVICEID_8169
+block|,
+name|RL_HWREV_8110S
+block|,
+literal|"RealTek 8110S Single-chip Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -392,11 +402,19 @@ literal|"8169"
 block|}
 block|,
 block|{
-name|RL_HWREV_8110
+name|RL_HWREV_8169S
 block|,
 name|RL_8169
 block|,
-literal|"8169S/8110S"
+literal|"8169S"
+block|}
+block|,
+block|{
+name|RL_HWREV_8110S
+block|,
+name|RL_8169
+block|,
+literal|"8110S"
 block|}
 block|,
 block|{
