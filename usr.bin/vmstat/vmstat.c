@@ -2140,7 +2140,7 @@ argument_list|)
 expr_stmt|;
 define|#
 directive|define
-name|pgtok
+name|vmstat_pgtok
 parameter_list|(
 name|a
 parameter_list|)
@@ -2163,7 +2163,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|pgtok
+name|vmstat_pgtok
 argument_list|(
 name|total
 operator|.
@@ -2173,7 +2173,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|pgtok
+name|vmstat_pgtok
 argument_list|(
 name|total
 operator|.
@@ -5209,7 +5209,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: vmstat [-imsz] [-c count] [-M core] [-N system] [-w wait] [disks]\n"
+literal|"%s%s"
+argument_list|,
+literal|"usage: vmstat [-imsz] [-c count] [-M core] [-N system] [-w wait]\n"
+argument_list|,
+literal|"              [-n devs] [disks]\n"
 argument_list|)
 expr_stmt|;
 name|exit
