@@ -581,7 +581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ftnint
 name|lowbss
 init|=
 literal|0
@@ -589,7 +589,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|ftnint
 name|highbss
 init|=
 literal|0
