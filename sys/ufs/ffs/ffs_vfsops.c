@@ -741,7 +741,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_SYNC
+name|ffs_sync
 argument_list|(
 name|mp
 argument_list|,

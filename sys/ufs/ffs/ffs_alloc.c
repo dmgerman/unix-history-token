@@ -3024,7 +3024,7 @@ condition|(
 operator|!
 name|doasyncfree
 condition|)
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
@@ -4218,7 +4218,7 @@ condition|(
 operator|!
 name|doasyncfree
 condition|)
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
@@ -4713,7 +4713,7 @@ name|noinodes
 goto|;
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|pvp
 operator|->
@@ -4731,7 +4731,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|UFS_VFREE
+name|ffs_vfree
 argument_list|(
 name|pvp
 argument_list|,
@@ -12887,7 +12887,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,
@@ -13009,7 +13009,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,

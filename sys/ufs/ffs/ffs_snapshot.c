@@ -4113,7 +4113,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|UFS_TRUNCATE
+name|ffs_truncate
 argument_list|(
 name|vp
 argument_list|,
@@ -5146,7 +5146,7 @@ name|TDP_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs1
 argument_list|(
 name|snapvp
 argument_list|,
@@ -5263,7 +5263,7 @@ else|else
 block|{
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs1
 argument_list|(
 name|snapvp
 argument_list|,
@@ -6401,7 +6401,7 @@ else|else
 block|{
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs1
 argument_list|(
 name|vp
 argument_list|,
@@ -6891,7 +6891,7 @@ name|TDP_COWINPROGRESS
 expr_stmt|;
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs2
 argument_list|(
 name|snapvp
 argument_list|,
@@ -7008,7 +7008,7 @@ else|else
 block|{
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs2
 argument_list|(
 name|snapvp
 argument_list|,
@@ -8146,7 +8146,7 @@ else|else
 block|{
 name|error
 operator|=
-name|UFS_BALLOC
+name|ffs_balloc_ufs2
 argument_list|(
 name|vp
 argument_list|,
@@ -10567,7 +10567,7 @@ name|snaploc
 decl_stmt|,
 name|loc
 decl_stmt|;
-comment|/* 	 * XXX The following needs to be set before UFS_TRUNCATE or 	 * VOP_READ can be called. 	 */
+comment|/* 	 * XXX The following needs to be set before ffs_truncate or 	 * VOP_READ can be called. 	 */
 name|mp
 operator|->
 name|mnt_stat
@@ -10622,7 +10622,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,
@@ -10719,7 +10719,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|UFS_TRUNCATE
+name|ffs_truncate
 argument_list|(
 name|vp
 argument_list|,

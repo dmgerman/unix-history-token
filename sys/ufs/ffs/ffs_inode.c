@@ -1227,7 +1227,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|ovp
 argument_list|,
@@ -1268,7 +1268,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|ovp
 argument_list|,
@@ -1593,7 +1593,7 @@ name|IN_UPDATE
 expr_stmt|;
 return|return
 operator|(
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|ovp
 argument_list|,
@@ -2018,7 +2018,7 @@ name|IN_UPDATE
 expr_stmt|;
 name|allerror
 operator|=
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|ovp
 argument_list|,

@@ -2894,7 +2894,7 @@ operator|&
 name|lk
 argument_list|)
 expr_stmt|;
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|WK_DIRREM
 argument_list|(
@@ -11146,7 +11146,7 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|freeblks
 operator|->
@@ -14591,7 +14591,7 @@ operator|&&
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|dirrem
 operator|->
@@ -21442,7 +21442,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mnt
 argument_list|,
@@ -21468,7 +21468,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mnt
 argument_list|,
@@ -21503,7 +21503,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 		 * All MKDIR_PARENT dependencies and all the NEWBLOCK pagedeps 		 * that are contained in direct blocks will be resolved by  		 * doing a UFS_UPDATE. Pagedeps contained in indirect blocks 		 * may require a complete sync'ing of the directory. So, we 		 * try the cheap and fast UFS_UPDATE first, and if that fails, 		 * then we do the slower ffs_syncvnode of the directory. 		 */
+comment|/* 		 * All MKDIR_PARENT dependencies and all the NEWBLOCK pagedeps 		 * that are contained in direct blocks will be resolved by  		 * doing a ffs_update. Pagedeps contained in indirect blocks 		 * may require a complete sync'ing of the directory. So, we 		 * try the cheap and fast ffs_update first, and if that fails, 		 * then we do the slower ffs_syncvnode of the directory. 		 */
 if|if
 condition|(
 name|flushparent
@@ -21514,7 +21514,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|pvp
 argument_list|,
@@ -23253,7 +23253,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|pvp
 argument_list|,
@@ -23322,7 +23322,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,
@@ -23814,7 +23814,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|UFS_UPDATE
+name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
@@ -24361,7 +24361,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,
@@ -24723,7 +24723,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|VFS_VGET
+name|ffs_vget
 argument_list|(
 name|mp
 argument_list|,
