@@ -692,19 +692,26 @@ directive|ifdef
 name|OPT_DEBUG
 end_ifdef
 
-begin_decl_stmt
-name|struct
-name|ctldebug
-name|debug14
-init|=
-block|{
-literal|"doasyncfree"
-block|,
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+literal|14
+argument_list|,
+name|doasyncfree
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
 operator|&
 name|doasyncfree
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
