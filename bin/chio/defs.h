@@ -11,6 +11,7 @@ begin_struct
 struct|struct
 name|element_type
 block|{
+specifier|const
 name|char
 modifier|*
 name|et_name
@@ -28,6 +29,7 @@ begin_struct
 struct|struct
 name|changer_command
 block|{
+specifier|const
 name|char
 modifier|*
 name|cc_name
@@ -41,6 +43,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -60,6 +63,7 @@ begin_struct
 struct|struct
 name|special_word
 block|{
+specifier|const
 name|char
 modifier|*
 name|sw_name

@@ -227,7 +227,7 @@ name|bits_to_string
 name|__P
 argument_list|(
 operator|(
-name|int
+name|ces_status_flags
 operator|,
 specifier|const
 name|char
@@ -266,9 +266,11 @@ name|get_element_status
 name|__P
 argument_list|(
 operator|(
-name|u_int16_t
+name|unsigned
+name|int
 operator|,
-name|u_int16_t
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -281,6 +283,7 @@ name|do_move
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -301,6 +304,7 @@ name|do_exchange
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -321,6 +325,7 @@ name|do_position
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -341,6 +346,7 @@ name|do_params
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -361,6 +367,7 @@ name|do_getpicker
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -381,6 +388,7 @@ name|do_setpicker
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -401,6 +409,7 @@ name|do_status
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -421,6 +430,7 @@ name|do_ielem
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -441,6 +451,7 @@ name|do_return
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -461,6 +472,7 @@ name|do_voltag
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -982,6 +994,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1286,6 +1299,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1710,6 +1724,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -1935,6 +1950,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2182,6 +2198,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2295,6 +2312,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2424,6 +2442,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -2458,6 +2477,7 @@ name|schet
 decl_stmt|,
 name|echet
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|description
@@ -3004,6 +3024,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|count
 argument_list|,
 sizeof|sizeof
@@ -3356,6 +3379,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -3472,6 +3496,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -3711,8 +3736,12 @@ goto|goto
 name|usage
 goto|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|csvr
 operator|.
 name|csvr_voltag
@@ -4161,7 +4190,7 @@ name|v
 parameter_list|,
 name|cp
 parameter_list|)
-name|int
+name|ces_status_flags
 name|v
 decl_stmt|;
 specifier|const
@@ -4351,6 +4380,7 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cname
@@ -4473,16 +4503,24 @@ expr_stmt|;
 operator|--
 name|argc
 expr_stmt|;
+comment|/* Get the status */
 name|ces
 operator|=
 name|get_element_status
 argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|type
 argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
 name|element
 argument_list|)
 expr_stmt|;
-comment|/* Get the status */
 if|if
 condition|(
 name|NULL
@@ -4636,10 +4674,12 @@ name|type
 parameter_list|,
 name|element
 parameter_list|)
-name|u_int16_t
+name|unsigned
+name|int
 name|type
 decl_stmt|;
-name|u_int16_t
+name|unsigned
+name|int
 name|element
 decl_stmt|;
 block|{
@@ -4661,6 +4701,9 @@ operator|*
 operator|)
 name|calloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 literal|1
 argument_list|,
 sizeof|sizeof
@@ -4703,12 +4746,18 @@ name|cesr
 operator|.
 name|cesr_element_type
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|type
 expr_stmt|;
 name|cesr
 operator|.
 name|cesr_element_base
 operator|=
+operator|(
+name|u_int16_t
+operator|)
 name|element
 expr_stmt|;
 name|cesr
@@ -4818,13 +4867,14 @@ modifier|*
 name|ces
 decl_stmt|;
 name|int
-name|elem
-decl_stmt|,
-name|total_elem
-decl_stmt|,
 name|found
 init|=
 literal|0
+decl_stmt|;
+name|size_t
+name|elem
+decl_stmt|,
+name|total_elem
 decl_stmt|;
 comment|/* 	 * Get the changer parameters, we're interested in the counts 	 * for all types of elements to perform our search. 	 */
 if|if
@@ -5338,6 +5388,11 @@ name|strcasecmp
 argument_list|(
 name|voltag
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|ces
 operator|->
 name|ces_pvoltag
