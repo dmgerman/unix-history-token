@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS_REGRESSION_H
+name|_SYS_REGRESSION_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS_REGRESSION_H
+name|_SYS_REGRESSION_H_
 end_define
 
 begin_ifndef
@@ -50,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SYS_REGRESSION_H */
+comment|/* !_SYS_REGRESSION_H_ */
 end_comment
 
 end_unit

@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_SYS__LABEL_H
+name|_SYS__LABEL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_SYS__LABEL_H
+name|_SYS__LABEL_H_
 end_define
 
 begin_comment
@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_SYS__LABEL_H */
+comment|/* !_SYS__LABEL_H_ */
 end_comment
 
 end_unit
