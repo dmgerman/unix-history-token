@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.11 1996/07/23 22:00:14 julian Exp $"
+literal|"$Id: route.c,v 1.12 1996/08/09 22:52:02 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,12 @@ decl_stmt|,
 name|lockrest
 decl_stmt|,
 name|debugonly
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|extra_flags
 decl_stmt|;
 end_decl_stmt
 
@@ -3017,6 +3023,14 @@ name|RTF_STATIC
 expr_stmt|;
 break|break;
 case|case
+name|K_LLINFO
+case|:
+name|flags
+operator||=
+name|RTF_LLINFO
+expr_stmt|;
+break|break;
+case|case
 name|K_LOCK
 case|:
 name|locking
@@ -3468,6 +3482,10 @@ expr_stmt|;
 name|flags
 operator||=
 name|RTF_UP
+expr_stmt|;
+name|flags
+operator||=
+name|extra_flags
 expr_stmt|;
 if|if
 condition|(
@@ -4344,6 +4362,10 @@ name|sdl
 operator|=
 operator|*
 name|sdl
+expr_stmt|;
+name|extra_flags
+operator||=
+name|RTF_LLINFO
 expr_stmt|;
 return|return
 operator|(
