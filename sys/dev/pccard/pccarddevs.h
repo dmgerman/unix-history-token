@@ -1329,22 +1329,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_CIS_ASUS_WL
-value|-100	{ NULL, NULL, NULL, NULL }
+name|PCMCIA_CIS_ASUS_WL100
+value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_PRODUCT_ASUS_WL
-value|-100	0x0002
+name|PCMCIA_PRODUCT_ASUS_WL100
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCMCIA_STR_ASUS_WL
-value|-100	"ASUS SpaceLink WL-100 Wireless LAN"
+name|PCMCIA_STR_ASUS_WL100
+value|"ASUS SpaceLink WL-100 Wireless LAN"
 end_define
 
 begin_comment
