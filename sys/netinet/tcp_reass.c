@@ -4313,10 +4313,6 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
-name|headlocked
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 				 * this is a pure ack for outstanding data. 				 */
 operator|++
 name|tcpstat
@@ -4672,10 +4668,6 @@ argument_list|(
 operator|&
 name|tcbinfo
 argument_list|)
-expr_stmt|;
-name|headlocked
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 			 * this is a pure, in-sequence data packet 			 * with nothing on the reassembly queue and 			 * we have enough buffer space to take it. 			 */
 operator|++
@@ -8136,33 +8128,6 @@ literal|"headlocked"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|thflags
-operator|&
-name|TH_FIN
-operator|&&
-name|tp
-operator|->
-name|t_state
-operator|==
-name|TCPS_FIN_WAIT_2
-operator|)
-condition|)
-block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|headlocked
-operator|=
-literal|0
-expr_stmt|;
-block|}
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
 if|if
 condition|(
@@ -8511,6 +8476,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TCPDEBUG
@@ -8597,16 +8568,6 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|headlocked
-condition|)
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
