@@ -602,6 +602,10 @@ name|pbp
 expr_stmt|;
 else|else
 block|{
+name|c
+operator|=
+name|EOF
+expr_stmt|;
 while|while
 condition|(
 operator|!
