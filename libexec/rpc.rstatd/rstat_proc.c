@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rstat_proc.c,v 1.10 1998/01/19 23:13:19 wpaul Exp $"
+literal|"$Id: rstat_proc.c,v 1.11 1998/09/15 08:15:20 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1875,6 +1875,8 @@ name|int
 name|i
 decl_stmt|,
 name|j
+decl_stmt|,
+name|t
 decl_stmt|;
 name|struct
 name|statinfo
@@ -2105,20 +2107,21 @@ name|total_transfers
 operator|>
 name|INT_MAX
 condition|)
-name|devs
-index|[
-name|j
-index|]
+name|t
 operator|=
 name|INT_MAX
 expr_stmt|;
 else|else
+name|t
+operator|=
+name|total_transfers
+expr_stmt|;
 name|devs
 index|[
 name|j
 index|]
 operator|=
-name|total_transfers
+name|t
 expr_stmt|;
 name|j
 operator|++
