@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.35 (Berkeley) %G%"
+literal|"@(#)route.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2683,7 +2683,7 @@ name|K_SA
 case|:
 name|af
 operator|=
-literal|0
+name|PF_ROUTE
 expr_stmt|;
 name|aflen
 operator|=
@@ -3994,7 +3994,7 @@ if|if
 condition|(
 name|af
 operator|==
-literal|0
+name|PF_ROUTE
 condition|)
 goto|goto
 name|do_sa
@@ -6394,6 +6394,9 @@ name|cp
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|cp
+operator|++
 expr_stmt|;
 do|do
 block|{
