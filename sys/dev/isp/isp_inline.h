@@ -1500,7 +1500,7 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|PRINTF
 argument_list|(
 literal|"\n   "
 argument_list|)
