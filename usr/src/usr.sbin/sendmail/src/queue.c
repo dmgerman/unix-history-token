@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.9 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.10 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.9 (Berkeley) %G%"
+literal|"@(#)queue.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,9 +978,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|holdsigs
-argument_list|()
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -991,7 +988,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|rename
 argument_list|(
 name|tf
 argument_list|,
@@ -1002,7 +999,7 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot link(%s, %s), df=%s"
+literal|"cannot unlink(%s, %s), df=%s"
 argument_list|,
 name|tf
 argument_list|,
@@ -1013,17 +1010,9 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|tf
-argument_list|)
-expr_stmt|;
-name|rlsesigs
-argument_list|()
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_if
