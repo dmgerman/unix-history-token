@@ -249,18 +249,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-name|void
-name|ipx_abort
-parameter_list|(
-name|struct
-name|ipxpcb
-modifier|*
-name|ipxp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|u_short
 name|ipx_cksum
 parameter_list|(
