@@ -7,6 +7,10 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* To whomever it may concern: I have never seen the code which most    Unix programs use to perform this function.  I wrote this from scratch    based on specifications for the pattern matching.  --RMS.  */
 end_comment
 
@@ -642,9 +646,6 @@ decl_stmt|,
 name|b
 decl_stmt|;
 block|{
-name|int
-name|r
-decl_stmt|;
 specifier|static
 name|char
 name|s
@@ -655,23 +656,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|unsigned
-name|char
-operator|)
-name|a
-operator|==
-operator|(
-name|unsigned
-name|char
-operator|)
-name|b
-condition|)
-return|return
-literal|0
-return|;
 name|s
 index|[
 literal|0
@@ -692,11 +676,8 @@ index|]
 operator|=
 name|b
 expr_stmt|;
-if|if
-condition|(
+return|return
 operator|(
-name|r
-operator|=
 name|strcoll
 argument_list|(
 name|s
@@ -710,25 +691,6 @@ literal|1
 index|]
 argument_list|)
 operator|)
-operator|==
-literal|0
-condition|)
-name|r
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
-name|a
-operator|-
-operator|(
-name|unsigned
-name|char
-operator|)
-name|b
-expr_stmt|;
-return|return
-name|r
 return|;
 block|}
 end_function
