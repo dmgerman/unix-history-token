@@ -2305,6 +2305,7 @@ name|bif
 operator|!=
 name|BDG_LOCAL
 condition|)
+block|{
 name|bdg_forward
 argument_list|(
 operator|&
@@ -2316,6 +2317,15 @@ name|bif
 argument_list|)
 expr_stmt|;
 comment|/* needs forwarding */
+comment|/* 			 * Do not continue if bdg_forward() processed our 			 * packet (and cleared the mbuf pointer m) or if 			 * it dropped (m_free'd) the packet itself. 			 */
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return;
+block|}
 if|if
 condition|(
 name|bif
