@@ -223,7 +223,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|ino_t
 name|maxino
 decl_stmt|;
 end_decl_stmt
@@ -447,10 +447,11 @@ name|int
 operator|,
 name|int
 operator|,
-name|int
-argument_list|(
+name|void
 operator|*
-argument_list|)
+call|(
+modifier|*
+call|)
 argument_list|(
 expr|struct
 name|fstab
@@ -468,9 +469,9 @@ argument_list|,
 name|char
 operator|*
 argument_list|,
-name|long
-argument_list|,
-name|int
+expr|struct
+name|quotaname
+operator|*
 argument_list|)
 operator|)
 argument_list|)
@@ -664,19 +665,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fstab
 modifier|*
 name|fs
 decl_stmt|;
-specifier|register
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-specifier|register
 name|struct
 name|group
 modifier|*
@@ -1124,14 +1122,12 @@ name|needchk
 parameter_list|(
 name|fs
 parameter_list|)
-specifier|register
 name|struct
 name|fstab
 modifier|*
 name|fs
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|quotaname
 modifier|*
@@ -1306,7 +1302,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|quotaname
 modifier|*
@@ -1316,13 +1311,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|fileusage
 modifier|*
 name|fup
 decl_stmt|;
-specifier|register
 name|struct
 name|dinode
 modifier|*
@@ -1777,7 +1770,6 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-specifier|register
 name|int
 name|type
 decl_stmt|;
@@ -1785,13 +1777,11 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|fileusage
 modifier|*
 name|fup
 decl_stmt|;
-specifier|register
 name|FILE
 modifier|*
 name|qfi
@@ -1799,13 +1789,11 @@ decl_stmt|,
 modifier|*
 name|qfo
 decl_stmt|;
-specifier|register
 name|u_long
 name|id
 decl_stmt|,
 name|lastid
 decl_stmt|;
-specifier|register
 name|off_t
 name|offset
 decl_stmt|;
@@ -2301,9 +2289,6 @@ name|fseek
 argument_list|(
 name|qfo
 argument_list|,
-operator|(
-name|long
-operator|)
 name|offset
 argument_list|,
 name|SEEK_SET
@@ -2398,11 +2383,11 @@ argument_list|(
 name|qfo
 argument_list|)
 argument_list|,
-call|(
-name|off_t
-call|)
-argument_list|(
 operator|(
+operator|(
+operator|(
+name|off_t
+operator|)
 name|highid
 index|[
 name|type
@@ -2416,7 +2401,7 @@ argument_list|(
 expr|struct
 name|dqblk
 argument_list|)
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2446,7 +2431,6 @@ name|list
 argument_list|,
 name|cnt
 argument_list|)
-decl|register
 name|char
 modifier|*
 name|target
@@ -2465,7 +2449,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -2567,7 +2550,6 @@ name|type
 parameter_list|,
 name|qfnamep
 parameter_list|)
-specifier|register
 name|struct
 name|fstab
 modifier|*
@@ -2582,7 +2564,6 @@ modifier|*
 name|qfnamep
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|opt
@@ -2835,7 +2816,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|fileusage
 modifier|*
