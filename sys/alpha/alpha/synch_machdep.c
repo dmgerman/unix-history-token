@@ -494,7 +494,7 @@ name|CTR4
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"propagate priority: p 0x%x moved before 0x%x on [0x%x] %s"
+literal|"propagate priority: p %p moved before %p on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -576,7 +576,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%x recurse"
+literal|"mtx_enter: %p recurse"
 argument_list|,
 name|m
 argument_list|)
@@ -587,7 +587,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%x contested (lock=%x) [0x%x]"
+literal|"mtx_enter: %p contested (lock=%lx) [0x%lx]"
 argument_list|,
 name|m
 argument_list|,
@@ -957,7 +957,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p 0x%x blocked on [0x%x] %s"
+literal|"mtx_enter: p %p blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -1065,7 +1065,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p 0x%x free from blocked on [0x%x] %s"
+literal|"mtx_enter: p %p free from blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -1131,7 +1131,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%x spinning"
+literal|"mtx_enter: %p spinning"
 argument_list|,
 name|m
 argument_list|)
@@ -1230,7 +1230,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%x spin done"
+literal|"mtx_enter: %p spin done"
 argument_list|,
 name|m
 argument_list|)
@@ -1315,7 +1315,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x unrecurse"
+literal|"mtx_exit: %p unrecurse"
 argument_list|,
 name|m
 argument_list|)
@@ -1334,7 +1334,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x contested"
+literal|"mtx_exit: %p contested"
 argument_list|,
 name|m
 argument_list|)
@@ -1419,7 +1419,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x not held"
+literal|"mtx_exit: %p not held"
 argument_list|,
 name|m
 argument_list|)
@@ -1494,7 +1494,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x contested setrunqueue 0x%x"
+literal|"mtx_exit: %p contested setrunqueue %p"
 argument_list|,
 name|m
 argument_list|,
@@ -1593,7 +1593,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x switching out lock=0x%x"
+literal|"mtx_exit: %p switching out lock=0x%lx"
 argument_list|,
 name|m
 argument_list|,
@@ -1609,7 +1609,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x resuming lock=0x%x"
+literal|"mtx_exit: %p resuming lock=0x%lx"
 argument_list|,
 name|m
 argument_list|,
@@ -2105,7 +2105,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_init 0x%x (%s)"
+literal|"mtx_init %p (%s)"
 argument_list|,
 name|m
 argument_list|,
@@ -2241,7 +2241,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_destroy 0x%x (%s)"
+literal|"mtx_destroy %p (%s)"
 argument_list|,
 name|m
 argument_list|,
