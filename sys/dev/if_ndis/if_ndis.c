@@ -5739,7 +5739,14 @@ name|pcnt
 operator|==
 literal|0
 condition|)
+block|{
+name|NDIS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 name|sc
