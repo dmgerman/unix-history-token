@@ -16,7 +16,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)state.c	8.2 (Berkeley) 12/15/93";
+unit|static const char sccsid[] = "@(#)state.c	8.2 (Berkeley) 12/15/93";
 endif|#
 directive|endif
 end_endif
@@ -1173,11 +1173,11 @@ name|opfrontp
 decl_stmt|,
 name|oc
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|opfrontp
-argument_list|,
 name|xptyobuf
+argument_list|,
+name|opfrontp
 argument_list|,
 name|n
 argument_list|)
@@ -3561,7 +3561,7 @@ operator|==
 name|LM_SLC
 condition|)
 block|{
-comment|/* SLC is not preceeded by WILL or WONT */
+comment|/* SLC is not preceded by WILL or WONT */
 comment|/* 		 * Process suboption buffer of slc's 		 */
 name|start_slc
 argument_list|(
