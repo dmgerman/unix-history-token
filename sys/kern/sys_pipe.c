@@ -3128,8 +3128,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|PIPE_LOCK_ASSERT
 argument_list|(
 name|wpipe
@@ -3344,7 +3342,7 @@ operator|&=
 operator|~
 name|PIPE_DIRECTW
 expr_stmt|;
-name|PIPE_GET_GIANT
+name|PIPE_UNLOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3376,7 +3374,7 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|PIPE_DROP_GIANT
+name|PIPE_LOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3685,7 +3683,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|PIPE_GET_GIANT
+name|PIPE_UNLOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3695,7 +3693,7 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|PIPE_DROP_GIANT
+name|PIPE_LOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3791,7 +3789,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PIPE_GET_GIANT
+name|PIPE_UNLOCK
 argument_list|(
 name|wpipe
 argument_list|)
@@ -3801,7 +3799,7 @@ argument_list|(
 name|wpipe
 argument_list|)
 expr_stmt|;
-name|PIPE_DROP_GIANT
+name|PIPE_LOCK
 argument_list|(
 name|wpipe
 argument_list|)
