@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.6 (Berkeley) %G%"
+literal|"@(#)mount.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -446,9 +446,11 @@ condition|)
 block|{
 name|argcnt
 label|:
-name|printf
+name|fprintf
 argument_list|(
-literal|"arg count\n"
+name|stderr
+argument_list|,
+literal|"usage: mount [ -a ] [ -r ] [ -f ] [ -v ] [ special dir ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -457,19 +459,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|ro
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|3
-condition|)
-name|ro
-operator|++
-expr_stmt|;
 name|mountfs
 argument_list|(
 name|argv
