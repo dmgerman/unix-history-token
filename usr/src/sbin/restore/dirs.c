@@ -183,7 +183,7 @@ end_define
 
 begin_struct
 struct|struct
-name|dirdesc
+name|rstdirdesc
 block|{
 name|int
 name|dd_fd
@@ -206,7 +206,7 @@ end_struct
 
 begin_function_decl
 specifier|extern
-name|DIR
+name|RST_DIR
 modifier|*
 name|opendirfile
 parameter_list|()
@@ -253,7 +253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -1933,7 +1933,7 @@ parameter_list|,
 name|base
 parameter_list|)
 specifier|register
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -2050,7 +2050,7 @@ parameter_list|(
 name|dirp
 parameter_list|)
 specifier|register
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -2250,7 +2250,7 @@ comment|/*  * Simulate the opening of a directory  */
 end_comment
 
 begin_function
-name|DIR
+name|RST_DIR
 modifier|*
 name|rst_opendir
 parameter_list|(
@@ -2331,7 +2331,7 @@ name|rst_telldir
 parameter_list|(
 name|dirp
 parameter_list|)
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -2370,7 +2370,7 @@ comment|/*  * Open a directory file.  */
 end_comment
 
 begin_function
-name|DIR
+name|RST_DIR
 modifier|*
 name|opendirfile
 parameter_list|(
@@ -2382,7 +2382,7 @@ name|name
 decl_stmt|;
 block|{
 specifier|register
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -2415,14 +2415,14 @@ operator|(
 name|dirp
 operator|=
 operator|(
-name|DIR
+name|RST_DIR
 operator|*
 operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|DIR
+name|RST_DIR
 argument_list|)
 argument_list|)
 operator|)

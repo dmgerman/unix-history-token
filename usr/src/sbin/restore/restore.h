@@ -620,14 +620,14 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|dirdesc
-name|DIR
+name|rstdirdesc
+name|RST_DIR
 typedef|;
 end_typedef
 
 begin_function_decl
 specifier|extern
-name|DIR
+name|RST_DIR
 modifier|*
 name|rst_opendir
 parameter_list|()
