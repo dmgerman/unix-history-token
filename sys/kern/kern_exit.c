@@ -2371,6 +2371,7 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 			 * Remove other references to this process to ensure 			 * we have an exclusive reference. 			 */
 name|sx_xlock
 argument_list|(
 operator|&
@@ -2398,7 +2399,6 @@ argument_list|,
 name|p_sibling
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Remove other references to this process to ensure 			 * we have an exclusive reference. 			 */
 name|leavepgrp
 argument_list|(
 name|p
