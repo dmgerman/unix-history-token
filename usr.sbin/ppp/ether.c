@@ -3015,6 +3015,40 @@ name|p
 argument_list|)
 return|;
 block|}
+comment|/* Bring the Ethernet interface up */
+name|path
+index|[
+name|ifacelen
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* Remove the trailing ':' */
+if|if
+condition|(
+operator|!
+name|iface_SetFlags
+argument_list|(
+name|path
+argument_list|,
+name|IFF_UP
+argument_list|)
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"%s: Failed to set the IFF_UP flag on %s\n"
+argument_list|,
+name|p
+operator|->
+name|link
+operator|.
+name|name
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 comment|/* And finally, request a connection to the given provider */
 name|data
 operator|=
@@ -3505,48 +3539,6 @@ argument_list|,
 name|PHYSICAL_FORCE_SYNCNOACF
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|path
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* Mark the interface as UP if it's not already */
-name|path
-index|[
-name|ifacelen
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Remove the trailing ':' */
-if|if
-condition|(
-operator|!
-name|iface_SetFlags
-argument_list|(
-name|path
-argument_list|,
-name|IFF_UP
-argument_list|)
-condition|)
-name|log_Printf
-argument_list|(
-name|LogWARN
-argument_list|,
-literal|"%s: Failed to set the IFF_UP flag on %s\n"
-argument_list|,
-name|p
-operator|->
-name|link
-operator|.
-name|name
-argument_list|,
-name|path
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|&
 name|dev
