@@ -388,8 +388,6 @@ name|afd
 argument_list|,
 name|archive
 argument_list|,
-name|RPAD
-operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
