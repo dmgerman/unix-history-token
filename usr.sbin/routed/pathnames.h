@@ -16,5 +16,16 @@ name|_PATH_GATEWAYS
 value|"/etc/gateways"
 end_define
 
+begin_comment
+comment|/* all remotely requested trace files must either start with this prefix  * or be the same as the tracefile specified when the daemon was started.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_TRACE
+value|"/tmp"
+end_define
+
 end_unit
 
