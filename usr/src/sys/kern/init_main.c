@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	6.6	84/08/29	*/
+comment|/*	init_main.c	6.7	85/03/03	*/
 end_comment
 
 begin_include
@@ -422,14 +422,7 @@ argument_list|(
 name|MAXDSIZ
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_maxrss
-operator|=
-name|RLIM_INFINITY
-operator|/
-name|NBPG
-expr_stmt|;
+comment|/* p_maxrss is set later, in pageout (process 2) */
 if|#
 directive|if
 name|defined
@@ -665,10 +658,6 @@ operator|.
 name|u_smap
 operator|=
 name|zdmap
-expr_stmt|;
-comment|/* 	 * Set the scan rate and other parameters of the paging subsystem. 	 */
-name|setupclock
-argument_list|()
 expr_stmt|;
 comment|/* 	 * make init process 	 */
 name|proc
