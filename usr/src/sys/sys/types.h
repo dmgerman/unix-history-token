@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	8.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -22,7 +22,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
+file|<machine/ansi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/types.h>
 end_include
 
 begin_ifndef
@@ -94,9 +100,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
-name|long
+name|u_int64_t
 name|u_quad_t
 typedef|;
 end_typedef
@@ -107,8 +111,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
-name|long
+name|int64_t
 name|quad_t
 typedef|;
 end_typedef
@@ -135,7 +138,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|daddr_t
 typedef|;
 end_typedef
@@ -146,8 +149,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|dev_t
 typedef|;
 end_typedef
@@ -158,8 +160,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|fixpt_t
 typedef|;
 end_typedef
@@ -170,8 +171,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|gid_t
 typedef|;
 end_typedef
@@ -182,8 +182,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|ino_t
 typedef|;
 end_typedef
@@ -194,8 +193,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|u_int16_t
 name|mode_t
 typedef|;
 end_typedef
@@ -206,8 +204,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|u_int16_t
 name|nlink_t
 typedef|;
 end_typedef
@@ -229,7 +226,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|pid_t
 typedef|;
 end_typedef
@@ -240,7 +237,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|segsz_t
 typedef|;
 end_typedef
@@ -251,7 +248,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|swblk_t
 typedef|;
 end_typedef
@@ -262,8 +259,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|uid_t
 typedef|;
 end_typedef
@@ -320,6 +316,10 @@ directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
 
+begin_comment
+comment|/* major number */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -327,12 +327,8 @@ name|major
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
+value|((int32_t)(((u_int32_t)(x)>> 8)& 0xff))
 end_define
-
-begin_comment
-comment|/* major number */
-end_comment
 
 begin_define
 define|#
@@ -341,7 +337,7 @@ name|minor
 parameter_list|(
 name|x
 parameter_list|)
-value|((int)((x)&0xff))
+value|((int32_t)((x)& 0xff))
 end_define
 
 begin_comment
@@ -357,7 +353,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|((dev_t)(((x)<<8) | (y)))
+value|((dev_t)(((x)<< 8) | (y)))
 end_define
 
 begin_comment
@@ -372,13 +368,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
+file|<machine/endian.h>
 end_include
 
 begin_ifdef
@@ -518,7 +508,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|long
+name|int32_t
 name|fd_mask
 typedef|;
 end_typedef
@@ -549,7 +539,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(((x)+((y)-1))/(y))
+value|(((x) + ((y) - 1)) / (y))
 end_define
 
 begin_endif
