@@ -1163,7 +1163,7 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-comment|/*    * The given FSM has been told to come down.    * If it's our last NCP, stop the idle timer.    * If it's our last NCP, clear our ``upat'' value.    * If it's our last NCP, stop the autoload timer    * If it's an LCP, adjust our phys_type.open value and any timers.    * If it's an LCP and we're in multilink mode, adjust our tun    * speed and make sure our minimum sequence number is adjusted.    */
+comment|/*    * The given FSM has been told to come down.    * If it's our last NCP, stop the idle timer.    * If it's our last NCP, clear our ``upat'' value.    * If it's our last NCP, stop the autoload timer    * If it's an LCP, adjust our phys_type.open value and any timers.    * If it's an LCP and we're in multilink mode, adjust our tun    * If it's the last LCP, down all NCPs    * speed and make sure our minimum sequence number is adjusted.    */
 name|struct
 name|bundle
 modifier|*
@@ -1217,23 +1217,6 @@ operator|==
 name|PROTO_LCP
 condition|)
 block|{
-name|bundle_LinksRemoved
-argument_list|(
-name|bundle
-argument_list|)
-expr_stmt|;
-comment|/* adjust timers& phys_type values */
-if|if
-condition|(
-name|bundle
-operator|->
-name|ncp
-operator|.
-name|mp
-operator|.
-name|active
-condition|)
-block|{
 name|struct
 name|datalink
 modifier|*
@@ -1244,9 +1227,22 @@ name|datalink
 modifier|*
 name|lost
 decl_stmt|;
+name|int
+name|others_active
+decl_stmt|;
+name|bundle_LinksRemoved
+argument_list|(
+name|bundle
+argument_list|)
+expr_stmt|;
+comment|/* adjust timers& phys_type values */
 name|lost
 operator|=
 name|NULL
+expr_stmt|;
+name|others_active
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1264,6 +1260,7 @@ name|dl
 operator|->
 name|next
 control|)
+block|{
 if|if
 condition|(
 name|fp
@@ -1283,6 +1280,36 @@ name|lost
 operator|=
 name|dl
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dl
+operator|->
+name|state
+operator|!=
+name|DATALINK_CLOSED
+operator|&&
+name|dl
+operator|->
+name|state
+operator|!=
+name|DATALINK_HANGUP
+condition|)
+name|others_active
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|mp
+operator|.
+name|active
+condition|)
+block|{
 name|bundle_CalculateBandwidth
 argument_list|(
 name|bundle
@@ -1319,6 +1346,24 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|others_active
+condition|)
+comment|/* Down the NCPs.  We don't expect to get fsm_Close()d ourself ! */
+name|fsm2initial
+argument_list|(
+operator|&
+name|bundle
+operator|->
+name|ncp
+operator|.
+name|ipcp
+operator|.
+name|fsm
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1397,6 +1442,14 @@ name|dl
 operator|->
 name|next
 control|)
+if|if
+condition|(
+name|dl
+operator|->
+name|state
+operator|==
+name|DATALINK_OPEN
+condition|)
 name|datalink_Close
 argument_list|(
 name|dl
@@ -1410,7 +1463,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*    * If it's an LCP, don't try to murder any NCPs, let bundle_LinkClosed()    * do that side of things (at a time when a call to fsm2initial() on the    * NCP isn't going to take charge of bringing down this link).    */
 block|}
 end_function
 
