@@ -1365,6 +1365,25 @@ name|geom
 operator|->
 name|softc
 expr_stmt|;
+comment|/* 	 * Block all GETATTR requests, we wouldn't know which of our 	 * subdevices we should ship it off to. 	 * XXX: this may not be the right policy. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_cmd
+operator|==
+name|BIO_GETATTR
+condition|)
+block|{
+name|g_io_deliver
+argument_list|(
+name|bp
+argument_list|,
+name|EINVAL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	 * Translate the partition-relative block number to an absolute. 	 */
 name|bn
 operator|=
