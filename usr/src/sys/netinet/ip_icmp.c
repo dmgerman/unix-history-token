@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.29	83/03/10	*/
+comment|/*	ip_icmp.c	4.30	83/03/12	*/
 end_comment
 
 begin_include
@@ -747,9 +747,6 @@ case|case
 name|ICMP_PARAMPROB
 case|:
 case|case
-name|ICMP_REDIRECT
-case|:
-case|case
 name|ICMP_SOURCEQUENCH
 case|:
 comment|/* 		 * Problem with previous datagram; advise 		 * higher level routines. 		 */
@@ -928,6 +925,9 @@ goto|goto
 name|reflect
 goto|;
 case|case
+name|ICMP_REDIRECT
+case|:
+case|case
 name|ICMP_ECHOREPLY
 case|:
 case|case
@@ -958,6 +958,54 @@ expr_stmt|;
 goto|goto
 name|free
 goto|;
+block|}
+comment|/* 		 * Short circuit routing redirects to force 		 * immediate change in the kernel's routing 		 * tables.  The message is also handed to anyone 		 * listening on a raw socket (e.g. the routing 		 * daemon for use in updating it's tables). 		 */
+if|if
+condition|(
+name|icp
+operator|->
+name|icmp_type
+operator|==
+name|ICMP_REDIRECT
+condition|)
+block|{
+name|icmpsrc
+operator|.
+name|sin_addr
+operator|=
+name|icp
+operator|->
+name|icmp_ip
+operator|.
+name|ip_dst
+expr_stmt|;
+name|icmpdst
+operator|.
+name|sin_addr
+operator|=
+name|icp
+operator|->
+name|icmp_gwaddr
+expr_stmt|;
+name|rtredirect
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|icmpsrc
+argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
+name|icmpdst
+argument_list|)
+expr_stmt|;
 block|}
 name|icmpsrc
 operator|.
