@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.h,v 1.3 1998/05/28 23:15:35 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.h,v 1.4 1998/06/15 19:05:19 brian Exp $  */
 end_comment
 
 begin_define
@@ -62,8 +62,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DATALINK_OPEN
+name|DATALINK_CBCP
 value|(8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATALINK_OPEN
+value|(9)
 end_define
 
 begin_define
@@ -177,7 +184,7 @@ name|struct
 name|pppTimer
 name|dial_timer
 decl_stmt|;
-comment|/* For timing between opens& scripts */
+comment|/* For timing between close& open */
 struct|struct
 block|{
 struct|struct
@@ -248,6 +255,16 @@ comment|/* Timeout before reconnect on carrier loss */
 block|}
 name|reconnect
 struct|;
+name|struct
+name|callback
+name|callback
+decl_stmt|;
+comment|/* Direction depends on physical type */
+name|struct
+name|cbcpcfg
+name|cbcp
+decl_stmt|;
+comment|/* Direction depends on phys type& callback */
 block|}
 name|cfg
 struct|;
@@ -280,6 +297,10 @@ comment|/* Chosen phone number after DIAL */
 block|}
 name|phone
 struct|;
+name|struct
+name|cbcp
+name|cbcp
+decl_stmt|;
 name|int
 name|dial_tries
 decl_stmt|;
@@ -555,6 +576,42 @@ begin_function_decl
 specifier|extern
 name|void
 name|datalink_AuthNotOk
+parameter_list|(
+name|struct
+name|datalink
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|datalink_NCPUp
+parameter_list|(
+name|struct
+name|datalink
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|datalink_CBCPComplete
+parameter_list|(
+name|struct
+name|datalink
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|datalink_CBCPFailed
 parameter_list|(
 name|struct
 name|datalink

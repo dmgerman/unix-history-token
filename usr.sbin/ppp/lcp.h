@@ -1,7 +1,105 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.17 1998/05/21 21:46:03 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.h,v 1.18 1998/06/27 23:48:48 brian Exp $  *  *	TODO:  */
 end_comment
+
+begin_comment
+comment|/* callback::opmask values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_AUTH
+value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_DIALSTRING
+value|(1)
+end_define
+
+begin_comment
+comment|/* Don't do this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_LOCATION
+value|(2)
+end_define
+
+begin_comment
+comment|/* Don't do this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_E164
+value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_NAME
+value|(4)
+end_define
+
+begin_comment
+comment|/* Don't do this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_CBCP
+value|(6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_NONE
+value|(14)
+end_define
+
+begin_comment
+comment|/* No callback is ok */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CALLBACK_BIT
+parameter_list|(
+name|n
+parameter_list|)
+value|((n)< 0 ? 0 : 1<< (n))
+end_define
+
+begin_struct
+struct|struct
+name|callback
+block|{
+name|int
+name|opmask
+decl_stmt|;
+comment|/* want these types of callback */
+name|char
+name|msg
+index|[
+name|SCRIPT_LEN
+index|]
+decl_stmt|;
+comment|/* with this data (E.164) */
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -48,6 +146,11 @@ name|u_short
 name|his_auth
 decl_stmt|;
 comment|/* Peer wants this type of authentication */
+name|struct
+name|callback
+name|his_callback
+decl_stmt|;
+comment|/* Peer wants callback ? */
 name|unsigned
 name|his_shortseq
 range|:
@@ -90,6 +193,11 @@ name|u_short
 name|want_auth
 decl_stmt|;
 comment|/* We want this type of authentication */
+name|struct
+name|callback
+name|want_callback
+decl_stmt|;
+comment|/* We want callback ? */
 name|unsigned
 name|want_shortseq
 range|:
@@ -314,6 +422,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TY_CALLBACK
+value|13
+end_define
+
+begin_comment
+comment|/* Callback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TY_CFRAMES
+value|15
+end_define
+
+begin_comment
+comment|/* Compound-frames */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TY_MRRU
 value|17
 end_define
@@ -348,7 +478,7 @@ begin_define
 define|#
 directive|define
 name|MAX_LCP_OPT_LEN
-value|10
+value|20
 end_define
 
 begin_struct

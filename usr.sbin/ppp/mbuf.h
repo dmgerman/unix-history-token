@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.h,v 1.11.2.5 1998/05/01 19:25:24 brian Exp $  *  *	TODO:  */
+comment|/*  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.h,v 1.12 1998/05/21 21:46:49 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_struct
@@ -91,57 +91,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|MB_HDLCOUT
+name|MB_CBCP
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_IPIN
+name|MB_HDLCOUT
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_ECHO
+name|MB_IPIN
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LQR
+name|MB_ECHO
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_LINK
+name|MB_LQR
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_VJCOMP
+name|MB_LINK
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_IPQ
+name|MB_VJCOMP
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|MB_MP
+name|MB_IPQ
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|MB_MP
+value|11
 end_define
 
 begin_define
