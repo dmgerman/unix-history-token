@@ -31,11 +31,11 @@ begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|1
+value|(-1)
 end_define
 
 begin_comment
-comment|/* FP addition rounds to nearest */
+comment|/* indeterminate */
 end_comment
 
 begin_define
@@ -46,7 +46,7 @@ value|(-1)
 end_define
 
 begin_comment
-comment|/* i387 semantics are...interesting */
+comment|/* XXX */
 end_comment
 
 begin_define

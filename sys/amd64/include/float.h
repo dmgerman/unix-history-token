@@ -22,6 +22,21 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_function_decl
+name|__BEGIN_DECLS
+specifier|extern
+name|int
+name|__flt_rounds
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
+
 begin_define
 define|#
 directive|define
@@ -37,12 +52,8 @@ begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|1
+value|__flt_rounds()
 end_define
-
-begin_comment
-comment|/* FP addition rounds to nearest */
-end_comment
 
 begin_if
 if|#
