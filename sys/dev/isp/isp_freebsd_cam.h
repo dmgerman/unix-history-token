@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd_cam.h,v 1.11 1999/01/10 02:51:06 mjacob Exp $ */
+comment|/* $Id: isp_freebsd_cam.h,v 1.12 1999/01/10 11:15:23 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A+ */
+comment|/* release_5_11_99 */
 end_comment
 
 begin_comment
@@ -125,6 +125,48 @@ directive|include
 file|<cam/scsi/scsi_message.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_isp.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_ISP_FABRIC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP2100_FABRIC
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCSI_ISP_SCCLUN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ISP2100_SCCLUN
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -154,6 +196,24 @@ define|#
 directive|define
 name|SCSI_BUSY
 value|SCSI_STATUS_BUSY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCSI_QFULL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SCSI_QFULL
+value|SCSI_STATUS_QUEUE_FULL
 end_define
 
 begin_endif
@@ -191,6 +251,16 @@ name|cam_path
 modifier|*
 name|path
 decl_stmt|;
+name|struct
+name|cam_sim
+modifier|*
+name|sim2
+decl_stmt|;
+name|struct
+name|cam_path
+modifier|*
+name|path2
+decl_stmt|;
 specifier|volatile
 name|char
 name|simqfrozen
@@ -198,6 +268,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SIMQFRZ_RESOURCE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIMQFRZ_LOOPDOWN
+value|0x2
+end_define
 
 begin_define
 define|#
@@ -216,6 +300,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|isp_sim2
+value|isp_osinfo.sim2
+end_define
+
+begin_define
+define|#
+directive|define
+name|isp_path2
+value|isp_osinfo.path2
+end_define
+
+begin_define
+define|#
+directive|define
 name|isp_unit
 value|isp_osinfo.unit
 end_define
@@ -225,20 +323,6 @@ define|#
 directive|define
 name|isp_name
 value|isp_osinfo.name
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXISPREQUEST
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVS
-value|"Qlogic ISP Driver, FreeBSD CAM"
 end_define
 
 begin_include
@@ -262,41 +346,8 @@ end_include
 begin_define
 define|#
 directive|define
-name|PRINTF
-value|printf
-end_define
-
-begin_define
-define|#
-directive|define
-name|IDPRINTF
-parameter_list|(
-name|lev
-parameter_list|,
-name|x
-parameter_list|)
-value|if (isp->isp_dblev>= lev) printf x
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMZERO
-value|bzero
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEMCPY
-parameter_list|(
-name|dst
-parameter_list|,
-name|src
-parameter_list|,
-name|amt
-parameter_list|)
-value|bcopy((src), (dst), (amt))
+name|PVS
+value|"Qlogic ISP Driver, FreeBSD CAM"
 end_define
 
 begin_ifdef
@@ -428,6 +479,16 @@ parameter_list|(
 name|ccb
 parameter_list|)
 value|(ccb)->ccb_h.target_id
+end_define
+
+begin_define
+define|#
+directive|define
+name|XS_CHANNEL
+parameter_list|(
+name|ccb
+parameter_list|)
+value|cam_sim_bus(xpt_path_sim((ccb)->ccb_h.path))
 end_define
 
 begin_define
@@ -737,16 +798,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_DELAY
-parameter_list|(
-name|x
-parameter_list|)
-value|DELAY(x)
-end_define
-
-begin_define
-define|#
-directive|define
 name|STOP_WATCHDOG
 parameter_list|(
 name|f
@@ -754,36 +805,6 @@ parameter_list|,
 name|s
 parameter_list|)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|isp_uninit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ispsoftc
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
