@@ -2420,8 +2420,9 @@ name|KERBEROS
 literal|"k"
 endif|#
 directive|endif
-literal|"nu] [-B records] [-b blocksize] [-d density] [-f file]\n"
-literal|"            [-h level] [-s feet] [-T date] filesystem\n"
+literal|"nu] [-B records] [-b blocksize] [-D dumpdates]\n"
+literal|"            [-d density] [-f file ] [-h level] [-s feet] "
+literal|"[-T date] filesystem\n"
 literal|"       dump [-W | -w]\n"
 argument_list|)
 expr_stmt|;
