@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.11	%G%"
+literal|"@(#)bib.c	2.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -353,7 +353,7 @@ name|int
 name|rcomp
 parameter_list|()
 function_decl|;
-name|int
+name|void
 name|intr
 parameter_list|()
 function_decl|;
@@ -584,12 +584,10 @@ begin_comment
 comment|/* interrupt processing */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|cleanup
 argument_list|(
@@ -597,7 +595,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* clean up and exit */

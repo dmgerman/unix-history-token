@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)listrefs.c	2.6	%G%"
+literal|"@(#)listrefs.c	2.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -231,10 +231,11 @@ name|i
 decl_stmt|,
 name|rcomp
 argument_list|()
-decl_stmt|,
-name|intr
-argument_list|()
 decl_stmt|;
+name|void
+name|intr
+parameter_list|()
+function_decl|;
 name|InitDirectory
 argument_list|(
 name|BMACLIB
@@ -389,12 +390,10 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|intr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|cleanup
 argument_list|(
@@ -402,7 +401,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|cleanup
