@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strdup.c	5.4 (Berkeley) %G%"
+literal|"@(#)strdup.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,12 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -68,7 +74,7 @@ modifier|*
 name|str
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|char
@@ -101,10 +107,6 @@ operator|)
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 operator|)
 return|;
