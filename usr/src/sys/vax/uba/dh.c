@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.8	%G%	*/
+comment|/*	dh.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -746,6 +746,36 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|)
+expr_stmt|;
+comment|/* 	 * Turn of the break bit in case somebody did a TIOCSBRK without 	 * a TIOCCBRK. 	 */
+operator|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|)
+operator|(
+name|tp
+operator|->
+name|t_addr
+operator|)
+operator|)
+operator|->
+name|dhbreak
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|&
+literal|017
+operator|)
 operator|)
 expr_stmt|;
 if|if
