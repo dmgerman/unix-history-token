@@ -1424,7 +1424,7 @@ operator|->
 name|min_offset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
+comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
 condition|(
 name|nbuf
@@ -1489,6 +1489,22 @@ name|factor
 operator|*
 literal|5
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|maxbcache
+operator|&&
+name|nbuf
+operator|>
+name|physmem_est
+operator|/
+name|BKVASIZE
+condition|)
+name|nbuf
+operator|=
+name|maxbcache
+operator|/
+name|BKVASIZE
 expr_stmt|;
 block|}
 comment|/* 	 * Do not allow the buffer_map to be more then 1/2 the size of the 	 * kernel_map. 	 */
