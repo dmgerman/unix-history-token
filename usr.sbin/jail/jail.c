@@ -123,8 +123,6 @@ index|[
 name|NGROUPS
 index|]
 decl_stmt|,
-name|i
-decl_stmt|,
 name|ngroups
 decl_stmt|;
 name|char
@@ -213,7 +211,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"getpwnam %s"
+literal|"getpwnam: %s"
 argument_list|,
 name|username
 argument_list|)
@@ -235,7 +233,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"getpwclass failed"
+literal|"getpwclass: %s"
 argument_list|,
 name|username
 argument_list|)
@@ -244,8 +242,8 @@ name|ngroups
 operator|=
 name|NGROUPS
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|getgrouplist
 argument_list|(
 name|username
@@ -259,23 +257,21 @@ argument_list|,
 operator|&
 name|ngroups
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"getgrouplist %s"
+literal|"getgrouplist: %s"
 argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
 block|}
-name|i
-operator|=
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|argv
@@ -283,16 +279,14 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"chdir %s"
+literal|"chdir: %s"
 argument_list|,
 name|argv
 index|[
@@ -337,8 +331,8 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|inet_aton
 argument_list|(
 name|argv
@@ -349,17 +343,19 @@ argument_list|,
 operator|&
 name|in
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|i
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Couldn't make sense of ip-number\n"
+literal|"Could not make sense of ip-number: %s"
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 name|j
@@ -373,23 +369,21 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|jail
 argument_list|(
 operator|&
 name|j
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"Imprisonment failed"
+literal|"jail"
 argument_list|)
 expr_stmt|;
 if|if
@@ -399,48 +393,44 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|i
-operator|=
+if|if
+condition|(
 name|setgroups
 argument_list|(
 name|ngroups
 argument_list|,
 name|groups
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"setgroups failed"
+literal|"setgroups"
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|setgid
 argument_list|(
 name|pwd
 operator|->
 name|pw_gid
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"setgid failed"
+literal|"setgid"
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|setusercontext
 argument_list|(
 name|lcap
@@ -456,21 +446,19 @@ operator|&
 operator|~
 name|LOGIN_SETGROUP
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"setusercontext failed"
+literal|"setusercontext"
 argument_list|)
 expr_stmt|;
 block|}
-name|i
-operator|=
+if|if
+condition|(
 name|execv
 argument_list|(
 name|argv
@@ -482,16 +470,14 @@ name|argv
 operator|+
 literal|3
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
+operator|!=
+literal|0
 condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"execv(%s)"
+literal|"execv: %s"
 argument_list|,
 name|argv
 index|[
@@ -515,11 +501,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|errx
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
+argument_list|,
+literal|"%s\n"
 argument_list|,
 literal|"Usage: jail [-u username] path hostname ip-number command ..."
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
