@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)SEEK.c 1.3 %G%"
+literal|"@(#)SEEK.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,19 @@ operator|->
 name|funit
 operator||=
 name|SYNC
+expr_stmt|;
+name|curfile
+operator|->
+name|funit
+operator|&=
+operator|~
+operator|(
+name|EOFF
+operator||
+name|EOLN
+operator||
+name|SPEOLN
+operator|)
 expr_stmt|;
 if|if
 condition|(
