@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.27 1996/03/11 02:49:48 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.11.2.9 1996/04/01 00:25:26 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -156,6 +156,20 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_AIC7870
 value|0x70789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_AIC7860
+value|0x60789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_AIC7855
+value|0x55789004ul
 end_define
 
 begin_define
@@ -721,6 +735,24 @@ operator|)
 return|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7860
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7860 SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7855
+case|:
+return|return
+operator|(
+literal|"Adaptec aic7855 SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7850
 case|:
 return|return
@@ -894,6 +926,17 @@ name|AHC_AIC7870
 expr_stmt|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7860
+case|:
+name|ahc_t
+operator|=
+name|AHC_AIC7860
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_AIC7855
+case|:
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7850
 case|:
 name|ahc_t
@@ -904,6 +947,11 @@ break|break;
 default|default:
 break|break;
 block|}
+comment|/* On all PCI adapters, we allow SCB paging */
+name|ahc_f
+operator||=
+name|AHC_PAGESCBS
+expr_stmt|;
 name|ahc_reset
 argument_list|(
 name|io_port
@@ -1013,8 +1061,8 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"ahc%d: BurstLen = %dDWDs, "
-literal|"Latency Timer = %dPCLKS\n"
+literal|"ahc%d: BurstLen = %ldDWDs, "
+literal|"Latency Timer = %ldPCLKS\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -1158,6 +1206,23 @@ name|load_seeprom
 argument_list|(
 name|ahc
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+case|case
+name|AHC_AIC7860
+case|:
+block|{
+name|id_string
+operator|=
+literal|"aic7860 "
+expr_stmt|;
+comment|/* Assume there is no BIOS for these cards? */
+name|ahc
+operator|->
+name|flags
+operator||=
+name|AHC_USEDEFAULTS
 expr_stmt|;
 break|break;
 block|}
@@ -1827,7 +1892,7 @@ literal|1
 operator|+
 name|iobase
 argument_list|,
-name|scsi_conf
+name|host_id
 argument_list|)
 expr_stmt|;
 return|return
