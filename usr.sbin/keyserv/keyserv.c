@@ -1034,7 +1034,22 @@ name|KEYSERV_RANDOM
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|srandomdev
+name|master
+operator|->
+name|key
+operator|.
+name|low
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
+name|master
+operator|->
+name|key
+operator|.
+name|high
+operator|=
+name|arc4random
 argument_list|()
 expr_stmt|;
 else|#
@@ -1044,8 +1059,6 @@ argument_list|(
 name|seed
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|master
 operator|->
 name|key
@@ -1064,6 +1077,8 @@ operator|=
 name|random
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* use stupid dangerous bad rand() */
