@@ -9,27 +9,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|ABI_VENDOR
-value|"FreeBSD"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ABI_SECTION
-value|".note.ABI-tag"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ABI_NOTETYPE
-value|1
-end_define
-
 begin_typedef
 typedef|typedef
 name|void
@@ -288,7 +267,7 @@ end_function
 begin_include
 include|#
 directive|include
-file|"crtbegin.c"
+file|"crtbrand.c"
 end_include
 
 end_unit
