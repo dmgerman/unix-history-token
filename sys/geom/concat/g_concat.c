@@ -2835,6 +2835,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Let's check if device already exists. 	 */
+name|sc
+operator|=
+name|NULL
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|gp
@@ -3766,10 +3770,13 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%s<id>%zu</id>\n"
+literal|"%s<id>%u</id>\n"
 argument_list|,
 name|indent
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|sc
 operator|->
 name|sc_id
