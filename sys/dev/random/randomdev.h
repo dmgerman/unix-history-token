@@ -141,7 +141,7 @@ name|enum
 name|esource
 parameter_list|)
 parameter_list|,
-name|u_int
+name|int
 function_decl|(
 modifier|*
 function_decl|)
@@ -149,7 +149,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 parameter_list|)
 function_decl|;
@@ -205,13 +205,13 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|int
 name|read_random_real
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -232,7 +232,7 @@ parameter_list|,
 name|max
 parameter_list|)
 define|\
-value|static int								\ random_check_uint_##name(SYSCTL_HANDLER_ARGS)				\ {									\ 	if (oidp->oid_arg1 != NULL) {					\ 		 if (*(u_int *)(oidp->oid_arg1)< min)			\ 			*(u_int *)(oidp->oid_arg1) = min;		\ 		 else if (*(u_int *)(oidp->oid_arg1)> max)		\ 			*(u_int *)(oidp->oid_arg1) = max;		\ 	}								\         return sysctl_handle_int(oidp, oidp->oid_arg1, oidp->oid_arg2,	\ 		req);							\ }
+value|static int								\ random_check_uint_##name(SYSCTL_HANDLER_ARGS)				\ {									\ 	if (oidp->oid_arg1 != NULL) {					\ 		 if (*(u_int *)(oidp->oid_arg1)<= (min))		\ 			*(u_int *)(oidp->oid_arg1) = (min);		\ 		 else if (*(u_int *)(oidp->oid_arg1)> (max))		\ 			*(u_int *)(oidp->oid_arg1) = (max);		\ 	}								\         return sysctl_handle_int(oidp, oidp->oid_arg1, oidp->oid_arg2,	\ 		req);							\ }
 end_define
 
 end_unit

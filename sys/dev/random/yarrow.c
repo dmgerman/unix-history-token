@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/libkern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -42,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/selinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/random.h>
 end_include
 
@@ -55,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -395,8 +377,6 @@ block|{
 name|u_int
 name|pl
 decl_stmt|,
-name|src
-decl_stmt|,
 name|overthreshhold
 index|[
 literal|2
@@ -406,6 +386,10 @@ name|struct
 name|source
 modifier|*
 name|source
+decl_stmt|;
+name|enum
+name|esource
+name|src
 decl_stmt|;
 comment|/* Unpack the event into the appropriate source accumulator */
 name|pl
@@ -534,7 +518,7 @@ for|for
 control|(
 name|src
 operator|=
-literal|0
+name|RANDOM_START
 init|;
 name|src
 operator|<
@@ -804,7 +788,9 @@ index|]
 decl_stmt|;
 name|u_int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|enum
+name|esource
 name|j
 decl_stmt|;
 ifdef|#
@@ -1141,7 +1127,7 @@ for|for
 control|(
 name|j
 operator|=
-literal|0
+name|RANDOM_START
 init|;
 name|j
 operator|<
@@ -1277,14 +1263,14 @@ comment|/* Internal function to do return processed entropy from the  * Yarrow P
 end_comment
 
 begin_function
-name|u_int
+name|int
 name|read_random_real
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|u_int
+name|int
 name|count
 parameter_list|)
 block|{
@@ -1307,10 +1293,10 @@ index|[
 name|KEYSIZE
 index|]
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
-name|u_int
+name|int
 name|retval
 decl_stmt|;
 comment|/* The reseed task must not be jumped on */
@@ -1342,6 +1328,13 @@ block|}
 if|if
 condition|(
 name|count
+operator|>
+literal|0
+operator|&&
+operator|(
+name|size_t
+operator|)
+name|count
 operator|>=
 sizeof|sizeof
 argument_list|(
@@ -1367,6 +1360,9 @@ name|count
 condition|;
 name|i
 operator|+=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|random_state
@@ -1441,6 +1437,9 @@ expr_stmt|;
 block|}
 name|retval
 operator|+=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|random_state
@@ -1486,11 +1485,17 @@ name|buf
 argument_list|,
 name|genval
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|count
 argument_list|)
 expr_stmt|;
 name|cur
 operator|=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|random_state
@@ -1546,6 +1551,9 @@ argument_list|,
 operator|&
 name|genval
 index|[
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|random_state
@@ -1556,6 +1564,9 @@ operator|-
 name|cur
 index|]
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|retval
 argument_list|)
 expr_stmt|;

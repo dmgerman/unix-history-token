@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -85,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_include
@@ -139,12 +127,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/resource.h>
 end_include
 
 begin_include
@@ -254,7 +236,10 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|, }
+block|,
+comment|/* kqfilter */
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +284,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -395,6 +380,10 @@ name|dev_t
 name|urandom_dev
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
@@ -668,6 +657,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -675,12 +668,14 @@ name|random_open
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|int
 name|flags
 parameter_list|,
 name|int
 name|fmt
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -743,6 +738,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -750,12 +749,14 @@ name|random_close
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|int
 name|flags
 parameter_list|,
 name|int
 name|fmt
+name|__unused
 parameter_list|,
 name|struct
 name|thread
@@ -801,6 +802,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -808,6 +813,7 @@ name|random_read
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
@@ -818,7 +824,7 @@ name|int
 name|flag
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|c
 decl_stmt|,
 name|ret
@@ -879,14 +885,17 @@ return|;
 block|}
 name|c
 operator|=
-name|min
-argument_list|(
 name|uio
 operator|->
 name|uio_resid
-argument_list|,
+operator|<
 name|PAGE_SIZE
-argument_list|)
+condition|?
+name|uio
+operator|->
+name|uio_resid
+else|:
+name|PAGE_SIZE
 expr_stmt|;
 name|random_buf
 operator|=
@@ -896,6 +905,9 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|c
 argument_list|,
 name|M_TEMP
@@ -950,6 +962,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -957,6 +973,7 @@ name|random_write
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|struct
 name|uio
@@ -965,9 +982,10 @@ name|uio
 parameter_list|,
 name|int
 name|flag
+name|__unused
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|c
 decl_stmt|;
 name|int
@@ -1007,12 +1025,20 @@ condition|)
 block|{
 name|c
 operator|=
-name|min
+call|(
+name|int
+call|)
 argument_list|(
 name|uio
 operator|->
 name|uio_resid
-argument_list|,
+operator|<
+name|PAGE_SIZE
+condition|?
+name|uio
+operator|->
+name|uio_resid
+else|:
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
@@ -1053,6 +1079,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1060,20 +1090,24 @@ name|random_ioctl
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
 name|addr
+name|__unused
 parameter_list|,
 name|int
 name|flags
+name|__unused
 parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|td
+name|__unused
 parameter_list|)
 block|{
 switch|switch
@@ -1099,6 +1133,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1106,6 +1144,7 @@ name|random_poll
 parameter_list|(
 name|dev_t
 name|dev
+name|__unused
 parameter_list|,
 name|int
 name|events
@@ -1168,6 +1207,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1175,6 +1218,7 @@ name|random_modevent
 parameter_list|(
 name|module_t
 name|mod
+name|__unused
 parameter_list|,
 name|int
 name|type
@@ -1182,6 +1226,7 @@ parameter_list|,
 name|void
 modifier|*
 name|data
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -1369,6 +1414,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1377,7 +1426,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
-comment|/* NOTUSED */
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -1385,7 +1434,7 @@ name|harvest
 modifier|*
 name|event
 decl_stmt|;
-name|int
+name|u_int
 name|newtail
 decl_stmt|,
 name|burst
@@ -1562,9 +1611,9 @@ block|{
 name|struct
 name|harvest
 modifier|*
-name|harvest
+name|pharvest
 decl_stmt|;
-name|int
+name|u_int
 name|newhead
 decl_stmt|;
 name|newhead
@@ -1589,7 +1638,7 @@ name|tail
 condition|)
 block|{
 comment|/* Add the harvested data to the ring buffer */
-name|harvest
+name|pharvest
 operator|=
 operator|&
 name|harvestring
@@ -1602,7 +1651,7 @@ name|head
 index|]
 expr_stmt|;
 comment|/* Stuff the harvested data into the ring */
-name|harvest
+name|pharvest
 operator|->
 name|somecounter
 operator|=
@@ -1620,7 +1669,7 @@ name|count
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|harvest
+name|pharvest
 operator|->
 name|entropy
 argument_list|,
@@ -1629,25 +1678,25 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
-name|harvest
+name|pharvest
 operator|->
 name|size
 operator|=
 name|count
 expr_stmt|;
-name|harvest
+name|pharvest
 operator|->
 name|bits
 operator|=
 name|bits
 expr_stmt|;
-name|harvest
+name|pharvest
 operator|->
 name|frac
 operator|=
 name|frac
 expr_stmt|;
-name|harvest
+name|pharvest
 operator|->
 name|source
 operator|=
@@ -1657,7 +1706,7 @@ name|ENTROPYSOURCE
 condition|?
 name|origin
 else|:
-literal|0
+name|RANDOM_START
 expr_stmt|;
 comment|/* Bump the ring counter. This action is assumed 		 * to be atomic. 		 */
 name|harvestring
@@ -1679,11 +1728,11 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|u_int
+name|int
 name|count
 parameter_list|)
 block|{
-name|u_int
+name|int
 name|i
 decl_stmt|;
 comment|/* Break the input up into HARVESTSIZE chunks. 	 * The writer has too much control here, so "estimate" the 	 * the entropy as zero. 	 */
@@ -1759,6 +1808,9 @@ name|buf
 operator|+
 name|i
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|count
 argument_list|,
 literal|0

@@ -83,13 +83,13 @@ end_include
 
 begin_function_decl
 specifier|static
-name|u_int
+name|int
 name|read_random_phony
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -146,7 +146,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int
+name|int
 function_decl|(
 modifier|*
 name|read_func
@@ -155,7 +155,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 init|=
 name|read_random_phony
@@ -191,7 +191,7 @@ name|enum
 name|esource
 parameter_list|)
 parameter_list|,
-name|u_int
+name|int
 function_decl|(
 modifier|*
 name|reader
@@ -200,7 +200,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 parameter_list|)
 block|{
@@ -294,14 +294,14 @@ comment|/* Userland-visible version of read_random */
 end_comment
 
 begin_function
-name|u_int
+name|int
 name|read_random
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|u_int
+name|int
 name|count
 parameter_list|)
 block|{
@@ -325,14 +325,14 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int
+name|int
 name|read_random_phony
 parameter_list|(
 name|void
 modifier|*
 name|buf
 parameter_list|,
-name|u_int
+name|int
 name|count
 parameter_list|)
 block|{
@@ -378,6 +378,9 @@ name|count
 condition|;
 name|i
 operator|+=
+operator|(
+name|size_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|u_long
@@ -397,6 +400,9 @@ operator|-
 name|i
 operator|)
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|u_long
@@ -430,6 +436,9 @@ argument_list|,
 operator|&
 name|randval
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|)
 expr_stmt|;

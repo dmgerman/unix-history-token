@@ -34,7 +34,7 @@ name|KEYSIZE
 index|]
 decl_stmt|;
 comment|/* Repeatedly encrypted */
-name|u_char
+name|char
 name|accum
 index|[
 name|KEYSIZE

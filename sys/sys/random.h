@@ -22,13 +22,13 @@ name|_KERNEL
 end_ifdef
 
 begin_function_decl
-name|u_int
+name|int
 name|read_random
 parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|u_int
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -37,7 +37,13 @@ begin_enum
 enum|enum
 name|esource
 block|{
+name|RANDOM_START
+init|=
+literal|0
+block|,
 name|RANDOM_WRITE
+init|=
+literal|0
 block|,
 name|RANDOM_KEYBOARD
 block|,
