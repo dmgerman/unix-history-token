@@ -4913,7 +4913,7 @@ condition|)
 block|{
 name|regid
 operator|=
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 expr_stmt|;
 name|type
 operator|=
