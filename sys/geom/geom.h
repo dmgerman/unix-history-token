@@ -678,7 +678,7 @@ comment|/* geom_dev.c */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|g_dev_print
 parameter_list|(
 name|void

@@ -213,7 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|g_dev_print
 parameter_list|(
 name|void
@@ -224,29 +224,13 @@ name|g_geom
 modifier|*
 name|gp
 decl_stmt|;
-name|g_waitidle
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|LIST_EMPTY
-argument_list|(
-operator|&
-name|g_dev_class
-operator|.
-name|geom
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|printf
-argument_list|(
-literal|"List of GEOM disk devices:\n  "
-argument_list|)
-expr_stmt|;
+name|char
+specifier|const
+modifier|*
+name|p
+init|=
+literal|""
+decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|gp
@@ -255,25 +239,28 @@ argument|&g_dev_class.geom
 argument_list|,
 argument|geom
 argument_list|)
+block|{
 name|printf
 argument_list|(
-literal|" %s"
+literal|"%s%s"
+argument_list|,
+name|p
 argument_list|,
 name|gp
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+literal|" "
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 
