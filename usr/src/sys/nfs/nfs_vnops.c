@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -513,6 +513,164 @@ comment|/* islocked */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FIFO
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|fifo_lookup
+argument_list|()
+decl_stmt|,
+name|fifo_open
+argument_list|()
+decl_stmt|,
+name|fifo_read
+argument_list|()
+decl_stmt|,
+name|fifo_write
+argument_list|()
+decl_stmt|,
+name|fifo_bmap
+argument_list|()
+decl_stmt|,
+name|fifo_ioctl
+argument_list|()
+decl_stmt|,
+name|fifo_select
+argument_list|()
+decl_stmt|,
+name|fifo_close
+argument_list|()
+decl_stmt|,
+name|fifo_print
+argument_list|()
+decl_stmt|,
+name|fifo_badop
+argument_list|()
+decl_stmt|,
+name|fifo_nullop
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnodeops
+name|fifo_nfsv2nodeops
+init|=
+block|{
+name|fifo_lookup
+block|,
+comment|/* lookup */
+name|fifo_badop
+block|,
+comment|/* create */
+name|fifo_badop
+block|,
+comment|/* mknod */
+name|fifo_open
+block|,
+comment|/* open */
+name|fifo_close
+block|,
+comment|/* close */
+name|nfs_access
+block|,
+comment|/* access */
+name|nfs_getattr
+block|,
+comment|/* getattr */
+name|nfs_setattr
+block|,
+comment|/* setattr */
+name|fifo_read
+block|,
+comment|/* read */
+name|fifo_write
+block|,
+comment|/* write */
+name|fifo_ioctl
+block|,
+comment|/* ioctl */
+name|fifo_select
+block|,
+comment|/* select */
+name|fifo_badop
+block|,
+comment|/* mmap */
+name|fifo_nullop
+block|,
+comment|/* fsync */
+name|fifo_badop
+block|,
+comment|/* seek */
+name|fifo_badop
+block|,
+comment|/* remove */
+name|fifo_badop
+block|,
+comment|/* link */
+name|fifo_badop
+block|,
+comment|/* rename */
+name|fifo_badop
+block|,
+comment|/* mkdir */
+name|fifo_badop
+block|,
+comment|/* rmdir */
+name|fifo_badop
+block|,
+comment|/* symlink */
+name|fifo_badop
+block|,
+comment|/* readdir */
+name|fifo_badop
+block|,
+comment|/* readlink */
+name|fifo_badop
+block|,
+comment|/* abortop */
+name|nfs_inactive
+block|,
+comment|/* inactive */
+name|nfs_reclaim
+block|,
+comment|/* reclaim */
+name|nfs_lock
+block|,
+comment|/* lock */
+name|nfs_unlock
+block|,
+comment|/* unlock */
+name|fifo_bmap
+block|,
+comment|/* bmap */
+name|fifo_badop
+block|,
+comment|/* strategy */
+name|nfs_print
+block|,
+comment|/* print */
+name|nfs_islocked
+block|,
+comment|/* islocked */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FIFO */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -8313,7 +8471,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"tag VT_NFS, fileid %d fsid 0x%x%s\n"
+literal|"tag VT_NFS, fileid %d fsid 0x%x"
 argument_list|,
 name|np
 operator|->
@@ -8326,6 +8484,30 @@ operator|->
 name|n_vattr
 operator|.
 name|va_fsid
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FIFO
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VFIFO
+condition|)
+name|fifo_printinfo
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FIFO */
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 operator|(
 name|np
