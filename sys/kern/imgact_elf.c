@@ -888,9 +888,16 @@ name|rv
 operator|!=
 name|KERN_SUCCESS
 condition|)
+block|{
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 return|return
 name|EINVAL
 return|;
+block|}
 comment|/* we can stop now if we've covered it all */
 if|if
 condition|(
