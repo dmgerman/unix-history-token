@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.37 1999/07/23 02:01:19 hosokawa Exp $"
+literal|"$Id: cardd.c,v 1.38 1999/07/23 08:53:20 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2688,6 +2688,16 @@ operator|<<
 name|sp
 operator|->
 name|irq
+expr_stmt|;
+name|drv
+operator|.
+name|flags
+operator|=
+name|sp
+operator|->
+name|config
+operator|->
+name|flags
 expr_stmt|;
 if|if
 condition|(
