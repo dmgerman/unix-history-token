@@ -3981,7 +3981,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: newsyslog [-CFnrsv] [-a directory] [-f config-file]\n"
+literal|"usage: newsyslog [-CFnrsv] [-a directory] [-d directory] [-f config-file]\n"
 literal|"                 [ [-R requestor] filename ... ]\n"
 argument_list|)
 expr_stmt|;
