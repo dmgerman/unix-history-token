@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.9	83/10/22  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.10	83/11/30  *  * Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -190,7 +190,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.9	83/10/22"
+literal|"dver.c	1.10	83/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +602,7 @@ begin_define
 define|#
 directive|define
 name|BAND
-value|2
+value|1
 end_define
 
 begin_comment
@@ -2206,11 +2206,14 @@ case|case
 literal|'x'
 case|:
 comment|/* device control */
+if|if
+condition|(
 name|devcntrl
 argument_list|(
 name|fp
 argument_list|)
-expr_stmt|;
+condition|)
+return|return;
 break|break;
 default|default:
 name|error
@@ -2229,25 +2232,18 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|devcntrl
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|fp
+parameter_list|)
 comment|/* interpret device control functions */
-end_comment
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+comment|/* returns -1 apon recieving "stop" command */
 block|{
 name|char
 name|str
@@ -2323,7 +2319,10 @@ argument_list|(
 literal|'s'
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|-
+literal|1
+return|;
 case|case
 literal|'r'
 case|:
@@ -2479,9 +2478,15 @@ name|c
 operator|==
 name|EOF
 condition|)
-break|break;
+return|return
+operator|-
+literal|1
+return|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* fileinit:	read in font and code files, etc. 		Must open table for device, read in resolution, 		size info, font info, etc. and set params. 		Also read in font name mapping. */
@@ -3453,11 +3458,16 @@ index|[
 literal|60
 index|]
 decl_stmt|;
+specifier|register
 name|int
 name|fin
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|nw
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|norig
 decl_stmt|;
 if|if
@@ -3498,6 +3508,145 @@ operator|==
 literal|0
 condition|)
 return|return;
+for|for
+control|(
+name|fin
+operator|=
+literal|1
+init|;
+name|fin
+operator|<=
+name|NFONTS
+condition|;
+name|fin
+operator|++
+control|)
+comment|/* first check to see if the */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|s
+argument_list|,
+name|fontbase
+index|[
+name|fin
+index|]
+operator|->
+name|namefont
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* font is loaded */
+specifier|register
+name|char
+modifier|*
+name|c
+decl_stmt|;
+comment|/* somewhere else */
+define|#
+directive|define
+name|ptrswap
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|{ c = (char*) (x); x = y; y = c; }
+name|ptrswap
+argument_list|(
+name|fontbase
+index|[
+name|n
+index|]
+argument_list|,
+name|fontbase
+index|[
+name|fin
+index|]
+argument_list|)
+expr_stmt|;
+name|ptrswap
+argument_list|(
+name|codetab
+index|[
+name|n
+index|]
+argument_list|,
+name|codetab
+index|[
+name|fin
+index|]
+argument_list|)
+expr_stmt|;
+name|ptrswap
+argument_list|(
+name|widtab
+index|[
+name|n
+index|]
+argument_list|,
+name|widtab
+index|[
+name|fin
+index|]
+argument_list|)
+expr_stmt|;
+name|ptrswap
+argument_list|(
+name|fitab
+index|[
+name|n
+index|]
+argument_list|,
+name|fitab
+index|[
+name|fin
+index|]
+argument_list|)
+expr_stmt|;
+name|t_fp
+argument_list|(
+name|n
+argument_list|,
+name|fontbase
+index|[
+name|n
+index|]
+operator|->
+name|namefont
+argument_list|,
+name|fontbase
+index|[
+name|n
+index|]
+operator|->
+name|intname
+argument_list|)
+expr_stmt|;
+name|t_fp
+argument_list|(
+name|fin
+argument_list|,
+name|fontbase
+index|[
+name|fin
+index|]
+operator|->
+name|namefont
+argument_list|,
+name|fontbase
+index|[
+name|fin
+index|]
+operator|->
+name|intname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|s1
@@ -4185,6 +4334,13 @@ operator|)
 operator|/
 name|RES
 expr_stmt|;
+name|vorigin
+operator|=
+name|pagelen
+operator|=
+literal|0
+expr_stmt|;
+comment|/* reset for new page */
 if|if
 condition|(
 name|outsize
@@ -4216,16 +4372,10 @@ name|outsize
 argument_list|)
 expr_stmt|;
 comment|/* since vsort makes sure of */
-name|vorigin
-operator|=
-name|pagelen
-operator|=
-literal|0
-expr_stmt|;
-comment|/* putting P commands in */
 block|}
 else|else
 block|{
+comment|/* putting P commands in */
 name|vorigin
 operator|+=
 name|NLINES
