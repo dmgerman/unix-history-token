@@ -4807,25 +4807,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-extern|extern printw(
-block|)
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_expr_stmt
-name|printf
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|int
 function_decl|(
 modifier|*
@@ -4833,9 +4814,6 @@ name|funcp
 function_decl|)
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_if
 if|if
 condition|(
 name|Windows
@@ -4854,9 +4832,6 @@ name|funcp
 operator|=
 name|printf
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 call|(
 modifier|*
 name|funcp
@@ -4869,9 +4844,6 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 call|(
 modifier|*
 name|funcp
@@ -4880,22 +4852,16 @@ argument_list|(
 literal|"Please run 'setup' to determine the problem.\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|cleanup
 argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*NOTREACHED*/
-end_comment
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*
 comment|*/
 end_comment
@@ -4904,21 +4870,18 @@ begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: distance() / / FUNCTION: calculate distance between two points / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	double x1, y1 - x, y coordinates of first point /	double x2, y2 - x, y coordinates of second point / / RETURN VALUE: distance between the two points / / MODULES CALLED: sqrt() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	This function is provided because someone's hypot() library function /	fails if x1 == x2&& y1 == y2. / /************************************************************************/
 end_comment
 
-begin_macro
-unit|double
+begin_function
+name|double
 name|distance
-argument_list|(
-argument|x1
-argument_list|,
-argument|x2
-argument_list|,
-argument|y1
-argument_list|,
-argument|y2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|x1
+parameter_list|,
+name|x2
+parameter_list|,
+name|y1
+parameter_list|,
+name|y2
+parameter_list|)
 name|double
 name|x1
 decl_stmt|,
@@ -4928,9 +4891,6 @@ name|y1
 decl_stmt|,
 name|y2
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|double
 name|deltax
@@ -4964,7 +4924,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*
