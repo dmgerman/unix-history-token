@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,16 @@ include|#
 directive|include
 file|<sys/errno.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* before tcp_seq.h, for tcp_random18() */
+end_comment
 
 begin_include
 include|#
@@ -1541,15 +1551,18 @@ if|if
 condition|(
 name|tiflags
 operator|&
-operator|(
 name|TH_ACK
-operator||
-name|TH_RST
-operator|)
 condition|)
+block|{
+name|tcpstat
+operator|.
+name|tcps_badsyn
+operator|++
+expr_stmt|;
 goto|goto
 name|dropwithreset
 goto|;
+block|}
 goto|goto
 name|drop
 goto|;
@@ -2258,6 +2271,9 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|already_done
 if|if
 condition|(
 name|tiflags
@@ -2289,6 +2305,8 @@ condition|)
 goto|goto
 name|drop
 goto|;
+endif|#
+directive|endif
 comment|/* 		 * RFC1122 4.2.3.10, p. 104: discard bcast/mcast SYN 		 * in_broadcast() should never return true on a received 		 * packet with M_BCAST not set. 		 */
 if|if
 condition|(
@@ -2547,7 +2565,7 @@ name|tcp_iss
 operator|+=
 name|TCP_ISSINCR
 operator|/
-literal|2
+literal|4
 expr_stmt|;
 name|tp
 operator|->
