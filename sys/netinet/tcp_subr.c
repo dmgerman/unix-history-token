@@ -938,6 +938,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sack
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"TCP SACK"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|int
 name|tcp_do_sack
@@ -949,11 +967,11 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|do_sack
+name|enable
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
@@ -984,7 +1002,7 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_tcp
+name|_net_inet_tcp_sack
 argument_list|,
 name|OID_AUTO
 argument_list|,
