@@ -318,6 +318,32 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
+name|char
+name|machine
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* machine type */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|cpu_model
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CPU model */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|nblkdev
 decl_stmt|;
