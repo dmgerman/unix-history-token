@@ -737,20 +737,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|g_hexdump
-parameter_list|(
-name|void
-modifier|*
-name|ptr
-parameter_list|,
-name|int
-name|length
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|g_trace
 parameter_list|(
 name|int

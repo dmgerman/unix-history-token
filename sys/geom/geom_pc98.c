@@ -155,7 +155,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|g_hexdump
+name|hexdump
 argument_list|(
 name|dp
 argument_list|,
@@ -166,6 +166,10 @@ index|[
 literal|0
 index|]
 argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|printf
