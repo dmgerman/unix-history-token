@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/assym.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -53,68 +59,12 @@ directive|include
 file|<i386/svr4/svr4_machdep.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|offsetof
-parameter_list|(
-name|type
-parameter_list|,
-name|member
-parameter_list|)
-value|((size_t)(&((type *)0)->member))
-end_define
-
-begin_define
-define|#
-directive|define
-name|OS
-parameter_list|(
-name|s
-parameter_list|,
-name|m
-parameter_list|)
-value|((u_int)offsetof(struct s, m))
-end_define
-
-begin_decl_stmt
-name|int
-decl|main
-name|__P
+begin_expr_stmt
+name|ASSYM
 argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|printf
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-name|int
-name|main
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"#define\tSVR4_SIGF_HANDLER %u\n"
+name|SVR4_SIGF_HANDLER
 argument_list|,
-name|OS
+name|offsetof
 argument_list|(
 name|svr4_sigframe
 argument_list|,
@@ -122,11 +72,14 @@ name|sf_handler
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
 argument_list|(
-literal|"#define\tSVR4_SIGF_UC %u\n"
+name|SVR4_SIGF_UC
 argument_list|,
-name|OS
+name|offsetof
 argument_list|(
 name|svr4_sigframe
 argument_list|,
@@ -134,11 +87,14 @@ name|sf_uc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
 argument_list|(
-literal|"#define\tSVR4_UC_FS %u\n"
+name|SVR4_UC_FS
 argument_list|,
-name|OS
+name|offsetof
 argument_list|(
 name|svr4_ucontext
 argument_list|,
@@ -151,11 +107,14 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
 argument_list|(
-literal|"#define\tSVR4_UC_GS %u\n"
+name|SVR4_UC_GS
 argument_list|,
-name|OS
+name|offsetof
 argument_list|(
 name|svr4_ucontext
 argument_list|,
@@ -168,11 +127,14 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+end_expr_stmt
+
+begin_expr_stmt
+name|ASSYM
 argument_list|(
-literal|"#define\tSVR4_UC_EFLAGS %u\n"
+name|SVR4_UC_EFLAGS
 argument_list|,
-name|OS
+name|offsetof
 argument_list|(
 name|svr4_ucontext
 argument_list|,
@@ -185,13 +147,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
+end_expr_stmt
 
 end_unit
 
