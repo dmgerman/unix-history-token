@@ -66,6 +66,10 @@ name|int
 name|extract_flags
 decl_stmt|;
 comment|/* Flags for extract operation */
+name|int
+name|strip_components
+decl_stmt|;
+comment|/* Remove this many leading dirs */
 name|char
 name|mode
 decl_stmt|;
