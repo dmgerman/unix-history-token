@@ -135,6 +135,10 @@ name|sys_nerr
 condition|)
 return|return
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|sys_errlist
 index|[
 name|offset
