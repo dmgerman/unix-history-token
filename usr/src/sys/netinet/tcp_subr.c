@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_subr.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -566,10 +566,6 @@ name|flags
 operator|=
 name|TH_ACK
 expr_stmt|;
-name|tlen
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -661,11 +657,11 @@ expr_stmt|;
 undef|#
 directive|undef
 name|xchg
+block|}
 name|tlen
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|ti
 operator|->
 name|ti_next
@@ -1026,7 +1022,18 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_drops
+operator|++
+expr_stmt|;
 block|}
+else|else
+name|tcpstat
+operator|.
+name|tcps_conndrops
+operator|++
+expr_stmt|;
 name|so
 operator|->
 name|so_error
@@ -1208,6 +1215,11 @@ name|in_pcbdetach
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_closed
+operator|++
 expr_stmt|;
 return|return
 operator|(

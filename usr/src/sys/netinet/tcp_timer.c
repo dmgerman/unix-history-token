@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_timer.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -220,6 +220,11 @@ operator|->
 name|t_flags
 operator||=
 name|TF_ACKNOW
+expr_stmt|;
+name|tcpstat
+operator|.
+name|tcps_delack
+operator|++
 expr_stmt|;
 operator|(
 name|void
@@ -640,6 +645,11 @@ operator|>
 name|TCP_MAXRXTSHIFT
 condition|)
 block|{
+name|tcpstat
+operator|.
+name|tcps_timeoutdrop
+operator|++
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_drop
@@ -651,6 +661,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|tcpstat
+operator|.
+name|tcps_rexmttimeo
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -768,6 +783,11 @@ comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output
 case|case
 name|TCPT_PERSIST
 case|:
+name|tcpstat
+operator|.
+name|tcps_persisttimeo
+operator|++
+expr_stmt|;
 name|tcp_setpersist
 argument_list|(
 name|tp
@@ -798,6 +818,11 @@ comment|/* 	 * Keep-alive timer went off; send something 	 * or drop connection 
 case|case
 name|TCPT_KEEP
 case|:
+name|tcpstat
+operator|.
+name|tcps_keeptimeo
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -839,7 +864,12 @@ condition|)
 goto|goto
 name|dropit
 goto|;
-comment|/* 			 * Saying tp->rcv_nxt-1 lies about what 			 * we have received, and by the protocol spec 			 * requires the correspondent TCP to respond. 			 * Saying tp->snd_una-1 causes the transmitted 			 * byte to lie outside the receive window; this 			 * is important because we don't necessarily 			 * have a byte in the window to send (consider 			 * a one-way stream!) 			 */
+comment|/* 			 * Send a packet designed to force a response 			 * if the peer is up and reachable: 			 * either an ACK if the connection is still alive, 			 * or an RST if the peer has closed the connection 			 * due to timeout or reboot. 			 * Using sequence number tp->snd_una-1 			 * causes the transmitted zero-length segment 			 * to lie outside the receive window; 			 * by the protocol spec, this requires the 			 * correspondent TCP to respond. 			 */
+name|tcpstat
+operator|.
+name|tcps_keepprobe
+operator|++
+expr_stmt|;
 name|tcp_respond
 argument_list|(
 name|tp
@@ -851,8 +881,6 @@ argument_list|,
 name|tp
 operator|->
 name|rcv_nxt
-operator|-
-literal|1
 argument_list|,
 name|tp
 operator|->
@@ -876,6 +904,11 @@ expr_stmt|;
 break|break;
 name|dropit
 label|:
+name|tcpstat
+operator|.
+name|tcps_keepdrops
+operator|++
+expr_stmt|;
 name|tp
 operator|=
 name|tcp_drop
