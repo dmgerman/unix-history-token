@@ -16363,6 +16363,13 @@ name|ahc
 operator|->
 name|scb_data
 expr_stmt|;
+if|if
+condition|(
+name|scb_data
+operator|==
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|scb_data
