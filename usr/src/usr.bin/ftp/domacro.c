@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domacro.c	1.7 (Berkeley) %G%"
+literal|"@(#)domacro.c	1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,55 +148,18 @@ condition|(
 name|argc
 operator|<
 literal|2
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|strcat
-argument_list|(
-name|line
-argument_list|,
-literal|" "
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"(macro name) "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|gets
+operator|&&
+operator|!
+name|another
 argument_list|(
 operator|&
-name|line
-index|[
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-index|]
-argument_list|)
-expr_stmt|;
-name|makeargv
-argument_list|()
-expr_stmt|;
 name|argc
-operator|=
-name|margc
-expr_stmt|;
+argument_list|,
+operator|&
 name|argv
-operator|=
-name|margv
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|argc
-operator|<
-literal|2
+argument_list|,
+literal|"macro name"
+argument_list|)
 condition|)
 block|{
 name|printf
