@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file is derived from various .h and .c files from the zlib-0.95  * distribution by Jean-loup Gailly and Mark Adler, with some additions  * by Paul Mackerras to aid in implementing Deflate compression and  * decompression for PPP packets.  See zlib.h for conditions of  * distribution and use.  *  * Changes that have been made include:  * - changed functions not used outside this file to "local"  * - added minCompression parameter to deflateInit2  * - added Z_PACKET_FLUSH (see zlib.h for details)  * - added inflateIncomp  *  * $Id: zlib.c,v 1.1.2.1 1997/07/01 20:44:10 peter Exp $  */
+comment|/*  * This file is derived from various .h and .c files from the zlib-0.95  * distribution by Jean-loup Gailly and Mark Adler, with some additions  * by Paul Mackerras to aid in implementing Deflate compression and  * decompression for PPP packets.  See zlib.h for conditions of  * distribution and use.  *  * Changes that have been made include:  * - changed functions not used outside this file to "local"  * - added minCompression parameter to deflateInit2  * - added Z_PACKET_FLUSH (see zlib.h for details)  * - added inflateIncomp  *  * $Id: zlib.c,v 1.3 1997/08/19 14:10:48 peter Exp $  */
 end_comment
 
 begin_comment
@@ -306,12 +306,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
