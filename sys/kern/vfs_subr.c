@@ -783,7 +783,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The workitem queue.  *   * It is useful to delay writes of file data and filesystem metadata  * for tens of seconds so that quickly created and deleted files need  * not waste disk bandwidth being created and removed. To realize this,  * we append vnodes to a "workitem" queue. When running with a soft  * updates implementation, most pending metadata dependencies should  * not wait for more than a few seconds. Thus, mounted on block devices  * are delayed only about a half the time that file data is delayed.  * Similarly, directory updates are more critical, so are only delayed  * about a third the time that file data is delayed. Thus, there are  * SYNCER_MAXDELAY queues that are processed round-robin at a rate of  * one each second (driven off the filesystem syncer process). The  * syncer_delayno variable indicates the next queue that is to be processed.  * Items that need to be processed soon are placed in this queue:  *  *	syncer_workitem_pending[syncer_delayno]  *  * A delay of fifteen seconds is done by placing the request fifteen  * entries later in the queue:  *  *	syncer_workitem_pending[(syncer_delayno + 15)& syncer_mask]  *  */
+comment|/*  * The workitem queue.  *  * It is useful to delay writes of file data and filesystem metadata  * for tens of seconds so that quickly created and deleted files need  * not waste disk bandwidth being created and removed. To realize this,  * we append vnodes to a "workitem" queue. When running with a soft  * updates implementation, most pending metadata dependencies should  * not wait for more than a few seconds. Thus, mounted on block devices  * are delayed only about a half the time that file data is delayed.  * Similarly, directory updates are more critical, so are only delayed  * about a third the time that file data is delayed. Thus, there are  * SYNCER_MAXDELAY queues that are processed round-robin at a rate of  * one each second (driven off the filesystem syncer process). The  * syncer_delayno variable indicates the next queue that is to be processed.  * Items that need to be processed soon are placed in this queue:  *  *	syncer_workitem_pending[syncer_delayno]  *  * A delay of fifteen seconds is done by placing the request fifteen  * entries later in the queue:  *  *	syncer_workitem_pending[(syncer_delayno + 15)& syncer_mask]  *  */
 end_comment
 
 begin_decl_stmt
@@ -5933,7 +5933,7 @@ operator|==
 name|vp
 condition|)
 block|{
-comment|/* 				 * Note: v_tag VT_VFS vps can remain on the 				 * worklist too with no dirty blocks, but  				 * since sync_fsync() moves it to a different  				 * slot we are safe. 				 */
+comment|/* 				 * Note: v_tag VT_VFS vps can remain on the 				 * worklist too with no dirty blocks, but 				 * since sync_fsync() moves it to a different 				 * slot we are safe. 				 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -6630,7 +6630,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * Missed, append to end, but before meta-data. 				 * We know that the head buffer in the list is 				 * not meta-data due to prior conditionals. 				 * 				 * Indirect effects:  NFS second stage write 				 * tends to wind up here, giving maximum  				 * distance between the unstable write and the 				 * commit rpc. 				 */
+comment|/* 				 * Missed, append to end, but before meta-data. 				 * We know that the head buffer in the list is 				 * not meta-data due to prior conditionals. 				 * 				 * Indirect effects:  NFS second stage write 				 * tends to wind up here, giving maximum 				 * distance between the unstable write and the 				 * commit rpc. 				 */
 name|tbp
 operator|=
 name|TAILQ_LAST
@@ -7499,7 +7499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Increase the reference count of a vnode.  */
+comment|/*  * Increase the reference count of a vnode.  */
 end_comment
 
 begin_function
@@ -7713,7 +7713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Release an already locked vnode.  This give the same effects as  * unlock+vrele(), but takes less time and avoids releasing and  * re-aquiring the lock (as vrele() aquires the lock internally.)  */
+comment|/*  * Release an already locked vnode.  This give the same effects as  * unlock+vrele(), but takes less time and avoids releasing and  * re-aquiring the lock (as vrele() aquires the lock internally.)  */
 end_comment
 
 begin_function
@@ -8248,7 +8248,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If WRITECLOSE is set, flush out unlinked but still open 		 * files (even if open only for reading) and regular file 		 * vnodes open for writing.  		 */
+comment|/* 		 * If WRITECLOSE is set, flush out unlinked but still open 		 * files (even if open only for reading) and regular file 		 * vnodes open for writing. 		 */
 if|if
 condition|(
 operator|(
@@ -11538,7 +11538,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Opposite of vfree() - mark a vnode as in use.  */
+comment|/*  * Opposite of vfree() - mark a vnode as in use.  */
 end_comment
 
 begin_function
