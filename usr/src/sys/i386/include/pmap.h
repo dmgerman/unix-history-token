@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.2 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  * from hp300:	@(#)pmap.h	7.2 (Berkeley) 12/16/90  *  *	@(#)pmap.h	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -486,85 +486,6 @@ begin_comment
 comment|/* last of kernel virtual pde's */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|I386_MAX_PTSIZE
-value|NPTEPG*NBPG
-end_define
-
-begin_comment
-comment|/* max size of PT */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|old
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|I386_MAX_KPTSIZE
-value|0x100000
-end_define
-
-begin_comment
-comment|/* max memory to allocate to KPT */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|I386_PTBASE
-value|0xfe200000
-end_define
-
-begin_define
-define|#
-directive|define
-name|I386_PTMAXSIZE
-value|0x01000000
-end_define
-
-begin_comment
-comment|/*  * Kernel virtual address to page table entry and to physical address.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|kvtopte
-parameter_list|(
-name|va
-parameter_list|)
-define|\
-value|(&Sysmap[((unsigned)(va) - VM_MIN_KERNEL_ADDRESS)>> PGSHIFT])
-end_define
-
-begin_define
-define|#
-directive|define
-name|ptetokv
-parameter_list|(
-name|pt
-parameter_list|)
-define|\
-value|((((pt_entry_t *)(pt) - Sysmap)<< PGSHIFT) + VM_MIN_KERNEL_ADDRESS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kvtophys
-parameter_list|(
-name|va
-parameter_list|)
-define|\
-value|((kvtopte(va)->pg_pfnum<< PGSHIFT) | ((int)(va)& PGOFSET))
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|pt_entry_t
@@ -572,11 +493,6 @@ modifier|*
 name|Sysmap
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_comment
 comment|/*  * Address of current and alternate address space page table maps  * and directories.  */
@@ -622,7 +538,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  */
+comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
 
 begin_define
@@ -663,6 +579,16 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(i386_ptob(vtopte(va)->pg_pfnum) | ((int)(va)& PGOFSET))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ispt
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)>= UPT_MIN_ADDRESS&& (va)<= KPT_MAX_ADDRESS)
 end_define
 
 begin_define
@@ -718,11 +644,6 @@ name|va
 parameter_list|)
 value|(((va)&PT_MASK)>>PT_SHIFT)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Pmap stuff  */
@@ -843,15 +764,6 @@ name|vm_offset_t
 name|pv_va
 decl_stmt|;
 comment|/* virtual address for mapping */
-name|pd_entry_t
-modifier|*
-name|pv_ptpde
-decl_stmt|;
-comment|/* non-zero if VA maps a PT page */
-name|pmap_t
-name|pv_ptpmap
-decl_stmt|;
-comment|/* if pv_ptpde, pmap for PT page */
 name|int
 name|pv_flags
 decl_stmt|;
