@@ -295,9 +295,13 @@ condition|)
 block|{
 if|#
 directive|if
-literal|0
+literal|1
 comment|/* XXX - Save FP registers? */
-block|FP_SAVE_UC(ucp);
+name|FP_SAVE_UC
+argument_list|(
+name|ucp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|called_from_handler
@@ -404,9 +408,13 @@ else|else
 block|{
 if|#
 directive|if
-literal|0
+literal|1
 comment|/* XXX - Restore FP registers? */
-block|FP_RESTORE_UC(ucp);
+name|FP_RESTORE_UC
+argument_list|(
+name|ucp
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 			 * Set the process signal mask in the context; it 			 * could have changed by the handler. 			 */

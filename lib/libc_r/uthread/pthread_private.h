@@ -204,7 +204,7 @@ name|FP_SAVE_UC
 parameter_list|(
 name|ucp
 parameter_list|)
-value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpregs;	\ 	__asm__("fnsave %0": :"m"(*fdata));		\ } while (0)
+value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpstate;	\ 	__asm__("fnsave %0": :"m"(*fdata));		\ } while (0)
 end_define
 
 begin_define
@@ -214,7 +214,7 @@ name|FP_RESTORE_UC
 parameter_list|(
 name|ucp
 parameter_list|)
-value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpregs;	\ 	__asm__("frstor %0": :"m"(*fdata));		\ } while (0)
+value|do {			\ 	char	*fdata;					\ 	fdata = (char *) (ucp)->uc_mcontext.mc_fpstate;	\ 	__asm__("frstor %0": :"m"(*fdata));		\ } while (0)
 end_define
 
 begin_define
