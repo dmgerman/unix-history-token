@@ -1908,8 +1908,6 @@ name|devlist
 decl_stmt|;
 name|int
 name|tmp
-decl_stmt|,
-name|cardattached
 decl_stmt|;
 name|device_get_children
 argument_list|(
