@@ -235,7 +235,13 @@ name|bcount
 operator|)
 return|;
 name|dest
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|dest
+operator|+
 name|ccount
 expr_stmt|;
 block|}

@@ -88,8 +88,16 @@ operator|)
 expr_stmt|;
 name|maxheap
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|top
 operator|-
+operator|(
+name|char
+operator|*
+operator|)
 name|heapbase
 expr_stmt|;
 block|}
@@ -121,6 +129,10 @@ condition|)
 block|{
 name|ret
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|heapbase
 operator|+
 name|heapsize

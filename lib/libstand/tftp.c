@@ -1511,7 +1511,13 @@ name|count
 argument_list|)
 expr_stmt|;
 name|addr
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|addr
+operator|+
 name|count
 expr_stmt|;
 name|tftpfile

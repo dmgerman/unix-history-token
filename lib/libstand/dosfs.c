@@ -1667,7 +1667,13 @@ operator|=
 literal|0
 expr_stmt|;
 name|buf
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
 name|n
 expr_stmt|;
 name|cnt

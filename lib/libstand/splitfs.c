@@ -1032,7 +1032,13 @@ operator|+=
 name|nread
 expr_stmt|;
 name|buf
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
 name|nread
 expr_stmt|;
 if|if
