@@ -1076,8 +1076,6 @@ name|VFid
 decl_stmt|;
 name|ENTRY
 expr_stmt|;
-name|ENTRY
-expr_stmt|;
 name|MARK_ENTRY
 argument_list|(
 name|CODA_ROOT_STATS
