@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linkaddr.c	5.3 (Berkeley) %G%"
+literal|"@(#)linkaddr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -418,7 +418,7 @@ operator|++
 operator|=
 name|byte
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+comment|/* FALLTHROUGH */
 case|case
 name|RESET
 operator||
