@@ -660,7 +660,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|addugd_intr_forwarded
+name|addupc_intr_forwarded
 parameter_list|(
 name|struct
 name|proc
@@ -731,9 +731,9 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_OWEUPC
+name|PS_OWEUPC
 operator|)
 operator|==
 literal|0
@@ -753,9 +753,9 @@ literal|1
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_OWEUPC
+name|PS_OWEUPC
 expr_stmt|;
 block|}
 operator|*
@@ -841,6 +841,33 @@ index|[
 name|id
 index|]
 expr_stmt|;
+comment|/* XXX */
+if|if
+condition|(
+name|p
+operator|->
+name|p_ithd
+condition|)
+name|cpustate
+operator|=
+name|CHECKSTATE_INTR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|p
+operator|==
+name|cpuid_to_globaldata
+index|[
+name|id
+index|]
+operator|->
+name|gd_idleproc
+condition|)
+name|cpustate
+operator|=
+name|CHECKSTATE_SYS
+expr_stmt|;
 switch|switch
 condition|(
 name|cpustate
@@ -853,11 +880,11 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_PROFIL
+name|PS_PROFIL
 condition|)
-name|addugd_intr_forwarded
+name|addupc_intr_forwarded
 argument_list|(
 name|p
 argument_list|,
@@ -906,7 +933,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|GPROF
-comment|/* 		 * Kernel statistics are just like addugd_intr, only easier. 		 */
+comment|/* 		 * Kernel statistics are just like addupc_intr, only easier. 		 */
 name|g
 operator|=
 operator|&
@@ -974,8 +1001,14 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|cpuid_to_globaldata
+index|[
+name|id
+index|]
+operator|->
+name|gd_idleproc
 condition|)
 name|cp_time
 index|[
@@ -1005,7 +1038,7 @@ default|default:
 ifdef|#
 directive|ifdef
 name|GPROF
-comment|/* 		 * Kernel statistics are just like addugd_intr, only easier. 		 */
+comment|/* 		 * Kernel statistics are just like addupc_intr, only easier. 		 */
 name|g
 operator|=
 operator|&
@@ -1087,13 +1120,6 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
 name|schedclock
 argument_list|(
 name|p
@@ -1191,7 +1217,6 @@ name|ru_maxrss
 operator|=
 name|rss
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
