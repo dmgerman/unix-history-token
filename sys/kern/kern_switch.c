@@ -916,12 +916,6 @@ operator|.
 name|mtx_lock
 argument_list|)
 expr_stmt|;
-name|idleproc
-operator|->
-name|p_stat
-operator|=
-name|SRUN
-expr_stmt|;
 return|return
 name|idleproc
 return|;

@@ -319,7 +319,7 @@ name|gd_idleproc
 operator|->
 name|p_stat
 operator|=
-name|SWAIT
+name|SRUN
 expr_stmt|;
 block|}
 block|}
@@ -397,12 +397,6 @@ name|sched_lock
 argument_list|,
 name|MTX_SPIN
 argument_list|)
-expr_stmt|;
-name|idleproc
-operator|->
-name|p_stat
-operator|=
-name|SWAIT
 expr_stmt|;
 name|mi_switch
 argument_list|()
