@@ -684,9 +684,6 @@ modifier|*
 name|mode
 decl_stmt|;
 name|int
-name|error
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|tp
