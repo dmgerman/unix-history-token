@@ -829,6 +829,10 @@ name|init
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"random:<entropy source, %s>\n"

@@ -4330,6 +4330,10 @@ name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|pcib

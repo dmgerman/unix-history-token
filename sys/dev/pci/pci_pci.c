@@ -2067,6 +2067,8 @@ name|PCI_INTERRUPT_VALID
 argument_list|(
 name|intnum
 argument_list|)
+operator|&&
+name|bootverbose
 condition|)
 block|{
 name|device_printf

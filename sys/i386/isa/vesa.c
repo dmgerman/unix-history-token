@@ -8550,6 +8550,11 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 comment|/* general adapter information */
 name|printf
 argument_list|(
@@ -8634,6 +8639,7 @@ argument_list|,
 name|vesa_oemstr
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|level
@@ -8650,6 +8656,8 @@ operator|->
 name|v_version
 operator|>=
 literal|0x0200
+operator|&&
+name|bootverbose
 condition|)
 block|{
 comment|/* vender name, product name, product revision */

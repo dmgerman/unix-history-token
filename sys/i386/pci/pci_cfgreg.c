@@ -358,10 +358,11 @@ name|v
 operator|>
 literal|0
 condition|)
-name|printf
+name|PRVERB
 argument_list|(
+operator|(
 literal|"pcibios: BIOS version %x.%02x\n"
-argument_list|,
+operator|,
 operator|(
 name|v
 operator|&
@@ -369,10 +370,11 @@ literal|0xff00
 operator|)
 operator|>>
 literal|8
-argument_list|,
+operator|,
 name|v
 operator|&
 literal|0xff
+operator|)
 argument_list|)
 expr_stmt|;
 name|mtx_init

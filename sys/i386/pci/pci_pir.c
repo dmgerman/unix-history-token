@@ -2356,6 +2356,10 @@ name|INTR_POLARITY_LOW
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"$PIR: %d:%d INT%c routed to irq %d\n"

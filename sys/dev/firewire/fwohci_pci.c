@@ -816,6 +816,10 @@ operator|==
 name|PCI_INTERFACE_OHCI
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev

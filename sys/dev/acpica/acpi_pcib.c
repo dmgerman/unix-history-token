@@ -976,6 +976,10 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|pcib
@@ -1178,6 +1182,11 @@ name|out
 goto|;
 block|}
 comment|/*      * Pick an interrupt to use.  Note that a more scientific approach than      * just taking the first one available would be desirable.      *      * The PCI BIOS $PIR table offers "preferred PCI interrupts", but ACPI      * doesn't seem to offer a similar mechanism, so picking a "good"      * interrupt here is a difficult task.      *      * Build a resource buffer and pass it to AcpiSetCurrentResources to      * route the new interrupt.      */
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|pcib
@@ -1213,6 +1222,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* This should never happen. */
 if|if
 condition|(
@@ -1471,6 +1481,10 @@ operator|&
 name|resbuf
 expr_stmt|;
 comment|/* Return the interrupt we just routed. */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|pcib

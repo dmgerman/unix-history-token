@@ -2749,6 +2749,10 @@ name|mtrrcap
 operator|&
 literal|0xff
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Pentium Pro MTRR support enabled\n"

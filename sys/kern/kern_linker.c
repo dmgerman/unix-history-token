@@ -5421,6 +5421,10 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Preloaded %s \"%s\" at %p.\n"
