@@ -99,7 +99,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
-name|pamconv
+name|do_pam_conversation
 parameter_list|(
 name|int
 name|num_msg
@@ -126,7 +126,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pam_cleanup_proc
+name|do_pam_cleanup_proc
 parameter_list|(
 name|void
 modifier|*
@@ -158,7 +158,7 @@ name|pam_conv
 name|conv
 init|=
 block|{
-name|pamconv
+name|do_pam_conversation
 block|,
 name|NULL
 block|}
@@ -204,7 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* states for pamconv() */
+comment|/* states for do_pam_conversation() */
 end_comment
 
 begin_typedef
@@ -242,13 +242,74 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* remember whether the last pam_authenticate() succeeded or not */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|was_authenticated
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Remember what has been initialised */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|session_opened
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|creds_set
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * accessor which allows us to switch conversation structs according to  * the authentication method being used  */
+end_comment
+
+begin_function
+name|void
+name|do_pam_set_conv
+parameter_list|(
+name|struct
+name|pam_conv
+modifier|*
+name|conv
+parameter_list|)
+block|{
+name|pam_set_item
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_CONV
+argument_list|,
+name|conv
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * PAM conversation function.  * There are two states this can run in.  *  * INITIAL_LOGIN mode simply feeds the password from the client into  * PAM in response to PAM_PROMPT_ECHO_OFF, and collects output  * messages with pam_msg_cat().  This is used during initial  * authentication to bypass the normal PAM password prompt.  *  * OTHER mode handles PAM_PROMPT_ECHO_OFF with read_passphrase(prompt, 1)  * and outputs messages to stderr. This mode is used if pam_chauthtok()  * is called to update expired passwords.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|pamconv
+name|do_pam_conversation
 parameter_list|(
 name|int
 name|num_msg
@@ -599,7 +660,7 @@ end_comment
 
 begin_function
 name|void
-name|pam_cleanup_proc
+name|do_pam_cleanup_proc
 parameter_list|(
 name|void
 modifier|*
@@ -614,6 +675,8 @@ condition|(
 name|pamh
 operator|!=
 name|NULL
+operator|&&
+name|session_opened
 condition|)
 block|{
 name|pam_retval
@@ -647,6 +710,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|pamh
+operator|!=
+name|NULL
+operator|&&
+name|creds_set
+condition|)
+block|{
 name|pam_retval
 operator|=
 name|pam_setcred
@@ -678,6 +751,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|pamh
+operator|!=
+name|NULL
+condition|)
+block|{
 name|pam_retval
 operator|=
 name|pam_end
@@ -743,6 +824,12 @@ decl_stmt|;
 name|int
 name|pam_retval
 decl_stmt|;
+name|do_pam_set_conv
+argument_list|(
+operator|&
+name|conv
+argument_list|)
+expr_stmt|;
 comment|/* deny if no user. */
 if|if
 condition|(
@@ -802,6 +889,14 @@ name|pamh
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|was_authenticated
+operator|=
+operator|(
+name|pam_retval
+operator|==
+name|PAM_SUCCESS
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -870,6 +965,12 @@ block|{
 name|int
 name|pam_retval
 decl_stmt|;
+name|do_pam_set_conv
+argument_list|(
+operator|&
+name|conv
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"PAM setting rhost to \"%.200s\""
@@ -1051,6 +1152,12 @@ block|{
 name|int
 name|pam_retval
 decl_stmt|;
+name|do_pam_set_conv
+argument_list|(
+operator|&
+name|conv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ttyname
@@ -1141,6 +1248,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|session_opened
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1158,6 +1269,12 @@ block|{
 name|int
 name|pam_retval
 decl_stmt|;
+name|do_pam_set_conv
+argument_list|(
+operator|&
+name|conv
+argument_list|)
+expr_stmt|;
 name|debug
 argument_list|(
 literal|"PAM establishing creds"
@@ -1179,6 +1296,25 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
+if|if
+condition|(
+name|was_authenticated
+condition|)
+name|fatal
+argument_list|(
+literal|"PAM setcred failed[%d]: %.200s"
+argument_list|,
+name|pam_retval
+argument_list|,
+name|PAM_STRERROR
+argument_list|(
+name|pamh
+argument_list|,
+name|pam_retval
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|debug
 argument_list|(
 literal|"PAM setcred failed[%d]: %.200s"
@@ -1194,6 +1330,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|creds_set
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
@@ -1228,6 +1369,12 @@ block|{
 name|int
 name|pam_retval
 decl_stmt|;
+name|do_pam_set_conv
+argument_list|(
+operator|&
+name|conv
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|password_change_required
@@ -1294,7 +1441,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|pam_cleanup_proc
+name|do_pam_cleanup_proc
 argument_list|(
 name|NULL
 argument_list|)
@@ -1302,7 +1449,7 @@ expr_stmt|;
 name|fatal_remove_cleanup
 argument_list|(
 operator|&
-name|pam_cleanup_proc
+name|do_pam_cleanup_proc
 argument_list|,
 name|NULL
 argument_list|)
@@ -1418,7 +1565,7 @@ comment|/* PAM_TTY_KLUDGE */
 name|fatal_add_cleanup
 argument_list|(
 operator|&
-name|pam_cleanup_proc
+name|do_pam_cleanup_proc
 argument_list|,
 name|NULL
 argument_list|)
