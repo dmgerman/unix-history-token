@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.33 1998/08/02 16:06:34 bde Exp $"
+literal|"$Id: mountd.c,v 1.34 1998/12/29 09:38:49 dfr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -11612,7 +11612,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"-alldir has multiple directories"
+literal|"-alldirs has multiple directories"
 argument_list|)
 expr_stmt|;
 return|return
