@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	savax.h	4.3	82/07/15	*/
+comment|/*	savax.h	4.4	83/03/01	*/
 end_comment
 
 begin_comment
@@ -125,6 +125,34 @@ parameter_list|,
 name|off
 parameter_list|)
 value|((umaddr[UNITTOUBA(unit)]+ubdevreg(off)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSUBA0
+value|0x20006000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSMBA0
+value|0x20010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSMBA1
+value|0x20012000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSUMEM
+value|0x2013e000
 end_define
 
 end_unit
