@@ -228,6 +228,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|enable_sse
@@ -236,11 +241,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -1802,6 +1802,15 @@ comment|/* CPU_PPRO2CELERON */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* I686_CPU */
+end_comment
+
 begin_comment
 comment|/*  * Initialize CR4 (Control register 4) to enable SSE instructions.  */
 end_comment
@@ -1855,15 +1864,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* I686_CPU */
-end_comment
 
 begin_function
 name|void
@@ -1984,14 +1984,9 @@ directive|endif
 default|default:
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|I686_CPU
 name|enable_sse
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
