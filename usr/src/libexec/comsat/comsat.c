@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	5.20 (Berkeley) %G%"
+literal|"@(#)comsat.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,24 +133,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<string.h>
 end_include
 
-begin_comment
-comment|/*  * comsat  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_decl_stmt
 name|int
