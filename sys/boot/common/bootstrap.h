@@ -15,6 +15,12 @@ directive|include
 file|<sys/queue.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/linker_set.h>
+end_include
+
 begin_comment
 comment|/*  * Generic device specifier; architecture-dependant   * versions may be larger, but should be allowed to  * overlap.  */
 end_comment
@@ -1083,125 +1089,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEW_LINKER_SET
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_comment
-comment|/* XXX just for conversion's sake, until we move to the new linker set code */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_FOREACH
-parameter_list|(
-name|pvar
-parameter_list|,
-name|set
-parameter_list|)
-define|\
-value|for ((char*) pvar = set.ls_items;			\ 		 (char*) pvar< (char*)&set.ls_items[set.ls_length];	\ 		 pvar++)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NEW_LINKER_SET */
-end_comment
-
-begin_comment
-comment|/*  * Private macros, not to be used outside this header file.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__MAKE_SET
-parameter_list|(
-name|set
-parameter_list|,
-name|sym
-parameter_list|)
-define|\
-value|static void *__CONCAT(__setentry,__LINE__)			\ 	__attribute__((__section__("set_" #set),__unused__)) =&sym
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SET_BEGIN
-parameter_list|(
-name|set
-parameter_list|)
-define|\
-value|({ extern void *__CONCAT(__start_set_,set);			\&__CONCAT(__start_set_,set); })
-end_define
-
-begin_define
-define|#
-directive|define
-name|__SET_END
-parameter_list|(
-name|set
-parameter_list|)
-define|\
-value|({ extern void *__CONCAT(__stop_set_,set);			\&__CONCAT(__stop_set_,set); })
-end_define
-
-begin_comment
-comment|/*  * Public macros.  */
-end_comment
-
-begin_comment
-comment|/* Add an entry to a set. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DATA_SET
-parameter_list|(
-name|set
-parameter_list|,
-name|sym
-parameter_list|)
-value|__MAKE_SET(set, sym)
-end_define
-
-begin_comment
-comment|/*  * Iterate over all the elements of a set.  *  * Sets always contain addresses of things, and "pvar" points to words  * containing those addresses.  Thus is must be declared as "type **pvar",  * and the address of each set item is obtained inside the loop by "*pvar".  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SET_FOREACH
-parameter_list|(
-name|pvar
-parameter_list|,
-name|set
-parameter_list|)
-define|\
-value|for (pvar = (__typeof__(pvar))__SET_BEGIN(set);			\ 	    pvar< (__typeof__(pvar))__SET_END(set); pvar++)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Support for commands   */
 end_comment
@@ -1245,13 +1132,16 @@ define|\
 value|static bootblk_cmd_t func;						\     static struct bootblk_command _cmd_ ## tag = { key, desc, func };	\     DATA_SET(Xcommand_set, _cmd_ ## tag)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
+begin_expr_stmt
+name|SET_DECLARE
+argument_list|(
 name|Xcommand_set
-decl_stmt|;
-end_decl_stmt
+argument_list|,
+expr|struct
+name|bootblk_command
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*   * The intention of the architecture switch is to provide a convenient  * encapsulation of the interface between the bootstrap MI and MD code.  * MD code may selectively populate the switch at runtime based on the  * actual configuration of the target system.  */

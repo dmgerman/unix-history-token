@@ -696,14 +696,6 @@ name|pnp_overrides_valid
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|pnpdevice_set
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * these two functions are for use in drivers  */
 end_comment
