@@ -36,7 +36,7 @@ value|(a> b ? a : b)
 end_define
 
 begin_comment
-comment|/*  *	This routine writes win1 on win2 non-destructively.  *  * %G% (Berkeley) @(#)overlay.c	1.4  */
+comment|/*  *	This routine writes win1 on win2 non-destructively.  *  * %G% (Berkeley) @(#)overlay.c	1.5  */
 end_comment
 
 begin_macro
@@ -178,7 +178,7 @@ operator|=
 name|starty
 init|;
 name|y
-operator|<
+operator|<=
 name|endy
 condition|;
 name|y
