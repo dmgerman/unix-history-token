@@ -168,7 +168,7 @@ directive|ifdef
 name|ORDER
 name|fputs
 argument_list|(
-literal|"\ o       - specify sort order (size, res, cpu, time)\n"
+literal|"\ o       - specify sort order (pri, size, res, cpu, time)\n"
 argument_list|,
 name|stdout
 argument_list|)
