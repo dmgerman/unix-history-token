@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.26 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,7 +277,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|NAMED_BIND
 name|m
 operator|=
 name|to
@@ -3468,9 +3467,16 @@ decl_stmt|;
 specifier|extern
 name|int
 name|N_SysEx
-decl_stmt|,
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
+specifier|extern
+name|int
 name|h_errno
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|buf
 index|[
@@ -3561,6 +3567,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 if|if
 condition|(
 name|h_errno
@@ -3585,6 +3594,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 if|if
 condition|(
@@ -3797,10 +3808,15 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 name|h_errno
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
