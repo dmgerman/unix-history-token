@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999,2000,2001 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999,2000,2001 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"vlan.h"
+end_include
 
 begin_include
 include|#
@@ -224,6 +230,22 @@ include|#
 directive|include
 file|<dev/gx/if_gxvar.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|VLAN_INPUT_TAG
+parameter_list|(
+name|ifp
+parameter_list|,
+name|eh
+parameter_list|,
+name|m
+parameter_list|,
+name|tag
+parameter_list|)
+value|vlan_input_tag(eh, m, tag)
+end_define
 
 begin_expr_stmt
 name|MODULE_DEPEND
@@ -1696,17 +1718,9 @@ condition|)
 block|{
 name|ifp
 operator|->
-name|if_capabilities
+name|if_hwassist
 operator|=
-name|IFCAP_HWCSUM
-expr_stmt|;
-name|ifp
-operator|->
-name|if_capenable
-operator|=
-name|ifp
-operator|->
-name|if_capabilities
+name|GX_CSUM_FEATURES
 expr_stmt|;
 block|}
 comment|/* figure out transciever type */
@@ -2260,9 +2274,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_capenable
-operator|&
-name|IFCAP_RXCSUM
+name|if_hwassist
 condition|)
 name|CSR_WRITE_4
 argument_list|(
@@ -2273,21 +2285,6 @@ argument_list|,
 name|GX_CSUM_TCP
 comment|/* | GX_CSUM_IP*/
 argument_list|)
-expr_stmt|;
-comment|/* setup transmit checksum control */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_TXCSUM
-condition|)
-name|ifp
-operator|->
-name|if_hwassist
-operator|=
-name|GX_CSUM_FEATURES
 expr_stmt|;
 name|ctrl
 operator||=
@@ -4136,8 +4133,6 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|,
-name|mask
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4381,63 +4376,6 @@ operator|->
 name|gx_media
 argument_list|,
 name|command
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|SIOCSIFCAP
-case|:
-name|mask
-operator|=
-name|ifr
-operator|->
-name|ifr_reqcap
-operator|^
-name|ifp
-operator|->
-name|if_capenable
-expr_stmt|;
-if|if
-condition|(
-name|mask
-operator|&
-name|IFCAP_HWCSUM
-condition|)
-block|{
-if|if
-condition|(
-name|IFCAP_HWCSUM
-operator|&
-name|ifp
-operator|->
-name|if_capenable
-condition|)
-name|ifp
-operator|->
-name|if_capenable
-operator|&=
-operator|~
-name|IFCAP_HWCSUM
-expr_stmt|;
-else|else
-name|ifp
-operator|->
-name|if_capenable
-operator||=
-name|IFCAP_HWCSUM
-expr_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_RUNNING
-condition|)
-name|gx_init
-argument_list|(
-name|gx
 argument_list|)
 expr_stmt|;
 block|}
@@ -5865,9 +5803,7 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_capenable
-operator|&
-name|IFCAP_RXCSUM
+name|if_hwassist
 condition|)
 block|{
 if|#
@@ -5908,6 +5844,11 @@ literal|0xffff
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+name|NVLAN
+operator|>
+literal|0
 comment|/* 		 * If we received a packet with a vlan tag, pass it 		 * to vlan_input() instead of ether_input(). 		 */
 if|if
 condition|(
@@ -5931,6 +5872,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 name|ether_input
 argument_list|(
 name|ifp
