@@ -820,17 +820,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Set when initialization has been done */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|malloc_started
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Number of free pages we cache */
 end_comment
 
@@ -2080,10 +2069,6 @@ sizeof|sizeof
 expr|*
 name|page_dir
 expr_stmt|;
-comment|/* Been here, done that */
-name|malloc_started
-operator|++
-expr_stmt|;
 comment|/* Recalculate the cache size in bytes, and make sure it's nonzero */
 if|if
 condition|(
@@ -3120,14 +3105,6 @@ name|result
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|malloc_started
-condition|)
-name|malloc_init
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|suicide
 condition|)
 name|abort
@@ -3256,23 +3233,6 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|malloc_started
-condition|)
-block|{
-name|wrtwarning
-argument_list|(
-literal|"malloc() has never been called\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|index
 operator|=
 name|ptr2index
@@ -4634,19 +4594,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-if|if
-condition|(
-operator|!
-name|malloc_started
-condition|)
-block|{
-name|wrtwarning
-argument_list|(
-literal|"malloc() has never been called\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* If we're already sinking, don't make matters any worse. */
 if|if
 condition|(
@@ -4757,6 +4704,11 @@ name|int
 name|malloc_active
 decl_stmt|;
 comment|/* Recusion flag for public interface. */
+specifier|static
+name|unsigned
+name|malloc_started
+decl_stmt|;
+comment|/* Set when initialization has been done */
 comment|/*      * If a thread is inside our code with a functional lock held, and then      * catches a signal which calls us again, we would get a deadlock if the      * lock is not of a recursive type.      */
 name|_MALLOC_LOCK
 argument_list|()
@@ -4806,6 +4758,49 @@ name|malloc_active
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|malloc_started
+condition|)
+block|{
+if|if
+condition|(
+name|ptr
+operator|!=
+name|NULL
+condition|)
+block|{
+name|wrtwarning
+argument_list|(
+literal|"malloc() has never been called\n"
+argument_list|)
+expr_stmt|;
+name|malloc_active
+operator|=
+literal|0
+expr_stmt|;
+name|_MALLOC_UNLOCK
+argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|EDOOFUS
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+name|malloc_init
+argument_list|()
+expr_stmt|;
+name|malloc_started
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ptr
