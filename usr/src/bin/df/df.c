@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.32 (Berkeley) %G%"
+literal|"@(#)df.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -167,7 +173,7 @@ expr|struct
 name|statfs
 operator|*
 operator|,
-name|long
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -182,7 +188,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|long
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -244,10 +250,6 @@ modifier|*
 name|mntbuf
 decl_stmt|;
 name|long
-name|width
-decl_stmt|,
-name|maxwidth
-decl_stmt|,
 name|mntsize
 decl_stmt|;
 name|int
@@ -256,6 +258,10 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|i
+decl_stmt|,
+name|maxwidth
+decl_stmt|,
+name|width
 decl_stmt|;
 name|char
 modifier|*
@@ -272,7 +278,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ikn"
+literal|"in"
 argument_list|)
 operator|)
 operator|!=
@@ -289,21 +295,6 @@ case|:
 name|iflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'k'
-case|:
-comment|/* Delete before 4.4BSD. */
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"df: -k no longer supported\n"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -477,19 +468,12 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"df: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|err
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -577,18 +561,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"df: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|mntpt
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -659,19 +636,12 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"df: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -715,18 +685,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"df: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|mntpt
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -869,7 +832,7 @@ name|statfs
 modifier|*
 name|sfsp
 decl_stmt|;
-name|long
+name|int
 name|maxwidth
 decl_stmt|;
 block|{
@@ -1202,7 +1165,7 @@ name|char
 modifier|*
 name|file
 decl_stmt|;
-name|long
+name|int
 name|maxwidth
 decl_stmt|;
 block|{
@@ -1250,21 +1213,11 @@ operator|<
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"df: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|file
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1463,16 +1416,8 @@ name|mntpt
 operator|=
 literal|""
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|mntpt
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sfsp
 operator|->
@@ -1481,19 +1426,13 @@ index|[
 literal|0
 index|]
 argument_list|,
+name|mntpt
+argument_list|,
 name|MNAMELEN
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|file
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|sfsp
 operator|->
@@ -1501,6 +1440,8 @@ name|f_mntfromname
 index|[
 literal|0
 index|]
+argument_list|,
+name|file
 argument_list|,
 name|MNAMELEN
 argument_list|)
