@@ -957,9 +957,37 @@ expr_stmt|;
 comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
 if|#
 directive|if
-literal|0
+literal|1
 comment|/* 	 * If not OBJT_SWAP, additional memory may be needed to do the pageout. 	 * Try to avoid the deadlock. 	 */
-block|if ((object->type == OBJT_DEFAULT)&& 	    ((cnt.v_free_count + cnt.v_cache_count)< cnt.v_pageout_free_min)) 		return 0;
+if|if
+condition|(
+operator|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEFAULT
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cnt
+operator|.
+name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
+operator|<
+name|cnt
+operator|.
+name|v_pageout_free_min
+operator|)
+condition|)
+return|return
+literal|0
+return|;
 endif|#
 directive|endif
 comment|/* 	 * Don't mess with the page if it's busy. 	 */
