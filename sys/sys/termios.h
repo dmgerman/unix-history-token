@@ -124,13 +124,24 @@ begin_comment
 comment|/* ICANON together with IEXTEN */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VERASE2
+value|7
+end_define
+
+begin_comment
+comment|/* ICANON */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*			7	   spare 1 */
+comment|/*			7	   ex-spare 1 */
 end_comment
 
 begin_define
@@ -542,6 +553,39 @@ end_define
 
 begin_comment
 comment|/* discard EOT's (^D) on output) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OCRNL
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* map CR to NL on output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONOCR
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* no CR output at column 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ONLRET
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* NL performs CR function */
 end_comment
 
 begin_endif
