@@ -3640,15 +3640,11 @@ condition|)
 block|{
 name|ia
 operator|->
-name|ia_ifa
-operator|.
-name|ifa_dstaddr
+name|ia_dstaddr
 operator|=
 name|ia
 operator|->
-name|ia_ifa
-operator|.
-name|ifa_addr
+name|ia_addr
 expr_stmt|;
 name|flags
 operator||=
