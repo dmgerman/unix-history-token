@@ -789,6 +789,8 @@ operator|*
 operator|,
 name|ino_t
 operator|,
+name|int
+operator|,
 expr|struct
 name|vnode
 operator|*

@@ -288,6 +288,9 @@ operator|,
 name|ino_t
 name|ino
 operator|,
+name|int
+name|lkflags
+operator|,
 expr|struct
 name|vnode
 operator|*
@@ -1445,6 +1448,8 @@ index|[
 name|i
 index|]
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 operator|(
 name|ntmp
@@ -1564,6 +1569,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|NTFS_ATTRDEFINO
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|vp
@@ -2336,6 +2343,8 @@ name|ino_t
 operator|)
 name|NTFS_ROOTINO
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|nvp
 argument_list|)
@@ -2838,6 +2847,8 @@ argument_list|,
 name|ntfhp
 operator|->
 name|ntfid_ino
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|nvp
@@ -3501,6 +3512,9 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+name|int
+name|lkflags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -3519,9 +3533,7 @@ name|NTFS_A_DATA
 argument_list|,
 name|NULL
 argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
+name|lkflags
 argument_list|,
 literal|0
 argument_list|,

@@ -9456,6 +9456,8 @@ name|mp
 argument_list|,
 name|NTFS_UPCASEINO
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|)

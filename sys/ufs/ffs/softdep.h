@@ -132,6 +132,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|INPROGRESS
+value|0x1000
+end_define
+
+begin_comment
+comment|/* dirrem, freeblks, freefrag, freefile only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ONWORKLIST
 value|0x8000
 end_define

@@ -6742,6 +6742,8 @@ index|[
 name|snaploc
 index|]
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|vp
 argument_list|)

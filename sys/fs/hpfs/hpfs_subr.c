@@ -2571,6 +2571,8 @@ name|h_fn
 operator|.
 name|fn_parent
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|dvp
 argument_list|)
@@ -3282,6 +3284,8 @@ operator|->
 name|h_fn
 operator|.
 name|fn_parent
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|dvp

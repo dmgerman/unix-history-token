@@ -18325,6 +18325,8 @@ name|dp
 operator|->
 name|d_fileno
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|nvp
 argument_list|)
@@ -18512,6 +18514,8 @@ argument_list|,
 name|dp
 operator|->
 name|d_fileno
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|nvp

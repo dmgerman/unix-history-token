@@ -1643,6 +1643,8 @@ name|v_mount
 argument_list|,
 name|ino
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;

@@ -1186,6 +1186,8 @@ name|dp
 operator|->
 name|i_ino
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|tdp
 argument_list|,
@@ -1327,6 +1329,8 @@ argument_list|,
 name|dp
 operator|->
 name|i_ino
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|tdp

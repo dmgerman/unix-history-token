@@ -188,6 +188,8 @@ name|ino_t
 operator|)
 name|ROOTINO
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|nvp
 argument_list|)
@@ -608,6 +610,8 @@ argument_list|,
 name|ufhp
 operator|->
 name|ufid_ino
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|nvp

@@ -3144,6 +3144,8 @@ name|va_a_name
 operator|->
 name|n_pnumber
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 name|ap
 operator|->
 name|a_vpp

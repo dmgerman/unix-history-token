@@ -1517,6 +1517,9 @@ operator|,
 name|ino_t
 name|ino
 operator|,
+name|int
+name|flags
+operator|,
 expr|struct
 name|vnode
 operator|*
@@ -1779,9 +1782,12 @@ name|MP
 parameter_list|,
 name|INO
 parameter_list|,
+name|FLAGS
+parameter_list|,
 name|VPP
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_vget)(MP, INO, VPP)
+define|\
+value|(*(MP)->mnt_op->vfs_vget)(MP, INO, FLAGS, VPP)
 end_define
 
 begin_define
@@ -2497,6 +2503,8 @@ name|mp
 operator|,
 name|ino_t
 name|ino
+operator|,
+name|int
 operator|,
 expr|struct
 name|vnode

@@ -832,6 +832,8 @@ name|long
 operator|)
 name|inodenum
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 operator|&
 name|tdp
 argument_list|)

@@ -396,9 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
+name|int
 name|cd9660_ihashget
 name|__P
 argument_list|(
@@ -406,6 +404,13 @@ operator|(
 name|dev_t
 operator|,
 name|ino_t
+operator|,
+name|int
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

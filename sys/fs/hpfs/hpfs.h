@@ -1631,9 +1631,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|vnode
-modifier|*
+name|int
 name|hpfs_hphashvget
 name|__P
 argument_list|(
@@ -1641,6 +1639,13 @@ operator|(
 name|dev_t
 operator|,
 name|lsn_t
+operator|,
+name|int
+operator|,
+expr|struct
+name|vnode
+operator|*
+operator|*
 operator|,
 expr|struct
 name|thread

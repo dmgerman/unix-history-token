@@ -312,6 +312,9 @@ parameter_list|,
 name|ino_t
 name|ino
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -1519,6 +1522,8 @@ name|mp
 parameter_list|,
 name|ino
 parameter_list|,
+name|flags
+parameter_list|,
 name|vpp
 parameter_list|)
 name|struct
@@ -1528,6 +1533,9 @@ name|mp
 decl_stmt|;
 name|ino_t
 name|ino
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 name|struct
 name|vnode
@@ -1551,6 +1559,8 @@ operator|->
 name|nullm_vfs
 argument_list|,
 name|ino
+argument_list|,
+name|flags
 argument_list|,
 name|vpp
 argument_list|)

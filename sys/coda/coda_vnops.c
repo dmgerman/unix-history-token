@@ -8185,6 +8185,8 @@ name|mp
 argument_list|,
 name|ino
 argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
 name|vpp
 argument_list|)
 expr_stmt|;
