@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.16 (Berkeley) %G%"
+literal|"@(#)main.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,18 +258,24 @@ begin_comment
 comment|/* output blocks per file */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|host
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* remote host (if any) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|RDUMP
 end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|host
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -344,6 +350,12 @@ decl_stmt|;
 name|ino_t
 name|maxino
 decl_stmt|;
+name|spcl
+operator|.
+name|c_date
+operator|=
+literal|0
+expr_stmt|;
 name|time
 argument_list|(
 operator|&
@@ -939,15 +951,16 @@ operator|*
 literal|120L
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|RDUMP
-block|{
-name|char
-modifier|*
+if|if
+condition|(
 name|index
-parameter_list|()
-function_decl|;
+argument_list|(
+name|tape
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
 name|host
 operator|=
 name|tape
@@ -961,30 +974,15 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tape
-operator|==
-literal|0
-condition|)
-block|{
-name|msg
-argument_list|(
-literal|"need keyletter ``f'' and device ``host:tape''\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|tape
 operator|++
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RDUMP
 if|if
 condition|(
 name|rmthost
@@ -999,6 +997,22 @@ argument_list|(
 name|X_ABORT
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"remote dump not enabled\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|setuid
 argument_list|(
@@ -1007,8 +1021,6 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* rmthost() is the only reason to be setuid */
-endif|#
-directive|endif
 if|if
 condition|(
 name|signal
@@ -1323,9 +1335,10 @@ operator|->
 name|fs_file
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RDUMP
+if|if
+condition|(
+name|host
+condition|)
 name|msgtail
 argument_list|(
 literal|"to %s on host %s\n"
@@ -1335,8 +1348,7 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|msgtail
 argument_list|(
 literal|"to %s\n"
@@ -1344,8 +1356,6 @@ argument_list|,
 name|tape
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -1800,7 +1810,9 @@ argument_list|()
 expr_stmt|;
 comment|/* Allocate tape buffer */
 name|startnewtape
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|time
 argument_list|(
@@ -1995,9 +2007,6 @@ name|c_type
 operator|=
 name|TS_END
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RDUMP
 for|for
 control|(
 name|i
@@ -2016,8 +2025,6 @@ argument_list|(
 name|maxino
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|pipeout
@@ -2045,60 +2052,20 @@ operator|.
 name|c_volume
 argument_list|)
 expr_stmt|;
-name|msg
-argument_list|(
-literal|"DUMP IS DONE\n"
-argument_list|)
-expr_stmt|;
 name|putdumptime
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|RDUMP
-if|if
-condition|(
-operator|!
-name|pipeout
-condition|)
-block|{
-name|close
-argument_list|(
-name|tapefd
-argument_list|)
-expr_stmt|;
 name|trewind
 argument_list|()
 expr_stmt|;
-block|}
-else|#
-directive|else
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ntrec
-condition|;
-name|i
-operator|++
-control|)
-name|writeheader
-argument_list|(
-name|curino
-argument_list|)
-expr_stmt|;
-name|trewind
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|broadcast
 argument_list|(
 literal|"DUMP IS DONE!\7\7\n"
+argument_list|)
+expr_stmt|;
+name|msg
+argument_list|(
+literal|"DUMP IS DONE\n"
 argument_list|)
 expr_stmt|;
 name|Exit
