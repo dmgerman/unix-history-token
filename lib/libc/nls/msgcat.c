@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.15 1998/04/30 11:39:08 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.16 1998/04/30 12:25:05 ache Exp $ */
 end_comment
 
 begin_comment
@@ -1212,8 +1212,13 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|cat
+name|catd
+operator|==
+name|NULL
+operator|||
+name|catd
+operator|==
+name|NLERR
 condition|)
 return|return
 operator|-
