@@ -96,9 +96,9 @@ name|isa16bit
 decl_stmt|;
 comment|/* width of access to card 0=8 or 1=16 */
 name|int
-name|is790
+name|chip_type
 decl_stmt|;
-comment|/* set by the probe code if the card is 790 				 * based */
+comment|/* the type of chip (one of ED_CHIP_TYPE_*) */
 comment|/*  * HP PC LAN PLUS card support.  */
 name|u_short
 name|hpp_options

@@ -1248,7 +1248,18 @@ value|0x20
 end_define
 
 begin_comment
-comment|/*  * bits 6 and 7 are unused/reserved.  */
+comment|/*  * INTT: Interrupt Trigger Mode for AX88190.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_RCR_INTT
+value|0x40
+end_define
+
+begin_comment
+comment|/*  * bit 7 is unused/reserved.  */
 end_comment
 
 begin_comment
@@ -1508,6 +1519,41 @@ value|0x0010
 end_define
 
 begin_comment
+comment|/*  * These are flags describing the chip type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_TOSH_ETHER
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_GWETHER
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_AX88190
+value|0x30000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_GETTYPE
+parameter_list|(
+name|flg
+parameter_list|)
+value|((flg)& 0xff0000)
+end_define
+
+begin_comment
 comment|/*  *		Definitions for Western digital/SMC WD80x3 series ASIC  */
 end_comment
 
@@ -1691,12 +1737,6 @@ begin_comment
 comment|/* store to non-volatile memory */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -1726,11 +1766,6 @@ end_comment
 begin_comment
 comment|/* IAR holds address A23-A16 (R/W) */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * IO Address Register (IAR)  */
@@ -2338,24 +2373,6 @@ begin_comment
 comment|/*  * Checksum total. All 8 bytes in station address PROM will add up to this  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ED_WD_ROM_CHECKSUM_TOTAL
-value|0xA5
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2363,10 +2380,12 @@ name|ED_WD_ROM_CHECKSUM_TOTAL
 value|0xFF
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|ED_WD_ROM_CHECKSUM_TOTAL_TOSH_ETHER
+value|0xA5
+end_define
 
 begin_define
 define|#
@@ -3680,6 +3699,49 @@ define|#
 directive|define
 name|ED_TYPE_HP_PCLANPLUS
 value|0x00
+end_define
+
+begin_comment
+comment|/*  * Chip types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_DP8390
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_WD790
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_CHIP_TYPE_AX88190
+value|0x02
+end_define
+
+begin_comment
+comment|/*  * AX88190 IOBASE registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_AX88190_IOBASE0
+value|0x3ca
+end_define
+
+begin_define
+define|#
+directive|define
+name|ED_AX88190_IOBASE1
+value|0x3cc
 end_define
 
 end_unit

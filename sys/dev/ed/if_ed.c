@@ -744,6 +744,8 @@ decl_stmt|,
 name|isa16bit
 decl_stmt|,
 name|sum
+decl_stmt|,
+name|totalsum
 decl_stmt|;
 name|u_long
 name|conf_maddr
@@ -797,13 +799,24 @@ name|ED_WD_NIC_OFFSET
 expr_stmt|;
 name|sc
 operator|->
-name|is790
+name|chip_type
 operator|=
-literal|0
+name|ED_CHIP_TYPE_DP8390
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
+if|if
+condition|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_TOSH_ETHER
+condition|)
+block|{
+name|totalsum
+operator|=
+name|ED_WD_ROM_CHECKSUM_TOTAL_TOSH_ETHER
+expr_stmt|;
 name|outb
 argument_list|(
 name|sc
@@ -820,8 +833,12 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
+else|else
+name|totalsum
+operator|=
+name|ED_WD_ROM_CHECKSUM_TOTAL
+expr_stmt|;
 comment|/* 	 * Attempt to do a checksum over the station address PROM. If it 	 * fails, it's probably not a SMC/WD board. There is a problem with 	 * this, though: some clone WD boards don't pass the checksum test. 	 * Danpex boards for one. 	 */
 for|for
 control|(
@@ -857,7 +874,7 @@ if|if
 condition|(
 name|sum
 operator|!=
-name|ED_WD_ROM_CHECKSUM_TOTAL
+name|totalsum
 condition|)
 block|{
 comment|/* 		 * Checksum is invalid. This often happens with cheap WD8003E 		 * clones.  In this case, the checksum byte (the eighth byte) 		 * seems to always be zero. 		 */
@@ -894,9 +911,15 @@ operator|)
 return|;
 block|}
 comment|/* reset card to force it into a known state. */
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
+if|if
+condition|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_TOSH_ETHER
+condition|)
 name|outb
 argument_list|(
 name|sc
@@ -910,8 +933,7 @@ operator||
 name|ED_WD_MSR_POW
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
 name|outb
 argument_list|(
 name|sc
@@ -923,8 +945,6 @@ argument_list|,
 name|ED_WD_MSR_RST
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DELAY
 argument_list|(
 literal|100
@@ -1317,14 +1337,11 @@ literal|1
 expr_stmt|;
 name|sc
 operator|->
-name|is790
+name|chip_type
 operator|=
-literal|1
+name|ED_CHIP_TYPE_WD790
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
 case|case
 name|ED_TYPE_TOSHIBA1
 case|:
@@ -1361,8 +1378,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|sc
 operator|->
@@ -1384,9 +1399,6 @@ name|type
 operator|!=
 name|ED_TYPE_WD8013EBT
 operator|)
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
 operator|&&
 operator|(
 name|sc
@@ -1403,8 +1415,6 @@ name|type
 operator|!=
 name|ED_TYPE_TOSHIBA4
 operator|)
-endif|#
-directive|endif
 operator|&&
 operator|(
 operator|(
@@ -1592,10 +1602,11 @@ name|ED_WD_SOFTCONFIG
 operator|)
 operator|&&
 operator|(
-operator|!
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|!=
+name|ED_CHIP_TYPE_WD790
 operator|)
 condition|)
 block|{
@@ -1702,7 +1713,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -2078,7 +2091,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|sc
@@ -2149,9 +2164,6 @@ operator|&
 name|ED_WD_SOFTCONFIG
 operator|)
 operator|||
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
 operator|(
 name|sc
 operator|->
@@ -2168,8 +2180,6 @@ operator|==
 name|ED_TYPE_TOSHIBA4
 operator|)
 operator|||
-endif|#
-directive|endif
 operator|(
 name|sc
 operator|->
@@ -2180,10 +2190,11 @@ operator|)
 operator|)
 operator|&&
 operator|(
-operator|!
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|!=
+name|ED_CHIP_TYPE_WD790
 operator|)
 condition|)
 block|{
@@ -2222,15 +2233,23 @@ block|}
 comment|/* 	 * Set address and enable interface shared memory. 	 */
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|!=
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TOSH_ETHER
+if|if
+condition|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_TOSH_ETHER
+condition|)
+block|{
 name|outb
 argument_list|(
 name|sc
@@ -2298,8 +2317,9 @@ operator||
 name|ED_WD_MSR_POW
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+block|}
+else|else
+block|{
 name|outb
 argument_list|(
 name|sc
@@ -2326,8 +2346,7 @@ operator||
 name|ED_WD_MSR_MENB
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|sc
 operator|->
 name|cr_proto
@@ -2518,7 +2537,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -2567,7 +2588,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -3857,9 +3880,16 @@ name|ED_NOVELL_NIC_OFFSET
 expr_stmt|;
 comment|/* XXX - do Novell-specific probe here */
 comment|/* Reset the board */
-ifdef|#
-directive|ifdef
-name|GWETHER
+if|if
+condition|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_GWETHER
+condition|)
+block|{
 name|outb
 argument_list|(
 name|sc
@@ -3876,9 +3906,7 @@ argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* GWETHER */
+block|}
 name|tmp
 operator|=
 name|inb
@@ -4255,9 +4283,15 @@ name|memsize
 operator|/
 name|ED_PAGE_SIZE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GWETHER
+if|if
+condition|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_GWETHER
+condition|)
 block|{
 name|int
 name|x
@@ -4670,9 +4704,6 @@ operator|/
 name|ED_PAGE_SIZE
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* GWETHER */
 comment|/* 	 * Use one xmit buffer if< 16k, two buffers otherwise (if not told 	 * otherwise). 	 */
 if|if
 condition|(
@@ -4789,11 +4820,18 @@ literal|1
 operator|)
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|GWETHER
 if|if
 condition|(
+operator|(
+name|ED_FLAGS_GETTYPE
+argument_list|(
+name|flags
+argument_list|)
+operator|==
+name|ED_FLAGS_GWETHER
+operator|)
+operator|&&
+operator|(
 name|sc
 operator|->
 name|arpcom
@@ -4804,6 +4842,7 @@ literal|2
 index|]
 operator|==
 literal|0x86
+operator|)
 condition|)
 block|{
 name|sc
@@ -4813,9 +4852,6 @@ operator|=
 literal|"Gateway AT"
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* GWETHER */
 comment|/* clear any pending interrupts that might have occurred above */
 name|outb
 argument_list|(
@@ -4984,9 +5020,9 @@ name|ED_HPP_NIC_OFFSET
 expr_stmt|;
 name|sc
 operator|->
-name|is790
+name|chip_type
 operator|=
-literal|0
+name|ED_CHIP_TYPE_DP8390
 expr_stmt|;
 name|sc
 operator|->
@@ -6042,13 +6078,11 @@ operator|)
 return|;
 block|}
 else|else
-block|{
 return|return
 operator|(
 name|ENOENT
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -6496,7 +6530,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 name|sc
 operator|->
@@ -6833,6 +6869,14 @@ name|ED_CR_STP
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for interface to enter stopped state, but limit # of checks to 	 * 'n' (about 5ms). It shouldn't even take 5us on modern DS8390's, but 	 * just in case it's an old one. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|chip_type
+operator|!=
+name|ED_CHIP_TYPE_AX88190
+condition|)
 while|while
 condition|(
 operator|(
@@ -7160,7 +7204,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 name|outb
 argument_list|(
@@ -7780,7 +7826,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -7885,7 +7933,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -8591,6 +8641,54 @@ argument_list|,
 name|isr
 argument_list|)
 expr_stmt|;
+comment|/* XXX workaround for AX88190 */
+if|if
+condition|(
+name|sc
+operator|->
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_AX88190
+condition|)
+block|{
+while|while
+condition|(
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_ISR
+argument_list|)
+operator|&
+name|isr
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_ISR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|nic_addr
+operator|+
+name|ED_P0_ISR
+argument_list|,
+name|isr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* 		 * Handle transmitter interrupts. Handle these first because 		 * the receiver will reset the board under some conditions. 		 */
 if|if
 condition|(
@@ -9037,7 +9135,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -9078,7 +9178,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|is790
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_WD790
 condition|)
 block|{
 name|outb
@@ -12009,6 +12111,27 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|u_char
+name|reg1
+decl_stmt|;
+comment|/* Bit 6 in AX88190 RCR register must be set. */
+if|if
+condition|(
+name|sc
+operator|->
+name|chip_type
+operator|==
+name|ED_CHIP_TYPE_AX88190
+condition|)
+name|reg1
+operator|=
+name|ED_RCR_INTT
+expr_stmt|;
+else|else
+name|reg1
+operator|=
+literal|0x00
+expr_stmt|;
 comment|/* set page 1 registers */
 name|outb
 argument_list|(
@@ -12098,6 +12221,8 @@ operator||
 name|ED_RCR_AR
 operator||
 name|ED_RCR_SEP
+operator||
+name|reg1
 argument_list|)
 expr_stmt|;
 block|}
@@ -12215,6 +12340,8 @@ argument_list|,
 name|ED_RCR_AM
 operator||
 name|ED_RCR_AB
+operator||
+name|reg1
 argument_list|)
 expr_stmt|;
 block|}
@@ -12273,6 +12400,8 @@ operator|+
 name|ED_P0_RCR
 argument_list|,
 name|ED_RCR_AB
+operator||
+name|reg1
 argument_list|)
 expr_stmt|;
 block|}
