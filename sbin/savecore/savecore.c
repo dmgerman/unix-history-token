@@ -203,7 +203,7 @@ name|ok
 parameter_list|(
 name|number
 parameter_list|)
-value|((number) - KERNBASE)
+value|((number) - kernbase)
 end_define
 
 begin_endif
@@ -265,6 +265,14 @@ name|X_DUMPMAG
 value|5
 block|{
 literal|"_dumpmag"
+block|}
+block|,
+define|#
+directive|define
+name|X_KERNBASE
+value|6
+block|{
+literal|"_kernbase"
 block|}
 block|,
 block|{
@@ -346,6 +354,10 @@ block|}
 block|,
 block|{
 literal|"_dumpmag"
+block|}
+block|,
+block|{
+literal|"_kernbase"
 block|}
 block|,
 block|{
@@ -493,6 +505,27 @@ end_decl_stmt
 begin_comment
 comment|/* version of kernel that crashed */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
+begin_decl_stmt
+name|u_long
+name|kernbase
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset of kvm to core file */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1241,6 +1274,36 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__i386__
+if|if
+condition|(
+name|dump_nl
+index|[
+name|X_KERNBASE
+index|]
+operator|.
+name|n_value
+operator|!=
+literal|0
+condition|)
+name|kernbase
+operator|=
+name|dump_nl
+index|[
+name|X_KERNBASE
+index|]
+operator|.
+name|n_value
+expr_stmt|;
+else|else
+name|kernbase
+operator|=
+name|KERNBASE
+expr_stmt|;
+endif|#
+directive|endif
 name|len
 operator|=
 sizeof|sizeof
