@@ -6576,7 +6576,7 @@ name|panic
 argument_list|(
 literal|"pmap_page_protect: illegal for unmanaged page, va: 0x%lx"
 argument_list|,
-name|VM_PAGE_TO_PHSY
+name|VM_PAGE_TO_PHYS
 argument_list|(
 name|m
 argument_list|)
