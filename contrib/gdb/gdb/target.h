@@ -304,6 +304,9 @@ name|TARGET_OBJECT_AUXV
 block|,
 comment|/* StackGhost cookie.  See "sparc-tdep.c".  */
 name|TARGET_OBJECT_WCOOKIE
+block|,
+comment|/* Dirty registers. See "ia64-tdep.c".  */
+name|TARGET_OBJECT_DIRTY
 comment|/* Possible future objects: TARGET_OBJECT_FILE, TARGET_OBJECT_PROC, ... */
 block|}
 enum|;
