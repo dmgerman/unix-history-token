@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.83 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	7.84 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -836,7 +836,7 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
-name|spec_vfree
+name|lfs_vfree
 block|}
 block|,
 comment|/* vfree */
@@ -1222,7 +1222,7 @@ block|{
 operator|&
 name|vop_vfree_desc
 block|,
-name|fifo_vfree
+name|lfs_vfree
 block|}
 block|,
 comment|/* vfree */
@@ -1782,14 +1782,22 @@ name|ap
 operator|->
 name|a_vp
 decl_stmt|;
+specifier|register
+name|struct
+name|uio
+modifier|*
+name|uio
+init|=
+name|ap
+operator|->
+name|a_uio
+decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|p
 init|=
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_procp
 decl_stmt|;
@@ -1810,6 +1818,13 @@ name|lfs
 modifier|*
 name|fs
 decl_stmt|;
+specifier|register
+name|ioflag
+operator|=
+name|ap
+operator|->
+name|a_ioflag
+expr_stmt|;
 name|struct
 name|buf
 modifier|*
@@ -1858,9 +1873,7 @@ directive|ifdef
 name|DIAGNOSTIC
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_rw
 operator|!=
@@ -1885,15 +1898,11 @@ name|VREG
 case|:
 if|if
 condition|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_APPEND
 condition|)
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|=
@@ -1913,9 +1922,7 @@ comment|/* XXX This may not be correct for LFS. */
 if|if
 condition|(
 operator|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_SYNC
 operator|)
@@ -1937,9 +1944,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|<
@@ -1952,9 +1957,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|==
@@ -1976,15 +1979,11 @@ name|VREG
 operator|&&
 name|p
 operator|&&
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|+
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|>
@@ -2013,9 +2012,7 @@ return|;
 block|}
 name|resid
 operator|=
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
@@ -2041,9 +2038,7 @@ directive|ifdef
 name|NOTLFS
 if|if
 condition|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_SYNC
 condition|)
@@ -2061,9 +2056,7 @@ name|lblkno
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 argument_list|)
@@ -2074,9 +2067,7 @@ name|blkoff
 argument_list|(
 name|fs
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 argument_list|)
@@ -2096,9 +2087,7 @@ operator|-
 name|on
 argument_list|)
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 argument_list|)
@@ -2122,9 +2111,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|+
@@ -2139,9 +2126,7 @@ name|ip
 operator|->
 name|i_size
 operator|=
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|+
@@ -2202,9 +2187,7 @@ name|on
 argument_list|,
 name|n
 argument_list|,
-name|ap
-operator|->
-name|a_uio
+name|uio
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2213,9 +2196,7 @@ name|NOTLFS
 comment|/* LFS */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_SYNC
 condition|)
@@ -2303,9 +2284,7 @@ name|error
 operator|==
 literal|0
 operator|&&
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|>
@@ -2321,9 +2300,7 @@ condition|(
 name|error
 operator|&&
 operator|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_UNIT
 operator|)
@@ -2338,9 +2315,7 @@ name|vp
 argument_list|,
 name|osize
 argument_list|,
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_SYNC
 argument_list|,
@@ -2349,23 +2324,17 @@ operator|->
 name|a_cred
 argument_list|)
 expr_stmt|;
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_offset
 operator|-=
 name|resid
 operator|-
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-name|ap
-operator|->
-name|a_uio
+name|uio
 operator|->
 name|uio_resid
 operator|=
@@ -2378,9 +2347,7 @@ operator|!
 name|error
 operator|&&
 operator|(
-name|ap
-operator|->
-name|a_ioflag
+name|ioflag
 operator|&
 name|IO_SYNC
 operator|)
@@ -2526,6 +2493,16 @@ name|prtactive
 decl_stmt|;
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+init|=
+name|ap
+operator|->
+name|a_vp
+decl_stmt|;
+specifier|register
+name|struct
 name|inode
 modifier|*
 name|ip
@@ -2549,9 +2526,7 @@ if|if
 condition|(
 name|prtactive
 operator|&&
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|!=
@@ -2561,9 +2536,7 @@ name|vprint
 argument_list|(
 literal|"lfs_inactive: pushing active"
 argument_list|,
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 comment|/* Get rid of inodes related to stale file handles. */
@@ -2571,9 +2544,7 @@ name|ip
 operator|=
 name|VTOI
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -2588,9 +2559,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_flag
 operator|&
@@ -2601,9 +2570,7 @@ literal|0
 condition|)
 name|vgone
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
@@ -2630,9 +2597,7 @@ operator|<=
 literal|0
 operator|&&
 operator|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_mount
 operator|->
@@ -2676,9 +2641,7 @@ name|error
 operator|=
 name|VOP_TRUNCATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|(
 name|off_t
@@ -2718,9 +2681,7 @@ name|ICHG
 expr_stmt|;
 name|VOP_VFREE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 name|ip
 operator|->
@@ -2748,9 +2709,7 @@ operator|)
 condition|)
 name|VOP_UPDATE
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
 operator|&
 name|time
@@ -2775,9 +2734,7 @@ expr_stmt|;
 comment|/* 	 * If we are done with the inode, reclaim it 	 * so that it can be reused immediately. 	 */
 if|if
 condition|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 operator|->
 name|v_usecount
 operator|==
@@ -2791,9 +2748,7 @@ literal|0
 condition|)
 name|vgone
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
