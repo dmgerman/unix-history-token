@@ -7228,7 +7228,10 @@ name|sc
 operator|->
 name|ti_mtx
 argument_list|,
-literal|"ti"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MTX_DEF
 argument_list|)

@@ -3256,7 +3256,10 @@ name|sc
 operator|->
 name|vr_mtx
 argument_list|,
-literal|"vr"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MTX_DEF
 argument_list|)

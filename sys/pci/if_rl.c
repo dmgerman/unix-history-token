@@ -3625,7 +3625,10 @@ name|sc
 operator|->
 name|rl_mtx
 argument_list|,
-literal|"rl"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MTX_DEF
 argument_list|)

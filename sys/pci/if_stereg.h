@@ -2386,9 +2386,33 @@ name|struct
 name|callout_handle
 name|ste_stat_ch
 decl_stmt|;
+name|struct
+name|mtx
+name|ste_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|STE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->ste_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->ste_mtx, MTX_DEF)
+end_define
 
 begin_struct
 struct|struct

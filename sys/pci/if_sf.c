@@ -3549,7 +3549,10 @@ name|sc
 operator|->
 name|sf_mtx
 argument_list|,
-literal|"sf"
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|MTX_DEF
 argument_list|)
