@@ -240,13 +240,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/dvcfg.h>
+file|<compat/netbsd/dvcfg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/physio_proc.h>
+file|<compat/netbsd/physio_proc.h>
 end_include
 
 begin_include

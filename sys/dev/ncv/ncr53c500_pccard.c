@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/dvcfg.h>
+file|<compat/netbsd/dvcfg.h>
 end_include
 
 begin_include

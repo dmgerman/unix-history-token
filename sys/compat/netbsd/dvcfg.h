@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_I386_DVCFG_H_
+name|_COMPAT_NETBSD_DVCFG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_I386_DVCFG_H_
+name|_COMPAT_NETBSD_DVCFG_H_
 end_define
 
 begin_typedef
@@ -167,7 +167,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _I386_DVCFG_H_ */
+comment|/* _COMPAT_NETBSD_DVCFG_H_ */
 end_comment
 
 end_unit
