@@ -704,7 +704,7 @@ name|sipp
 operator|)
 operator|->
 name|order
-operator|<
+operator|<=
 operator|(
 operator|*
 name|xipp
