@@ -8274,8 +8274,8 @@ argument|); 			ccb->ccb_h.status = CAM_REQ_INVALID; 			xpt_done(ccb); 			break; 
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d:%d:XPT_CALC_GEOMETRY: "
-literal|"Volume size = %d\n"
-argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
+literal|"Volume size = %lld\n"
+argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			(u_int64_t)ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
 literal|1024L
 argument|*
 literal|1024L
