@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.30	82/11/13	*/
+comment|/*	vfs_lookup.c	4.31	82/11/17	*/
 end_comment
 
 begin_include
@@ -2546,7 +2546,16 @@ name|u_count
 operator|==
 literal|0
 condition|)
+block|{
 comment|/* 		 * First entry in block: set d_ino to zero. 		 */
+name|u
+operator|.
+name|u_dent
+operator|.
+name|d_ino
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2588,6 +2597,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* 		 * Collapse new free space into previous entry. 		 */
