@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.28 1998/03/16 11:15:45 eivind Exp $"
+literal|"$Id: mkmakefile.c,v 1.29 1998/05/02 01:57:39 kato Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,6 +603,15 @@ literal|512
 block|}
 block|,
 comment|/* MACHINE_PC98 */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|512
+block|}
+block|,
+comment|/* MACHINE_ALPHA */
 block|}
 struct|;
 end_struct

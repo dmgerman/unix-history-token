@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.23 1998/04/23 16:37:06 bde Exp $"
+literal|"$Id: main.c,v 1.24 1998/05/02 01:57:38 kato Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,6 +615,13 @@ case|case
 name|MACHINE_NEWS3400
 case|:
 name|news_ioconf
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|MACHINE_ALPHA
+case|:
+name|alpha_ioconf
 argument_list|()
 expr_stmt|;
 break|break;
@@ -1719,6 +1726,15 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|MAP_FAILED
+define|#
+directive|define
+name|MAP_FAILED
+value|((caddr_t) -1)
+endif|#
+directive|endif
 if|if
 condition|(
 name|p

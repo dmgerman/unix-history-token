@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkswapconf.c,v 1.13 1997/09/15 06:37:10 charnier Exp $"
+literal|"$Id: mkswapconf.c,v 1.14 1997/09/17 06:20:45 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,23 @@ include|#
 directive|include
 file|<sys/diskslice.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|linux
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
