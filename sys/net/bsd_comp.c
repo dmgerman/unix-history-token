@@ -4,7 +4,7 @@ comment|/* Because this code is derived from the 4.3BSD compress source:  *  *  
 end_comment
 
 begin_comment
-comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.7 1997/08/19 14:10:44 peter Exp $  */
+comment|/*  * This version is for use with mbufs on BSD-derived systems.  *  * $Id: bsd_comp.c,v 1.8 1997/08/19 17:07:07 peter Exp $  */
 end_comment
 
 begin_include
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include

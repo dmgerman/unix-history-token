@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc_subr.c,v 1.12.4.1 1996/06/07 00:52:26 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc_subr.c,v 1.3 1997/06/12 14:03:16 tegge Exp $	*/
+comment|/*	$Id: krpc_subr.c,v 1.4 1997/08/16 19:15:53 wollman Exp $	*/
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.1.2.1 1997/07/01 20:44:10 peter Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.3 1997/08/19 14:10:46 peter Exp $	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
