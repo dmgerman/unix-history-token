@@ -4577,7 +4577,7 @@ name|nrele
 operator|=
 literal|0
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -4591,7 +4591,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|VREF
+name|vref
 argument_list|(
 name|newdp
 argument_list|)
@@ -4615,7 +4615,7 @@ operator|==
 name|olddp
 condition|)
 block|{
-name|VREF
+name|vref
 argument_list|(
 name|newdp
 argument_list|)
@@ -4630,7 +4630,7 @@ name|nrele
 operator|++
 expr_stmt|;
 block|}
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -4670,7 +4670,7 @@ argument_list|(
 name|rootvnode
 argument_list|)
 expr_stmt|;
-name|VREF
+name|vref
 argument_list|(
 name|newdp
 argument_list|)
