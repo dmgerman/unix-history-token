@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncr.c,v 1.106 1997/08/31 19:35:52 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncr.c,v 1.107 1997/08/31 19:36:56 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	Wolfgang Stanglmeier<wolf@cologne.de> **	Stefan Esser<se@mi.Uni-Koeln.de> ** **  Ported to NetBSD by **	Charles M. Hannum<mycroft@gnu.ai.mit.edu> ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -957,7 +957,7 @@ name|INL_OFF
 parameter_list|(
 name|o
 parameter_list|)
-value|*((u_long *)  ( ((u_char *) np->reg) + (o)) )
+value|*((u_int32_t *)  ( ((u_char *) np->reg) + (o)) )
 end_define
 
 begin_endif
@@ -1488,10 +1488,10 @@ begin_struct
 struct|struct
 name|link
 block|{
-name|u_long
+name|ncrcmd
 name|l_cmd
 decl_stmt|;
-name|u_long
+name|ncrcmd
 name|l_paddr
 decl_stmt|;
 block|}
@@ -1826,13 +1826,13 @@ name|link
 name|launch
 decl_stmt|;
 comment|/* 	**	Saved data pointer. 	**	Points to the position in the script 	**	responsible for the actual transfer 	**	of data. 	**	It's written after reception of a 	**	"SAVE_DATA_POINTER" message. 	**	The goalpointer points after 	**	the last transfer command. 	*/
-name|u_long
+name|u_int32_t
 name|savep
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|lastp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|goalp
 decl_stmt|;
 comment|/* 	**	The virtual address of the ccb 	**	containing this header. 	*/
@@ -2086,7 +2086,7 @@ name|dsb
 name|phys
 decl_stmt|;
 comment|/* 	**	If a data transfer phase is terminated too early 	**	(after reception of a message (i.e. DISCONNECT)), 	**	we have to prepare a mini script to transfer 	**	the rest of the data. 	*/
-name|u_long
+name|ncrcmd
 name|patch
 index|[
 literal|8
@@ -2318,7 +2318,7 @@ name|MAX_TARGET
 index|]
 decl_stmt|;
 comment|/* 	**	Start queue. 	*/
-name|u_long
+name|u_int32_t
 name|squeue
 index|[
 name|MAX_START
@@ -2382,7 +2382,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|lastmsg
 decl_stmt|;
 comment|/* 	**	Buffer for STATUS_IN phase. 	*/
@@ -3451,7 +3451,7 @@ name|char
 name|ident
 index|[]
 init|=
-literal|"\n$Id: ncr.c,v 1.106 1997/08/31 19:35:52 se Exp $\n"
+literal|"\n$Id: ncr.c,v 1.107 1997/08/31 19:36:56 se Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -11105,6 +11105,11 @@ name|np
 operator|->
 name|script
 operator|=
+operator|(
+expr|struct
+name|script
+operator|*
+operator|)
 name|np
 operator|->
 name|vaddr2
@@ -17907,7 +17912,7 @@ name|u_char
 name|dstat
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|dsp
 decl_stmt|;
 name|int
@@ -19530,31 +19535,31 @@ name|u_char
 name|dstat
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|dbc
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|rest
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|dsa
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|dsp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|nxtdsp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|vdsp
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|oadr
 decl_stmt|,
 name|olen
 decl_stmt|;
-name|u_long
+name|u_int32_t
 modifier|*
 name|tblp
 decl_stmt|,
@@ -19976,7 +19981,7 @@ block|{
 name|vdsp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -20007,7 +20012,7 @@ block|{
 name|vdsp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -20142,7 +20147,7 @@ comment|/* Table indirect */
 name|tblp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|(
@@ -20178,7 +20183,7 @@ block|{
 name|tblp
 operator|=
 operator|(
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 literal|0
@@ -23806,7 +23811,7 @@ parameter_list|)
 block|{
 specifier|register
 specifier|volatile
-name|u_long
+name|u_int32_t
 name|data
 decl_stmt|,
 modifier|*
@@ -23817,7 +23822,7 @@ name|addr
 operator|=
 operator|(
 specifier|volatile
-name|u_long
+name|u_int32_t
 operator|*
 operator|)
 operator|&
@@ -23901,7 +23906,7 @@ modifier|*
 name|np
 parameter_list|)
 block|{
-name|u_long
+name|u_int32_t
 name|ncr_rd
 decl_stmt|,
 name|ncr_wr
@@ -23913,13 +23918,13 @@ decl_stmt|,
 name|host_wr
 decl_stmt|,
 name|pc
+decl_stmt|;
+name|int
+name|i
 decl_stmt|,
 name|err
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 ifndef|#
 directive|ifndef
@@ -24099,8 +24104,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tstart=%08x, pc=%08x, end=%08x\n"
+literal|"start=%08lx, pc=%08lx, end=%08lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|NCB_SCRIPTH_PHYS
 argument_list|(
 name|np
@@ -24108,8 +24116,14 @@ argument_list|,
 name|snooptest
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pc
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|NCB_SCRIPTH_PHYS
 argument_list|(
 name|np

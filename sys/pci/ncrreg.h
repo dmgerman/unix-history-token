@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.9 1997/08/06 20:25:54 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: ncrreg.h,v 1.10 1997/08/24 06:24:51 se Exp $ ** **  Device driver for the   NCR 53C810   PCI-SCSI-Controller. ** **  386bsd / FreeBSD / NetBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@cologne.de		Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **  Ported to NetBSD by **	mycroft@gnu.ai.mit.edu ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_ifndef
@@ -282,7 +282,7 @@ name|LDSC
 value|0x02
 comment|/* sta: disconnect& reconnect      */
 comment|/*10*/
-name|u_long
+name|u_int32_t
 name|nc_dsa
 decl_stmt|;
 comment|/* --> Base page                    */
@@ -384,7 +384,7 @@ name|WRIE
 value|0x01
 comment|/* mod: write and invalidate enable */
 comment|/*1c*/
-name|u_long
+name|u_int32_t
 name|nc_temp
 decl_stmt|;
 comment|/* ### Temporary stack              */
@@ -420,27 +420,27 @@ name|u_char
 name|nc_ctest6
 decl_stmt|;
 comment|/*24*/
-name|u_long
+name|u_int32_t
 name|nc_dbc
 decl_stmt|;
 comment|/* ### Byte count and command       */
 comment|/*28*/
-name|u_long
+name|u_int32_t
 name|nc_dnad
 decl_stmt|;
 comment|/* ### Next command register        */
 comment|/*2c*/
-name|u_long
+name|u_int32_t
 name|nc_dsp
 decl_stmt|;
 comment|/* --> Script Pointer               */
 comment|/*30*/
-name|u_long
+name|u_int32_t
 name|nc_dsps
 decl_stmt|;
 comment|/* --> Script pointer save/opcode#2 */
 comment|/*34*/
-name|u_long
+name|u_int32_t
 name|nc_scratcha
 decl_stmt|;
 comment|/* ??? Temporary register a         */
@@ -527,7 +527,7 @@ name|NOCOM
 value|0x01
 comment|/* cmd: protect sfbr while reselect */
 comment|/*3c*/
-name|u_long
+name|u_int32_t
 name|nc_adder
 decl_stmt|;
 comment|/*40*/
@@ -804,8 +804,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|long
+name|u_int32_t
 name|ncrcmd
 typedef|;
 end_typedef
@@ -905,10 +904,10 @@ begin_struct
 struct|struct
 name|scr_tblmove
 block|{
-name|u_long
+name|u_int32_t
 name|size
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|addr
 decl_stmt|;
 block|}
@@ -981,7 +980,7 @@ name|SCR_ID
 parameter_list|(
 name|id
 parameter_list|)
-value|(((u_long)(id))<< 16)
+value|(((u_int32_t)(id))<< 16)
 end_define
 
 begin_comment
