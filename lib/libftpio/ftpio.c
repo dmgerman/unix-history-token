@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15 1996/10/10 08:34:27 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.21 1996/12/17 20:19:35 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ name|FTP_TIMEOUT
 parameter_list|(
 name|code
 parameter_list|)
-value|(code == 421)
+value|(FtpTimedOut || code == FTP_TIMED_OUT)
 end_define
 
 begin_comment
@@ -391,6 +391,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|ftp_timeout
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ftp_set_timeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ftp_clear_timeout
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Global status variable - ick */
 end_comment
@@ -402,28 +433,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* FTP status codes */
+comment|/* FTP happy status codes */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FTP_ASCII_HAPPY
+name|FTP_GENERALLY_HAPPY
 value|200
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTP_ASCII_HAPPY
+value|FTP_GENERALLY_HAPPY
 end_define
 
 begin_define
 define|#
 directive|define
 name|FTP_BINARY_HAPPY
-value|200
+value|FTP_GENERALLY_HAPPY
 end_define
 
 begin_define
 define|#
 directive|define
 name|FTP_PORT_HAPPY
-value|200
+value|FTP_GENERALLY_HAPPY
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTP_HAPPY_COMMENT
+value|220
 end_define
 
 begin_define
@@ -452,6 +497,17 @@ define|#
 directive|define
 name|FTP_CHDIR_HAPPY
 value|250
+end_define
+
+begin_comment
+comment|/* FTP unhappy status codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FTP_TIMED_OUT
+value|421
 end_define
 
 begin_comment
@@ -528,7 +584,7 @@ if|if
 condition|(
 name|var
 operator|==
-literal|226
+name|FTP_TRANSFER_HAPPY
 condition|)
 comment|/* last operation succeeded */
 name|var
@@ -545,7 +601,7 @@ if|if
 condition|(
 name|var
 operator|==
-literal|220
+name|FTP_HAPPY_COMMENT
 condition|)
 comment|/* chit-chat */
 name|var
@@ -562,9 +618,9 @@ if|if
 condition|(
 name|var
 operator|==
-literal|200
+name|FTP_GENERALLY_HAPPY
 condition|)
-comment|/* success codes */
+comment|/* general success code */
 name|var
 operator|=
 name|get_a_number
@@ -963,8 +1019,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|writes
 argument_list|(
 name|ftp
@@ -973,10 +1029,6 @@ name|fd_ctrl
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 condition|)
 return|return
 operator|(
@@ -1131,8 +1183,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|writes
 argument_list|(
 name|ftp
@@ -1141,10 +1193,6 @@ name|fd_ctrl
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 condition|)
 return|return
 operator|(
@@ -2489,13 +2537,99 @@ begin_function
 specifier|static
 name|void
 name|ftp_timeout
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 name|FtpTimedOut
 operator|=
 name|TRUE
 expr_stmt|;
 comment|/* Debug("ftp_pkg: ftp_timeout called - operation timed out"); */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ftp_set_timeout
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|ival
+decl_stmt|;
+name|FtpTimedOut
+operator|=
+name|FALSE
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|ftp_timeout
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+name|getenv
+argument_list|(
+literal|"FTP_TIMEOUT_INTERVAL"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+operator|||
+operator|!
+operator|(
+name|ival
+operator|=
+name|atoi
+argument_list|(
+name|cp
+argument_list|)
+operator|)
+condition|)
+name|ival
+operator|=
+literal|120
+expr_stmt|;
+name|alarm
+argument_list|(
+name|ival
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ftp_clear_timeout
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2522,24 +2656,9 @@ argument_list|(
 name|s
 argument_list|)
 decl_stmt|;
-comment|/* Set the timer */
-name|FtpTimedOut
-operator|=
-name|FALSE
+name|ftp_set_timeout
+argument_list|()
 expr_stmt|;
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|ftp_timeout
-argument_list|)
-expr_stmt|;
-name|alarm
-argument_list|(
-literal|120
-argument_list|)
-expr_stmt|;
-comment|/* Debug("ftp_pkg: writing \"%s\" to ftp connection %d", s, fd); */
 name|n
 operator|=
 name|write
@@ -2551,22 +2670,22 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
+name|ftp_clear_timeout
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|FtpTimedOut
+operator|||
 name|i
 operator|!=
 name|n
 condition|)
 return|return
-name|FAILURE
+name|TRUE
 return|;
 return|return
-name|SUCCESS
+name|FALSE
 return|;
 block|}
 end_function
@@ -2594,18 +2713,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* Set the timer */
-name|FtpTimedOut
-operator|=
-name|FALSE
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|ftp_timeout
-argument_list|)
-expr_stmt|;
 comment|/* Debug("ftp_pkg: trying to read a line from %d", ftp->fd_ctrl); */
 for|for
 control|(
@@ -2619,10 +2726,8 @@ name|BUFSIZ
 condition|;
 control|)
 block|{
-name|alarm
-argument_list|(
-literal|120
-argument_list|)
+name|ftp_set_timeout
+argument_list|()
 expr_stmt|;
 name|j
 operator|=
@@ -2639,13 +2744,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|alarm
-argument_list|(
-literal|0
-argument_list|)
+name|ftp_clear_timeout
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|FtpTimedOut
+operator|||
 name|j
 operator|!=
 literal|1
@@ -2766,6 +2871,13 @@ argument_list|(
 name|ftp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FtpTimedOut
+condition|)
+return|return
+name|FTP_TIMED_OUT
+return|;
 return|return
 name|FAILURE
 return|;
@@ -3107,8 +3219,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|writes
 argument_list|(
 name|ftp
@@ -3117,14 +3229,19 @@ name|fd_ctrl
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 if|if
 condition|(
-name|i
+name|FtpTimedOut
 condition|)
+return|return
+name|FTP_TIMED_OUT
+return|;
 return|return
 name|FAILURE
 return|;
+block|}
 while|while
 condition|(
 operator|(
@@ -3138,7 +3255,7 @@ name|NULL
 argument_list|)
 operator|)
 operator|==
-literal|220
+name|FTP_HAPPY_COMMENT
 condition|)
 empty_stmt|;
 return|return
