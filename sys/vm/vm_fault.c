@@ -3543,18 +3543,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pmap
-operator|!=
-name|kernel_pmap
-condition|)
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Since the pages are wired down, we must be able to get their 	 * mappings from the physical map system. 	 */
 for|for
 control|(
@@ -3621,18 +3609,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|if
-condition|(
-name|pmap
-operator|!=
-name|kernel_pmap
-condition|)
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
