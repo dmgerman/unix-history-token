@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pcib_if.h"
 end_include
 
@@ -435,7 +429,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pcib_softc
+name|apb_softc
 argument_list|)
 block|, }
 decl_stmt|;
