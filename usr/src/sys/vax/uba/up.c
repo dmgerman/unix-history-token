@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.67	83/02/10	*/
+comment|/*	up.c	4.68	83/02/10	*/
 end_comment
 
 begin_include
@@ -3022,7 +3022,27 @@ operator|>
 literal|27
 condition|)
 block|{
-comment|/* 			 * After 28 retries (16 without offset, and 			 * 12 with offset positioning) give up. 			 */
+comment|/* 			 * After 28 retries (16 without offset, and 			 * 12 with offset positioning) give up. 			 * If the error was header CRC, the header is  			 * screwed up, and the sector may in fact exist 			 * in the bad sector table, better check... 			 */
+if|if
+condition|(
+name|upaddr
+operator|->
+name|uper1
+operator|&
+name|UPER1_HCRC
+condition|)
+block|{
+if|if
+condition|(
+name|upecc
+argument_list|(
+name|ui
+argument_list|,
+name|BSE
+argument_list|)
+condition|)
+return|return;
+block|}
 name|hard
 label|:
 name|hard
