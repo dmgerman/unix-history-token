@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.18	83/05/10	*/
+comment|/*	if_vv.c	4.19	83/05/10	*/
 end_comment
 
 begin_include
@@ -2786,7 +2786,7 @@ operator|+
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|vvheader
+name|vv_header
 argument_list|)
 condition|)
 block|{
