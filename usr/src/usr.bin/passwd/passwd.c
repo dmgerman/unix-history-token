@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.22 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2239,7 +2239,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Default values are printed inside of of '[]'.\n"
+literal|"Default values are printed inside of '[]'.\n"
 argument_list|)
 expr_stmt|;
 name|printf
