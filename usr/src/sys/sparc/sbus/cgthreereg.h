@@ -1,42 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cgthreereg.h	8.2 (Berkeley) %G%  *  * from: $Header: cgthreereg.h,v 1.5 92/11/26 02:28:07 torek Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cgthreereg.h	8.2 (Berkeley) %G%  *  * from: $Header: cgthreereg.h,v 1.7 93/10/31 05:09:28 torek Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * cgthree display registers.  *  * The registers start at offset 0x400000 and repeat every 32 bytes  * (presumably only the low order address lines are decoded).  Video RAM  * starts at offset 0x800000.  We use separate pointers to each so that  * the sparc addressing modes work well.  *  * The cg3 has a Brooktree Bt458 (?) chip to do everything (Brooktree  * makes the only decent color frame buffer chips).  To update the  * color map one would normally do byte writes, but the hardware  * takes longword writes.  Since there are three registers for each  * color map entry (R, then G, then B), we have to set color 1 with  * a write to address 0 (setting 0's R/G/B and color 1's R) followed  * by a second write to address 1 (setting color 1's G/B and color 2's  * R/G).  Software must therefore keep a copy of the current map.  *  * The colormap address register increments automatically, so the above  * write is done as:  *  *	p->cg3_cadr = 0;  *	p->cg3_cmap = R0G0B0R1;  *	p->cg3_cmap = G1B1R2G2;  *  * Yow!  */
+comment|/*  * cgthree display registers.  Much like bwtwo registers, except that  * there is a Brooktree Video DAC in there (so we also use btreg.h).  */
 end_comment
-
-begin_struct
-struct|struct
-name|cgthreereg
-block|{
-name|u_int
-name|cg3_addr
-decl_stmt|;
-comment|/* ?any? address register */
-name|u_int
-name|cg3_cmap
-decl_stmt|;
-comment|/* colormap data register */
-name|u_int
-name|cg3_ctrl
-decl_stmt|;
-comment|/* control register */
-name|u_int
-name|cg3_omap
-decl_stmt|;
-comment|/* overlay map register */
-name|char
-name|cg3_xxx0
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* ? (make same size as bwtwo) */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* offsets */
@@ -84,16 +53,20 @@ literal|4
 index|]
 decl_stmt|;
 name|struct
-name|cgthreereg
-name|ba_reg
+name|bt_regs
+name|ba_btreg
 decl_stmt|;
-comment|/* control registers */
+comment|/* Brooktree registers */
 name|char
 name|ba_xxx1
 index|[
 literal|0x400000
 operator|-
-literal|32
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bt_regs
+argument_list|)
 index|]
 decl_stmt|;
 name|char
