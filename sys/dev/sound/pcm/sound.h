@@ -217,6 +217,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kobj.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
