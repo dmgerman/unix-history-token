@@ -2323,7 +2323,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"<%s> invalid router preference"
+literal|"<%s> invalid route preference"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -4953,9 +4953,12 @@ name|ndopt_rti
 operator|->
 name|nd_opt_rti_lifetime
 operator|=
+name|htonl
+argument_list|(
 name|rti
 operator|->
 name|ltime
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
