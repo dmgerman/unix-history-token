@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.7	(Berkeley)	83/03/06"
+literal|"@(#)tape.c	3.8	(Berkeley)	83/03/08"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +765,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|volno
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|readhdr
