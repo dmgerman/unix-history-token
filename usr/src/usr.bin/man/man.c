@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.2 (Berkeley) %G%"
+literal|"@(#)man.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,8 +1025,10 @@ comment|/* new */
 if|if
 condition|(
 operator|!
+operator|(
 operator|*
 name|argv
+operator|)
 index|[
 literal|1
 index|]
@@ -1062,8 +1064,10 @@ comment|/* old */
 if|if
 condition|(
 operator|!
+operator|(
 operator|*
 name|argv
+operator|)
 index|[
 literal|1
 index|]
