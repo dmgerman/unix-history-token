@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserv
 end_comment
 
 begin_comment
-comment|/*  * sup misc. routines, include list processing.  **********************************************************************  * HISTORY  * $Log: supcmisc.c,v $  * Revision 1.2  1994/06/20  06:04:11  rgrimes  * Humm.. they did a lot of #if __STDC__ but failed to properly prototype  * the code.  Also fixed one bad argument to a wait3 call.  *  * It won't compile -Wall, but atleast it compiles standard without warnings  * now.  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.5  92/08/11  12:07:22  mrt  * 	Added release to FILEWHEN name.  * 	Brad's changes: delinted and updated variable arguement usage.  * 	[92/07/26            mrt]  *   * Revision 1.3  89/08/15  15:31:28  bww  * 	Updated to use v*printf() in place of _doprnt().  * 	From "[89/04/19            mja]" at CMU.  * 	[89/08/15            bww]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed bug in ugconvert() which left pw uninitialized.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Split off from sup.c and changed goaway to use printf  *	instead of notify if thisC is NULL.  *  **********************************************************************  */
+comment|/*  * sup misc. routines, include list processing.  **********************************************************************  * HISTORY  * $Log: supcmisc.c,v $  * Revision 1.1.1.1  1995/12/26 04:54:46  peter  * Import the unmodified version of the sup that we are using.  * The heritage of this version is not clear.  It appears to be NetBSD  * derived from some time ago.  *  * Revision 1.2  1994/06/20  06:04:11  rgrimes  * Humm.. they did a lot of #if __STDC__ but failed to properly prototype  * the code.  Also fixed one bad argument to a wait3 call.  *  * It won't compile -Wall, but atleast it compiles standard without warnings  * now.  *  * Revision 1.1.1.1  1993/08/21  00:46:34  jkh  * Current sup with compression support.  *  * Revision 1.1.1.1  1993/05/21  14:52:18  cgd  * initial import of CMU's SUP to NetBSD  *  * Revision 1.5  92/08/11  12:07:22  mrt  * 	Added release to FILEWHEN name.  * 	Brad's changes: delinted and updated variable arguement usage.  * 	[92/07/26            mrt]  *   * Revision 1.3  89/08/15  15:31:28  bww  * 	Updated to use v*printf() in place of _doprnt().  * 	From "[89/04/19            mja]" at CMU.  * 	[89/08/15            bww]  *   * 27-Dec-87  Glenn Marcy (gm0w) at Carnegie-Mellon University  *	Fixed bug in ugconvert() which left pw uninitialized.  *  * 25-May-87  Doug Philips (dwp) at Carnegie-Mellon University  *	Split off from sup.c and changed goaway to use printf  *	instead of notify if thisC is NULL.  *  **********************************************************************  */
 end_comment
 
 begin_if
@@ -1199,7 +1199,7 @@ index|[
 name|STRINGLENGTH
 index|]
 decl_stmt|;
-name|long
+name|time_t
 name|tloc
 decl_stmt|;
 specifier|static
@@ -1341,7 +1341,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"mail -s \"SUP Upgrade of %s\" %s>/dev/null"
+literal|"/usr/bin/mail -s \"SUP Upgrade of %s\" %s>/dev/null"
 argument_list|,
 name|collrelname
 argument_list|,
@@ -1388,12 +1388,21 @@ name|noteF
 operator|=
 name|stdout
 expr_stmt|;
+if|if
+condition|(
+name|thisC
+operator|->
+name|Cflags
+operator|&
+name|CFVERBOSE
+condition|)
+block|{
 name|tloc
 operator|=
 name|time
 argument_list|(
 operator|(
-name|long
+name|time_t
 operator|*
 operator|)
 name|NULL
@@ -1422,6 +1431,7 @@ argument_list|(
 name|noteF
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|vfprintf
 argument_list|(
