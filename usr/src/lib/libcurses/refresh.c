@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.35 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -571,6 +571,7 @@ operator||
 name|__FORCEPAINT
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|makech
@@ -706,6 +707,20 @@ name|__ISDIRTY
 expr_stmt|;
 block|}
 block|}
+block|}
+else|else
+name|win
+operator|->
+name|lines
+index|[
+name|wy
+index|]
+operator|->
+name|flags
+operator|&=
+operator|~
+name|__ISPASTEOL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
