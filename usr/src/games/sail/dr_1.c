@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_1.c	1.2 83/05/20"
+literal|"@(#)dr_1.c	1.3 83/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,12 +30,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_define
@@ -3400,29 +3394,23 @@ index|[
 literal|25
 index|]
 decl_stmt|;
-name|struct
-name|stat
-name|Stat
-decl_stmt|;
 name|int
 name|uid
 decl_stmt|;
 name|signal
 argument_list|(
-literal|1
+name|SIGHUP
 argument_list|,
-literal|1
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
 name|signal
 argument_list|(
-literal|2
+name|SIGINT
 argument_list|,
-literal|1
+name|SIG_IGN
 argument_list|)
 expr_stmt|;
-comment|/*	uid = geteuid(); */
-comment|/*	MIGHTYCAPTAIN = uid == MASTER || uid == SERVANT1 || uid == SERVANT2 || uid == SERVANT3; */
 name|srand
 argument_list|(
 name|getpid
@@ -3448,12 +3436,11 @@ name|n
 operator|=
 literal|0
 init|;
-name|stat
+name|access
 argument_list|(
 name|file
 argument_list|,
-operator|&
-name|Stat
+literal|0
 argument_list|)
 operator|<
 literal|0
@@ -3479,6 +3466,24 @@ argument_list|,
 literal|"r+"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|syncfile
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|sscanf
 argument_list|(
 name|argv
