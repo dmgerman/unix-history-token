@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	4.1 %G%"
+literal|"@(#)n7.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2649,6 +2649,8 @@ expr_stmt|;
 if|if
 condition|(
 name|donef
+operator|==
+literal|1
 condition|)
 block|{
 if|if
