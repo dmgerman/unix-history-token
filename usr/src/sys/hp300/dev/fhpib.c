@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2652,29 +2652,29 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * XXX: this will have to change if we every allow more than one  * pending operation per HP-IB.  */
+comment|/*  * XXX: this will have to change if we ever allow more than one  * pending operation per HP-IB.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fhpibppwatch
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
+specifier|register
+name|int
+name|unit
+decl_stmt|;
 specifier|register
 name|struct
 name|hpib_softc
 modifier|*
 name|hs
-init|=
-operator|&
-name|hpib_softc
-index|[
-name|unit
-index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -2686,6 +2686,21 @@ specifier|register
 name|int
 name|slave
 decl_stmt|;
+name|unit
+operator|=
+operator|(
+name|int
+operator|)
+name|arg
+expr_stmt|;
+name|hs
+operator|=
+operator|&
+name|hpib_softc
+index|[
+name|unit
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2765,6 +2780,10 @@ name|timeout
 argument_list|(
 name|fhpibppwatch
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 literal|1
@@ -2827,7 +2846,7 @@ operator|=
 name|IDS_IE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.38 90/10/12$  *  *	@(#)rd.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: rd.c 1.38 90/10/12$  *  *	@(#)rd.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3700,20 +3700,16 @@ begin_comment
 comment|/*  * Called from timeout() when handling maintenance releases  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rdrestart
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|unit
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|s
@@ -3723,7 +3719,10 @@ argument_list|()
 decl_stmt|;
 name|rdustart
 argument_list|(
-name|unit
+operator|(
+name|int
+operator|)
+name|arg
 argument_list|)
 expr_stmt|;
 name|splx
@@ -3732,7 +3731,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|rdustart
@@ -5400,6 +5399,10 @@ name|timeout
 argument_list|(
 name|rdrestart
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 name|rdtimo

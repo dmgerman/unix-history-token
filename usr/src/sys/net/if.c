@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -95,6 +95,20 @@ name|IFQ_MAXLEN
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|if_slowtimo
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Network interface utility routines.  *  * Routines with ifa_ifwith* names take sockaddr *'s as  * parameters.  */
 end_comment
@@ -145,7 +159,9 @@ operator|=
 name|ifqmaxlen
 expr_stmt|;
 name|if_slowtimo
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1977,12 +1993,16 @@ begin_comment
 comment|/*  * Handle interface watchdog timer routines.  Called  * from softclock, we decrement timers (if set) and  * call the appropriate interface routine on expiration.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|if_slowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2054,7 +2074,8 @@ argument_list|(
 name|if_slowtimo
 argument_list|,
 operator|(
-name|caddr_t
+name|void
+operator|*
 operator|)
 literal|0
 argument_list|,
@@ -2064,7 +2085,7 @@ name|IFNET_SLOWHZ
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Map interface name to  * interface structure pointer.  */

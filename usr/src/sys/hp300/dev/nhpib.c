@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1735,31 +1735,42 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|nhpibppwatch
-argument_list|(
-name|unit
-argument_list|)
-specifier|register
-name|int
-name|unit
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|(
+name|arg
+parameter_list|)
+name|void
+modifier|*
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|struct
 name|hpib_softc
 modifier|*
 name|hs
-init|=
+decl_stmt|;
+specifier|register
+name|int
+name|unit
+decl_stmt|;
+name|unit
+operator|=
+operator|(
+name|int
+operator|)
+name|arg
+expr_stmt|;
+name|hs
+operator|=
 operator|&
 name|hpib_softc
 index|[
 name|unit
 index|]
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1814,13 +1825,17 @@ name|timeout
 argument_list|(
 name|nhpibppwatch
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|unit
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
