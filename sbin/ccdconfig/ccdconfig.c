@@ -715,8 +715,8 @@ argument_list|(
 name|cp
 argument_list|)
 operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 block|{
 name|warnx
@@ -844,8 +844,8 @@ argument_list|(
 name|cp
 argument_list|)
 operator|)
-operator|==
-name|NULL
+operator|<
+literal|0
 condition|)
 block|{
 name|warnx
