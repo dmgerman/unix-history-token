@@ -315,6 +315,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_extern.h>
 end_include
 
@@ -372,23 +378,6 @@ directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<cam/scsi/scsiconf.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -411,6 +400,12 @@ begin_include
 include|#
 directive|include
 file|<i386/isa/icu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/intr_machdep.h>
 end_include
 
 begin_endif
@@ -925,17 +920,8 @@ name|softintr
 parameter_list|(
 name|y
 parameter_list|)
-value|ipending |= (1<< y)
+value|do {			\ 	atomic_set_int(&spending, 1<< y);	\ 	sched_ithd((void*)SOFTINTR);		\ } while(0);
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPENDING */
-end_comment
 
 begin_function
 specifier|static
