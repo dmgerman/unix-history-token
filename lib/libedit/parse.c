@@ -251,6 +251,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|ptr
