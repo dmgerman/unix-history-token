@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ugen.c,v 1.57 2002/02/11 15:11:49 augustss Exp $	*/
+comment|/*	$NetBSD: ugen.c,v 1.59 2002/07/11 21:14:28 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* Also already merged from NetBSD:  *	$NetBSD: ugen.c,v 1.61 2002/09/23 05:51:20 simonb Exp $  */
+comment|/* Also already merged from NetBSD:  *	$NetBSD: ugen.c,v 1.61 2002/09/23 05:51:20 simonb Exp $  *	$NetBSD: ugen.c,v 1.64 2003/06/28 14:21:46 darrenr Exp $  *	$NetBSD: ugen.c,v 1.65 2003/06/29 22:30:56 fvdl Exp $  */
 end_comment
 
 begin_comment
