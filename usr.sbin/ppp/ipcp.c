@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.56 1998/06/15 19:06:12 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.57 1998/06/16 19:40:38 brian Exp $  *  *	TODO:  *		o More RFC1772 backward compatibility  */
 end_comment
 
 begin_include
@@ -3800,6 +3800,16 @@ name|fp
 parameter_list|)
 block|{
 comment|/* We're about to start up ! */
+name|struct
+name|ipcp
+modifier|*
+name|ipcp
+init|=
+name|fsm2ipcp
+argument_list|(
+name|fp
+argument_list|)
+decl_stmt|;
 name|log_Printf
 argument_list|(
 name|LogIPCP
@@ -3811,6 +3821,25 @@ operator|->
 name|link
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|throughput_start
+argument_list|(
+operator|&
+name|ipcp
+operator|->
+name|throughput
+argument_list|,
+literal|"IPCP throughput"
+argument_list|,
+name|Enabled
+argument_list|(
+name|fp
+operator|->
+name|bundle
+argument_list|,
+name|OPT_THROUGHPUT
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* This is where we should be setting up the interface in AUTO mode */
@@ -3829,6 +3858,16 @@ name|fp
 parameter_list|)
 block|{
 comment|/* We're now down */
+name|struct
+name|ipcp
+modifier|*
+name|ipcp
+init|=
+name|fsm2ipcp
+argument_list|(
+name|fp
+argument_list|)
+decl_stmt|;
 name|log_Printf
 argument_list|(
 name|LogIPCP
@@ -3840,6 +3879,26 @@ operator|->
 name|link
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|throughput_stop
+argument_list|(
+operator|&
+name|ipcp
+operator|->
+name|throughput
+argument_list|)
+expr_stmt|;
+name|throughput_log
+argument_list|(
+operator|&
+name|ipcp
+operator|->
+name|throughput
+argument_list|,
+name|LogIPCP
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -4175,26 +4234,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-name|throughput_stop
-argument_list|(
-operator|&
-name|ipcp
-operator|->
-name|throughput
-argument_list|)
-expr_stmt|;
-name|throughput_log
-argument_list|(
-operator|&
-name|ipcp
-operator|->
-name|throughput
-argument_list|,
-name|LogIPCP
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/*    * XXX this stuff should really live in the FSM.  Our config should    * associate executable sections in files with events.    */
 if|if
 condition|(
@@ -4301,6 +4340,11 @@ name|PHYS_AUTO
 operator|)
 condition|)
 name|ipcp_CleanInterface
+argument_list|(
+name|ipcp
+argument_list|)
+expr_stmt|;
+name|ipcp_Setup
 argument_list|(
 name|ipcp
 argument_list|)
@@ -4589,25 +4633,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|throughput_start
-argument_list|(
-operator|&
-name|ipcp
-operator|->
-name|throughput
-argument_list|,
-literal|"IPCP throughput"
-argument_list|,
-name|Enabled
-argument_list|(
-name|fp
-operator|->
-name|bundle
-argument_list|,
-name|OPT_THROUGHPUT
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|log_DisplayPrompts
 argument_list|()
 expr_stmt|;
