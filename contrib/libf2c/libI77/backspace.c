@@ -61,7 +61,7 @@ name|unit
 modifier|*
 name|b
 decl_stmt|;
-name|long
+name|off_t
 name|v
 decl_stmt|,
 name|w
@@ -245,7 +245,7 @@ condition|)
 block|{
 name|x
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|f
 argument_list|)
@@ -279,10 +279,7 @@ name|b
 operator|->
 name|url
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,
@@ -306,13 +303,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,
 operator|-
 operator|(
-name|long
+name|off_t
 operator|)
 sizeof|sizeof
 argument_list|(
@@ -341,13 +338,13 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,
 operator|-
 operator|(
-name|long
+name|off_t
 operator|)
 name|n
 operator|-
@@ -371,7 +368,7 @@ name|w
 operator|=
 name|x
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|f
 argument_list|)
@@ -397,7 +394,7 @@ name|x
 else|:
 literal|64
 expr_stmt|;
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,
@@ -432,7 +429,7 @@ condition|)
 continue|continue;
 name|v
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|f
 argument_list|)
@@ -476,7 +473,7 @@ expr_stmt|;
 block|}
 name|break2
 label|:
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,

@@ -1275,7 +1275,7 @@ end_endif
 
 begin_block
 block|{
-name|long
+name|off_t
 name|loc
 decl_stmt|;
 name|int
@@ -1328,7 +1328,7 @@ name|ufmt
 expr_stmt|;
 name|loc
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|x
 operator|->
@@ -1396,7 +1396,7 @@ literal|1
 return|;
 block|}
 block|}
-name|fseek
+name|FSEEK
 argument_list|(
 name|x
 operator|->
@@ -1466,7 +1466,7 @@ end_endif
 
 begin_block
 block|{
-name|long
+name|off_t
 name|loc
 decl_stmt|;
 name|int
@@ -1562,7 +1562,7 @@ else|else
 block|{
 name|loc
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|x
 operator|->
@@ -1623,7 +1623,7 @@ name|urw
 operator|=
 literal|3
 expr_stmt|;
-name|fseek
+name|FSEEK
 argument_list|(
 name|x
 operator|->

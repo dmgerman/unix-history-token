@@ -882,7 +882,7 @@ name|a
 operator|->
 name|innrec
 operator|=
-name|ftell
+name|FTELL
 argument_list|(
 name|p
 operator|->

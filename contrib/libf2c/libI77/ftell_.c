@@ -120,7 +120,10 @@ literal|"ftell"
 argument_list|)
 operator|)
 condition|?
-name|ftell
+operator|(
+name|integer
+operator|)
+name|FTELL
 argument_list|(
 name|f
 argument_list|)
@@ -252,10 +255,13 @@ literal|"fseek"
 argument_list|)
 operator|)
 operator|||
-name|fseek
+name|FSEEK
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|off_t
+operator|)
 operator|*
 name|offset
 argument_list|,
