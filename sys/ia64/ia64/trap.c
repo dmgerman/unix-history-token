@@ -2622,6 +2622,10 @@ decl_stmt|;
 name|FPSWA_BUNDLE
 name|bundle
 decl_stmt|;
+name|char
+modifier|*
+name|ip
+decl_stmt|;
 comment|/* Always fatal in kernel. Should never happen. */
 if|if
 condition|(
@@ -2652,21 +2656,45 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|error
+name|ip
 operator|=
-name|copyin
-argument_list|(
 operator|(
-name|void
+name|char
 operator|*
 operator|)
-operator|(
 name|tf
 operator|->
 name|tf_special
 operator|.
 name|iip
+expr_stmt|;
+if|if
+condition|(
+name|vector
+operator|==
+name|IA64_VEC_FLOATING_POINT_TRAP
+operator|&&
+operator|(
+name|tf
+operator|->
+name|tf_special
+operator|.
+name|psr
+operator|&
+name|IA64_PSR_RI
 operator|)
+operator|==
+literal|0
+condition|)
+name|ip
+operator|-=
+literal|16
+expr_stmt|;
+name|error
+operator|=
+name|copyin
+argument_list|(
+name|ip
 argument_list|,
 operator|&
 name|bundle
@@ -2745,7 +2773,15 @@ name|fpswa_interface
 operator|->
 name|Fpswa
 argument_list|(
+operator|(
+name|vector
+operator|==
+name|IA64_VEC_FLOATING_POINT_FAULT
+operator|)
+condition|?
 literal|1
+else|:
+literal|0
 argument_list|,
 operator|&
 name|bundle
@@ -2792,16 +2828,30 @@ expr_stmt|;
 name|ia64_disable_highfp
 argument_list|()
 expr_stmt|;
+comment|/* 		 * Update ipsr and iip to next instruction. We only 		 * have to do that for faults. 		 */
 if|if
 condition|(
+name|vector
+operator|==
+name|IA64_VEC_FLOATING_POINT_FAULT
+operator|&&
+operator|(
 name|fpswa_ret
 operator|.
 name|status
 operator|==
 literal|0
+operator|||
+operator|(
+name|fpswa_ret
+operator|.
+name|status
+operator|&
+literal|2
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* fixed.  update ipsr and iip to next insn */
 name|int
 name|ei
 decl_stmt|;
@@ -2899,6 +2949,16 @@ operator|+=
 literal|0x10
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|fpswa_ret
+operator|.
+name|status
+operator|==
+literal|0
+condition|)
+block|{
 goto|goto
 name|out
 goto|;
@@ -2937,26 +2997,8 @@ literal|"fpswa fatal error on fp fault"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|fpswa_ret
-operator|.
-name|status
-operator|>
-literal|0
-condition|)
+else|else
 block|{
-if|#
-directive|if
-literal|0
-block|if (fpswa_ret.status& 1) {
-comment|/* 				 * New exception needs to be raised. 				 * If set then the following bits also apply: 				 *& 2 -> fault was converted to a trap 				 *& 4 -> SIMD caused the exception 				 */
-block|sig = SIGFPE; 				ucode = 0;
-comment|/* exception summary */
-block|break; 			}
-endif|#
-directive|endif
 name|sig
 operator|=
 name|SIGFPE
@@ -2965,19 +3007,9 @@ name|ucode
 operator|=
 literal|0
 expr_stmt|;
-comment|/* exception summary */
+comment|/* XXX exception summary */
 break|break;
 block|}
-else|else
-name|panic
-argument_list|(
-literal|"bad fpswa return code %lx"
-argument_list|,
-name|fpswa_ret
-operator|.
-name|status
-argument_list|)
-expr_stmt|;
 block|}
 case|case
 name|IA64_VEC_IA32_EXCEPTION
