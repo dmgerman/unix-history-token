@@ -125,12 +125,19 @@ name|r
 decl_stmt|,
 name|n
 decl_stmt|;
-comment|/* r = read_random(key, sizeof(key)); */
+comment|/* XXX read_random() returns unsafe numbers if the entropy 	 * devce is not loaded - MarkM 	 */
 name|r
 operator|=
-literal|0
+name|read_random
+argument_list|(
+name|key
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* XXX MarkM - revisit this when /dev/random is done */
 comment|/* if r == 0 || -1, just use what was on the stack */
 if|if
 condition|(
