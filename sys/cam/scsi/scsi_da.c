@@ -487,6 +487,9 @@ name|da_quirk_table
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|DA_OLD_QUIRKS
 comment|/* 	 * Logitec USB/Firewire LHD-P30FU 	 */
 block|{
 comment|/* USB part */
@@ -524,6 +527,9 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
+endif|#
+directive|endif
+comment|/* DA_OLD_QUIRKS */
 block|{
 comment|/* 		 * Fujitsu M2513A MO drives. 		 * Tested devices: M2513A2 firmware versions 1200& 1300. 		 * (dip switch selects whether T_DIRECT or T_OPTICAL device) 		 * Reported by: W.Scholten<whs@xs4all.nl> 		 */
 block|{
@@ -704,6 +710,9 @@ comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|DA_OLD_QUIRKS
 comment|/* Below a list of quirks for USB devices supported by umass. */
 block|{
 comment|/* 		 * This USB floppy drive uses the UFI command set. This 		 * command set is a derivative of the ATAPI command set and 		 * does not support READ_6 commands only READ_10. It also does 		 * not support sync cache (0x35). 		 */
@@ -720,8 +729,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -740,8 +747,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -760,8 +765,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -780,8 +783,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -800,8 +801,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -820,8 +819,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -893,8 +890,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -913,8 +908,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -933,8 +926,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -971,8 +962,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -991,8 +980,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1011,8 +998,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1103,8 +1088,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1159,8 +1142,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1179,8 +1160,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1235,8 +1214,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1363,8 +1340,6 @@ literal|"*"
 block|}
 block|,
 comment|/*quirks*/
-name|DA_Q_NO_6_BYTE
-operator||
 name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
@@ -1385,6 +1360,9 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_6_BYTE
 block|}
+endif|#
+directive|endif
+comment|/* DA_OLD_QUIRKS */
 block|}
 decl_stmt|;
 end_decl_stmt
