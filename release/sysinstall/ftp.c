@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.1 1995/06/02 18:19:18 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: ftp.c,v 1.13.2.2 1995/06/02 19:29:13 jkh Exp $  *  * Return values have been sanitized:  *	-1	error, but you (still) have a session.  *	-2	error, your session is dead.  *   */
 end_comment
 
 begin_include
@@ -584,6 +584,11 @@ name|FTP_t
 name|ftp
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
+name|i
+operator|=
 name|writes
 argument_list|(
 name|ftp
@@ -591,6 +596,22 @@ operator|->
 name|fd_ctrl
 argument_list|,
 literal|"QUIT\r\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Zapping ftp connection on %d returns %d\n"
+argument_list|,
+name|ftp
+operator|->
+name|fd_ctrl
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|close
