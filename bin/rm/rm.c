@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rm.c,v 1.5 1994/01/26 21:22:58 ats Exp $"
+literal|"$Id: rm.c,v 1.6 1994/02/02 09:59:47 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -439,8 +439,12 @@ argument_list|,
 name|needstat
 condition|?
 name|FTS_PHYSICAL
+operator||
+name|FTS_NOCHDIR
 else|:
 name|FTS_PHYSICAL
+operator||
+name|FTS_NOCHDIR
 operator||
 name|FTS_NOSTAT
 argument_list|,
