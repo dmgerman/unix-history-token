@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -297,20 +297,20 @@ end_define
 begin_define
 define|#
 directive|define
-name|PSOCK
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
 name|PZERO
-value|25
+value|22
 end_define
 
 begin_comment
 comment|/* No longer magic, shouldn't be here.  XXX */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PSOCK
+value|24
+end_define
 
 begin_define
 define|#
