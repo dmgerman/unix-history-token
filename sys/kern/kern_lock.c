@@ -1908,6 +1908,7 @@ decl_stmt|;
 name|int
 name|prio
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|wmesg

@@ -55,6 +55,7 @@ name|short
 name|lk_prio
 decl_stmt|;
 comment|/* priority at which to sleep */
+specifier|const
 name|char
 modifier|*
 name|lk_wmesg
@@ -505,6 +506,7 @@ operator|,
 name|int
 name|prio
 operator|,
+specifier|const
 name|char
 operator|*
 name|wmesg
