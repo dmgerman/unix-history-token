@@ -443,9 +443,10 @@ name|vp
 argument_list|,
 name|name
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|lvp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -459,9 +460,10 @@ directive|endif
 comment|/* 	 * Since the lower fs may actually remove the vnode on last 	 * release, destroy ourselves mostly here if that occurs. 	 * 	 * Additionally, devices should be totally freed 	 * on last close, not lazily. 	 */
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|lvp
-operator|->
-name|v_usecount
+argument_list|)
 operator|==
 literal|0
 operator|&&
@@ -611,9 +613,10 @@ name|vp
 argument_list|,
 name|name
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|lvp
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1211,12 +1214,13 @@ name|vp
 argument_list|,
 name|name
 argument_list|,
+name|vrefcnt
+argument_list|(
 name|VTOLVP
 argument_list|(
 name|vp
 argument_list|)
-operator|->
-name|v_usecount
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

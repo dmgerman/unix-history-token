@@ -6807,9 +6807,10 @@ name|ni_vp
 expr_stmt|;
 if|if
 condition|(
+name|vrefcnt
+argument_list|(
 name|vp
-operator|->
-name|v_usecount
+argument_list|)
 operator|>
 literal|1
 condition|)
