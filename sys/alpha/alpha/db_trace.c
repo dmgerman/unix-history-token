@@ -1096,13 +1096,13 @@ condition|(
 name|tr
 operator|->
 name|ksp
-operator|>=
+operator|<
 name|KERNBASE
-operator|&&
+operator|||
 name|tr
 operator|->
 name|pc
-operator|>=
+operator|<
 name|KERNBASE
 condition|)
 block|{
@@ -1492,7 +1492,7 @@ end_function
 
 begin_function
 name|void
-name|db_stack_trace_cmd
+name|db_print_backtrace
 parameter_list|(
 name|void
 parameter_list|)
@@ -1502,8 +1502,9 @@ name|trace_request
 name|tr
 decl_stmt|;
 asm|__asm __volatile(
-literal|"	stq sp,%0 \n"
-literal|"	stq pc,%1 \n"
+literal|"	mov $30,%0 \n"
+literal|"	lda %1,1f \n"
+literal|"1:\n"
 operator|:
 literal|"=r"
 operator|(
@@ -1525,6 +1526,9 @@ end_function
 begin_expr_stmt
 name|db_stack_trace_cmd
 argument_list|(
+operator|(
+name|db_addr_t
+operator|)
 operator|&
 name|tr
 argument_list|,
