@@ -95,11 +95,12 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|*
 name|u
 operator|.
 name|p
+operator|==
+literal|'\0'
 condition|)
 return|return
 operator|(
