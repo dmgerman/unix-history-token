@@ -2968,9 +2968,7 @@ name|from
 operator|.
 name|sin_addr
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|IP_HDRINCL
+comment|/* Check source address for validity */
 if|if
 condition|(
 name|bind
@@ -3014,8 +3012,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 if|#
 directive|if
