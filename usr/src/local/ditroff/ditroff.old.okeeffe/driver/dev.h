@@ -7,6 +7,7 @@ begin_struct
 struct|struct
 name|dev
 block|{
+name|unsigned
 name|short
 name|filesize
 decl_stmt|;
