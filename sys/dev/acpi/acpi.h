@@ -173,6 +173,9 @@ decl_stmt|;
 name|int
 name|enabled
 decl_stmt|;
+name|u_int32_t
+name|ignore_events
+decl_stmt|;
 name|struct
 name|acpi_system_state_package
 name|system_state_package
