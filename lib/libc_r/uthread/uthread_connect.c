@@ -67,6 +67,8 @@ name|sockaddr
 name|tmpname
 decl_stmt|;
 name|int
+name|errnolen
+decl_stmt|,
 name|ret
 decl_stmt|,
 name|tmpnamelen
@@ -210,6 +212,13 @@ operator|)
 condition|)
 block|{
 comment|/* 					 * Get the error, this function 					 * should not fail  					 */
+name|errnolen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|errno
+argument_list|)
+expr_stmt|;
 name|_thread_sys_getsockopt
 argument_list|(
 name|fd
@@ -222,7 +231,7 @@ operator|&
 name|errno
 argument_list|,
 operator|&
-name|tmpnamelen
+name|errnolen
 argument_list|)
 expr_stmt|;
 block|}
