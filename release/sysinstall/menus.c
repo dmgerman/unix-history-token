@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.9 1995/06/01 09:52:01 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.10 1995/06/01 21:04:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -275,7 +275,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The language selection menu.  *  * Note:  The RADIO menus use a slightly different syntax.  If an item  * name starts with `*', it is considered to be "ON" by default,  * otherwise off.  */
+comment|/*  * The language selection menu.  */
 end_comment
 
 begin_decl_stmt
@@ -562,7 +562,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Please specify an FTP site"
 block|,
-literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be\n\ available from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates.\n\ You may also wish to investigate the Ftp options menu in case of trouble.\n\ To specify a URL not in this list, chose \"other\"."
+literal|"FreeBSD is distributed from a number of sites on the Internet. Please\n\ select the site closest to you or \"other\" if you'd like to specify another\n\ choice.  Also note that not all sites carry every possible distribution!\n\ Distributions other than the basic user set are only guaranteed to be\n\ available from the Primary site.\n\n\ If the first site selected doesn't respond, try one of the alternates.\n\ You may also wish to investigate the options menu in case of trouble.\n\ To specify a URL not in this list, chose \"other\"."
 block|,
 literal|"Select a site that's close!"
 block|,
@@ -1348,6 +1348,56 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|char
+modifier|*
+name|srcFlagCheck
+parameter_list|(
+name|DMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|&
+name|DIST_SRC
+operator|)
+condition|?
+literal|"YES"
+else|:
+literal|"NO"
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|x11FlagCheck
+parameter_list|(
+name|DMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|&
+name|DIST_XF86
+operator|)
+condition|?
+literal|"YES"
+else|:
+literal|"NO"
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 name|DMenu
 name|MenuDistributions
@@ -1359,7 +1409,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the distributions you wish to install."
 block|,
-literal|"Please check off the distributions you wish to install.  Some\n of the most generally useful distributions are already checked, and\n\ selecting OK at this stage will chose them as defaults."
+literal|"Please check off the distributions you wish to install.  Some\n of the most generally useful distributions are already checked, and\n\ selecting OK at this stage will chose them as defaults.\n\ WARNING:  Do not export the DES distribution out of the U.S.!"
 block|,
 name|NULL
 block|,
@@ -1367,7 +1417,7 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"*bin"
+literal|"bin"
 block|,
 literal|"Binary base distribution (required) [36MB]"
 block|,
@@ -1379,6 +1429,8 @@ block|,
 name|DIST_BIN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1394,6 +1446,8 @@ block|,
 name|DIST_COMMERCIAL
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1409,6 +1463,8 @@ block|,
 name|DIST_COMPAT1X
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1424,6 +1480,8 @@ block|,
 name|DIST_COMPAT20
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1439,6 +1497,8 @@ block|,
 name|DIST_DES
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1454,6 +1514,8 @@ block|,
 name|DIST_DICT
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1469,6 +1531,8 @@ block|,
 name|DIST_GAMES
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1484,10 +1548,12 @@ block|,
 name|DIST_INFO
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
-literal|"*man"
+literal|"man"
 block|,
 literal|"System manual pages - strongly recommended [3.3MB]"
 block|,
@@ -1499,6 +1565,8 @@ block|,
 name|DIST_MANPAGES
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1514,6 +1582,8 @@ block|,
 name|DIST_PROFLIBS
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1526,6 +1596,10 @@ block|,
 name|distSetSrc
 block|,
 literal|0
+block|,
+literal|0
+block|,
+name|srcFlagCheck
 block|}
 block|,
 block|{
@@ -1539,6 +1613,10 @@ operator|&
 name|MenuXF86Select
 block|,
 literal|0
+block|,
+literal|0
+block|,
+name|x11FlagCheck
 block|}
 block|,
 block|{
@@ -1580,6 +1658,8 @@ block|,
 name|DIST_SRC_BASE
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1595,6 +1675,8 @@ block|,
 name|DIST_SRC_GNU
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1610,6 +1692,8 @@ block|,
 name|DIST_SRC_ETC
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1625,6 +1709,8 @@ block|,
 name|DIST_SRC_GAMES
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1640,6 +1726,8 @@ block|,
 name|DIST_SRC_INCLUDE
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1655,6 +1743,8 @@ block|,
 name|DIST_SRC_LIB
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1670,6 +1760,8 @@ block|,
 name|DIST_SRC_LIBEXEC
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1685,6 +1777,8 @@ block|,
 name|DIST_SRC_LKM
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1700,6 +1794,8 @@ block|,
 name|DIST_SRC_RELEASE
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1715,6 +1811,8 @@ block|,
 name|DIST_SRC_SBIN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1730,6 +1828,8 @@ block|,
 name|DIST_SRC_SHARE
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1745,6 +1845,8 @@ block|,
 name|DIST_SRC_SYS
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1760,6 +1862,8 @@ block|,
 name|DIST_SRC_UBIN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1775,6 +1879,8 @@ block|,
 name|DIST_SRC_USBIN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1784,6 +1890,39 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|clearx11
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|XF86Dists
+operator|=
+literal|0
+expr_stmt|;
+name|XF86ServerDists
+operator|=
+literal|0
+expr_stmt|;
+name|XF86FontDists
+operator|=
+literal|0
+expr_stmt|;
+name|Dists
+operator|&=
+operator|~
+name|DIST_XF86
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
 
 begin_decl_stmt
 name|DMenu
@@ -1850,6 +1989,22 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Clear"
+block|,
+literal|"Reset XFree86 distribution list"
+block|,
+name|DMENU_CALL
+block|,
+name|clearx11
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
@@ -1883,7 +2038,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"XFree86 3.1.1 base distribution types"
 block|,
-literal|"Please check off the basic XFree86 components you wish to install.\n\ Those deemed most generally useful are already checked off for you."
+literal|"Please check off the basic XFree86 components you wish to install."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -1891,7 +2046,7 @@ literal|"XF86.hlp"
 block|,
 block|{
 block|{
-literal|"*bin"
+literal|"bin"
 block|,
 literal|"X client applications and shared libs [4MB]."
 block|,
@@ -1903,10 +2058,12 @@ block|,
 name|DIST_XF86_BIN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
-literal|"*lib"
+literal|"lib"
 block|,
 literal|"Data files needed at runtime [600K]"
 block|,
@@ -1918,6 +2075,8 @@ block|,
 name|DIST_XF86_LIB
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1933,6 +2092,8 @@ block|,
 name|DIST_XF86_XINIT
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1948,6 +2109,8 @@ block|,
 name|DIST_XF86_XDMCF
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1963,10 +2126,12 @@ block|,
 name|DIST_XF86_DOC
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
-literal|"*man"
+literal|"man"
 block|,
 literal|"Man pages (except XFree86 specific ones) [1.2MB]"
 block|,
@@ -1978,6 +2143,8 @@ block|,
 name|DIST_XF86_MAN
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -1993,6 +2160,8 @@ block|,
 name|DIST_XF86_PROG
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2008,6 +2177,8 @@ block|,
 name|DIST_XF86_LINK
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2023,6 +2194,8 @@ block|,
 name|DIST_XF86_PEX
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2038,6 +2211,8 @@ block|,
 name|DIST_XF86_SRC
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2067,7 +2242,7 @@ literal|"XF86.hlp"
 block|,
 block|{
 block|{
-literal|"*fnts"
+literal|"fnts"
 block|,
 literal|"Standard 75 DPI and miscellaneous fonts [3.6MB]"
 block|,
@@ -2079,6 +2254,8 @@ block|,
 name|DIST_XF86_FONTS_MISC
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2094,6 +2271,8 @@ block|,
 name|DIST_XF86_FONTS_100
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2109,6 +2288,8 @@ block|,
 name|DIST_XF86_FONTS_SCALE
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2124,6 +2305,8 @@ block|,
 name|DIST_XF86_FONTS_NON
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2139,6 +2322,8 @@ block|,
 name|DIST_XF86_FONTS_SERVER
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2168,7 +2353,7 @@ literal|"XF86.hlp"
 block|,
 block|{
 block|{
-literal|"*SVGA"
+literal|"SVGA"
 block|,
 literal|"Standard VGA or Super VGA display [1MB]"
 block|,
@@ -2180,6 +2365,8 @@ block|,
 name|DIST_XF86_SERVER_SVGA
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2195,6 +2382,8 @@ block|,
 name|DIST_XF86_SERVER_VGA16
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2210,6 +2399,8 @@ block|,
 name|DIST_XF86_SERVER_MONO
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2225,6 +2416,8 @@ block|,
 name|DIST_XF86_SERVER_8514
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2240,6 +2433,8 @@ block|,
 name|DIST_XF86_SERVER_AGX
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2255,6 +2450,8 @@ block|,
 name|DIST_XF86_SERVER_MACH32
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2270,6 +2467,8 @@ block|,
 name|DIST_XF86_SERVER_MACH8
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2285,6 +2484,8 @@ block|,
 name|DIST_XF86_SERVER_P9000
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2300,6 +2501,8 @@ block|,
 name|DIST_XF86_SERVER_S3
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2315,6 +2518,8 @@ block|,
 name|DIST_XF86_SERVER_W32
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2330,6 +2535,8 @@ block|,
 name|DIST_XF86_SERVER_NEST
 block|,
 literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2367,6 +2574,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Local work func for MenuOptions */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|clearFlags
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|OptFlags
+operator|=
+literal|0
+expr_stmt|;
+return|return
+literal|1
+return|;
+comment|/* Gross, but forces menu rebuild */
+block|}
+end_function
+
+begin_comment
 comment|/* The installation options menu */
 end_comment
 
@@ -2375,44 +2607,34 @@ name|DMenu
 name|MenuOptions
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_MULTIPLE_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose Installation Options"
 block|,
 literal|"The following options control how this utility will deal\n\ with various possible error conditions and how verbose it will\n\ be at various stages."
 block|,
-name|NULL
+literal|"Press F1 for more help on these options"
 block|,
-name|NULL
+literal|"options.hlp"
 block|,
 block|{
-block|{
-literal|"Ftp Options"
-block|,
-literal|"Ftp options menu"
-block|,
-name|DMENU_SUBMENU
-block|,
-operator|&
-name|MenuOptionsFTP
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
 block|{
 literal|"NFS Secure"
 block|,
 literal|"NFS server talks only on a secure port"
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_FLAG
 block|,
-literal|"nfsServerSecure=yes"
+operator|&
+name|OptFlags
+block|,
+name|OPT_NFS_SECURE
 block|,
 literal|0
 block|,
-literal|0
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2420,13 +2642,50 @@ literal|"NFS Slow"
 block|,
 literal|"User is using a slow PC or ethernet card"
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_FLAG
 block|,
-literal|"nfsSlowPC=yes"
+operator|&
+name|OptFlags
+block|,
+name|OPT_SLOW_ETHER
 block|,
 literal|0
 block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"FTP Reselect"
+block|,
+literal|"On transfer failure, ask for another host"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|OptFlags
+block|,
+name|OPT_FTP_RESELECT
+block|,
 literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"FTP passive"
+block|,
+literal|"Use \"passive mode\" for firewalled FTP"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|OptFlags
+block|,
+name|OPT_FTP_PASSIVE
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2434,27 +2693,16 @@ literal|"Extra Debugging"
 block|,
 literal|"Toggle the extra debugging flag"
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_FLAG
 block|,
-literal|"debug=yes"
+operator|&
+name|OptFlags
 block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"No Debugging"
-block|,
-literal|"Turn the extra debugging flag off"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"debug=no"
+name|OPT_DEBUG
 block|,
 literal|0
 block|,
-literal|0
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
@@ -2462,9 +2710,40 @@ literal|"Yes To All"
 block|,
 literal|"Assume \"Yes\" answers to all non-critical dialogs"
 block|,
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_FLAG
 block|,
-literal|"noConfirmation=Yes"
+operator|&
+name|OptFlags
+block|,
+name|OPT_NO_CONFIRM
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
+block|}
+block|,
+block|{
+literal|"FTP userpass"
+block|,
+literal|"Specify username and password instead of anonymous"
+block|,
+name|DMENU_CALL
+block|,
+name|mediaSetFtpUserPass
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Clear All Option Flags"
+block|,
+name|DMENU_CALL
+block|,
+name|clearFlags
 block|,
 literal|0
 block|,
@@ -2479,102 +2758,6 @@ block|,
 name|DMENU_CANCEL
 block|,
 name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuOptionsFTP
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Choose FTP Options"
-block|,
-literal|"Please indicate how you would like FTP to deal with potential error\n\ conditions, the default behavior being to Abort on transfer errors.\n\ If you are behind an IP firewall, you will also probably wish to\n\ select passive mode transfers (it's generally OK to set this in any\n\ case as almost all servers support it, firewalled or not)."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-literal|"FTP Retry"
-block|,
-literal|"On transfer failure, retry same host"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"ftpRetryType=loop"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"FTP Reselect"
-block|,
-literal|"On transfer failure, ask for another host"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"ftpRetryType=reselect"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"FTP Abort"
-block|,
-literal|"On transfer failure, abort installation"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"ftpRetryType=abort"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"FTP passive"
-block|,
-literal|"Use \"passive mode\" for firewalled FTP"
-block|,
-name|DMENU_SET_VARIABLE
-block|,
-literal|"ftpPassive=yes"
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-literal|"FTP userpass"
-block|,
-literal|"Specify username and password instead of anonymous"
-block|,
-name|DMENU_CALL
-block|,
-name|mediaSetFtpUserPass
 block|,
 literal|0
 block|,
@@ -2749,18 +2932,21 @@ literal|"install.hlp"
 block|,
 block|{
 block|{
-literal|"*BootMgr"
+literal|"BootMgr"
 block|,
 literal|"Install the FreeBSD Boot Manager (\"Booteasy\")"
 block|,
 comment|/* B */
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_VALUE
 block|,
-literal|"bootManager=bteasy"
+operator|&
+name|BootMgr
 block|,
 literal|0
 block|,
 literal|0
+block|,
+name|dmenuRadioCheck
 block|}
 block|,
 block|{
@@ -2769,13 +2955,16 @@ block|,
 literal|"Use a standard MBR (no boot manager)"
 block|,
 comment|/* S */
-name|DMENU_SET_VARIABLE
+name|DMENU_SET_VALUE
 block|,
-literal|"bootManager=mbr"
+operator|&
+name|BootMgr
+block|,
+literal|1
 block|,
 literal|0
 block|,
-literal|0
+name|dmenuRadioCheck
 block|}
 block|,
 block|{
@@ -2786,11 +2975,14 @@ block|,
 comment|/* N */
 name|DMENU_SET_VARIABLE
 block|,
-literal|"bootManager=none"
+operator|&
+name|BootMgr
+block|,
+literal|2
 block|,
 literal|0
 block|,
-literal|0
+name|dmenuRadioCheck
 block|}
 block|,
 block|{

@@ -60,9 +60,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_DES
+name|DIST_HELP
 value|0x0040
 end_define
+
+begin_comment
+comment|/* Not yet used; reserved */
+end_comment
 
 begin_define
 define|#
@@ -97,6 +101,13 @@ define|#
 directive|define
 name|DIST_COMMERCIAL
 value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_DES
+value|0x1000
 end_define
 
 begin_define
@@ -298,8 +309,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86_SERVER
+name|DIST_XF86_XINIT
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_XDMCF
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SRC
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIST_XF86_SERVER
+value|0x1000
 end_define
 
 begin_define
@@ -382,22 +414,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|DIST_XF86_XINIT
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_XDMCF
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
 name|DIST_XF86_FONTS
-value|0x1000
+value|0x2000
 end_define
 
 begin_define
@@ -433,13 +451,6 @@ define|#
 directive|define
 name|DIST_XF86_FONTS_SERVER
 value|0x0010
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIST_XF86_SRC
-value|0x2000
 end_define
 
 begin_define
