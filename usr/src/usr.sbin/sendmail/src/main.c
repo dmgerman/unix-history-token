@@ -33,7 +33,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.12
+literal|4.13
 operator|%
 name|G
 operator|%
@@ -2766,7 +2766,7 @@ name|MetaMacros
 index|[]
 init|=
 block|{
-comment|/* these are important on the LHS */
+comment|/* LHS pattern matching characters */
 literal|'*'
 block|,
 name|MATCHZANY
@@ -2812,7 +2812,7 @@ literal|'}'
 block|,
 name|MATCHELOOKUP
 block|,
-comment|/* and finally the conditional operations */
+comment|/* the conditional operations */
 literal|'?'
 block|,
 name|CONDIF
@@ -2824,6 +2824,15 @@ block|,
 literal|'.'
 block|,
 name|CONDFI
+block|,
+comment|/* and finally the hostname lookup characters */
+literal|'{'
+block|,
+name|HOSTBEGIN
+block|,
+literal|'}'
+block|,
+name|HOSTEND
 block|,
 literal|'\0'
 block|}
