@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.80 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,7 +1273,15 @@ operator||
 name|EF_CLRQUEUE
 operator||
 name|EF_FATALERRS
+operator||
+name|EF_SENDRECEIPT
 operator|)
+expr_stmt|;
+name|ee
+operator|->
+name|e_flags
+operator||=
+name|EF_NORECEIPT
 expr_stmt|;
 name|setsender
 argument_list|(
@@ -1604,6 +1612,12 @@ operator|->
 name|e_errormode
 operator|=
 name|EM_MAIL
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NORECEIPT
 expr_stmt|;
 block|}
 name|CurEnv

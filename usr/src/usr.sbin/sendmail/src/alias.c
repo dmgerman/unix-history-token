@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.24 (Berkeley) %G%"
+literal|"@(#)alias.c	8.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,10 +454,11 @@ expr_stmt|;
 if|if
 condition|(
 name|owner
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return;
+comment|/* reflect owner into envelope sender */
 if|if
 condition|(
 name|strpbrk
@@ -481,6 +482,35 @@ name|newstr
 argument_list|(
 name|owner
 argument_list|)
+expr_stmt|;
+comment|/* announce delivery to this alias; NORECEIPT bit set later */
+if|if
+condition|(
+name|e
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"Message delivered to mailing list %s\n"
+argument_list|,
+name|a
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_SENDRECEIPT
 expr_stmt|;
 block|}
 block|}

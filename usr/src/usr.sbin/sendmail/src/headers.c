@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.31 (Berkeley) %G%"
+literal|"@(#)headers.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3728,6 +3728,44 @@ condition|)
 name|printf
 argument_list|(
 literal|" (skipped (resent))\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* suppress return receipts if requested */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_RECEIPTTO
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+operator|&&
+name|bitset
+argument_list|(
+name|EF_NORECEIPT
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|34
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" (skipped (receipt))\n"
 argument_list|)
 expr_stmt|;
 continue|continue;

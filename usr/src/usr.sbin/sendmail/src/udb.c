@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.7 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	8.8 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.7 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	8.8 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,6 +1120,36 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* announce delivery; NORECEIPT bit set later */
+if|if
+condition|(
+name|e
+operator|->
+name|e_xfp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+literal|"Message delivered to mailing list %s\n"
+argument_list|,
+name|a
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_SENDRECEIPT
+expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef
