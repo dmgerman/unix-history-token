@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.39 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.22.1.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
