@@ -3,15 +3,12 @@ begin_comment
 comment|/*  * All Rights Reserved, Copyright (C) Fujitsu Limited 1995  *  * This software may be used, modified, copied, distributed, and sold, in  * both source and binary form provided that the above copyright, these  * terms and the following disclaimer are retained.  The name of the author  * and/or the contributor may not be used to endorse or promote products  * derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND THE CONTRIBUTOR ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR THE CONTRIBUTOR BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION.  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FE_VERSION
-value|"if_fe.c ver. 0.8a"
-end_define
+begin_comment
+comment|/*  * $Id:$  *  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.x  * Contributed by M. Sekiguchi.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series for ISA and Allied-Telesis AT1700/RE2000  * series for ISA, as well as Fujitsu MBH10302 PC card.  * There are some currently-  * unused hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This version also includes some alignments for  * RE1000/RE1000+/ME1500 support.  It is incomplete, however, since the  * cards are not for AT-compatibles.  (They are for PC98 bus -- a  * proprietary bus architecture available only in Japan.)  Further  * work for PC98 version will be available as a part of FreeBSD(98)  * project.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+end_comment
 
 begin_comment
-comment|/*  * Device driver for Fujitsu MB86960A/MB86965A based Ethernet cards.  * To be used with FreeBSD 2.0 RELEASE.  * Contributed by M.S.<seki@sysrap.cs.fujitsu.co.jp>  *  * This version is intended to be a generic template for various  * MB86960A/MB86965A based Ethernet cards.  It currently supports  * Fujitsu FMV-180 series (i.e., FMV-181 and FMV-182) and Allied-  * Telesis AT1700 series and RE2000 series.  There are some  * unnecessary hooks embedded, which are primarily intended to support  * other types of Ethernet cards, but the author is not sure whether  * they are useful.  *  * This software is a derivative work of if_ed.c version 1.56 by David  * Greenman available as a part of FreeBSD 2.0 RELEASE source distribution.  *  * The following lines are retained from the original if_ed.c:  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*  * TODO:  *  o   To support MBH10304 PC card.  It is another MB8696x based  *      PCMCIA Ethernet card by Fujitsu, which is not compatible with  *      MBH10302.  *  o   To merge FreeBSD(98) efforts into a single source file.  *  o   To support ISA PnP auto configuration for FMV-183/184.  *  o   To reconsider mbuf usage.  *  o   To reconsider transmission buffer usage, including  *      transmission buffer size (currently 4KB x 2) and pros-and-  *      cons of multiple frame transmission.  *  o   To test IPX codes.  */
 end_comment
 
 begin_include
@@ -139,6 +136,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* IPX code is not tested.  FIXME.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -161,6 +162,35 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* To be used with IPv6 package of INRIA.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
+begin_comment
+comment|/* IPv6 added by shin 96.2.6 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether6.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XNS code is not tested.  FIXME.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -234,6 +264,57 @@ directive|include
 file|<i386/isa/icu.h>
 end_include
 
+begin_comment
+comment|/* PCCARD suport */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"crd.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/card.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/slot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/driver.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCRD> 0 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -246,34 +327,39 @@ directive|include
 file|<i386/isa/if_fereg.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+end_if
 
-begin_define
-define|#
-directive|define
-name|INLINE
-value|inline
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|INLINE
-end_define
+begin_include
+include|#
+directive|include
+file|<i386/include/laptops.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NCRD> 0 */
+end_comment
+
+begin_comment
+comment|/*  * This version of fe is an ISA device driver.  * Override the following macro to adapt it to another bus.  * (E.g., PC98.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEVICE
+value|struct isa_device
+end_define
 
 begin_comment
 comment|/*  * Default settings for fe driver specific options.  * They can be set in config file by "options" statements.  */
@@ -302,29 +388,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Delay padding of short transmission packets to minimum Ethernet size.  * This may or may not gain performance.  An EXPERIMENTAL option.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FE_DELAYED_PADDING
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FE_DELAYED_PADDING
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Transmit just one packet per a "send"command to 86960.  * This option is intended for performance test.  An EXPERIMENTAL option.  */
+comment|/*  * Transmit just one packet per a "send" command to 86960.  * This option is intended for performance test.  An EXPERIMENTAL option.  */
 end_comment
 
 begin_ifndef
@@ -372,18 +436,7 @@ value|0x0080
 end_define
 
 begin_comment
-comment|/* A cludge for PCMCIA support.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FE_FLAGS_PCMCIA
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Shouldn't this be defined somewhere else such as isa_device.h?  */
+comment|/* Shouldn't these be defined somewhere else such as isa_device.h?  */
 end_comment
 
 begin_define
@@ -393,54 +446,15 @@ name|NO_IOADDR
 value|0xFFFFFFFF
 end_define
 
-begin_comment
-comment|/* Identification of the driver version.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-specifier|const
-name|fe_version
-index|[]
-init|=
-name|FE_VERSION
-literal|" / "
-name|FE_REG_VERSION
-decl_stmt|;
-end_decl_stmt
+begin_define
+define|#
+directive|define
+name|NO_IRQ
+value|0
+end_define
 
 begin_comment
-comment|/*  * Supported hardware (Ethernet card) types  * This information is currently used only for debugging  */
-end_comment
-
-begin_enum
-enum|enum
-name|fe_type
-block|{
-comment|/* For cards which are successfully probed but not identified.  */
-name|FE_TYPE_UNKNOWN
-block|,
-comment|/* Fujitsu FMV-180 series.  */
-name|FE_TYPE_FMV181
-block|,
-name|FE_TYPE_FMV182
-block|,
-comment|/* Allied-Telesis AT1700 series and RE2000 series.  */
-name|FE_TYPE_AT1700
-block|,
-comment|/* PCMCIA by Fujitsu.  */
-name|FE_TYPE_MBH10302
-block|,
-name|FE_TYPE_MBH10304
-block|,
-comment|/* More can be here.  */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Data type for a multicast address filter on 86960.  */
+comment|/*  * Data type for a multicast address filter on 8696x.  */
 end_comment
 
 begin_struct
@@ -488,6 +502,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* How many registers does an fe-supported adapter have at maximum?  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXREGISTERS
+value|32
+end_define
+
+begin_comment
 comment|/*  * fe_softc: per line info and status  */
 end_comment
 
@@ -501,7 +526,7 @@ name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* ethernet common */
+comment|/* Ethernet common */
 comment|/* Used by config codes.  */
 name|struct
 name|kern_devconf
@@ -509,20 +534,22 @@ name|kdc
 decl_stmt|;
 comment|/* Kernel configuration database info.  */
 comment|/* Set by probe() and not modified in later phases.  */
-name|enum
-name|fe_type
-name|type
-decl_stmt|;
-comment|/* interface type code */
 name|char
 modifier|*
 name|typestr
 decl_stmt|;
 comment|/* printable name of the interface.  */
 name|u_short
-name|addr
+name|iobase
 decl_stmt|;
-comment|/* MB86960A I/O base address */
+comment|/* base I/O address of the adapter.  */
+name|u_short
+name|ioaddr
+index|[
+name|MAXREGISTERS
+index|]
+decl_stmt|;
+comment|/* I/O addresses of register.  */
 name|u_short
 name|txb_size
 decl_stmt|;
@@ -543,6 +570,10 @@ name|u_char
 name|proto_dlcr7
 decl_stmt|;
 comment|/* DLCR7 prototype.  */
+name|u_char
+name|proto_bmpr13
+decl_stmt|;
+comment|/* BMPR13 prototype.  */
 comment|/* Vendor specific hooks.  */
 name|void
 function_decl|(
@@ -642,16 +673,6 @@ name|sc_description
 value|kdc.kdc_description
 end_define
 
-begin_define
-define|#
-directive|define
-name|IFNET2SOFTC
-parameter_list|(
-name|P
-parameter_list|)
-value|(P)->if_softc
-end_define
-
 begin_comment
 comment|/* Standard driver entry points.  These can be static.  */
 end_comment
@@ -746,11 +767,25 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|void
+name|fe_registerdev
+parameter_list|(
+name|struct
+name|fe_softc
+modifier|*
+parameter_list|,
+name|DEVICE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|fe_probe_fmv
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
 parameter_list|,
 name|struct
@@ -765,8 +800,7 @@ specifier|static
 name|int
 name|fe_probe_ati
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
 parameter_list|,
 name|struct
@@ -781,8 +815,7 @@ specifier|static
 name|int
 name|fe_probe_mbh
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
 parameter_list|,
 name|struct
@@ -1048,8 +1081,8 @@ name|fe_attach
 block|,
 literal|"fe"
 block|,
-literal|0
-comment|/* Assume we are insensitive.  FIXME.  */
+literal|1
+comment|/* It's safe to mark as "sensitive"  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1095,23 +1128,23 @@ block|,
 operator|&
 name|kdc_isa0
 block|,
-comment|/* We are an ISA device.  */
+comment|/* This is an ISA device.  */
 literal|0
 block|,
 name|DC_UNCONFIGURED
 block|,
 comment|/* Not yet configured.  */
-literal|"Ethernet (fe)"
+literal|"Ethernet (MB8696x)"
 block|,
 comment|/* Tentative description (filled in later.)  */
 name|DC_CLS_NETIF
-comment|/* We are a network interface.  */
+comment|/* This is a network interface.  */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Fe driver specific constants which relate to 86960/86965.  * They are here (not in if_fereg.h), since selection of those  * values depend on driver design.  I want to keep definitions in  * if_fereg.h "clean", so that if someone wrote another driver  * for 86960/86965, if_fereg.h were usable unchanged.  *  * The above statement sounds somothing like it's better to name  * it "ic/mb86960.h" but "if_fereg.h"...  Should I do so?  FIXME.  */
+comment|/*  * Fe driver specific constants which relate to 86960/86965.  */
 end_comment
 
 begin_comment
@@ -1133,7 +1166,7 @@ value|( FE_D3_OVRFLO | FE_D3_CRCERR \ 		 | FE_D3_ALGERR | FE_D3_SRTPKT | FE_D3_P
 end_define
 
 begin_comment
-comment|/* Maximum number of iterrations for a receive interrupt.  */
+comment|/* Maximum number of iterations for a receive interrupt.  */
 end_comment
 
 begin_define
@@ -1144,21 +1177,25 @@ value|( ( 65536 - 2048 * 2 ) / 64 )
 end_define
 
 begin_comment
-comment|/* Maximum size of SRAM is 65536, 	 * minimum size of transmission buffer in fe is 2x2KB, 	 * and minimum amount of received packet including headers 	 * added by the chip is 64 bytes. 	 * Hence FE_MAX_RECV_COUNT is the upper limit for number 	 * of packets in the receive buffer.  */
+comment|/* 	 * Maximum size of SRAM is 65536, 	 * minimum size of transmission buffer in fe is 2x2KB, 	 * and minimum amount of received packet including headers 	 * added by the chip is 64 bytes. 	 * Hence FE_MAX_RECV_COUNT is the upper limit for number 	 * of packets in the receive buffer. 	 */
 end_comment
 
 begin_comment
-comment|/*  * Convenient routines to access contiguous I/O ports.  */
+comment|/*  * Routines to access contiguous I/O ports.  */
 end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|inblk
 parameter_list|(
-name|u_short
-name|addr
+name|struct
+name|fe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|offs
 parameter_list|,
 name|u_char
 modifier|*
@@ -1182,8 +1219,13 @@ operator|++
 operator|=
 name|inb
 argument_list|(
-name|addr
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|offs
 operator|++
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -1192,12 +1234,16 @@ end_function
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|outblk
 parameter_list|(
-name|u_short
-name|addr
+name|struct
+name|fe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|offs
 parameter_list|,
 name|u_char
 specifier|const
@@ -1218,8 +1264,13 @@ condition|)
 block|{
 name|outb
 argument_list|(
-name|addr
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|offs
 operator|++
+index|]
 argument_list|,
 operator|*
 name|mem
@@ -1229,6 +1280,337 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* PCCARD Support */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+end_if
+
+begin_comment
+comment|/*  *      PC-Card (PCMCIA) specific code.  */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|fe_card_intr
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Interrupt handler */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|feunload
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Disable driver */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|fesuspend
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Suspend driver */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|feinit
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* init device */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pccard_drv
+name|fe_info
+init|=
+block|{
+literal|"fe"
+block|,
+name|fe_card_intr
+block|,
+name|feunload
+block|,
+name|fesuspend
+block|,
+name|feinit
+block|,
+literal|0
+block|,
+comment|/* Attributes - presently unused */
+operator|&
+name|net_imask
+comment|/* Interrupt mask for device */
+comment|/* This should also include net_imask?? */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Called when a power down is requested. Shuts down the  * device and configures the device as unavailable (but  * still loaded...). A resume is done by calling  * feinit with first=0. This is called when the user suspends  * the system, or the APM code suspends the system.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|fesuspend
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+name|dp
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"fe%d: suspending\n"
+argument_list|,
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *      Initialize the device - called from Slot manager.  *      if first is set, then initially check for  *      the device's existence before initializing it.  *      Once initialized, the device table may be set up.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|feinit
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+name|dp
+parameter_list|,
+name|int
+name|first
+parameter_list|)
+block|{
+comment|/*  *      validate unit number.  */
+name|struct
+name|fe_softc
+modifier|*
+name|sc
+decl_stmt|;
+if|if
+condition|(
+name|first
+condition|)
+block|{
+if|if
+condition|(
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+operator|>=
+name|NFE
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+comment|/*  *      Probe the device. If a value is returned, the  *      device was found at the location.  */
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|2
+name|printf
+argument_list|(
+literal|"Start Probe\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|fe_probe
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|isahd
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|2
+name|printf
+argument_list|(
+literal|"Start attach\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|fe_attach
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|isahd
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+comment|/*  *      XXX TODO:  *      If it was already init'ed before, the device structure  *      should be already initialized. Here we should  *      reset (and possibly restart) the hardware, but  *      I am not sure of the best way to do this...  */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *      feunload - unload the driver and clear the table.  *      XXX TODO:  *      This is called usually when the card is ejected, but  *      can be caused by the modunload of a controller driver.  *      The idea is reset the driver's view of the device  *      and ensure that any driver entry points such as  *      read and write do not hang.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|feunload
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+name|dp
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"fe%d: unload\n"
+argument_list|,
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|)
+expr_stmt|;
+name|fe_stop
+argument_list|(
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *      card_intr - Shared interrupt called from  *      front end of PC-Card handler.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|fe_card_intr
+parameter_list|(
+name|struct
+name|pccard_dev
+modifier|*
+name|dp
+parameter_list|)
+block|{
+name|feintr
+argument_list|(
+name|dp
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NCRD> 0 */
+end_comment
 
 begin_comment
 comment|/*  * Hardware probe routines.  */
@@ -1248,8 +1630,7 @@ modifier|*
 name|probe
 function_decl|)
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
 parameter_list|,
 name|struct
@@ -1365,6 +1746,57 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+specifier|static
+name|void
+name|fe_registerdev
+parameter_list|(
+name|struct
+name|fe_softc
+modifier|*
+name|sc
+parameter_list|,
+name|DEVICE
+modifier|*
+name|dev
+parameter_list|)
+block|{
+comment|/* Fill the device config data and register it.  */
+name|sc
+operator|->
+name|kdc
+operator|=
+name|fe_kdc_template
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_unit
+operator|=
+name|sc
+operator|->
+name|sc_unit
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_parentdata
+operator|=
+name|dev
+expr_stmt|;
+name|dev_attach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|kdc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Determine if the device is present  *  *   on entry:  * 	a pointer to an isa_device struct  *   on exit:  *	zero if device not found  *	or number of i/o addresses used (if found)  */
 end_comment
@@ -1374,18 +1806,29 @@ specifier|static
 name|int
 name|fe_probe
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
-name|isa_dev
+name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+specifier|static
+name|int
+name|fe_already_init
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NCRD> 0 */
 name|struct
 name|fe_softc
 modifier|*
 name|sc
-decl_stmt|,
-modifier|*
+decl_stmt|;
+name|int
 name|u
 decl_stmt|;
 name|int
@@ -1414,7 +1857,7 @@ operator|=
 operator|&
 name|fe_softc
 index|[
-name|isa_dev
+name|dev
 operator|->
 name|id_unit
 index|]
@@ -1423,68 +1866,65 @@ name|sc
 operator|->
 name|sc_unit
 operator|=
-name|isa_dev
+name|dev
 operator|->
 name|id_unit
 expr_stmt|;
 if|#
 directive|if
-name|FE_DEBUG
-operator|>=
-literal|2
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"fe%d: %s\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_unit
-argument_list|,
-name|fe_version
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
+name|NCRD
+operator|==
+literal|0
 ifndef|#
 directive|ifndef
 name|DEV_LKM
-comment|/* Fill the device config data and register it.  */
-name|sc
-operator|->
-name|kdc
-operator|=
-name|fe_kdc_template
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_unit
-operator|=
-name|sc
-operator|->
-name|sc_unit
-expr_stmt|;
-name|sc
-operator|->
-name|kdc
-operator|.
-name|kdc_parentdata
-operator|=
-name|isa_dev
-expr_stmt|;
-name|dev_attach
+name|fe_registerdev
 argument_list|(
-operator|&
 name|sc
-operator|->
-name|kdc
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* NCRD == 0 */
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+comment|/*  *      If PC-Card probe required, then register driver with  *      slot manager.  */
+if|if
+condition|(
+name|fe_already_init
+operator|!=
+literal|1
+condition|)
+block|{
+name|fe_registerdev
+argument_list|(
+name|sc
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
+name|pccard_add_driver
+argument_list|(
+operator|&
+name|fe_info
+argument_list|)
+expr_stmt|;
+name|fe_already_init
+operator|=
+literal|1
+expr_stmt|;
+comment|/*		return ( 0 );  */
+block|}
+endif|#
+directive|endif
+comment|/* NCRD> 0 */
 comment|/* Probe each possibility, one at a time.  */
 for|for
 control|(
@@ -1504,7 +1944,7 @@ control|)
 block|{
 if|if
 condition|(
-name|isa_dev
+name|dev
 operator|->
 name|id_iobase
 operator|!=
@@ -1517,7 +1957,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|isa_dev
+name|dev
 operator|->
 name|id_iobase
 expr_stmt|;
@@ -1565,24 +2005,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Don't probe already used address.  */
+comment|/* See if the address is already in use.  */
 for|for
 control|(
 name|u
 operator|=
-operator|&
-name|fe_softc
-index|[
 literal|0
-index|]
 init|;
 name|u
 operator|<
-operator|&
-name|fe_softc
-index|[
 name|NFE
-index|]
 condition|;
 name|u
 operator|++
@@ -1590,30 +2022,119 @@ control|)
 block|{
 if|if
 condition|(
+name|fe_softc
+index|[
 name|u
-operator|->
-name|addr
+index|]
+operator|.
+name|iobase
 operator|==
 operator|*
 name|addr
 condition|)
 break|break;
 block|}
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|3
 if|if
 condition|(
 name|u
-operator|<
-operator|&
-name|fe_softc
-index|[
+operator|==
 name|NFE
-index|]
 condition|)
-continue|continue;
+block|{
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"fe%d: probing %d at 0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|list
+operator|-
+name|fe_probe_list
+argument_list|,
+operator|*
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|u
+operator|==
+name|sc
+operator|->
+name|sc_unit
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"fe%d: re-probing %d at 0x%x?\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|list
+operator|-
+name|fe_probe_list
+argument_list|,
+operator|*
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"fe%d: skipping %d at 0x%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|list
+operator|-
+name|fe_probe_list
+argument_list|,
+operator|*
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* Probe the address if it is free.  */
+if|if
+condition|(
+name|u
+operator|==
+name|NFE
+operator|||
+name|u
+operator|==
+name|sc
+operator|->
+name|sc_unit
+condition|)
+block|{
 comment|/* Probe an address.  */
 name|sc
 operator|->
-name|addr
+name|iobase
 operator|=
 operator|*
 name|addr
@@ -1624,7 +2145,7 @@ name|list
 operator|->
 name|probe
 argument_list|(
-name|isa_dev
+name|dev
 argument_list|,
 name|sc
 argument_list|)
@@ -1637,7 +2158,7 @@ literal|0
 condition|)
 block|{
 comment|/* Found.  */
-name|isa_dev
+name|dev
 operator|->
 name|id_iobase
 operator|=
@@ -1650,13 +2171,14 @@ name|nports
 operator|)
 return|;
 block|}
-comment|/* Try next.  */
 name|sc
 operator|->
-name|addr
+name|iobase
 operator|=
 literal|0
 expr_stmt|;
+block|}
+comment|/* Try next.  */
 name|addr
 operator|++
 expr_stmt|;
@@ -1697,12 +2219,14 @@ end_struct
 
 begin_function
 specifier|static
-name|INLINE
 name|int
 name|fe_simple_probe
 parameter_list|(
-name|u_short
-name|addr
+name|struct
+name|fe_softc
+specifier|const
+modifier|*
+name|sc
 parameter_list|,
 name|struct
 name|fe_simple_probe_struct
@@ -1733,16 +2257,55 @@ name|p
 operator|++
 control|)
 block|{
+if|#
+directive|if
+name|FE_DEBUG
+operator|>=
+literal|2
+name|printf
+argument_list|(
+literal|"Probe Port:%x,Value:%x,Mask:%x.Bits:%x\n"
+argument_list|,
+name|p
+operator|->
+name|port
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|p
+operator|->
+name|port
+index|]
+argument_list|)
+argument_list|,
+name|p
+operator|->
+name|mask
+argument_list|,
+name|p
+operator|->
+name|bits
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
 name|inb
 argument_list|(
-name|addr
-operator|+
+name|sc
+operator|->
+name|ioaddr
+index|[
 name|p
 operator|->
 name|port
+index|]
 argument_list|)
 operator|&
 name|p
@@ -1776,15 +2339,14 @@ end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
-name|strobe
+name|fe_strobe_eeprom
 parameter_list|(
 name|u_short
 name|bmpr16
 parameter_list|)
 block|{
-comment|/* 	 * Output same value twice.  To speed-down execution? 	 */
+comment|/* 	 * We must guarantee 800ns (or more) interval to access slow 	 * EEPROMs.  The following redundant code provides enough 	 * delay with ISA timing.  (Even if the bus clock is "tuned.") 	 * Some modification will be needed on faster busses. 	 */
 name|outb
 argument_list|(
 name|bmpr16
@@ -1854,18 +2416,20 @@ name|bmpr16
 init|=
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR16
+index|]
 decl_stmt|;
 name|u_short
 name|bmpr17
 init|=
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR17
+index|]
 decl_stmt|;
 name|u_char
 name|n
@@ -1874,27 +2438,7 @@ name|val
 decl_stmt|,
 name|bit
 decl_stmt|;
-name|u_char
-name|save16
-decl_stmt|,
-name|save17
-decl_stmt|;
-comment|/* Save old values of the registers.  */
-name|save16
-operator|=
-name|inb
-argument_list|(
-name|bmpr16
-argument_list|)
-expr_stmt|;
-name|save17
-operator|=
-name|inb
-argument_list|(
-name|bmpr17
-argument_list|)
-expr_stmt|;
-comment|/* Read bytes from EEPROM; two bytes per an iterration.  */
+comment|/* Read bytes from EEPROM; two bytes per an iteration.  */
 for|for
 control|(
 name|n
@@ -1926,6 +2470,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
+comment|/* Start EEPROM access.  */
 name|outb
 argument_list|(
 name|bmpr16
@@ -1933,7 +2478,6 @@ argument_list|,
 name|FE_B16_SELECT
 argument_list|)
 expr_stmt|;
-comment|/* Start EEPROM access.  */
 name|outb
 argument_list|(
 name|bmpr17
@@ -1941,12 +2485,12 @@ argument_list|,
 name|FE_B17_DATA
 argument_list|)
 expr_stmt|;
-name|strobe
+name|fe_strobe_eeprom
 argument_list|(
 name|bmpr16
 argument_list|)
 expr_stmt|;
-comment|/* Pass the iterration count to the chip.  */
+comment|/* Pass the iteration count to the chip.  */
 name|val
 operator|=
 literal|0x80
@@ -1983,7 +2527,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-name|strobe
+name|fe_strobe_eeprom
 argument_list|(
 name|bmpr16
 argument_list|)
@@ -2016,7 +2560,7 @@ operator|>>=
 literal|1
 control|)
 block|{
-name|strobe
+name|fe_strobe_eeprom
 argument_list|(
 name|bmpr16
 argument_list|)
@@ -2063,7 +2607,7 @@ operator|>>=
 literal|1
 control|)
 block|{
-name|strobe
+name|fe_strobe_eeprom
 argument_list|(
 name|bmpr16
 argument_list|)
@@ -2091,19 +2635,19 @@ operator|=
 name|val
 expr_stmt|;
 block|}
-comment|/* Restore register values, in the case we had no 86965.  */
+comment|/* Reset the EEPROM interface, again.  */
 name|outb
 argument_list|(
 name|bmpr16
 argument_list|,
-name|save16
+literal|0x00
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
 name|bmpr17
 argument_list|,
-name|save17
+literal|0x00
 argument_list|)
 expr_stmt|;
 if|#
@@ -2309,10 +2853,9 @@ specifier|static
 name|int
 name|fe_probe_fmv
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
-name|isa_dev
+name|dev
 parameter_list|,
 name|struct
 name|fe_softc
@@ -2328,7 +2871,7 @@ decl_stmt|;
 specifier|static
 name|u_short
 specifier|const
-name|ioaddr
+name|baseaddr
 index|[
 literal|8
 index|]
@@ -2397,25 +2940,27 @@ comment|/*	{ FE_DLCR5, 0x80, 0x00 },	Doesn't work.  */
 block|{
 name|FE_FMV0
 block|,
-name|FE_FMV0_MAGIC_MASK
+literal|0x78
 block|,
-name|FE_FMV0_MAGIC_VALUE
+literal|0x50
 block|}
 block|,
+comment|/* ERRDY+PRRDY */
 block|{
 name|FE_FMV1
 block|,
-name|FE_FMV1_CARDID_MASK
+literal|0xB0
 block|,
-name|FE_FMV1_CARDID_ID
+literal|0x00
 block|}
 block|,
+comment|/* FMV-183/184 has 0x48 bits. */
 block|{
 name|FE_FMV3
 block|,
-name|FE_FMV3_EXTRA_MASK
+literal|0x7F
 block|,
-name|FE_FMV3_EXTRA_VALUE
+literal|0x00
 block|}
 block|,
 if|#
@@ -2448,7 +2993,7 @@ block|}
 block|,
 else|#
 directive|else
-comment|/* 	 * We can always verify the *first* 2 bits (in Ehternet 	 * bit order) are "no multicast" and "no local" even for 	 * unknown vendors. 	 */
+comment|/* 	 * We can always verify the *first* 2 bits (in Ethernet 	 * bit order) are "no multicast" and "no local" even for 	 * unknown vendors. 	 */
 block|{
 name|FE_FMV4
 block|,
@@ -2464,14 +3009,11 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * Dont probe at all if the config says we are PCMCIA... 	 */
-block|if ( isa_dev->id_flags& FE_FLAGS_PCMCIA ) return ( 0 );
-endif|#
-directive|endif
-comment|/* 	 * See if the sepcified address is possible for FMV-180 series. 	 */
+comment|/* "Hardware revision ID"  */
+name|int
+name|revision
+decl_stmt|;
+comment|/* 	 * See if the specified address is possible for FMV-180 series. 	 */
 for|for
 control|(
 name|i
@@ -2488,14 +3030,14 @@ control|)
 block|{
 if|if
 condition|(
-name|ioaddr
+name|baseaddr
 index|[
 name|i
 index|]
 operator|==
 name|sc
 operator|->
-name|addr
+name|iobase
 condition|)
 break|break;
 block|}
@@ -2508,6 +3050,35 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Setup an I/O address mapping table.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXREGISTERS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|i
+index|]
+operator|=
+name|sc
+operator|->
+name|iobase
+operator|+
+name|i
+expr_stmt|;
+block|}
 comment|/* Simple probe.  */
 if|if
 condition|(
@@ -2515,8 +3086,6 @@ operator|!
 name|fe_simple_probe
 argument_list|(
 name|sc
-operator|->
-name|addr
 argument_list|,
 name|probe_table
 argument_list|)
@@ -2524,7 +3093,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Check if our I/O address matches config info on EEPROM.  */
+comment|/* Check if our I/O address matches config info. on EEPROM.  */
 name|n
 operator|=
 operator|(
@@ -2532,54 +3101,114 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV2
+index|]
 argument_list|)
 operator|&
-name|FE_FMV2_ADDR
+name|FE_FMV2_IOS
 operator|)
 operator|>>
-name|FE_FMV2_ADDR_SHIFT
+name|FE_FMV2_IOS_SHIFT
 expr_stmt|;
 if|if
 condition|(
-name|ioaddr
+name|baseaddr
 index|[
 name|n
 index|]
 operator|!=
 name|sc
 operator|->
-name|addr
+name|iobase
 condition|)
 return|return
 literal|0
 return|;
+comment|/* Find the "hardware revision."  */
+name|revision
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV1
+index|]
+argument_list|)
+operator|&
+name|FE_FMV1_REV
+expr_stmt|;
 comment|/* Determine the card type.  */
+name|sc
+operator|->
+name|typestr
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV0
+index|]
 argument_list|)
 operator|&
-name|FE_FMV0_MODEL
+name|FE_FMV0_MEDIA
 condition|)
 block|{
 case|case
-name|FE_FMV0_MODEL_FMV181
+literal|0
+case|:
+comment|/* No interface?  This doesn't seem to be an FMV-180...  */
+return|return
+literal|0
+return|;
+case|case
+name|FE_FMV0_MEDIUM_T
+case|:
+switch|switch
+condition|(
+name|revision
+condition|)
+block|{
+case|case
+literal|8
 case|:
 name|sc
 operator|->
-name|type
+name|typestr
 operator|=
-name|FE_TYPE_FMV181
+literal|"FMV-183"
 expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-183"
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|FE_FMV0_MEDIUM_T
+operator||
+name|FE_FMV0_MEDIUM_5
+case|:
+switch|switch
+condition|(
+name|revision
+condition|)
+block|{
+case|case
+literal|0
+case|:
 name|sc
 operator|->
 name|typestr
@@ -2594,14 +3223,88 @@ literal|"Ethernet adapter: FMV-181"
 expr_stmt|;
 break|break;
 case|case
-name|FE_FMV0_MODEL_FMV182
+literal|1
 case|:
 name|sc
 operator|->
-name|type
+name|typestr
 operator|=
-name|FE_TYPE_FMV182
+literal|"FMV-181A"
 expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-181A"
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|FE_FMV0_MEDIUM_2
+case|:
+switch|switch
+condition|(
+name|revision
+condition|)
+block|{
+case|case
+literal|8
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"FMV-184 (CSR = 2)"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-184"
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|FE_FMV0_MEDIUM_5
+case|:
+switch|switch
+condition|(
+name|revision
+condition|)
+block|{
+case|case
+literal|8
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"FMV-184 (CSR = 1)"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-184"
+expr_stmt|;
+break|break;
+block|}
+break|break;
+case|case
+name|FE_FMV0_MEDIUM_2
+operator||
+name|FE_FMV0_MEDIUM_5
+case|:
+switch|switch
+condition|(
+name|revision
+condition|)
+block|{
+case|case
+literal|0
+case|:
 name|sc
 operator|->
 name|typestr
@@ -2615,13 +3318,120 @@ operator|=
 literal|"Ethernet adapter: FMV-182"
 expr_stmt|;
 break|break;
-default|default:
-comment|/* Unknown card type: maybe a new model, but...  */
-return|return
-literal|0
-return|;
+case|case
+literal|1
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"FMV-182A"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-182A"
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"FMV-184 (CSR = 3)"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: FMV-184"
+expr_stmt|;
+break|break;
 block|}
-comment|/* 	 * An FMV-180 has successfully been proved. 	 * Determine which IRQ to be used. 	 * 	 * In this version, we always get an IRQ assignment from the 	 * FMV-180's configuration EEPROM, ignoring that specified in 	 * config file. 	 */
+break|break;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|typestr
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Unknown card type...  Hope the driver works.  */
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"unknown FMV-180 version"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: unknown FMV-180 version"
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"fe%d: %s: %x-%x-%x-%x\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|,
+name|sc
+operator|->
+name|typestr
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV0
+index|]
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV1
+index|]
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV2
+index|]
+argument_list|)
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV3
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * An FMV-180 has been proved. 	 * Determine which IRQ to be used. 	 * 	 * In this version, we give a priority to the kernel config file. 	 * If the EEPROM and config don't match, say it to the user for 	 * an attention. 	 */
 name|n
 operator|=
 operator|(
@@ -2629,17 +3439,28 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV2
+index|]
 argument_list|)
 operator|&
-name|FE_FMV2_IRQ
+name|FE_FMV2_IRS
 operator|)
 operator|>>
-name|FE_FMV2_IRQ_SHIFT
+name|FE_FMV2_IRS_SHIFT
 expr_stmt|;
-name|isa_dev
+if|if
+condition|(
+name|dev
+operator|->
+name|id_irq
+operator|==
+name|NO_IRQ
+condition|)
+block|{
+comment|/* Just use the probed value.  */
+name|dev
 operator|->
 name|id_irq
 operator|=
@@ -2648,14 +3469,39 @@ index|[
 name|n
 index|]
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|dev
+operator|->
+name|id_irq
+operator|!=
+name|irqmap
+index|[
+name|n
+index|]
+condition|)
+block|{
+comment|/* Don't match.  */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"fe%d: check IRQ in config; it may be incorrect"
+argument_list|,
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Initialize constants in the per-line structure. 	 */
 comment|/* Get our station address from EEPROM.  */
 name|inblk
 argument_list|(
 name|sc
-operator|->
-name|addr
-operator|+
+argument_list|,
 name|FE_FMV4
 argument_list|,
 name|sc
@@ -2713,7 +3559,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Register values which depend on board design.  */
+comment|/* 	 * Register values which (may) depend on board design. 	 * 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 */
 name|sc
 operator|->
 name|proto_dlcr4
@@ -2730,15 +3576,6 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|proto_dlcr7
-operator|=
-name|FE_D7_BYTSWP_LH
-operator||
-name|FE_D7_IDENT_EC
-expr_stmt|;
-comment|/* 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 * We cannot change these values but TXBSIZE, because they 	 * are hard-wired on the board.  Modifying TXBSIZE will affect 	 * the driver performance. 	 */
-name|sc
-operator|->
 name|proto_dlcr6
 operator|=
 name|FE_D6_BUFSIZ_32KB
@@ -2751,15 +3588,32 @@ name|FE_D6_SBW_WORD
 operator||
 name|FE_D6_SRAM_100ns
 expr_stmt|;
+name|sc
+operator|->
+name|proto_dlcr7
+operator|=
+name|FE_D7_BYTSWP_LH
+operator||
+name|FE_D7_IDENT_EC
+expr_stmt|;
+name|sc
+operator|->
+name|proto_bmpr13
+operator|=
+name|FE_B13_TPTYPE_UTP
+operator||
+name|FE_B13_PORT_AUTO
+expr_stmt|;
 comment|/* 	 * Minimum initialization of the hardware. 	 * We write into registers; hope I/O ports have no 	 * overlap with other boards. 	 */
 comment|/* Initialize ASIC.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV3
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -2768,27 +3622,28 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV10
+index|]
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Wait for a while.  I'm not sure this is necessary.  FIXME.  */
+comment|/* Initialize 86960.  */
 name|DELAY
 argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
-comment|/* Initialize 86960.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -2807,9 +3662,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -2818,11 +3674,33 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* "Refresh" hardware configuration.  FIXME.  */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV2
+index|]
+argument_list|,
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_FMV2
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Turn the "master interrupt control" flag of ASIC on.  */
@@ -2830,11 +3708,12 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_FMV3
+index|]
 argument_list|,
-name|FE_FMV3_ENABLE_FLAG
+name|FE_FMV3_IRQENB
 argument_list|)
 expr_stmt|;
 comment|/* 	 * That's all.  FMV-180 occupies 32 I/O addresses, by the way. 	 */
@@ -2853,10 +3732,9 @@ specifier|static
 name|int
 name|fe_probe_ati
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
-name|isa_dev
+name|dev
 parameter_list|,
 name|struct
 name|fe_softc
@@ -2875,10 +3753,15 @@ index|[
 name|FE_EEPROM_SIZE
 index|]
 decl_stmt|;
+name|u_char
+name|save16
+decl_stmt|,
+name|save17
+decl_stmt|;
 specifier|static
 name|u_short
 specifier|const
-name|ioaddr
+name|baseaddr
 index|[
 literal|8
 index|]
@@ -2904,11 +3787,15 @@ decl_stmt|;
 specifier|static
 name|u_short
 specifier|const
-name|irqmap_lo
+name|irqmaps
+index|[
+literal|4
+index|]
 index|[
 literal|4
 index|]
 init|=
+block|{
 block|{
 name|IRQ3
 block|,
@@ -2918,15 +3805,7 @@ name|IRQ5
 block|,
 name|IRQ9
 block|}
-decl_stmt|;
-specifier|static
-name|u_short
-specifier|const
-name|irqmap_hi
-index|[
-literal|4
-index|]
-init|=
+block|,
 block|{
 name|IRQ10
 block|,
@@ -2936,6 +3815,27 @@ name|IRQ12
 block|,
 name|IRQ15
 block|}
+block|,
+block|{
+name|IRQ3
+block|,
+name|IRQ11
+block|,
+name|IRQ5
+block|,
+name|IRQ15
+block|}
+block|,
+block|{
+name|IRQ10
+block|,
+name|IRQ11
+block|,
+name|IRQ14
+block|,
+name|IRQ15
+block|}
+block|, 	}
 decl_stmt|;
 specifier|static
 name|struct
@@ -2980,13 +3880,15 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-if|#
-directive|if
+comment|/* Assume we have 86965 and no need to restore these.  */
+name|save16
+operator|=
 literal|0
-comment|/* 	 * Don't probe at all if the config says we are PCMCIA... 	 */
-block|if ( isa_dev->id_flags& FE_FLAGS_PCMCIA ) return ( 0 );
-endif|#
-directive|endif
+expr_stmt|;
+name|save17
+operator|=
+literal|0
+expr_stmt|;
 if|#
 directive|if
 name|FE_DEBUG
@@ -3004,7 +3906,7 @@ name|sc_unit
 argument_list|,
 name|sc
 operator|->
-name|addr
+name|iobase
 argument_list|)
 expr_stmt|;
 name|fe_dump
@@ -3018,7 +3920,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * See if the sepcified address is possible for MB86965A JLI mode. 	 */
+comment|/* 	 * See if the specified address is possible for MB86965A JLI mode. 	 */
 for|for
 control|(
 name|i
@@ -3035,14 +3937,14 @@ control|)
 block|{
 if|if
 condition|(
-name|ioaddr
+name|baseaddr
 index|[
 name|i
 index|]
 operator|==
 name|sc
 operator|->
-name|addr
+name|iobase
 condition|)
 break|break;
 block|}
@@ -3052,9 +3954,38 @@ name|i
 operator|==
 literal|8
 condition|)
-return|return
+goto|goto
+name|NOTFOUND
+goto|;
+comment|/* Setup an I/O address mapping table.  */
+for|for
+control|(
+name|i
+operator|=
 literal|0
-return|;
+init|;
+name|i
+operator|<
+name|MAXREGISTERS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|i
+index|]
+operator|=
+name|sc
+operator|->
+name|iobase
+operator|+
+name|i
+expr_stmt|;
+block|}
 comment|/* 	 * We should test if MB86965A is on the base address now. 	 * Unfortunately, it is very hard to probe it reliably, since 	 * we have no way to reset the chip under software control. 	 * On cold boot, we could check the "signature" bit patterns 	 * described in the Fujitsu document.  On warm boot, however, 	 * we can predict almost nothing about register values. 	 */
 if|if
 condition|(
@@ -3062,15 +3993,13 @@ operator|!
 name|fe_simple_probe
 argument_list|(
 name|sc
-operator|->
-name|addr
 argument_list|,
 name|probe_table
 argument_list|)
 condition|)
-return|return
-literal|0
-return|;
+goto|goto
+name|NOTFOUND
+goto|;
 comment|/* Check if our I/O address matches config info on 86965.  */
 name|n
 operator|=
@@ -3079,9 +4008,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR19
+index|]
 argument_list|)
 operator|&
 name|FE_B19_ADDR
@@ -3091,24 +4021,73 @@ name|FE_B19_ADDR_SHIFT
 expr_stmt|;
 if|if
 condition|(
-name|ioaddr
+name|baseaddr
 index|[
 name|n
 index|]
 operator|!=
 name|sc
 operator|->
-name|addr
+name|iobase
 condition|)
-return|return
-literal|0
-return|;
-comment|/* 	 * We are now almost sure we have an AT1700 at the given 	 * address.  So, read EEPROM through 86965.  We have to write 	 * into LSI registers to read from EEPROM.  I want to avoid it 	 * at this stage, but I cannot test the presense of the chip 	 * any further without reading EEPROM.  FIXME. 	 */
+goto|goto
+name|NOTFOUND
+goto|;
+comment|/* 	 * We are now almost sure we have an AT1700 at the given 	 * address.  So, read EEPROM through 86965.  We have to write 	 * into LSI registers to read from EEPROM.  I want to avoid it 	 * at this stage, but I cannot test the presence of the chip 	 * any further without reading EEPROM.  FIXME. 	 */
+name|save16
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR16
+index|]
+argument_list|)
+expr_stmt|;
+name|save17
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR17
+index|]
+argument_list|)
+expr_stmt|;
 name|fe_read_eeprom
 argument_list|(
 name|sc
 argument_list|,
 name|eeprom
+argument_list|)
+expr_stmt|;
+comment|/* Make sure the EEPROM is turned off.  */
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR16
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR17
+index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Make sure that config info in EEPROM and 86965 agree.  */
@@ -3123,36 +4102,116 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR19
+index|]
 argument_list|)
 condition|)
 block|{
-return|return
-literal|0
-return|;
+goto|goto
+name|NOTFOUND
+goto|;
 block|}
-comment|/* 	 * Determine the card type. 	 * There may be a way to identify various models.  FIXME. 	 */
-name|sc
-operator|->
-name|type
-operator|=
-name|FE_TYPE_AT1700
-expr_stmt|;
+comment|/* 	 * The following model identification codes are stolen from 	 * from the NetBSD port of the fe driver.  My reviewers 	 * suggested minor revision. 	 */
+comment|/* Determine the card type.  */
+switch|switch
+condition|(
+name|eeprom
+index|[
+name|FE_ATI_EEP_MODEL
+index|]
+condition|)
+block|{
+case|case
+name|FE_ATI_MODEL_AT1700T
+case|:
 name|sc
 operator|->
 name|typestr
 operator|=
-literal|"AT1700/RE2000"
+literal|"AT-1700T/RE2001"
 expr_stmt|;
 name|sc
 operator|->
 name|sc_description
 operator|=
-literal|"Ethernet adapter: AT1700 or RE2000"
+literal|"Ethernet adapter: AT1700T or RE2001"
 expr_stmt|;
-comment|/* 	 * I was told that RE2000 series has two variants on IRQ 	 * selection.  They are 3/4/5/9 and 10/11/12/15.  I don't know 	 * how we can distinguish which model is which.  For now, we 	 * just trust irq setting in config.  FIXME. 	 * 	 * I've heard that ATI puts an identification between these 	 * two models in the EEPROM.  Sounds reasonable.  I've also 	 * heard that Linux driver for AT1700 tests it.  O.K.  Let's 	 * try using it and see what happens.  Anyway, we will use an 	 * IRQ value passed by config (i.e., user), if one is 	 * available.  FIXME. 	 */
+break|break;
+case|case
+name|FE_ATI_MODEL_AT1700BT
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"AT-1700BT/RE2003"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: AT1700BT or RE2003"
+expr_stmt|;
+break|break;
+case|case
+name|FE_ATI_MODEL_AT1700FT
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"AT-1700FT/RE2009"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: AT1700FT or RE2009"
+expr_stmt|;
+break|break;
+case|case
+name|FE_ATI_MODEL_AT1700AT
+case|:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"AT-1700AT/RE2005"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: AT1700AT or RE2005"
+expr_stmt|;
+break|break;
+default|default:
+name|sc
+operator|->
+name|typestr
+operator|=
+literal|"unknown AT-1700/RE2000 ?"
+expr_stmt|;
+name|sc
+operator|->
+name|sc_description
+operator|=
+literal|"Ethernet adapter: AT1700 or RE2000 ?"
+expr_stmt|;
+break|break;
+block|}
+comment|/* 	 * Try to determine IRQ settings. 	 * Different models use different ranges of IRQs. 	 */
+if|if
+condition|(
+name|dev
+operator|->
+name|id_irq
+operator|==
+name|NO_IRQ
+condition|)
+block|{
 name|n
 operator|=
 operator|(
@@ -3160,9 +4219,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR19
+index|]
 argument_list|)
 operator|&
 name|FE_B19_IRQ
@@ -3170,31 +4230,75 @@ operator|)
 operator|>>
 name|FE_B19_IRQ_SHIFT
 expr_stmt|;
-if|if
+switch|switch
 condition|(
-name|isa_dev
-operator|->
-name|id_irq
-operator|==
-literal|0
+name|eeprom
+index|[
+name|FE_ATI_EEP_REVISION
+index|]
+operator|&
+literal|0xf0
 condition|)
 block|{
-comment|/* Try to determine IRQ settings.  */
+case|case
+literal|0x30
+case|:
+name|dev
+operator|->
+name|id_irq
+operator|=
+name|irqmaps
+index|[
+literal|3
+index|]
+index|[
+name|n
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|0x10
+case|:
+case|case
+literal|0x50
+case|:
+name|dev
+operator|->
+name|id_irq
+operator|=
+name|irqmaps
+index|[
+literal|2
+index|]
+index|[
+name|n
+index|]
+expr_stmt|;
+break|break;
+case|case
+literal|0x40
+case|:
+case|case
+literal|0x60
+case|:
 if|if
 condition|(
 name|eeprom
 index|[
-name|FE_EEP_ATI_TYPE
+name|FE_ATI_EEP_MAGIC
 index|]
 operator|&
-name|FE_EEP_ATI_TYPE_HIGHIRQ
+literal|0x04
 condition|)
 block|{
-name|isa_dev
+name|dev
 operator|->
 name|id_irq
 operator|=
-name|irqmap_hi
+name|irqmaps
+index|[
+literal|1
+index|]
 index|[
 name|n
 index|]
@@ -3202,15 +4306,34 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|isa_dev
+name|dev
 operator|->
 name|id_irq
 operator|=
-name|irqmap_lo
+name|irqmaps
+index|[
+literal|0
+index|]
 index|[
 name|n
 index|]
 expr_stmt|;
+block|}
+break|break;
+default|default:
+name|dev
+operator|->
+name|id_irq
+operator|=
+name|irqmaps
+index|[
+literal|0
+index|]
+index|[
+name|n
+index|]
+expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/* 	 * Initialize constants in the per-line structure. 	 */
@@ -3219,7 +4342,7 @@ name|bcopy
 argument_list|(
 name|eeprom
 operator|+
-name|FE_EEP_ATI_ADDR
+name|FE_ATI_EEP_ADDR
 argument_list|,
 name|sc
 operator|->
@@ -3317,7 +4440,7 @@ literal|0
 return|;
 endif|#
 directive|endif
-comment|/* Should find all register prototypes here.  FIXME.  */
+comment|/* 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 */
 name|sc
 operator|->
 name|proto_dlcr4
@@ -3335,15 +4458,6 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|proto_dlcr7
-operator|=
-name|FE_D7_BYTSWP_LH
-operator||
-name|FE_D7_IDENT_EC
-expr_stmt|;
-comment|/* 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 * We cannot change these values but TXBSIZE, because they 	 * are hard-wired on the board.  Modifying TXBSIZE will affect 	 * the driver performance. 	 */
-name|sc
-operator|->
 name|proto_dlcr6
 operator|=
 name|FE_D6_BUFSIZ_32KB
@@ -3356,6 +4470,31 @@ name|FE_D6_SBW_WORD
 operator||
 name|FE_D6_SRAM_100ns
 expr_stmt|;
+name|sc
+operator|->
+name|proto_dlcr7
+operator|=
+name|FE_D7_BYTSWP_LH
+operator||
+name|FE_D7_IDENT_EC
+expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXXX Should we use this?  FIXME.  */
+block|sc->proto_bmpr13 = eeprom[ FE_ATI_EEP_MEDIA ];
+else|#
+directive|else
+name|sc
+operator|->
+name|proto_bmpr13
+operator|=
+name|FE_B13_TPTYPE_UTP
+operator||
+name|FE_B13_PORT_AUTO
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|FE_DEBUG
@@ -3373,13 +4512,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Initialize 86965.  */
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -3398,9 +4543,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3409,9 +4555,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3436,6 +4583,50 @@ comment|/* 	 * That's all.  AT1700 occupies 32 I/O addresses, by the way. 	 */
 return|return
 literal|32
 return|;
+name|NOTFOUND
+label|:
+comment|/* 	 * We have no AT1700 at a given address. 	 * Restore BMPR16 and BMPR17 if we have destroyed them, 	 * hoping that the hardware on the address didn't get 	 * bad side effect. 	 */
+if|if
+condition|(
+name|save16
+operator|!=
+literal|0
+operator||
+name|save17
+operator|!=
+literal|0
+condition|)
+block|{
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR16
+index|]
+argument_list|,
+name|save16
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR17
+index|]
+argument_list|,
+name|save17
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -3448,10 +4639,9 @@ specifier|static
 name|int
 name|fe_probe_mbh
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
-name|isa_dev
+name|dev
 parameter_list|,
 name|struct
 name|fe_softc
@@ -3459,6 +4649,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 specifier|static
 name|struct
 name|fe_simple_probe_struct
@@ -3486,11 +4679,11 @@ comment|/*	{ FE_DLCR5, 0x80, 0x00 },	Does not work well.  */
 if|#
 directive|if
 literal|0
-comment|/* 	 * Test *vendor* part of the address for Fujitsu. 	 * The test will gain reliability of probe process, but 	 * it rejects clones by other vendors, or OEM product 	 * supplied by resalers other than Fujitsu. 	 */
+comment|/* 	 * Test *vendor* part of the address for Fujitsu. 	 * The test will gain reliability of probe process, but 	 * it rejects clones by other vendors, or OEM product 	 * supplied by retailer other than Fujitsu. 	 */
 block|{ FE_MBH10, 0xFF, 0x00 }, 		{ FE_MBH11, 0xFF, 0x00 }, 		{ FE_MBH12, 0xFF, 0x0E },
 else|#
 directive|else
-comment|/* 	 * We can always verify the *first* 2 bits (in Ehternet 	 * bit order) are "global" and "unicast" even for 	 * unknown vendors. 	 */
+comment|/* 	 * We can always verify the *first* 2 bits (in Ethernet 	 * bit order) are "global" and "unicast" even for 	 * unknown vendors. 	 */
 block|{
 name|FE_MBH10
 block|,
@@ -3550,47 +4743,31 @@ block|,
 literal|0x00
 block|}
 block|,
-block|{
-literal|0x18
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|}
-block|,
-block|{
-literal|0x19
-block|,
-literal|0xFF
-block|,
-literal|0xFF
-block|}
-block|,
+if|#
+directive|if
+literal|0
+block|{ 0x18, 0xFF, 0xFF }, 		{ 0x19, 0xFF, 0xFF },
+endif|#
+directive|endif
+comment|/* 0 */
 block|{
 literal|0
 block|}
 block|}
 decl_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * We need a PCMCIA flag. 	 */
-block|if ( ( isa_dev->id_flags& FE_FLAGS_PCMCIA ) == 0 ) return ( 0 );
-endif|#
-directive|endif
 comment|/* 	 * We need explicit IRQ and supported address. 	 */
 if|if
 condition|(
-name|isa_dev
+name|dev
 operator|->
 name|id_irq
 operator|==
-literal|0
+name|NO_IRQ
 operator|||
 operator|(
 name|sc
 operator|->
-name|addr
+name|iobase
 operator|&
 operator|~
 literal|0x3E0
@@ -3598,11 +4775,13 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 if|#
 directive|if
 name|FE_DEBUG
@@ -3619,6 +4798,35 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Setup an I/O address mapping table.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXREGISTERS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|i
+index|]
+operator|=
+name|sc
+operator|->
+name|iobase
+operator|+
+name|i
+expr_stmt|;
+block|}
 comment|/* 	 * See if MBH10302 is on its address. 	 * I'm not sure the following probe code works.  FIXME. 	 */
 if|if
 condition|(
@@ -3626,8 +4834,6 @@ operator|!
 name|fe_simple_probe
 argument_list|(
 name|sc
-operator|->
-name|addr
 argument_list|,
 name|probe_table
 argument_list|)
@@ -3636,12 +4842,6 @@ return|return
 literal|0
 return|;
 comment|/* Determine the card type.  */
-name|sc
-operator|->
-name|type
-operator|=
-name|FE_TYPE_MBH10302
-expr_stmt|;
 name|sc
 operator|->
 name|typestr
@@ -3659,9 +4859,7 @@ comment|/* Get our station address from EEPROM.  */
 name|inblk
 argument_list|(
 name|sc
-operator|->
-name|addr
-operator|+
+argument_list|,
 name|FE_MBH10
 argument_list|,
 name|sc
@@ -3719,7 +4917,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Should find all register prototypes here.  FIXME.  */
+comment|/* 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 */
 name|sc
 operator|->
 name|proto_dlcr4
@@ -3736,15 +4934,6 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|proto_dlcr7
-operator|=
-name|FE_D7_BYTSWP_LH
-operator||
-name|FE_D7_IDENT_NICE
-expr_stmt|;
-comment|/* 	 * Program the 86960 as follows: 	 *	SRAM: 32KB, 100ns, byte-wide access. 	 *	Transmission buffer: 4KB x 2. 	 *	System bus interface: 16 bits. 	 * We cannot change these values but TXBSIZE, because they 	 * are hard-wired on the board.  Modifying TXBSIZE will affect 	 * the driver performance. 	 */
-name|sc
-operator|->
 name|proto_dlcr6
 operator|=
 name|FE_D6_BUFSIZ_32KB
@@ -3757,6 +4946,22 @@ name|FE_D6_SBW_WORD
 operator||
 name|FE_D6_SRAM_100ns
 expr_stmt|;
+name|sc
+operator|->
+name|proto_dlcr7
+operator|=
+name|FE_D7_BYTSWP_LH
+operator||
+name|FE_D7_IDENT_NICE
+expr_stmt|;
+name|sc
+operator|->
+name|proto_bmpr13
+operator|=
+name|FE_B13_TPTYPE_UTP
+operator||
+name|FE_B13_PORT_AUTO
+expr_stmt|;
 comment|/* Setup hooks.  We need a special initialization procedure.  */
 name|sc
 operator|->
@@ -3765,20 +4970,20 @@ operator|=
 name|fe_init_mbh
 expr_stmt|;
 comment|/* 	 * Minimum initialization. 	 */
-comment|/* Wait for a while.  I'm not sure this is necessary.  FIXME.  */
+comment|/* Minimal initialization of 86960.  */
 name|DELAY
 argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
-comment|/* Minimul initialization of 86960.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -3797,9 +5002,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3808,9 +5014,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3824,9 +5031,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_MBH0
+index|]
 argument_list|,
 name|FE_MBH0_MAGIC
 operator||
@@ -3857,21 +5065,20 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* Probably required after hot-insertion...  */
-comment|/* Wait for a while.  I'm not sure this is necessary.  FIXME.  */
+comment|/* Minimal initialization of 86960.  */
 name|DELAY
 argument_list|(
 literal|200
 argument_list|)
 expr_stmt|;
-comment|/* Minimul initialization of 86960.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -3890,9 +5097,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3901,9 +5109,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0
 argument_list|)
@@ -3913,9 +5122,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_MBH0
+index|]
 argument_list|,
 name|FE_MBH0_MAGIC
 operator||
@@ -3934,12 +5144,25 @@ specifier|static
 name|int
 name|fe_attach
 parameter_list|(
-name|struct
-name|isa_device
+name|DEVICE
 modifier|*
-name|isa_dev
+name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+specifier|static
+name|int
+name|alredy_ifatch
+index|[
+name|NFE
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|fe_softc
 modifier|*
@@ -3948,7 +5171,7 @@ init|=
 operator|&
 name|fe_softc
 index|[
-name|isa_dev
+name|dev
 operator|->
 name|id_unit
 index|]
@@ -4021,9 +5244,11 @@ name|if_flags
 operator|=
 name|IFF_BROADCAST
 operator||
+name|IFF_SIMPLEX
+operator||
 name|IFF_MULTICAST
 expr_stmt|;
-comment|/* 	 * Set maximum size of output queue, if it has not been set. 	 * It is done here as this driver may be started after the 	 * system intialization (i.e., the interface is PCMCIA.) 	 * 	 * I'm not sure this is really necessary, but, even if it is, 	 * it should be done somewhere else, e.g., in if_attach(), 	 * since it must be a common workaround for all network drivers. 	 * FIXME. 	 */
+comment|/* 	 * Set maximum size of output queue, if it has not been set. 	 * It is done here as this driver may be started after the 	 * system initialization (i.e., the interface is PCMCIA.) 	 * 	 * I'm not sure this is really necessary, but, even if it is, 	 * it should be done somewhere else, e.g., in if_attach(), 	 * since it must be a common workaround for all network drivers. 	 * FIXME. 	 */
 if|if
 condition|(
 name|sc
@@ -4085,7 +5310,7 @@ directive|endif
 comment|/* Modify hardware config if it is requested.  */
 if|if
 condition|(
-name|isa_dev
+name|dev
 operator|->
 name|id_flags
 operator|&
@@ -4096,7 +5321,7 @@ name|sc
 operator|->
 name|proto_dlcr6
 operator|=
-name|isa_dev
+name|dev
 operator|->
 name|id_flags
 operator|&
@@ -4185,6 +5410,23 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Attach and stop the interface.  */
+if|#
+directive|if
+name|NCRD
+operator|>
+literal|0
+if|if
+condition|(
+name|alredy_ifatch
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+operator|!=
+literal|1
+condition|)
+block|{
 name|if_attach
 argument_list|(
 operator|&
@@ -4193,6 +5435,29 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
+name|alredy_ifatch
+index|[
+name|dev
+operator|->
+name|id_unit
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|#
+directive|else
+name|if_attach
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_if
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NCRD> 0 */
 name|fe_stop
 argument_list|(
 name|sc
@@ -4545,9 +5810,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -4556,9 +5822,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -4573,9 +5840,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -4594,9 +5862,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -4605,9 +5874,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -4622,9 +5892,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -4767,6 +6038,7 @@ directive|if
 name|FE_DEBUG
 operator|>=
 literal|1
+comment|/* A "debug" message.  */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -4800,6 +6072,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Suggest users a possible cause.  */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_oerrors
+operator|>
+literal|0
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"fe%d: wrong IRQ setting in config?"
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|FE_DEBUG
@@ -5046,19 +6340,30 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Make sure to disable the chip, also. 	 * This may also help re-programming the chip after 	 * hot insertion of PCMCIAs. 	 */
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
 name|proto_dlcr6
 operator||
 name|FE_D6_DLC_DISABLE
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
 argument_list|)
 expr_stmt|;
 comment|/* Power up the chip and select register bank for DLCRs.  */
@@ -5071,9 +6376,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5093,9 +6399,7 @@ comment|/* Feed the station address.  */
 name|outblk
 argument_list|(
 name|sc
-operator|->
-name|addr
-operator|+
+argument_list|,
 name|FE_DLCR8
 argument_list|,
 name|sc
@@ -5110,9 +6414,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5126,9 +6431,7 @@ expr_stmt|;
 name|outblk
 argument_list|(
 name|sc
-operator|->
-name|addr
-operator|+
+argument_list|,
 name|FE_MAR8
 argument_list|,
 name|fe_filter_nothing
@@ -5143,9 +6446,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5161,9 +6465,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -5173,9 +6478,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -5185,9 +6491,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -5196,9 +6503,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -5207,9 +6515,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR4
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5220,9 +6529,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5233,9 +6543,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR10
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -5244,44 +6555,24 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR11
+index|]
 argument_list|,
 name|FE_B11_CTRL_SKIP
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|addr
-operator|+
-name|FE_BMPR12
-argument_list|,
-literal|0x00
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|addr
-operator|+
-name|FE_BMPR13
-argument_list|,
-name|FE_B13_TPTYPE_UTP
 operator||
-name|FE_B13_PORT_AUTO
+name|FE_B11_MODE1
 argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
-name|FE_BMPR14
+name|ioaddr
+index|[
+name|FE_BMPR12
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -5290,9 +6581,36 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
+name|FE_BMPR13
+index|]
+argument_list|,
+name|sc
+operator|->
+name|proto_bmpr13
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
+name|FE_BMPR14
+index|]
+argument_list|,
+literal|0x00
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|ioaddr
+index|[
 name|FE_BMPR15
+index|]
 argument_list|,
 literal|0x00
 argument_list|)
@@ -5318,9 +6636,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|,
 name|FE_TMASK
 argument_list|)
@@ -5329,9 +6648,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|,
 name|FE_RMASK
 argument_list|)
@@ -5346,9 +6666,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5378,7 +6699,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Make sure to empty the receive buffer. 	 * 	 * This may be redundant, but *if* the receive buffer were full 	 * at this point, the driver would hang.  I have experienced 	 * some strange hangups just after UP.  I hope the following 	 * code solve the problem. 	 * 	 * I have changed the order of hardware initialization. 	 * I think the receive buffer cannot have any packets at this 	 * point in this version.  The following code *must* be 	 * redundant now.  FIXME. 	 */
+comment|/* 	 * Make sure to empty the receive buffer. 	 * 	 * This may be redundant, but *if* the receive buffer were full 	 * at this point, the driver would hang.  I have experienced 	 * some strange hang-up just after UP.  I hope the following 	 * code solve the problem. 	 * 	 * I have changed the order of hardware initialization. 	 * I think the receive buffer cannot have any packets at this 	 * point in this version.  The following code *must* be 	 * redundant now.  FIXME. 	 */
 for|for
 control|(
 name|i
@@ -5399,9 +6720,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|)
 operator|&
 name|FE_D5_BUFEMP
@@ -5411,9 +6733,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR14
+index|]
 argument_list|,
 name|FE_B14_SKIP
 argument_list|)
@@ -5489,14 +6812,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Do we need this here?  */
+comment|/* Do we need this here?  FIXME.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -5506,9 +6830,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|,
 literal|0xFF
 argument_list|)
@@ -5546,7 +6871,7 @@ name|sc_dcstate
 operator|=
 name|DC_BUSY
 expr_stmt|;
-comment|/* 	 * At this point, the interface is runnung properly, 	 * except that it receives *no* packets.  we then call 	 * fe_setmode() to tell the chip what packets to be 	 * received, based on the if_flags and multicast group 	 * list.  It completes the initialization process. 	 */
+comment|/* 	 * At this point, the interface is running properly, 	 * except that it receives *no* packets.  we then call 	 * fe_setmode() to tell the chip what packets to be 	 * received, based on the if_flags and multicast group 	 * list.  It completes the initialization process. 	 */
 name|fe_setmode
 argument_list|(
 name|sc
@@ -5610,7 +6935,6 @@ end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|fe_xmit
 parameter_list|(
@@ -5656,26 +6980,15 @@ name|sc
 operator|->
 name|txb_size
 expr_stmt|;
-if|#
-directive|if
-name|FE_DELAYED_PADDING
-comment|/* Omit the postponed padding process.  */
-name|sc
-operator|->
-name|txb_padding
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Start transmitter, passing packets in TX buffer.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR10
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -5706,10 +7019,9 @@ name|fe_softc
 modifier|*
 name|sc
 init|=
-name|IFNET2SOFTC
-argument_list|(
 name|ifp
-argument_list|)
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|mbuf
@@ -5763,7 +7075,7 @@ operator|->
 name|txb_free
 argument_list|)
 expr_stmt|;
-comment|/* 		 * So, what should I do, then? 		 * 		 * We now know txb_count and txb_free contradicts.  We 		 * cannot, however, tell which is wrong.  More 		 * over, we cannot peek 86960 transmission buffer or 		 * reset the transmission buffer.  (In fact, we can 		 * reset the entire interface.  I don't want to do it.) 		 * 		 * If txb_count is incorrect, leaving it as is will cause 		 * sending of gabages after next interrupt.  We have to 		 * avoid it.  Hence, we reset the txb_count here.  If 		 * txb_free was incorrect, resetting txb_count just loose 		 * some packets.  We can live with it. 		 */
+comment|/* 		 * So, what should I do, then? 		 * 		 * We now know txb_count and txb_free contradicts.  We 		 * cannot, however, tell which is wrong.  More 		 * over, we cannot peek 86960 transmission buffer or 		 * reset the transmission buffer.  (In fact, we can 		 * reset the entire interface.  I don't want to do it.) 		 * 		 * If txb_count is incorrect, leaving it as-is will cause 		 * sending of garbage after next interrupt.  We have to 		 * avoid it.  Hence, we reset the txb_count here.  If 		 * txb_free was incorrect, resetting txb_count just loose 		 * some packets.  We can live with it. 		 */
 name|sc
 operator|->
 name|txb_count
@@ -5821,7 +7133,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Stop accepting more transmission packets temporarily, when 	 * a filter change request is delayed.  Updating the MARs on 	 * 86960 flushes the transmisstion buffer, so it is delayed 	 * until all buffered transmission packets have been sent 	 * out. 	 */
+comment|/* 	 * Stop accepting more transmission packets temporarily, when 	 * a filter change request is delayed.  Updating the MARs on 	 * 86960 flushes the transmission buffer, so it is delayed 	 * until all buffered transmission packets have been sent 	 * out. 	 */
 if|if
 condition|(
 name|sc
@@ -5829,7 +7141,7 @@ operator|->
 name|filter_change
 condition|)
 block|{
-comment|/* 		 * Filter change requst is delayed only when the DLC is 		 * working.  DLC soon raise an interrupt after finishing 		 * the work. 		 */
+comment|/* 		 * Filter change request is delayed only when the DLC is 		 * working.  DLC soon raise an interrupt after finishing 		 * the work. 		 */
 goto|goto
 name|indicate_active
 goto|;
@@ -5923,19 +7235,43 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* Turned of, since our interface is now duplex.  */
-comment|/* 		 * Tap off here if there is a bpf listener. 		 */
+comment|/* 		 * Tap off here if there is a bpf listener, 		 * and the device is *not* in promiscuous mode. 		 * (86960 receives self-generated packets if  		 * and only if it is in "receive everything" 		 * mode.) 		 */
 if|#
 directive|if
 name|NBPFILTER
 operator|>
 literal|0
-block|if ( sc->bpf ) bpf_mtap( sc->bpf, m );
-endif|#
-directive|endif
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_bpf
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_flags
+operator|&
+name|IFF_PROMISC
+operator|)
+condition|)
+block|{
+name|bpf_mtap
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_if
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|m_freem
@@ -5978,7 +7314,6 @@ end_comment
 
 begin_function
 specifier|static
-name|INLINE
 name|void
 name|fe_droppacket
 parameter_list|(
@@ -5992,9 +7327,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR14
+index|]
 argument_list|,
 name|FE_B14_SKIP
 argument_list|)
@@ -6041,9 +7377,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR10
+index|]
 argument_list|)
 expr_stmt|;
 if|#
@@ -6119,9 +7456,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 name|FE_D0_COLLID
 argument_list|)
@@ -6131,9 +7469,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR11
+index|]
 argument_list|,
 name|FE_B11_CTRL_SKIP
 operator||
@@ -6157,16 +7496,17 @@ operator|&
 name|FE_D0_TXDONE
 condition|)
 block|{
-comment|/* 		 * Add in total number of collisions on last 		 * transmission.  We also clear "collision occurred" flag 		 * here. 		 * 		 * 86960 has a design flaw on collision count on multiple 		 * packet transmission.  When we send two or more packets 		 * with one start command (that's what we do when the 		 * transmission queue is clauded), 86960 informs us number 		 * of collisions occured on the last packet on the 		 * transmission only.  Number of collisions on previous 		 * packets are lost.  I have told that the fact is clearly 		 * stated in the Fujitsu document. 		 * 		 * I considered not to mind it seriously.  Collision 		 * count is not so important, anyway.  Any comments?  FIXME. 		 */
+comment|/* 		 * Add in total number of collisions on last 		 * transmission.  We also clear "collision occurred" flag 		 * here. 		 * 		 * 86960 has a design flaw on collision count on multiple 		 * packet transmission.  When we send two or more packets 		 * with one start command (that's what we do when the 		 * transmission queue is crowded), 86960 informs us number 		 * of collisions occurred on the last packet on the 		 * transmission only.  Number of collisions on previous 		 * packets are lost.  I have told that the fact is clearly 		 * stated in the Fujitsu document. 		 * 		 * I considered not to mind it seriously.  Collision 		 * count is not so important, anyway.  Any comments?  FIXME. 		 */
 if|if
 condition|(
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|)
 operator|&
 name|FE_D0_COLLID
@@ -6177,9 +7517,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 name|FE_D0_COLLID
 argument_list|)
@@ -6191,9 +7532,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR4
+index|]
 argument_list|)
 expr_stmt|;
 name|col
@@ -6408,7 +7750,7 @@ name|if_ierrors
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * MB86960 has a flag indicating "receive queue empty." 	 * We just loop cheking the flag to pull out all received 	 * packets. 	 * 	 * We limit the number of iterrations to avoid inifnit-loop. 	 * It can be caused by a very slow CPU (some broken 	 * peripheral may insert incredible number of wait cycles) 	 * or, worse, by a broken MB86960 chip. 	 */
+comment|/* 	 * MB86960 has a flag indicating "receive queue empty." 	 * We just loop, checking the flag, to pull out all received 	 * packets. 	 * 	 * We limit the number of iterations to avoid infinite-loop. 	 * It can be caused by a very slow CPU (some broken 	 * peripheral may insert incredible number of wait cycles) 	 * or, worse, by a broken MB86960 chip. 	 */
 for|for
 control|(
 name|i
@@ -6423,16 +7765,17 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Stop the iterration if 86960 indicates no packets.  */
+comment|/* Stop the iteration if 86960 indicates no packets.  */
 if|if
 condition|(
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|)
 operator|&
 name|FE_D5_BUFEMP
@@ -6448,9 +7791,10 @@ name|inw
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR8
+index|]
 argument_list|)
 expr_stmt|;
 if|#
@@ -6521,12 +7865,13 @@ name|inw
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR8
+index|]
 argument_list|)
 expr_stmt|;
-comment|/* 		 * MB86965 checks the packet length and drop big packet 		 * before passing it to us.  There are no chance we can 		 * get [crufty] packets.  Hence, if the length exceeds 		 * the specified limit, it means some serious failure, 		 * such as out-of-sync on receive buffer management. 		 * 		 * Is this statement true?  FIXME. 		 */
+comment|/* 		 * MB86965 checks the packet length and drop big packet 		 * before passing it to us.  There are no chance we can 		 * get big packets through it, even if they are actually 		 * sent over a line.  Hence, if the length exceeds 		 * the specified limit, it means some serious failure, 		 * such as out-of-sync on receive buffer management. 		 * 		 * Is this statement true?  FIXME. 		 */
 if|if
 condition|(
 name|len
@@ -6632,8 +7977,8 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s%d: no enough mbuf;"
-literal|" a packet (%u bytes) dropped\n"
+literal|"%s%d: out of mbuf;"
+literal|" dropping a packet (%u bytes)\n"
 argument_list|,
 name|sc
 operator|->
@@ -6729,9 +8074,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|)
 operator|&
 name|FE_TMASK
@@ -6742,9 +8088,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|)
 operator|&
 name|FE_RMASK
@@ -6765,9 +8112,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|,
 name|tstat
 argument_list|)
@@ -6776,9 +8124,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|,
 name|rstat
 argument_list|)
@@ -6811,7 +8160,7 @@ name|rstat
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Update the multicast address filter if it is 		 * needed and possible.  We do it now, because 		 * we can make sure the transmission buffer is empty, 		 * and there is a good chance that the receive queue 		 * is empty.  It will minimize the possibility of 		 * packet lossage. 		 */
+comment|/* 		 * Update the multicast address filter if it is 		 * needed and possible.  We do it now, because 		 * we can make sure the transmission buffer is empty, 		 * and there is a good chance that the receive queue 		 * is empty.  It will minimize the possibility of 		 * packet loss. 		 */
 if|if
 condition|(
 name|sc
@@ -6880,6 +8229,7 @@ comment|/*  * Process an ioctl request. This code needs some work - it looks  * 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fe_ioctl
 parameter_list|(
@@ -6900,10 +8250,9 @@ name|fe_softc
 modifier|*
 name|sc
 init|=
-name|IFNET2SOFTC
-argument_list|(
 name|ifp
-argument_list|)
+operator|->
+name|if_softc
 decl_stmt|;
 name|int
 name|s
@@ -6988,7 +8337,7 @@ operator|->
 name|sc_unit
 argument_list|)
 expr_stmt|;
-comment|/* before arpwhohas */
+comment|/* before arp_ifinit */
 name|arp_ifinit
 argument_list|(
 operator|&
@@ -7089,6 +8438,33 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+comment|/* IPV6 added by shin 96.2.6 */
+name|fe_init
+argument_list|(
+name|sc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+name|ndp6_ifinit
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|arpcom
+argument_list|,
+name|ifa
+argument_list|)
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 ifdef|#
@@ -7302,7 +8678,7 @@ case|case
 name|SIOCSIFPHYSADDR
 case|:
 block|{
-comment|/* 		 * Set the physical (Ehternet) address of the interface. 		 * When and by whom is this command used?  FIXME. 		 */
+comment|/* 		 * Set the physical (Ethernet) address of the interface. 		 * When and by whom is this command used?  FIXME. 		 */
 name|struct
 name|ifreq
 modifier|*
@@ -7602,7 +8978,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retreive packet from receive buffer and send to the next level up via  * ether_input(). If there is a BPF listener, give a copy to BPF, too.  * Returns 0 if success, -1 if error (i.e., mbuf allocation failure).  */
+comment|/*  * Retrieve packet from receive buffer and send to the next level up via  * ether_input(). If there is a BPF listener, give a copy to BPF, too.  * Returns 0 if success, -1 if error (i.e., mbuf allocation failure).  */
 end_comment
 
 begin_function
@@ -7649,7 +9025,7 @@ directive|error
 literal|"Too small MCLBYTES to use fe driver."
 endif|#
 directive|endif
-comment|/* 	 * Our strategy has one more problem.  There is a policy on 	 * mbuf cluster allocation.  It says that we must have at 	 * least MINCLSIZE (208 bytes on FreeBSD 2.0 for x86) to 	 * allocate a cluster.  For a packet of a size between 	 * (MHLEN - 2) to (MINCLSIZE - 2), our code violates the rule... 	 * On the other hand, the current code is short, simle, 	 * and fast, however.  It does no harmful thing, just waists 	 * some memory.  Any comments?  FIXME. 	 */
+comment|/* 	 * Our strategy has one more problem.  There is a policy on 	 * mbuf cluster allocation.  It says that we must have at 	 * least MINCLSIZE (208 bytes on FreeBSD 2.0 for x86) to 	 * allocate a cluster.  For a packet of a size between 	 * (MHLEN - 2) to (MINCLSIZE - 2), our code violates the rule... 	 * On the other hand, the current code is short, simple, 	 * and fast, however.  It does no harmful thing, just waists 	 * some memory.  Any comments?  FIXME. 	 */
 comment|/* Allocate an mbuf with packet header info.  */
 name|MGETHDR
 argument_list|(
@@ -7737,7 +9113,7 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
-comment|/* The following sillines is to make NFS happy */
+comment|/* The following silliness is to make NFS happy */
 name|m
 operator|->
 name|m_data
@@ -7749,9 +9125,10 @@ name|insw
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR8
+index|]
 argument_list|,
 name|m
 operator|->
@@ -7973,7 +9350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are  * shorter than mandatory Ethernet header.  *  * I wrote a code for an experimental "delayed padding" technique.  * When employed, it postpones the padding process for short packets.  * If xmit() occured at the moment, the padding process is omitted, and  * garbages are sent as pad data.  If next packet is stored in the  * transmission buffer before xmit(), write_mbuf() pads the previous  * packet before transmitting new packet.  This *may* gain the  * system performance (slightly).  */
+comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are  * shorter than mandatory Ethernet header.  *  * I wrote a code for an experimental "delayed padding" technique.  * When employed, it postpones the padding process for short packets.  * If xmit() occurred at the moment, the padding process is omitted, and  * garbage is sent as pad data.  If next packet is stored in the  * transmission buffer before xmit(), write_mbuf() pads the previous  * packet before transmitting new packet.  This *may* gain the  * system performance (slightly).  */
 end_comment
 
 begin_function
@@ -7997,9 +9374,10 @@ name|addr_bmpr8
 init|=
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR8
+index|]
 decl_stmt|;
 name|u_short
 name|length
@@ -8026,50 +9404,6 @@ define|#
 directive|define
 name|NO_PENDING_BYTE
 value|0xFFFF
-if|#
-directive|if
-name|FE_DELAYED_PADDING
-comment|/* Do the "delayed padding."  */
-name|pad
-operator|=
-name|sc
-operator|->
-name|txb_padding
-operator|>>
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|pad
-operator|>
-literal|0
-condition|)
-block|{
-while|while
-condition|(
-operator|--
-name|pad
-operator|>=
-literal|0
-condition|)
-block|{
-name|outw
-argument_list|(
-name|addr_bmpr8
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-name|sc
-operator|->
-name|txb_padding
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|FE_DEBUG
@@ -8241,28 +9575,6 @@ operator|->
 name|txb_count
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|FE_DELAYED_PADDING
-comment|/* Postpone the packet padding if necessary.  */
-if|if
-condition|(
-name|length
-operator|<
-name|ETHER_MIN_LEN
-condition|)
-block|{
-name|sc
-operator|->
-name|txb_padding
-operator|=
-name|ETHER_MIN_LEN
-operator|-
-name|length
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Transfer the data from mbuf chain to the transmission buffer. 	 * MB86960 seems to require that data be transferred as words, and 	 * only words.  So that we require some extra code to patch 	 * over odd-length mbufs. 	 */
 name|savebyte
 operator|=
@@ -8404,43 +9716,6 @@ name|savebyte
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|FE_DELAYED_PADDING
-comment|/* 	 * Pad the packet to the minimum length if necessary. 	 */
-name|pad
-operator|=
-operator|(
-name|ETHER_MIN_LEN
-operator|>>
-literal|1
-operator|)
-operator|-
-operator|(
-name|length
-operator|>>
-literal|1
-operator|)
-expr_stmt|;
-while|while
-condition|(
-operator|--
-name|pad
-operator|>=
-literal|0
-condition|)
-block|{
-name|outw
-argument_list|(
-name|addr_bmpr8
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -8741,14 +10016,15 @@ operator|&
 name|IFF_PROMISC
 condition|)
 block|{
-comment|/* 		 * Program 86960 to receive all packets on the segment 		 * including those directed to other stations. 		 * Multicast filter stored in MARs are ignored 		 * under this setting, so we don't need to update it. 		 * 		 * Promiscuous mode in FreeBSD 2 is used solely by 		 * BPF, and BPF only listens to valid (no error) packets. 		 * So, we ignore errornous ones even in this mode. 		 * (Older versions of fe driver mistook the point.) 		 */
+comment|/* 		 * Program 86960 to receive all packets on the segment 		 * including those directed to other stations. 		 * Multicast filter stored in MARs are ignored 		 * under this setting, so we don't need to update it. 		 * 		 * Promiscuous mode in FreeBSD 2 is used solely by 		 * BPF, and BPF only listens to valid (no error) packets. 		 * So, we ignore erroneous ones even in this mode. 		 * (Older versions of fe driver mistook the point.) 		 */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -8790,9 +10066,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -8858,8 +10135,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"fe%d: address filter:"
-literal|" [%02x %02x %02x %02x %02x %02x %02x %02x]\n"
+literal|"fe%d: address filter: [%8D]\n"
 argument_list|,
 name|sc
 operator|->
@@ -8870,77 +10146,13 @@ operator|->
 name|filter
 operator|.
 name|data
-index|[
-literal|0
-index|]
 argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|1
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|2
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|3
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|4
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|5
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|6
-index|]
-argument_list|,
-name|sc
-operator|->
-name|filter
-operator|.
-name|data
-index|[
-literal|7
-index|]
+literal|" "
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We have to update the multicast filter in the 86960, A.S.A.P. 	 * 	 * Note that the DLC (Data Linc Control unit, i.e. transmitter 	 * and receiver) must be stopped when feeding the filter, and 	 * DLC trushes all packets in both transmission and receive 	 * buffers when stopped. 	 * 	 * ... Are the above sentenses correct?  I have to check the 	 *     manual of the MB86960A.  FIXME. 	 * 	 * To reduce the packet lossage, we delay the filter update 	 * process until buffers are empty. 	 */
+comment|/* 	 * We have to update the multicast filter in the 86960, A.S.A.P. 	 * 	 * Note that the DLC (Data Link Control unit, i.e. transmitter 	 * and receiver) must be stopped when feeding the filter, and 	 * DLC trashes all packets in both transmission and receive 	 * buffers when stopped. 	 * 	 * ... Are the above sentences correct?  I have to check the 	 *     manual of the MB86960A.  FIXME. 	 * 	 * To reduce the packet loss, we delay the filter update 	 * process until buffers are empty. 	 */
 if|if
 condition|(
 name|sc
@@ -8961,9 +10173,10 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|)
 operator|&
 name|FE_D1_PKTRDY
@@ -9003,7 +10216,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Load a new multicast address filter into MARs.  *  * The caller must have splimp'ed befor fe_loadmar.  * This function starts the DLC upon return.  So it can be called only  * when the chip is working, i.e., from the driver's point of view, when  * a device is RUNNING.  (I mistook the point in previous versions.)  */
+comment|/*  * Load a new multicast address filter into MARs.  *  * The caller must have splimp'ed before fe_loadmar.  * This function starts the DLC upon return.  So it can be called only  * when the chip is working, i.e., from the driver's point of view, when  * a device is RUNNING.  (I mistook the point in previous versions.)  */
 end_comment
 
 begin_function
@@ -9018,13 +10231,19 @@ name|sc
 parameter_list|)
 block|{
 comment|/* Stop the DLC (transmitter and receiver).  */
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -9033,14 +10252,20 @@ operator||
 name|FE_D6_DLC_DISABLE
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 comment|/* Select register bank 1 for MARs.  */
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -9055,9 +10280,7 @@ comment|/* Copy filter value into the registers.  */
 name|outblk
 argument_list|(
 name|sc
-operator|->
-name|addr
-operator|+
+argument_list|,
 name|FE_MAR8
 argument_list|,
 name|sc
@@ -9074,9 +10297,10 @@ name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -9088,19 +10312,30 @@ name|FE_D7_POWER_UP
 argument_list|)
 expr_stmt|;
 comment|/* Restart the DLC.  */
+name|DELAY
+argument_list|(
+literal|200
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|,
 name|sc
 operator|->
 name|proto_dlcr6
 operator||
 name|FE_D6_DLC_ENABLE
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|200
 argument_list|)
 expr_stmt|;
 comment|/* We have just updated the filter.  */
@@ -9181,270 +10416,300 @@ name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR0
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR1
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR2
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR3
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR4
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR5
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR6
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_DLCR7
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR10
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR11
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR12
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR13
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR14
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 name|FE_BMPR15
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x10
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x11
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x12
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x13
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x14
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x15
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x16
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x17
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x18
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x19
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1A
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1B
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1C
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1D
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1E
+index|]
 argument_list|)
 argument_list|,
 name|inb
 argument_list|(
 name|sc
 operator|->
-name|addr
-operator|+
+name|ioaddr
+index|[
 literal|0x1F
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
