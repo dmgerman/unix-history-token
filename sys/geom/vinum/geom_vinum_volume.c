@@ -1416,6 +1416,7 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
+comment|/* Let's see if the volume this plex wants is already configured. */
 name|v
 operator|=
 name|gv_find_vol
@@ -1495,6 +1496,27 @@ operator|->
 name|bqueue
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|gp
+operator|=
+name|v
+operator|->
+name|geom
+expr_stmt|;
+comment|/* Create bio queue mutex and worker thread, if necessary. */
+if|if
+condition|(
+name|mtx_initialized
+argument_list|(
+operator|&
+name|v
+operator|->
+name|bqueue_mtx
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|mtx_init
 argument_list|(
 operator|&
@@ -1509,6 +1531,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|v
+operator|->
+name|flags
+operator|&
+name|GV_VOL_THREAD_ACTIVE
+operator|)
+condition|)
+block|{
 name|kthread_create
 argument_list|(
 name|gv_vol_worker
@@ -1535,13 +1569,6 @@ operator||=
 name|GV_VOL_THREAD_ACTIVE
 expr_stmt|;
 block|}
-else|else
-name|gp
-operator|=
-name|v
-operator|->
-name|geom
-expr_stmt|;
 comment|/* 	 * Create a new consumer and attach it to the plex geom.  Since this 	 * volume might already have a plex attached, we need to adjust the 	 * access counts of the new consumer. 	 */
 name|ocp
 operator|=
