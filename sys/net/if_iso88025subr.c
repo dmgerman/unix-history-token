@@ -1770,6 +1770,7 @@ operator|*
 name|th
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Set mbuf flags for bcast/mcast. 	 */
 if|if
 condition|(
 name|th
