@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$Id: arp.c,v 1.4 1996/02/08 21:05:52 phk Exp $"
+literal|"$Id: arp.c,v 1.5 1996/12/10 17:00:34 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -295,7 +295,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ether_aton
+name|my_ether_aton
 parameter_list|(
 name|char
 modifier|*
@@ -1304,7 +1304,7 @@ else|else
 block|{
 if|if
 condition|(
-name|ether_aton
+name|my_ether_aton
 argument_list|(
 name|eaddr
 argument_list|,
@@ -2566,7 +2566,7 @@ end_function
 
 begin_function
 name|int
-name|ether_aton
+name|my_ether_aton
 parameter_list|(
 name|char
 modifier|*
