@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.35 91/12/26$  *  *	@(#)trap.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.35 91/12/26$  *  *	@(#)trap.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -462,6 +462,11 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+specifier|extern
+name|char
+name|fswintr
+index|[]
+decl_stmt|;
 name|cnt
 operator|.
 name|v_trap
@@ -1219,6 +1224,22 @@ case|case
 name|T_MMUFLT
 case|:
 comment|/* kernel mode page fault */
+comment|/* 		 * If we were doing profiling ticks or other user mode 		 * stuff from interrupt code, Just Say No. 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_onfault
+operator|==
+name|fswintr
+condition|)
+goto|goto
+name|copyfault
+goto|;
 comment|/* fall into ... */
 case|case
 name|T_MMUFLT
