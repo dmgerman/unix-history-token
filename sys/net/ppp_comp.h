@@ -16,68 +16,6 @@ name|_NET_PPP_COMP_H
 end_define
 
 begin_comment
-comment|/*  * The following symbols control whether we include code for  * various compression methods.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DO_BSD_COMPRESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DO_BSD_COMPRESS
-value|1
-end_define
-
-begin_comment
-comment|/* by default, include BSD-Compress */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DO_DEFLATE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DO_DEFLATE
-value|1
-end_define
-
-begin_comment
-comment|/* by default, include Deflate */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|DO_PREDICTOR_1
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DO_PREDICTOR_2
-value|0
-end_define
-
-begin_comment
 comment|/*  * Structure giving methods for compression/decompression.  */
 end_comment
 
