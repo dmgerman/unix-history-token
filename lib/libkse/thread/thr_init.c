@@ -408,13 +408,13 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pthread_guard_default
+name|_pthread_guard_default
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|pthread_page_size
+name|_pthread_page_size
 decl_stmt|;
 end_decl_stmt
 
@@ -459,12 +459,12 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-name|pthread_page_size
+name|_pthread_page_size
 operator|=
 name|getpagesize
 argument_list|()
 expr_stmt|;
-name|pthread_guard_default
+name|_pthread_guard_default
 operator|=
 name|getpagesize
 argument_list|()
@@ -478,7 +478,7 @@ name|pthread_attr_default
 operator|.
 name|guardsize_attr
 operator|=
-name|pthread_guard_default
+name|_pthread_guard_default
 expr_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
@@ -1043,9 +1043,9 @@ name|_usrstack
 operator|-
 name|PTHREAD_STACK_INITIAL
 operator|-
-name|pthread_guard_default
+name|_pthread_guard_default
 argument_list|,
-name|pthread_guard_default
+name|_pthread_guard_default
 argument_list|,
 literal|0
 argument_list|,

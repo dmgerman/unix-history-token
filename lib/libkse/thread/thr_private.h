@@ -1189,14 +1189,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|pthread_guard_default
+name|_pthread_guard_default
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|pthread_page_size
+name|_pthread_page_size
 decl_stmt|;
 end_decl_stmt
 

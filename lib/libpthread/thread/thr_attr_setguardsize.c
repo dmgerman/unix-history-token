@@ -70,12 +70,12 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Round guardsize up to the nearest multiple of 		 * pthread_page_size. 		 */
+comment|/* 		 * Round guardsize up to the nearest multiple of 		 * _pthread_page_size. 		 */
 if|if
 condition|(
 name|guardsize
 operator|%
-name|pthread_page_size
+name|_pthread_page_size
 operator|!=
 literal|0
 condition|)
@@ -85,13 +85,13 @@ operator|(
 operator|(
 name|guardsize
 operator|/
-name|pthread_page_size
+name|_pthread_page_size
 operator|)
 operator|+
 literal|1
 operator|)
 operator|*
-name|pthread_page_size
+name|_pthread_page_size
 expr_stmt|;
 comment|/* Save the stack size. */
 operator|(
