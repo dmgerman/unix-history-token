@@ -5518,6 +5518,7 @@ operator|!
 name|packet_connection_is_on_socket
 argument_list|()
 condition|)
+return|return;
 if|if
 condition|(
 name|interactive
