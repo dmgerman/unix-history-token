@@ -194,6 +194,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_IPX
+end_ifndef
+
 begin_comment
 comment|/* IPX */
 end_comment
@@ -221,6 +227,11 @@ include|#
 directive|include
 file|<netipx/ipx_if.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Appletalk */
@@ -1659,8 +1670,6 @@ begin_decl_stmt
 name|af_status
 name|in_status
 decl_stmt|,
-name|ipx_status
-decl_stmt|,
 name|at_status
 decl_stmt|,
 name|ether_status
@@ -1671,13 +1680,34 @@ begin_decl_stmt
 name|af_getaddr
 name|in_getaddr
 decl_stmt|,
-name|ipx_getaddr
-decl_stmt|,
 name|at_getaddr
 decl_stmt|,
 name|ether_getaddr
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_IPX
+end_ifndef
+
+begin_decl_stmt
+name|af_status
+name|ipx_status
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|af_getaddr
+name|ipx_getaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1846,6 +1876,9 @@ block|,
 endif|#
 directive|endif
 comment|/*INET6*/
+ifndef|#
+directive|ifndef
+name|NO_IPX
 block|{
 literal|"ipx"
 block|,
@@ -1872,6 +1905,8 @@ argument|addreq
 argument_list|)
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"atalk"
 block|,
@@ -3471,6 +3506,9 @@ comment|/* in6_getprefix("64", MASK) if MASK is available here... */
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|NO_IPX
 if|if
 condition|(
 name|setipdst
@@ -3536,6 +3574,8 @@ literal|"Encapsulation Routing"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifr
@@ -7634,6 +7674,12 @@ begin_comment
 comment|/*INET6*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_IPX
+end_ifndef
+
 begin_function
 name|void
 name|ipx_status
@@ -7749,6 +7795,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -9220,6 +9271,12 @@ block|}
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_IPX
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -9332,6 +9389,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
