@@ -274,6 +274,10 @@ name|ifi_hdrlen
 decl_stmt|;
 comment|/* media header length */
 name|u_char
+name|ifi_link_state
+decl_stmt|;
+comment|/* current link state */
+name|u_char
 name|ifi_recvquota
 decl_stmt|;
 comment|/* polling quota for receive intrs */
@@ -597,6 +601,43 @@ name|IFF_CANTCHANGE
 define|\
 value|(IFF_BROADCAST|IFF_POINTOPOINT|IFF_RUNNING|IFF_OACTIVE|\ 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_SMART|IFF_PROMISC|\ 	    IFF_POLLING)
 end_define
+
+begin_comment
+comment|/*  * Values for if_link_state.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_STATE_UNKNOWN
+value|0
+end_define
+
+begin_comment
+comment|/* link invalid/unknown */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_STATE_DOWN
+value|1
+end_define
+
+begin_comment
+comment|/* link is down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_STATE_UP
+value|2
+end_define
+
+begin_comment
+comment|/* link is up */
+end_comment
 
 begin_comment
 comment|/*  * Some convenience macros used for setting ifi_baudrate.  * XXX 1000 vs. 1024? --thorpej@netbsd.org  */

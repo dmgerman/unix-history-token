@@ -555,6 +555,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|if_link_state
+value|if_data.ifi_link_state
+end_define
+
+begin_define
+define|#
+directive|define
 name|if_baudrate
 value|if_data.ifi_baudrate
 end_define
