@@ -313,6 +313,9 @@ name|opv
 operator|->
 name|opv_desc_vector_p
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WANT_BAD_JUJU
 if|if
 condition|(
 operator|*
@@ -326,6 +329,8 @@ argument_list|,
 name|M_VNODE
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|MALLOC
 argument_list|(
 operator|*
