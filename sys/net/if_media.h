@@ -804,6 +804,28 @@ begin_comment
 comment|/* Operate in Host AP mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_IBSS
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Operate in IBSS mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_IBSSMASTER
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Operate as an IBSS master */
+end_comment
+
 begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
@@ -1199,7 +1221,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_OPTION_DESCRIPTIONS
-value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_IEEE80211_ADHOC, "adhoc" },				\ 	{ IFM_IEEE80211_HOSTAP, "hostap" },				\ 	{ IFM_IEEE80211_IBSS, "ibss" },					\ 	{ IFM_IEEE80211_IBSSMASTER, "ibss-master" },			\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
