@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.60 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,6 +2232,12 @@ operator|=
 name|e
 expr_stmt|;
 comment|/* just in case */
+name|e
+operator|->
+name|e_statmsg
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|tTd
