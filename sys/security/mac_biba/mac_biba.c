@@ -2428,7 +2428,7 @@ operator|--
 name|pos
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -6412,7 +6412,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|mac
+name|label
 modifier|*
 name|vnodelabel
 parameter_list|)
@@ -6478,7 +6478,7 @@ modifier|*
 name|vp
 parameter_list|,
 name|struct
-name|mac
+name|label
 modifier|*
 name|vnodelabel
 parameter_list|)
@@ -8163,7 +8163,7 @@ parameter_list|,
 name|struct
 name|socket
 modifier|*
-name|socket
+name|so
 parameter_list|,
 name|struct
 name|label

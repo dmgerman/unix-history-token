@@ -1655,6 +1655,11 @@ parameter_list|,
 name|struct
 name|label
 modifier|*
+name|ifnetlabel
+parameter_list|,
+name|struct
+name|label
+modifier|*
 name|newlabel
 parameter_list|)
 block|{

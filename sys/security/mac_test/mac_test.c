@@ -2412,11 +2412,6 @@ name|label
 modifier|*
 name|label
 parameter_list|,
-name|struct
-name|mac
-modifier|*
-name|mac
-parameter_list|,
 name|char
 modifier|*
 name|element_name
