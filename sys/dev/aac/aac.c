@@ -926,16 +926,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_rev_check
+name|aac_rev_check
 parameter_list|(
 name|struct
 name|aac_softc
@@ -951,7 +945,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -967,7 +961,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|aac_linux_return_aif
+name|aac_return_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -979,11 +973,6 @@ name|uptr
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -7754,14 +7743,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|debug_called
 argument_list|(
 literal|2
@@ -7830,11 +7814,20 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
-ifdef|#
-directive|ifdef
-name|AAC_COMPAT_LINUX
 case|case
 name|FSACTL_SENDFIB
+case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_SENDFIB
 case|:
 name|debug
 argument_list|(
@@ -7856,6 +7849,9 @@ break|break;
 case|case
 name|FSACTL_AIF_THREAD
 case|:
+case|case
+name|FSACTL_LNX_AIF_THREAD
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7870,6 +7866,18 @@ expr_stmt|;
 break|break;
 case|case
 name|FSACTL_OPEN_GET_ADAPTER_FIB
+case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_OPEN_GET_ADAPTER_FIB
 case|:
 name|debug
 argument_list|(
@@ -7902,6 +7910,18 @@ break|break;
 case|case
 name|FSACTL_GET_NEXT_ADAPTER_FIB
 case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_GET_NEXT_ADAPTER_FIB
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7911,7 +7931,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -7921,6 +7941,9 @@ expr_stmt|;
 break|break;
 case|case
 name|FSACTL_CLOSE_GET_ADAPTER_FIB
+case|:
+case|case
+name|FSACTL_LNX_CLOSE_GET_ADAPTER_FIB
 case|:
 name|debug
 argument_list|(
@@ -7934,6 +7957,18 @@ break|break;
 case|case
 name|FSACTL_MINIPORT_REV_CHECK
 case|:
+name|arg
+operator|=
+operator|*
+operator|(
+name|caddr_t
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+case|case
+name|FSACTL_LNX_MINIPORT_REV_CHECK
+case|:
 name|debug
 argument_list|(
 literal|1
@@ -7943,7 +7978,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_rev_check
+name|aac_rev_check
 argument_list|(
 name|sc
 argument_list|,
@@ -7951,8 +7986,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|device_printf
 argument_list|(
@@ -8553,6 +8586,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/******************************************************************************  * Return the Revision of the driver to userspace and check to see if the  * userspace app is possibly compatible.  This is extremely bogus right now  * because I have no idea how to handle the versioning of this driver.  It is  * needed, though, to get aaccli working.  */
 end_comment
@@ -8560,7 +8598,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|aac_linux_rev_check
+name|aac_rev_check
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8698,7 +8736,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|aac_linux_getnext_aif
+name|aac_getnext_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8769,7 +8807,7 @@ argument_list|()
 expr_stmt|;
 name|error
 operator|=
-name|aac_linux_return_aif
+name|aac_return_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -8831,7 +8869,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|aac_linux_return_aif
+name|aac_return_aif
 argument_list|(
 name|sc
 argument_list|,
@@ -8871,7 +8909,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|aac_linux_return_aif
+name|aac_return_aif
 parameter_list|(
 name|struct
 name|aac_softc
@@ -8970,15 +9008,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* AAC_COMPAT_LINUX */
-end_comment
 
 end_unit
 
