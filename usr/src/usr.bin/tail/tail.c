@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.10 (Berkeley) %G%"
+literal|"@(#)tail.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -548,7 +548,10 @@ argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_CUR
 argument_list|)

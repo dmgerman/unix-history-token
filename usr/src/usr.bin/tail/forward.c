@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forward.c	5.6 (Berkeley) %G%"
+literal|"@(#)forward.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,6 +674,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|,
 name|PROT_READ
@@ -768,6 +771,9 @@ name|fseek
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sbp
 operator|->
 name|st_size

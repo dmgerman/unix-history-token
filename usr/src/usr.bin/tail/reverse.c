@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reverse.c	5.5 (Berkeley) %G%"
+literal|"@(#)reverse.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -299,6 +299,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|size
 argument_list|,
 name|PROT_READ
