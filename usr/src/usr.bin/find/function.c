@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.9 (Berkeley) %G%"
+literal|"@(#)function.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -187,6 +193,10 @@ modifier|*
 name|endchar
 decl_stmt|;
 comment|/* pointer to character ending conversion */
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 comment|/* determine comparison from leading + or - */
 switch|switch
 condition|(
@@ -579,7 +589,7 @@ name|PLAN
 modifier|*
 name|new
 decl_stmt|;
-name|depth
+name|isdepth
 operator|=
 literal|1
 expr_stmt|;
@@ -629,11 +639,6 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
-name|char
-modifier|*
-name|find_subst
-parameter_list|()
-function_decl|;
 name|union
 name|wait
 name|pstat
@@ -644,6 +649,10 @@ decl_stmt|,
 name|waitpid
 argument_list|()
 decl_stmt|;
+name|void
+name|find_subst
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|cnt
@@ -847,10 +856,6 @@ name|int
 name|isok
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|relative
-decl_stmt|;
 name|PLAN
 modifier|*
 name|new
@@ -873,16 +878,22 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
-name|relative
+name|isrelative
 condition|)
 name|ftsoptions
 operator||=
 name|FTS_NOCHDIR
 expr_stmt|;
-name|output_specified
+name|isoutput
+operator|=
+name|isstopdnx
 operator|=
 literal|1
 expr_stmt|;
@@ -1613,6 +1624,10 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 name|ftsoptions
 operator|&=
 operator|~
@@ -1921,6 +1936,10 @@ end_decl_stmt
 
 begin_block
 block|{
+name|void
+name|printlong
+parameter_list|()
+function_decl|;
 name|printlong
 argument_list|(
 name|entry
@@ -1960,7 +1979,7 @@ operator|&=
 operator|~
 name|FTS_NOSTAT
 expr_stmt|;
-name|output_specified
+name|isoutput
 operator|=
 literal|1
 expr_stmt|;
@@ -2224,6 +2243,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|group_from_gid
+parameter_list|()
+function_decl|;
 return|return
 operator|(
 name|group_from_gid
@@ -2236,6 +2260,10 @@ name|st_gid
 argument_list|,
 literal|1
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 operator|)
 return|;
 block|}
@@ -2304,6 +2332,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|user_from_uid
+parameter_list|()
+function_decl|;
 return|return
 operator|(
 name|user_from_uid
@@ -2316,6 +2349,10 @@ name|st_uid
 argument_list|,
 literal|1
 argument_list|)
+condition|?
+literal|1
+else|:
+literal|0
 operator|)
 return|;
 block|}
@@ -2462,6 +2499,10 @@ modifier|*
 name|setmode
 argument_list|()
 decl_stmt|;
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 name|ftsoptions
 operator|&=
 operator|~
@@ -2594,7 +2635,7 @@ name|PLAN
 modifier|*
 name|new
 decl_stmt|;
-name|output_specified
+name|isoutput
 operator|=
 literal|1
 expr_stmt|;
@@ -2653,7 +2694,7 @@ name|tree
 decl_stmt|;
 if|if
 condition|(
-name|ftsset
+name|fts_set
 argument_list|(
 name|tree
 argument_list|,
@@ -2938,6 +2979,10 @@ decl_stmt|;
 name|mode_t
 name|mask
 decl_stmt|;
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 name|ftsoptions
 operator|&=
 operator|~
@@ -3106,6 +3151,10 @@ decl_stmt|;
 name|uid_t
 name|uid
 decl_stmt|;
+name|void
+name|bad_arg
+parameter_list|()
+function_decl|;
 name|ftsoptions
 operator|&=
 operator|~
@@ -3195,11 +3244,6 @@ name|PLAN
 modifier|*
 name|new
 decl_stmt|;
-name|ftsoptions
-operator|&=
-operator|~
-name|FTS_NOSTAT
-expr_stmt|;
 name|ftsoptions
 operator||=
 name|FTS_XDEV
