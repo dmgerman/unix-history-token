@@ -6,7 +6,7 @@ name|UPECCDEBUG
 end_define
 
 begin_comment
-comment|/*	up.c	4.39	81/05/11	*/
+comment|/*	up.c	4.43	82/03/24	*/
 end_comment
 
 begin_include
