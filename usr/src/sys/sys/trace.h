@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)trace.h	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)trace.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -425,15 +425,6 @@ name|TRACE
 end_ifdef
 
 begin_decl_stmt
-name|char
-name|traceflags
-index|[
-name|TR_NFLAGS
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
@@ -443,6 +434,8 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|tracewhich
+decl_stmt|,
 name|tracebuf
 index|[
 name|TRCSIZ
@@ -451,14 +444,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|u_int
 name|tracex
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|tracewhich
+name|char
+name|traceflags
+index|[
+name|TR_NFLAGS
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -485,7 +481,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|if (traceflags[a]) trace1(a,b,c)
+value|{							\ 	if (traceflags[a])						\ 		trace1(a,b,c);						\ }
 end_define
 
 begin_else
@@ -504,7 +500,6 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|;
 end_define
 
 begin_endif
