@@ -469,6 +469,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|ALLIEDTELESIS
+argument_list|,
+name|WR211PCM
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|BAY
 argument_list|,
 name|EMOBILITY_11B
