@@ -2842,7 +2842,6 @@ operator|+
 name|len
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 name|next
@@ -2859,6 +2858,7 @@ name|tx_upper_limit
 operator|-
 literal|2
 expr_stmt|;
+block|}
 block|}
 comment|/* 			 * Build the packet frame in the card's ring buffer. 			 */
 name|DODEBUG
@@ -3062,7 +3062,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 				 * If there were other frames chained, update the 				 * chain in the last one. 				 */
+block|}
+comment|/* 			 * If there were other frames chained, update the 			 * chain in the last one. 			 */
 if|if
 condition|(
 name|sc
@@ -3153,7 +3154,7 @@ name|Ch_bit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 				 * Resume normal operation of the card: 				 * - Make a dummy read to flush the DRAM write 				 *   pipeline. 				 * - Enable receive and transmit interrupts. 				 * - Send Transmit or Resume_XMT command, as 				 *   appropriate. 				 */
+comment|/* 			 * Resume normal operation of the card: 			 * - Make a dummy read to flush the DRAM write 			 *   pipeline. 			 * - Enable receive and transmit interrupts. 			 * - Send Transmit or Resume_XMT command, as 			 *   appropriate. 			 */
 name|inw
 argument_list|(
 name|iobase
@@ -3311,7 +3312,6 @@ literal|"OACTIVE start\n"
 argument|);
 argument_list|)
 empty_stmt|;
-block|}
 block|}
 block|}
 name|splx
