@@ -66,6 +66,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_SOCKLEN_T_
+value|__uint32_t
+end_define
+
+begin_define
+define|#
+directive|define
 name|_BSD_SSIZE_T_
 value|long
 end_define

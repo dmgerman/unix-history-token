@@ -15,6 +15,12 @@ directive|define
 name|_SYS_SOCKET_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -48,12 +54,29 @@ name|sa_family_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SOCKLEN_T_
+end_ifdef
+
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|_BSD_SOCKLEN_T_
 name|socklen_t
 typedef|;
 end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SOCKLEN_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Types  */
