@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.16 1995/11/09 08:16:50 bde Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.17 1995/12/14 09:52:56 phk Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -5320,6 +5320,7 @@ parameter_list|(
 name|dn_p
 name|dnp
 parameter_list|)
+comment|/*proto*/
 block|{
 name|struct
 name|vnode

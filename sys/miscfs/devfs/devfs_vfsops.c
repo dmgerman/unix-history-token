@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.6 1995/09/07 06:01:35 julian Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.7 1995/12/14 09:52:55 phk Exp $  *  *  */
 end_comment
 
 begin_include
@@ -93,6 +93,24 @@ name|struct
 name|statfs
 modifier|*
 name|sbp
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|mountdevfs
+parameter_list|(
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|,
 name|struct
 name|proc

@@ -299,6 +299,17 @@ comment|/*proto*/
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|devfs_dropvnode
+parameter_list|(
+name|dn_p
+name|dnp
+parameter_list|)
+comment|/*proto*/
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* THIS FILE PRODUCED AUTOMATICALLY */
 end_comment
