@@ -2245,7 +2245,7 @@ argument_list|()
 expr_stmt|;
 name|systemExecute
 argument_list|(
-literal|"rm -f /etc/localtime /etc/wall_cmos_clock; tzsetup"
+literal|"tzsetup"
 argument_list|)
 expr_stmt|;
 name|restorescr

@@ -1351,7 +1351,7 @@ name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
-literal|"rm -f /etc/localtime; tzsetup"
+literal|"tzsetup"
 block|}
 block|,
 block|{
@@ -6474,7 +6474,7 @@ name|dmenuSystemCommand
 block|,
 name|NULL
 block|,
-literal|"rm -f /etc/localtime; tzsetup"
+literal|"tzsetup"
 block|}
 block|,
 block|{
