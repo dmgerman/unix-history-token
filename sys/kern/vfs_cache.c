@@ -1441,7 +1441,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup an entry in the cache  *  * We don't do this if the segment name is long, simply so the cache  * can avoid holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  */
+comment|/*  * Lookup an entry in the cache  *  * Lookup is called with dvp pointing to the directory to search,  * cnp pointing to the name of the entry being sought. If the lookup  * succeeds, the vnode is returned in *vpp, and a status of -1 is  * returned. If the lookup determines that the name does not exist  * (negative cacheing), a status of ENOENT is returned. If the lookup  * fails, a status of zero is returned.  */
 end_comment
 
 begin_function
