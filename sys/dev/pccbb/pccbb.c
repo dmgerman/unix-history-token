@@ -1729,6 +1729,9 @@ block|{
 case|case
 name|CB_RF5C46X
 case|:
+case|case
+name|CB_RF5C47X
+case|:
 name|PCI_MASK_CONFIG
 argument_list|(
 name|sc
