@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.63 1998/09/04 18:25:59 brian Exp $  *  * TODO:  *	o Limit data field length by MRU  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.64 1998/09/09 00:03:09 brian Exp $  *  * TODO:  *	o Limit data field length by MRU  */
 end_comment
 
 begin_include
@@ -3869,7 +3869,58 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-elseif|else
+else|else
+block|{
+if|if
+condition|(
+name|IsAccepted
+argument_list|(
+name|lcp
+operator|->
+name|cfg
+operator|.
+name|chap
+argument_list|)
+condition|)
+block|{
+ifndef|#
+directive|ifndef
+name|HAVE_DES
+if|if
+condition|(
+name|cp
+index|[
+literal|4
+index|]
+operator|==
+literal|0x80
+condition|)
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Chap 0x80 not available without DES\n"
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|log_Printf
+argument_list|(
+name|LogWARN
+argument_list|,
+literal|"Chap 0x%02x not supported\n"
+argument_list|,
+operator|(
+name|unsigned
+operator|)
+name|cp
+index|[
+literal|4
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|IsAccepted
@@ -3932,6 +3983,7 @@ else|else
 goto|goto
 name|reqreject
 goto|;
+block|}
 break|break;
 default|default:
 name|log_Printf
