@@ -3537,6 +3537,21 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|cam_calc_geometry
+parameter_list|(
+name|struct
+name|ccb_calc_geometry
+modifier|*
+name|ccg
+parameter_list|,
+name|int
+name|extended
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
