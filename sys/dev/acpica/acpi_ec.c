@@ -85,6 +85,193 @@ literal|"EC"
 argument_list|)
 end_macro
 
+begin_comment
+comment|/*  * EC_COMMAND:  * -----------  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT8
+name|EC_COMMAND
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_UNKNOWN
+value|((EC_COMMAND) 0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_READ
+value|((EC_COMMAND) 0x80)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_WRITE
+value|((EC_COMMAND) 0x81)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_BURST_ENABLE
+value|((EC_COMMAND) 0x82)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_BURST_DISABLE
+value|((EC_COMMAND) 0x83)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_COMMAND_QUERY
+value|((EC_COMMAND) 0x84)
+end_define
+
+begin_comment
+comment|/*   * EC_STATUS:  * ----------  * The encoding of the EC status register is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the output buffer is full).  * +-+-+-+-+-+-+-+-+  * |7|6|5|4|3|2|1|0|	  * +-+-+-+-+-+-+-+-+  *  | | | | | | | |  *  | | | | | | | +- Output Buffer Full?  *  | | | | | | +--- Input Buffer Full?  *  | | | | | +-----<reserved>  *  | | | | +------- Data Register is Command Byte?  *  | | | +--------- Burst Mode Enabled?  *  | | +----------- SCI Event?  *  | +------------- SMI Event?  *  +---------------<Reserved>  *  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT8
+name|EC_STATUS
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EC_FLAG_OUTPUT_BUFFER
+value|((EC_STATUS) 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_FLAG_INPUT_BUFFER
+value|((EC_STATUS) 0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_FLAG_BURST_MODE
+value|((EC_STATUS) 0x10)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_FLAG_SCI
+value|((EC_STATUS) 0x20)
+end_define
+
+begin_comment
+comment|/*  * EC_EVENT:  * ---------  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT8
+name|EC_EVENT
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|EC_EVENT_UNKNOWN
+value|((EC_EVENT) 0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_EVENT_OUTPUT_BUFFER_FULL
+value|((EC_EVENT) 0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_EVENT_INPUT_BUFFER_EMPTY
+value|((EC_EVENT) 0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_EVENT_SCI
+value|((EC_EVENT) 0x20)
+end_define
+
+begin_comment
+comment|/*  * Register access primitives  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EC_GET_DATA
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_read_1((sc)->ec_data_tag, (sc)->ec_data_handle, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_SET_DATA
+parameter_list|(
+name|sc
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|bus_space_write_1((sc)->ec_data_tag, (sc)->ec_data_handle, 0, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_GET_CSR
+parameter_list|(
+name|sc
+parameter_list|)
+define|\
+value|bus_space_read_1((sc)->ec_csr_tag, (sc)->ec_csr_handle, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EC_SET_CSR
+parameter_list|(
+name|sc
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|bus_space_write_1((sc)->ec_csr_tag, (sc)->ec_csr_handle, 0, (v))
+end_define
+
+begin_comment
+comment|/*  * Driver softc.  */
+end_comment
+
 begin_struct
 struct|struct
 name|acpi_ec_softc
@@ -1861,7 +2048,7 @@ literal|"EcWaitEvent called without EC lock!\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * Stall 1us:      * ----------      * Stall for 1 microsecond before reading the status register      * for the first time.  This allows the EC to set the IBF/OBF      * bit to its proper state.      *      * XXX it is not clear why we read the CSR twice.      */
-name|AcpiOsSleepUsec
+name|AcpiOsStall
 argument_list|(
 literal|1
 argument_list|)
@@ -1934,7 +2121,7 @@ operator|(
 name|AE_OK
 operator|)
 return|;
-name|AcpiOsSleepUsec
+name|AcpiOsStall
 argument_list|(
 literal|10
 argument_list|)
