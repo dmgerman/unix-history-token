@@ -38,13 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lmonetary.h"
+file|"ldpart.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldpart.h"
+file|"lmonetary.h"
 end_include
 
 begin_decl_stmt
@@ -365,7 +365,7 @@ argument_list|(
 name|n_sign_posn
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The six additional C99 international monetary formatting 		 * parameters default to the national parameters when 		 * reading FreeBSD 4 LC_MONETARY data files. 		 */
+comment|/* 		 * The six additional C99 international monetary formatting 		 * parameters default to the national parameters when 		 * reading FreeBSD LC_MONETARY data files. 		 */
 define|#
 directive|define
 name|M_ASSIGN_ICHAR
@@ -470,6 +470,13 @@ literal|"n_sep_by_space = %d\n"
 literal|"p_sign_posn = %d\n"
 literal|"n_sign_posn = %d\n"
 argument_list|,
+literal|"int_p_cs_precedes = %d\n"
+literal|"int_p_sep_by_space = %d\n"
+literal|"int_n_cs_precedes = %d\n"
+literal|"int_n_sep_by_space = %d\n"
+literal|"int_p_sign_posn = %d\n"
+literal|"int_n_sign_posn = %d\n"
+argument_list|,
 name|_monetary_locale
 operator|.
 name|int_curr_symbol
@@ -550,6 +557,48 @@ argument_list|,
 name|_monetary_locale
 operator|.
 name|n_sign_posn
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_p_cs_precedes
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_p_sep_by_space
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_n_cs_precedes
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_n_sep_by_space
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_p_sign_posn
+index|[
+literal|0
+index|]
+argument_list|,
+name|_monetary_locale
+operator|.
+name|int_n_sign_posn
 index|[
 literal|0
 index|]

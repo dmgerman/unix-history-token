@@ -80,13 +80,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"setlocale.h"
+file|"ldpart.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldpart.h"
+file|"setlocale.h"
 end_include
 
 begin_function_decl

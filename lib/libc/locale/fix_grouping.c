@@ -51,7 +51,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * "3;3;-1" -> "\003\003\177"  */
+comment|/*  * Internal helper used to convert grouping sequences from string  * representation into POSIX specified form, i.e.  *  * "3;3;-1" -> "\003\003\177\000"  */
 end_comment
 
 begin_function

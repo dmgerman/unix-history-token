@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lmessages.h"
+file|"ldpart.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldpart.h"
+file|"lmessages.h"
 end_include
 
 begin_define

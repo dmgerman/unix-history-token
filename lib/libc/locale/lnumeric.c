@@ -26,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lnumeric.h"
+file|"ldpart.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ldpart.h"
+file|"lnumeric.h"
 end_include
 
 begin_decl_stmt
