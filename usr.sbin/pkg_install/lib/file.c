@@ -1975,7 +1975,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"cp -p -r %s %s"
+literal|"cp -r %s %s"
 argument_list|,
 name|fname
 argument_list|,
@@ -1989,7 +1989,7 @@ name|cmd
 argument_list|,
 name|FILENAME_MAX
 argument_list|,
-literal|"cp -p -r %s/%s %s"
+literal|"cp -r %s/%s %s"
 argument_list|,
 name|dir
 argument_list|,
