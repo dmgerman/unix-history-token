@@ -46,7 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -65,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/acl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/uma.h>
 end_include
 
 begin_comment
@@ -1588,7 +1594,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|uma_zone_t
+name|struct
+name|uma_zone
+modifier|*
 name|namei_zone
 decl_stmt|;
 end_decl_stmt
