@@ -28,12 +28,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_ddb.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_comconsole.h"
 end_include
 
@@ -77,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -137,12 +137,6 @@ begin_include
 include|#
 directive|include
 file|<sys/tty.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ddb/ddb.h>
 end_include
 
 begin_include
@@ -1585,7 +1579,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
@@ -1602,7 +1596,7 @@ literal|0
 condition|)
 name|brk
 operator|=
-name|db_alt_break
+name|kdb_alt_break
 argument_list|(
 name|c
 argument_list|,
@@ -1712,7 +1706,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DDB
+name|KDB
 argument_list|)
 operator|&&
 name|defined
