@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_subr.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_subr.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -164,6 +170,41 @@ operator|=
 operator|&
 name|tcb
 expr_stmt|;
+if|if
+condition|(
+name|max_protohdr
+operator|<
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+condition|)
+name|max_protohdr
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|max_linkhdr
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+operator|>
+name|MHLEN
+condition|)
+name|panic
+argument_list|(
+literal|"tcp_init"
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -240,18 +281,6 @@ operator|(
 literal|0
 operator|)
 return|;
-name|m
-operator|->
-name|m_off
-operator|=
-name|MMAXOFF
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcpiphdr
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|m_len
@@ -414,6 +443,8 @@ argument|tp
 argument_list|,
 argument|ti
 argument_list|,
+argument|m
+argument_list|,
 argument|ack
 argument_list|,
 argument|seq
@@ -440,6 +471,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|register
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|tcp_seq
 name|ack
 decl_stmt|,
@@ -455,12 +495,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|int
 name|win
 init|=
@@ -506,14 +540,14 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|flags
+name|m
 operator|==
 literal|0
 condition|)
 block|{
 name|m
 operator|=
-name|m_get
+name|m_gethdr
 argument_list|(
 name|M_DONTWAIT
 argument_list|,
@@ -554,6 +588,12 @@ argument_list|)
 operator|+
 name|tlen
 expr_stmt|;
+name|m
+operator|->
+name|m_data
+operator|+=
+name|max_linkhdr
+expr_stmt|;
 operator|*
 name|mtod
 argument_list|(
@@ -585,13 +625,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|m
-operator|=
-name|dtom
-argument_list|(
-name|ti
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -607,17 +640,12 @@ literal|0
 expr_stmt|;
 name|m
 operator|->
-name|m_off
+name|m_data
 operator|=
 operator|(
-name|int
+name|caddr_t
 operator|)
 name|ti
-operator|-
-operator|(
-name|int
-operator|)
-name|m
 expr_stmt|;
 name|tlen
 operator|=

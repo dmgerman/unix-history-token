@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_input.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_input.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -134,14 +140,6 @@ name|int
 name|tcpprintfs
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|tcpcksum
-init|=
-literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -726,18 +724,24 @@ begin_comment
 comment|/*  * TCP input routine, follows pages 65-76 of the  * protocol specification dated September, 1981 very closely.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|tcp_input
 argument_list|(
-argument|m0
+name|m
+argument_list|,
+name|iphlen
 argument_list|)
-end_macro
+specifier|register
+expr|struct
+name|mbuf
+operator|*
+name|m
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|struct
-name|mbuf
-modifier|*
-name|m0
+name|int
+name|iphlen
 decl_stmt|;
 end_decl_stmt
 
@@ -753,12 +757,6 @@ name|struct
 name|inpcb
 modifier|*
 name|inp
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 name|struct
 name|mbuf
@@ -825,10 +823,6 @@ name|tcps_rcvtotal
 operator|++
 expr_stmt|;
 comment|/* 	 * Get IP and TCP header together in first mbuf. 	 * Note: IP leaves IP header in first mbuf. 	 */
-name|m
-operator|=
-name|m0
-expr_stmt|;
 name|ti
 operator|=
 name|mtod
@@ -842,35 +836,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|ti
-operator|)
-operator|->
-name|ip_hl
+name|iphlen
 operator|>
-operator|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ip
 argument_list|)
-operator|>>
-literal|2
-operator|)
 condition|)
 name|ip_stripoptions
 argument_list|(
-operator|(
-expr|struct
-name|ip
-operator|*
-operator|)
-name|ti
+name|m
 argument_list|,
 operator|(
 expr|struct
@@ -884,9 +860,9 @@ if|if
 condition|(
 name|m
 operator|->
-name|m_off
-operator|>
-name|MMAXOFF
+name|m_flags
+operator|&
+name|M_EXT
 operator|||
 name|m
 operator|->
@@ -962,11 +938,6 @@ argument_list|)
 operator|+
 name|tlen
 expr_stmt|;
-if|if
-condition|(
-name|tcpcksum
-condition|)
-block|{
 name|ti
 operator|->
 name|ti_next
@@ -1041,7 +1012,6 @@ expr_stmt|;
 goto|goto
 name|drop
 goto|;
-block|}
 block|}
 comment|/* 	 * Check that TCP offset makes sense, 	 * pull out TCP options and adjust length. 	 */
 name|off
@@ -1242,6 +1212,16 @@ name|om
 operator|->
 name|m_len
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|om
+operator|->
+name|m_len
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|op
@@ -1279,7 +1259,7 @@ expr_stmt|;
 comment|/* 	 * Drop TCP and IP headers; TCP options were dropped above. 	 */
 name|m
 operator|->
-name|m_off
+name|m_data
 operator|+=
 sizeof|sizeof
 argument_list|(
@@ -1290,6 +1270,18 @@ expr_stmt|;
 name|m
 operator|->
 name|m_len
+operator|-=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tcpiphdr
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 operator|-=
 sizeof|sizeof
 argument_list|(
@@ -1590,7 +1582,7 @@ name|tp
 operator|->
 name|rcv_wnd
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|win
 argument_list|,
@@ -1665,12 +1657,11 @@ name|drop
 goto|;
 if|if
 condition|(
-name|in_broadcast
-argument_list|(
-name|ti
+name|m
 operator|->
-name|ti_dst
-argument_list|)
+name|m_flags
+operator|&
+name|M_BCAST
 condition|)
 goto|goto
 name|drop
@@ -2108,7 +2099,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -2969,7 +2960,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -3112,7 +3103,7 @@ decl_stmt|;
 name|u_int
 name|win
 init|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -3516,7 +3507,7 @@ name|snd_ssthresh
 condition|)
 name|incr
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|incr
 operator|*
@@ -3533,7 +3524,7 @@ name|tp
 operator|->
 name|snd_cwnd
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -3541,7 +3532,7 @@ name|snd_cwnd
 operator|+
 name|incr
 argument_list|,
-name|IP_MAXPACKET
+name|USHRT_MAX
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -3612,24 +3603,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_flags
-operator|&
-name|SB_WAIT
-operator|)
-operator|||
-name|so
-operator|->
-name|so_snd
-operator|.
-name|sb_sel
-condition|)
 name|sowwakeup
 argument_list|(
 name|so
@@ -4441,12 +4414,11 @@ operator|&
 name|TH_RST
 operator|)
 operator|||
-name|in_broadcast
-argument_list|(
-name|ti
+name|m
 operator|->
-name|ti_dst
-argument_list|)
+name|m_flags
+operator|&
+name|M_BCAST
 condition|)
 goto|goto
 name|drop
@@ -4462,6 +4434,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|ti
+argument_list|,
+name|m
 argument_list|,
 operator|(
 name|tcp_seq
@@ -4493,6 +4467,8 @@ argument_list|(
 name|tp
 argument_list|,
 name|ti
+argument_list|,
+name|m
 argument_list|,
 name|ti
 operator|->
@@ -4778,7 +4754,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|tp
 operator|->
@@ -5195,7 +5171,7 @@ operator|)
 return|;
 name|mss
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|mss
 argument_list|,
