@@ -8672,7 +8672,7 @@ operator|>
 literal|0
 name|fprintf
 argument_list|(
-name|stderr
+argument|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
@@ -8725,48 +8725,36 @@ literal|"\t\t(to restore label and install boot program)"
 argument_list|,
 endif|#
 directive|endif
-literal|"       disklabel [-NW] disk"
-argument_list|,
-literal|"\t\t(to write disable/enable label)"
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
+argument|fprintf(stderr,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
-argument_list|,
+argument|,
 literal|"usage: disklabel [-r] disk"
-argument_list|,
+argument|,
 literal|"(to read label)"
-argument_list|,
+argument|,
 literal|"       disklabel -w [-r] [-n] disk type [ packid ]"
-argument_list|,
+argument|,
 literal|"\t\t(to write label)"
-argument_list|,
+argument|,
 literal|"       disklabel -e [-r] [-n] disk"
-argument_list|,
+argument|,
 literal|"\t\t(to edit label)"
-argument_list|,
+argument|,
 literal|"       disklabel -R [-r] [-n] disk protofile"
-argument_list|,
+argument|,
 literal|"\t\t(to restore label)"
-argument_list|,
+argument|,
 literal|"       disklabel [-NW] disk"
-argument_list|,
+argument|,
 literal|"\t\t(to write disable/enable label)"
-argument_list|)
-expr_stmt|;
+argument|);
 endif|#
 directive|endif
-name|exit
-argument_list|(
+argument|exit(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
+argument|); }
 end_function
 
 end_unit
