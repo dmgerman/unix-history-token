@@ -633,6 +633,13 @@ name|PSM_4DPLUS_ID
 value|8
 end_define
 
+begin_define
+define|#
+directive|define
+name|PSM_4DPLUS_RFSW35_ID
+value|24
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
