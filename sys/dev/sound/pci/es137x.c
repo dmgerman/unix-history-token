@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Support the ENSONIQ AudioPCI board and Creative Labs SoundBlaster PCI  * boards based on the ES1370, ES1371 and ES1373 chips.  *  * Copyright (c) 1999 Russell Cattelan<cattelan@thebarn.com>  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Copyright (c) 1998 by Joachim Kuebart. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *	This product includes software developed by Joachim Kuebart.  *  * 4. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Support the ENSONIQ AudioPCI board and Creative Labs SoundBlaster PCI  * boards based on the ES1370, ES1371 and ES1373 chips.  *  * Copyright (c) 1999 Russell Cattelan<cattelan@thebarn.com>  * Copyright (c) 1999 Cameron Grant<cg@freebsd.org>  * Copyright (c) 1998 by Joachim Kuebart. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *	This product includes software developed by Joachim Kuebart.  *  * 4. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.	IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -129,6 +129,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CT4730_PCI_ID
+value|0x89381102
+end_define
+
+begin_define
+define|#
+directive|define
 name|ES1371REV_ES1371_A
 value|0x02
 end_define
@@ -187,6 +194,13 @@ define|#
 directive|define
 name|CT5880REV_CT5880_E
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|CT4730REV_CT4730_A
+value|0x00
 end_define
 
 begin_define
@@ -3061,6 +3075,12 @@ name|revid
 operator|==
 name|CT5880REV_CT5880_E
 operator|)
+operator|||
+operator|(
+name|devid
+operator|==
+name|CT4730_PCI_ID
+operator|)
 condition|)
 block|{
 name|bus_space_write_4
@@ -5012,6 +5032,54 @@ return|return
 literal|0
 return|;
 case|case
+name|CT4730_PCI_ID
+case|:
+switch|switch
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+name|CT4730REV_CT4730_A
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Creative SB AudioPCI CT4730"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+default|default:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Creative SB AudioPCI CT4730-?"
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"unknown revision %d -- please report to cg@freebsd.org\n"
+argument_list|,
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+case|case
 name|CT5880_PCI_ID
 case|:
 switch|switch
@@ -5446,6 +5514,13 @@ name|dev
 argument_list|)
 operator|==
 name|CT5880_PCI_ID
+operator|||
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|CT4730_PCI_ID
 condition|)
 block|{
 if|if
