@@ -1441,6 +1441,21 @@ comment|/* 3Com */
 end_comment
 
 begin_comment
+comment|/*  * Compile-time config flags  */
+end_comment
+
+begin_comment
+comment|/*  * this sets the default for enabling/disablng the tranceiver  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ED_FLAGS_DISABLE_TRANCEIVER
+value|0x01
+end_define
+
+begin_comment
 comment|/*  *		Definitions for Western digital/SMC WD80x3 series ASIC  */
 end_comment
 
