@@ -460,6 +460,10 @@ block|}
 comment|/* Fill space with random characters */
 while|while
 condition|(
+name|trv
+operator|>=
+name|path
+operator|&&
 operator|*
 name|trv
 operator|==
