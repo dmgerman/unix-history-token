@@ -1000,6 +1000,7 @@ block|{
 name|ierr
 argument_list|()
 expr_stmt|;
+return|return;
 block|}
 else|else
 block|{
