@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ccdconfig.c,v 1.6 1997/02/22 14:32:10 peter Exp $ */
 end_comment
 
 begin_comment
@@ -130,14 +130,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3300,49 +3292,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-cv] ccd ileave [flags] %s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-name|__progname
+literal|"usage: ccdconfig [-cv] ccd ileave [flags] dev [...]"
 argument_list|,
-literal|"dev [...]"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"       ccdconfig -C [-v] [-f config_file]"
 argument_list|,
-literal|"       %s -C [-v] [-f config_file]\n"
+literal|"       ccdconfig -u [-v] ccd [...]"
 argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"       ccdconfig -U [-v] [-f config_file]"
 argument_list|,
-literal|"       %s -u [-v] ccd [...]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s -U [-v] [-f config_file]\n"
-argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s -g [-M core] [-N system] %s\n"
-argument_list|,
-name|__progname
-argument_list|,
-literal|"[ccd [...]]"
+literal|"       ccdconfig -g [-M core] [-N system] [ccd [...]]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3352,9 +3312,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* Local Variables: */
