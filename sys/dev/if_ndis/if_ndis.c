@@ -1068,6 +1068,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2992,27 +2994,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|sc
-operator|->
-name|ndis_txarray
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ndis_packet
-operator|*
-argument_list|)
-operator|*
-name|sc
-operator|->
-name|ndis_maxpkts
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 block|}
@@ -3333,6 +3316,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|r
@@ -8109,6 +8094,8 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|error
@@ -9543,6 +9530,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|error
@@ -10238,6 +10227,11 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"dev shutting down...\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
