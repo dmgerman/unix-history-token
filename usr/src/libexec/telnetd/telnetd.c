@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	5.6 (Berkeley) %G%"
+literal|"@(#)telnetd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1688,42 +1688,21 @@ name|TS_DATA
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|c
 operator|==
 literal|0
-condition|)
-block|{
-operator|*
-name|pfrontp
-operator|++
-operator|=
-literal|'\r'
-expr_stmt|;
-break|break;
-block|}
-elseif|else
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|c
 operator|==
 literal|'\n'
+operator|)
 condition|)
 block|{
-operator|*
-name|pfrontp
-operator|++
-operator|=
-name|c
-expr_stmt|;
 break|break;
 block|}
-else|else
-operator|*
-name|pfrontp
-operator|++
-operator|=
-literal|'\r'
-expr_stmt|;
 comment|/* FALL THROUGH */
 case|case
 name|TS_DATA
@@ -1760,11 +1739,12 @@ name|c
 operator|==
 literal|'\r'
 condition|)
+block|{
 name|state
 operator|=
 name|TS_CR
 expr_stmt|;
-else|else
+block|}
 operator|*
 name|pfrontp
 operator|++
