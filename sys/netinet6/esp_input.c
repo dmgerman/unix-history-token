@@ -2838,7 +2838,7 @@ operator|+
 name|siz
 condition|)
 block|{
-name|ipsecstat
+name|ipsec6stat
 operator|.
 name|in_inval
 operator|++
