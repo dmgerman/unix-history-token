@@ -3306,7 +3306,7 @@ name|tp
 operator|->
 name|rcv_nxt
 expr_stmt|;
-comment|/*  * XXX possible bug - it doesn't appear that tp->snd_wnd is unscaled  * until the _second_ ACK is received:  *    rcv SYN (set wscale opts)	 --> send SYN/ACK, set snd_wnd = window.  *    rcv ACK, calculate tiwin --> process SYN_RECEIVED, determine wscale,  *        move to ESTAB, set snd_wnd to tiwin.  */
+comment|/* 				 * RFC1323: The window in SYN& SYN/ACK 				 * segments is never scaled. 				 */
 name|tp
 operator|->
 name|snd_wnd
