@@ -420,6 +420,17 @@ argument_list|(
 name|principal
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+name|PAM_SUCCESS
+condition|)
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Kerberos IV refuses you"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|retval
