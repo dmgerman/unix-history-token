@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)optr.c	1.2 (Berkeley) %G%"
+literal|"@(#)optr.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1528,8 +1528,20 @@ end_comment
 
 begin_macro
 name|lastdump
-argument_list|()
+argument_list|(
+argument|arg
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+name|arg
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* w ==> just what to do; W ==> most recent dumps */
+end_comment
 
 begin_block
 block|{
@@ -1597,11 +1609,25 @@ argument_list|,
 name|idatesort
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+literal|'w'
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Last dump(s) done (Dump '*' file systems):\n"
+literal|"Dump these file systems:\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"Last dump(s) done (Dump '>' file systems):\n"
 argument_list|)
 expr_stmt|;
 name|lastname
@@ -1707,6 +1733,16 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|arg
+operator|!=
+literal|'w'
+operator|)
+operator|||
+name|dumpme
+condition|)
 name|fprintf
 argument_list|(
 name|stdout
@@ -1714,8 +1750,14 @@ argument_list|,
 literal|"%c %8s\t(%6s) Last dump: Level %c, Date %s\n"
 argument_list|,
 name|dumpme
+operator|&&
+operator|(
+name|arg
+operator|!=
+literal|'w'
+operator|)
 condition|?
-literal|'*'
+literal|'>'
 else|:
 literal|' '
 argument_list|,

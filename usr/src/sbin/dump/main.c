@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.1 (Berkeley) %G%"
+literal|"@(#)main.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,12 +179,30 @@ operator|++
 condition|)
 block|{
 case|case
+literal|'w'
+case|:
+name|lastdump
+argument_list|(
+literal|'w'
+argument_list|)
+expr_stmt|;
+comment|/* tell us only what has to be done */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'W'
 case|:
 comment|/* what to do */
 name|lastdump
-argument_list|()
+argument_list|(
+literal|'W'
+argument_list|)
 expr_stmt|;
+comment|/* tell us the current state of what has been done */
 name|exit
 argument_list|(
 literal|0
