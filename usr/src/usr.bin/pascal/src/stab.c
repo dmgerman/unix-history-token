@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 1.8 %G%"
+literal|"@(#)stab.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"yy.h"
 end_include
 
 begin_include
@@ -901,10 +907,10 @@ block|{
 name|int
 name|label
 decl_stmt|;
-comment|/* 	     *	for separate compilation 	     */
+comment|/* 	 *	for separate compilation 	 */
 name|putprintf
 argument_list|(
-literal|"	.stabs	\"%s\",0x%x,0,0x%x,0"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
@@ -913,9 +919,11 @@ argument_list|,
 name|N_PC
 argument_list|,
 name|N_PSO
+argument_list|,
+name|N_FLAGCHECKSUM
 argument_list|)
 expr_stmt|;
-comment|/* 	     *	for sdb 	     */
+comment|/* 	 *	for sdb 	 */
 if|if
 condition|(
 operator|!
@@ -990,13 +998,15 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	included files get one or more of these:      *	one as they are entered by a #include,      *	and one every time they are returned to by nested #includes      */
+comment|/*      *	included files get one or more of these:      *	one as they are entered by a #include,      *	and one every time they are returned to from nested #includes.      */
 end_comment
 
 begin_macro
 name|stabinclude
 argument_list|(
 argument|filename
+argument_list|,
+argument|firsttime
 argument_list|)
 end_macro
 
@@ -1007,15 +1017,44 @@ name|filename
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|firsttime
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
 name|label
 decl_stmt|;
-comment|/* 	     *	for separate compilation 	     */
+name|long
+name|check
+decl_stmt|;
+comment|/* 	 *	for separate compilation 	 */
+if|if
+condition|(
+name|firsttime
+condition|)
+block|{
+name|check
+operator|=
+name|checksum
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|check
+operator|=
+name|N_FLAGCHECKSUM
+expr_stmt|;
+block|}
 name|putprintf
 argument_list|(
-literal|"	.stabs	\"%s\",0x%x,0,0x%x,0"
+literal|"	.stabs	\"%s\",0x%x,0,0x%x,0x%x"
 argument_list|,
 literal|0
 argument_list|,
@@ -1024,9 +1063,11 @@ argument_list|,
 name|N_PC
 argument_list|,
 name|N_PSOL
+argument_list|,
+name|check
 argument_list|)
 expr_stmt|;
-comment|/* 	     *	for sdb 	     */
+comment|/* 	 *	for sdb 	 */
 if|if
 condition|(
 operator|!
@@ -1099,6 +1140,136 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*      *	anyone know a good checksum for ascii files?      *	this does a rotate-left and then exclusive-or's in the character.      *	also, it avoids returning checksums of 0.      *	The rotate is implemented by shifting and adding back the      *	sign bit when negative.      */
+end_comment
+
+begin_function
+name|long
+name|checksum
+parameter_list|(
+name|filename
+parameter_list|)
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+block|{
+name|FILE
+modifier|*
+name|filep
+decl_stmt|;
+specifier|register
+name|int
+name|input
+decl_stmt|;
+specifier|register
+name|long
+name|check
+decl_stmt|;
+name|filep
+operator|=
+name|fopen
+argument_list|(
+name|filename
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|filep
+operator|==
+name|NULL
+condition|)
+block|{
+name|perror
+argument_list|(
+name|filename
+argument_list|)
+expr_stmt|;
+name|pexit
+argument_list|(
+name|DIED
+argument_list|)
+expr_stmt|;
+block|}
+name|check
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|input
+operator|=
+name|getc
+argument_list|(
+name|filep
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+block|{
+if|if
+condition|(
+name|check
+operator|<
+literal|0
+condition|)
+block|{
+name|check
+operator|<<=
+literal|1
+expr_stmt|;
+name|check
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|check
+operator|<<=
+literal|1
+expr_stmt|;
+block|}
+name|check
+operator|^=
+name|input
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|filep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|check
+operator|<=
+name|N_FLAGCHECKSUM
+condition|)
+block|{
+return|return
+name|N_FLAGCHECKSUM
+operator|+
+literal|1
+return|;
+block|}
+else|else
+block|{
+return|return
+name|check
+return|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * global Pascal symbols :  *   labels, types, constants, and external procedure and function names:  *   These are used by the separate compilation facility  *   to be able to check for disjoint header files.  */

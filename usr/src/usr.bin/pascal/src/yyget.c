@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyget.c 1.4 %G%"
+literal|"@(#)yyget.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -930,6 +930,8 @@ name|PC
 name|stabinclude
 argument_list|(
 name|filename
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1158,6 +1160,8 @@ block|{
 name|stabinclude
 argument_list|(
 name|filename
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
