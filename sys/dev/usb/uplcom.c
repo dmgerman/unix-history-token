@@ -730,6 +730,27 @@ block|,
 name|USB_PRODUCT_ELECOM_UCSGT
 block|}
 block|,
+comment|/* SOURCENEXT KeikaiDenwa 8 */
+block|{
+name|USB_VENDOR_SOURCENEXT
+block|,
+name|USB_PRODUCT_SOURCENEXT_KEIKAI8
+block|}
+block|,
+comment|/* SOURCENEXT KeikaiDenwa 8 with charger */
+block|{
+name|USB_VENDOR_SOURCENEXT
+block|,
+name|USB_PRODUCT_SOURCENEXT_KEIKAI8_CHG
+block|}
+block|,
+comment|/* HAL Corporation Crossam2+USB */
+block|{
+name|USB_VENDOR_HAL
+block|,
+name|USB_PRODUCT_HAL_IMR001
+block|}
+block|,
 block|{
 literal|0
 block|,
