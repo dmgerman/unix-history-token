@@ -1620,6 +1620,11 @@ name|BUS_DMA_COULD_BOUNCE
 condition|)
 block|{
 comment|/* Must bounce */
+name|struct
+name|bounce_zone
+modifier|*
+name|bz
+decl_stmt|;
 name|int
 name|maxpages
 decl_stmt|;
@@ -1651,6 +1656,12 @@ name|error
 operator|)
 return|;
 block|}
+name|bz
+operator|=
+name|dmat
+operator|->
+name|bounce_zone
+expr_stmt|;
 operator|*
 name|mapp
 operator|=
@@ -1715,6 +1726,19 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Attempt to add pages to our pool on a per-instance 		 * basis up to a sane limit. 		 */
+if|if
+condition|(
+name|dmat
+operator|->
+name|alignment
+operator|>
+literal|1
+condition|)
+name|maxpages
+operator|=
+name|MAX_BPAGES
+expr_stmt|;
+else|else
 name|maxpages
 operator|=
 name|MIN
@@ -1750,6 +1774,8 @@ name|map_count
 operator|>
 literal|0
 operator|&&
+name|bz
+operator|->
 name|total_bpages
 operator|<
 name|maxpages
@@ -1779,9 +1805,20 @@ name|MIN
 argument_list|(
 name|maxpages
 operator|-
+name|bz
+operator|->
 name|total_bpages
 argument_list|,
 name|pages
+argument_list|)
+expr_stmt|;
+name|pages
+operator|=
+name|MAX
+argument_list|(
+name|pages
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
