@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.8 (Berkeley) %G%  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.9 (Berkeley) %G%  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
 end_comment
 
 begin_include
@@ -309,6 +309,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_include
+include|#
+directive|include
+file|"npx.h"
+end_include
 
 begin_if
 if|#
