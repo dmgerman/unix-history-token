@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	5.17 (Berkeley) %G%"
+literal|"@(#)chown.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -104,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -306,7 +318,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|setgid
+name|a_gid
 argument_list|(
 name|cp
 argument_list|)
@@ -334,13 +346,13 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|setgid
+name|a_gid
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
 block|}
-name|setuid
+name|a_uid
 argument_list|(
 operator|*
 name|argv
@@ -348,7 +360,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|setgid
+name|a_gid
 argument_list|(
 operator|*
 name|argv
@@ -505,7 +517,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|setgid
+name|a_gid
 argument_list|(
 name|s
 argument_list|)
@@ -522,10 +534,6 @@ name|struct
 name|group
 modifier|*
 name|gr
-decl_stmt|,
-modifier|*
-name|getgrnam
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -542,11 +550,29 @@ expr_stmt|;
 comment|/* argument was "uid." */
 return|return;
 block|}
-for|for
-control|(
 name|gname
 operator|=
 name|s
+expr_stmt|;
+if|if
+condition|(
+name|gr
+operator|=
+name|getgrnam
+argument_list|(
+name|s
+argument_list|)
+condition|)
+name|gid
+operator|=
+name|gr
+operator|->
+name|gr_gid
+expr_stmt|;
+else|else
+block|{
+for|for
+control|(
 init|;
 operator|*
 name|s
@@ -575,19 +601,6 @@ name|gname
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|gr
-operator|=
-name|getgrnam
-argument_list|(
-name|gname
-argument_list|)
-operator|)
-condition|)
 block|{
 operator|(
 name|void
@@ -609,18 +622,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|gid
-operator|=
-name|gr
-operator|->
-name|gr_gid
-expr_stmt|;
 block|}
 block|}
 end_block
 
 begin_expr_stmt
-name|setuid
+name|a_uid
 argument_list|(
 name|s
 argument_list|)
@@ -636,15 +643,11 @@ block|{
 name|struct
 name|passwd
 modifier|*
-name|pwd
-decl_stmt|,
-modifier|*
-name|getpwnam
-argument_list|()
+name|pw
 decl_stmt|;
 name|char
 modifier|*
-name|beg
+name|uname
 decl_stmt|;
 if|if
 condition|(
@@ -661,9 +664,26 @@ expr_stmt|;
 comment|/* argument was ".gid" */
 return|return;
 block|}
+if|if
+condition|(
+name|pw
+operator|=
+name|getpwnam
+argument_list|(
+name|s
+argument_list|)
+condition|)
+name|uid
+operator|=
+name|pw
+operator|->
+name|pw_uid
+expr_stmt|;
+else|else
+block|{
 for|for
 control|(
-name|beg
+name|uname
 operator|=
 name|s
 init|;
@@ -690,23 +710,10 @@ name|uid
 operator|=
 name|atoi
 argument_list|(
-name|beg
+name|uname
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|pwd
-operator|=
-name|getpwnam
-argument_list|(
-name|beg
-argument_list|)
-operator|)
-condition|)
 block|{
 operator|(
 name|void
@@ -717,7 +724,7 @@ name|stderr
 argument_list|,
 literal|"chown: unknown user id: %s\n"
 argument_list|,
-name|beg
+name|uname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -726,12 +733,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|uid
-operator|=
-name|pwd
-operator|->
-name|pw_uid
-expr_stmt|;
 block|}
 block|}
 end_block
