@@ -182,7 +182,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6lu %4"
+literal|"%6lu %8"
 name|PRId64
 literal|" "
 argument_list|,
