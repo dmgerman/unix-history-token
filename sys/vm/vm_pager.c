@@ -142,6 +142,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|pagerops
+name|physpagerops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|cluster_pbuf_freecnt
 init|=
@@ -493,6 +501,10 @@ operator|&
 name|devicepagerops
 block|,
 comment|/* OBJT_DEVICE */
+operator|&
+name|physpagerops
+block|,
+comment|/* OBJT_PHYS */
 operator|&
 name|deadpagerops
 comment|/* OBJT_DEAD */

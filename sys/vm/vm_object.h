@@ -43,6 +43,8 @@ name|OBJT_VNODE
 block|,
 name|OBJT_DEVICE
 block|,
+name|OBJT_PHYS
+block|,
 name|OBJT_DEAD
 block|}
 enum|;
@@ -177,6 +179,19 @@ name|devp_pglist
 expr_stmt|;
 block|}
 name|devp
+struct|;
+comment|/* 		 * Physmem pager 		 * 		 *	physp_pglist - list of allocated pages 		 */
+struct|struct
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|vm_page
+argument_list|)
+name|physp_pglist
+expr_stmt|;
+block|}
+name|physp
 struct|;
 comment|/* 		 * Swap pager 		 * 		 *	swp_bcount - number of swap 'swblock' metablocks, each 		 *		     contains up to 16 swapblk assignments. 		 *		     see vm/swap_pager.h 		 */
 struct|struct
