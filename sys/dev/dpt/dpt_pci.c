@@ -474,6 +474,7 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* Device registers are offset 0x10 into the register window.  FEH */
 name|dpt
 operator|=
 name|dpt_alloc
@@ -489,6 +490,8 @@ name|rman_get_bushandle
 argument_list|(
 name|io
 argument_list|)
+operator|+
+literal|0x10
 argument_list|)
 expr_stmt|;
 if|if
