@@ -99,6 +99,12 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|compat_3_brand
+decl_stmt|;
+comment|/* pre Binutils 2.10 method (FBSD 3) */
+specifier|const
+name|char
+modifier|*
 name|emul_path
 decl_stmt|;
 specifier|const
@@ -221,10 +227,18 @@ block|{
 name|int
 name|brand
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|compat_3_brand
+decl_stmt|;
+comment|/* pre Binutils 2.10 method (FBSD 3) */
+specifier|const
 name|char
 modifier|*
 name|emul_path
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|interp_path

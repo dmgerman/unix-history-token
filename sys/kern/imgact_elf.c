@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995-1996 Søren Schmidt  * Copyright (c) 1996 Peter Wemm  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2000 David O'Brien  * Copyright (c) 1995-1996 Søren Schmidt  * Copyright (c) 1996 Peter Wemm  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -422,6 +422,8 @@ name|freebsd_brand_info
 init|=
 block|{
 name|ELFOSABI_FREEBSD
+block|,
+literal|"FreeBSD"
 block|,
 literal|""
 block|,
@@ -2461,34 +2463,7 @@ name|brand_info
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX  For now we look for the magic "FreeBSD" that we used to put 	 * into the ELF header at the EI_ABIVERSION location.  If found use 	 * that information rather than figuring out the ABI from proper 	 * branding.  This should be removed for 5.0-RELEASE. The Linux caes 	 * can be figured out from the `interp_path' field. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-literal|"FreeBSD"
-argument_list|,
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-operator|&
-name|hdr
-operator|->
-name|e_ident
-index|[
-name|OLD_EI_BRAND
-index|]
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|brand_info
-operator|=
-operator|&
-name|freebsd_brand_info
-expr_stmt|;
+comment|/* We support three types of branding -- (1) the ELF EI_OSABI field 	 * that SCO added to the ELF spec, (2) FreeBSD 3.x's traditional string 	 * branding w/in the ELF header, and (3) path of the `interp_path' 	 * field.  We should also look for an ".note.ABI-tag" ELF section now 	 * in all Linux ELF binaries, FreeBSD 4.1+, and some NetBSD ones. 	 */
 comment|/* If the executable has a brand, search for it in the brand list. */
 if|if
 condition|(
@@ -2526,6 +2501,7 @@ name|bi
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|hdr
 operator|->
 name|e_ident
@@ -2536,6 +2512,36 @@ operator|==
 name|bi
 operator|->
 name|brand
+operator|||
+literal|0
+operator|==
+name|strncmp
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+operator|&
+name|hdr
+operator|->
+name|e_ident
+index|[
+name|OLD_EI_BRAND
+index|]
+argument_list|,
+name|bi
+operator|->
+name|compat_3_brand
+argument_list|,
+name|strlen
+argument_list|(
+name|bi
+operator|->
+name|compat_3_brand
+argument_list|)
+argument_list|)
+operator|)
 condition|)
 block|{
 name|brand_info

@@ -474,6 +474,8 @@ block|{
 name|ELFOSABI_SOLARIS
 block|,
 comment|/* XXX  Or should we use ELFOSABI_SYSV here?  */
+literal|"SVR4"
+block|,
 name|svr4_emul_path
 block|,
 literal|"/lib/libc.so.1"
