@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.43 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.44 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.43 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.44 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1421,7 +1421,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|kp
+name|vp
 operator|==
 name|NULL
 condition|)
@@ -1440,6 +1440,96 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|kp
+argument_list|,
+literal|"body"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|vp
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 BODY requires a value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+ifdef|#
+directive|ifdef
+name|MIME
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|vp
+argument_list|,
+literal|"8bitmime"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|e
+operator|->
+name|e_bodytype
+operator|=
+literal|"8BITMIME"
+expr_stmt|;
+name|EightBit
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|vp
+argument_list|,
+literal|"7bit"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|e
+operator|->
+name|e_bodytype
+operator|=
+literal|"7BIT"
+expr_stmt|;
+name|EightBit
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Unknown BODY type %s"
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{

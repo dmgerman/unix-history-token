@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.55 (Berkeley) %G%"
+literal|"@(#)main.c	6.56 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,7 +987,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvx"
+value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtvx"
 end_define
 
 begin_else
@@ -999,7 +999,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"b:C:cd:e:F:f:h:Iimno:p:q:r:sTtv"
+value|"B:b:C:cd:e:F:f:h:Iimno:p:q:r:sTtv"
 end_define
 
 begin_endif
@@ -2028,6 +2028,20 @@ name|EX_USAGE
 expr_stmt|;
 break|break;
 block|}
+break|break;
+case|case
+literal|'B'
+case|:
+comment|/* body type */
+name|CurEnv
+operator|->
+name|e_bodytype
+operator|=
+name|newstr
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'C'

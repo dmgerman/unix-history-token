@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.46 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	6.47 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	6.46 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	6.47 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -585,8 +585,30 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* output name of data file */
+comment|/* output type and name of data file */
 end_comment
+
+begin_if
+if|if
+condition|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+condition|)
+name|fprintf
+argument_list|(
+name|tfp
+argument_list|,
+literal|"B%s\n"
+argument_list|,
+name|e
+operator|->
+name|e_bodytype
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_expr_stmt
 name|fprintf
@@ -4045,6 +4067,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'B'
+case|:
+comment|/* body type */
+name|e
+operator|->
+name|e_bodytype
+operator|=
+name|newstr
+argument_list|(
+operator|&
+name|bp
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'D'
 case|:
 comment|/* data file name */
@@ -4580,6 +4620,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|char
+name|bodytype
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
 specifier|extern
 name|bool
 name|shouldqueue
@@ -4683,6 +4729,11 @@ index|[
 literal|0
 index|]
 operator|=
+name|bodytype
+index|[
+literal|0
+index|]
+operator|=
 literal|'\0'
 expr_stmt|;
 while|while
@@ -4775,6 +4826,56 @@ literal|'\0'
 expr_stmt|;
 break|break;
 case|case
+literal|'B'
+case|:
+comment|/* body type */
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|strlen
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+operator|)
+operator|>=
+sizeof|sizeof
+name|bodytype
+condition|)
+name|i
+operator|=
+sizeof|sizeof
+name|bodytype
+operator|-
+literal|1
+expr_stmt|;
+name|bcopy
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|,
+name|bodytype
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|bodytype
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 comment|/* sender name */
@@ -4846,14 +4947,39 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
+operator|||
+name|bodytype
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n    %10.10s"
+argument_list|,
+name|bodytype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|message
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t (%.60s)"
+literal|"   (%.60s)"
 argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'C'
