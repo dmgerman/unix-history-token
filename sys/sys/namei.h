@@ -95,11 +95,7 @@ name|uio_seg
 name|ni_segflg
 decl_stmt|;
 comment|/* location of pathname */
-comment|/* u_long	ni_nameiop;		   namei operation */
-comment|/* u_long	ni_flags;		   flags to namei */
-comment|/* struct	proc *ni_proc;		   process requesting lookup */
 comment|/* 	 * Arguments to lookup. 	 */
-comment|/* struct	ucred *ni_cred;		   credentials */
 name|struct
 name|vnode
 modifier|*
@@ -537,17 +533,6 @@ begin_function
 specifier|static
 name|__inline
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
 name|NDINIT
 parameter_list|(
 name|struct
@@ -575,48 +560,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-else|#
-directive|else
-function|NDINIT
-parameter_list|(
-name|ndp
-parameter_list|,
-name|op
-parameter_list|,
-name|flags
-parameter_list|,
-name|segflg
-parameter_list|,
-name|namep
-parameter_list|,
-name|td
-parameter_list|)
-name|struct
-name|nameidata
-modifier|*
-name|ndp
-decl_stmt|;
-name|u_long
-name|op
-decl_stmt|,
-name|flags
-decl_stmt|;
-name|enum
-name|uio_seg
-name|segflg
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|namep
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|ndp
 operator|->
