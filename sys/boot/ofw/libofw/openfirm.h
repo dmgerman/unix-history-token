@@ -376,6 +376,19 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|vm_offset_t
+name|OF_claim_virt
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 modifier|*
 name|OF_alloc_phys
@@ -393,6 +406,17 @@ name|OF_release
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|OF_release_phys
+parameter_list|(
+name|vm_offset_t
 parameter_list|,
 name|u_int
 parameter_list|)
