@@ -864,6 +864,28 @@ begin_comment
 comment|/* PM buffering of mcast */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WI_RID_ENCRYPTION
+value|0xFC20
+end_define
+
+begin_comment
+comment|/* enable/disable WEP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WI_RID_AUTHTYPE
+value|0xFC21
+end_define
+
+begin_comment
+comment|/* specify authentication type */
+end_comment
+
 begin_comment
 comment|/*  * Network parameters, dynamic configuration entities  */
 end_comment
@@ -1084,9 +1106,61 @@ end_define
 begin_define
 define|#
 directive|define
+name|WI_RID_DEFLT_CRYPT_KEYS
+value|0xFCB0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WI_RID_TX_CRYPT_KEY
+value|0xFCB1
+end_define
+
+begin_define
+define|#
+directive|define
 name|WI_RID_TICK_TIME
 value|0xFCE0
 end_define
+
+begin_struct
+struct|struct
+name|wi_key
+block|{
+name|u_int16_t
+name|wi_keylen
+decl_stmt|;
+name|u_int8_t
+name|wi_keydat
+index|[
+literal|14
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wi_ltv_keys
+block|{
+name|u_int16_t
+name|wi_len
+decl_stmt|;
+name|u_int16_t
+name|wi_type
+decl_stmt|;
+name|struct
+name|wi_key
+name|wi_keys
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * NIC information  */
