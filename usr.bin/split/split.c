@@ -41,8 +41,24 @@ directive|if
 literal|0
 end_if
 
-begin_endif
+begin_else
 unit|static char sccsid[] = "@(#)split.c	8.2 (Berkeley) 4/16/94";
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
 end_endif
@@ -134,7 +150,7 @@ comment|/* Default num lines per file. */
 end_comment
 
 begin_decl_stmt
-name|long
+name|size_t
 name|bytecnt
 decl_stmt|;
 end_decl_stmt
@@ -466,7 +482,7 @@ condition|(
 operator|(
 name|bytecnt
 operator|=
-name|strtol
+name|strtoq
 argument_list|(
 name|optarg
 argument_list|,
@@ -791,10 +807,9 @@ name|void
 name|split1
 parameter_list|()
 block|{
-name|long
+name|size_t
 name|bcnt
-decl_stmt|;
-name|int
+decl_stmt|,
 name|dist
 decl_stmt|,
 name|len
