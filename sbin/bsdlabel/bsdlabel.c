@@ -706,6 +706,12 @@ end_enum
 
 begin_decl_stmt
 name|int
+name|mflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
@@ -726,7 +732,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"BNRWb:ders:w"
+value|"BNRWb:demrs:w"
 end_define
 
 begin_else
@@ -738,7 +744,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"BNRWb:ers:w"
+value|"BNRWb:emrs:w"
 end_define
 
 begin_endif
@@ -918,6 +924,13 @@ expr_stmt|;
 name|op
 operator|=
 name|EDIT
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+operator|++
+name|mflag
 expr_stmt|;
 break|break;
 case|case
@@ -1132,7 +1145,7 @@ name|sprintf
 argument_list|(
 name|specname
 argument_list|,
-literal|"%sr%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -7034,7 +7047,7 @@ name|namebuf
 argument_list|,
 name|BBSIZE
 argument_list|,
-literal|"%sr%s"
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
