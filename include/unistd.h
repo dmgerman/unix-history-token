@@ -135,7 +135,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* test a section for locks by other processes */
+comment|/* test a section for locks by other procs */
 end_comment
 
 begin_endif
