@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.3 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1770,7 +1770,7 @@ name|va_mode
 operator|=
 name|ACCESSPERMS
 expr_stmt|;
-name|LEASE_CHECK
+name|VOP_LEASE
 argument_list|(
 name|nd
 operator|.
