@@ -817,7 +817,7 @@ literal|0xad
 block|}
 block|}
 block|,
-comment|/* 	 * You have to add new entries which contains 	 * PCMCIA_VENDOR_INVALID and/or PCMCIA_PRODUCT_INVALID  	 * in front of this comment. 	 * 	 * There are cards which use a generic vendor and product id but needs 	 * a different handling depending on the cis_info, so ne2000_match 	 * needs a table where the exceptions comes first and then the normal 	 * product and vendor entries. 	 */
+comment|/* 	 * You have to add new entries which contains 	 * PCMCIA_VENDOR_INVALID and/or PCMCIA_PRODUCT_INVALID  	 * in front of this comment. 	 */
 block|{
 name|PCMCIA_CARD
 argument_list|(
@@ -928,6 +928,9 @@ literal|0xc8
 block|}
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|BOGUS
 block|{
 name|PCMCIA_CARD
 argument_list|(
@@ -952,6 +955,32 @@ block|,
 name|NE2000DVF_DL10019
 block|}
 block|,
+block|{
+name|PCMCIA_CARD
+argument_list|(
+name|PLANEX
+argument_list|,
+name|FNW3700T
+argument_list|,
+literal|0
+argument_list|)
+block|,
+operator|-
+literal|1
+block|,
+block|{
+literal|0x00
+block|,
+literal|0x90
+block|,
+literal|0xcc
+block|}
+block|,
+name|NE2000DVF_DL10019
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|PCMCIA_CARD
 argument_list|(
