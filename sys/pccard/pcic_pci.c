@@ -2424,7 +2424,7 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|bst
+name|bsh
 operator|=
 name|sp
 operator|->
