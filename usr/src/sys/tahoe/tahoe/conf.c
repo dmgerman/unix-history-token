@@ -1,46 +1,42 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	1.3	85/04/25	*/
-end_comment
-
-begin_comment
-comment|/*	conf.c	6.1	83/07/29	*/
+comment|/*	conf.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"ioctl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_function_decl
@@ -585,10 +581,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|tty
 name|cons
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1322,6 +1318,25 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|logopen
+argument_list|()
+decl_stmt|,
+name|logclose
+argument_list|()
+decl_stmt|,
+name|logread
+argument_list|()
+decl_stmt|,
+name|logioctl
+argument_list|()
+decl_stmt|,
+name|logselect
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|ttselect
 argument_list|()
 decl_stmt|,
@@ -1352,6 +1367,7 @@ name|nulldev
 block|,
 name|nulldev
 block|,
+operator|&
 name|cons
 block|,
 name|ttselect
@@ -1652,16 +1668,16 @@ name|seltrue
 block|,
 name|nodev
 block|,
-name|nodev
+name|logopen
+block|,
+name|logclose
+block|,
+name|logread
 block|,
 name|nodev
-block|,
-name|nulldev
-block|,
-name|nulldev
 block|,
 comment|/*15*/
-name|nodev
+name|logioctl
 block|,
 name|nodev
 block|,
@@ -1669,7 +1685,7 @@ name|nulldev
 block|,
 literal|0
 block|,
-name|nodev
+name|logselect
 block|,
 name|nodev
 block|,

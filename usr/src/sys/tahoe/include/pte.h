@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pte.h	1.1	85/07/21	*/
-end_comment
-
-begin_comment
-comment|/*	Tahoe version, November 1982	*/
+comment|/*	pte.h	1.2	86/01/05	*/
 end_comment
 
 begin_comment
@@ -38,11 +34,10 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* is fill on demand (=0) */
-name|pg_swapm
 range|:
 literal|1
 decl_stmt|,
-comment|/* must write back to swap */
+comment|/* must write back to swap (unused) */
 name|pg_nc
 range|:
 literal|1
@@ -53,13 +48,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* hardware maintained modified bit */
-comment|/*	pg_u:1,			/* hardware maintained 'used' bit */
-comment|/* Not implemented in this version */
-name|pg_vreadm
+name|pg_u
 range|:
 literal|1
 decl_stmt|,
-comment|/* modified since vread (ored with _m)*/
+comment|/* hardware maintained 'used' bit */
 name|pg_pfnum
 range|:
 literal|22
@@ -112,12 +105,12 @@ literal|1
 decl_stmt|,
 name|pg_fileno
 range|:
-literal|5
+literal|1
 decl_stmt|,
 comment|/* file mapped from or TEXT or ZERO */
 name|pg_blkno
 range|:
-literal|20
+literal|24
 decl_stmt|;
 comment|/* file system block number */
 block|}
@@ -179,19 +172,15 @@ name|PG_M
 value|0x00800000
 end_define
 
-begin_comment
-comment|/*  #define PG_U	0x00400000 /* NOT implemented now !!! */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PG_VREADM
+name|PG_U
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* Uses 'U' bit location !!! */
+comment|/* not currently used */
 end_comment
 
 begin_define
@@ -205,14 +194,14 @@ begin_define
 define|#
 directive|define
 name|PG_FZERO
-value|(NOFILE)
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
 name|PG_FTEXT
-value|(NOFILE+1)
+value|1
 end_define
 
 begin_define
@@ -275,7 +264,7 @@ name|dirty
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)->pg_fod == 0&& (pte)->pg_pfnum&& \ 			    ((pte)->pg_m || (pte)->pg_swapm))
+value|((pte)->pg_fod == 0&& (pte)->pg_pfnum&& (pte)->pg_m)
 end_define
 
 begin_ifndef
@@ -289,15 +278,6 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
-
-begin_function_decl
-name|struct
-name|pte
-modifier|*
-name|vtopte
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* utilities defined in locore.s */
@@ -384,10 +364,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* extern	struct pte IOmap[]; */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -437,7 +413,16 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|pte
-name|CYmap
+name|CY0map
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pte
+name|CY1map
 index|[]
 decl_stmt|;
 end_decl_stmt

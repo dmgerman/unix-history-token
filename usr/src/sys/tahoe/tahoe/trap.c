@@ -1,85 +1,85 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.10	84/02/09	*/
+comment|/*	trap.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../machine/psl.h"
+file|"../tahoe/psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/reg.h"
+file|"../tahoe/reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/seg.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/trap.h"
+file|"seg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/acct.h"
+file|"acct.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../machine/mtpr.h"
-end_include
+begin_define
+define|#
+directive|define
+name|SYSCALLTRACE
+end_define
 
 begin_ifdef
 ifdef|#
@@ -101,7 +101,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../machine/fp_in_krnl.h"
+file|"../tahoe/trap.h"
 end_include
 
 begin_define
@@ -129,8 +129,79 @@ name|nsysent
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|trap_type
+index|[]
+init|=
+block|{
+literal|"Reserved addressing mode"
+block|,
+comment|/* T_RESADFLT */
+literal|"Privileged instruction"
+block|,
+comment|/* T_PRIVINFLT */
+literal|"Reserved operand"
+block|,
+comment|/* T_RESOPFLT */
+literal|"Breakpoint"
+block|,
+comment|/* T_BPTFLT */
+literal|0
+block|,
+literal|"Kernel call"
+block|,
+comment|/* T_SYSCALL */
+literal|"Arithmetic trap"
+block|,
+comment|/* T_ARITHTRAP */
+literal|"System forced exception"
+block|,
+comment|/* T_ASTFLT */
+literal|"Segmentation fault"
+block|,
+comment|/* T_SEGFLT */
+literal|"Protection fault"
+block|,
+comment|/* T_PROTFLT */
+literal|"Trace trap"
+block|,
+comment|/* T_TRCTRAP */
+literal|0
+block|,
+literal|"Page fault"
+block|,
+comment|/* T_PAGEFLT */
+literal|"Page table fault"
+block|,
+comment|/* T_TABLEFLT */
+literal|"Alignment fault"
+block|,
+comment|/* T_ALIGNFLT */
+literal|"Kernel stack not valid"
+block|,
+comment|/* T_KSPNOTVAL */
+literal|"Bus error"
+block|,
+comment|/* T_BUSERR */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TRAP_TYPES
+value|(sizeof (trap_type) / sizeof (trap_type[0]))
+end_define
+
 begin_comment
 comment|/*  * Called from the trap handler when a processor trap occurs.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -158,28 +229,20 @@ end_macro
 
 begin_decl_stmt
 name|unsigned
+name|type
+decl_stmt|,
 name|code
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-comment|/* Next 2 dummy variables MUST BE the first local */
-comment|/* variables; leaving place for registers 0 and 1 */
-comment|/* which are not preserved by the 'cct' */
 name|int
-name|dumm1
+name|r0
+decl_stmt|,
+name|r1
 decl_stmt|;
-comment|/* register 1 */
-name|int
-name|dumm0
-decl_stmt|;
-comment|/* register 0 */
-specifier|register
-name|dumm3
-expr_stmt|;
-comment|/* register 12 is the 1'st register variable */
-comment|/* in TAHOE  (register 11 in VAX) */
+comment|/* must reserve space */
 specifier|register
 name|int
 modifier|*
@@ -210,10 +273,27 @@ name|struct
 name|timeval
 name|syst
 decl_stmt|;
-name|char
-modifier|*
-name|typename
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|r0
+operator|=
+literal|0
+expr_stmt|;
+name|r0
+operator|=
+name|r0
+expr_stmt|;
+name|r1
+operator|=
+literal|0
+expr_stmt|;
+name|r1
+operator|=
+name|r1
+expr_stmt|;
+endif|#
+directive|endif
 name|syst
 operator|=
 name|u
@@ -250,140 +330,48 @@ name|type
 condition|)
 block|{
 default|default:
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|T_RESADFLT
-case|:
-name|typename
-operator|=
-literal|"reserved addressing mode"
-expr_stmt|;
-break|break;
-case|case
-name|T_PRIVINFLT
-case|:
-name|typename
-operator|=
-literal|"illegal opcode"
-expr_stmt|;
-break|break;
-case|case
-name|T_RESOPFLT
-case|:
-name|typename
-operator|=
-literal|"reserved operand"
-expr_stmt|;
-break|break;
-case|case
-name|T_BPTFLT
-case|:
-name|typename
-operator|=
-literal|"breakpoint"
-expr_stmt|;
-break|break;
-case|case
-name|T_SYSCALL
-case|:
-name|typename
-operator|=
-literal|"kernel call"
-expr_stmt|;
-break|break;
-case|case
-name|T_ARITHTRAP
-case|:
-name|typename
-operator|=
-literal|"arithmetic exception"
-expr_stmt|;
-break|break;
-case|case
-name|T_ASTFLT
-case|:
-name|typename
-operator|=
-literal|"system forced exception"
-expr_stmt|;
-break|break;
-case|case
-name|T_SEGFLT
-case|:
-name|typename
-operator|=
-literal|"limit fault"
-expr_stmt|;
-break|break;
-case|case
-name|T_PROTFLT
-case|:
-name|typename
-operator|=
-literal|"illegal access type"
-expr_stmt|;
-break|break;
-case|case
-name|T_TRCTRAP
-case|:
-name|typename
-operator|=
-literal|"trace trap"
-expr_stmt|;
-break|break;
-case|case
-name|T_PAGEFLT
-case|:
-name|typename
-operator|=
-literal|"page fault"
-expr_stmt|;
-break|break;
-case|case
-name|T_TABLEFLT
-case|:
-name|typename
-operator|=
-literal|"page table fault"
-expr_stmt|;
-break|break;
-case|case
-name|T_ALIGNFLT
-case|:
-name|typename
-operator|=
-literal|"alignment fault"
-expr_stmt|;
-break|break;
-case|case
-name|T_KSPNOTVAL
-case|:
-name|typename
-operator|=
-literal|"kernel stack not valid"
-expr_stmt|;
-break|break;
-block|}
 name|printf
 argument_list|(
-literal|"System trap (%s), code = %x, pc = %x\n"
+literal|"trap type %d, code = %x, pc = %x\n"
 argument_list|,
-name|typename
+name|type
 argument_list|,
 name|code
 argument_list|,
 name|pc
 argument_list|)
 expr_stmt|;
+name|type
+operator|&=
+operator|~
+name|USER
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|<
+name|TRAP_TYPES
+operator|&&
+name|trap_type
+index|[
+name|type
+index|]
+condition|)
+name|panic
+argument_list|(
+name|trap_type
+index|[
+name|type
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|panic
 argument_list|(
 literal|"trap"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 case|case
 name|T_PROTFLT
 operator|+
@@ -540,7 +528,7 @@ break|break;
 case|case
 name|T_TABLEFLT
 case|:
-comment|/* allow page table faults in kernel mode */
+comment|/* allow page table faults in kernel */
 case|case
 name|T_TABLEFLT
 operator|+
@@ -568,15 +556,6 @@ name|u
 operator|.
 name|u_error
 expr_stmt|;
-if|if
-condition|(
-name|fastreclaim
-argument_list|(
-name|code
-argument_list|)
-operator|==
-literal|0
-condition|)
 name|pagein
 argument_list|(
 name|code
@@ -642,6 +621,22 @@ name|printf
 argument_list|(
 literal|"KSP NOT VALID.\n"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|T_BUSERR
+operator|+
+name|USER
+case|:
+name|i
+operator|=
+name|SIGBUS
+expr_stmt|;
+name|u
+operator|.
+name|u_code
+operator|=
+name|code
 expr_stmt|;
 break|break;
 block|}
@@ -819,7 +814,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Called from the trap handler when a system call occurs  */
+comment|/*  * Called from locore when a system call occurs  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -853,22 +852,12 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Next 2 dummy variables MUST BE the first local */
-comment|/* variables; leaving place for registers 0 and 1 */
-comment|/* which are not preserved by the 'cct' */
 name|int
-name|dumm1
+name|r0
+decl_stmt|,
+name|r1
 decl_stmt|;
-comment|/* register 1 */
-name|int
-name|dumm0
-decl_stmt|;
-comment|/* register 0 */
-specifier|register
-name|dumm3
-expr_stmt|;
-comment|/* register 12 is the 1'st register variable */
-comment|/* in TAHOE  (register 11 in VAX) */
+comment|/* must reserve space */
 specifier|register
 name|int
 modifier|*
@@ -889,12 +878,10 @@ specifier|register
 name|caddr_t
 name|params
 decl_stmt|;
-comment|/* known to be r10 below */
 specifier|register
 name|int
 name|i
 decl_stmt|;
-comment|/* known to be r9 below */
 specifier|register
 name|struct
 name|sysent
@@ -914,6 +901,27 @@ decl_stmt|;
 name|int
 name|opc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|r0
+operator|=
+literal|0
+expr_stmt|;
+name|r0
+operator|=
+name|r0
+expr_stmt|;
+name|r1
+operator|=
+literal|0
+expr_stmt|;
+name|r1
+operator|=
+name|r1
+expr_stmt|;
+endif|#
+directive|endif
 name|syst
 operator|=
 name|u
@@ -951,15 +959,15 @@ operator|==
 literal|139
 condition|)
 block|{
-comment|/* XXX */
-name|sigcleanup
+comment|/* 4.2 COMPATIBILTY XXX */
+name|osigcleanup
 argument_list|()
 expr_stmt|;
-comment|/* XXX */
+comment|/* 4.2 COMPATIBILTY XXX */
 goto|goto
 name|done
 goto|;
-comment|/* XXX */
+comment|/* 4.2 COMPATIBILTY XXX */
 block|}
 name|params
 operator|=
@@ -979,8 +987,8 @@ name|u_error
 operator|=
 literal|0
 expr_stmt|;
-comment|/*------ DIRTY CODE !!!!!!!!!---------*/
-comment|/* try to reconstruct pc, assuming code is an immediate constant */
+comment|/* BEGIN GROT */
+comment|/* 	 * Try to reconstruct pc, assuming code 	 * is an immediate constant 	 */
 name|opc
 operator|=
 name|pc
@@ -1023,7 +1031,7 @@ expr_stmt|;
 comment|/* long immediate */
 block|}
 block|}
-comment|/*------------------------------------*/
+comment|/* END GROT */
 name|callp
 operator|=
 operator|(
@@ -1085,6 +1093,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|callp
@@ -1095,59 +1104,55 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-condition|)
-block|{
-asm|asm("prober $1,(r10),r9");
-comment|/* GROT */
-asm|asm("bnequ ok");
-comment|/* GROT */
+operator|)
+operator|&&
+operator|(
 name|u
 operator|.
 name|u_error
 operator|=
-name|EFAULT
-expr_stmt|;
-comment|/* GROT */
-goto|goto
-name|bad
-goto|;
-comment|/* GROT */
-asm|asm("ok:");
-comment|/* GROT */
-name|bcopy
+name|copyin
 argument_list|(
 name|params
 argument_list|,
-name|u
-operator|.
-name|u_arg
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-name|u
-operator|.
-name|u_ap
-operator|=
-name|u
-operator|.
-name|u_arg
-expr_stmt|;
-name|u
-operator|.
-name|u_dirp
-operator|=
 operator|(
 name|caddr_t
 operator|)
 name|u
 operator|.
 name|u_arg
-index|[
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|i
+argument_list|)
+operator|)
+operator|!=
 literal|0
+condition|)
+block|{
+name|locr0
+index|[
+name|R0
 index|]
+operator|=
+name|u
+operator|.
+name|u_error
 expr_stmt|;
+name|locr0
+index|[
+name|PS
+index|]
+operator||=
+name|PSL_C
+expr_stmt|;
+comment|/* carry bit */
+goto|goto
+name|done
+goto|;
+block|}
 name|u
 operator|.
 name|u_r
@@ -1167,7 +1172,6 @@ index|[
 name|R1
 index|]
 expr_stmt|;
-comment|/*------------ CHECK again */
 if|if
 condition|(
 name|setjmp
@@ -1190,8 +1194,8 @@ operator|&&
 name|u
 operator|.
 name|u_eosys
-operator|==
-name|JUSTRETURN
+operator|!=
+name|RESTARTSYS
 condition|)
 name|u
 operator|.
@@ -1206,7 +1210,7 @@ name|u
 operator|.
 name|u_eosys
 operator|=
-name|JUSTRETURN
+name|NORMALRETURN
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1308,16 +1312,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-operator|(
-operator|*
-operator|(
+call|(
+modifier|*
 name|callp
 operator|->
 name|sy_call
-operator|)
-operator|)
-operator|(
-operator|)
+call|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -1326,13 +1327,9 @@ name|u
 operator|.
 name|u_eosys
 operator|==
-name|RESTARTSYS
+name|NORMALRETURN
 condition|)
-name|pc
-operator|=
-name|opc
-expr_stmt|;
-elseif|else
+block|{
 if|if
 condition|(
 name|u
@@ -1340,8 +1337,6 @@ operator|.
 name|u_error
 condition|)
 block|{
-name|bad
-label|:
 name|locr0
 index|[
 name|R0
@@ -1394,6 +1389,22 @@ operator|.
 name|r_val2
 expr_stmt|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|u
+operator|.
+name|u_eosys
+operator|==
+name|RESTARTSYS
+condition|)
+name|pc
+operator|=
+name|opc
+expr_stmt|;
+comment|/* else if (u.u_eosys == JUSTRETURN) */
+comment|/* nothing to do */
 name|done
 label|:
 name|p
@@ -1588,6 +1599,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * Ignored system call  */
 end_comment
@@ -1601,750 +1618,10 @@ begin_block
 block|{  }
 end_block
 
-begin_macro
-name|fpemulate
-argument_list|(
-argument|hfsreg
-argument_list|,
-argument|acc_most
-argument_list|,
-argument|acc_least
-argument_list|,
-argument|dbl
-argument_list|,
-argument|op_most
-argument_list|,
-argument|op_least
-argument_list|,
-argument|opcode
-argument_list|,
-argument|pc
-argument_list|,
-argument|psl
-argument_list|)
-end_macro
-
-begin_block
-block|{
-comment|/*  * Emulate the F.P. 'opcode'. Update psl flags as necessary.  * If all OK, set 'opcode' to 0, else to the F.P. exception #.  * Not all parameter longwords are relevant - depends on opcode.  *  * The entry mask is set so ALL registers are saved - courtesy of  *  locore.s. This enables F.P. opcodes to change 'user' registers  *  before return.  */
-comment|/* WARNING!!!! THIS CODE MUST NOT PRODUCE ANY FLOATING POINT EXCEPTIONS. */
-comment|/* Next 2 dummy variables MUST BE the first local */
-comment|/* variables; leaving place for registers 0 and 1 */
-comment|/* which are not preserved by the 'cct' */
-name|int
-name|dumm1
-decl_stmt|;
-comment|/* register 1 */
-name|int
-name|dumm0
-decl_stmt|;
-comment|/* register 0 */
-specifier|register
-name|dumm3
-expr_stmt|;
-comment|/* register 12 is the 1'st register variable */
-comment|/* in TAHOE  (register 11 in VAX) */
-specifier|register
-name|int
-modifier|*
-name|locr0
-init|=
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|psl
-operator|)
-operator|-
-name|PS
-decl_stmt|;
-comment|/* R11 */
-name|int
-name|hfs
-init|=
-literal|0
-decl_stmt|;
-comment|/* returned data about exceptions */
-name|float
-function_decl|(
-modifier|*
-name|f_proc
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* fp procedure to be called.	*/
-name|double
-function_decl|(
-modifier|*
-name|d_proc
-function_decl|)
-parameter_list|()
-function_decl|;
-comment|/* fp procedure to be called.	*/
-name|int
-name|dest_type
-decl_stmt|;
-comment|/* float or double.	*/
-union|union
-block|{
-name|float
-name|ff
-decl_stmt|;
-comment|/* float result. 	*/
-name|int
-name|fi
-decl_stmt|;
-block|}
-name|f_res
-union|;
-union|union
-block|{
-name|double
-name|dd
-decl_stmt|;
-comment|/* double result.	*/
-name|int
-name|di
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|d_res
-union|;
-specifier|extern
-name|float
-name|Kcvtlf
-argument_list|()
-decl_stmt|,
-name|Kaddf
-argument_list|()
-decl_stmt|,
-name|Ksubf
-argument_list|()
-decl_stmt|,
-name|Kmulf
-argument_list|()
-decl_stmt|,
-name|Kdivf
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|double
-name|Kcvtld
-argument_list|()
-decl_stmt|,
-name|Kaddd
-argument_list|()
-decl_stmt|,
-name|Ksubd
-argument_list|()
-decl_stmt|,
-name|Kmuld
-argument_list|()
-decl_stmt|,
-name|Kdivd
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|float
-name|Ksinf
-argument_list|()
-decl_stmt|,
-name|Kcosf
-argument_list|()
-decl_stmt|,
-name|Katanf
-argument_list|()
-decl_stmt|,
-name|Klogf
-argument_list|()
-decl_stmt|,
-name|Ksqrtf
-argument_list|()
-decl_stmt|,
-name|Kexpf
-argument_list|()
-decl_stmt|;
-switch|switch
-condition|(
-name|opcode
-operator|&
-literal|0x0FF
-condition|)
-block|{
-case|case
-name|CVLF
-case|:
-name|f_proc
-operator|=
-name|Kcvtlf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-name|locr0
-index|[
-name|PS
-index|]
-operator|&=
-operator|~
-name|PSL_DBL
-expr_stmt|;
-break|break;
-comment|/* clear double bit */
-case|case
-name|CVLD
-case|:
-name|d_proc
-operator|=
-name|Kcvtld
-expr_stmt|;
-name|dest_type
-operator|=
-name|DOUBLE
-expr_stmt|;
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_DBL
-expr_stmt|;
-break|break;
-comment|/* turn on double bit */
-case|case
-name|ADDF
-case|:
-name|f_proc
-operator|=
-name|Kaddf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|ADDD
-case|:
-name|d_proc
-operator|=
-name|Kaddd
-expr_stmt|;
-name|dest_type
-operator|=
-name|DOUBLE
-expr_stmt|;
-break|break;
-case|case
-name|SUBF
-case|:
-name|f_proc
-operator|=
-name|Ksubf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|SUBD
-case|:
-name|d_proc
-operator|=
-name|Ksubd
-expr_stmt|;
-name|dest_type
-operator|=
-name|DOUBLE
-expr_stmt|;
-break|break;
-case|case
-name|MULF
-case|:
-name|f_proc
-operator|=
-name|Kmulf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|MULD
-case|:
-name|d_proc
-operator|=
-name|Kmuld
-expr_stmt|;
-name|dest_type
-operator|=
-name|DOUBLE
-expr_stmt|;
-break|break;
-case|case
-name|DIVF
-case|:
-name|f_proc
-operator|=
-name|Kdivf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|DIVD
-case|:
-name|d_proc
-operator|=
-name|Kdivd
-expr_stmt|;
-name|dest_type
-operator|=
-name|DOUBLE
-expr_stmt|;
-break|break;
-case|case
-name|SINF
-case|:
-name|f_proc
-operator|=
-name|Ksinf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|COSF
-case|:
-name|f_proc
-operator|=
-name|Kcosf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|ATANF
-case|:
-name|f_proc
-operator|=
-name|Katanf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|LOGF
-case|:
-name|f_proc
-operator|=
-name|Klogf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|SQRTF
-case|:
-name|f_proc
-operator|=
-name|Ksqrtf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-case|case
-name|EXPF
-case|:
-name|f_proc
-operator|=
-name|Kexpf
-expr_stmt|;
-name|dest_type
-operator|=
-name|FLOAT
-expr_stmt|;
-break|break;
-block|}
-switch|switch
-condition|(
-name|dest_type
-condition|)
-block|{
-case|case
-name|FLOAT
-case|:
-name|f_res
-operator|.
-name|ff
-operator|=
-call|(
-modifier|*
-name|f_proc
-call|)
-argument_list|(
-name|acc_most
-argument_list|,
-name|acc_least
-argument_list|,
-name|op_most
-argument_list|,
-name|op_least
-argument_list|,
-operator|&
-name|hfs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|f_res
-operator|.
-name|fi
-operator|==
-literal|0
-condition|)
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_Z
-expr_stmt|;
-if|if
-condition|(
-name|f_res
-operator|.
-name|fi
-operator|<
-literal|0
-condition|)
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_N
-expr_stmt|;
-break|break;
-case|case
-name|DOUBLE
-case|:
-name|d_res
-operator|.
-name|dd
-operator|=
-call|(
-modifier|*
-name|d_proc
-call|)
-argument_list|(
-name|acc_most
-argument_list|,
-name|acc_least
-argument_list|,
-name|op_most
-argument_list|,
-name|op_least
-argument_list|,
-operator|&
-name|hfs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|d_res
-operator|.
-name|di
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|d_res
-operator|.
-name|di
-index|[
-literal|1
-index|]
-operator|==
-literal|0
-operator|)
-condition|)
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_Z
-expr_stmt|;
-if|if
-condition|(
-name|d_res
-operator|.
-name|di
-index|[
-literal|0
-index|]
-operator|<
-literal|0
-condition|)
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_N
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|hfs
-operator|&
-name|HFS_OVF
-condition|)
-block|{
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_V
-expr_stmt|;
-comment|/* turn on overflow bit */
-comment|/* if (locr0[PS]& PSL_IV)   {  /* overflow elabled?	*/
-name|opcode
-operator|=
-name|OVF_EXC
-expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
-operator|(
-name|hfs
-operator|&
-name|HFS_DOM
-operator|)
-condition|?
-name|EDOM
-else|:
-name|ERANGE
-expr_stmt|;
-return|return;
-comment|/*}*/
-block|}
-elseif|else
-if|if
-condition|(
-name|hfs
-operator|&
-name|HFS_UNDF
-condition|)
-block|{
-if|if
-condition|(
-name|locr0
-index|[
-name|PS
-index|]
-operator|&
-name|PSL_FU
-condition|)
-block|{
-comment|/* underflow elabled?	*/
-name|opcode
-operator|=
-name|UNDF_EXC
-expr_stmt|;
-name|u
-operator|.
-name|u_error
-operator|=
-operator|(
-name|hfs
-operator|&
-name|HFS_DOM
-operator|)
-condition|?
-name|EDOM
-else|:
-name|ERANGE
-expr_stmt|;
-return|return;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|hfs
-operator|&
-name|HFS_DIVZ
-condition|)
-block|{
-name|opcode
-operator|=
-name|DIV0_EXC
-expr_stmt|;
-return|return;
-block|}
-elseif|else
-if|if
-condition|(
-name|hfs
-operator|&
-name|HFS_DOM
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|EDOM
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|hfs
-operator|&
-name|HFS_RANGE
-condition|)
-name|u
-operator|.
-name|u_error
-operator|=
-name|ERANGE
-expr_stmt|;
-switch|switch
-condition|(
-name|dest_type
-condition|)
-block|{
-case|case
-name|FLOAT
-case|:
-if|if
-condition|(
-operator|(
-name|hfs
-operator|&
-name|HFS_OVF
-operator|)
-operator|||
-operator|(
-name|hfs
-operator|&
-name|HFS_UNDF
-operator|)
-condition|)
-block|{
-name|f_res
-operator|.
-name|ff
-operator|=
-literal|0.0
-expr_stmt|;
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_Z
-expr_stmt|;
-block|}
-name|mvtofacc
-argument_list|(
-name|f_res
-operator|.
-name|ff
-argument_list|,
-operator|&
-name|acc_most
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|DOUBLE
-case|:
-if|if
-condition|(
-operator|(
-name|hfs
-operator|&
-name|HFS_OVF
-operator|)
-operator|||
-operator|(
-name|hfs
-operator|&
-name|HFS_UNDF
-operator|)
-condition|)
-block|{
-name|d_res
-operator|.
-name|dd
-operator|=
-literal|0.0
-expr_stmt|;
-name|locr0
-index|[
-name|PS
-index|]
-operator||=
-name|PSL_Z
-expr_stmt|;
-block|}
-name|mvtodacc
-argument_list|(
-name|d_res
-operator|.
-name|di
-index|[
-literal|0
-index|]
-argument_list|,
-name|d_res
-operator|.
-name|di
-index|[
-literal|1
-index|]
-argument_list|,
-operator|&
-name|acc_most
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|opcode
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_block
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

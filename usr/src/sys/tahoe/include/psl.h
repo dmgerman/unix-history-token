@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	psl.h	4.4	84/01/31	*/
+comment|/*	psl.h	1.2	86/01/05	*/
 end_comment
 
 begin_comment
-comment|/*  * TAHOE program status longword  */
+comment|/*  * TAHOE processor status longword.  */
 end_comment
 
 begin_define
@@ -131,6 +131,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PSL_PRVMOD
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* previous mode (kernel mode) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PSL_CURMOD
 value|0x01000000
 end_define
@@ -165,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|PSL_MBZ
-value|0xbae0ffc0
+value|0xbae0fe00
 end_define
 
 begin_comment
@@ -183,7 +194,7 @@ begin_define
 define|#
 directive|define
 name|PSL_USERCLR
-value|(PSL_IS|PSL_IPL|PSL_MBZ)
+value|(PSL_IS|PSL_IPL|PSL_MBZ|PSL_SFE|PSL_DBL|PSL_FU)
 end_define
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.5	81/02/23	*/
+comment|/*	clock.h	1.2	86/01/05	*/
 end_comment
 
 begin_define
@@ -55,7 +55,7 @@ define|#
 directive|define
 name|setsoftclock
 parameter_list|()
-value|mtpr(0x8, SIRR)
+value|mtpr(SIRR, 0x8)
 end_define
 
 end_unit

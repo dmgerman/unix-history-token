@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	1.1	85/07/21	*/
+comment|/*	mem.c	1.2	86/01/05	*/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_macro
@@ -320,9 +320,9 @@ operator|)
 expr_stmt|;
 name|mtpr
 argument_list|(
-name|vmmap
-argument_list|,
 name|TBIS
+argument_list|,
+name|vmmap
 argument_list|)
 expr_stmt|;
 name|o

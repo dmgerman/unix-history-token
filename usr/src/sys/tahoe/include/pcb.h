@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	pcb.h	1.2	86/01/05	*/
+end_comment
+
+begin_comment
 comment|/*  * TAHOE process control block  */
 end_comment
 
@@ -118,7 +122,7 @@ value|pcb_acl
 name|int
 name|pcb_hfs
 decl_stmt|;
-comment|/* f.p. status register.	*/
+comment|/* fp status register */
 comment|/*  * Software pcb (extension)  */
 union|union
 block|{
@@ -154,20 +158,13 @@ name|int
 modifier|*
 name|pcb_sswap
 decl_stmt|;
-name|short
-name|pcb_ckey
-decl_stmt|;
-comment|/* cache code key (proc index if NPROC<255) */
-name|short
-name|pcb_dkey
-decl_stmt|;
-comment|/* cache data key */
-name|int
+name|long
 name|pcb_sigc
 index|[
-literal|4
+literal|5
 index|]
 decl_stmt|;
+comment|/* sigcode actually 19 bytes */
 block|}
 struct|;
 end_struct
@@ -185,8 +182,7 @@ define|#
 directive|define
 name|aston
 parameter_list|()
-define|\
-value|{ \ 		u.u_pcb.pcb_psl |= PSL_SFE; \ 		if ((int)user_psl != 0) *user_psl |= PSL_SFE; \ 	}
+value|{ \ 	u.u_pcb.pcb_psl |= PSL_SFE; \ 	if ((int)user_psl != 0) \ 		*user_psl |= PSL_SFE; \ }
 end_define
 
 begin_define
@@ -194,8 +190,7 @@ define|#
 directive|define
 name|astoff
 parameter_list|()
-define|\
-value|{ \ 		u.u_pcb.pcb_psl&= ~ PSL_SFE; \ 		if ((int)user_psl != 0) *user_psl&= ~PSL_SFE; \ 	}
+value|{ \ 	u.u_pcb.pcb_psl&= ~ PSL_SFE; \ 	if ((int)user_psl != 0) \ 		*user_psl&= ~PSL_SFE; \ }
 end_define
 
 end_unit

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.3	5/25/85	*/
-end_comment
-
-begin_comment
-comment|/*	vmparam.h	6.1	83/07/29	*/
+comment|/*	vmparam.h	1.2	86/01/05	*/
 end_comment
 
 begin_comment
@@ -13,10 +9,6 @@ end_comment
 
 begin_comment
 comment|/*  * USRTEXT is the start of the user text/data space, while USRSTACK  * is the top (end) of the user stack.  LOWPAGES and HIGHPAGES are  * the number of pages from the beginning of the P0 region to the  * beginning of the text and from the beginning of the P2 region to the  * beginning of the stack respectively.  */
-end_comment
-
-begin_comment
-comment|/* number of ptes per page */
 end_comment
 
 begin_define
@@ -30,11 +22,22 @@ begin_define
 define|#
 directive|define
 name|USRSTACK
-value|(0xC0000000-UPAGES*NBPG)
+value|(0xc0000000-UPAGES*NBPG)
 end_define
 
 begin_comment
 comment|/* Start of user stack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BTOPUSRSTACK
+value|(0x300000 - UPAGES)
+end_define
+
+begin_comment
+comment|/* btop(USRSTACK) */
 end_comment
 
 begin_define
@@ -63,47 +66,143 @@ value|UPAGES
 end_define
 
 begin_comment
-comment|/*  * Virtual memory related constants  */
+comment|/*  * Virtual memory related constants, all in clicks  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SLOP
-value|32
-end_define
 
 begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(6*1024-SLOP)
+value|(6*CLSIZE*1024)
 end_define
 
 begin_comment
-comment|/* max text size (clicks) */
+comment|/* max text size */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLDSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLDSIZ
+value|(6*1024*1024/NBPG)
+end_define
+
+begin_comment
+comment|/* initial data size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXDSIZ
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(19*2048-32-SLOP)
+value|(19*1024*1024/NBPG)
 end_define
 
 begin_comment
-comment|/* max data size (clicks) */
+comment|/* max data size */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DFLSSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DFLSSIZ
+value|(512*1024/NBPG)
+end_define
+
+begin_comment
+comment|/* initial stack size limit */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXSSIZ
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|MAXSSIZ
-value|(19*2048-32-SLOP)
+value|MAXDSIZ
 end_define
 
 begin_comment
-comment|/* max stack size (clicks) */
+comment|/* max stack size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Default sizes of swap allocation chunks (see dmap.h).  * The actual values may be changed in vminit() based on MAXDSIZ.  * With MAXDSIZ of 16Mb and NDMAP of 38, dmmax will be 1024.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMMIN
+value|32
+end_define
+
+begin_comment
+comment|/* smallest swap allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMMAX
+value|4096
+end_define
+
+begin_comment
+comment|/* largest potential swap allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMTEXT
+value|1024
+end_define
+
+begin_comment
+comment|/* swap allocation for text */
 end_comment
 
 begin_comment
@@ -114,19 +213,49 @@ begin_comment
 comment|/* SYSPTSIZE IS SILLY; IT SHOULD BE COMPUTED AT BOOT TIME */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|SYSPTSIZE
-value|((30+MAXUSERS)*NPTEPG/4)
+value|((20+MAXUSERS)*NPTEPG)
 end_define
 
 begin_define
 define|#
 directive|define
 name|USRPTSIZE
-value|(2*NPTEPG)
+value|(32*NPTEPG)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SYSPTSIZE
+value|((128*NPTEPG/2)+(MAXUSERS*NPTEPG/16))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USRPTSIZE
+value|(4*NPTEPG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The size of the clock loop.  */
@@ -158,7 +287,7 @@ begin_define
 define|#
 directive|define
 name|SAFERSS
-value|16
+value|32
 end_define
 
 begin_comment
@@ -243,8 +372,15 @@ comment|/* klusters advance/retard for seq. fifo */
 end_comment
 
 begin_comment
-comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 4/22/81:  *	lotsfree is 1/4 of memory free.  *	desfree is 200k bytes, but at most 1/8 of memory  *	minfree is 64k bytes, but at most 1/2 of desfree  */
+comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 1/19/85:  *	lotsfree is 512k bytes, but at most 1/4 of memory  *	desfree is 200k bytes, but at most 1/8 of memory  *	minfree is 64k bytes, but at most 1/2 of desfree  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|LOTSFREE
+value|(512 * 1024)
+end_define
 
 begin_define
 define|#
@@ -282,6 +418,28 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * There are two clock hands, initially separated by HANDSPREAD bytes  * (but at most all of user memory).  The amount of time to reclaim  * a page once the pageout process examines it increases with this  * distance and decreases as the scan rate rises.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HANDSPREAD
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/*  * The number of times per second to recompute the desired paging rate  * and poke the pagedaemon.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RATETOSCHEDPAGING
+value|4
+end_define
+
+begin_comment
 comment|/*  * Believed threshold (in megabytes) for which interleaved  * swapping area is desirable.  */
 end_comment
 
@@ -312,11 +470,38 @@ parameter_list|,
 name|prot
 parameter_list|)
 define|\
-value|(*(int *)(pte) = (pfnum) | (prot), mtpr(ptob(v), TBIS))
+value|(*(int *)(pte) = (pfnum) | (prot), mtpr(TBIS, ptob(v)))
 end_define
 
 begin_comment
-comment|/*   * The following constant is used to initialize the map of the  * system page table i/o entries.  * It's value should be the highest i/o address used by all the   * controllers handled in the system as specified in ubminit   * structure in ioconf.c. */
+comment|/*  * Invalidate a cluster (optimized here for standard CLSIZE).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|CLSIZE
+operator|==
+literal|1
+end_if
+
+begin_define
+define|#
+directive|define
+name|tbiscl
+parameter_list|(
+name|v
+parameter_list|)
+value|mtpr(TBIS, ptob(v))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*   * The following constant is used to initialize the map of the  * system page table i/o entries.  * It's value should be the highest i/o address used by all the   * controllers handled in the system as specified in ubminit   * structure in ioconf.c.  */
 end_comment
 
 begin_define
@@ -327,25 +512,21 @@ value|0xffffee45
 end_define
 
 begin_comment
-comment|/* highest physical io address */
-end_comment
-
-begin_comment
-comment|/* Number of entries in the system page pable for i/o space */
+comment|/* number of entries in the system page pable for i/o space */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IOSIZE
-value|(( (MAXIOADDR - IOBASE+ NBPG -1)>> PGSHIFT )+1)
+value|(((MAXIOADDR - (int)IOBASE+ NBPG-1)>> PGSHIFT)+1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|TBUFSIZ
-value|10
+value|32
 end_define
 
 begin_comment
@@ -360,7 +541,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* ACC Ethernet (ACE) I/O window	*/
+comment|/* ACC Ethernet (ACE) I/O window */
 end_comment
 
 end_unit

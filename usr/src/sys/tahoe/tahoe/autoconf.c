@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.1	85/07/21	*/
+comment|/*	autoconf.c	1.2	86/01/05	*/
 end_comment
 
 begin_comment
@@ -10,73 +10,73 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"../tahoe/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../tahoe/mem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dk.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"dk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dmap.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/mem.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"dmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vba/vbavar.h"
+file|"../tahoevba/vbavar.h"
 end_include
 
 begin_comment
@@ -110,21 +110,26 @@ modifier|*
 name|ip
 decl_stmt|;
 specifier|extern
-name|char
+name|caddr_t
 name|Sysbase
-index|[]
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"vba%d at 0x%x\n"
+literal|"vba%d at %x\n"
 argument_list|,
 name|numvba
+operator|-
+literal|1
 argument_list|,
 name|IOBASE
 argument_list|)
 expr_stmt|;
 name|vbafind
 argument_list|(
+name|numvba
+operator|-
+literal|1
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -165,11 +170,13 @@ name|PG_KR
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|TBIS
+argument_list|,
 name|Sysbase
 operator|+
-literal|0x800
-argument_list|,
-name|TBIS
+literal|2
+operator|*
+name|NBPG
 argument_list|)
 expr_stmt|;
 if|#
@@ -197,7 +204,7 @@ name|pte
 argument_list|,
 name|iobase
 argument_list|,
-name|iosize
+name|n
 argument_list|)
 specifier|register
 expr|struct
@@ -208,7 +215,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|register
 name|caddr_t
 name|iobase
 decl_stmt|;
@@ -217,19 +223,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|register
 name|int
-name|iosize
+name|n
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-init|=
-name|iosize
-decl_stmt|;
-comment|/* number of ptes to map */
 specifier|register
 name|unsigned
 name|v
@@ -258,16 +257,16 @@ expr_stmt|;
 do|while
 condition|(
 operator|--
-name|i
+name|n
 operator|>
 literal|0
 condition|)
 do|;
 name|mtpr
 argument_list|(
-literal|0
-argument_list|,
 name|TBIA
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -288,11 +287,19 @@ end_decl_stmt
 begin_macro
 name|vbafind
 argument_list|(
+argument|vban
+argument_list|,
 argument|vumem
 argument_list|,
 argument|memmap
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|vban
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -345,6 +352,9 @@ name|memmap
 argument_list|,
 name|IOBASE
 argument_list|,
+operator|(
+name|int
+operator|)
 name|IOSIZE
 argument_list|)
 expr_stmt|;
@@ -382,7 +392,7 @@ name|um
 operator|->
 name|um_vbanum
 operator|!=
-name|numvba
+name|vban
 operator|&&
 name|um
 operator|->
@@ -428,7 +438,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%s%d at csr 0x%x\n"
+literal|"%s%d at vba%d csr %x\n"
 argument_list|,
 name|udp
 operator|->
@@ -437,6 +447,8 @@ argument_list|,
 name|um
 operator|->
 name|um_ctlr
+argument_list|,
+name|vban
 argument_list|,
 name|addr
 argument_list|)
@@ -451,7 +463,7 @@ name|um
 operator|->
 name|um_vbanum
 operator|=
-name|numvba
+name|vban
 expr_stmt|;
 name|um
 operator|->
@@ -517,7 +529,7 @@ name|ui
 operator|->
 name|ui_vbanum
 operator|!=
-name|numvba
+name|vban
 operator|&&
 name|ui
 operator|->
@@ -559,7 +571,7 @@ name|ui
 operator|->
 name|ui_vbanum
 operator|=
-name|numvba
+name|vban
 expr_stmt|;
 name|ui
 operator|->
@@ -689,7 +701,7 @@ name|ui
 operator|->
 name|ui_vbanum
 operator|!=
-name|numvba
+name|vban
 operator|&&
 name|ui
 operator|->
@@ -759,7 +771,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%s%d at csr 0x%x\n"
+literal|"%s%d at vba%d csr %x\n"
 argument_list|,
 name|ui
 operator|->
@@ -770,6 +782,8 @@ argument_list|,
 name|ui
 operator|->
 name|ui_unit
+argument_list|,
+name|vban
 argument_list|,
 name|addr
 argument_list|)
@@ -784,7 +798,7 @@ name|ui
 operator|->
 name|ui_vbanum
 operator|=
-name|numvba
+name|vban
 expr_stmt|;
 name|ui
 operator|->
@@ -846,29 +860,8 @@ end_block
 begin_define
 define|#
 directive|define
-name|DMMIN
-value|32
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMMAX
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMTEXT
-value|1024
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXDUMP
-value|(10*2048)
+value|(8*1024)
 end_define
 
 begin_comment
@@ -1008,46 +1001,6 @@ condition|)
 name|dumplo
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|dmmin
-operator|==
-literal|0
-condition|)
-name|dmmin
-operator|=
-name|DMMIN
-expr_stmt|;
-if|if
-condition|(
-name|dmmax
-operator|==
-literal|0
-condition|)
-name|dmmax
-operator|=
-name|DMMAX
-expr_stmt|;
-if|if
-condition|(
-name|dmtext
-operator|==
-literal|0
-condition|)
-name|dmtext
-operator|=
-name|DMTEXT
-expr_stmt|;
-if|if
-condition|(
-name|dmtext
-operator|>
-name|dmmax
-condition|)
-name|dmtext
-operator|=
-name|dmmax
 expr_stmt|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	1.1	85/07/21	*/
+comment|/*	swapgeneric.c	1.2	86/01/05	*/
 end_comment
 
 begin_include
@@ -12,55 +12,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/reboot.h"
+file|"reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/cp.h"
+file|"../tahoe/cp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/mtpr.h"
+file|"../tahoe/mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vba/vbavar.h"
+file|"../tahoevba/vbavar.h"
 end_include
 
 begin_comment
@@ -195,6 +195,23 @@ operator|&
 name|vddriver
 block|,
 literal|"xfd"
+block|,
+name|makedev
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+block|,	}
+block|,
+block|{
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|vddriver
+block|,
+literal|"xsd"
 block|,
 name|makedev
 argument_list|(
@@ -391,7 +408,7 @@ name|bad
 label|:
 name|printf
 argument_list|(
-literal|"use fsd%%d, smd%%d, or xfd%%d\n"
+literal|"use fsd%%d, smd%%d, xfd%%d, or xsd%%d\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -610,10 +627,6 @@ name|timo
 condition|)
 name|uncache
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|lasthdr
 operator|->
@@ -647,10 +660,10 @@ literal|1
 expr_stmt|;
 name|mtpr
 argument_list|(
+name|CPMDCB
+argument_list|,
 operator|&
 name|cpin
-argument_list|,
-name|CPMDCB
 argument_list|)
 expr_stmt|;
 while|while
