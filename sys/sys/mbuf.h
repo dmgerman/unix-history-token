@@ -235,7 +235,7 @@ modifier|*
 name|ref_cnt
 decl_stmt|;
 comment|/* pointer to ref count info */
-name|short
+name|int
 name|ext_type
 decl_stmt|;
 comment|/* type of external storage */
@@ -567,6 +567,17 @@ end_define
 
 begin_comment
 comment|/* custom ext_buf provided by net driver(s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_MOD_TYPE
+value|200
+end_define
+
+begin_comment
+comment|/* custom module's ext_buf type */
 end_comment
 
 begin_comment
