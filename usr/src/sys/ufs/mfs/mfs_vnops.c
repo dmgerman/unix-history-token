@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -60,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/specdev.h>
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_include
