@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.9 2000/10/19 15:44:04 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_nat.h	1.5 2/4/96  * $Id: ip_nat.h,v 2.17.2.10 2000/10/27 14:06:51 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -917,6 +917,9 @@ decl_stmt|;
 name|nat_t
 modifier|*
 name|ns_instances
+decl_stmt|;
+name|u_int
+name|ns_wilds
 decl_stmt|;
 block|}
 name|natstat_t
