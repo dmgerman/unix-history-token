@@ -164,48 +164,6 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<utmp.h>
-end_include
-
-begin_if
-if|#
-directive|if
-operator|(
-name|MAXLOGNAME
-operator|-
-literal|1
-operator|)
-operator|>
-name|UT_NAMESIZE
-end_if
-
-begin_define
-define|#
-directive|define
-name|LOGNAMESIZE
-value|UT_NAMESIZE
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LOGNAMESIZE
-value|(MAXLOGNAME-1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Local headers */
 end_comment
@@ -1401,7 +1359,7 @@ argument_list|(
 literal|"cannot reopen atjob file"
 argument_list|)
 expr_stmt|;
-comment|/* Get the userid to mail to, first by trying getlogin(), which reads      * /etc/utmp, then from LOGNAME, finally from getpwuid().      */
+comment|/* Get the userid to mail to, first by trying getlogin(),      * then from LOGNAME, finally from getpwuid().      */
 name|mailname
 operator|=
 name|getlogin
@@ -1442,8 +1400,8 @@ name|strlen
 argument_list|(
 name|mailname
 argument_list|)
-operator|>
-name|LOGNAMESIZE
+operator|>=
+name|MAXLOGNAME
 operator|)
 operator|||
 operator|(
@@ -1526,7 +1484,9 @@ name|long
 operator|)
 name|real_gid
 argument_list|,
-name|LOGNAMESIZE
+name|MAXLOGNAME
+operator|-
+literal|1
 argument_list|,
 name|mailname
 argument_list|,
