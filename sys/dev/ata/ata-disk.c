@@ -3319,7 +3319,7 @@ name|request
 operator|->
 name|bp
 argument_list|,
-literal|"soft (ECC corrected)"
+literal|"soft error (ECC corrected)"
 argument_list|,
 name|request
 operator|->
@@ -3400,9 +3400,9 @@ operator|&
 name|ATA_E_ICRC
 operator|)
 condition|?
-literal|"UDMA ICRC"
+literal|"UDMA ICRC error"
 else|:
-literal|"hard"
+literal|"hard error"
 argument_list|,
 name|request
 operator|->
