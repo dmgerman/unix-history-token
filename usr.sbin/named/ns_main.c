@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_main.c,v 1.5 1996/01/01 08:44:53 peter Exp $"
+literal|"$Id: ns_main.c,v 1.6 1996/01/07 05:48:33 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2814,8 +2814,11 @@ operator|*
 operator|)
 name|buf
 argument_list|,
-sizeof|sizeof
+name|MIN
 argument_list|(
+name|PACKETSZ
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 argument_list|,
