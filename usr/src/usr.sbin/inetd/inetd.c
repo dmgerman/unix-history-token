@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983,1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inetd.c	5.29 (Berkeley) %G%"
+literal|"@(#)inetd.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3876,7 +3876,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZE
-value|4096
+value|8192
 end_define
 
 begin_comment
@@ -4112,6 +4112,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|char
 name|buffer
 index|[
@@ -4134,6 +4137,9 @@ condition|)
 block|{
 while|while
 condition|(
+operator|(
+name|ret
+operator|=
 name|read
 argument_list|(
 name|s
@@ -4145,12 +4151,17 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|)
+operator|)
 operator|>
 literal|0
 condition|)
 empty_stmt|;
 if|if
 condition|(
+name|ret
+operator|==
+literal|0
+operator|||
 name|errno
 operator|!=
 name|EINTR
