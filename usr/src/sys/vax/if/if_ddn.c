@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_ddn.c	6.3 (Berkeley) %G% */
+comment|/*	@(#)if_ddn.c	6.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2209,11 +2209,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|endevice
-modifier|*
-name|enaddr
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -2679,8 +2674,6 @@ argument_list|,
 name|chan
 argument_list|,
 name|cc
-argument_list|,
-name|cnt
 argument_list|)
 expr_stmt|;
 block|}
@@ -2747,11 +2740,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-specifier|register
-name|u_char
-modifier|*
-name|bp
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2921,11 +2909,6 @@ name|struct
 name|ddn_cb
 modifier|*
 name|dc
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m_callbfr
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -5033,8 +5016,6 @@ parameter_list|,
 name|chan
 parameter_list|,
 name|cc
-parameter_list|,
-name|rcnt
 parameter_list|)
 name|int
 name|unit
@@ -5042,8 +5023,6 @@ decl_stmt|,
 name|chan
 decl_stmt|,
 name|cc
-decl_stmt|,
-name|rcnt
 decl_stmt|;
 block|{
 specifier|register
