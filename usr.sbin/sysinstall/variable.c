@@ -896,7 +896,7 @@ argument_list|()
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Writing sysinstall variables to file.."
+literal|"Writing sysinstall variables to file..\n"
 argument_list|)
 expr_stmt|;
 name|fp

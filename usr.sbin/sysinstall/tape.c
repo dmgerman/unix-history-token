@@ -395,7 +395,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Cleaning up results of tape extract in %s.."
+literal|"Cleaning up results of tape extract in %s..\n"
 argument_list|,
 operator|(
 name|char

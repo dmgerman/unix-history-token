@@ -1066,7 +1066,7 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"sending http request: %s"
+literal|"sending http request: %s\n"
 argument_list|,
 name|req
 argument_list|)
