@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.4 1995/09/22 14:11:00 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.5 1995/10/08 18:44:20 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * Defining EXTRA_SANITY will enable some checks which are related  * to internal conditions and consistency in malloc.c  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|EXTRA_SANITY
-end_define
+end_undef
 
 begin_comment
 comment|/*  * What to use for Junk  */
@@ -1851,9 +1851,6 @@ name|void
 name|malloc_init
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|char
 modifier|*
 name|p
@@ -2042,6 +2039,10 @@ comment|/* malloc_maxsize */
 ifndef|#
 directive|ifndef
 name|malloc_pageshift
+block|{
+name|int
+name|i
+decl_stmt|;
 comment|/* determine how much we shift by to get there */
 for|for
 control|(
@@ -2060,6 +2061,7 @@ control|)
 name|malloc_pageshift
 operator|++
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* malloc_pageshift */
@@ -2078,6 +2080,10 @@ comment|/* malloc_cache */
 ifndef|#
 directive|ifndef
 name|malloc_minsize
+block|{
+name|int
+name|i
+decl_stmt|;
 comment|/*      * find the smallest size allocation we will bother about.      * this is determined as the smallest allocation that can hold      * it's own pginfo;      */
 name|i
 operator|=
@@ -2146,6 +2152,7 @@ name|malloc_minsize
 operator|=
 name|i
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* malloc_minsize */
@@ -4415,9 +4422,6 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|u_long
-name|page
-decl_stmt|;
 name|struct
 name|pginfo
 modifier|*
