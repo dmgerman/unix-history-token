@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)machine.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)machine.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -102,6 +102,17 @@ end_function_decl
 
 begin_comment
 comment|/* address of next line to be executed */
+end_comment
+
+begin_function_decl
+name|BOOLEAN
+name|isendofproc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* test if address is at end of procedure */
 end_comment
 
 begin_expr_stmt
