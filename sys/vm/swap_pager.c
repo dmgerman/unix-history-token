@@ -929,7 +929,6 @@ end_expr_stmt
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|swp_sizecheck
 parameter_list|(
@@ -970,7 +969,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|__inline
 name|void
 name|swp_pager_freeswapspace
 parameter_list|(
@@ -985,7 +983,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|daddr_t
 name|swp_pager_getswapspace
 parameter_list|(
@@ -999,21 +996,22 @@ begin_comment
 comment|/*  * Metadata functions  */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
-name|__inline
-expr|struct
+name|struct
 name|swblock
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|swp_pager_hash
-argument_list|(
-argument|vm_object_t object
-argument_list|,
-argument|vm_pindex_t index
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1073,7 +1071,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|swp_sizecheck
 parameter_list|()
@@ -1126,32 +1123,35 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SWP_PAGER_HASH() -	hash swap meta data  *  *	This is an inline helper function which hashes the swapblk given  *	the object and page index.  It returns a pointer to a pointer  *	to the object, or a pointer to a NULL pointer if it could not  *	find a swapblk.  *  *	This routine must be called at splvm().  */
+comment|/*  * SWP_PAGER_HASH() -	hash swap meta data  *  *	This is an helper function which hashes the swapblk given  *	the object and page index.  It returns a pointer to a pointer  *	to the object, or a pointer to a NULL pointer if it could not  *	find a swapblk.  *  *	This routine must be called at splvm().  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|__inline
-expr|struct
+name|struct
 name|swblock
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|swp_pager_hash
-argument_list|(
-argument|vm_object_t object
-argument_list|,
-argument|vm_pindex_t index
-argument_list|)
-block|{ 	struct
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|index
+parameter_list|)
+block|{
+name|struct
 name|swblock
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|pswap
-block|; 	struct
+decl_stmt|;
+name|struct
 name|swblock
-operator|*
+modifier|*
 name|swap
-block|;
+decl_stmt|;
 name|index
 operator|&=
 operator|~
@@ -1159,7 +1159,7 @@ operator|(
 name|vm_pindex_t
 operator|)
 name|SWAP_META_MASK
-block|;
+expr_stmt|;
 name|pswap
 operator|=
 operator|&
@@ -1179,7 +1179,7 @@ operator|)
 operator|&
 name|swhash_mask
 index|]
-block|;
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1216,23 +1216,21 @@ name|swap
 operator|->
 name|swb_hnext
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} 	return
+block|}
+return|return
 operator|(
 name|pswap
 operator|)
-expr_stmt|;
-end_expr_stmt
+return|;
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * SWAP_PAGER_INIT() -	initialize the swap pager!  *  *	Expected to be started from system init.  NOTE:  This code is run   *	before much else so be careful what you depend on.  Most of the VM  *	system has yet to be initialized at this point.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|swap_pager_init
 parameter_list|()
@@ -1807,7 +1805,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|daddr_t
 name|swp_pager_getswapspace
 parameter_list|(
@@ -1897,7 +1894,6 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
 name|void
 name|swp_pager_freeswapspace
 parameter_list|(
