@@ -32,25 +32,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
 end_include
 
 begin_include
@@ -62,13 +44,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cronyx.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cronyx.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -144,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|symbol
@@ -226,6 +227,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|char
 name|atosym
@@ -281,9 +283,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -315,6 +320,8 @@ block|}
 end_function
 
 begin_function
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|chantype
@@ -328,6 +335,7 @@ condition|(
 name|type
 condition|)
 block|{
+default|default:
 case|case
 name|T_NONE
 case|:
@@ -397,6 +405,8 @@ block|}
 end_function
 
 begin_function
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|chanmode
@@ -453,6 +463,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getchan
 parameter_list|(
@@ -557,6 +568,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|printstats
 parameter_list|(
@@ -705,9 +717,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printallstats
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|b
@@ -760,6 +775,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setchan
 parameter_list|(
@@ -841,9 +857,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printopt
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Common channel options */
 comment|/* channel option register 4 */
@@ -2950,6 +2969,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printchan
 parameter_list|(
@@ -2990,7 +3010,7 @@ name|rxbaud
 condition|)
 name|printf
 argument_list|(
-literal|" %d"
+literal|" %lu"
 argument_list|,
 name|o
 operator|.
@@ -3000,7 +3020,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" ospeed=%d ispeed=%d"
+literal|" ospeed=%lu ispeed=%lu"
 argument_list|,
 name|o
 operator|.
@@ -3147,9 +3167,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printall
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ifconf
@@ -3421,6 +3444,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_interface_type
 parameter_list|(
@@ -3508,6 +3532,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_master
 parameter_list|(
@@ -3549,6 +3574,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_async_opt
 parameter_list|(
@@ -4936,6 +4962,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_hdlc_opt
 parameter_list|(
@@ -5719,12 +5746,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_bisync_opt
 parameter_list|(
 name|char
 modifier|*
 name|opt
+name|__unused
 parameter_list|)
 block|{
 name|usage
@@ -5734,12 +5763,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_x21_opt
 parameter_list|(
 name|char
 modifier|*
 name|opt
+name|__unused
 parameter_list|)
 block|{
 name|usage
