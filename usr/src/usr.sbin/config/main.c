@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * main.c	1.1	81/02/24  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
+comment|/*  * main.c	1.2	81/02/25  * Config  *	Do system configuration for VAX/UNIX  *		1) Build system data structures  *		2) Build makefile  *		3) Create header files for devices  *	Michael Toy -- Berkeley -- 1981  */
 end_comment
 
 begin_include
@@ -63,6 +63,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|PREFIX
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|freopen
@@ -270,6 +277,68 @@ name|line
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * path:  *	Prepend the path to a filename  */
+end_comment
+
+begin_macro
+name|path
+argument_list|(
+argument|file
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|malloc
+argument_list|(
+name|strlen
+argument_list|(
+name|PREFIX
+argument_list|)
+operator|+
+name|strlen
+argument_list|(
+name|file
+argument_list|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cp
+argument_list|,
+name|PREFIX
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|cp
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+return|return
+name|cp
+return|;
+block|}
+end_block
 
 end_unit
 
