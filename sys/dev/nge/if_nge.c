@@ -5758,6 +5758,10 @@ operator|&
 name|NGE_TBIBMSR_ANEG_DONE
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"nge%d: gigabit link up\n"
@@ -5854,6 +5858,8 @@ name|mii_media_active
 argument_list|)
 operator|==
 name|IFM_1000_T
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(

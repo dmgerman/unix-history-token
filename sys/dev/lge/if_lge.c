@@ -4698,6 +4698,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|bootverbose
+operator|&&
+operator|(
 name|IFM_SUBTYPE
 argument_list|(
 name|mii
@@ -4715,6 +4718,7 @@ name|mii_media_active
 argument_list|)
 operator|==
 name|IFM_1000_T
+operator|)
 condition|)
 name|printf
 argument_list|(
