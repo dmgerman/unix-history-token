@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.8 (Berkeley) %G%"
+literal|"@(#)parse.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4380,7 +4380,7 @@ literal|'\0'
 expr_stmt|;
 name|newName
 operator|=
-name|Str_Concat
+name|str_concat
 argument_list|(
 name|fname
 argument_list|,
@@ -4552,7 +4552,7 @@ operator|(
 name|IFile
 operator|*
 operator|)
-name|malloc
+name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
