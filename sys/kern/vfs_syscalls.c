@@ -21158,7 +21158,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_setextattr
+name|mac_check_vnode_deleteextattr
 argument_list|(
 name|td
 operator|->
@@ -21169,8 +21169,6 @@ argument_list|,
 name|attrnamespace
 argument_list|,
 name|attrname
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -21824,7 +21822,7 @@ directive|ifdef
 name|MAC
 name|error
 operator|=
-name|mac_check_vnode_getextattr
+name|mac_check_vnode_listextattr
 argument_list|(
 name|td
 operator|->
@@ -21833,11 +21831,6 @@ argument_list|,
 name|vp
 argument_list|,
 name|attrnamespace
-argument_list|,
-literal|""
-argument_list|,
-operator|&
-name|auio
 argument_list|)
 expr_stmt|;
 if|if
