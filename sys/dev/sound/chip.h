@@ -20,7 +20,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * This is the device information struct, used by  * sndcard device to pass the device function code  * to the driver.  */
+comment|/*  * This is the device information struct, used by  * a bridge device to pass the device function code  * to the children.  */
 end_comment
 
 begin_struct
@@ -30,6 +30,12 @@ block|{
 name|int
 name|func
 decl_stmt|;
+comment|/* The function code. */
+name|void
+modifier|*
+name|varinfo
+decl_stmt|;
+comment|/* Bridge-specific information. */
 block|}
 struct|;
 end_struct

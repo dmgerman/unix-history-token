@@ -66,6 +66,33 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* State of the bridge. */
+end_comment
+
+begin_struct
+struct|struct
+name|csa_bridgeinfo
+block|{
+name|u_int32_t
+name|hisr
+decl_stmt|;
+comment|/* The value of HISR on this interrupt. */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|void
+name|csa_clearserialfifos
+parameter_list|(
+name|csa_res
+modifier|*
+name|resp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Common functions for csa. */
 end_comment
 

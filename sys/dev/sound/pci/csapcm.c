@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Seigo Tanimura  * All rights reserved.  *  * Portions of this source are based on cwcealdr.cpp and dhwiface.cpp in  * cwcealdr1.zip, the sample sources by Crystal Semiconductor.  * Copyright (c) 1996-1998 Crystal Semiconductor Corp.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999 Seigo Tanimura  * All rights reserved.  *  * Portions of this source are based on cwcealdr.cpp and dhwiface.cpp in  * cwcealdr1.zip, the sample sources by Crystal Semiconductor.  * Copyright (c) 1996-1998 Crystal Semiconductor Corp.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -105,6 +105,12 @@ name|bus_dma_tag_t
 name|parent_dmat
 decl_stmt|;
 comment|/* DMA tag */
+name|struct
+name|csa_bridgeinfo
+modifier|*
+name|binfo
+decl_stmt|;
+comment|/* The state of the parent. */
 comment|/* Contents of board's registers */
 name|u_long
 name|pfie
@@ -1946,6 +1952,12 @@ argument_list|,
 literal|0xffffffff
 argument_list|)
 expr_stmt|;
+comment|/* Clear the serial fifos. */
+name|csa_clearserialfifos
+argument_list|(
+name|resp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2527,60 +2539,13 @@ name|csa
 init|=
 name|p
 decl_stmt|;
-name|csa_res
-modifier|*
-name|resp
-decl_stmt|;
-name|u_int
-name|hisr
-decl_stmt|;
-name|resp
-operator|=
-operator|&
+if|if
+condition|(
+operator|(
 name|csa
 operator|->
-name|res
-expr_stmt|;
-comment|/* Is this interrupt for us? */
-comment|/* XXX The parent device should handle this. */
-name|hisr
-operator|=
-name|csa_readio
-argument_list|(
-name|resp
-argument_list|,
-name|BA0_HISR
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|hisr
-operator|&
-operator|~
-name|HISR_INTENA
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* Throw an eoi. */
-name|csa_writeio
-argument_list|(
-name|resp
-argument_list|,
-name|BA0_HICR
-argument_list|,
-name|HICR_IEV
-operator||
-name|HICR_CHGM
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
+name|binfo
+operator|->
 name|hisr
 operator|&
 name|HISR_VC0
@@ -2600,6 +2565,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|csa
+operator|->
+name|binfo
+operator|->
 name|hisr
 operator|&
 name|HISR_VC1
@@ -2614,18 +2583,6 @@ operator|->
 name|rch
 operator|.
 name|channel
-argument_list|)
-expr_stmt|;
-comment|/* Throw an eoi. */
-name|csa_writeio
-argument_list|(
-name|resp
-argument_list|,
-name|BA0_HICR
-argument_list|,
-name|HICR_IEV
-operator||
-name|HICR_CHGM
 argument_list|)
 expr_stmt|;
 block|}
@@ -3198,6 +3155,11 @@ name|ac97_info
 modifier|*
 name|codec
 decl_stmt|;
+name|struct
+name|sndcard_func
+modifier|*
+name|func
+decl_stmt|;
 name|devinfo
 operator|=
 name|device_get_softc
@@ -3248,6 +3210,21 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
+expr_stmt|;
+name|func
+operator|=
+name|device_get_ivars
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|csa
+operator|->
+name|binfo
+operator|=
+name|func
+operator|->
+name|varinfo
 expr_stmt|;
 comment|/* Allocate the resources. */
 name|resp
@@ -3404,32 +3381,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-if|if
-condition|(
-operator|(
-name|csa_readio
-argument_list|(
-name|resp
-argument_list|,
-name|BA0_HISR
-argument_list|)
-operator|&
-name|HISR_INTENA
-operator|)
-operator|==
-literal|0
-condition|)
-name|csa_writeio
-argument_list|(
-name|resp
-argument_list|,
-name|BA0_HICR
-argument_list|,
-name|HICR_IEV
-operator||
-name|HICR_CHGM
-argument_list|)
-expr_stmt|;
 name|csa_writemem
 argument_list|(
 name|resp
