@@ -151,7 +151,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogSYNC
+name|LogRADIUS
 value|(18)
 end_define
 
@@ -162,15 +162,26 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LogTCPIP
+name|LogSYNC
 value|(19)
+end_define
+
+begin_comment
+comment|/* syslog(LOG_INFO, ....)	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LogTCPIP
+value|(20)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogTIMER
-value|(20)
+value|(21)
 end_define
 
 begin_comment
@@ -181,7 +192,7 @@ begin_define
 define|#
 directive|define
 name|LogTUN
-value|(21)
+value|(22)
 end_define
 
 begin_comment
@@ -192,7 +203,7 @@ begin_define
 define|#
 directive|define
 name|LogWARN
-value|(22)
+value|(23)
 end_define
 
 begin_comment
@@ -203,7 +214,7 @@ begin_define
 define|#
 directive|define
 name|LogERROR
-value|(23)
+value|(24)
 end_define
 
 begin_comment
@@ -214,7 +225,7 @@ begin_define
 define|#
 directive|define
 name|LogALERT
-value|(24)
+value|(25)
 end_define
 
 begin_comment
@@ -225,14 +236,14 @@ begin_define
 define|#
 directive|define
 name|LogMAXCONF
-value|(21)
+value|(22)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LogMAX
-value|(24)
+value|(25)
 end_define
 
 begin_struct_decl

@@ -5641,6 +5641,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|radius_StopTimer
+argument_list|(
+operator|&
+name|fp
+operator|->
+name|bundle
+operator|->
+name|radius
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/*      * XXX this stuff should really live in the FSM.  Our config should      * associate executable sections in files with events.      */
@@ -6058,6 +6068,13 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|radius_StartTimer
+argument_list|(
+name|fp
+operator|->
+name|bundle
 argument_list|)
 expr_stmt|;
 endif|#
