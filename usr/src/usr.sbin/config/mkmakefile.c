@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.22 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3089,7 +3089,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: Makefile ../machine/symbols.sort"
+literal|"%s: Makefile machine/symbols.sort"
 argument_list|,
 name|fl
 operator|->
