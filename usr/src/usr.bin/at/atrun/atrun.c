@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.2 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -863,7 +863,7 @@ else|:
 name|ABNORMAL
 operator|)
 expr_stmt|;
-comment|/* If errors occured, then we send mail to the owner 		 * telling him/her that we ran into trouble.   		 * 		 * (NOTE: this could easily be modified so that if any  		 * errors occured while running a job, mail is sent regard- 		 * less of whether the -m flag was set or not. 		 * 		 * i.e. rather than: 		 * 		 *	"if (notifybymail)" use 		 * use: 		 * 		 *	"if ((exitstatus == ABNORMAL) || (notifybymail))" 		 * 		 * It's up to you if you want to implement this. 		 * 		 */
+comment|/* If errors occurred, then we send mail to the owner 		 * telling him/her that we ran into trouble.   		 * 		 * (NOTE: this could easily be modified so that if any  		 * errors occurred while running a job, mail is sent regard- 		 * less of whether the -m flag was set or not. 		 * 		 * i.e. rather than: 		 * 		 *	"if (notifybymail)" use 		 * use: 		 * 		 *	"if ((exitstatus == ABNORMAL) || (notifybymail))" 		 * 		 * It's up to you if you want to implement this. 		 * 		 */
 if|if
 condition|(
 name|exitstatus
@@ -1221,7 +1221,7 @@ literal|"any errors.\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the job exited abnormally, send a letter notifying the user 	 * that the job didn't run proberly. Also, send a copy of the errors  	 * that occured to the user. 	 */
+comment|/* 	 * If the job exited abnormally, send a letter notifying the user 	 * that the job didn't run proberly. Also, send a copy of the errors  	 * that occurred to the user. 	 */
 else|else
 block|{
 if|if
@@ -1259,10 +1259,10 @@ name|fprintf
 argument_list|(
 name|mailptr
 argument_list|,
-literal|" errors that occured follows:\n\n\n"
+literal|" errors that occurred follows:\n\n\n"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Open the file containing a log of the errors that 			 * occured. 			 */
+comment|/* 			 * Open the file containing a log of the errors that 			 * occurred. 			 */
 if|if
 condition|(
 operator|(
