@@ -666,9 +666,6 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 name|__func__
@@ -1047,30 +1044,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|TZ_NUMLEVELS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|sprintf
-argument_list|(
-name|oidname
-argument_list|,
-literal|"_AC%d"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_OPAQUE
 argument_list|(
 operator|&
 name|sc
@@ -1086,7 +1060,7 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|oidname
+literal|"_ACx"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -1096,16 +1070,21 @@ operator|->
 name|tz_zone
 operator|.
 name|ac
-index|[
-name|i
-index|]
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|tz_zone
+operator|.
+name|ac
+argument_list|)
+argument_list|,
+literal|"I"
 argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-block|}
 comment|/*      * Register our power profile event handler, and flag it for a manual      * invocation by our timeout.  We defer it like this so that the rest      * of the subsystem has time to come up.      */
 name|EVENTHANDLER_REGISTER
 argument_list|(
@@ -1712,6 +1691,9 @@ name|struct
 name|timespec
 name|curtime
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 name|__func__
@@ -1723,6 +1705,8 @@ comment|/*      * Get the current temperature.      */
 if|if
 condition|(
 operator|(
+name|status
+operator|=
 name|acpi_EvaluateInteger
 argument_list|(
 name|sc
@@ -1745,7 +1729,12 @@ name|sc
 operator|->
 name|tz_dev
 argument_list|,
-literal|"error fetching current temperature\n"
+literal|"error fetching current temperature -- %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX disable zone? go to max cooling? */
