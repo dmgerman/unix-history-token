@@ -186,7 +186,6 @@ name|div
 operator|/
 literal|100
 decl_stmt|;
-comment|/*    * The Revision D cards have a problem with their MVA508 interface. The    * kludge-o-rama fix is to make a 16-bit quantity with identical LSB and    * MSBs out of the output byte and to do a 16-bit out to the mixer port -    * 1. We don't need to do this because the call to pas_write more than    * compensates for the timing problems.    */
 if|if
 condition|(
 name|bits
@@ -216,7 +215,7 @@ name|P_M_MV508_TREBLE
 condition|)
 block|{
 comment|/* Bass and trebble are mono devices     */
-name|pas_write
+name|mix_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -225,7 +224,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|pas_write
+name|mix_write
 argument_list|(
 name|left
 argument_list|,
@@ -239,7 +238,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|pas_write
+name|mix_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -250,14 +249,14 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|pas_write
+name|mix_write
 argument_list|(
 name|left
 argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|pas_write
+name|mix_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -268,7 +267,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|pas_write
+name|mix_write
 argument_list|(
 name|right
 argument_list|,
@@ -298,7 +297,7 @@ name|int
 name|new_mode
 parameter_list|)
 block|{
-name|pas_write
+name|mix_write
 argument_list|(
 name|P_M_MV508_ADDRESS
 operator||
@@ -307,7 +306,7 @@ argument_list|,
 name|PARALLEL_MIXER
 argument_list|)
 expr_stmt|;
-name|pas_write
+name|mix_write
 argument_list|(
 name|new_mode
 argument_list|,
