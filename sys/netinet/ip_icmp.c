@@ -4024,7 +4024,6 @@ decl_stmt|;
 name|int
 name|curpps
 decl_stmt|;
-empty_stmt|;
 block|}
 name|rates
 index|[

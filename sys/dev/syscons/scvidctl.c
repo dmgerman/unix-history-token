@@ -243,7 +243,6 @@ decl_stmt|;
 name|u_int
 name|va_buffer
 decl_stmt|;
-empty_stmt|;
 name|size_t
 name|va_buffer_size
 decl_stmt|;
