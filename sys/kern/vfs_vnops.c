@@ -404,6 +404,8 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|GIANT_REQUIRED
+expr_stmt|;
 name|restart
 label|:
 name|fmode
@@ -1383,6 +1385,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1645,6 +1649,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2036,6 +2042,8 @@ decl_stmt|;
 name|int
 name|iaresid
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 do|do
 block|{
 name|int
@@ -2209,12 +2217,6 @@ name|error
 decl_stmt|,
 name|ioflag
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|uio
@@ -2267,6 +2269,12 @@ condition|)
 name|ioflag
 operator||=
 name|IO_DIRECT
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|VOP_LEASE
 argument_list|(
@@ -2484,12 +2492,6 @@ name|error
 decl_stmt|,
 name|ioflag
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|uio
@@ -2514,6 +2516,12 @@ operator|=
 name|fp
 operator|->
 name|f_vnode
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2959,6 +2967,8 @@ decl_stmt|;
 name|u_short
 name|mode
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
@@ -3494,6 +3504,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 switch|switch
 condition|(
 name|vp
@@ -3864,6 +3876,8 @@ name|error
 decl_stmt|;
 endif|#
 directive|endif
+name|GIANT_REQUIRED
+expr_stmt|;
 name|vp
 operator|=
 name|fp
@@ -4522,6 +4536,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4726,6 +4742,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -4835,6 +4853,8 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4898,6 +4918,8 @@ modifier|*
 name|kn
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 return|return
 operator|(
 name|VOP_KQFILTER
