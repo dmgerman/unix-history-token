@@ -3406,6 +3406,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dname
