@@ -3261,7 +3261,7 @@ begin_define
 define|#
 directive|define
 name|T_ST
-value|&c_size_type_node
+value|&size_type_node
 end_define
 
 begin_define
