@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.26 1999/03/01 04:47:37 gpalmer Exp $"
+literal|"$Id: moused.c,v 1.27 1999/06/03 12:42:10 yokota Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,6 +190,32 @@ define|#
 directive|define
 name|MOUSE_YAXIS
 value|(-2)
+end_define
+
+begin_comment
+comment|/* Logitech PS2++ protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_CHECKBITS
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|((((b[2]& 0x03)<< 2) | 0x02) == (b[1]& 0x0f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_PACKET_TYPE
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|(((b[0]& 0x30)>> 2) | ((b[1]& 0x30)>> 4))
 end_define
 
 begin_define
@@ -7328,19 +7354,48 @@ case|:
 if|if
 condition|(
 operator|(
+operator|(
 name|pBuf
 index|[
 literal|0
 index|]
 operator|&
-operator|~
-name|MOUSE_PS2_BUTTONS
+name|MOUSE_PS2PLUS_SYNCMASK
 operator|)
 operator|==
-literal|0xc8
+name|MOUSE_PS2PLUS_SYNC
+operator|)
+operator|&&
+operator|(
+name|abs
+argument_list|(
+name|act
+operator|->
+name|dx
+argument_list|)
+operator|>
+literal|191
+operator|)
+operator|&&
+name|MOUSE_PS2PLUS_CHECKBITS
+argument_list|(
+name|pBuf
+argument_list|)
 condition|)
 block|{
 comment|/* the extended data packet encodes button and wheel events */
+switch|switch
+condition|(
+name|MOUSE_PS2PLUS_PACKET_TYPE
+argument_list|(
+name|pBuf
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* wheel data packet */
 name|act
 operator|->
 name|dx
@@ -7351,6 +7406,21 @@ name|dy
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|pBuf
+index|[
+literal|2
+index|]
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* horizontal roller count - ignore it XXX*/
+block|}
+else|else
+block|{
+comment|/* vertical roller count */
 name|act
 operator|->
 name|dz
@@ -7384,11 +7454,11 @@ operator|&
 literal|0x0f
 operator|)
 expr_stmt|;
+block|}
 name|act
 operator|->
 name|button
 operator||=
-operator|(
 operator|(
 name|pBuf
 index|[
@@ -7401,8 +7471,81 @@ condition|?
 name|MOUSE_BUTTON4DOWN
 else|:
 literal|0
-operator|)
 expr_stmt|;
+name|act
+operator|->
+name|button
+operator||=
+operator|(
+name|pBuf
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_PS2PLUS_BUTTON5DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON5DOWN
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+comment|/* this packet type is reserved, and currently ignored */
+comment|/* FALL THROUGH */
+case|case
+literal|0
+case|:
+comment|/* device type packet - shouldn't happen */
+comment|/* FALL THROUGH */
+default|default:
+name|act
+operator|->
+name|dx
+operator|=
+name|act
+operator|->
+name|dy
+operator|=
+literal|0
+expr_stmt|;
+name|act
+operator|->
+name|button
+operator|=
+name|act
+operator|->
+name|obutton
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"unknown PS2++ packet type %d: 0x%02x 0x%02x 0x%02x\n"
+argument_list|,
+name|MOUSE_PS2PLUS_PACKET_TYPE
+argument_list|(
+name|pBuf
+argument_list|)
+argument_list|,
+name|pBuf
+index|[
+literal|0
+index|]
+argument_list|,
+name|pBuf
+index|[
+literal|1
+index|]
+argument_list|,
+name|pBuf
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 else|else
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.12 1999/07/04 14:58:34 phk Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993 Erik Forsberg.  * Copyright (c) 1996, 1997 Kazutaka YOKOTA.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: psm.c,v 1.13 1999/07/12 13:40:21 yokota Exp $  */
 end_comment
 
 begin_comment
@@ -352,6 +352,32 @@ value|PSM_LEVEL_NATIVE
 end_define
 
 begin_comment
+comment|/* Logitech PS2++ protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_CHECKBITS
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|((((b[2]& 0x03)<< 2) | 0x02) == (b[1]& 0x0f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOUSE_PS2PLUS_PACKET_TYPE
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|(((b[0]& 0x30)>> 2) | ((b[1]& 0x30)>> 4))
+end_define
+
+begin_comment
 comment|/* some macros */
 end_comment
 
@@ -432,6 +458,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|abs
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)< 0) ? -(x) : (x))
+end_define
 
 begin_comment
 comment|/* ring buffer */
@@ -4677,6 +4713,8 @@ operator|->
 name|hw
 operator|.
 name|hwid
+operator|&
+literal|0x00ff
 argument_list|)
 expr_stmt|;
 block|}
@@ -4684,7 +4722,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"psm%d: model %s, device ID %d, %d buttons\n"
+literal|"psm%d: model %s, device ID %d-%02x, %d buttons\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4702,6 +4740,16 @@ operator|->
 name|hw
 operator|.
 name|hwid
+operator|&
+literal|0x00ff
+argument_list|,
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator|>>
+literal|8
 argument_list|,
 name|sc
 operator|->
@@ -6749,6 +6797,8 @@ operator|->
 name|hw
 operator|.
 name|hwid
+operator|&
+literal|0x00ff
 expr_stmt|;
 name|splx
 argument_list|(
@@ -8355,7 +8405,16 @@ operator|->
 name|hw
 operator|.
 name|hwid
-operator|=
+operator|&=
+operator|~
+literal|0x00ff
+expr_stmt|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator||=
 name|get_aux_id
 argument_list|(
 name|sc
@@ -8375,6 +8434,8 @@ operator|->
 name|hw
 operator|.
 name|hwid
+operator|&
+literal|0x00ff
 expr_stmt|;
 name|unblock_mouse_data
 argument_list|(
@@ -8753,25 +8814,74 @@ break|break;
 case|case
 name|MOUSE_MODEL_MOUSEMANPLUS
 case|:
+comment|/* 	     * PS2++ protocl packet 	     * 	     *          b7 b6 b5 b4 b3 b2 b1 b0 	     * byte 1:  *  1  p3 p2 1  *  *  * 	     * byte 2:  c1 c2 p1 p0 d1 d0 1  0 	     * 	     * p3-p0: packet type 	     * c1, c2: c1& c2 == 1, if p2 == 0 	     *         c1& c2 == 0, if p2 == 1 	     * 	     * packet type: 0 (device type) 	     * See comments in enable_mmanplus() below. 	     *  	     * packet type: 1 (wheel data) 	     * 	     *          b7 b6 b5 b4 b3 b2 b1 b0 	     * byte 3:  h  *  B5 B4 s  d2 d1 d0 	     * 	     * h: 1, if horizontal roller data 	     *    0, if vertical roller data 	     * B4, B5: button 4 and 5 	     * s: sign bit 	     * d2-d0: roller data 	     * 	     * packet type: 2 (reserved) 	     */
 if|if
 condition|(
 operator|(
+operator|(
 name|c
 operator|&
-operator|~
-name|MOUSE_PS2_BUTTONS
+name|MOUSE_PS2PLUS_SYNCMASK
 operator|)
 operator|==
-literal|0xc8
+name|MOUSE_PS2PLUS_SYNC
+operator|)
+operator|&&
+operator|(
+name|abs
+argument_list|(
+name|x
+argument_list|)
+operator|>
+literal|191
+operator|)
+operator|&&
+name|MOUSE_PS2PLUS_CHECKBITS
+argument_list|(
+name|sc
+operator|->
+name|ipacket
+argument_list|)
 condition|)
 block|{
 comment|/* the extended data packet encodes button and wheel events */
+switch|switch
+condition|(
+name|MOUSE_PS2PLUS_PACKET_TYPE
+argument_list|(
+name|sc
+operator|->
+name|ipacket
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* wheel data packet */
 name|x
 operator|=
 name|y
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+literal|0x80
+condition|)
+block|{
+comment|/* horizontal roller count - ignore it XXX*/
+block|}
+else|else
+block|{
+comment|/* vertical roller count */
 name|z
 operator|=
 operator|(
@@ -8809,6 +8919,7 @@ operator|&
 literal|0x0f
 operator|)
 expr_stmt|;
+block|}
 name|ms
 operator|.
 name|button
@@ -8828,6 +8939,89 @@ name|MOUSE_BUTTON4DOWN
 else|:
 literal|0
 expr_stmt|;
+name|ms
+operator|.
+name|button
+operator||=
+operator|(
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+operator|&
+name|MOUSE_PS2PLUS_BUTTON5DOWN
+operator|)
+condition|?
+name|MOUSE_BUTTON5DOWN
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+comment|/* this packet type is reserved, and currently ignored */
+comment|/* FALL THROUGH */
+case|case
+literal|0
+case|:
+comment|/* device type packet - shouldn't happen */
+comment|/* FALL THROUGH */
+default|default:
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
+name|ms
+operator|.
+name|button
+operator|=
+name|ms
+operator|.
+name|obutton
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psmintr: unknown PS2++ packet type %d: "
+literal|"0x%02x 0x%02x 0x%02x\n"
+argument_list|,
+name|MOUSE_PS2PLUS_PACKET_TYPE
+argument_list|(
+name|sc
+operator|->
+name|ipacket
+argument_list|)
+argument_list|,
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|0
+index|]
+argument_list|,
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|1
+index|]
+argument_list|,
+name|sc
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 else|else
 block|{
@@ -10297,7 +10491,8 @@ condition|)
 return|return
 name|FALSE
 return|;
-comment|/*       * MouseMan+ and FirstMouse+ return following data.      *      * byte 1 0xc8      * byte 2 ?? (MouseMan+:0xc2, FirstMouse+:0xc6)      * byte 3 model ID? MouseMan+:0x50, FirstMouse+:0x51      */
+comment|/*      * PS2++ protocl, packet type 0      *      *          b7 b6 b5 b4 b3 b2 b1 b0      * byte 1:  *  1  p3 p2 1  *  *  *      * byte 2:  1  1  p1 p0 m1 m0 1  0      * byte 3:  m7 m6 m5 m4 m3 m2 m1 m0      *      * p3-p0: packet type: 0      * m7-m0: model ID: MouseMan+:0x50, FirstMouse+:0x51,...      */
+comment|/* check constant bits */
 if|if
 condition|(
 operator|(
@@ -10306,15 +10501,77 @@ index|[
 literal|0
 index|]
 operator|&
-operator|~
-name|MOUSE_PS2_BUTTONS
+name|MOUSE_PS2PLUS_SYNCMASK
 operator|)
 operator|!=
-literal|0xc8
+name|MOUSE_PS2PLUS_SYNC
 condition|)
 return|return
 name|FALSE
 return|;
+if|if
+condition|(
+operator|(
+name|data
+index|[
+literal|1
+index|]
+operator|&
+literal|0xc3
+operator|)
+operator|!=
+literal|0xc2
+condition|)
+return|return
+name|FALSE
+return|;
+comment|/* check d3-d0 in byte 2 */
+if|if
+condition|(
+operator|!
+name|MOUSE_PS2PLUS_CHECKBITS
+argument_list|(
+name|data
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+comment|/* check p3-p0 */
+if|if
+condition|(
+name|MOUSE_PS2PLUS_PACKET_TYPE
+argument_list|(
+name|data
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|FALSE
+return|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator|&=
+literal|0x00ff
+expr_stmt|;
+name|sc
+operator|->
+name|hw
+operator|.
+name|hwid
+operator||=
+name|data
+index|[
+literal|2
+index|]
+operator|<<
+literal|8
+expr_stmt|;
+comment|/* save model ID */
 comment|/*      * MouseMan+ (or FirstMouse+) is now in its native mode, in which      * the wheel and the fourth button events are encoded in the      * special data packet. The mouse may be put in the IntelliMouse mode      * if it is initialized by the IntelliMouse's method.      */
 return|return
 name|TRUE
