@@ -4,11 +4,11 @@ comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/*  * NE1000/2000 Ethernet Card registers  */
+comment|/*  * NE2000 Ethernet Card registers  */
 end_comment
 
 begin_comment
-comment|/* This card uses a DS8390 Ethernet controller in at the beginning of    its i/o space */
+comment|/* The NE1000/NE2000 uses a DS8390 Ethernet controller in at the beginning of    its i/o space */
 end_comment
 
 begin_include
@@ -43,22 +43,17 @@ begin_define
 define|#
 directive|define
 name|PKTSZ
-value|3*512
+value|0x600
 end_define
-
-begin_comment
-comment|/* Size of transmit buffer */
-end_comment
-
-begin_comment
-comment|/* Span of memory on an NE2000 */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|TBUF16
-value|(16*1024)
+name|TBUF
+parameter_list|(
+name|board
+parameter_list|)
+value|(0x2000 * (board))
 end_define
 
 begin_comment
@@ -68,23 +63,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RBUFEND16
-value|(32*1024)
+name|RBUF
+parameter_list|(
+name|board
+parameter_list|)
+value|(TBUF(board)+PKTSZ)
 end_define
 
 begin_comment
-comment|/* Ending location of Receive Buffer */
-end_comment
-
-begin_comment
-comment|/* Span of memory on an NE1000 */
+comment|/* Starting location of Receive Buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TBUF8
-value|(8*1024)
+name|RBUFEND
+parameter_list|(
+name|board
+parameter_list|)
+value|(0x4000 * (board))
+end_define
+
+begin_comment
+comment|/* Ending location of Tr ansmit Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBUF1
+value|TBUF(1)
 end_define
 
 begin_comment
@@ -94,12 +102,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RBUFEND8
-value|(16*1024)
+name|RBUF1
+value|RBUF(1)
 end_define
 
 begin_comment
-comment|/* Ending location of Receive Buffer */
+comment|/* Starting location of Receive Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBUFEND1
+value|RBUFEND(1)
+end_define
+
+begin_comment
+comment|/* Ending location of Transmit Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TBUF2
+value|TBUF(2)
+end_define
+
+begin_comment
+comment|/* Starting location of Transmit Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBUF2
+value|RBUF(2)
+end_define
+
+begin_comment
+comment|/* Starting location of Receive Buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RBUFEND2
+value|RBUFEND(2)
+end_define
+
+begin_comment
+comment|/* Ending location of Transmit Buffer */
 end_comment
 
 end_unit
