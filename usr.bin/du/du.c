@@ -523,10 +523,9 @@ name|hflag
 decl_stmt|,
 name|ch
 decl_stmt|,
-name|rval
-decl_stmt|;
-name|size_t
 name|notused
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|char
 modifier|*

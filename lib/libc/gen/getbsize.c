@@ -84,7 +84,7 @@ name|headerlenp
 parameter_list|,
 name|blocksizep
 parameter_list|)
-name|size_t
+name|int
 modifier|*
 name|headerlenp
 decl_stmt|;
