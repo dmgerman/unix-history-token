@@ -7417,18 +7417,12 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Some callers of crget(), such as nfs_statfs(), 		 * allocate a temporary credential, but don't 		 * allocate a uidinfo structure. 		 */
 name|mtx_unlock
 argument_list|(
 name|mtxp
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
+comment|/* 		 * Some callers of crget(), such as nfs_statfs(), 		 * allocate a temporary credential, but don't 		 * allocate a uidinfo structure. 		 */
 if|if
 condition|(
 name|cr
@@ -7489,12 +7483,6 @@ argument_list|(
 name|cr
 argument_list|,
 name|M_CRED
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
