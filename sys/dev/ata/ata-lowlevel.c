@@ -2351,7 +2351,13 @@ expr_stmt|;
 comment|/* done with HW */
 break|break;
 block|}
-comment|/* schedule completition for this request */
+comment|/* finished running this request schedule completition */
+name|ch
+operator|->
+name|running
+operator|=
+name|NULL
+expr_stmt|;
 name|ata_finish
 argument_list|(
 name|request
@@ -2402,6 +2408,51 @@ literal|0
 decl_stmt|,
 name|timeout
 decl_stmt|;
+comment|/* if DMA functionality present stop it  */
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+condition|)
+block|{
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|stop
+condition|)
+name|ch
+operator|->
+name|dma
+operator|->
+name|stop
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|flags
+operator|&
+name|ATA_DMA_LOADED
+condition|)
+name|ch
+operator|->
+name|dma
+operator|->
+name|unload
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* reset host end of channel (if supported) */
 if|if
 condition|(
@@ -2591,7 +2642,7 @@ operator||
 name|ATA_A_RESET
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -2605,7 +2656,7 @@ argument_list|,
 name|ATA_A_IDS
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|100000
 argument_list|)
@@ -3079,7 +3130,7 @@ operator|~
 literal|0x02
 expr_stmt|;
 block|}
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|100000
 argument_list|)

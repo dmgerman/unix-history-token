@@ -2127,6 +2127,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ata_udelay
+parameter_list|(
+name|int
+name|interval
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ata_printf
 parameter_list|(
@@ -2420,6 +2430,18 @@ name|struct
 name|ata_request
 modifier|*
 name|request
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_catch_inflight
+parameter_list|(
+name|struct
+name|ata_channel
+modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

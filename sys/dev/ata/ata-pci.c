@@ -2703,6 +2703,12 @@ name|ctlr
 operator|->
 name|reset
 expr_stmt|;
+if|if
+condition|(
+name|ctlr
+operator|->
+name|r_res1
+condition|)
 name|ctlr
 operator|->
 name|dmainit

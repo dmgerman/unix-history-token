@@ -978,12 +978,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* unlock the channel */
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
@@ -1355,7 +1349,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* reset the HW */
 if|if
 condition|(
 name|bootverbose
@@ -1371,6 +1364,11 @@ literal|"reiniting channel ..\n"
 argument_list|)
 expr_stmt|;
 name|ATA_FORCELOCK_CH
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
+name|ata_catch_inflight
 argument_list|(
 name|ch
 argument_list|)
@@ -1585,12 +1583,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* unlock the channel */
-name|ch
-operator|->
-name|running
-operator|=
-name|NULL
-expr_stmt|;
 name|ATA_UNLOCK_CH
 argument_list|(
 name|ch
@@ -3079,9 +3071,13 @@ name|device
 argument_list|)
 operator|)
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|ENXIO
-return|;
+expr_stmt|;
+break|break;
+block|}
 name|error
 operator|=
 name|ata_reinit
@@ -4572,6 +4568,53 @@ end_function
 begin_comment
 comment|/*  * misc support functions  */
 end_comment
+
+begin_function
+name|void
+name|ata_udelay
+parameter_list|(
+name|int
+name|interval
+parameter_list|)
+block|{
+if|if
+condition|(
+name|interval
+operator|<
+operator|(
+literal|1000000
+operator|/
+name|hz
+operator|)
+operator|||
+name|ata_delayed_attach
+condition|)
+name|DELAY
+argument_list|(
+name|interval
+argument_list|)
+expr_stmt|;
+else|else
+name|tsleep
+argument_list|(
+operator|&
+name|interval
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"ataslp"
+argument_list|,
+name|interval
+operator|/
+operator|(
+literal|1000000
+operator|/
+name|hz
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static

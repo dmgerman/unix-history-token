@@ -1279,8 +1279,20 @@ name|satacapabilities
 operator|!=
 literal|0xffff
 condition|)
-name|mode
-operator|=
+block|{
+if|if
+condition|(
+operator|!
+name|ata_controlcmd
+argument_list|(
+name|atadev
+argument_list|,
+name|ATA_SETFEATURES
+argument_list|,
+name|ATA_SF_SETXFER
+argument_list|,
+literal|0
+argument_list|,
 name|ata_limit_mode
 argument_list|(
 name|atadev
@@ -1289,8 +1301,17 @@ name|mode
 argument_list|,
 name|ATA_UDMA6
 argument_list|)
+argument_list|)
+condition|)
+name|atadev
+operator|->
+name|mode
+operator|=
+name|ATA_SA150
 expr_stmt|;
+block|}
 else|else
+block|{
 name|mode
 operator|=
 name|ata_limit_mode
@@ -1324,6 +1345,7 @@ name|mode
 operator|=
 name|mode
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3219,7 +3241,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* set prefetch, postwrite */
+comment|/* disable/set prefetch, postwrite */
 if|if
 condition|(
 name|ctlr
@@ -5364,7 +5386,7 @@ literal|"Intel ICH5"
 block|}
 block|,
 block|{
-name|ATA_I82801EB_1
+name|ATA_I82801EB_S1
 block|,
 literal|0
 block|,
@@ -5378,7 +5400,7 @@ literal|"Intel ICH5"
 block|}
 block|,
 block|{
-name|ATA_I82801EB_2
+name|ATA_I82801EB_R1
 block|,
 literal|0
 block|,
@@ -5406,7 +5428,7 @@ literal|"Intel 6300ESB"
 block|}
 block|,
 block|{
-name|ATA_I6300ESB_1
+name|ATA_I6300ESB_S1
 block|,
 literal|0
 block|,
@@ -5420,7 +5442,7 @@ literal|"Intel 6300ESB"
 block|}
 block|,
 block|{
-name|ATA_I6300ESB_2
+name|ATA_I6300ESB_R1
 block|,
 literal|0
 block|,
@@ -5949,7 +5971,7 @@ name|timeout
 operator|--
 condition|)
 block|{
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -5980,7 +6002,7 @@ literal|4
 operator|)
 condition|)
 block|{
-name|DELAY
+name|ata_udelay
 argument_list|(
 literal|10000
 argument_list|)
@@ -6419,7 +6441,7 @@ argument_list|,
 name|reg54
 operator||
 operator|(
-literal|0x10000
+literal|0x1000
 operator|<<
 name|devno
 operator|)
@@ -6438,7 +6460,7 @@ name|reg54
 operator|&
 operator|~
 operator|(
-literal|0x10000
+literal|0x1000
 operator|<<
 name|devno
 operator|)
@@ -7118,8 +7140,6 @@ block|,
 name|AMDNVIDIA
 block|,
 name|NVIDIA
-operator||
-name|AMDBUG
 block|,
 name|ATA_UDMA5
 block|,
@@ -7134,12 +7154,24 @@ block|,
 name|AMDNVIDIA
 block|,
 name|NVIDIA
-operator||
-name|AMDBUG
 block|,
 name|ATA_UDMA6
 block|,
 literal|"nVidia nForce2"
+block|}
+block|,
+block|{
+name|ATA_NFORCE2_MCP
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce2 MCP"
 block|}
 block|,
 block|{
@@ -7154,6 +7186,48 @@ block|,
 name|ATA_UDMA6
 block|,
 literal|"nVidia nForce3"
+block|}
+block|,
+block|{
+name|ATA_NFORCE3_PRO
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce3 Pro"
+block|}
+block|,
+block|{
+name|ATA_NFORCE3_MCP
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce3 MCP"
+block|}
+block|,
+block|{
+name|ATA_NFORCE4
+block|,
+literal|0
+block|,
+name|AMDNVIDIA
+block|,
+name|NVIDIA
+block|,
+name|ATA_UDMA6
+block|,
+literal|"nVidia nForce4"
 block|}
 block|,
 block|{
@@ -7266,17 +7340,7 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* set prefetch, postwrite */
-if|if
-condition|(
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg2
-operator|&
-name|AMDBUG
-condition|)
+comment|/* disable prefetch, postwrite */
 name|pci_write_config
 argument_list|(
 name|dev
@@ -7293,27 +7357,6 @@ literal|1
 argument_list|)
 operator|&
 literal|0x0f
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-else|else
-name|pci_write_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x51
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x51
-argument_list|,
-literal|1
-argument_list|)
-operator||
-literal|0xf0
 argument_list|,
 literal|1
 argument_list|)
@@ -10046,16 +10089,12 @@ argument_list|,
 literal|0x00000001
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|command
-operator|!=
-name|ATA_READ_DMA
-operator|&&
-name|command
-operator|!=
-name|ATA_WRITE_DMA
 condition|)
+block|{
+default|default:
 return|return
 name|ata_generic_command
 argument_list|(
@@ -10070,12 +10109,9 @@ argument_list|,
 name|feature
 argument_list|)
 return|;
-if|if
-condition|(
-name|command
-operator|==
+case|case
 name|ATA_READ_DMA
-condition|)
+case|:
 name|wordp
 index|[
 literal|0
@@ -10106,12 +10142,10 @@ literal|24
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|command
-operator|==
+break|break;
+case|case
 name|ATA_WRITE_DMA
-condition|)
+case|:
 name|wordp
 index|[
 literal|0
@@ -10142,11 +10176,15 @@ literal|24
 operator|)
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|wordp
 index|[
 literal|1
 index|]
 operator|=
+name|htole32
+argument_list|(
 name|atadev
 operator|->
 name|channel
@@ -10154,6 +10192,7 @@ operator|->
 name|dma
 operator|->
 name|mdmatab
+argument_list|)
 expr_stmt|;
 name|wordp
 index|[
@@ -15020,9 +15059,9 @@ argument_list|,
 literal|0x00000000
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|ata_udelay
 argument_list|(
-literal|250000
+literal|1000000
 argument_list|)
 expr_stmt|;
 block|}
@@ -16440,7 +16479,7 @@ index|[]
 init|=
 block|{
 block|{
-name|ATA_SIS964_1
+name|ATA_SIS964_S
 block|,
 literal|0x00
 block|,
