@@ -16237,6 +16237,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* 	 * Map VAPPEND to VWRITE; NFSv2 does not understand the concept 	 * of append-only files. XXX What about VADMIN and VSTAT? 	 */
+if|if
+condition|(
+name|mode
+operator|&
+name|VAPPEND
+condition|)
+name|mode
+operator|=
+operator|(
+name|mode
+operator|&
+operator|~
+name|VAPPEND
+operator|)
+operator||
+name|VWRITE
+expr_stmt|;
 comment|/* 	 * Disallow write attempts on filesystems mounted read-only; 	 * unless the file is a socket, fifo, or a block or character 	 * device resident on the filesystem. 	 */
 if|if
 condition|(
