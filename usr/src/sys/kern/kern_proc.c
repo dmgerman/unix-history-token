@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.10	81/03/09	*/
+comment|/*	kern_proc.c	4.11	81/04/23	*/
 end_comment
 
 begin_include
@@ -1952,7 +1952,7 @@ operator|~
 operator|(
 name|SPAGI
 operator||
-name|SANOM
+name|SSEQL
 operator||
 name|SUANOM
 operator||
