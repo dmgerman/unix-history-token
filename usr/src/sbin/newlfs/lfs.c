@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.4 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1238,15 +1238,11 @@ name|segp
 operator|->
 name|su_nbytes
 operator|=
-name|LFS_SBPAD
-operator|+
-operator|(
 name|blocks_used
 operator|<<
 name|lfsp
 operator|->
 name|lfs_bshift
-operator|)
 expr_stmt|;
 name|segp
 operator|->
@@ -1337,12 +1333,6 @@ name|su_flags
 operator|=
 name|SEGUSE_SUPERBLOCK
 expr_stmt|;
-name|segp
-operator|->
-name|su_nbytes
-operator|=
-name|LFS_SBPAD
-expr_stmt|;
 name|lfsp
 operator|->
 name|lfs_bfree
@@ -1357,7 +1347,6 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|segp
 operator|->
 name|su_flags
@@ -1366,14 +1355,13 @@ literal|0
 expr_stmt|;
 name|segp
 operator|->
-name|su_nbytes
+name|su_lastmod
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|segp
 operator|->
-name|su_lastmod
+name|su_nbytes
 operator|=
 literal|0
 expr_stmt|;
