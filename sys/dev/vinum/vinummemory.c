@@ -150,7 +150,7 @@ name|jb
 operator|->
 name|jb_esp
 operator|<
-literal|0xd0000000
+literal|0xc0000000
 operator|)
 operator|||
 operator|(
@@ -158,7 +158,7 @@ name|jb
 operator|->
 name|jb_ebp
 operator|<
-literal|0xd0000000
+literal|0xc0000000
 operator|)
 operator|||
 operator|(
@@ -166,7 +166,7 @@ name|jb
 operator|->
 name|jb_eip
 operator|<
-literal|0xe0000000
+literal|0xc0000000
 operator|)
 condition|)
 name|panic
