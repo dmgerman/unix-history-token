@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	8.1 (Berkeley) %G%"
+literal|"@(#)scandir.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ parameter_list|(
 name|dp
 parameter_list|)
 define|\
-value|((sizeof (struct dirent) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
+value|((sizeof (struct dirent) - sizeof (dp)->d_name) + (((dp)->d_namlen+1 + 3)&~ 3))
 end_define
 
 begin_function_decl
