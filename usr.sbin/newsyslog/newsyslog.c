@@ -3366,7 +3366,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|newlist
+name|firstnew
 operator|)
 return|;
 block|}
