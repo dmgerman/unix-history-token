@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: spppcontrol.c,v 1.3 1998/01/07 07:55:26 charnier Exp $"
+literal|"$Id: spppcontrol.c,v 1.4 1998/08/03 06:24:59 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1273,7 +1273,7 @@ specifier|static
 name|char
 name|buf
 index|[
-literal|10
+literal|20
 index|]
 decl_stmt|;
 name|buf
