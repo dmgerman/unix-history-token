@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.20 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,6 +449,10 @@ name|glob
 operator|.
 name|gl_closedir
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|rst_closedir
 expr_stmt|;
 name|arglist
