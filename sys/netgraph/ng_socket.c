@@ -1097,9 +1097,7 @@ block|}
 if|if
 condition|(
 operator|(
-operator|(
 name|error
-operator|)
 operator|=
 name|ng_address_path
 argument_list|(
@@ -1119,9 +1117,7 @@ operator|(
 name|path
 operator|)
 argument_list|,
-operator|(
-name|NULL
-operator|)
+literal|0
 argument_list|)
 operator|)
 operator|==
