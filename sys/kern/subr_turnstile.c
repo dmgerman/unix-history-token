@@ -2810,28 +2810,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WITNESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WITNESS
-value|0
-end_define
-
-begin_comment
-comment|/* default off */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|SMP
 end_ifndef
 
@@ -2850,6 +2828,8 @@ end_endif
 begin_decl_stmt
 name|int
 name|witness_watch
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
