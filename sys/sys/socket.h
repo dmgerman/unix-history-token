@@ -1375,6 +1375,43 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * howto arguments for shutdown(2), specified by Posix.1g.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHUT_RD
+value|0
+end_define
+
+begin_comment
+comment|/* shut down the reading side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHUT_WR
+value|1
+end_define
+
+begin_comment
+comment|/* shut down the writing side */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHUT_RDWR
+value|2
+end_define
+
+begin_comment
+comment|/* shut down both sides */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
