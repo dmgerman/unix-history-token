@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.15	82/12/30	*/
+comment|/*	conf.c	4.16	83/02/16	*/
 end_comment
 
 begin_include
@@ -55,7 +55,7 @@ end_expr_stmt
 begin_block
 block|{
 name|int
-name|error
+name|cc
 decl_stmt|;
 name|io
 operator|->
@@ -63,7 +63,13 @@ name|i_flgs
 operator||=
 name|F_RDDATA
 expr_stmt|;
-name|error
+name|io
+operator|->
+name|i_error
+operator|=
+literal|0
+expr_stmt|;
+name|cc
 operator|=
 operator|(
 operator|*
@@ -93,7 +99,7 @@ name|F_TYPEMASK
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|cc
 operator|)
 return|;
 block|}
@@ -115,7 +121,7 @@ end_expr_stmt
 begin_block
 block|{
 name|int
-name|error
+name|cc
 decl_stmt|;
 name|io
 operator|->
@@ -123,7 +129,13 @@ name|i_flgs
 operator||=
 name|F_WRDATA
 expr_stmt|;
-name|error
+name|io
+operator|->
+name|i_error
+operator|=
+literal|0
+expr_stmt|;
+name|cc
 operator|=
 operator|(
 operator|*
@@ -153,7 +165,7 @@ name|F_TYPEMASK
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|cc
 operator|)
 return|;
 block|}
