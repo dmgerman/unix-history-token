@@ -1479,6 +1479,12 @@ name|curproc
 argument_list|)
 condition|)
 break|break;
+comment|/* Give interrupts a chance while we spin. */
+name|critical_exit
+argument_list|(
+name|mtx_crit
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|m
@@ -1542,6 +1548,11 @@ name|mtx_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_crit
+operator|=
+name|critical_enter
+argument_list|()
+expr_stmt|;
 block|}
 name|m
 operator|->
