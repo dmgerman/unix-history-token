@@ -223,6 +223,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|dRESTRICT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|dRESTRICT
+value|1
+end_define
+
+begin_comment
+comment|/* should be safe to be 1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|dVERBOSE
 end_ifndef
 

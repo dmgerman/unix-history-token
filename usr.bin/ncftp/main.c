@@ -843,6 +843,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|restricted_data_ports
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|FILE
 modifier|*
 name|cout
@@ -1180,6 +1187,10 @@ name|passivemode
 operator|=
 name|dPASSIVE
 expr_stmt|;
+name|restricted_data_ports
+operator|=
+name|dRESTRICT
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1508,7 +1519,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:V:INPRHaicmup:rd:g:"
+literal|"D:V:INPURHaicmup:rd:g:"
 argument_list|)
 operator|)
 operator|>=
@@ -1640,6 +1651,15 @@ name|passivemode
 expr_stmt|;
 break|break;
 case|case
+literal|'U'
+case|:
+name|restricted_data_ports
+operator|=
+operator|!
+name|restricted_data_ports
+expr_stmt|;
+break|break;
+case|case
 literal|'H'
 case|:
 operator|(
@@ -1667,7 +1687,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [program options] [[open options] site.to.open[:path]]\n\ Program Options:\n\     -D x   : Set debugging level to x (a number).\n\     -H     : Show version and compilation information.\n\     -I     : Toggle interactive (mprompt) mode.\n\     -N     : Toggle reading of the .netrc/.ncftprc.\n\     -P     : Toggle passive mode ftp (for use behind firewalls).\n\     -V x   : Set verbosity to level x (-1,0,1,2).\n\ Open Options:\n\     -a     : Open anonymously (this is the default).\n\     -u     : Open, specify user/password.\n\     -i     : Ignore machine entry in your .netrc.\n\     -p N   : Use port #N for connection.\n\     -r     : \"Redial\" until connected.\n\     -d N   : Redial, pausing N seconds between tries.\n\     -g N   : Redial, giving up after N tries.\n\     :path  : ``Colon-mode:'' If \"path\" is a file, it opens site, retrieves\n\              file \"path,\" then exits; if \"path\" is a remote directory,\n\              it opens site then starts you in that directory..\n\     -c     : If you're using colon-mode with a file path, this will cat the\n\              file to stdout instead of storing on disk.\n\     -m     : Just like -c, only it pipes the file to your $PAGER.\n\ Examples:\n\     ncftp ftp.unl.edu:/pub/README (just fetches README then quits)\n\     ncftp  (just enters ncftp command shell)\n\     ncftp -V -u ftp.unl.edu\n\     ncftp -c ftp.unl.edu:/pub/README (cats README to stdout then quits)\n\     ncftp -D -r -d 120 -g 10 ftp.unl.edu\n"
+literal|"Usage: %s [program options] [[open options] site.to.open[:path]]\n\ Program Options:\n\     -D x   : Set debugging level to x (a number).\n\     -H     : Show version and compilation information.\n\     -I     : Toggle interactive (mprompt) mode.\n\     -N     : Toggle reading of the .netrc/.ncftprc.\n\     -P     : Toggle passive mode ftp (for use behind firewalls).\n\     -U     : Toggle restricted data ports (for use behind firewalls).\n\     -V x   : Set verbosity to level x (-1,0,1,2).\n\ Open Options:\n\     -a     : Open anonymously (this is the default).\n\     -u     : Open, specify user/password.\n\     -i     : Ignore machine entry in your .netrc.\n\     -p N   : Use port #N for connection.\n\     -r     : \"Redial\" until connected.\n\     -d N   : Redial, pausing N seconds between tries.\n\     -g N   : Redial, giving up after N tries.\n\     :path  : ``Colon-mode:'' If \"path\" is a file, it opens site, retrieves\n\              file \"path,\" then exits; if \"path\" is a remote directory,\n\              it opens site then starts you in that directory..\n\     -c     : If you're using colon-mode with a file path, this will cat the\n\              file to stdout instead of storing on disk.\n\     -m     : Just like -c, only it pipes the file to your $PAGER.\n\ Examples:\n\     ncftp ftp.unl.edu:/pub/README (just fetches README then quits)\n\     ncftp  (just enters ncftp command shell)\n\     ncftp -V -u ftp.unl.edu\n\     ncftp -c ftp.unl.edu:/pub/README (cats README to stdout then quits)\n\     ncftp -D -r -d 120 -g 10 ftp.unl.edu\n"
 argument_list|,
 name|progname
 argument_list|)

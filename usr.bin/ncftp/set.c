@@ -222,6 +222,13 @@ name|passivemode
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|restricted_data_ports
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -538,6 +545,20 @@ literal|1
 argument_list|,
 operator|&
 name|remote_is_unix
+argument_list|,
+name|NULL
+argument_list|)
+block|,
+name|VARENTRY
+argument_list|(
+literal|"restricted-data-ports"
+argument_list|,
+name|BOOL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|restricted_data_ports
 argument_list|,
 name|NULL
 argument_list|)

@@ -294,6 +294,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RESTRICTHELP
+value|"toggle restriction of data port range"
+end_define
+
+begin_define
+define|#
+directive|define
 name|RHELPHELP
 value|"asks the remote-server for help"
 end_define
@@ -1228,6 +1235,20 @@ block|,
 name|UNIMPLHELP
 block|,
 name|UNIMPLUSAGE
+block|}
+block|,
+block|{
+literal|"restrict"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|setrestrict
+block|,
+name|RESTRICTHELP
+block|,
+name|EMPTYSTR
 block|}
 block|,
 block|{
