@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.17 1998/09/14 23:22:51 mjacob Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -702,96 +702,6 @@ directive|define
 name|FW_NON_PART
 value|0x0007
 end_define
-
-begin_decl_stmt
-specifier|static
-name|__inline
-name|char
-modifier|*
-name|fw_statename
-name|__P
-argument_list|(
-operator|(
-name|u_int8_t
-name|x
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_function
-specifier|static
-name|__inline
-name|char
-modifier|*
-name|fw_statename
-parameter_list|(
-name|x
-parameter_list|)
-name|u_int8_t
-name|x
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|x
-condition|)
-block|{
-case|case
-name|FW_CONFIG_WAIT
-case|:
-return|return
-literal|"Config Wait"
-return|;
-case|case
-name|FW_WAIT_AL_PA
-case|:
-return|return
-literal|"Waiting for AL/PA"
-return|;
-case|case
-name|FW_WAIT_LOGIN
-case|:
-return|return
-literal|"Wait Login"
-return|;
-case|case
-name|FW_READY
-case|:
-return|return
-literal|"Ready"
-return|;
-case|case
-name|FW_LOSS_OF_SYNC
-case|:
-return|return
-literal|"Loss Of Sync"
-return|;
-case|case
-name|FW_ERROR
-case|:
-return|return
-literal|"Error"
-return|;
-case|case
-name|FW_REINIT
-case|:
-return|return
-literal|"Re-Init"
-return|;
-case|case
-name|FW_NON_PART
-case|:
-return|return
-literal|"Nonparticipating"
-return|;
-default|default:
-return|return
-literal|"eh?"
-return|;
-block|}
-block|}
-end_function
 
 begin_comment
 comment|/*  * Soft Structure per host adapter  */

@@ -421,6 +421,20 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|char
+modifier|*
+name|isp2100_fw_statename
+name|__P
+argument_list|(
+operator|(
+name|u_int8_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|isp_mboxcmd
 name|__P
@@ -3648,12 +3662,12 @@ name|isp
 operator|->
 name|isp_name
 argument_list|,
-name|fw_statename
+name|isp2100_fw_statename
 argument_list|(
 name|lwfs
 argument_list|)
 argument_list|,
-name|fw_statename
+name|isp2100_fw_statename
 argument_list|(
 name|fcp
 operator|->
@@ -13272,6 +13286,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Miscellaneous debug statements.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -13499,6 +13517,79 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|isp2100_fw_statename
+parameter_list|(
+name|state
+parameter_list|)
+name|u_int8_t
+name|state
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|FW_CONFIG_WAIT
+case|:
+return|return
+literal|"Config Wait"
+return|;
+case|case
+name|FW_WAIT_AL_PA
+case|:
+return|return
+literal|"Waiting for AL/PA"
+return|;
+case|case
+name|FW_WAIT_LOGIN
+case|:
+return|return
+literal|"Wait Login"
+return|;
+case|case
+name|FW_READY
+case|:
+return|return
+literal|"Ready"
+return|;
+case|case
+name|FW_LOSS_OF_SYNC
+case|:
+return|return
+literal|"Loss Of Sync"
+return|;
+case|case
+name|FW_ERROR
+case|:
+return|return
+literal|"Error"
+return|;
+case|case
+name|FW_REINIT
+case|:
+return|return
+literal|"Re-Init"
+return|;
+case|case
+name|FW_NON_PART
+case|:
+return|return
+literal|"Nonparticipating"
+return|;
+default|default:
+return|return
+literal|"eh?"
+return|;
+block|}
 block|}
 end_function
 
