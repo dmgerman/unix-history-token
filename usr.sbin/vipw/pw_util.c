@@ -1071,6 +1071,13 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+condition|)
 name|warn
 argument_list|(
 literal|"%s"
@@ -1078,6 +1085,13 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+else|else
+name|warn
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|YP
