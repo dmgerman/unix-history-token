@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.27 (Berkeley) %G%"
+literal|"@(#)local2.c	1.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2501,6 +2501,18 @@ case|:
 comment|/* INCR and DECR, FOREFF */
 if|if
 condition|(
+name|p
+operator|->
+name|in
+operator|.
+name|right
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|ICON
+operator|&&
 name|p
 operator|->
 name|in
