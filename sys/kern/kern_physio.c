@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.6 1994/08/08 13:53:55 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: kern_physio.c,v 1.7 1994/08/18 22:35:02 wollman Exp $  */
 end_comment
 
 begin_include
@@ -280,16 +280,6 @@ operator|.
 name|iov_len
 condition|)
 block|{
-name|vm_offset_t
-name|v
-decl_stmt|,
-name|lastv
-decl_stmt|,
-name|pa
-decl_stmt|;
-name|caddr_t
-name|adr
-decl_stmt|;
 name|bp
 operator|->
 name|b_bcount

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.7 1994/08/24 04:06:39 davidg Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_subr.c	8.13 (Berkeley) 4/18/94  * $Id: vfs_subr.c,v 1.8 1994/08/29 06:08:51 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -595,12 +595,14 @@ name|MNT_UNMOUNT
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vfs_lock
 argument_list|(
 name|mp
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -626,6 +628,7 @@ expr_stmt|;
 comment|/* remove cache entries for this file sys */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_SYNC
@@ -640,6 +643,7 @@ name|p_ucred
 argument_list|,
 name|initproc
 argument_list|)
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -650,6 +654,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VFS_UNMOUNT
@@ -660,6 +665,7 @@ name|MNT_FORCE
 argument_list|,
 name|initproc
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -1297,9 +1303,6 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1701,11 +1704,13 @@ name|B_WRITEINPROG
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|vp
 operator|=
 name|bp
 operator|->
 name|b_vp
+operator|)
 condition|)
 block|{
 name|vp
@@ -1858,6 +1863,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_FSYNC
@@ -1870,6 +1876,7 @@ name|MNT_WAIT
 argument_list|,
 name|p
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -2601,6 +2608,7 @@ name|VBLK
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|nvp
 operator|=
 name|checkalias
@@ -2616,6 +2624,7 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 name|vput
@@ -3593,11 +3602,13 @@ decl_stmt|;
 comment|/* 	 * Check to see if the vnode is in use. 	 * If so we have to reference it before we clean it out 	 * so that its count cannot fall to zero and generate a 	 * race against ourselves to recycle it. 	 */
 if|if
 condition|(
+operator|(
 name|active
 operator|=
 name|vp
 operator|->
 name|v_usecount
+operator|)
 condition|)
 name|VREF
 argument_list|(
@@ -4537,7 +4548,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"type %s, usecount %d, writecount %d, refcount %d,"
+literal|"type %s, usecount %d, writecount %d, refcount %ld,"
 argument_list|,
 name|typename
 index|[
@@ -5424,6 +5435,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyin
@@ -5441,6 +5453,7 @@ name|argp
 operator|->
 name|ex_addrlen
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|out
@@ -5841,6 +5854,7 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|rnh
 operator|=
 name|nep
@@ -5849,6 +5863,7 @@ name|ne_rtable
 index|[
 name|i
 index|]
+operator|)
 condition|)
 block|{
 call|(
@@ -5957,6 +5972,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vfs_hang_addrlist
@@ -5967,6 +5983,7 @@ name|nep
 argument_list|,
 name|argp
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

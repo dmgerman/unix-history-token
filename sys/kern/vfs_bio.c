@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.10 1994/08/30 18:19:11 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.11 1994/08/31 06:17:37 davidg Exp $  */
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -1723,6 +1729,7 @@ label|:
 comment|/* can we constitute a new buffer? */
 if|if
 condition|(
+operator|(
 name|bp
 operator|=
 name|bufqueues
@@ -1731,6 +1738,7 @@ name|QUEUE_EMPTY
 index|]
 operator|.
 name|tqh_first
+operator|)
 condition|)
 block|{
 if|if
@@ -1755,10 +1763,9 @@ goto|goto
 name|fillbuf
 goto|;
 block|}
-name|tryfree
-label|:
 if|if
 condition|(
+operator|(
 name|bp
 operator|=
 name|bufqueues
@@ -1767,6 +1774,7 @@ name|QUEUE_AGE
 index|]
 operator|.
 name|tqh_first
+operator|)
 condition|)
 block|{
 if|if
@@ -1791,6 +1799,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|bp
 operator|=
 name|bufqueues
@@ -1799,6 +1808,7 @@ name|QUEUE_LRU
 index|]
 operator|.
 name|tqh_first
+operator|)
 condition|)
 block|{
 if|if
@@ -2109,7 +2119,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"incore: buf out of range: %lx, hash: %d\n"
+literal|"incore: buf out of range: %p, hash: %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -2233,6 +2243,7 @@ name|loop
 label|:
 if|if
 condition|(
+operator|(
 name|bp
 operator|=
 name|incore
@@ -2241,6 +2252,7 @@ name|vp
 argument_list|,
 name|blkno
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2301,7 +2313,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"getblk: invalid buffer size: %d\n"
+literal|"getblk: invalid buffer size: %ld\n"
 argument_list|,
 name|bp
 operator|->
@@ -3135,9 +3147,6 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|vm_offset_t
-name|pa
-decl_stmt|;
 name|tryagain
 label|:
 comment|/*  * don't allow buffer cache to cause VM paging  */
