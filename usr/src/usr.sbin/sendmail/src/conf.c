@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.32 (Berkeley) %G%"
+literal|"@(#)conf.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5989,9 +5989,9 @@ name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
-block|}
 if|if
 condition|(
 name|tTd
