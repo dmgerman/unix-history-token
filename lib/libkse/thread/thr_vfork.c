@@ -9,14 +9,15 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|vfork
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_vfork
-end_pragma
+argument_list|,
+name|vfork
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

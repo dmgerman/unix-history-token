@@ -21,14 +21,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_attr_getdetachstate
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_attr_getdetachstate
-end_pragma
+argument_list|,
+name|pthread_attr_getdetachstate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

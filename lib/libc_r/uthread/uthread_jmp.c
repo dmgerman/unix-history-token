@@ -65,32 +65,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|siglongjmp
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_thread_siglongjmp
-end_pragma
+argument_list|,
+name|siglongjmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|longjmp
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_thread_longjmp
-end_pragma
+argument_list|,
+name|longjmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|_longjmp
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|__thread_longjmp
-end_pragma
+argument_list|,
+name|_longjmp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

@@ -33,14 +33,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|wait4
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_wait4
-end_pragma
+argument_list|,
+name|wait4
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|pid_t

@@ -45,14 +45,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|readv
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_readv
-end_pragma
+argument_list|,
+name|readv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|ssize_t

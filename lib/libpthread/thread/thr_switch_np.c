@@ -27,23 +27,25 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_switch_add_np
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_switch_add_np
-end_pragma
+argument_list|,
+name|pthread_switch_add_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_switch_delete_np
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_switch_delete_np
-end_pragma
+argument_list|,
+name|pthread_switch_delete_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

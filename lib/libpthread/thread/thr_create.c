@@ -222,14 +222,15 @@ name|CTX_UC
 decl_stmt|;
 end_decl_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_create
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_create
-end_pragma
+argument_list|,
+name|pthread_create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

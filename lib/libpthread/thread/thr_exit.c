@@ -59,14 +59,15 @@ define|\
 value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
 end_define
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_exit
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_exit
-end_pragma
+argument_list|,
+name|pthread_exit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void

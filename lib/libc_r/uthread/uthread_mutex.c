@@ -253,54 +253,59 @@ begin_comment
 comment|/* Single underscore versions provided for libc internal usage: */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_mutex_trylock
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|__pthread_mutex_trylock
-end_pragma
+argument_list|,
+name|pthread_mutex_trylock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_mutex_lock
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|__pthread_mutex_lock
-end_pragma
+argument_list|,
+name|pthread_mutex_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* No difference between libc and application usage of these: */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_mutex_init
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_mutex_init
-end_pragma
+argument_list|,
+name|pthread_mutex_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_mutex_destroy
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_mutex_destroy
-end_pragma
+argument_list|,
+name|pthread_mutex_destroy
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_mutex_unlock
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_mutex_unlock
-end_pragma
+argument_list|,
+name|pthread_mutex_unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Reinitialize a mutex to defaults. */

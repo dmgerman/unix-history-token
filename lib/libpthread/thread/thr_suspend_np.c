@@ -33,14 +33,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_suspend_np
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_suspend_np
-end_pragma
+argument_list|,
+name|pthread_suspend_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Suspend a thread: */

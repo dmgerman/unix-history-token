@@ -21,14 +21,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|aio_suspend
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_aio_suspend
-end_pragma
+argument_list|,
+name|aio_suspend
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

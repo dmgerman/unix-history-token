@@ -15,23 +15,25 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|sched_yield
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_sched_yield
-end_pragma
+argument_list|,
+name|sched_yield
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_yield
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_pthread_yield
-end_pragma
+argument_list|,
+name|pthread_yield
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

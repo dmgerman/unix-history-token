@@ -27,14 +27,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|bind
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|_bind
-end_pragma
+argument_list|,
+name|bind
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
