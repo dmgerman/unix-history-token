@@ -4742,6 +4742,7 @@ decl_stmt|;
 name|void
 modifier|*
 name|b
+name|__unused
 decl_stmt|;
 block|{
 name|printf
@@ -4756,10 +4757,6 @@ name|a
 argument_list|)
 expr_stmt|;
 return|return
-name|b
-condition|?
-literal|0
-else|:
 literal|0
 return|;
 block|}
