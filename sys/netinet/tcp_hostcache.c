@@ -2734,6 +2734,9 @@ name|struct
 name|hc_metrics
 modifier|*
 name|hc_entry
+decl_stmt|,
+modifier|*
+name|hc_next
 decl_stmt|;
 name|int
 name|all
@@ -2793,13 +2796,15 @@ operator|.
 name|hch_mtx
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|hc_entry
 argument_list|,
 argument|&tcp_hostcache.hashbase[i].hch_bucket
 argument_list|,
 argument|rmx_q
+argument_list|,
+argument|hc_next
 argument_list|)
 block|{
 if|if
