@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.26.2.10 1996/06/03 05:12:29 jkh Exp $"
+literal|"$Id: perform.c,v 1.37 1996/10/14 19:41:42 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -979,9 +979,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|Fake
-operator|&&
 name|vsystem
 argument_list|(
 literal|"pkg_info -e %s"
@@ -1007,7 +1004,10 @@ if|if
 condition|(
 operator|!
 name|Fake
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|isURL
 argument_list|(
@@ -1112,9 +1112,6 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|!
-name|Fake
-operator|&&
 operator|(
 name|cp
 operator|=
@@ -1147,17 +1144,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|Fake
-condition|)
-block|{
-if|if
-condition|(
-operator|!
 name|fexists
 argument_list|(
 literal|"+CONTENTS"
 argument_list|)
 condition|)
+block|{
 name|whinge
 argument_list|(
 literal|"Autoloaded package %s has no +CONTENTS file?"
@@ -1167,6 +1159,15 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Force
+condition|)
+operator|++
+name|code
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1220,13 +1221,13 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Nuke the temporary playpen */
 name|leave_playpen
 argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

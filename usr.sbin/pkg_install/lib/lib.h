@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.16.4.4 1996/06/08 00:55:25 alex Exp $ */
+comment|/* $Id: lib.h,v 1.22 1996/07/30 10:48:19 jkh Exp $ */
 end_comment
 
 begin_comment
