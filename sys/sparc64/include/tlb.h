@@ -316,8 +316,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|MMU_SFSR_GET_ASI
+parameter_list|(
+name|sfsr
+parameter_list|)
+define|\
+value|(((sfsr)>> MMU_SFSR_ASI_SHIFT)& ((1UL<< MMU_SFSR_ASI_SIZE) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|MMU_SFSR_W
-value|(1L<< MMU_SFSR_W_SHIFT)
+value|(1UL<< MMU_SFSR_W_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MMU_SFSR_FV
+value|(1UL<< MMU_SFSR_FV_SHIFT)
 end_define
 
 begin_struct_decl

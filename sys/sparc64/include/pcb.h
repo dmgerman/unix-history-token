@@ -52,9 +52,6 @@ decl_stmt|;
 name|u_long
 name|pcb_pc
 decl_stmt|;
-name|caddr_t
-name|pcb_onfault
-decl_stmt|;
 name|u_long
 name|pcb_nsaved
 decl_stmt|;
