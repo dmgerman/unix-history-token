@@ -3513,6 +3513,14 @@ argument_list|,
 name|ad
 argument_list|)
 expr_stmt|;
+else|else
+name|free
+argument_list|(
+name|ad
+argument_list|,
+name|M_ACPIDEV
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|child
