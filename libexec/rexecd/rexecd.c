@@ -264,7 +264,7 @@ name|void
 name|doit
 parameter_list|(
 name|struct
-name|sockaddr_storage
+name|sockaddr
 modifier|*
 parameter_list|)
 function_decl|;
@@ -461,6 +461,11 @@ argument_list|)
 expr_stmt|;
 name|doit
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|)
@@ -479,7 +484,7 @@ name|void
 name|doit
 parameter_list|(
 name|struct
-name|sockaddr_storage
+name|sockaddr
 modifier|*
 name|fromp
 parameter_list|)
@@ -671,7 +676,7 @@ name|socket
 argument_list|(
 name|fromp
 operator|->
-name|ss_family
+name|sa_family
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
@@ -706,7 +711,7 @@ name|ss_family
 operator|=
 name|fromp
 operator|->
-name|ss_family
+name|sa_family
 expr_stmt|;
 name|sa
 operator|.
@@ -714,7 +719,7 @@ name|ss_len
 operator|=
 name|fromp
 operator|->
-name|ss_len
+name|sa_len
 expr_stmt|;
 if|if
 condition|(
@@ -746,7 +751,7 @@ switch|switch
 condition|(
 name|fromp
 operator|->
-name|ss_family
+name|sa_family
 condition|)
 block|{
 case|case
@@ -756,6 +761,10 @@ operator|(
 operator|(
 expr|struct
 name|sockaddr_in
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|fromp
@@ -776,6 +785,10 @@ operator|(
 operator|(
 expr|struct
 name|sockaddr_in6
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|fromp
@@ -802,16 +815,11 @@ name|connect
 argument_list|(
 name|sd
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 name|fromp
 argument_list|,
 name|fromp
 operator|->
-name|ss_len
+name|sa_len
 argument_list|)
 operator|<
 literal|0
