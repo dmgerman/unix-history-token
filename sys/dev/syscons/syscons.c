@@ -13,11 +13,9 @@ directive|define
 name|STAR_SAVER
 end_define
 
-begin_define
-define|#
-directive|define
-name|FAT_CURSOR
-end_define
+begin_comment
+comment|/* #define FAT_CURSOR	/* This breaks on some CGA displays */
+end_comment
 
 begin_include
 include|#
