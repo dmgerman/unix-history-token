@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1983 Eric P. Allman.  All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: praliases.c,v 8.59.4.15 2000/10/24 00:42:59 geir Exp $"
+literal|"@(#)$Id: praliases.c,v 8.59.4.18 2001/01/22 19:00:18 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1139,6 +1139,65 @@ condition|)
 name|db_name
 operator|++
 expr_stmt|;
+block|}
+comment|/* Skip non-file based DB types */
+if|if
+condition|(
+name|db_type
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|db_type
+operator|!=
+literal|'\0'
+condition|)
+block|{
+if|if
+condition|(
+name|db_type
+operator|!=
+name|SMDB_TYPE_DEFAULT
+operator|&&
+name|strcmp
+argument_list|(
+name|db_type
+argument_list|,
+literal|"hash"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|db_type
+argument_list|,
+literal|"btree"
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|db_type
+argument_list|,
+literal|"dbm"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"praliases: Skipping non-file based alias type %s\n"
+argument_list|,
+name|db_type
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 block|}
 if|if
 condition|(
