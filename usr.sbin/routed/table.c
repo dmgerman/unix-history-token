@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_empty
-empty|#ident "$Revision: 1.2 $"
+empty|#ident "$Revision: 1.1.3.1 $"
 end_empty
 
 begin_include
@@ -6166,18 +6166,13 @@ name|rt_nodes
 argument_list|)
 condition|)
 block|{
-name|msglog
-argument_list|(
-literal|"rnh_addaddr() failed for %s mask=%#x"
-argument_list|,
-name|naddr_ntoa
-argument_list|(
-name|dst
-argument_list|)
-argument_list|,
-name|mask
-argument_list|)
-expr_stmt|;
+comment|/*  * This will happen if RIP1 and RIP2 routeds talk to one another and  * there are variable subnets.  This is only good for filling up your  * syslog. -jkh  */
+if|#
+directive|if
+literal|0
+block|msglog("rnh_addaddr() failed for %s mask=%#x", 		       naddr_ntoa(dst), mask);
+endif|#
+directive|endif
 block|}
 block|}
 end_function
