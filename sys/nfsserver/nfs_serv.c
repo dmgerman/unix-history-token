@@ -1081,6 +1081,8 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 name|nfsfh_t
 name|nfh
@@ -2243,6 +2245,8 @@ name|vp
 decl_stmt|,
 modifier|*
 name|dirp
+init|=
+name|NULL
 decl_stmt|;
 name|nfsfh_t
 name|nfh
@@ -3855,6 +3859,8 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 name|nfsfh_t
 name|nfh
@@ -6102,6 +6108,8 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|uio
