@@ -351,7 +351,7 @@ block|,
 comment|/* H=blk 131404 thru end */
 block|}
 struct|,
-name|ra53_sizes
+name|rd52_sizes
 index|[
 literal|8
 index|]
@@ -361,38 +361,97 @@ literal|15884
 block|,
 literal|0
 block|,
+comment|/* A=blk 0 thru 15883 */
+literal|9766
+block|,
+literal|15884
+block|,
+comment|/* B=blk 15884 thru 25649 */
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+comment|/* C=blk 0 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* D=unused */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* E=unused */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* F=unused */
+operator|-
+literal|1
+block|,
+literal|25650
+block|,
+comment|/* G=blk 25650 thru end */
+literal|0
+block|,
+literal|0
+block|,
+comment|/* H=unused */
+block|}
+struct|,
+name|rd53_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=blk 0 thru 15883 */
 literal|33440
 block|,
 literal|15884
 block|,
+comment|/* B=blk 15884 thru 49323 */
 operator|-
 literal|1
 block|,
 literal|0
 block|,
+comment|/* C=blk 0 thru end */
 literal|0
 block|,
 literal|0
 block|,
+comment|/* D=unused */
 literal|33440
 block|,
 literal|0
 block|,
+comment|/* E=blk 0 thru 33439 */
 operator|-
 literal|1
 block|,
 literal|33440
 block|,
-operator|-
-literal|1
-block|,
-literal|15884
-block|,
+comment|/* F=blk 33440 thru end */
 operator|-
 literal|1
 block|,
 literal|49324
-block|, }
+block|,
+comment|/* G=blk 49324 thru end */
+operator|-
+literal|1
+block|,
+literal|15884
+block|,
+comment|/* H=blk 15884 thru end */
+block|}
 struct|,
 name|ra60_sizes
 index|[
@@ -5221,6 +5280,21 @@ name|ra25_sizes
 expr_stmt|;
 break|break;
 case|case
+literal|52
+case|:
+name|ra_info
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
+operator|.
+name|ra_sizes
+operator|=
+name|rd52_sizes
+expr_stmt|;
+break|break;
+case|case
 literal|53
 case|:
 name|ra_info
@@ -5232,7 +5306,7 @@ index|]
 operator|.
 name|ra_sizes
 operator|=
-name|ra53_sizes
+name|rd53_sizes
 expr_stmt|;
 break|break;
 case|case
