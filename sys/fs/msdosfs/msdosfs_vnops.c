@@ -2733,6 +2733,9 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|uoff_t
+operator|)
 name|uio
 operator|->
 name|uio_offset
@@ -2741,7 +2744,7 @@ name|DOS_FILESIZE_MAX
 condition|)
 return|return
 operator|(
-name|EFBIG
+literal|0
 operator|)
 return|;
 comment|/* 	 * If they didn't ask for any data, then we are done. 	 */
@@ -2826,6 +2829,20 @@ operator|&
 name|blsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|E2BIG
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+break|break;
+block|}
+elseif|else
 if|if
 condition|(
 name|error
@@ -3301,7 +3318,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|EFBIG
 operator|)
 return|;
 if|if
@@ -3317,23 +3334,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|uio
-operator|->
-name|uio_offset
-operator|+
-name|uio
-operator|->
-name|uio_resid
-operator|>
-name|DOS_FILESIZE_MAX
-condition|)
-return|return
-operator|(
-name|EFBIG
-operator|)
-return|;
 comment|/* 	 * If they've exceeded their filesize limit, tell them about it. 	 */
 if|if
 condition|(
@@ -3341,6 +3341,8 @@ name|p
 operator|&&
 operator|(
 operator|(
+name|uoff_t
+operator|)
 name|uio
 operator|->
 name|uio_offset
@@ -3348,7 +3350,6 @@ operator|+
 name|uio
 operator|->
 name|uio_resid
-operator|)
 operator|>
 name|p
 operator|->
@@ -3374,6 +3375,26 @@ name|EFBIG
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|uoff_t
+operator|)
+name|uio
+operator|->
+name|uio_offset
+operator|+
+name|uio
+operator|->
+name|uio_resid
+operator|>
+name|DOS_FILESIZE_MAX
+condition|)
+return|return
+operator|(
+name|EFBIG
+operator|)
+return|;
 comment|/* 	 * If the offset we are starting the write at is beyond the end of 	 * the file, then they've done a seek.  Unix filesystems allow 	 * files with holes in them, DOS doesn't so we must fill the hole 	 * with zeroed blocks. 	 */
 if|if
 condition|(
