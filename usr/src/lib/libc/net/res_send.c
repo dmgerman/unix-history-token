@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.23 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -519,7 +519,7 @@ name|RES_DEBUG
 condition|)
 name|perror
 argument_list|(
-literal|"socket failed"
+literal|"socket (vc) failed"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1036,6 +1036,7 @@ name|s
 operator|<
 literal|0
 condition|)
+block|{
 name|s
 operator|=
 name|socket
@@ -1047,6 +1048,39 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|<
+literal|0
+condition|)
+block|{
+name|terrno
+operator|=
+name|errno
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_DEBUG
+condition|)
+name|perror
+argument_list|(
+literal|"socket (dg) failed"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+continue|continue;
+block|}
+block|}
 if|#
 directive|if
 name|BSD
