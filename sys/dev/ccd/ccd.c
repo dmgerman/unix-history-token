@@ -2129,6 +2129,9 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|int
+name|sent
+decl_stmt|;
 comment|/* 	 * Translate the partition-relative block number to an absolute. 	 */
 name|bn
 operator|=
@@ -2142,6 +2145,10 @@ operator|=
 name|bp
 operator|->
 name|bio_data
+expr_stmt|;
+name|sent
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2189,6 +2196,11 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sent
+condition|)
 name|biofinish
 argument_list|(
 name|bp
@@ -2198,6 +2210,28 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+comment|/* 				 * XXX: maybe a race where the partners 				 * XXX: we sent already have been in  				 * XXX: ccdiodone().  Single-threaded g_down 				 * XXX: may protect against this. 				 */
+name|bp
+operator|->
+name|bio_resid
+operator|-=
+name|bcount
+expr_stmt|;
+name|bp
+operator|->
+name|bio_error
+operator|=
+name|err
+expr_stmt|;
+name|bp
+operator|->
+name|bio_flags
+operator||=
+name|BIO_ERROR
+expr_stmt|;
+block|}
 return|return;
 block|}
 name|rcount
@@ -2256,6 +2290,9 @@ index|]
 operator|->
 name|cb_buf
 argument_list|)
+expr_stmt|;
+name|sent
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -2337,6 +2374,9 @@ operator|->
 name|cb_buf
 argument_list|)
 expr_stmt|;
+name|sent
+operator|++
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -2352,6 +2392,9 @@ index|]
 operator|->
 name|cb_buf
 argument_list|)
+expr_stmt|;
+name|sent
+operator|++
 expr_stmt|;
 block|}
 name|bn
