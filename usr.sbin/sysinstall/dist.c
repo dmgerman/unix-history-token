@@ -4527,18 +4527,11 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
-end_function
-
-begin_expr_stmt
 name|properties_free
 argument_list|(
 name|dist_attr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sigaction
 argument_list|(
 name|SIGINT
@@ -4549,28 +4542,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Restore signal handler */
-end_comment
-
-begin_expr_stmt
 name|restorescr
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|status
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|void
 name|printSelected
 parameter_list|(
