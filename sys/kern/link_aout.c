@@ -2803,6 +2803,9 @@ name|diff
 init|=
 name|off
 decl_stmt|;
+name|u_long
+name|sp_nz_value
+decl_stmt|;
 name|struct
 name|nzlist
 modifier|*
@@ -2819,9 +2822,6 @@ modifier|*
 name|best
 init|=
 literal|0
-decl_stmt|;
-name|u_long
-name|sp_nz_value
 decl_stmt|;
 for|for
 control|(
@@ -2887,7 +2887,11 @@ operator|->
 name|nz_value
 operator|+
 operator|(
-name|u_long
+name|uintptr_t
+operator|)
+operator|(
+name|void
+operator|*
 operator|)
 name|af
 operator|->
