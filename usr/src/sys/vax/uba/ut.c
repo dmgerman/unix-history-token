@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.11	82/03/14	*/
+comment|/*	ut.c	4.12	82/05/27	*/
 end_comment
 
 begin_include
@@ -500,10 +500,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|notdef
-comment|/* 	 * It appears the controller won't interrupt unless the 	 * slave is off-line...this is as bad as the TS-11. 	 */
+comment|/* 	 * The SI documentation says you must set the RDY bit 	 * (even though it's read-only) to force an interrupt. 	 */
 operator|(
 operator|(
 expr|struct
@@ -519,45 +516,13 @@ name|UT_IE
 operator||
 name|UT_NOP
 operator||
-name|UT_GO
+name|UT_RDY
 expr_stmt|;
 name|DELAY
 argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
-operator|(
-operator|(
-expr|struct
-name|utdevice
-operator|*
-operator|)
-name|reg
-operator|)
-operator|->
-name|utcs1
-operator|=
-name|UT_CLEAR
-operator||
-name|UT_GO
-expr_stmt|;
-else|#
-directive|else
-name|br
-operator|=
-literal|0x15
-expr_stmt|;
-name|cvec
-operator|=
-literal|0164
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_block
 
