@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getpwent.c,v 1.7 1994/03/02 19:46:20 ache Exp $"
+literal|"$Id: getpwent.c,v 1.8 1994/03/09 20:59:03 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,11 +142,9 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|PW_COMPACT
-end_define
+begin_comment
+comment|/* #define PW_COMPACT */
+end_comment
 
 begin_comment
 comment|/* Compact pwd.db/spwd.db structure by Alex G. Bulushev, bag@demos.su */
