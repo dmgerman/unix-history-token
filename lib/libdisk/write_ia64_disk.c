@@ -1748,10 +1748,6 @@ operator|=
 name|c
 operator|->
 name|offset
-operator|/
-name|disk
-operator|->
-name|sector_size
 expr_stmt|;
 name|tbl
 index|[
@@ -1763,10 +1759,6 @@ operator|=
 name|c
 operator|->
 name|end
-operator|/
-name|disk
-operator|->
-name|sector_size
 expr_stmt|;
 block|}
 name|hdr
