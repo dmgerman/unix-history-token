@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getcwd.c	5.10 (Berkeley) %G%"
+literal|"@(#)getcwd.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,7 +254,7 @@ operator|-
 literal|1
 expr_stmt|;
 operator|*
-name|ept
+name|bpt
 operator|=
 literal|'\0'
 expr_stmt|;
