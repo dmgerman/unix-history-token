@@ -343,6 +343,43 @@ enum|;
 end_enum
 
 begin_comment
+comment|/*  * ISA_IVAR_CONFIGATTR bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISACFGATTR_CANDISABLE
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* can be disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISACFGATTR_DYNAMIC
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* dynamic configuration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISACFGATTR_MULTI
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* multiple configurations */
+end_comment
+
+begin_comment
 comment|/*  * Simplified accessors for isa devices  */
 end_comment
 
