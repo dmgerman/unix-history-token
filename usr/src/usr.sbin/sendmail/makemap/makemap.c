@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.6 (Berkeley) %G%"
+literal|"@(#)makemap.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,11 @@ init|=
 name|FALSE
 decl_stmt|;
 name|bool
+name|allowdups
+init|=
+name|FALSE
+decl_stmt|;
+name|bool
 name|verbose
 init|=
 name|FALSE
@@ -279,6 +284,14 @@ name|key
 decl_stmt|,
 name|val
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWDB
+name|BTREEINFO
+name|bti
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|ibuf
 index|[
@@ -318,7 +331,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Nforv"
+literal|"Ndforv"
 argument_list|)
 operator|)
 operator|!=
@@ -334,6 +347,14 @@ case|case
 literal|'N'
 case|:
 name|inclnull
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|allowdups
 operator|=
 name|TRUE
 expr_stmt|;
@@ -495,7 +516,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-N] [-o] [-v] type mapname\n"
+literal|"Usage: %s [-N] [-d] [-f] [-o] [-r] [-v] type mapname\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -559,6 +580,68 @@ argument_list|(
 name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWDB
+case|case
+name|T_BTREE
+case|:
+name|bzero
+argument_list|(
+operator|&
+name|bti
+argument_list|,
+sizeof|sizeof
+name|bti
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|allowdups
+condition|)
+name|bti
+operator|.
+name|flags
+operator||=
+name|R_DUP
+expr_stmt|;
+break|break;
+case|case
+name|T_HASH
+case|:
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NDBM
+case|case
+name|T_DBM
+case|:
+endif|#
+directive|endif
+if|if
+condition|(
+name|allowdups
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: Type %s does not support -d (allow dups)\n"
+argument_list|,
+name|progname
+argument_list|,
+name|typename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_UNAVAILABLE
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
 block|}
 comment|/* 	**  Adjust file names. 	*/
 if|if
@@ -713,7 +796,8 @@ literal|0644
 argument_list|,
 name|DB_BTREE
 argument_list|,
-name|NULL
+operator|&
+name|bti
 argument_list|)
 expr_stmt|;
 break|break;
