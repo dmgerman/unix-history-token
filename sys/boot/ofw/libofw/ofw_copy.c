@@ -387,6 +387,12 @@ operator|<=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|got
+operator|<
+literal|0
+condition|)
 name|printf
 argument_list|(
 literal|"ofw_readin: read failed\n"
