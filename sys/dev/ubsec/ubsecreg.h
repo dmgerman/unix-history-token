@@ -125,6 +125,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCI_PRODUCT_BROADCOM_5801
+value|0x5801
+end_define
+
+begin_comment
+comment|/* 5801 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_PRODUCT_BROADCOM_5802
+value|0x5802
+end_define
+
+begin_comment
+comment|/* 5802 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCI_PRODUCT_BROADCOM_5805
 value|0x5805
 end_define
