@@ -1790,6 +1790,11 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|int
 name|error
 init|=
