@@ -63,6 +63,11 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -164,6 +169,11 @@ name|ign
 init|=
 name|FALSE
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
 name|printf
 argument_list|(
 literal|"%s%s"
@@ -223,6 +233,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"%s\n"
+else|:
 literal|"File: %s (ignored)\n"
 argument_list|,
 name|p
@@ -238,6 +252,10 @@ block|}
 else|else
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"%s\n"
+else|:
 literal|"File: %s\n"
 argument_list|,
 name|p
@@ -251,6 +269,10 @@ name|PLIST_CWD
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@cwd %s\n"
+else|:
 literal|"\tCWD to %s\n"
 argument_list|,
 name|p
@@ -264,6 +286,10 @@ name|PLIST_CMD
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@exec %s\n"
+else|:
 literal|"\tEXEC '%s'\n"
 argument_list|,
 name|p
@@ -277,6 +303,10 @@ name|PLIST_CHMOD
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@chmod %s\n"
+else|:
 literal|"\tCHMOD to %s\n"
 argument_list|,
 name|p
@@ -287,7 +317,7 @@ name|p
 operator|->
 name|name
 else|:
-literal|"(no default)"
+literal|"(clear default)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -296,6 +326,10 @@ name|PLIST_CHOWN
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@chown %s\n"
+else|:
 literal|"\tCHOWN to %s\n"
 argument_list|,
 name|p
@@ -306,7 +340,7 @@ name|p
 operator|->
 name|name
 else|:
-literal|"(no default)"
+literal|"(clear default)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -315,6 +349,10 @@ name|PLIST_CHGRP
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@chgrp %s\n"
+else|:
 literal|"\tCHGRP to %s\n"
 argument_list|,
 name|p
@@ -325,7 +363,7 @@ name|p
 operator|->
 name|name
 else|:
-literal|"(no default)"
+literal|"(clear default)"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -334,6 +372,10 @@ name|PLIST_COMMENT
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@comment %s\n"
+else|:
 literal|"\tComment: %s\n"
 argument_list|,
 name|p
@@ -355,6 +397,10 @@ name|PLIST_NAME
 case|:
 name|printf
 argument_list|(
+name|Quiet
+condition|?
+literal|"@name %s\n"
+else|:
 literal|"\tPackage name: %s\n"
 argument_list|,
 name|p
@@ -376,6 +422,122 @@ name|p
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|p
+operator|=
+name|p
+operator|->
+name|next
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Show all files in the packing list (except ignored ones) */
+end_comment
+
+begin_function
+name|void
+name|show_files
+parameter_list|(
+name|char
+modifier|*
+name|title
+parameter_list|,
+name|Package
+modifier|*
+name|plist
+parameter_list|)
+block|{
+name|PackingList
+name|p
+decl_stmt|;
+name|Boolean
+name|ign
+init|=
+name|FALSE
+decl_stmt|;
+name|char
+modifier|*
+name|dir
+init|=
+literal|"."
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
+name|printf
+argument_list|(
+literal|"%s%s"
+argument_list|,
+name|InfoPrefix
+argument_list|,
+name|title
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|plist
+operator|->
+name|head
+expr_stmt|;
+while|while
+condition|(
+name|p
+condition|)
+block|{
+switch|switch
+condition|(
+name|p
+operator|->
+name|type
+condition|)
+block|{
+case|case
+name|PLIST_FILE
+case|:
+if|if
+condition|(
+operator|!
+name|ign
+condition|)
+name|printf
+argument_list|(
+literal|"%s/%s\n"
+argument_list|,
+name|dir
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|ign
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_CWD
+case|:
+name|dir
+operator|=
+name|p
+operator|->
+name|name
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_IGNORE
+case|:
+name|ign
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 block|}

@@ -489,6 +489,11 @@ block|}
 else|else
 block|{
 comment|/* Start showing the package contents */
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
 name|printf
 argument_list|(
 literal|"%sInformation for %s:\n\n"
@@ -600,6 +605,25 @@ argument_list|,
 name|PLIST_CWD
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Flags
+operator|&
+name|SHOW_FILES
+condition|)
+name|show_files
+argument_list|(
+literal|"Files:\n"
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Quiet
+condition|)
 name|puts
 argument_list|(
 name|InfoPrefix

@@ -75,6 +75,13 @@ name|SHOW_INDEX
 value|0x80
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHOW_FILES
+value|0x100
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -86,6 +93,13 @@ begin_decl_stmt
 specifier|extern
 name|Boolean
 name|AllInstalled
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|Quiet
 decl_stmt|;
 end_decl_stmt
 
@@ -139,6 +153,20 @@ name|Package
 modifier|*
 parameter_list|,
 name|plist_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|show_files
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|Package
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
