@@ -115,7 +115,8 @@ name|timeval
 name|ktr_time
 decl_stmt|;
 comment|/* timestamp */
-name|caddr_t
+name|void
+modifier|*
 name|ktr_buffer
 decl_stmt|;
 block|}
@@ -123,20 +124,31 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Test for kernel trace point (MP SAFE)  */
+comment|/*  * Test for kernel trace point (MP SAFE).  *  * KTRCHECK() just checks that the type is enabled and is only for  * internal use in the ktrace subsystem.  KTRPOINT() checks against  * ktrace recursion as well as checking that the type is enabled and  * is the public interface.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KTRCHECK
+parameter_list|(
+name|td
+parameter_list|,
+name|type
+parameter_list|)
+value|((td)->td_proc->p_traceflag& (1<< type))
+end_define
 
 begin_define
 define|#
 directive|define
 name|KTRPOINT
 parameter_list|(
-name|p
+name|td
 parameter_list|,
 name|type
 parameter_list|)
-define|\
-value|(((p)->p_traceflag& ((1<<(type))|KTRFAC_ACTIVE)) == (1<<(type)))
+value|(KTRCHECK((td), (type))&& !(td)->td_inktrace)
 end_define
 
 begin_comment
@@ -416,31 +428,24 @@ begin_comment
 comment|/* pass trace flags to children */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|KTRFAC_ACTIVE
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* ktrace logging in progress, ignore */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|ktrace_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|ktrnamei
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|char
 modifier|*
 parameter_list|)
@@ -451,10 +456,6 @@ begin_function_decl
 name|void
 name|ktrcsw
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -466,10 +467,6 @@ begin_function_decl
 name|void
 name|ktrpsig
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|sig_t
@@ -486,10 +483,6 @@ begin_function_decl
 name|void
 name|ktrgenio
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|enum
@@ -508,10 +501,6 @@ begin_function_decl
 name|void
 name|ktrsyscall
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -528,10 +517,6 @@ begin_function_decl
 name|void
 name|ktrsysret
 parameter_list|(
-name|struct
-name|vnode
-modifier|*
-parameter_list|,
 name|int
 parameter_list|,
 name|int
