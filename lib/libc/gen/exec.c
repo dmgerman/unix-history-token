@@ -483,9 +483,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|int
-name|sverrno
-decl_stmt|;
 name|char
 modifier|*
 modifier|*
