@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_v.c	7.5 %G%"
+literal|"@(#)ex_v.c	7.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1492,6 +1492,11 @@ begin_block
 block|{
 name|vsave
 argument_list|()
+expr_stmt|;
+name|setty
+argument_list|(
+name|normf
+argument_list|)
 expr_stmt|;
 name|longjmp
 argument_list|(
