@@ -80,6 +80,10 @@ name|void
 modifier|*
 name|ih_cam
 decl_stmt|;
+name|void
+modifier|*
+name|ih_bio
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
