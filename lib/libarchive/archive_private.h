@@ -51,40 +51,11 @@ begin_comment
 comment|/*  * This is used by archive_extract to keep track of non-writable  * directories so that they can be initially restored writable, then  * fixed up at end.  This also handles mtime/atime fixups.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|archive_extract_dir_entry
-block|{
-name|struct
-name|archive_extract_dir_entry
-modifier|*
-name|next
-decl_stmt|;
-name|mode_t
-name|mode
-decl_stmt|;
-name|int64_t
-name|mtime
-decl_stmt|;
-name|int64_t
-name|atime
-decl_stmt|;
-name|unsigned
-name|long
-name|mtime_nanos
-decl_stmt|;
-name|unsigned
-name|long
-name|atime_nanos
-decl_stmt|;
-comment|/* Note: ctime cannot be restored, so don't bother */
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-struct|;
-end_struct
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct

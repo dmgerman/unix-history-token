@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -453,7 +453,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|EDOOFUS
+name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
 literal|"No write callback is registered?  "
 literal|"This is probably an internal programming error."
@@ -641,7 +641,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|EDOOFUS
+name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
 literal|"No write callback is registered?  "
 literal|"This is probably an internal programming error."

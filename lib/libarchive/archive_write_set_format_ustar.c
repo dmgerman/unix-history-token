@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -26,7 +26,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -809,8 +809,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ENAMETOOLONG
 argument_list|,
 literal|"Pathname too long"
 argument_list|)
@@ -839,8 +838,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ENAMETOOLONG
 argument_list|,
 literal|"Pathname too long"
 argument_list|)
@@ -943,8 +941,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ENAMETOOLONG
 argument_list|,
 literal|"Link contents too long"
 argument_list|)
@@ -1010,8 +1007,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Username too long"
 argument_list|)
@@ -1077,8 +1073,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Group name too long"
 argument_list|)
@@ -1575,8 +1570,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"tar format cannot archive socket"
 argument_list|)
@@ -1591,8 +1585,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"tar format cannot archive this"
 argument_list|)

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -24,7 +24,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -155,6 +155,12 @@ name|ap
 argument_list|)
 expr_stmt|;
 block|}
+name|as
+operator|->
+name|length
+operator|=
+name|l
+expr_stmt|;
 block|}
 end_function
 

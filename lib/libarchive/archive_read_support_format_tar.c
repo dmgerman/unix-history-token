@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -26,7 +26,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -2993,6 +2993,7 @@ literal|0
 operator|)
 return|;
 comment|/* Null-terminate 'key' value. */
+comment|/* XXX TODO: 'key' is officially UTF-8; should 		 * decode UTF-8 key to wchar here, then do 		 * all wchar matching below. XXX */
 name|key
 operator|=
 name|p
@@ -3052,49 +3053,20 @@ literal|1
 operator|)
 return|;
 comment|/* Null-terminate 'value' portion. */
+comment|/* XXX need to decode UTF-8 value, make everything 		 * else wchar-clean. */
+comment|/* XXX should use pointer/length so that NULLs can 		 * appear within the value portion.<sigh> */
 name|value
 operator|=
 name|p
 operator|+
 literal|1
 expr_stmt|;
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|value
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|p
-operator|>
 name|line
-operator|+
+index|[
 name|line_length
-condition|)
-return|return
-operator|(
 operator|-
 literal|1
-operator|)
-return|;
-operator|*
-name|p
+index|]
 operator|=
 literal|0
 expr_stmt|;

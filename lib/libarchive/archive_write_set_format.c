@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -16,6 +16,18 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -185,8 +197,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|EINVAL
 argument_list|,
 literal|"No such format"
 argument_list|)

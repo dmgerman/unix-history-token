@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -32,7 +32,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -1145,8 +1145,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"tar format cannot archive socket"
 argument_list|)
@@ -1161,8 +1160,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"tar format cannot archive this"
 argument_list|)
@@ -1224,7 +1222,6 @@ name|p
 expr_stmt|;
 comment|/* Record a zero-length prefix */
 else|else
-block|{
 comment|/* Find the largest suffix that fits in 'name' field. */
 name|name_start
 operator|=
@@ -1244,26 +1241,13 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+comment|/* If name is too long, add 'path' to pax extended attrs. */
 if|if
 condition|(
 name|name_start
 operator|==
 name|NULL
-condition|)
-comment|/* No feasible break point. */
-name|name_start
-operator|=
-name|p
-operator|+
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* If name is too long, add 'path' to pax extended attrs. */
-if|if
-condition|(
+operator|||
 name|name_start
 operator|-
 name|p
@@ -2670,7 +2654,9 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|strlcpy
+comment|/* The OpenBSD strlcpy function is safer, but less portable. */
+comment|/* Rather than maintain two versions, just use the strncpy version. */
+name|strncpy
 argument_list|(
 name|dest
 argument_list|,
@@ -2680,10 +2666,19 @@ name|basename
 operator|-
 name|prefix
 operator|+
-literal|1
-operator|+
 name|basename_length
 argument_list|)
+expr_stmt|;
+name|dest
+index|[
+name|basename
+operator|-
+name|prefix
+operator|+
+name|basename_length
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(

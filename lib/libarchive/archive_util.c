@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -17,10 +17,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include

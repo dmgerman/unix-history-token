@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -625,12 +625,11 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|EFTYPE
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Unrecognized archive format"
 argument_list|)
 expr_stmt|;
-comment|/* EFTYPE == "Inappropriate file type or format" */
 return|return
 operator|(
 name|ARCHIVE_FATAL
@@ -1081,7 +1080,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|EFTYPE
+name|ARCHIVE_ERRNO_FILE_FORMAT
 argument_list|,
 literal|"Unrecognized archive format"
 argument_list|)
@@ -1387,7 +1386,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-literal|0
+name|EIO
 argument_list|,
 literal|"Premature end of archive entry"
 argument_list|)

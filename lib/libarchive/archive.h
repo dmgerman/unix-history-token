@@ -123,6 +123,34 @@ comment|/* No more operations are possible. */
 end_comment
 
 begin_comment
+comment|/*  * As far as possible, archive_errno returns standard platform errno codes.  * Of course, the details vary by platform, so the actual definitions  * here are stored in "archive_platform.h".  The symbols are listed here  * for reference; as a rule, clients should not need to know the exact  * platform-dependent error code.  */
+end_comment
+
+begin_comment
+comment|/* Unrecognized or invalid file format. */
+end_comment
+
+begin_comment
+comment|/* #define ARCHIVE_ERRNO_FILE_FORMAT */
+end_comment
+
+begin_comment
+comment|/* Illegal usage of the library. */
+end_comment
+
+begin_comment
+comment|/* #define ARCHIVE_ERRNO_PROGRAMMER_ERROR */
+end_comment
+
+begin_comment
+comment|/* Unknown or unclassified error. */
+end_comment
+
+begin_comment
+comment|/* #define ARCHIVE_ERRNO_MISC */
+end_comment
+
+begin_comment
 comment|/*  * Callbacks are invoked to automatically read/write/open/close the archive.  * You can provide your own for complex tasks (like breaking archives  * across multiple tapes) or use standard ones built into the library.  */
 end_comment
 

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -26,7 +26,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -683,8 +683,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"shar format cannot archive this"
 argument_list|)

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|"archive_platform.h"
 end_include
 
 begin_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DMALLOC
+name|HAVE_DMALLOC
 end_ifdef
 
 begin_include
@@ -696,8 +696,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Internal error initializing %s library"
 argument_list|,
@@ -731,8 +730,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Internal error initializing compression library: "
 literal|"invalid setup parameter"
@@ -746,8 +744,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ENOMEM
 argument_list|,
 literal|"Internal error initializing compression library: "
 literal|"out of memory"
@@ -761,8 +758,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Internal error initializing compression library: "
 literal|"invalid library version"
@@ -837,7 +833,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-name|EINVAL
+name|ARCHIVE_ERRNO_PROGRAMMER
 argument_list|,
 literal|"No read callback is registered?  "
 literal|"This is probably an internal programming error."
@@ -1126,8 +1122,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Failed to clean up %s compressor"
 argument_list|,
@@ -1320,8 +1315,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|EIO
 argument_list|,
 literal|"Premature end of %s compressed data"
 argument_list|,
@@ -1824,8 +1818,7 @@ name|archive_set_error
 argument_list|(
 name|a
 argument_list|,
-operator|-
-literal|1
+name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"%s decompression failed"
 argument_list|,
