@@ -1019,6 +1019,8 @@ argument_list|(
 name|rstart
 operator|+
 name|count
+operator|-
+literal|1
 argument_list|,
 name|end
 argument_list|)
@@ -1533,6 +1535,8 @@ argument_list|(
 name|start
 operator|+
 name|count
+operator|-
+literal|1
 argument_list|,
 name|end
 argument_list|)
