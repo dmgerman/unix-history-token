@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: if_wl_wavelan.h,v 1.2 1997/08/01 03:33:43 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -462,12 +462,6 @@ end_define
 begin_comment
 comment|/* 2.4 Gz  EEPROM busy		  */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|_CHIPS_WAVELAN_H
-end_endif
 
 begin_comment
 comment|/* additional socket ioctl params for wl card     * see sys/sockio.h for numbers.  The 2nd params here  * must be greater than any values in sockio.h  */
@@ -969,6 +963,15 @@ comment|/* packet has unique age between 1 to MAX_AGE - 1 */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _CHIPS_WAVELAN_H */
+end_comment
 
 end_unit
 
