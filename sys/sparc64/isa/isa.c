@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ofw_pci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -135,12 +141,6 @@ directive|include
 file|<sparc64/isa/ofw_isa.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"sparcbus_if.h"
-end_include
-
 begin_comment
 comment|/* There can be only one ISA bus, so it is safe to use globals. */
 end_comment
@@ -212,13 +212,31 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int32_t
+name|ofw_pci_intr_t
 name|isa_ino
 index|[
 literal|8
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|ofw_bus_iinfo
+name|isa_iinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * XXX: This is really partly partly PCI-specific, but unfortunately is  * differently enough to have to duplicate it here...  */
@@ -330,13 +348,13 @@ index|[
 name|i
 index|]
 operator|!=
-name|ORIR_NOTFOUND
+name|PCI_INVALID_IRQ
 condition|)
 block|{
 name|pending
 operator||=
 operator|(
-name|SPARCBUS_INTR_PENDING
+name|OFW_PCI_INTR_PENDING
 argument_list|(
 name|isa_bus_device
 argument_list|,
@@ -377,9 +395,17 @@ decl_stmt|;
 name|phandle_t
 name|node
 decl_stmt|;
-name|u_int32_t
+name|ofw_isa_intr_t
 name|ino
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OFW_NEWPCI
+name|ofw_pci_intr_t
+name|rino
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|isa_ranges
 modifier|*
@@ -398,6 +424,18 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
+name|isab_node
+operator|=
+name|ofw_pci_get_node
+argument_list|(
+name|bridge
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|isab_node
 operator|=
 name|ofw_pci_node
@@ -405,6 +443,8 @@ argument_list|(
 name|bridge
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|nbr
 operator|=
 name|OF_getprop_alloc
@@ -439,7 +479,25 @@ argument_list|(
 literal|"isa_init: cannot get bridge range property"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is really a bad kluge; however, it is needed to provide 	 * isa_irq_pending(). 	 */
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
+name|ofw_bus_setup_iinfo
+argument_list|(
+name|isab_node
+argument_list|,
+operator|&
+name|isa_iinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ofw_isa_intr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * This is really a bad kludge; however, it is needed to provide 	 * isa_irq_pending(), which is unfortunately still used by some 	 * drivers. 	 */
 for|for
 control|(
 name|i
@@ -458,7 +516,7 @@ index|[
 name|i
 index|]
 operator|=
-name|ORIR_NOTFOUND
+name|PCI_INVALID_IRQ
 expr_stmt|;
 for|for
 control|(
@@ -513,10 +571,29 @@ argument_list|(
 literal|"isa_init: XXX: ino too large"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
 name|isa_ino
 index|[
 name|ino
 index|]
+operator|=
+name|ofw_isa_route_intr
+argument_list|(
+name|bridge
+argument_list|,
+name|node
+argument_list|,
+operator|&
+name|isa_iinfo
+argument_list|,
+name|ino
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|rino
 operator|=
 name|ofw_bus_route_intr
 argument_list|(
@@ -529,6 +606,21 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
+name|isa_ino
+index|[
+name|ino
+index|]
+operator|=
+name|rino
+operator|==
+name|ORIR_NOTFOUND
+condition|?
+name|PCI_INVALID_IRQ
+else|:
+name|rino
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 for|for
 control|(
@@ -580,11 +672,11 @@ name|size
 expr_stmt|;
 name|isa_io_hdl
 operator|=
-name|SPARCBUS_GET_BUS_HANDLE
+name|OFW_PCI_GET_BUS_HANDLE
 argument_list|(
 name|bridge
 argument_list|,
-name|SBBT_IO
+name|SYS_RES_IOPORT
 argument_list|,
 name|isa_io_base
 argument_list|,
@@ -619,11 +711,11 @@ name|size
 expr_stmt|;
 name|isa_mem_hdl
 operator|=
-name|SPARCBUS_GET_BUS_HANDLE
+name|OFW_PCI_GET_BUS_HANDLE
 argument_list|(
 name|bridge
 argument_list|,
-name|SBBT_MEM
+name|SYS_RES_MEMORY
 argument_list|,
 name|isa_mem_base
 argument_list|,
@@ -702,7 +794,7 @@ if|if
 condition|(
 name|res
 operator|==
-name|ORIR_NOTFOUND
+name|PCI_INVALID_IRQ
 condition|)
 name|device_printf
 argument_list|(
@@ -1031,7 +1123,7 @@ if|if
 condition|(
 name|start
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 return|return
 operator|(
@@ -1256,7 +1348,7 @@ if|if
 condition|(
 name|start
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 return|return
 operator|(

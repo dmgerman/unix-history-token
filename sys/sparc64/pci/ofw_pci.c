@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999, 2000 Matthew R. Green  * All rights reserved.  * Copyright 2001 by Thomas Moestl<tmm@FreeBSD.org>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: psycho.c,v 1.35 2001/09/10 16:17:06 eeh Exp  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999, 2000 Matthew R. Green  * Copyright (c) 2001 - 2003 by Thomas Moestl<tmm@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: NetBSD: psycho.c,v 1.35 2001/09/10 16:17:06 eeh Exp  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -36,13 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcireg.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
@@ -55,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc64/pci/ofw_pci.h>
 end_include
 
 begin_include
@@ -96,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcib_if.h"
+file|<sparc64/pci/ofw_pci.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sparcbus_if.h"
+file|"pcib_if.h"
 end_include
 
 begin_decl_stmt
@@ -123,6 +117,19 @@ name|int
 name|pci_bus_map_sz
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCI_BUS_MAP_INC
+value|10
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OFW_NEWPCI
+end_ifndef
 
 begin_comment
 comment|/* Do not swizzle on a PCI bus node with no interrupt-map propery. */
@@ -219,13 +226,6 @@ name|OFW_PCI_EBUS
 value|"ebus"
 end_define
 
-begin_define
-define|#
-directive|define
-name|PCI_BUS_MAP_INC
-value|10
-end_define
-
 begin_function
 name|int
 name|ofw_pci_orb_callback
@@ -270,7 +270,7 @@ name|struct
 name|ofw_pci_register
 name|preg
 decl_stmt|;
-name|u_int32_t
+name|ofw_pci_intr_t
 name|pintr
 decl_stmt|,
 name|intr
@@ -344,7 +344,7 @@ name|pintsz
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|pintr
 argument_list|)
 operator|||
 name|pregsz
@@ -410,10 +410,10 @@ operator|<=
 literal|255
 condition|)
 block|{
-comment|/* 		 * The e450 has no interrupt maps at all, and it usually has 		 * full interrupt numbers, including IGN, in the interrupt 		 * properties. There is one exception, however: the property 		 * values for external PCI devices seem to always be below 255 		 * and describe the interrupt pin to be used on the slot, while 		 * we have to figure out the base INO by looking at the slot 		 * number (which we do using a sparcbus method). 		 * 		 * Of course, there is an exception to that nice rule: 		 * in the ebus case, the interrupt property has the correct 		 * INO (but without IGN). This is dealt with above. 		 */
+comment|/* 		 * The e450 has no interrupt maps at all, and it usually has 		 * full interrupt numbers, including IGN, in the interrupt 		 * properties. There is one exception, however: the property 		 * values for external PCI devices seem to always be below 255 		 * and describe the interrupt pin to be used on the slot, while 		 * we have to figure out the base INO by looking at the slot 		 * number (which we do using an ofw_pci method). 		 * 		 * Of course, there is an exception to that nice rule: 		 * in the ebus case, the interrupt property has the correct 		 * INO (but without IGN). This is dealt with above. 		 */
 name|intr
 operator|=
-name|SPARCBUS_GUESS_INO
+name|OFW_PCI_GUESS_INO
 argument_list|(
 name|dev
 argument_list|,
@@ -564,7 +564,7 @@ end_function
 
 begin_function
 specifier|static
-name|u_int32_t
+name|ofw_pci_intr_t
 name|ofw_pci_route_intr
 parameter_list|(
 name|device_t
@@ -573,7 +573,7 @@ parameter_list|,
 name|phandle_t
 name|node
 parameter_list|,
-name|u_int32_t
+name|ofw_pci_intr_t
 name|ign
 parameter_list|)
 block|{
@@ -601,7 +601,7 @@ name|ORIR_NOTFOUND
 condition|)
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 comment|/* 	 * Some machines (notably the SPARCengine Ultra AX and the e450) have 	 * no mappings at all, but use complete interrupt vector number 	 * including the IGN. Catch this case and remove the IGN. 	 */
@@ -622,6 +622,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !OFW_NEWCPI */
+end_comment
 
 begin_function
 name|u_int8_t
@@ -732,6 +741,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OFW_NEWPCI
+end_ifndef
 
 begin_comment
 comment|/*  * Initialize bridge bus numbers for bridges that implement the primary,  * secondary and subordinate bus number registers.  */
@@ -877,7 +892,7 @@ parameter_list|,
 name|phandle_t
 name|bushdl
 parameter_list|,
-name|u_int32_t
+name|ofw_pci_intr_t
 name|ign
 parameter_list|,
 name|struct
@@ -1404,7 +1419,7 @@ name|ign
 argument_list|)
 operator|)
 operator|!=
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 block|{
 ifdef|#
@@ -1522,7 +1537,7 @@ name|func
 argument_list|,
 name|PCIR_INTLINE
 argument_list|,
-literal|255
+name|PCI_INVALID_IRQ
 argument_list|,
 literal|1
 argument_list|)
@@ -1712,6 +1727,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OFW_NEWPCI */
+end_comment
 
 end_unit
 

@@ -99,6 +99,13 @@ parameter_list|)
 value|(((r)->phys_hi>> 24)& 0x03)
 end_define
 
+begin_typedef
+typedef|typedef
+name|u_int32_t
+name|ofw_isa_intr_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|isa_imap
@@ -111,15 +118,15 @@ name|u_int32_t
 name|phys_lo
 decl_stmt|;
 comment|/* low phys addr mask */
-name|u_int32_t
+name|ofw_isa_intr_t
 name|intr
 decl_stmt|;
 comment|/* interrupt mask */
-name|int32_t
+name|phandle_t
 name|cnode
 decl_stmt|;
 comment|/* child node */
-name|u_int32_t
+name|ofw_pci_intr_t
 name|cintr
 decl_stmt|;
 comment|/* child interrupt */
@@ -139,42 +146,13 @@ name|u_int32_t
 name|phys_lo
 decl_stmt|;
 comment|/* low phys addr */
-name|u_int32_t
+name|ofw_isa_intr_t
 name|intr
 decl_stmt|;
 comment|/* interrupt */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* Map an interrupt property to an INO */
-end_comment
-
-begin_function_decl
-name|int
-name|ofw_isa_map_intr
-parameter_list|(
-name|struct
-name|isa_imap
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|isa_imap_msk
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|isa_regs
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* Map an IO range. Returns the resource type of the range. */
@@ -198,6 +176,34 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
+end_ifdef
+
+begin_function_decl
+name|ofw_pci_intr_t
+name|ofw_isa_route_intr
+parameter_list|(
+name|device_t
+parameter_list|,
+name|phandle_t
+parameter_list|,
+name|struct
+name|ofw_bus_iinfo
+modifier|*
+parameter_list|,
+name|ofw_isa_intr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

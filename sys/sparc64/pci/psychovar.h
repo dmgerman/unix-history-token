@@ -97,6 +97,15 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OFW_NEWPCI
+name|struct
+name|ofw_bus_iinfo
+name|sc_iinfo
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * note that the sabre really only has one ranges property, 	 * used for both simba a and simba b (but the ranges for 	 * real psychos are the same for PCI A and PCI B anyway). 	 */
 name|struct
 name|upa_ranges
@@ -125,8 +134,11 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|int
-name|sc_busno
+name|u_int
+name|sc_secbus
+decl_stmt|;
+name|u_int
+name|sc_subbus
 decl_stmt|;
 name|struct
 name|rman
