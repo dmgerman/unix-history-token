@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.43 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -131,16 +131,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_ACCESS
-expr_stmt|;
-name|USES_VOP_CREATE
-expr_stmt|;
-name|USES_VOP_OPEN
-expr_stmt|;
-name|USES_VOP_SETATTR
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -775,8 +765,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_CLOSE
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -914,14 +902,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_READ
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
-name|USES_VOP_WRITE
-expr_stmt|;
 name|struct
 name|uio
 name|auio
@@ -1154,12 +1134,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_READ
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1299,12 +1273,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
-name|USES_VOP_WRITE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1486,8 +1454,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
 name|struct
 name|vattr
 name|vattr
@@ -1786,10 +1752,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_IOCTL
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2005,8 +1967,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SELECT
-expr_stmt|;
 return|return
 operator|(
 name|VOP_SELECT
@@ -2139,8 +2099,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|mount

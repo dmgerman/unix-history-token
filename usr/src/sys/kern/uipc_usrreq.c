@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.34 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1551,12 +1551,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_CREATE
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|struct
 name|sockaddr_un
 modifier|*
@@ -1896,8 +1890,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ACCESS
-expr_stmt|;
 specifier|register
 name|struct
 name|sockaddr_un
