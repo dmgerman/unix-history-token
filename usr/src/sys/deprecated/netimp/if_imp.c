@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imp.c	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_imp.c	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -316,6 +316,14 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|impintr
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ui
@@ -1500,7 +1508,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*VARARGS*/
+comment|/*VARARGS2*/
 end_comment
 
 begin_macro
@@ -1729,12 +1737,17 @@ name|IMPLINK_IP
 case|:
 name|pfctlinput
 argument_list|(
+operator|(
+name|int
+operator|)
 name|cp
 operator|->
 name|dl_mtype
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|impsrc
@@ -1744,12 +1757,17 @@ break|break;
 default|default:
 name|raw_ctlinput
 argument_list|(
+operator|(
+name|int
+operator|)
 name|cp
 operator|->
 name|dl_mtype
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|impsrc
@@ -3076,7 +3094,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|long
+name|u_long
 name|final
 decl_stmt|;
 specifier|register
@@ -3248,7 +3266,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|long
+name|u_long
 name|a
 decl_stmt|;
 end_decl_stmt
@@ -3256,7 +3274,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|long
+name|u_long
 name|addr
 init|=
 name|htonl
@@ -3264,7 +3282,6 @@ argument_list|(
 name|a
 argument_list|)
 decl_stmt|;
-comment|/* host order */
 name|imp
 operator|->
 name|il_network
@@ -3371,7 +3388,6 @@ operator|->
 name|il_imp
 argument_list|)
 expr_stmt|;
-comment|/* network order! */
 block|}
 end_block
 
