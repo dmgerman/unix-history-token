@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: expand.c,v 1.24.2.2 1999/05/08 10:42:57 kris Exp $"
+literal|"$Id: expand.c,v 1.24.2.3 1999/07/25 12:26:42 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3089,9 +3089,8 @@ name|char
 modifier|*
 name|val
 decl_stmt|;
-name|char
-modifier|*
-name|pat
+name|int
+name|patloc
 decl_stmt|;
 name|int
 name|c
@@ -3515,9 +3514,12 @@ argument_list|,
 name|expdest
 argument_list|)
 expr_stmt|;
-name|pat
+name|patloc
 operator|=
 name|expdest
+operator|-
+name|stackblock
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3527,10 +3529,7 @@ name|p
 argument_list|,
 name|NULL
 argument_list|,
-name|expdest
-operator|-
-name|stackblock
-argument_list|()
+name|patloc
 argument_list|,
 name|subtype
 argument_list|,
@@ -3548,7 +3547,10 @@ init|=
 operator|(
 name|expdest
 operator|-
-name|pat
+name|stackblock
+argument_list|()
+operator|-
+name|patloc
 operator|)
 operator|+
 literal|1
