@@ -140,6 +140,9 @@ block|{
 literal|"_scbusses"
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|USE_SCSI
 block|{
 literal|"_scsi_cinit"
 block|}
@@ -152,6 +155,8 @@ block|{
 literal|"_scsi_tinit"
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|""
 block|}
@@ -2003,6 +2008,9 @@ name|writeback
 argument_list|)
 expr_stmt|;
 comment|/* or here */
+ifdef|#
+directive|ifdef
+name|USE_SCSI
 if|if
 condition|(
 name|kern
@@ -2016,6 +2024,8 @@ argument_list|,
 name|writeback
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2220,6 +2230,9 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_SCSI
 elseif|else
 if|if
 condition|(
@@ -2239,6 +2252,8 @@ argument_list|(
 name|kern
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2313,6 +2328,9 @@ goto|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|USE_SCSI
 if|if
 condition|(
 name|kern
@@ -2363,6 +2381,8 @@ goto|;
 block|}
 block|}
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|kern
