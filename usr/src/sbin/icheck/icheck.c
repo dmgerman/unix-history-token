@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.15 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2397,23 +2397,34 @@ name|sblock
 operator|.
 name|fs_size
 condition|)
+for|for
+control|(
+init|;
 name|dmax
-operator|=
+operator|>
 name|sblock
 operator|.
 name|fs_size
+condition|;
+name|dmax
+operator|--
+control|)
+name|clrbit
+argument_list|(
+name|cgrp
+operator|.
+name|cg_free
+argument_list|,
+name|dmax
+operator|-
+name|dbase
+argument_list|)
 expr_stmt|;
 name|dmin
 operator|=
-name|cgdmin
-argument_list|(
-operator|&
 name|sblock
-argument_list|,
-name|c
-argument_list|)
-operator|-
-name|dbase
+operator|.
+name|fs_dblkno
 expr_stmt|;
 name|cs
 operator|=

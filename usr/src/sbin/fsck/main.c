@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.19 (Berkeley) %G%"
+literal|"@(#)main.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8672,6 +8672,9 @@ name|j
 decl_stmt|,
 name|s
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 specifier|register
 name|struct
 name|csum
@@ -8832,23 +8835,34 @@ name|sblock
 operator|.
 name|fs_size
 condition|)
+for|for
+control|(
+init|;
 name|dmax
-operator|=
+operator|>
 name|sblock
 operator|.
 name|fs_size
+condition|;
+name|dmax
+operator|--
+control|)
+name|clrbit
+argument_list|(
+name|cgrp
+operator|.
+name|cg_free
+argument_list|,
+name|dmax
+operator|-
+name|dbase
+argument_list|)
 expr_stmt|;
 name|dmin
 operator|=
-name|cgdmin
-argument_list|(
-operator|&
 name|sblock
-argument_list|,
-name|c
-argument_list|)
-operator|-
-name|dbase
+operator|.
+name|fs_dblkno
 expr_stmt|;
 name|cs
 operator|=
@@ -9383,6 +9397,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|x
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -9424,6 +9442,9 @@ operator|.
 name|cg_cs
 operator|.
 name|cs_nffree
+operator|++
+expr_stmt|;
+name|x
 operator|++
 expr_stmt|;
 block|}
