@@ -255,7 +255,6 @@ parameter_list|(
 name|int
 name|c
 parameter_list|,
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1503,7 +1502,6 @@ parameter_list|)
 name|dev_t
 name|device
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1627,7 +1625,6 @@ name|ttyclose
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -1774,24 +1771,20 @@ name|c
 parameter_list|,
 name|tp
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|tcflag_t
 name|iflag
 decl_stmt|,
 name|lflag
 decl_stmt|;
-specifier|register
 name|cc_t
 modifier|*
 name|cc
@@ -3672,22 +3665,18 @@ name|c
 parameter_list|,
 name|tp
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|tcflag_t
 name|oflag
 decl_stmt|;
-specifier|register
 name|int
 name|col
 decl_stmt|,
@@ -4145,7 +4134,6 @@ name|data
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -4162,7 +4150,6 @@ modifier|*
 name|data
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -4663,7 +4650,6 @@ name|TIOCFLUSH
 case|:
 block|{
 comment|/* flush buffers */
-specifier|register
 name|int
 name|flags
 init|=
@@ -5050,7 +5036,6 @@ name|TIOCSETAF
 case|:
 block|{
 comment|/* drn out, fls in, set */
-specifier|register
 name|struct
 name|termios
 modifier|*
@@ -5589,7 +5574,6 @@ name|TIOCSETD
 case|:
 block|{
 comment|/* set line discipline */
-specifier|register
 name|int
 name|t
 init|=
@@ -7087,7 +7071,6 @@ name|ttywait
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -7331,7 +7314,6 @@ name|tp
 parameter_list|,
 name|rw
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -7341,7 +7323,6 @@ name|int
 name|rw
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|s
 decl_stmt|;
@@ -7935,7 +7916,6 @@ name|tp
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -8247,7 +8227,6 @@ name|ttypend
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -8258,7 +8237,6 @@ name|struct
 name|clist
 name|tq
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
@@ -8367,7 +8345,6 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -8382,21 +8359,17 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|clist
 modifier|*
 name|qp
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|tcflag_t
 name|lflag
 decl_stmt|;
-specifier|register
 name|cc_t
 modifier|*
 name|cc
@@ -8405,7 +8378,6 @@ name|tp
 operator|->
 name|t_cc
 decl_stmt|;
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -9494,7 +9466,6 @@ name|tp
 parameter_list|,
 name|wait
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -9660,13 +9631,11 @@ name|uio
 parameter_list|,
 name|flag
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-specifier|register
 name|struct
 name|uio
 modifier|*
@@ -9676,20 +9645,17 @@ name|int
 name|flag
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 init|=
 name|NULL
 decl_stmt|;
-specifier|register
 name|int
 name|cc
 decl_stmt|,
 name|ce
 decl_stmt|;
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -10556,23 +10522,19 @@ name|c
 parameter_list|,
 name|tp
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
 name|int
 name|savecol
 decl_stmt|;
@@ -11031,7 +10993,6 @@ name|tp
 parameter_list|,
 name|cnt
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -11094,14 +11055,12 @@ name|ttyretype
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -11295,11 +11254,9 @@ name|c
 parameter_list|,
 name|tp
 parameter_list|)
-specifier|register
 name|int
 name|c
 decl_stmt|;
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -11468,7 +11425,6 @@ name|ttwakeup
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -11561,7 +11517,6 @@ name|ttwwakeup
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
@@ -11743,7 +11698,6 @@ parameter_list|)
 name|int
 name|speed
 decl_stmt|;
-specifier|register
 name|struct
 name|speedtab
 modifier|*
@@ -11803,7 +11757,6 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|cps
 decl_stmt|,
@@ -12080,14 +12033,12 @@ name|ttyinfo
 parameter_list|(
 name|tp
 parameter_list|)
-specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -12504,7 +12455,6 @@ name|p1
 parameter_list|,
 name|p2
 parameter_list|)
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -12749,7 +12699,6 @@ modifier|*
 name|tp
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|s
 decl_stmt|;
