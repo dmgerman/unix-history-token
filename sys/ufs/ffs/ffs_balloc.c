@@ -1939,6 +1939,27 @@ operator|)
 return|;
 name|fail
 label|:
+comment|/* 	 * If we have failed to allocate any blocks, simply return the error. 	 * This is the usual case and avoids the need to fsync the file. 	 */
+if|if
+condition|(
+name|allocblk
+operator|==
+name|allociblk
+operator|&&
+name|allocib
+operator|==
+name|NULL
+operator|&&
+name|unwindidx
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 */
 operator|(
 name|void
@@ -4762,6 +4783,27 @@ operator|)
 return|;
 name|fail
 label|:
+comment|/* 	 * If we have failed to allocate any blocks, simply return the error. 	 * This is the usual case and avoids the need to fsync the file. 	 */
+if|if
+condition|(
+name|allocblk
+operator|==
+name|allociblk
+operator|&&
+name|allocib
+operator|==
+name|NULL
+operator|&&
+name|unwindidx
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * If we have failed part way through block allocation, we 	 * have to deallocate any indirect blocks that we have allocated. 	 * We have to fsync the file before we start to get rid of all 	 * of its dependencies so that we do not leave them dangling. 	 * We have to sync it at the end so that the soft updates code 	 * does not find any untracked changes. Although this is really 	 * slow, running out of disk space is not expected to be a common 	 * occurence. The error return from fsync is ignored as we already 	 * have an error to return to the user. 	 */
 operator|(
 name|void
