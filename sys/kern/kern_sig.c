@@ -1892,10 +1892,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sigaction
@@ -1934,12 +1930,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|actp
 operator|=
 operator|(
@@ -1995,10 +1985,18 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2014,6 +2012,12 @@ argument_list|,
 name|oactp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -2041,14 +2045,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|done2
-label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2099,10 +2095,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|freebsd4_sigaction
@@ -2141,12 +2133,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|actp
 operator|=
 operator|(
@@ -2202,10 +2188,18 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2221,6 +2215,12 @@ argument_list|,
 name|oactp
 argument_list|,
 name|KSA_FREEBSD4
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -2248,14 +2248,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|done2
-label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2317,10 +2309,6 @@ end_endif
 
 begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -2414,12 +2402,6 @@ name|osa
 else|:
 name|NULL
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nsap
@@ -2446,9 +2428,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|done2
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|nsap
 operator|->
 name|sa_handler
@@ -2477,6 +2461,12 @@ name|sa_mask
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|kern_sigaction
@@ -2492,6 +2482,12 @@ argument_list|,
 name|osap
 argument_list|,
 name|KSA_OSIGSET
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -2547,14 +2543,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|done2
-label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
