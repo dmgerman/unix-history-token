@@ -10748,6 +10748,19 @@ literal|32
 condition|)
 block|{
 comment|/* convert masklen to netmask */
+if|if
+condition|(
+name|masklen
+operator|==
+literal|0
+condition|)
+name|maskp
+operator|->
+name|s_addr
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|maskp
 operator|->
 name|s_addr
