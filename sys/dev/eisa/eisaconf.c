@@ -791,13 +791,7 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|id_size
-decl_stmt|,
-name|ret
 decl_stmt|;
-name|ret
-operator|=
-name|ENXIO
-expr_stmt|;
 name|probe_id
 operator|=
 literal|0
@@ -832,17 +826,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|outb
-argument_list|(
-name|base
-argument_list|,
-literal|0x80
-operator|+
-name|i
-argument_list|)
-expr_stmt|;
-comment|/* Some cards require priming. */
 name|probe_id
 operator||=
 name|inb
@@ -864,7 +847,6 @@ operator|*
 name|CHAR_BIT
 operator|)
 expr_stmt|;
-block|}
 comment|/* If we found a card, return its EISA id. */
 if|if
 condition|(
@@ -882,14 +864,15 @@ name|eisa_id
 operator|=
 name|probe_id
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 literal|0
-expr_stmt|;
+operator|)
+return|;
 block|}
 return|return
 operator|(
-name|ret
+name|ENXIO
 operator|)
 return|;
 block|}
