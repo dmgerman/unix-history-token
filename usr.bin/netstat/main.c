@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.24 1999/02/06 19:12:48 jhay Exp $"
+literal|"$Id: main.c,v 1.25 1999/04/26 16:11:48 luigi Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2570,7 +2570,7 @@ literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: netstat [-Aan] [-f address_family] [-M core] [-N system]"
 argument_list|,
-literal|"       netstat [-bdghimnrs] [-f address_family] [-M core] [-N system]"
+literal|"       netstat [-abdghimnrs] [-f address_family] [-M core] [-N system]"
 argument_list|,
 literal|"       netstat [-bdn] [-I interface] [-M core] [-N system] [-w wait]"
 argument_list|,
