@@ -10188,6 +10188,8 @@ name|bufp
 decl_stmt|;
 name|int
 name|count
+init|=
+literal|0
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -10241,6 +10243,9 @@ argument|&ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
 argument_list|)
+name|count
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|count
