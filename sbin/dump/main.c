@@ -297,18 +297,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|dokerberos
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Use Kerberos authentication */
-end_comment
-
-begin_decl_stmt
-name|int
 name|cachesize
 init|=
 literal|0
@@ -585,21 +573,10 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KERBEROS
-define|#
-directive|define
-name|optstring
-value|"0123456789aB:b:C:cD:d:f:h:kLnSs:T:uWw"
-else|#
-directive|else
 define|#
 directive|define
 name|optstring
 value|"0123456789aB:b:C:cD:d:f:h:LnSs:T:uWw"
-endif|#
-directive|endif
 while|while
 condition|(
 operator|(
@@ -794,19 +771,6 @@ literal|10L
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|KERBEROS
-case|case
-literal|'k'
-case|:
-name|dokerberos
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 case|case
 literal|'L'
 case|:
@@ -2885,12 +2849,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: dump [-0123456789ac"
-ifdef|#
-directive|ifdef
-name|KERBEROS
-literal|"k"
-endif|#
-directive|endif
 literal|"LnSu] [-B records] [-b blocksize] [-C cachesize]\n"
 literal|"            [-D dumpdates] [-d density] [-f file] [-h level] [-s feet]\n"
 literal|"            [-T date] filesystem\n"
