@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getch.c	5.2 (Berkeley) %G%"
+literal|"@(#)getch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ operator|!
 name|_rawmode
 condition|)
 block|{
-name|raw
+name|cbreak
 argument_list|()
 expr_stmt|;
 name|weset
@@ -201,7 +201,7 @@ if|if
 condition|(
 name|weset
 condition|)
-name|noraw
+name|nocbreak
 argument_list|()
 expr_stmt|;
 return|return
