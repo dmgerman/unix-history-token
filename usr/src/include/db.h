@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)db.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -381,7 +381,7 @@ name|nelem
 decl_stmt|;
 comment|/* number of elements */
 name|int
-name|ncached
+name|cachesize
 decl_stmt|;
 comment|/* bytes to cache */
 name|int
