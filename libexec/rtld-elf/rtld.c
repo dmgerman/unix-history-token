@@ -3995,6 +3995,12 @@ condition|(
 name|libmap_disable
 operator|||
 operator|(
+name|refobj
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|name
 operator|=
 name|lm_find
