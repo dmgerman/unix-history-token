@@ -76,6 +76,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|broken_undeftoken_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|spec_name_prefix
@@ -173,6 +179,17 @@ name|longopts
 index|[]
 init|=
 block|{
+block|{
+literal|"broken-undeftoken-init"
+block|,
+literal|0
+block|,
+operator|&
+name|broken_undeftoken_init
+block|,
+literal|1
+block|}
+block|,
 block|{
 literal|"debug"
 block|,

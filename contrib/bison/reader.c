@@ -83,6 +83,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|broken_undeftoken_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|definesflag
 decl_stmt|;
 end_decl_stmt
@@ -1069,10 +1076,15 @@ name|class
 operator|=
 name|STOKEN
 expr_stmt|;
+comment|/* XXX ``broken_undeftoken_init'' makes Bison 1.28 bug-compatable      with Bison 1.25.  FreeBSD depends on this behavior when compiling      EGCS-1.1.2's cc1plus.  */
 name|undeftoken
 operator|->
 name|user_token_number
 operator|=
+name|broken_undeftoken_init
+condition|?
+literal|0
+else|:
 literal|2
 expr_stmt|;
 comment|/* Read the declaration section.  Copy %{ ... %} groups to ftable and fdefines file.      Also notice any %token, %left, etc. found there.  */
