@@ -392,10 +392,11 @@ argument_list|(
 name|user_pg
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
+block|}
+else|else
+name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|kern_pg
@@ -505,9 +506,6 @@ name|kern_pg
 operator|->
 name|pindex
 expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|vm_page_busy
 argument_list|(
 name|kern_pg
@@ -525,6 +523,9 @@ argument_list|,
 name|upindex
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_flag_clear
 argument_list|(
 name|kern_pg
@@ -537,6 +538,9 @@ operator|->
 name|valid
 operator|=
 name|VM_PAGE_BITS_ALL
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_map_lookup_done
 argument_list|(
