@@ -2635,6 +2635,8 @@ operator|=
 name|sf_buf_alloc
 argument_list|(
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_LOCK

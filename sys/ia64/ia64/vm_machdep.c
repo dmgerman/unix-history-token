@@ -1535,6 +1535,9 @@ name|struct
 name|vm_page
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 block|{
 name|struct
@@ -1592,7 +1595,7 @@ name|sf_lock
 argument_list|,
 name|PVM
 operator||
-name|PCATCH
+name|pri
 argument_list|,
 literal|"sfbufa"
 argument_list|,

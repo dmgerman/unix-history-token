@@ -289,6 +289,8 @@ name|offset
 operator|>>
 name|PAGE_SHIFT
 index|]
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|cp

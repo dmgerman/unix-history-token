@@ -70,6 +70,9 @@ name|struct
 name|vm_page
 modifier|*
 name|m
+parameter_list|,
+name|int
+name|pri
 parameter_list|)
 function_decl|;
 end_function_decl
