@@ -903,6 +903,11 @@ directive|define
 name|CRYPTO_F_CBIMM
 value|0x0010
 comment|/* Do callback immediately */
+define|#
+directive|define
+name|CRYPTO_F_DONE
+value|0x0020
+comment|/* Operation completed */
 name|caddr_t
 name|crp_buf
 decl_stmt|;

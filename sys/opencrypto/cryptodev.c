@@ -2092,6 +2092,16 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+operator|(
+name|crp
+operator|->
+name|crp_flags
+operator|&
+name|CRYPTO_F_DONE
+operator|)
+operator|==
+literal|0
 condition|)
 name|error
 operator|=
