@@ -1610,11 +1610,17 @@ name|lp
 operator|->
 name|notifyProc
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_sm_status
 argument_list|,
 operator|&
 name|tx_arg
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|&

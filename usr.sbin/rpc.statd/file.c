@@ -872,11 +872,17 @@ name|cli
 argument_list|,
 name|SM_NOTIFY
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_stat_chge
 argument_list|,
 operator|&
 name|arg
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|&
