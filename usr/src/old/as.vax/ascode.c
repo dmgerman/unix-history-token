@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.5 %G%"
+literal|"@(#)ascode.c 4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -719,7 +719,7 @@ name|xp
 decl_stmt|;
 specifier|register
 name|int
-name|a
+name|argtype
 decl_stmt|;
 name|int
 name|i
@@ -773,7 +773,7 @@ operator|++
 control|)
 block|{
 comment|/* some args take more than 1 byte */
-name|a
+name|argtype
 operator|=
 name|ap
 operator|->
@@ -781,7 +781,7 @@ name|a_atype
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|&
 name|AINDX
 condition|)
@@ -792,7 +792,7 @@ operator|++
 expr_stmt|;
 switch|switch
 condition|(
-name|a
+name|argtype
 operator|&
 operator|~
 operator|(
@@ -805,7 +805,7 @@ block|{
 case|case
 name|AEXP
 case|:
-name|a
+name|argtype
 operator|=
 name|fetcharg
 argument_list|(
@@ -819,7 +819,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|==
 name|ACCB
 operator|+
@@ -828,7 +828,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|a
+name|argtype
 operator|==
 name|ACCB
 operator|+
@@ -900,7 +900,7 @@ literal|0
 operator|&&
 operator|!
 operator|(
-name|a
+name|argtype
 operator|&
 name|ASTAR
 operator|)
@@ -970,13 +970,13 @@ name|a_atype
 operator|&
 name|ASTAR
 condition|)
-name|a
+name|argtype
 operator|=
 name|TYPL
 expr_stmt|;
 else|else
 block|{
-name|a
+name|argtype
 operator|=
 name|fetcharg
 argument_list|(
@@ -990,16 +990,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|&
 name|ACCA
 condition|)
-name|a
+name|argtype
 operator|=
 name|TYPL
 expr_stmt|;
 else|else
-name|a
+name|argtype
 operator|&=
 name|TYPMASK
 expr_stmt|;
@@ -1059,13 +1059,13 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|a
+name|argtype
 operator|!=
 name|TYPD
 operator|)
 operator|&&
 operator|(
-name|a
+name|argtype
 operator|!=
 name|TYPF
 operator|)
@@ -1074,7 +1074,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|a
+name|argtype
 condition|)
 block|{
 case|case
@@ -1126,7 +1126,7 @@ name|e_xvalue
 operator|+=
 operator|(
 operator|(
-name|a
+name|argtype
 operator|==
 name|TYPF
 operator|)
@@ -1179,7 +1179,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/*end of the switch on a*/
+comment|/*end of the switch on argtype*/
 block|}
 comment|/*end of the switch on the type*/
 block|}
@@ -1245,7 +1245,7 @@ operator|++
 control|)
 block|{
 comment|/* now for the arguments */
-name|a
+name|argtype
 operator|=
 name|ap
 operator|->
@@ -1263,7 +1263,7 @@ name|TYPNONE
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|&
 name|AINDX
 condition|)
@@ -1318,7 +1318,7 @@ block|}
 endif|#
 directive|endif
 endif|VMS
-name|a
+name|argtype
 operator|&=
 operator|~
 name|AINDX
@@ -1326,7 +1326,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|a
+name|argtype
 operator|&
 name|ASTAR
 condition|)
@@ -1337,7 +1337,7 @@ name|a_areg1
 operator||=
 literal|0x10
 expr_stmt|;
-name|a
+name|argtype
 operator|&=
 operator|~
 name|ASTAR
@@ -1345,7 +1345,7 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
-name|a
+name|argtype
 condition|)
 block|{
 case|case
@@ -1396,7 +1396,7 @@ case|case
 name|AEXP
 case|:
 comment|/* expr */
-name|a
+name|argtype
 operator|=
 name|fetcharg
 argument_list|(
@@ -1410,7 +1410,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|==
 name|ACCB
 operator|+
@@ -1421,7 +1421,7 @@ name|ap
 operator|->
 name|a_areg1
 operator|=
-name|a
+name|argtype
 operator|=
 name|xp
 operator|->
@@ -1437,11 +1437,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|<
 name|MINBYTE
 operator|||
-name|a
+name|argtype
 operator|>
 name|MAXBYTE
 condition|)
@@ -1454,7 +1454,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|a
+name|argtype
 operator|==
 name|ACCB
 operator|+
@@ -1465,7 +1465,7 @@ name|ap
 operator|->
 name|a_areg1
 operator|=
-name|a
+name|argtype
 operator|=
 name|xp
 operator|->
@@ -1485,11 +1485,11 @@ name|XABS
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|<
 name|MINWORD
 operator|||
-name|a
+name|argtype
 operator|>
 name|MAXWORD
 condition|)
@@ -1502,7 +1502,7 @@ name|xp
 operator|->
 name|e_xvalue
 operator|=
-name|a
+name|argtype
 operator|>>
 literal|8
 expr_stmt|;
@@ -1694,13 +1694,13 @@ name|a_atype
 operator|&
 name|ASTAR
 condition|)
-name|a
+name|argtype
 operator|=
 name|TYPL
 expr_stmt|;
 else|else
 block|{
-name|a
+name|argtype
 operator|=
 name|fetcharg
 argument_list|(
@@ -1714,16 +1714,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
+name|argtype
 operator|&
 name|ACCA
 condition|)
-name|a
+name|argtype
 operator|=
 name|TYPL
 expr_stmt|;
 else|else
-name|a
+name|argtype
 operator|&=
 name|TYPMASK
 expr_stmt|;
@@ -1775,13 +1775,13 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|a
+name|argtype
 operator|!=
 name|TYPF
 operator|)
 operator|&&
 operator|(
-name|a
+name|argtype
 operator|!=
 name|TYPD
 operator|)
@@ -1806,7 +1806,7 @@ literal|0x8F
 expr_stmt|;
 name|reloc_how
 operator|=
-name|a
+name|argtype
 expr_stmt|;
 if|if
 condition|(
@@ -1869,7 +1869,7 @@ block|}
 block|}
 break|break;
 block|}
-comment|/*end of the switch on a*/
+comment|/*end of the switch on argtype*/
 comment|/* 		 *	use the first byte to describe the argument 		 */
 ifdef|#
 directive|ifdef
