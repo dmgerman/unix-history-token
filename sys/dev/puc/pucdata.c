@@ -4888,7 +4888,7 @@ name|COM_FREQ
 operator|*
 literal|8
 block|}
-block|, 		}
+block|, 	    }
 block|, 	}
 block|,
 comment|/* Moxa Technologies Co., Ltd. PCI I/O Card 4S RS232/422/485 */
