@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.20 1997/11/22 03:37:25 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
+comment|/*  *	   PPP Compression Control Protocol (CCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ccp.c,v 1.21 1997/12/03 10:23:44 brian Exp $  *  *	TODO:  *		o Support other compression protocols  */
 end_comment
 
 begin_include
@@ -355,13 +355,13 @@ block|,
 comment|/* 16: Hewlett-Packard PPC */
 literal|"STAC"
 block|,
-comment|/* 17: Stac Electronics LZS */
+comment|/* 17: Stac Electronics LZS (rfc1974) */
 literal|"MSPPC"
 block|,
 comment|/* 18: Microsoft PPC */
 literal|"GAND"
 block|,
-comment|/* 19: Gandalf FZA */
+comment|/* 19: Gandalf FZA (rfc1993) */
 literal|"V42BIS"
 block|,
 comment|/* 20: ARG->DATA.42bis compression */
@@ -370,11 +370,19 @@ block|,
 comment|/* 21: BSD LZW Compress */
 literal|"???"
 block|,
-literal|"???"
+literal|"LZS-DCP"
 block|,
+comment|/* 23: LZS-DCP Compression Protocol (rfc1967) */
+literal|"MAGNALINK/DEFLATE"
+block|,
+comment|/* 24: Magnalink Variable Resource (rfc1975) */
+comment|/* 24: Deflate (according to pppd-2.3.1) */
+literal|"DCE"
+block|,
+comment|/* 25: Data Circuit-Terminating Equip (rfc1976) */
 literal|"DEFLATE"
 block|,
-comment|/* 24: PPP Deflate */
+comment|/* 26: Deflate (rfc1979) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -419,6 +427,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* We support these algorithms, and Req them in the given order */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -430,10 +442,13 @@ index|[]
 init|=
 block|{
 operator|&
+name|DeflateAlgorithm
+block|,
+operator|&
 name|Pred1Algorithm
 block|,
 operator|&
-name|DeflateAlgorithm
+name|PppdDeflateAlgorithm
 block|}
 decl_stmt|;
 end_decl_stmt
