@@ -186,7 +186,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * XXX  * At some point struct route should possibly change to:  *   struct rtentry *rt  *   struct in_endpoints *ie;   */
+comment|/*  * XXX  * the defines for inc_* are hacks and should be changed to direct references  */
 end_comment
 
 begin_struct
@@ -203,25 +203,11 @@ name|u_int16_t
 name|inc_pad
 decl_stmt|;
 comment|/* XXX alignment for in_endpoints */
-comment|/* protocol dependent part; cached route */
+comment|/* protocol dependent part */
 name|struct
 name|in_endpoints
 name|inc_ie
 decl_stmt|;
-union|union
-block|{
-comment|/* placeholder for routing entry */
-name|struct
-name|route
-name|inc4_route
-decl_stmt|;
-name|struct
-name|route_in6
-name|inc6_route
-decl_stmt|;
-block|}
-name|inc_dependroute
-union|;
 block|}
 struct|;
 end_struct
@@ -268,13 +254,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|inc_route
-value|inc_dependroute.inc4_route
-end_define
-
-begin_define
-define|#
-directive|define
 name|inc6_faddr
 value|inc_ie.ie6_faddr
 end_define
@@ -284,13 +263,6 @@ define|#
 directive|define
 name|inc6_laddr
 value|inc_ie.ie6_laddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|inc6_route
-value|inc_dependroute.inc6_route
 end_define
 
 begin_struct_decl
@@ -433,10 +405,6 @@ name|inp_laddr
 value|inp_inc.inc_laddr
 define|#
 directive|define
-name|inp_route
-value|inp_inc.inc_route
-define|#
-directive|define
 name|inp_ip_tos
 value|inp_depend4.inp4_ip_tos
 define|#
@@ -516,8 +484,8 @@ name|in6p_laddr
 value|inp_inc.inc6_laddr
 define|#
 directive|define
-name|in6p_route
-value|inp_inc.inc6_route
+name|in6p_ip6_hlim
+value|inp_depend6.inp6_hlim
 define|#
 directive|define
 name|in6p_hops
@@ -1384,32 +1352,6 @@ parameter_list|,
 name|struct
 name|ifnet
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|in_losing
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|inpcb
-modifier|*
-name|in_rtchange
-parameter_list|(
-name|struct
-name|inpcb
-modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -265,17 +265,6 @@ name|rt_rmx
 operator|.
 name|rmx_mtu
 operator|&&
-operator|!
-operator|(
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
-operator|&
-name|RTV_MTU
-operator|)
-operator|&&
 name|rt
 operator|->
 name|rt_ifp

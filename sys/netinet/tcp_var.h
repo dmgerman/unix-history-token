@@ -658,14 +658,6 @@ name|in_conninfo
 name|sc_inc
 decl_stmt|;
 comment|/* addresses */
-define|#
-directive|define
-name|sc_route
-value|sc_inc.inc_route
-define|#
-directive|define
-name|sc_route6
-value|sc_inc.inc6_route
 name|u_int32_t
 name|sc_tsrecent
 decl_stmt|;
@@ -737,11 +729,6 @@ directive|define
 name|SCF_UNREACH
 value|0x10
 comment|/* icmp unreachable received */
-define|#
-directive|define
-name|SCF_KEEPROUTE
-value|0x20
-comment|/* keep cloned route */
 name|TAILQ_ENTRY
 argument_list|(
 argument|syncache
@@ -772,6 +759,47 @@ expr_stmt|;
 name|u_int
 name|sch_length
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hc_metrics_lite
+block|{
+comment|/* must stay in sync with hc_metrics */
+name|u_long
+name|rmx_mtu
+decl_stmt|;
+comment|/* MTU for this path */
+name|u_long
+name|rmx_ssthresh
+decl_stmt|;
+comment|/* outbound gateway buffer limit */
+name|u_long
+name|rmx_rtt
+decl_stmt|;
+comment|/* estimated round trip time */
+name|u_long
+name|rmx_rttvar
+decl_stmt|;
+comment|/* estimated rtt variance */
+name|u_long
+name|rmx_bandwidth
+decl_stmt|;
+comment|/* estimated bandwidth */
+name|u_long
+name|rmx_cwnd
+decl_stmt|;
+comment|/* congestion window */
+name|u_long
+name|rmx_sendpipe
+decl_stmt|;
+comment|/* outbound delay-bandwidth product */
+name|u_long
+name|rmx_recvpipe
+decl_stmt|;
+comment|/* inbound delay-bandwidth product */
 block|}
 struct|;
 end_struct
@@ -838,7 +866,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The TAO cache entry which is stored in the protocol family specific  * portion of the route metrics.  */
+comment|/*  * The TAO cache entry which is stored in the tcp hostcache.  */
 end_comment
 
 begin_struct
@@ -885,16 +913,6 @@ comment|/* notyet */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|rmx_taop
-parameter_list|(
-name|r
-parameter_list|)
-value|((struct rmxp_tao *)(r).rmx_filler)
-end_define
 
 begin_define
 define|#
@@ -1315,6 +1333,14 @@ name|u_long
 name|tcps_sc_recvcookie
 decl_stmt|;
 comment|/* SYN cookie received */
+name|u_long
+name|tcps_hc_added
+decl_stmt|;
+comment|/* entry added to hostcache */
+name|u_long
+name|tcps_hc_bucketoverflow
+decl_stmt|;
+comment|/* hostcache per bucket limit hit */
 block|}
 struct|;
 end_struct
@@ -1526,7 +1552,7 @@ begin_define
 define|#
 directive|define
 name|TCPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "rfc1323", CTLTYPE_INT }, \ 	{ "rfc1644", CTLTYPE_INT }, \ 	{ "mssdflt", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ 	{ "rttdflt", CTLTYPE_INT }, \ 	{ "keepidle", CTLTYPE_INT }, \ 	{ "keepintvl", CTLTYPE_INT }, \ 	{ "sendspace", CTLTYPE_INT }, \ 	{ "recvspace", CTLTYPE_INT }, \ 	{ "keepinit", CTLTYPE_INT }, \ 	{ "pcblist", CTLTYPE_STRUCT }, \ 	{ "delacktime", CTLTYPE_INT }, \ 	{ "v6mssdflt", CTLTYPE_INT }, \ 	{ "maxid", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -1761,19 +1787,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|rmxp_tao
-modifier|*
-name|tcp_gettaocache
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|tcp_init
 parameter_list|(
@@ -1796,6 +1809,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|u_long
+name|tcp_maxmtu
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|tcp_maxmtu6
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|tcp_mss
 parameter_list|(
@@ -1813,7 +1848,7 @@ name|int
 name|tcp_mssopt
 parameter_list|(
 name|struct
-name|tcpcb
+name|in_conninfo
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1933,19 +1968,6 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|rtentry
-modifier|*
-name|tcp_rtlookup
-parameter_list|(
-name|struct
-name|in_conninfo
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2155,6 +2177,130 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * All tcp_hc_* functions are IPv4 and IPv6 (via in_conninfo)  */
+end_comment
+
+begin_function_decl
+name|void
+name|tcp_hc_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_hc_get
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|hc_metrics_lite
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_long
+name|tcp_hc_getmtu
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_hc_gettao
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|rmxp_tao
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_hc_updatemtu
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_hc_update
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|struct
+name|hc_metrics_lite
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_hc_updatetao
+parameter_list|(
+name|struct
+name|in_conninfo
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|tcp_cc
+parameter_list|,
+name|u_short
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* update which tao field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_HC_TAO_CC
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_HC_TAO_CCSENT
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TCP_HC_TAO_MSSOPT
+value|0x3
+end_define
 
 begin_decl_stmt
 specifier|extern

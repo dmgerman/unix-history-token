@@ -1358,7 +1358,7 @@ comment|/* fool gcc */
 block|}
 else|else
 block|{
-comment|/* 		 * If this is the case, we probably don't want to allocate 		 * a protocol-cloned route since we didn't get one from the 		 * ULP.  This lets TCP do its thing, while not burdening 		 * forwarding or ICMP with the overhead of cloning a route. 		 * Of course, we still want to do any cloning requested by 		 * the link layer, as this is probably required in all cases 		 * for correct operation (as it is for ARP). 		 */
+comment|/* 		 * We want to do any cloning requested by the link layer, 		 * as this is probably required in all cases for correct 		 * operation (as it is for ARP). 		 */
 if|if
 condition|(
 name|ro
@@ -1417,7 +1417,9 @@ name|ro
 operator|->
 name|ro_rt
 operator|->
-name|rt_use
+name|rt_rmx
+operator|.
+name|rmx_pksent
 operator|++
 expr_stmt|;
 if|if
@@ -3498,7 +3500,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* Some of the logic for this was 			 * nicked from above. 			 * 			 * This rewrites the cached route in a local PCB. 			 * Is this what we want to do? 			 */
+comment|/* 			 * Some of the logic for this was 			 * nicked from above. 			 */
 name|bcopy
 argument_list|(
 name|dst
@@ -3521,9 +3523,11 @@ name|ro_rt
 operator|=
 literal|0
 expr_stmt|;
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 name|ro_fwd
+argument_list|,
+name|RTF_CLONING
 argument_list|)
 expr_stmt|;
 if|if
@@ -3571,7 +3575,9 @@ name|ro_fwd
 operator|->
 name|ro_rt
 operator|->
-name|rt_use
+name|rt_rmx
+operator|.
+name|rmx_pksent
 operator|++
 expr_stmt|;
 if|if
@@ -4020,19 +4026,6 @@ name|RTF_UP
 operator||
 name|RTF_HOST
 operator|)
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_locks
-operator|&
-name|RTV_MTU
 operator|)
 operator|&&
 operator|(
@@ -8058,10 +8051,12 @@ name|mreq
 operator|.
 name|imr_multiaddr
 expr_stmt|;
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 operator|&
 name|ro
+argument_list|,
+name|RTF_CLONING
 argument_list|)
 expr_stmt|;
 if|if

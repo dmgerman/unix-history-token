@@ -2541,7 +2541,7 @@ operator||
 name|TF_REQ_CC
 operator|)
 expr_stmt|;
-comment|/* 	 * If losing, let the lower level know and try for 	 * a better route.  Also, if we backed off this far, 	 * our srtt estimate is probably bogus.  Clobber it 	 * so we'll take the next rtt measurement as our srtt; 	 * move the current srtt into rttvar to keep the current 	 * retransmit times until then. 	 */
+comment|/* 	 * If we backed off this far, our srtt estimate is probably bogus. 	 * Clobber it so we'll take the next rtt measurement as our srtt; 	 * move the current srtt into rttvar to keep the current 	 * retransmit times until then. 	 */
 if|if
 condition|(
 name|tp
@@ -2580,13 +2580,6 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
-name|in_losing
-argument_list|(
-name|tp
-operator|->
-name|t_inpcb
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_rttvar

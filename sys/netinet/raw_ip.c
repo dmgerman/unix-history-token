@@ -1426,10 +1426,7 @@ name|inp
 operator|->
 name|inp_options
 argument_list|,
-operator|&
-name|inp
-operator|->
-name|inp_route
+name|NULL
 argument_list|,
 name|flags
 argument_list|,

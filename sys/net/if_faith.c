@@ -1099,7 +1099,6 @@ if|if
 condition|(
 name|rt
 condition|)
-block|{
 name|rt
 operator|->
 name|rt_rmx
@@ -1112,25 +1111,6 @@ name|rt_ifp
 operator|->
 name|if_mtu
 expr_stmt|;
-comment|/* for ISO */
-comment|/* 		 * For optimal performance, the send and receive buffers 		 * should be at least twice the MTU plus a little more for 		 * overhead. 		 */
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_recvpipe
-operator|=
-name|rt
-operator|->
-name|rt_rmx
-operator|.
-name|rmx_sendpipe
-operator|=
-literal|3
-operator|*
-name|FAITHMTU
-expr_stmt|;
-block|}
 block|}
 end_function
 

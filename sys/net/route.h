@@ -46,6 +46,26 @@ end_comment
 
 begin_struct
 struct|struct
+name|rt_metrics_lite
+block|{
+name|u_long
+name|rmx_mtu
+decl_stmt|;
+comment|/* MTU for this path */
+name|u_long
+name|rmx_expire
+decl_stmt|;
+comment|/* lifetime for route, e.g. redirect */
+name|u_long
+name|rmx_pksent
+decl_stmt|;
+comment|/* packets sent using this route */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|rt_metrics
 block|{
 name|u_long
@@ -206,7 +226,7 @@ name|ifaddr
 modifier|*
 name|rt_ifa
 decl_stmt|;
-comment|/* the answer: interface to use */
+comment|/* the answer: interface address to use */
 name|struct
 name|sockaddr
 modifier|*
@@ -218,7 +238,7 @@ name|rt_llinfo
 decl_stmt|;
 comment|/* pointer to link level info cache */
 name|struct
-name|rt_metrics
+name|rt_metrics_lite
 name|rt_rmx
 decl_stmt|;
 comment|/* metrics used by rx'ing protocols */

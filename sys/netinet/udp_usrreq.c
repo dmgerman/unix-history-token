@@ -2552,6 +2552,7 @@ operator|==
 name|INADDR_ANY
 condition|)
 return|return;
+comment|/* 	 * Redirects don't need to be handled up here. 	 */
 if|if
 condition|(
 name|PRC_IS_REDIRECT
@@ -2559,17 +2560,8 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-block|{
-name|ip
-operator|=
-literal|0
-expr_stmt|;
-name|notify
-operator|=
-name|in_rtchange
-expr_stmt|;
-block|}
-elseif|else
+return|return;
+comment|/* 	 * Hostdead is ugly because it goes linearly through all PCBs. 	 * XXX: We never get this from ICMP, otherwise it makes an 	 * excellent DoS attack on machines with many connections. 	 */
 if|if
 condition|(
 name|cmd
@@ -4405,10 +4397,7 @@ name|inp
 operator|->
 name|inp_options
 argument_list|,
-operator|&
-name|inp
-operator|->
-name|inp_route
+name|NULL
 argument_list|,
 name|ipflags
 argument_list|,

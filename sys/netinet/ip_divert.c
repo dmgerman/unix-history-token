@@ -1114,10 +1114,7 @@ name|inp
 operator|->
 name|inp_options
 argument_list|,
-operator|&
-name|inp
-operator|->
-name|inp_route
+name|NULL
 argument_list|,
 operator|(
 name|so
@@ -1980,24 +1977,7 @@ argument_list|(
 name|cmd
 argument_list|)
 condition|)
-block|{
-comment|/* flush held routes */
-name|in_pcbnotifyall
-argument_list|(
-operator|&
-name|divcbinfo
-argument_list|,
-name|faddr
-argument_list|,
-name|inetctlerrmap
-index|[
-name|cmd
-index|]
-argument_list|,
-name|in_rtchange
-argument_list|)
-expr_stmt|;
-block|}
+return|return;
 block|}
 end_function
 
