@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_malloc.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_malloc.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -112,23 +112,6 @@ directive|define
 name|OUT
 value|(malloc_reentered = 0)
 end_define
-
-begin_struct
-struct|struct
-block|{
-name|int
-name|nomap
-decl_stmt|;
-name|int
-name|atlimit
-decl_stmt|;
-name|int
-name|freemem
-decl_stmt|;
-block|}
-name|KFail
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Allocate a block of memory  */
@@ -262,11 +245,6 @@ operator|&
 name|M_NOWAIT
 condition|)
 block|{
-name|KFail
-operator|.
-name|atlimit
-operator|++
-expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
@@ -366,11 +344,6 @@ operator|<
 name|npg
 condition|)
 block|{
-name|KFail
-operator|.
-name|freemem
-operator|++
-expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
@@ -407,11 +380,6 @@ operator|&
 name|M_NOWAIT
 condition|)
 block|{
-name|KFail
-operator|.
-name|nomap
-operator|++
-expr_stmt|;
 name|OUT
 expr_stmt|;
 name|splx
