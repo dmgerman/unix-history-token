@@ -84,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -111,7 +123,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/games/x11/xneko/xneko.c,v 1.1.1.1 1994/09/04 04:02:16 jkh Exp $"
+literal|"$Header: /home/ncvs/src/games/x11/xneko/xneko.c,v 1.2 1995/05/30 03:37:35 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
