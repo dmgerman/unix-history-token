@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda.h,v 1.3 1998/09/11 18:50:17 rvb Exp $  *   */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/coda/coda.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: coda.h,v 1.4 1998/09/13 13:57:59 rvb Exp $  *   */
 end_comment
 
 begin_comment
@@ -40,17 +40,173 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CODA_MAXSYMLINKS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CODA_MAXSYMLINKS
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DJGPP
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN32__
+argument_list|)
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|u_long
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|u_int
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|u_short
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|ino_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_long
+name|dev_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|caddr_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|u_quad_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|inline
+end_define
+
+begin_struct
+struct|struct
+name|timespec
+block|{
+name|long
+name|ts_sec
+decl_stmt|;
+name|long
+name|ts_nsec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* DJGPP but not KERNEL */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|long
+name|u_quad_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !DJGPP */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__linux__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN32__
 argument_list|)
 end_if
 
@@ -157,7 +313,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Coda constants  */
+comment|/*  * Cfs constants  */
 end_comment
 
 begin_define
@@ -213,6 +369,13 @@ name|C_O_EXCL
 value|0x100
 end_define
 
+begin_define
+define|#
+directive|define
+name|C_O_CREAT
+value|0x200
+end_define
+
 begin_comment
 comment|/* these are to find mode bits in Venus */
 end_comment
@@ -233,6 +396,17 @@ end_define
 
 begin_comment
 comment|/* for access Venus will use */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_A_C_OK
+value|8
+end_define
+
+begin_comment
+comment|/* Test for writing upon create.  */
 end_comment
 
 begin_define
@@ -534,7 +708,7 @@ end_ifdef
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline__
 name|ino_t
 name|coda_f2i
 parameter_list|(
@@ -546,9 +720,46 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|fid
 condition|)
-block|{
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|fid
+operator|->
+name|Vnode
+operator|==
+literal|0xfffffffe
+operator|||
+name|fid
+operator|->
+name|Vnode
+operator|==
+literal|0xffffffff
+condition|)
+return|return
+operator|(
+operator|(
+name|fid
+operator|->
+name|Volume
+operator|<<
+literal|20
+operator|)
+operator||
+operator|(
+name|fid
+operator|->
+name|Unique
+operator|&
+literal|0xfffff
+operator|)
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|fid
@@ -573,14 +784,41 @@ operator|)
 operator|)
 return|;
 block|}
-else|else
-block|{
-return|return
-literal|0
-return|;
-block|}
-block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|coda_f2i
+parameter_list|(
+name|fid
+parameter_list|)
+define|\
+value|(fid) ? ((fid)->Unique + ((fid)->Vnode<<10) + ((fid)->Volume<<20)) : 0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__BIT_TYPES_DEFINED__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|u_int32_t
+value|unsigned int
+end_define
 
 begin_endif
 endif|#
@@ -601,14 +839,14 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int32_t
 name|vuid_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int32_t
 name|vgid_t
 typedef|;
 end_typedef
@@ -648,17 +886,6 @@ decl_stmt|,
 name|cr_fsuid
 decl_stmt|;
 comment|/* Real, efftve, set, fs uid*/
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|vgid_t
 name|cr_groupid
 decl_stmt|,
@@ -669,20 +896,6 @@ decl_stmt|,
 name|cr_fsgid
 decl_stmt|;
 comment|/* same for groups */
-else|#
-directive|else
-name|vgid_t
-name|cr_gid
-decl_stmt|,
-name|cr_egid
-decl_stmt|,
-name|cr_sgid
-decl_stmt|,
-name|cr_fsgid
-decl_stmt|;
-comment|/* same for groups */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -737,8 +950,7 @@ begin_struct
 struct|struct
 name|coda_vattr
 block|{
-name|enum
-name|coda_vtype
+name|int
 name|va_type
 decl_stmt|;
 comment|/* vnode type (for create) */
@@ -822,210 +1034,224 @@ begin_define
 define|#
 directive|define
 name|CODA_ROOT
-value|((u_long) 2)
+value|2
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_SYNC
-value|((u_long) 3)
+value|3
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_OPEN
-value|((u_long) 4)
+value|4
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_CLOSE
-value|((u_long) 5)
+value|5
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_IOCTL
-value|((u_long) 6)
+value|6
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_GETATTR
-value|((u_long) 7)
+value|7
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_SETATTR
-value|((u_long) 8)
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_ACCESS
-value|((u_long) 9)
+value|9
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_LOOKUP
-value|((u_long) 10)
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_CREATE
-value|((u_long) 11)
+value|11
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_REMOVE
-value|((u_long) 12)
+value|12
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_LINK
-value|((u_long) 13)
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_RENAME
-value|((u_long) 14)
+value|14
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_MKDIR
-value|((u_long) 15)
+value|15
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_RMDIR
-value|((u_long) 16)
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_READDIR
-value|((u_long) 17)
+value|17
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_SYMLINK
-value|((u_long) 18)
+value|18
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_READLINK
-value|((u_long) 19)
+value|19
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_FSYNC
-value|((u_long) 20)
+value|20
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_INACTIVE
-value|((u_long) 21)
+value|21
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_VGET
-value|((u_long) 22)
+value|22
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_SIGNAL
-value|((u_long) 23)
+value|23
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_REPLACE
-value|((u_long) 24)
+value|24
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_FLUSH
-value|((u_long) 25)
+value|25
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_PURGEUSER
-value|((u_long) 26)
+value|26
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_ZAPFILE
-value|((u_long) 27)
+value|27
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_ZAPDIR
-value|((u_long) 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CODA_ZAPVNODE
-value|((u_long) 29)
+value|28
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_PURGEFID
-value|((u_long) 30)
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|CODA_OPEN_BY_PATH
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|CODA_RESOLVE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|CODA_REINTEGRATE
+value|33
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODA_NCALLS
-value|31
+value|34
 end_define
 
 begin_define
@@ -2100,7 +2326,44 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Occasionally, don't cache the fid returned by CODA_LOOKUP. For instance, if  * the fid is inconsistent. This case is handled by setting the top bit of the  * return result parameter.  */
+comment|/* coda_open_by_path: */
+end_comment
+
+begin_struct
+struct|struct
+name|coda_open_by_path_in
+block|{
+name|struct
+name|coda_in_hdr
+name|ih
+decl_stmt|;
+name|ViceFid
+name|VFid
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|coda_open_by_path_out
+block|{
+name|struct
+name|coda_out_hdr
+name|oh
+decl_stmt|;
+name|int
+name|path
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*   * Occasionally, we don't cache the fid returned by CODA_LOOKUP.   * For instance, if the fid is inconsistent.   * This case is handled by setting the top bit of the type result parameter.  */
 end_comment
 
 begin_define
@@ -2199,6 +2462,10 @@ name|struct
 name|coda_rdwr_in
 name|coda_rdwr
 decl_stmt|;
+name|struct
+name|coda_open_by_path_in
+name|coda_open_by_path
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -2279,6 +2546,10 @@ decl_stmt|;
 name|struct
 name|coda_replace_out
 name|coda_replace
+decl_stmt|;
+name|struct
+name|coda_open_by_path_out
+name|coda_open_by_path
 decl_stmt|;
 block|}
 union|;
