@@ -2803,7 +2803,6 @@ operator|-
 literal|1
 operator|)
 return|;
-break|break;
 block|}
 comment|/* 	 * we can watch a 1, 2, or 4 byte sized location 	 */
 switch|switch
@@ -2846,7 +2845,6 @@ operator|-
 literal|1
 operator|)
 return|;
-break|break;
 block|}
 name|mask
 operator||=
