@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.17 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3064,6 +3064,37 @@ block|{
 name|rh
 operator|.
 name|bval
+operator|=
+name|strtoul
+argument_list|(
+name|eq
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|rh
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+literal|"psize"
+argument_list|,
+name|s
+argument_list|)
+condition|)
+block|{
+name|rh
+operator|.
+name|psize
 operator|=
 name|strtoul
 argument_list|(
