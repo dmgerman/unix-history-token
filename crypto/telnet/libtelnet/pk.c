@@ -3,14 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 1991, 1993  *      Dave Safford.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
 end_comment
 
-begin_comment
-comment|/* public key routines */
-end_comment
-
-begin_comment
-comment|/* functions: 	genkeys(char *public, char *secret) 	common_key(char *secret, char *public, desData *deskey)         pk_encode(char *in, *out, DesData *deskey);         pk_decode(char *in, *out, DesData *deskey);       where 	char public[HEXKEYBYTES + 1]; 	char secret[HEXKEYBYTES + 1];  */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -24,6 +16,14 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* public key routines */
+end_comment
+
+begin_comment
+comment|/* functions: 	genkeys(char *public, char *secret) 	common_key(char *secret, char *public, desData *deskey)         pk_encode(char *in, *out, DesData *deskey);         pk_decode(char *in, *out, DesData *deskey);       where 	char public[HEXKEYBYTES + 1]; 	char secret[HEXKEYBYTES + 1];  */
+end_comment
 
 begin_include
 include|#
@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -66,36 +72,6 @@ include|#
 directive|include
 file|"pk.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SOLARIS2
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LINUX
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -525,23 +501,11 @@ argument_list|,
 name|ideakey
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|DES_OSTHOLM
-name|des_fixup_key_parity
-argument_list|(
-name|deskey
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|des_set_odd_parity
 argument_list|(
 name|deskey
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mfree
 argument_list|(
 name|common
@@ -570,6 +534,7 @@ comment|/*  * Generate a seed  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getseed
 parameter_list|(
@@ -632,7 +597,7 @@ modifier|*
 name|secret
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 define|#
@@ -1176,13 +1141,14 @@ name|des_key_schedule
 name|k
 decl_stmt|;
 name|int
-name|l
-decl_stmt|,
 name|n1
 decl_stmt|,
 name|n2
 decl_stmt|,
 name|op
+decl_stmt|;
+name|size_t
+name|l
 decl_stmt|;
 name|memset
 argument_list|(

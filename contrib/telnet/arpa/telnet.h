@@ -257,6 +257,7 @@ name|TELCMDS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telcmds
@@ -830,6 +831,7 @@ name|TELOPTS
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|telopts
@@ -1408,6 +1410,7 @@ name|SLC_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|slc_names
@@ -1709,6 +1712,7 @@ name|AUTH_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|authtype_names
@@ -1910,6 +1914,7 @@ name|ENCRYPT_NAMES
 end_ifdef
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|encrypt_names
@@ -1940,6 +1945,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|enctype_names
