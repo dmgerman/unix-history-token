@@ -64,7 +64,8 @@ literal|"Read the 2.0 Release Notes (recommended)."
 block|,
 literal|"3. Troubleshooting"
 block|,
-literal|"Read this if you're having trouble getting installed."
+literal|"Read this in case of trouble."
+block|,
 literal|"4. COPYRIGHT"
 block|,
 literal|"Read FreeBSD Copyright Information."
@@ -99,7 +100,7 @@ literal|"Welcome to FreeBSD!"
 argument_list|,
 literal|"Use ALT-F2 and ALT-F1 to toggle between debugging\ninformation screen (ALT-F2) or this dialog screen (ALT-F1)\n\nPlease select one of the following options:"
 argument_list|,
-literal|15
+literal|18
 argument_list|,
 literal|75
 argument_list|,
