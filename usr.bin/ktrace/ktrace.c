@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)ktrace.c	8.1 (Berkeley) 6/6/93";
@@ -47,14 +47,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_include
 include|#
@@ -586,7 +586,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Refuse to append to %s not owned by you."
+literal|"refuse to append to %s not owned by you"
 argument_list|,
 name|tracefile
 argument_list|)
@@ -777,7 +777,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"only one -g or -p flag is permitted."
+literal|"only one -g or -p flag is permitted"
 argument_list|)
 expr_stmt|;
 name|usage
@@ -793,7 +793,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"illegal process id."
+literal|"illegal process id"
 argument_list|)
 expr_stmt|;
 name|usage
