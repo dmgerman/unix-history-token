@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.84.1.2 (Berkeley) 3/4/96"
+literal|"@(#)util.c	8.84.1.4 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -982,7 +982,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDFNAME -- build full name from gecos style entry. ** **	This routine interprets the strange entry that would appear **	in the GECOS field of the password file. ** **	Parameters: **		p -- name to build. **		login -- the login name of this user (for&). **		buf -- place to put the result. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  BUILDFNAME -- build full name from gecos style entry. ** **	This routine interprets the strange entry that would appear **	in the GECOS field of the password file. ** **	Parameters: **		p -- name to build. **		login -- the login name of this user (for&). **		buf -- place to put the result. **		buflen -- length of buf. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -994,6 +994,8 @@ parameter_list|,
 name|login
 parameter_list|,
 name|buf
+parameter_list|,
+name|buflen
 parameter_list|)
 specifier|register
 name|char
@@ -1007,6 +1009,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|buf
+decl_stmt|;
+name|int
+name|buflen
 decl_stmt|;
 block|{
 specifier|register
@@ -1088,6 +1093,29 @@ name|l
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|l
+operator|>
+name|buflen
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* not a good sign */
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+literal|"%s"
+argument_list|,
+name|gecos
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* now fill in buf */
 for|for
 control|(
@@ -1127,12 +1155,18 @@ operator|==
 literal|'&'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|bp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|bp
+argument_list|)
+argument_list|,
+literal|"%s"
 argument_list|,
 name|login
 argument_list|)
@@ -1146,15 +1180,12 @@ operator|*
 name|bp
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-operator|*
 name|bp
-operator|!=
-literal|'\0'
-condition|)
+operator|+=
+name|strlen
+argument_list|(
 name|bp
-operator|++
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -5343,9 +5374,16 @@ name|p
 operator|=
 name|buf
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%3d: "
 argument_list|,
@@ -5381,9 +5419,16 @@ operator|!=
 name|EBADF
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"CANNOT STAT (%s)"
 argument_list|,
@@ -5418,9 +5463,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"fl=0x%x, "
 argument_list|,
@@ -5435,9 +5487,16 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"mode=%o: "
 argument_list|,
@@ -5468,9 +5527,16 @@ name|S_IFSOCK
 case|case
 name|S_IFSOCK
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"SOCK "
 argument_list|)
@@ -5504,9 +5570,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"(%s)"
 argument_list|,
@@ -5536,9 +5609,16 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%s/%d"
 argument_list|,
@@ -5555,9 +5635,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -5572,9 +5659,16 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"->"
 argument_list|)
@@ -5608,9 +5702,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"(%s)"
 argument_list|,
@@ -5640,9 +5741,16 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%s/%d"
 argument_list|,
@@ -5659,9 +5767,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -5675,9 +5790,16 @@ directive|endif
 case|case
 name|S_IFCHR
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"CHR: "
 argument_list|)
@@ -5695,9 +5817,16 @@ goto|;
 case|case
 name|S_IFBLK
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"BLK: "
 argument_list|)
@@ -5733,9 +5862,16 @@ operator|)
 case|case
 name|S_IFIFO
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"FIFO: "
 argument_list|)
@@ -5758,9 +5894,16 @@ name|S_IFDIR
 case|case
 name|S_IFDIR
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"DIR: "
 argument_list|)
@@ -5783,9 +5926,16 @@ name|S_IFLNK
 case|case
 name|S_IFLNK
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"LNK: "
 argument_list|)
@@ -5826,9 +5976,16 @@ name|fmtstr
 operator|=
 literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%ld"
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 name|fmtstr
 argument_list|,
@@ -6777,7 +6934,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GET_COLUMN  -- look up a Column in a line buffer ** **	Parameters: **		line -- the raw text line to search. **		col -- the column number to fetch. **		delim -- the delimiter between columns.  If null, **			use white space. **		buf -- the output buffer. ** **	Returns: **		buf if successful. **		NULL otherwise. */
+comment|/* **  GET_COLUMN  -- look up a Column in a line buffer ** **	Parameters: **		line -- the raw text line to search. **		col -- the column number to fetch. **		delim -- the delimiter between columns.  If null, **			use white space. **		buf -- the output buffer. **		buflen -- the length of buf. ** **	Returns: **		buf if successful. **		NULL otherwise. */
 end_comment
 
 begin_function
@@ -6792,6 +6949,8 @@ parameter_list|,
 name|delim
 parameter_list|,
 name|buf
+parameter_list|,
+name|buflen
 parameter_list|)
 name|char
 name|line
@@ -6806,6 +6965,9 @@ decl_stmt|;
 name|char
 name|buf
 index|[]
+decl_stmt|;
+name|int
+name|buflen
 decl_stmt|;
 block|{
 name|char
@@ -6992,38 +7154,48 @@ name|end
 operator|==
 name|NULL
 condition|)
-block|{
-name|strcpy
+name|i
+operator|=
+name|strlen
 argument_list|(
 name|buf
-argument_list|,
-name|begin
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
+name|i
+operator|=
+name|end
+operator|-
+name|begin
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+name|buflen
+condition|)
+name|i
+operator|=
+name|buflen
+operator|-
+literal|1
+expr_stmt|;
 name|strncpy
 argument_list|(
 name|buf
 argument_list|,
 name|begin
 argument_list|,
-name|end
-operator|-
-name|begin
+name|i
 argument_list|)
 expr_stmt|;
 name|buf
 index|[
-name|end
-operator|-
-name|begin
+name|i
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
 return|return
 name|buf
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.76 (Berkeley) 11/11/95"
+literal|"@(#)envelope.c	8.76.1.2 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -635,8 +635,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Cannot send message for %s"
@@ -979,8 +982,11 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|,
 literal|"Warning: could not send message for past %s"
@@ -1865,8 +1871,11 @@ comment|/* process id */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|pbuf
+argument_list|,
+sizeof|sizeof
 name|pbuf
 argument_list|,
 literal|"%d"
@@ -1891,8 +1900,11 @@ comment|/* hop count */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|cbuf
+argument_list|,
+sizeof|sizeof
 name|cbuf
 argument_list|,
 literal|"%d"
@@ -1972,12 +1984,14 @@ argument_list|)
 operator|+
 literal|1
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|ybuf
+argument_list|,
+sizeof|sizeof
+name|ybuf
+argument_list|,
+literal|"%s"
 argument_list|,
 name|p
 argument_list|)
@@ -2076,8 +2090,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|tbuf
+argument_list|,
+sizeof|sizeof
 name|tbuf
 argument_list|,
 literal|"%04d%02d%02d%02d%02d"
@@ -2770,8 +2787,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|ebuf
+argument_list|,
+sizeof|sizeof
 name|ebuf
 argument_list|,
 literal|"%.*s@%.*s"
@@ -3260,6 +3280,9 @@ name|e_from
 operator|.
 name|q_user
 argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;

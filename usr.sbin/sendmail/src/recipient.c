@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.108 (Berkeley) 10/30/95"
+literal|"@(#)recipient.c	8.108.1.1 (Berkeley) 9/12/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1949,6 +1949,15 @@ condition|(
 name|pw
 operator|==
 name|NULL
+operator|||
+name|strlen
+argument_list|(
+name|pw
+operator|->
+name|pw_name
+argument_list|)
+operator|>
+name|MAXNAME
 condition|)
 block|{
 name|a
@@ -2135,6 +2144,9 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
+name|nbuf
+argument_list|,
+sizeof|sizeof
 name|nbuf
 argument_list|)
 expr_stmt|;
@@ -2939,6 +2951,9 @@ name|pw
 operator|->
 name|pw_name
 argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;

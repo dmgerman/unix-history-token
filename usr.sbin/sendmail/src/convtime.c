@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	8.4 (Berkeley) 5/19/95"
+literal|"@(#)convtime.c	8.4.1.1 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,19 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"useful.h"
+file|"sendmail.h"
 end_include
 
 begin_comment
@@ -369,9 +357,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%d+"
 argument_list|,
@@ -389,9 +384,16 @@ block|}
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"%02d:%02d:%02d"
 argument_list|,
@@ -419,9 +421,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|", %d week%s"
 argument_list|,
@@ -451,9 +460,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|", %d day%s"
 argument_list|,
@@ -483,9 +499,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|", %d hour%s"
 argument_list|,
@@ -515,9 +538,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|", %d minute%s"
 argument_list|,
@@ -547,9 +577,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|", %d second%s"
 argument_list|,

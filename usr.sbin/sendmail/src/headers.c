@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.82.1.1 (Berkeley) 2/18/96"
+literal|"@(#)headers.c	8.82.1.2 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -2699,8 +2699,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|hbuf
+argument_list|,
+sizeof|sizeof
 name|hbuf
 argument_list|,
 literal|"%.80s"
@@ -2733,9 +2736,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|hbuf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|" (%.100s)"
 argument_list|,
@@ -2760,9 +2770,16 @@ name|sbp
 operator|=
 name|sbuf
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d"
 argument_list|,
@@ -2813,9 +2830,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|", msgid=%.100s"
 argument_list|,
@@ -2842,9 +2866,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|", bodytype=%.20s"
 argument_list|,
@@ -2879,9 +2910,16 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|", proto=%.20s"
 argument_list|,
@@ -2993,9 +3031,16 @@ name|sbp
 operator|=
 name|sbuf
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|"%s:"
 argument_list|,
@@ -3020,9 +3065,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|" bodytype=%.20s,"
 argument_list|,
@@ -3055,9 +3107,16 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|sbp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|sbuf
+argument_list|,
+name|sbp
+argument_list|)
 argument_list|,
 literal|" proto=%.20s,"
 argument_list|,
@@ -4721,8 +4780,11 @@ comment|/* no other recipient headers: truncate value */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|obuf
+argument_list|,
+sizeof|sizeof
 name|obuf
 argument_list|,
 literal|"%s:"
@@ -4827,12 +4889,23 @@ name|obp
 decl_stmt|;
 name|vanilla
 label|:
+name|obp
+operator|=
+name|obuf
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
+argument_list|(
+name|obp
+argument_list|,
+name|SPACELEFT
 argument_list|(
 name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|"%.200s: "
 argument_list|,
@@ -4871,9 +4944,16 @@ name|nlp
 operator|=
 literal|'\0'
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
@@ -4931,9 +5011,16 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
@@ -5049,8 +5136,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|obuf
+argument_list|,
+sizeof|sizeof
 name|obuf
 argument_list|,
 literal|"Content-Type: text/plain; charset=%s"
@@ -5192,9 +5282,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|"%.200s: "
 argument_list|,
@@ -5615,12 +5712,16 @@ operator|!
 name|firstone
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|",\n"
 argument_list|)
@@ -5672,12 +5773,16 @@ operator|!
 name|firstone
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|obp
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|obuf
+argument_list|,
+name|obp
+argument_list|)
 argument_list|,
 literal|", "
 argument_list|)

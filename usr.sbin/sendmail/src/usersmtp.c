@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.65 (Berkeley) 9/28/95 (with SMTP)"
+literal|"@(#)usersmtp.c	8.65.1.2 (Berkeley) 9/16/96 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.65 (Berkeley) 9/28/95 (without SMTP)"
+literal|"@(#)usersmtp.c	8.65.1.2 (Berkeley) 9/16/96 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1131,6 +1131,9 @@ block|{
 name|int
 name|r
 decl_stmt|;
+name|int
+name|l
+decl_stmt|;
 name|char
 modifier|*
 name|bufp
@@ -1187,8 +1190,11 @@ name|e_msgsize
 operator|>
 literal|0
 condition|)
-name|sprintf
+name|snprintf
 argument_list|(
+name|optbuf
+argument_list|,
+sizeof|sizeof
 name|optbuf
 argument_list|,
 literal|" SIZE=%ld"
@@ -1205,6 +1211,18 @@ name|optbuf
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|l
+operator|=
+sizeof|sizeof
+name|optbuf
+operator|-
+name|strlen
+argument_list|(
+name|optbuf
+argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 name|bodytype
 operator|=
@@ -1289,6 +1307,13 @@ argument_list|(
 name|optbuf
 argument_list|,
 name|bodytype
+argument_list|)
+expr_stmt|;
+name|l
+operator|-=
+name|strlen
+argument_list|(
+name|optbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1431,6 +1456,18 @@ operator|->
 name|e_envid
 operator|!=
 name|NULL
+operator|&&
+name|strlen
+argument_list|(
+name|e
+operator|->
+name|e_envid
+argument_list|)
+operator|<
+operator|(
+name|SIZE_T
+operator|)
+name|l
 condition|)
 block|{
 name|strcat
@@ -1449,6 +1486,13 @@ operator|->
 name|e_envid
 argument_list|)
 expr_stmt|;
+name|l
+operator|-=
+name|strlen
+argument_list|(
+name|optbuf
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* RET= parameter */
 if|if
@@ -1461,6 +1505,10 @@ name|e
 operator|->
 name|e_flags
 argument_list|)
+operator|&&
+name|l
+operator|>=
+literal|9
 condition|)
 block|{
 name|strcat
@@ -1495,6 +1543,10 @@ name|optbuf
 argument_list|,
 literal|"FULL"
 argument_list|)
+expr_stmt|;
+name|l
+operator|-=
+literal|9
 expr_stmt|;
 block|}
 block|}
@@ -1938,6 +1990,9 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+name|int
+name|l
+decl_stmt|;
 name|char
 name|optbuf
 index|[
@@ -1956,6 +2011,13 @@ name|optbuf
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|l
+operator|=
+sizeof|sizeof
+name|optbuf
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2110,6 +2172,13 @@ argument_list|,
 literal|"NEVER"
 argument_list|)
 expr_stmt|;
+name|l
+operator|-=
+name|strlen
+argument_list|(
+name|optbuf
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* ORCPT= parameter */
 if|if
@@ -2119,6 +2188,17 @@ operator|->
 name|q_orcpt
 operator|!=
 name|NULL
+operator|&&
+name|strlen
+argument_list|(
+name|to
+operator|->
+name|q_orcpt
+argument_list|)
+operator|+
+literal|7
+operator|<
+name|l
 condition|)
 block|{
 name|strcat
@@ -2135,6 +2215,13 @@ argument_list|,
 name|to
 operator|->
 name|q_orcpt
+argument_list|)
+expr_stmt|;
+name|l
+operator|-=
+name|strlen
+argument_list|(
+name|optbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -3585,6 +3672,12 @@ name|p
 init|=
 name|wbuf
 decl_stmt|;
+name|int
+name|wbufleft
+init|=
+sizeof|sizeof
+name|wbuf
+decl_stmt|;
 if|if
 condition|(
 name|e
@@ -3594,9 +3687,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|int
+name|plen
+decl_stmt|;
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|wbufleft
 argument_list|,
 literal|"%s... "
 argument_list|,
@@ -3610,17 +3708,27 @@ literal|203
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
+name|plen
+operator|=
 name|strlen
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|p
+operator|+=
+name|plen
+expr_stmt|;
+name|wbufleft
+operator|-=
+name|plen
+expr_stmt|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|wbufleft
 argument_list|,
 literal|"reply(%.100s) during %s"
 argument_list|,
@@ -3867,12 +3975,14 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-operator|(
-name|void
-operator|)
-name|strcpy
+name|snprintf
 argument_list|(
 name|SmtpError
+argument_list|,
+sizeof|sizeof
+name|SmtpError
+argument_list|,
+literal|"%s"
 argument_list|,
 name|SmtpReplyBuffer
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.22 (Berkeley) 11/18/95"
+literal|"@(#)mci.c	8.22.1.1 (Berkeley) 9/16/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,9 +1141,16 @@ name|p
 operator|=
 name|buf
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"MCI@%x: "
 argument_list|,
@@ -1164,9 +1171,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"NULL"
 argument_list|)
@@ -1175,9 +1189,16 @@ goto|goto
 name|printit
 goto|;
 block|}
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"flags=%x, errno=%d, herrno=%d, exitstat=%d, state=%d, pid=%d,%s"
 argument_list|,
@@ -1215,9 +1236,16 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"maxsize=%ld, phase=%s, mailer=%s,%s"
 argument_list|,
@@ -1261,9 +1289,16 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|p
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|,
 literal|"host=%s, lastuse=%s"
 argument_list|,
