@@ -717,9 +717,6 @@ name|CA
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 name|PC
 operator|=
 name|_PC
@@ -731,6 +728,9 @@ index|]
 else|:
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 switch|switch
 condition|(
 name|cfgetospeed
