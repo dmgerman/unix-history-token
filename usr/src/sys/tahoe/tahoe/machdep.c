@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1987,1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -298,6 +298,18 @@ end_decl_stmt
 begin_comment
 comment|/* max supported memory, changes to actual */
 end_comment
+
+begin_comment
+comment|/*  * safepri is a safe priority for sleep to set for a spin-wait  * during autoconfiguration or after a panic.  On the tahoe, this must  * be> 0 so that we can take interrupts after a panic while on the interrupt  * stack.  Otherwise, we will get a illegal instruction trap when we return  * from any interrupt that comes in.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|safepri
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Machine-dependent startup code  */
