@@ -803,11 +803,6 @@ name|pfs_vdata
 modifier|*
 name|pvd
 decl_stmt|;
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

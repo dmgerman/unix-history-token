@@ -1186,11 +1186,6 @@ name|error
 operator|)
 return|;
 comment|/* Purge old data structures associated with the inode. */
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 name|ntfs_frele
 argument_list|(
 name|fp

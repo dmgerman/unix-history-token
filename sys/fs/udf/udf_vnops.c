@@ -4916,11 +4916,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|cache_purge
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|unode
