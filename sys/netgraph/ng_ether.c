@@ -140,11 +140,11 @@ comment|/* upper hook connection */
 name|hook_p
 name|lower
 decl_stmt|;
-comment|/* lower OR orphan hook connection */
-name|u_char
-name|lowerOrphan
+comment|/* lower hook connection */
+name|hook_p
+name|orphan
 decl_stmt|;
-comment|/* whether lower is lower or orphan */
+comment|/* orphan hook connection */
 name|u_char
 name|autoSrcAddr
 decl_stmt|;
@@ -364,23 +364,6 @@ end_function_decl
 begin_comment
 comment|/* Other functions */
 end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|ng_ether_input2
-parameter_list|(
-name|node_p
-name|node
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -713,6 +696,9 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* If "lower" hook not connected, let packet continue */
 if|if
 condition|(
@@ -721,19 +707,21 @@ operator|->
 name|lower
 operator|==
 name|NULL
-operator|||
-name|priv
-operator|->
-name|lowerOrphan
 condition|)
 return|return;
-name|ng_ether_input2
+name|NG_SEND_DATA_ONLY
 argument_list|(
-name|node
+name|error
 argument_list|,
+name|priv
+operator|->
+name|lower
+argument_list|,
+operator|*
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* sets *mp = NULL */
 block|}
 end_function
 
@@ -775,19 +763,17 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-comment|/* If "orphan" hook not connected, let packet continue */
+name|int
+name|error
+decl_stmt|;
+comment|/* If "orphan" hook not connected, discard packet */
 if|if
 condition|(
 name|priv
 operator|->
-name|lower
+name|orphan
 operator|==
 name|NULL
-operator|||
-operator|!
-name|priv
-operator|->
-name|lowerOrphan
 condition|)
 block|{
 name|m_freem
@@ -797,76 +783,16 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|ng_ether_input2
-argument_list|(
-name|node
-argument_list|,
-operator|&
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Handle a packet that has come in on an ethernet interface.  * The Ethernet header has already been detached from the mbuf,  * so we have to put it back.  *  * NOTE: this function will get called at splimp()  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ng_ether_input2
-parameter_list|(
-name|node_p
-name|node
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|mp
-parameter_list|)
-block|{
-specifier|const
-name|priv_p
-name|priv
-init|=
-name|NG_NODE_PRIVATE
-argument_list|(
-name|node
-argument_list|)
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-comment|/* Send out lower/orphan hook */
 name|NG_SEND_DATA_ONLY
 argument_list|(
 name|error
 argument_list|,
 name|priv
 operator|->
-name|lower
+name|orphan
 argument_list|,
-operator|*
-name|mp
+name|m
 argument_list|)
-expr_stmt|;
-operator|*
-name|mp
-operator|=
-name|NULL
 expr_stmt|;
 block|}
 end_function
@@ -1259,13 +1185,6 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-name|u_char
-name|orphan
-init|=
-name|priv
-operator|->
-name|lowerOrphan
-decl_stmt|;
 name|hook_p
 modifier|*
 name|hookptr
@@ -1317,7 +1236,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hookptr
 operator|=
 operator|&
@@ -1325,11 +1243,6 @@ name|priv
 operator|->
 name|lower
 expr_stmt|;
-name|orphan
-operator|=
-literal|0
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1342,19 +1255,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|hookptr
 operator|=
 operator|&
 name|priv
 operator|->
-name|lower
-expr_stmt|;
 name|orphan
-operator|=
-literal|1
 expr_stmt|;
-block|}
 else|else
 return|return
 operator|(
@@ -1397,12 +1304,6 @@ operator|*
 name|hookptr
 operator|=
 name|hook
-expr_stmt|;
-name|priv
-operator|->
-name|lowerOrphan
-operator|=
-name|orphan
 expr_stmt|;
 return|return
 operator|(
@@ -2017,6 +1918,12 @@ operator|==
 name|priv
 operator|->
 name|lower
+operator|||
+name|hook
+operator|==
+name|priv
+operator|->
+name|orphan
 condition|)
 return|return
 name|ng_ether_rcv_lower
@@ -2056,7 +1963,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RESTARTABLE_PANICS
-comment|/* so we don;t get an error msg in LINT */
+comment|/* so we don't get an error msg in LINT */
 return|return
 name|NULL
 return|;
@@ -2066,7 +1973,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle an mbuf received on the "lower" hook.  */
+comment|/*  * Handle an mbuf received on the "lower" or "orphan" hook.  */
 end_comment
 
 begin_function
@@ -2524,20 +2431,27 @@ name|priv
 operator|->
 name|lower
 condition|)
-block|{
 name|priv
 operator|->
 name|lower
 operator|=
 name|NULL
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|hook
+operator|==
 name|priv
 operator|->
-name|lowerOrphan
+name|orphan
+condition|)
+name|priv
+operator|->
+name|orphan
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
-block|}
 else|else
 name|panic
 argument_list|(
