@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)locore2.c	8.1 (Berkeley) %G%  *  * from: $Header: locore2.c,v 1.8 92/11/26 03:05:01 mccanne Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)locore2.c	8.2 (Berkeley) %G%  *  * from: $Header: locore2.c,v 1.8 92/11/26 03:05:01 mccanne Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|/*  * Put process p on the run queue indicated by its priority.  * Calls
 end_comment
 
 begin_expr_stmt
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
@@ -82,7 +82,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"setrq"
+literal|"setrunqueue"
 argument_list|)
 expr_stmt|;
 name|q

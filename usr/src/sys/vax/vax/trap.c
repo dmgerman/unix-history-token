@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trap.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -617,14 +617,14 @@ condition|(
 name|runrun
 condition|)
 block|{
-comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
 operator|(
 name|void
 operator|)
 name|splclock
 argument_list|()
 expr_stmt|;
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
@@ -1217,14 +1217,14 @@ condition|(
 name|runrun
 condition|)
 block|{
-comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we put ourselves on the run queue 		 * but before we swtch()'ed, we might not be on the queue 		 * indicated by our priority. 		 */
 operator|(
 name|void
 operator|)
 name|splclock
 argument_list|()
 expr_stmt|;
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)

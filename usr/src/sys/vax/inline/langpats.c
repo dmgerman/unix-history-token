@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	7.3 (Berkeley) %G%"
+literal|"@(#)langpats.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,9 +275,9 @@ block|,
 block|{
 literal|1
 block|,
-literal|"_setrq\n"
+literal|"_setrunqueue\n"
 block|,
-literal|"	movl	(sp)+,r0\n\ 	jsb	_Setrq\n"
+literal|"	movl	(sp)+,r0\n\ 	jsb	_Setrunqueue\n"
 block|}
 block|,
 block|{

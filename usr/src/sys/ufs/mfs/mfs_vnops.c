@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -735,9 +735,7 @@ name|base
 argument_list|,
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|bp
 operator|->
@@ -749,9 +747,7 @@ name|bcopy
 argument_list|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|base
 argument_list|,
@@ -884,7 +880,7 @@ name|kernaddr
 decl_stmt|,
 name|offset
 decl_stmt|;
-comment|/* 	 * For phys I/O, map the b_addr into kernel virtual space using 	 * the Mfsiomap pte's. 	 */
+comment|/* 	 * For phys I/O, map the b_data into kernel virtual space using 	 * the Mfsiomap pte's. 	 */
 if|if
 condition|(
 operator|(
@@ -902,9 +898,7 @@ name|kernaddr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 block|}
 else|else
@@ -935,9 +929,7 @@ name|int
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|&
 name|PGOFSET
 expr_stmt|;
@@ -1004,9 +996,7 @@ name|btop
 argument_list|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1314,9 +1304,7 @@ name|base
 argument_list|,
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|bp
 operator|->
@@ -1332,9 +1320,7 @@ name|copyout
 argument_list|(
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|base
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -869,9 +869,7 @@ name|b_saveaddr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 name|off
 operator|=
@@ -916,9 +914,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|=
 call|(
 name|caddr_t
@@ -1019,18 +1015,12 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|int
-name|npf
-decl_stmt|;
-specifier|register
 name|caddr_t
 name|addr
-init|=
-name|bp
-operator|->
-name|b_un
-operator|.
-name|b_addr
+decl_stmt|;
+specifier|register
+name|int
+name|npf
 decl_stmt|;
 name|vm_offset_t
 name|kva
@@ -1051,6 +1041,12 @@ name|panic
 argument_list|(
 literal|"vunmapbuf"
 argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+name|bp
+operator|->
+name|b_data
 expr_stmt|;
 name|npf
 operator|=
@@ -1102,9 +1098,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|=
 name|bp
 operator|->

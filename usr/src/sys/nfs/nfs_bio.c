@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_bio.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1657,9 +1657,7 @@ name|baddr
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 name|error
 operator|=
@@ -2569,11 +2567,13 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|on
 argument_list|,
@@ -3721,9 +3721,7 @@ name|iov_base
 operator|=
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 expr_stmt|;
 name|uiop
 operator|->
@@ -3833,11 +3831,13 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|diff
 argument_list|,
@@ -4094,11 +4094,13 @@ name|io
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|bp
 operator|->
