@@ -2899,7 +2899,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"nfs_mountroot: mount %s on %s: %d"
+literal|"nfs_mountroot: mount %s on %s: %d\n"
 argument_list|,
 name|path
 argument_list|,
