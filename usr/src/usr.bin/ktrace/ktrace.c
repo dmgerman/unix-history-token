@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ktrace.c	1.3 (Berkeley) %G%"
+literal|"@(#)ktrace.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"usage: ktrace [-aci] [-f tracefile] [-t facilitystring] [-p pid] [-g pgid]\n\ 	facilities: c = syscalls, n = namei, g = generic-i/o, a = everything\n"
+value|"usage: ktrace [-acid] [-f trfile] [-t trops] [-p pid] [-g pgid]\n\ 	trops: c = syscalls, n = namei, g = generic-i/o, a = everything\n\ 	ktrace -C (clear everthing)\n"
 end_define
 
 begin_decl_stmt
@@ -80,6 +80,10 @@ name|int
 name|append
 decl_stmt|,
 name|clear
+decl_stmt|,
+name|descend
+decl_stmt|,
+name|inherit
 decl_stmt|;
 end_decl_stmt
 
@@ -108,7 +112,7 @@ decl_stmt|;
 name|int
 name|facs
 init|=
-name|DEF_FACS
+name|ALL_FACS
 decl_stmt|;
 name|int
 name|ops
@@ -134,7 +138,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"acp:g:if:t:"
+literal|"Cacdp:g:if:t:"
 argument_list|)
 operator|)
 operator|!=
@@ -149,11 +153,27 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'C'
+case|:
+name|clear
+operator|=
+literal|2
+expr_stmt|;
+break|break;
+case|case
 literal|'c'
 case|:
 name|clear
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|ops
+operator||=
+name|KTRFLAG_DESCEND
 expr_stmt|;
 break|break;
 case|case
@@ -215,9 +235,8 @@ break|break;
 case|case
 literal|'i'
 case|:
-name|ops
-operator||=
-name|KTROP_INHERITFLAG
+name|inherit
+operator|++
 expr_stmt|;
 break|break;
 case|case
@@ -263,10 +282,39 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+name|inherit
+condition|)
+name|facs
+operator||=
+name|KTRFAC_INHERIT
+expr_stmt|;
+if|if
+condition|(
 name|clear
 condition|)
 block|{
 comment|/* untrace something */
+if|if
+condition|(
+name|clear
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* -C */
+name|ops
+operator|=
+name|KTROP_CLEAR
+operator||
+name|KTRFLAG_DESCEND
+expr_stmt|;
+name|pid
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ops
 operator||=
 name|pid
@@ -275,6 +323,7 @@ name|KTROP_CLEAR
 else|:
 name|KTROP_CLEARFILE
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|ktrace
