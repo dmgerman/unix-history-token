@@ -1501,11 +1501,8 @@ control|)
 block|{
 name|c
 operator|=
-name|toascii
-argument_list|(
 operator|*
 name|s
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
