@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: snprintf.c,v 8.27.16.2 2000/09/17 17:04:24 gshapiro Exp $"
+literal|"@(#)$Id: snprintf.c,v 8.27.16.4 2001/07/20 04:19:37 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +296,8 @@ expr_stmt|;
 if|if
 condition|(
 name|SnprfOverflow
+operator|>
+literal|0
 operator|&&
 name|tTd
 argument_list|(
@@ -326,6 +328,8 @@ name|strlen
 argument_list|(
 name|str
 argument_list|)
+operator|+
+name|SnprfOverflow
 return|;
 block|}
 end_function

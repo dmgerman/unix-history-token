@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: readcf.c,v 8.382.4.40 2001/05/03 17:24:13 gshapiro Exp $"
+literal|"@(#)$Id: readcf.c,v 8.382.4.42 2001/07/31 22:30:24 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -13865,6 +13865,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|int
+name|addopts
+decl_stmt|;
 name|time_t
 name|toval
 decl_stmt|;
@@ -13994,6 +13997,10 @@ name|val
 argument_list|,
 literal|'m'
 argument_list|)
+expr_stmt|;
+name|addopts
+operator|=
+literal|0
 expr_stmt|;
 switch|switch
 condition|(
@@ -14191,6 +14198,10 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
+name|addopts
+operator|=
+literal|2
+expr_stmt|;
 break|break;
 case|case
 name|TO_QUEUEWARN_NORMAL
@@ -14296,6 +14307,10 @@ name|TOC_NONURGENT
 index|]
 operator|=
 name|toval
+expr_stmt|;
+name|addopts
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -14411,6 +14426,10 @@ index|]
 operator|=
 name|toval
 expr_stmt|;
+name|addopts
+operator|=
+literal|2
+expr_stmt|;
 break|break;
 case|case
 name|TO_RESOLVER_RETRY
@@ -14448,6 +14467,10 @@ name|RES_TO_NORMAL
 index|]
 operator|=
 name|i
+expr_stmt|;
+name|addopts
+operator|=
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -14542,15 +14565,32 @@ if|if
 condition|(
 name|sticky
 condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<=
+name|addopts
+condition|;
+name|i
+operator|++
+control|)
 name|setbitn
 argument_list|(
 name|to
 operator|->
 name|to_code
+operator|+
+name|i
 argument_list|,
 name|StickyTimeoutOpt
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

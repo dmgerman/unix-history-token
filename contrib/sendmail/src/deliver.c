@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.81 2001/05/23 02:15:42 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.600.2.1.2.86 2001/07/20 21:52:55 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7953,6 +7953,10 @@ specifier|extern
 name|int
 name|DtableSize
 decl_stmt|;
+comment|/* clear the events to turn off SIGALRMs */
+name|clear_events
+argument_list|()
+expr_stmt|;
 comment|/* Reset global flags */
 name|RestartRequest
 operator|=
@@ -7993,9 +7997,19 @@ name|void
 operator|)
 name|setsignal
 argument_list|(
-name|SIGINT
+name|SIGALRM
 argument_list|,
-name|SIG_IGN
+name|sm_signal_noop
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -8013,11 +8027,37 @@ name|void
 operator|)
 name|setsignal
 argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
 name|SIGTERM
 argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGUSR1
+argument_list|,
+name|sm_signal_noop
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGUSR1 */
 if|if
 condition|(
 name|m
@@ -8569,12 +8609,30 @@ operator|->
 name|m_flags
 argument_list|)
 condition|)
+block|{
 name|new_euid
 operator|=
 name|m
 operator|->
 name|m_uid
 expr_stmt|;
+comment|/* 				**  Undo the effects of the uid change in main 				**  for signal handling.  The real uid may 				**  be used by mailer in adding a "From " 				**  line. 				*/
+if|if
+condition|(
+name|RealUid
+operator|!=
+literal|0
+operator|&&
+name|RealUid
+operator|!=
+name|getuid
+argument_list|()
+condition|)
+name|new_ruid
+operator|=
+name|RealUid
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -8672,6 +8730,52 @@ directive|if
 name|MAILER_SETUID_METHOD
 operator|==
 name|USE_SETEUID
+if|#
+directive|if
+name|HASSETREUID
+comment|/* 				**  Undo the effects of the uid change in main 				**  for signal handling.  The real uid may 				**  be used by mailer in adding a "From " 				**  line. 				*/
+if|if
+condition|(
+name|new_ruid
+operator|!=
+name|NO_UID
+operator|&&
+name|setreuid
+argument_list|(
+name|RealUid
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"openmailer: setreuid(%d, %d) failed"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|new_ruid
+argument_list|,
+operator|(
+name|int
+operator|)
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* HASSETREUID */
 if|if
 condition|(
 name|seteuid
@@ -12595,7 +12699,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ENDMAILER -- Wait for mailer to terminate. ** **	We should never get fatal errors (e.g., segmentation **	violation), so we report those specially.  For other **	errors, we choose a status message (into statmsg), **	and if it represents an error, we print it. ** **	Parameters: **		pid -- pid of mailer. **		e -- the current envelope. **		pv -- the parameter vector that invoked the mailer **			(for error messages). ** **	Returns: **		exit code of mailer. ** **	Side Effects: **		none. */
+comment|/* **  ENDMAILER -- Wait for mailer to terminate. ** **	We should never get fatal errors (e.g., segmentation **	violation), so we report those specially.  For other **	errors, we choose a status message (into statmsg), **	and if it represents an error, we print it. ** **	Parameters: **		mci -- the mailer connection info. **		e -- the current envelope. **		pv -- the parameter vector that invoked the mailer **			(for error messages). ** **	Returns: **		exit code of mailer. ** **	Side Effects: **		none. */
 end_comment
 
 begin_decl_stmt
@@ -20479,12 +20583,19 @@ operator|<=
 literal|0
 condition|)
 block|{
+name|int
+name|save_errno
+decl_stmt|;
 specifier|register
 name|MCI
 modifier|*
 name|mci
 decl_stmt|;
 comment|/* update the connection info for this host */
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|mci
 operator|=
 name|mci_get
@@ -20498,7 +20609,7 @@ name|mci
 operator|->
 name|mci_errno
 operator|=
-name|errno
+name|save_errno
 expr_stmt|;
 name|mci
 operator|->

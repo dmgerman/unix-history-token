@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.77 2001/05/27 22:20:30 gshapiro Exp $ (with SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.78 2001/06/26 18:52:21 gshapiro Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.77 2001/05/27 22:20:30 gshapiro Exp $ (without SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.78 2001/06/26 18:52:21 gshapiro Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3444,7 +3444,7 @@ operator|==
 name|NULL
 condition|)
 break|break;
-continue|continue;
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

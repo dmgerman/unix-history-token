@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: sfsasl.c,v 8.17.4.14 2001/05/03 17:24:16 gshapiro Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.17.4.15 2001/07/11 17:37:07 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -696,12 +696,15 @@ directive|include
 file|<openssl/err.h>
 end_include
 
-begin_function
-specifier|static
-name|ssize_t
+begin_if
 if|#
 directive|if
 name|SFIO
+end_if
+
+begin_function
+specifier|static
+name|ssize_t
 name|tls_read
 parameter_list|(
 name|f
@@ -730,7 +733,7 @@ decl_stmt|;
 else|#
 directive|else
 comment|/* SFIO */
-function|tls_read
+function|static int tls_read
 parameter_list|(
 name|disc
 parameter_list|,
@@ -742,11 +745,11 @@ name|void
 modifier|*
 name|disc
 decl_stmt|;
-name|void
+name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|size_t
+name|int
 name|size
 decl_stmt|;
 endif|#
@@ -891,12 +894,15 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|ssize_t
+begin_if
 if|#
 directive|if
 name|SFIO
+end_if
+
+begin_function
+specifier|static
+name|ssize_t
 name|tls_write
 parameter_list|(
 name|f
@@ -926,7 +932,7 @@ decl_stmt|;
 else|#
 directive|else
 comment|/* SFIO */
-function|tls_write
+function|static int tls_write
 parameter_list|(
 name|disc
 parameter_list|,
@@ -939,11 +945,11 @@ modifier|*
 name|disc
 decl_stmt|;
 specifier|const
-name|void
+name|char
 modifier|*
 name|buf
 decl_stmt|;
-name|size_t
+name|int
 name|size
 decl_stmt|;
 endif|#

@@ -54,7 +54,7 @@ name|char
 name|MilterlId
 index|[]
 init|=
-literal|"@(#)$Id: libmilter.h,v 8.3.6.14 2001/05/27 14:31:12 ca Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.3.6.16 2001/06/07 23:21:35 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 

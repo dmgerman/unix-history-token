@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: main.c,v 8.485.4.60 2001/05/27 22:00:26 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.485.4.65 2001/07/20 00:53:00 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|SIGFUNC_DECL
@@ -126,6 +132,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SIGUSR1 */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -8720,6 +8735,9 @@ comment|/* Still want to process new timeouts added below */
 name|clear_events
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|releasesignal
 argument_list|(
 name|SIGALRM
@@ -9016,7 +9034,15 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"interrupt"
+literal|"interrupt (%s)"
+argument_list|,
+name|reason
+operator|==
+name|NULL
+condition|?
+literal|"implicit call"
+else|:
+name|reason
 argument_list|)
 expr_stmt|;
 name|FileName
@@ -9212,7 +9238,13 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_TEST
+condition|)
 name|unlockqueue
 argument_list|(
 name|CurEnv
@@ -10927,6 +10959,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIGUSR1
+end_ifdef
+
 begin_escape
 end_escape
 
@@ -10984,6 +11022,15 @@ name|SIGFUNC_RETURN
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SIGUSR1 */
+end_comment
 
 begin_escape
 end_escape
