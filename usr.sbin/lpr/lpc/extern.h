@@ -18,6 +18,18 @@ end_include
 begin_function_decl
 name|__BEGIN_DECLS
 name|void
+name|abort_q
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|clean_q
 parameter_list|(
 name|struct
@@ -30,19 +42,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|disable
-parameter_list|(
-name|struct
-name|printer
-modifier|*
-name|_pp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|doabort
+name|disable_q
 parameter_list|(
 name|struct
 name|printer
@@ -69,7 +69,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|enable
+name|enable_q
 parameter_list|(
 name|struct
 name|printer
@@ -183,7 +183,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|restart
+name|restart_q
 parameter_list|(
 name|struct
 name|printer
@@ -195,7 +195,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|startcmd
+name|start_q
 parameter_list|(
 name|struct
 name|printer
@@ -219,7 +219,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|stop
+name|stop_q
 parameter_list|(
 name|struct
 name|printer
@@ -246,6 +246,114 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|up_q
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|disable
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|doabort
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|enable
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|restart
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|startcmd
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
+name|stop
+parameter_list|(
+name|struct
+name|printer
+modifier|*
+name|_pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
+
+begin_function_decl
+name|void
 name|up
 parameter_list|(
 name|struct
@@ -255,6 +363,10 @@ name|_pp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* X-version */
+end_comment
 
 begin_decl_stmt
 name|__END_DECLS

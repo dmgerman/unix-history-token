@@ -752,6 +752,135 @@ value|(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
 end_define
 
 begin_comment
+comment|/*  * Bit-flags for set_qstate() actions, followed by the return values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_DISABLEQ
+value|0x01
+end_define
+
+begin_comment
+comment|/* Disable the queuing of new jobs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_STOPP
+value|0x02
+end_define
+
+begin_comment
+comment|/* Stop the printing of jobs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_ENABLEQ
+value|0x10
+end_define
+
+begin_comment
+comment|/* Enable the queuing of new jobs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_STARTP
+value|0x20
+end_define
+
+begin_comment
+comment|/* Start the printing of jobs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_PARMERR
+value|-9
+end_define
+
+begin_comment
+comment|/* Invalid parameters from caller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_CREFAIL
+value|-3
+end_define
+
+begin_comment
+comment|/* File did not exist, and create failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_CHGFAIL
+value|-2
+end_define
+
+begin_comment
+comment|/* File exists, but unable to change state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_STATFAIL
+value|-1
+end_define
+
+begin_comment
+comment|/* Unable to stat() the lock file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_CHGOK
+value|1
+end_define
+
+begin_comment
+comment|/* File existed, and the state was changed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_CREOK
+value|2
+end_define
+
+begin_comment
+comment|/* File did not exist, but was created OK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SQS_SKIPCREOK
+value|3
+end_define
+
+begin_comment
+comment|/* File did not exist, and there was */
+end_comment
+
+begin_comment
+comment|/* no need to create it */
+end_comment
+
+begin_comment
 comment|/*  * Command codes used in the protocol.  */
 end_comment
 
@@ -1299,6 +1428,21 @@ parameter_list|(
 name|char
 modifier|*
 name|_newfile
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|set_qstate
+parameter_list|(
+name|int
+name|_action
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|_lfname
 parameter_list|)
 function_decl|;
 end_function_decl
