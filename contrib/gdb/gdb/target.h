@@ -42,6 +42,9 @@ comment|/* Executable files, etc */
 name|core_stratum
 block|,
 comment|/* Core dump files */
+name|kcore_stratum
+block|,
+comment|/* Kernel core files */
 name|download_stratum
 block|,
 comment|/* Downloading of remote targets */

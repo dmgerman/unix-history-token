@@ -212,7 +212,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 block|{
@@ -221,8 +221,7 @@ name|int
 name|regno
 decl_stmt|;
 specifier|register
-name|unsigned
-name|int
+name|CORE_ADDR
 name|addr
 decl_stmt|;
 name|int
@@ -232,11 +231,12 @@ operator|-
 literal|1
 decl_stmt|;
 specifier|register
+name|CORE_ADDR
 name|reg_ptr
-operator|=
+init|=
 operator|-
 name|reg_addr
-expr_stmt|;
+decl_stmt|;
 comment|/* Original u.u_ar0 is -reg_addr. */
 name|int
 name|numregs
@@ -248,9 +248,6 @@ if|if
 condition|(
 name|reg_ptr
 operator|>
-operator|(
-name|int
-operator|)
 name|core_reg_size
 condition|)
 name|reg_ptr
@@ -358,7 +355,7 @@ name|int
 name|blockend
 decl_stmt|;
 block|{
-name|int
+name|CORE_ADDR
 name|addr
 decl_stmt|;
 if|if

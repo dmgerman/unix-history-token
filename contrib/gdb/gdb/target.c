@@ -3411,7 +3411,13 @@ operator|)
 operator|->
 name|to_stratum
 operator|==
+operator|(
+name|kernel_debugging
+condition|?
+name|kcore_stratum
+else|:
 name|core_stratum
+operator|)
 condition|)
 block|{
 name|runable
