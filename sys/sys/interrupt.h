@@ -315,22 +315,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|SWI_TQ_GIANT
+name|SWI_TQ_FAST
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_TQ
+name|SWI_TQ_GIANT
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|SWI_CLOCK
+name|SWI_TQ
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CLOCK
+value|8
 end_define
 
 begin_decl_stmt

@@ -282,6 +282,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Queue for swi handlers dispatched from fast interrupt handlers.  * These are necessarily different from the above because the queue  * must be locked with spinlocks since sleep mutex's cannot be used  * from a fast interrupt handler context.  */
+end_comment
+
+begin_expr_stmt
+name|TASKQUEUE_DECLARE
+argument_list|(
+name|fast
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function_decl
+name|int
+name|taskqueue_enqueue_fast
+parameter_list|(
+name|struct
+name|taskqueue
+modifier|*
+name|queue
+parameter_list|,
+name|struct
+name|task
+modifier|*
+name|task
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
