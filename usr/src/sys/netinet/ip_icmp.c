@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.31	83/05/01	*/
+comment|/*	ip_icmp.c	4.32	83/05/27	*/
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|int
 name|type
 decl_stmt|,
 name|code
@@ -261,6 +261,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|type
 operator|>
 name|ICMP_IREQREPLY

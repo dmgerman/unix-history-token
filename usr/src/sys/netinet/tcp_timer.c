@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.31	83/02/10	*/
+comment|/*	tcp_timer.c	4.32	83/05/27	*/
 end_comment
 
 begin_include
@@ -386,7 +386,7 @@ name|i
 argument_list|,
 operator|(
 expr|struct
-name|socketopt
+name|mbuf
 operator|*
 operator|)
 literal|0

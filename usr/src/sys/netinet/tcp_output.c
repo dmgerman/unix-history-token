@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.54	83/05/12	*/
+comment|/*	tcp_output.c	4.55	83/05/27	*/
 end_comment
 
 begin_include
@@ -1398,6 +1398,11 @@ name|tp
 operator|->
 name|t_ipopt
 argument_list|,
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|IP_ROUTETOIF
