@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: clock.c,v 1.35 2002/03/22 18:34:38 gshapiro Exp $"
+literal|"@(#)$Id: clock.c,v 1.35.2.1 2002/06/20 05:14:45 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -960,13 +960,6 @@ comment|/* SM_CONF_SETITIMER */
 name|int
 name|wasblocked
 decl_stmt|;
-if|if
-condition|(
-name|SmEventQueue
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* nothing will be left in event queue, no need for an alarm */
 if|#
 directive|if
@@ -1030,6 +1023,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SM_CONF_SETITIMER */
+if|if
+condition|(
+name|SmEventQueue
+operator|==
+name|NULL
+condition|)
+return|return;
 name|wasblocked
 operator|=
 name|sm_blocksignal

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sasl.c,v 8.18 2002/05/25 00:26:42 gshapiro Exp $"
+literal|"@(#)$Id: sasl.c,v 8.19 2002/06/12 15:06:12 ca Exp $"
 argument_list|)
 end_macro
 
@@ -744,31 +744,34 @@ return|;
 block|}
 if|if
 condition|(
-name|inet_ntop
+name|sm_strlcpy
 argument_list|(
-name|AF_INET
+name|hbuf
 argument_list|,
-operator|&
-operator|(
+name|inet_ntoa
+argument_list|(
 name|addr
 operator|->
 name|sin
 operator|.
 name|sin_addr
-operator|)
-argument_list|,
-name|hbuf
+argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|hbuf
 argument_list|)
-operator|==
-name|NULL
+argument_list|)
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|hbuf
+argument_list|)
 condition|)
 block|{
 name|errno
 operator|=
-name|EINVAL
+name|ENOMEM
 expr_stmt|;
 return|return
 name|false

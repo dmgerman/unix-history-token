@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359 2002/03/29 16:20:47 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359.2.1 2002/06/19 18:24:26 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -5335,7 +5335,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"rewrite: LHS $&%s => \"%s\"\n"
+literal|"rewrite: LHS $&{%s} => \"%s\"\n"
 argument_list|,
 name|macname
 argument_list|(
@@ -6007,7 +6007,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* $&x replacement */
+comment|/* $&{x} replacement */
 name|char
 modifier|*
 name|mval
@@ -6063,7 +6063,7 @@ argument_list|)
 condition|)
 name|sm_dprintf
 argument_list|(
-literal|"rewrite: RHS $&%s => \"%s\"\n"
+literal|"rewrite: RHS $&{%s} => \"%s\"\n"
 argument_list|,
 name|macname
 argument_list|(

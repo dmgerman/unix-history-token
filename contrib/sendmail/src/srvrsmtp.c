@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.827 2002/05/28 14:29:57 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.829 2002/06/17 21:54:57 gshapiro Exp $"
 argument_list|)
 end_macro
 

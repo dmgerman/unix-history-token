@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.969 2002/05/24 23:48:55 gshapiro Exp $"
+literal|"@(#)$Id: conf.c,v 8.972 2002/06/18 16:11:44 ca Exp $"
 argument_list|)
 end_macro
 
@@ -9664,7 +9664,7 @@ name|x
 parameter_list|,
 name|align
 parameter_list|)
-value|((((x) + SPT_ALIGN_SIZE)>> (align))<< (align))
+value|(((((x) + SPT_ALIGN_SIZE)>> (align))<< (align)) - 1)
 end_define
 
 begin_else
