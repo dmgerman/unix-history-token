@@ -323,23 +323,6 @@ comment|/* The job is stopped */
 end_comment
 
 begin_comment
-comment|/*  * tfile is the name of a file into which all shell commands are put. It is  * used over by removing it before the child shell is executed. The XXXXXXXXXX  * in the string are replaced by mkstemp(3).  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|tfile
-index|[
-sizeof|sizeof
-argument_list|(
-name|TMPPAT
-argument_list|)
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Descriptions for various shells.  */
 end_comment
 
@@ -3526,6 +3509,8 @@ name|void
 operator|)
 name|eunlink
 argument_list|(
+name|job
+operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -6082,6 +6067,10 @@ name|Boolean
 name|noExec
 decl_stmt|;
 comment|/* Set true if we decide not to run the job */
+name|int
+name|tfd
+decl_stmt|;
+comment|/* File descriptor for temp file */
 if|if
 condition|(
 name|previous
@@ -6198,6 +6187,53 @@ name|flags
 operator||=
 name|flags
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|job
+operator|->
+name|tfile
+argument_list|,
+name|TMPPAT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tfd
+operator|=
+name|mkstemp
+argument_list|(
+name|job
+operator|->
+name|tfile
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Punt
+argument_list|(
+literal|"cannot create temp file: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|tfd
+argument_list|)
+expr_stmt|;
 comment|/*      * Check the commands now so any attributes from .DEFAULT have a chance      * to migrate to the node      */
 if|if
 condition|(
@@ -6265,6 +6301,8 @@ name|cmdFILE
 operator|=
 name|fopen
 argument_list|(
+name|job
+operator|->
 name|tfile
 argument_list|,
 literal|"w+"
@@ -6283,6 +6321,8 @@ name|Punt
 argument_list|(
 literal|"Could not open %s"
 argument_list|,
+name|job
+operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -6556,6 +6596,8 @@ name|void
 operator|)
 name|eunlink
 argument_list|(
+name|job
+operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -6690,6 +6732,8 @@ name|void
 operator|)
 name|eunlink
 argument_list|(
+name|job
+operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -8587,52 +8631,6 @@ modifier|*
 name|begin
 decl_stmt|;
 comment|/* node for commands to do at the very start */
-name|int
-name|tfd
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|tfile
-argument_list|,
-name|TMPPAT
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|tfd
-operator|=
-name|mkstemp
-argument_list|(
-name|tfile
-argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|Punt
-argument_list|(
-literal|"cannot create temp file: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|tfd
-argument_list|)
-expr_stmt|;
 name|jobs
 operator|=
 name|Lst_Init
@@ -10572,6 +10570,8 @@ name|void
 operator|)
 name|eunlink
 argument_list|(
+name|job
+operator|->
 name|tfile
 argument_list|)
 expr_stmt|;
@@ -10649,14 +10649,6 @@ comment|/* RMT_WILL_WATCH */
 block|}
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|tfile
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|errors
@@ -10843,6 +10835,16 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RMT_WANTS_SIGNALS */
+operator|(
+name|void
+operator|)
+name|eunlink
+argument_list|(
+name|job
+operator|->
+name|tfile
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/*      * Catch as many children as want to report in at first, then give up      */
@@ -10865,14 +10867,6 @@ operator|>
 literal|0
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
-name|eunlink
-argument_list|(
-name|tfile
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
