@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.28 92/12/20$  *  *	@(#)ite.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.28 92/12/20$  *  *	@(#)ite.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -659,12 +659,21 @@ name|flag
 operator|&
 literal|2
 condition|)
+block|{
 name|ip
 operator|->
 name|flags
 operator||=
 name|ITE_INGRF
 expr_stmt|;
+name|ip
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ITE_CURSORON
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -702,7 +711,6 @@ operator|)
 operator|==
 name|ITE_INITED
 condition|)
-block|{
 call|(
 modifier|*
 name|ip
@@ -715,14 +723,6 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|flags
-operator|&=
-operator|~
-name|ITE_CURSORON
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1543,6 +1543,10 @@ name|int
 name|hiwat
 init|=
 literal|0
+decl_stmt|,
+name|hadcursor
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ite_softc
@@ -1697,6 +1701,15 @@ name|t_dev
 argument_list|)
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|flags
+operator|&
+name|ITE_CURSORON
+condition|)
+block|{
 name|ite_erasecursor
 argument_list|(
 name|ip
@@ -1713,6 +1726,11 @@ operator|&=
 operator|~
 name|ITE_CURSORON
 expr_stmt|;
+name|hadcursor
+operator|=
+literal|1
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|--
@@ -1735,6 +1753,11 @@ operator|->
 name|t_dev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hadcursor
+condition|)
+block|{
 name|ip
 operator|->
 name|flags
@@ -1750,6 +1773,7 @@ operator|->
 name|isw
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|hiwat
