@@ -44,7 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../sys/param.h"
 end_include
 
 begin_comment
@@ -54,7 +54,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"../sys/conf.h"
 end_include
 
 begin_comment
@@ -64,17 +64,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
-end_include
-
-begin_comment
-comment|/* for directory handling */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"../h/user.h"
+file|"../sys/user.h"
 end_include
 
 begin_comment
@@ -94,13 +84,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"../sys/tty.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"../sys/map.h"
 end_include
 
 begin_comment
@@ -110,7 +100,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"../sys/buf.h"
 end_include
 
 begin_comment
@@ -120,7 +110,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"../sys/vm.h"
 end_include
 
 begin_comment
@@ -130,7 +120,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/clist.h"
+file|"../sys/clist.h"
 end_include
 
 begin_comment
@@ -140,7 +130,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"../sys/file.h"
 end_include
 
 begin_comment
@@ -150,7 +140,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/uio.h"
+file|"../sys/uio.h"
 end_include
 
 begin_comment
@@ -160,7 +150,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"../sys/kernel.h"
 end_include
 
 begin_comment
