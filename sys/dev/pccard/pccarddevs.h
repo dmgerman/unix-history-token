@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.46 2003/04/10 06:58:40 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.48 2003/04/18 14:52:14 sanpei Exp   */
 end_comment
 
 begin_comment
@@ -763,7 +763,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_COREGA
+name|PCMCIA_VENDOR_COREGA2
 value|0xc00f
 end_define
 
@@ -4553,6 +4553,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_COREGA
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* Corega K.K. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_DIGITAL
 value|0xffffffff
 end_define
@@ -6428,31 +6439,6 @@ define|#
 directive|define
 name|PCMCIA_STR_SVEC_LANCARD
 value|"SVEC PCMCIA Lan Card"
-end_define
-
-begin_comment
-comment|/*  * vendor ID of PN650TX is LINKSYS (0x0149) and product ID is 0xc1ab, but  * it conflicts with LINKSYS Combo EthernetCard.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_SVEC_PN650TX
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_SVEC_PN650TX
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_SVEC_PN650TX
-value|"SVEC PN650TX 10/100 Dual Speed Fast Ethernet PC Card"
 end_define
 
 begin_define
