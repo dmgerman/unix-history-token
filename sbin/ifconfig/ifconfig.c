@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.31 1997/10/16 03:55:28 peter Exp $"
+literal|"$Id: ifconfig.c,v 1.32 1997/10/27 03:28:44 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5489,9 +5489,19 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|,
+name|MIN
+argument_list|(
 name|hp
 operator|->
 name|h_length
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
