@@ -796,7 +796,7 @@ index|]
 operator|.
 name|fs_spec
 argument_list|,
-literal|"/dev/%s%d%s"
+literal|"%s%d%s"
 argument_list|,
 name|disk_list
 index|[
