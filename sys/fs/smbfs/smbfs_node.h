@@ -78,6 +78,17 @@ begin_comment
 comment|/* node holds parent from recycling */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFLUSHWIRE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* pending flush request */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|smbfs_fctx
