@@ -1866,7 +1866,7 @@ literal|1
 condition|)
 name|wrterror
 argument_list|(
-literal|"mmap(2) failed, check limits.\n"
+literal|"mmap(2) failed, check limits\n"
 argument_list|)
 expr_stmt|;
 comment|/*      * We need a maximum of malloc_pageshift buckets, steal these from the      * front of the page_directory;      */
@@ -3037,7 +3037,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense.\n"
+literal|"junk pointer, too low to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3053,7 +3053,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense.\n"
+literal|"junk pointer, too high to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3090,7 +3090,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer.\n"
+literal|"modified (page-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3176,7 +3176,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer.\n"
+literal|"modified (chunk-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3230,7 +3230,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free.\n"
+literal|"chunk is already free\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3282,7 +3282,7 @@ else|else
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page.\n"
+literal|"pointer to wrong page\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3401,7 +3401,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"page is already free.\n"
+literal|"page is already free\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3415,7 +3415,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"pointer to wrong page.\n"
+literal|"pointer to wrong page\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3432,7 +3432,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (page-) pointer.\n"
+literal|"modified (page-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3833,7 +3833,7 @@ else|else
 block|{
 name|wrterror
 argument_list|(
-literal|"freelist is destroyed.\n"
+literal|"freelist is destroyed\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4024,7 +4024,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"modified (chunk-) pointer.\n"
+literal|"modified (chunk-) pointer\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4053,7 +4053,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"chunk is already free.\n"
+literal|"chunk is already free\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4304,7 +4304,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called.\n"
+literal|"malloc() has never been called\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4331,7 +4331,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too low to make sense.\n"
+literal|"junk pointer, too low to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4345,7 +4345,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"junk pointer, too high to make sense.\n"
+literal|"junk pointer, too high to make sense\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4419,7 +4419,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
@@ -4485,7 +4485,7 @@ name|r
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory.\n"
+literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4520,11 +4520,14 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -4568,10 +4571,14 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|void
 modifier|*
 name|r
+decl_stmt|;
+name|int
+name|err
+init|=
+literal|0
 decl_stmt|;
 name|THREAD_LOCK
 argument_list|()
@@ -4588,11 +4595,14 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"recursive call.\n"
+literal|"recursive call\n"
 argument_list|)
 expr_stmt|;
 name|malloc_active
 operator|--
+expr_stmt|;
+name|THREAD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4610,7 +4620,7 @@ condition|)
 block|{
 name|wrtwarning
 argument_list|(
-literal|"malloc() has never been called.\n"
+literal|"malloc() has never been called\n"
 argument_list|)
 expr_stmt|;
 name|ptr
@@ -4658,6 +4668,14 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+name|err
+operator|=
+operator|(
+name|r
+operator|==
+name|NULL
+operator|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4669,6 +4687,14 @@ name|ptr
 argument_list|,
 name|size
 argument_list|)
+expr_stmt|;
+name|err
+operator|=
+operator|(
+name|r
+operator|==
+name|NULL
+operator|)
 expr_stmt|;
 block|}
 name|UTRACE
@@ -4690,12 +4716,11 @@ if|if
 condition|(
 name|malloc_xmalloc
 operator|&&
-operator|!
-name|r
+name|err
 condition|)
 name|wrterror
 argument_list|(
-literal|"out of memory.\n"
+literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 return|return
