@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	4.5 (Berkeley) 87/10/22"
+literal|"@(#)misc.c	4.6 (Berkeley) 93/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"defs"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_decl_stmt
@@ -359,11 +365,6 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
 specifier|register
 name|char
 modifier|*
