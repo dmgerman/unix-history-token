@@ -172,7 +172,7 @@ name|top_level_config
 operator|.
 name|script_name
 operator|=
-literal|"/etc/dhclient-script"
+literal|"/sbin/dhclient-script"
 expr_stmt|;
 name|top_level_config
 operator|.
