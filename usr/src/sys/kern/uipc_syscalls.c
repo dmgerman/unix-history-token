@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.21	82/07/24	*/
+comment|/*	uipc_syscalls.c	4.22	82/08/08	*/
 end_comment
 
 begin_include
@@ -645,7 +645,9 @@ name|u_error
 operator|=
 name|EFAULT
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 name|u
 operator|.
