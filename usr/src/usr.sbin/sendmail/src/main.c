@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.2	%G%"
+literal|"@(#)main.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,10 +368,6 @@ name|char
 modifier|*
 name|from
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 typedef|typedef
 name|int
 function_decl|(
@@ -409,6 +405,16 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|;
 name|bool
 name|canrename
 decl_stmt|;
@@ -1678,6 +1684,12 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|char
+modifier|*
+name|mktemp
+parameter_list|()
+function_decl|;
 name|mktemp
 argument_list|(
 name|Transcript

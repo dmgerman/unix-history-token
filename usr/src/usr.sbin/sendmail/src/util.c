@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)util.c	3.2	%G%"
+literal|"@(#)util.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,9 +306,19 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
 name|p
 operator|=
 name|xalloc
+argument_list|(
+call|(
+name|unsigned
+call|)
 argument_list|(
 name|strlen
 argument_list|(
@@ -316,6 +326,7 @@ name|s
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|strcpy

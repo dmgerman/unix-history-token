@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.1	%G%"
+literal|"@(#)savemail.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,27 @@ modifier|*
 name|DaemonName
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_if
 if|if

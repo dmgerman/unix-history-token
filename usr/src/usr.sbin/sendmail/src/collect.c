@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.2	%G%"
+literal|"@(#)collect.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,6 +171,20 @@ name|struct
 name|hdrinfo
 modifier|*
 name|hi
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|,
+modifier|*
+name|mktemp
+argument_list|()
 decl_stmt|;
 specifier|extern
 name|char
@@ -737,7 +751,7 @@ block|}
 else|else
 block|{
 specifier|register
-name|int
+name|unsigned
 name|len
 decl_stmt|;
 comment|/* concatenate the two values */
@@ -1559,6 +1573,17 @@ index|[
 literal|50
 index|]
 decl_stmt|;
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|sprintf
+parameter_list|()
+function_decl|;
 name|time
 argument_list|(
 operator|&

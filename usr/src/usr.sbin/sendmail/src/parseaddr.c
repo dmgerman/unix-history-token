@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.2	%G%"
+literal|"@(#)parseaddr.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,12 @@ modifier|*
 modifier|*
 name|pvp
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|strcpy
+parameter_list|()
+function_decl|;
 comment|/* 	**  Initialize and prescan address. 	*/
 name|To
 operator|=

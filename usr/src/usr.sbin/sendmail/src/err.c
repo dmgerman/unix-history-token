@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.1	%G%"
+literal|"@(#)err.c	3.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,6 +101,12 @@ specifier|extern
 name|int
 name|sys_nerr
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|sprintf
+parameter_list|()
+function_decl|;
 name|sprintf
 argument_list|(
 name|errbuf
@@ -287,7 +293,11 @@ if|if
 condition|(
 name|SuprErrs
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|Errors
 operator|++
 expr_stmt|;
