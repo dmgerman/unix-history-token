@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|HZ
-value|1024
+value|1000
 end_define
 
 begin_else
