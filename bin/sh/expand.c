@@ -3114,7 +3114,7 @@ name|expdir
 operator|=
 name|ckmalloc
 argument_list|(
-literal|1024
+literal|4096
 argument_list|)
 expr_stmt|;
 comment|/* I hope this is big enough */
@@ -3125,6 +3125,20 @@ argument_list|,
 name|str
 operator|->
 name|text
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|expdir
+argument_list|)
+operator|>=
+literal|4096
+condition|)
+name|error
+argument_list|(
+literal|"malloc overflow in sh:expand.c in ckmalloc(4096)\n"
 argument_list|)
 expr_stmt|;
 name|ckfree
