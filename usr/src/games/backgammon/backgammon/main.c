@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,7 +708,7 @@ name|execl
 argument_list|(
 name|TEACH
 argument_list|,
-literal|"backgammon"
+literal|"teachgammon"
 argument_list|,
 name|args
 argument_list|,
