@@ -1103,18 +1103,21 @@ if|if
 condition|(
 name|zflag
 condition|)
+block|{
+comment|/* 			 * Increment 'count', so that nulls will be treated 			 * as end-of-line, as well as end-of-argument.  This 			 * is needed so -0 works properly with -I and -L. 			 */
+name|count
+operator|++
+expr_stmt|;
 goto|goto
 name|arg2
 goto|;
+block|}
 goto|goto
 name|addch
 goto|;
 case|case
 literal|'\n'
 case|:
-name|count
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|zflag
@@ -1122,6 +1125,10 @@ condition|)
 goto|goto
 name|addch
 goto|;
+name|count
+operator|++
+expr_stmt|;
+comment|/* Indicate end-of-line (used by -L) */
 comment|/* Quotes do not escape newlines. */
 name|arg1
 label|:
