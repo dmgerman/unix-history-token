@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	v831.c	4.2	83/06/15	*/
+comment|/*	v831.c	4.3	83/06/18	*/
 end_comment
 
 begin_ifdef
@@ -55,7 +55,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)v831.c	4.2 %G%"
+literal|"@(#)v831.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|alarmtr
 parameter_list|()
@@ -164,7 +165,7 @@ name|open
 argument_list|(
 name|acu
 argument_list|,
-name|FRDWR
+name|O_RDWR
 argument_list|)
 operator|)
 operator|<
@@ -309,7 +310,7 @@ name|open
 argument_list|(
 name|DV
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 operator|)
 operator|<
@@ -438,48 +439,35 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|alarmtr
 argument_list|()
-end_macro
-
-begin_block
 block|{
 name|alarm
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 name|longjmp
 argument_list|(
 name|jmpbuf
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
+block|; }
 comment|/*  * Insurance, for some reason we don't seem to be  *  hanging up...  */
-end_comment
-
-begin_macro
 name|v831_disconnect
 argument_list|()
-end_macro
-
-begin_block
-block|{
-name|struct
+block|{         struct
 name|sgttyb
 name|cntrl
-decl_stmt|;
+block|;
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
-expr_stmt|;
+block|;
 ifdef|#
 directive|ifdef
 name|VMUNIX
@@ -492,7 +480,7 @@ literal|"[disconnect: FD=%d]\n"
 argument_list|,
 name|FD
 argument_list|)
-expr_stmt|;
+block|;
 endif|#
 directive|endif
 if|if
@@ -563,15 +551,12 @@ argument_list|(
 name|FD
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
-begin_macro
-name|v831_abort
-argument_list|()
-end_macro
-
-begin_block
+begin_expr_stmt
+unit|}  v831_abort
+operator|(
+operator|)
 block|{
 ifdef|#
 directive|ifdef
@@ -582,14 +567,14 @@ literal|"[abort: AC=%d]\n"
 argument_list|,
 name|AC
 argument_list|)
-expr_stmt|;
+block|;
 endif|#
 directive|endif
 name|sleep
 argument_list|(
 literal|2
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|child
@@ -603,6 +588,9 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|AC
@@ -623,14 +611,23 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|close
 argument_list|(
 name|AC
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|VMUNIX
+end_ifdef
+
+begin_if
 if|if
 condition|(
 name|FD
@@ -646,17 +643,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_expr_stmt
 name|close
 argument_list|(
 name|FD
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -665,9 +668,12 @@ begin_comment
 comment|/*  * Sigh, this probably must be changed at each site.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_macro
+unit|struct
 name|vaconfig
+end_macro
+
+begin_block
 block|{
 name|char
 modifier|*
@@ -680,9 +686,12 @@ name|char
 name|vc_modem
 decl_stmt|;
 block|}
+end_block
+
+begin_expr_stmt
 name|vaconfig
 index|[]
-init|=
+operator|=
 block|{
 block|{
 literal|"/dev/cua0"
@@ -704,8 +713,8 @@ block|{
 literal|0
 block|}
 block|}
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -746,6 +755,7 @@ value|03
 end_define
 
 begin_expr_stmt
+specifier|static
 name|dialit
 argument_list|(
 name|phonenum
