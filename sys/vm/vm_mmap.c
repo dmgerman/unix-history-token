@@ -3146,12 +3146,6 @@ name|uap
 operator|->
 name|vec
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|pmap
 operator|=
 name|vmspace_pmap
@@ -3291,6 +3285,12 @@ name|cend
 condition|)
 block|{
 comment|/* 			 * Check pmap first, it is likely faster, also 			 * it can provide info as to whether we are the 			 * one referencing or modifying the page. 			 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|mincoreinfo
 operator|=
 name|pmap_mincore
@@ -3298,6 +3298,12 @@ argument_list|(
 name|pmap
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 if|if
@@ -3359,18 +3365,6 @@ argument_list|,
 name|pindex
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|current
-operator|->
-name|object
-operator|.
-name|vm_object
-argument_list|)
-expr_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 				 * if the page is resident, then gather information about 				 * it. 				 */
 if|if
 condition|(
@@ -3380,6 +3374,9 @@ block|{
 name|mincoreinfo
 operator|=
 name|MINCORE_INCORE
+expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3424,9 +3421,18 @@ operator||=
 name|MINCORE_REFERENCED_OTHER
 expr_stmt|;
 block|}
-block|}
 name|vm_page_unlock_queues
 argument_list|()
+expr_stmt|;
+block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|current
+operator|->
+name|object
+operator|.
+name|vm_object
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * subyte may page fault.  In case it needs to modify 			 * the map, we release the lock. 			 */
@@ -3616,12 +3622,6 @@ argument_list|)
 expr_stmt|;
 name|done2
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
