@@ -605,17 +605,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* partition 'c' is the full disk and is special */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FULL_DISK_PART
-value|2
-end_define
-
 begin_define
 define|#
 directive|define
@@ -4925,11 +4914,13 @@ parameter_list|)
 block|{
 name|char
 modifier|*
+name|cp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
 modifier|*
 name|cpp
-decl_stmt|,
-modifier|*
-name|cp
 decl_stmt|;
 name|struct
 name|partition
@@ -4943,9 +4934,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|tp
-decl_stmt|,
-modifier|*
-name|s
 decl_stmt|,
 name|line
 index|[
@@ -5117,16 +5105,13 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|s
-operator|=
 operator|*
 name|cpp
-operator|)
 operator|&&
 name|streq
 argument_list|(
-name|s
+operator|*
+name|cpp
 argument_list|,
 name|tp
 argument_list|)
@@ -6318,16 +6303,13 @@ operator|++
 control|)
 if|if
 condition|(
-operator|(
-name|s
-operator|=
 operator|*
 name|cpp
-operator|)
 operator|&&
 name|streq
 argument_list|(
-name|s
+operator|*
+name|cpp
 argument_list|,
 name|cp
 argument_list|)
@@ -6965,12 +6947,11 @@ operator|==
 literal|'*'
 condition|)
 block|{
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|i
 operator|==
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 block|{
 name|pp
@@ -7149,12 +7130,11 @@ name|size
 expr_stmt|;
 block|}
 comment|/* else already in sectors */
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|i
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 name|total_size
 operator|+=
@@ -7192,7 +7172,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"total percentage %d is greater than 100\n"
+literal|"total percentage %lu is greater than 100\n"
 argument_list|,
 name|total_percent
 argument_list|)
@@ -7283,7 +7263,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld sectors available to give to '*' and '%' partitions\n"
+literal|"%ld sectors available to give to '*' and '%%' partitions\n"
 argument_list|,
 name|free_space
 argument_list|)
@@ -7385,12 +7365,11 @@ operator|==
 literal|'*'
 condition|)
 block|{
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|i
 operator|==
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 block|{
 name|pp
@@ -7417,7 +7396,6 @@ block|}
 else|else
 block|{
 comment|/* allow them to be out of order for old-style tables */
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|pp
@@ -7430,15 +7408,18 @@ name|seen_default_offset
 operator|&&
 name|i
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Offset %ld for partition %c overlaps previous partition which ends at %ld\n"
+literal|"Offset %ld for partition %c overlaps previous partition which ends at %lu\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -7472,7 +7453,7 @@ name|current_offset
 operator|&&
 name|i
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 operator|&&
 name|seen_default_offset
 condition|)
@@ -7482,6 +7463,9 @@ name|Warning
 argument_list|(
 literal|"Offset %ld for partition %c doesn't match expected value %ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pp
 operator|->
 name|p_offset
@@ -7495,12 +7479,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|i
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 name|current_offset
 operator|=
@@ -7702,7 +7685,7 @@ if|if
 condition|(
 name|i
 operator|==
-name|FULL_DISK_PART
+name|RAW_PART
 condition|)
 block|{
 if|if
@@ -7807,16 +7790,15 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* partition 2 ('c') is special */
 if|if
 condition|(
 name|j
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 operator|&&
 name|i
 operator|!=
-name|FULL_DISK_PART
+name|RAW_PART
 operator|&&
 name|part_set
 index|[
