@@ -162,7 +162,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/aac/aac_ioctl.h>
+file|<sys/aac_ioctl.h>
 end_include
 
 begin_include
