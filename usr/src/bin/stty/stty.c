@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)stty.c	4.7 (Berkeley) %G%"
+literal|"@(#)stty.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,26 +842,6 @@ block|,
 literal|0
 block|,
 name|LETXACK
-block|,
-literal|"intrup"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|LINTRUP
-block|,
-literal|0
-block|,
-literal|"-intrup"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|LINTRUP
 block|,
 literal|"ctlecho"
 block|,
@@ -2760,13 +2740,6 @@ argument_list|(
 name|LTOSTOP
 argument_list|,
 literal|"-tostop "
-argument_list|)
-expr_stmt|;
-name|lpit
-argument_list|(
-name|LINTRUP
-argument_list|,
-literal|"-intrup "
 argument_list|)
 expr_stmt|;
 if|if
