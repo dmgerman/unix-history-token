@@ -1,11 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)zabs.c	5.1	%G%  */
+comment|/*  *	@(#)zabs.c	5.2	%G%  */
 end_comment
 
-begin_comment
-comment|/*  *	"@(#)zabs.c	1.1"  */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
 
 begin_comment
 comment|/* THIS IS BASED ON TAHOE FP REPRESENTATION */
@@ -130,6 +132,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+endif|tahoe
+end_endif
 
 end_unit
 
