@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -37,67 +37,67 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/trap.h"
+file|<machine/trap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cons.h"
+file|<i386/i386/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kgdb_proto.h"
+file|<i386/i386/kgdb_proto.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/remote-sl.h"
+file|<machine/remote-sl.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)nhpib.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,19 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/nhpibreg.h"
+file|<hp300/dev/nhpibreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hpibvar.h"
+file|<hp300/stand/hpibvar.h>
 end_include
 
 begin_macro

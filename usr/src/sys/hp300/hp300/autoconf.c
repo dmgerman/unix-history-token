@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.35 92/01/22$  *  *	@(#)autoconf.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.35 92/01/22$  *  *	@(#)autoconf.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,91 +10,91 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/map.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dmap.h"
+file|<sys/dmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/reboot.h"
+file|<sys/reboot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/vmparam.h"
+file|<machine/vmparam.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pte.h"
+file|<hp300/hp300/pte.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"isr.h"
+file|<hp300/hp300/isr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/device.h"
+file|<hp/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfreg.h"
+file|<hp/dev/grfreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/hilreg.h"
+file|<hp/dev/hilreg.h>
 end_include
 
 begin_comment
@@ -3324,7 +3324,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"dev/cdvar.h"
+file|<dev/cdvar.h>
 end_include
 
 begin_macro

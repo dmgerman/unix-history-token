@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)cfb.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -32,97 +32,97 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"time.h"
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mman.h"
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/machConst.h"
+file|<machine/machConst.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/machMon.h"
+file|<machine/machMon.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/dc7085cons.h"
+file|<machine/dc7085cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/pmioctl.h"
+file|<machine/pmioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|<mips/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cfbreg.h"
+file|<mips/dev/cfbreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"font.c"
+file|<mips/dev/font.c>
 end_include
 
 begin_define

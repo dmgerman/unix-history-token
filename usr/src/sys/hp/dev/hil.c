@@ -1,126 +1,126 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.38 92/01/21$  *  *	@(#)hil.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.38 92/01/21$  *  *	@(#)hil.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hilreg.h"
+file|<hp/dev/hilreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hilioctl.h"
+file|<hp/dev/hilioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hilvar.h"
+file|<hp/dev/hilvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kbdmap.h"
+file|<hp/dev/kbdmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|<vm/vm_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_map.h"
+file|<vm/vm_map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_kern.h"
+file|<vm/vm_kern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_page.h"
+file|<vm/vm_page.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_pager.h"
+file|<vm/vm_pager.h>
 end_include
 
 begin_ifdef

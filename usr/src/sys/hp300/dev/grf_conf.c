@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_conf.c 1.2 92/01/22$  *  *	@(#)grf_conf.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_conf.c 1.2 92/01/22$  *  *	@(#)grf_conf.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,31 +24,31 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/device.h"
+file|<hp/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfioctl.h"
+file|<hp/dev/grfioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfvar.h"
+file|<hp/dev/grfvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfreg.h"
+file|<hp/dev/grfreg.h>
 end_include
 
 begin_decl_stmt
@@ -232,7 +232,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"hp/dev/itevar.h"
+file|<hp/dev/itevar.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  * OMRON: $Id: clockreg.h,v 1.1 92/05/27 14:24:52 moti Exp $  *  * from: hp300/hp300/clockreg.h	7.3 (Berkeley) 5/7/91  *  *	@(#)clockreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: clockreg.h 1.14 91/01/18$  * OMRON: $Id: clockreg.h,v 1.1 92/05/27 14:24:52 moti Exp $  *  * from: hp300/hp300/clockreg.h	7.3 (Berkeley) 5/7/91  *  *	@(#)clockreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -153,7 +153,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../dev/nvram.h"
+file|<luna68k/dev/nvram.h>
 end_include
 
 begin_struct

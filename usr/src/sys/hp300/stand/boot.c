@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)boot.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/reboot.h"
+file|<sys/reboot.h>
 end_include
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|<stand/saio.h>
 end_include
 
 begin_ifndef
@@ -36,7 +36,7 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_decl_stmt
@@ -114,7 +114,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"samachdep.h"
+file|<hp300/stand/samachdep.h>
 end_include
 
 begin_endif

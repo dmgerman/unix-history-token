@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.24 92/01/21$  *  *	@(#)ite.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.24 92/01/21$  *  *	@(#)ite.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -43,67 +43,67 @@ end_define
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grfioctl.h"
+file|<hp/dev/grfioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grfvar.h"
+file|<hp/dev/grfvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"itevar.h"
+file|<hp/dev/itevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kbdmap.h"
+file|<hp/dev/kbdmap.h>
 end_include
 
 begin_define
@@ -3906,7 +3906,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"cons.h"
+file|<hp/dev/cons.h>
 end_include
 
 begin_ifdef
@@ -3918,7 +3918,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"grfreg.h"
+file|<hp/dev/grfreg.h>
 end_include
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: sd.c 1.2 90/01/23$  *  *	@(#)sd.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory and the Systems  * Programming Group of the University of Utah Computer Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: sd.c 1.2 90/01/23$  *  *	@(#)sd.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,25 +10,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|<stand/saio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"samachdep.h"
+file|<hp300/stand/samachdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/scsireg.h"
+file|<hp300/dev/scsireg.h>
 end_include
 
 begin_struct

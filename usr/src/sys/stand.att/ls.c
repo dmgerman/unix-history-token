@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ls.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ls.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ufs/dir.h"
+file|<sys/ttychars.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"saio.h"
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ttychars.h"
+file|<stand/saio.h>
 end_include
 
 begin_function

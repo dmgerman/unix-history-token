@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Mark Davies of the Department of Computer  * Science, Victoria University of Wellington, New Zealand.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_hy.c 1.1 92/01/22$  *  *	@(#)ite_hy.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Mark Davies of the Department of Computer  * Science, Victoria University of Wellington, New Zealand.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite_hy.c 1.1 92/01/22$  *  *	@(#)ite_hy.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"samachdep.h"
+file|<hp300/stand/samachdep.h>
 end_include
 
 begin_ifdef
@@ -18,25 +18,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/itevar.h"
+file|<hp/dev/itevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/itereg.h"
+file|<hp/dev/itereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../dev/grf_hyreg.h"
+file|<hp300/dev/grf_hyreg.h>
 end_include
 
 begin_define
@@ -762,7 +762,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|"../dev/maskbits.h"
+file|<hp300/dev/maskbits.h>
 end_include
 
 begin_comment

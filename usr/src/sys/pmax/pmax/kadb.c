@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)kadb.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"kdb/defs.h"
+file|<kdb/defs.h>
 end_include
 
 begin_undef
@@ -22,19 +22,19 @@ end_undef
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/trap.h"
+file|<machine/trap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/mips_opcode.h"
+file|<machine/mips_opcode.h>
 end_include
 
 begin_decl_stmt

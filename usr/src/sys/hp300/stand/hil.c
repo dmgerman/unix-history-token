@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.1 89/08/22$  *  *	@(#)hil.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.1 89/08/22$  *  *	@(#)hil.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"samachdep.h"
+file|<hp300/stand/samachdep.h>
 end_include
 
 begin_ifdef
@@ -22,25 +22,25 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/hilreg.h"
+file|<hp/dev/hilreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/kbdmap.h"
+file|<hp/dev/kbdmap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/itevar.h"
+file|<hp/dev/itevar.h>
 end_include
 
 begin_ifndef

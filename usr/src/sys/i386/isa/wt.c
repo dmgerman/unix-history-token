@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wt.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wt.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,44 +29,40 @@ begin_comment
 comment|/*  *  *  Copyright 1988, 1989 by Intel Corporation  *  *	Support Bell Tech QIC-02 and WANGTEK QIC-36 or QIC-02  */
 end_comment
 
-begin_comment
-comment|/*#include<sys/errno.h> #include<sys/signal.h> #include<sys/types.h>*/
-end_comment
-
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/wtreg.h"
+file|<i386/isa/wtreg.h>
 end_include
 
 begin_ifdef
@@ -4978,13 +4974,13 @@ end_block
 begin_include
 include|#
 directive|include
-file|"i386/isa/isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"i386/isa/icu.h"
+file|<i386/isa/icu.h>
 end_include
 
 begin_decl_stmt

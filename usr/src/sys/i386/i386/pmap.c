@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -18,125 +18,132 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_kern.h"
+file|<vm/vm_kern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_page.h"
+file|<vm/vm_page.h>
 end_include
-
-begin_comment
-comment|/*#include "vm/vm_pageout.h"*/
-end_comment
-
-begin_comment
-comment|/*#include "machine/isa.h"*/
-end_comment
-
-begin_comment
-comment|/*  * Allocate various and sundry SYSMAPs used in the days of old VM  * and not yet converted.  XXX.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSDVM_COMPAT
-value|1
-end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|NOTDEF
 end_ifdef
 
-begin_struct
-struct|struct
+begin_expr_stmt
+name|include
+operator|<
+name|vm
+operator|/
+name|vm_pageout
+operator|.
+name|h
+operator|>
+name|include
+operator|<
+name|machine
+operator|/
+name|isa
+operator|.
+name|h
+operator|>
+endif|#
+directive|endif
+comment|/*  * Allocate various and sundry SYSMAPs used in the days of old VM  * and not yet converted.  XXX.  */
+define|#
+directive|define
+name|BSDVM_COMPAT
+value|1
+ifdef|#
+directive|ifdef
+name|DEBUG
+expr|struct
 block|{
 name|int
 name|kernel
-decl_stmt|;
+block|;
 comment|/* entering kernel mapping */
 name|int
 name|user
-decl_stmt|;
+block|;
 comment|/* entering user mapping */
 name|int
 name|ptpneeded
-decl_stmt|;
+block|;
 comment|/* needed to allocate a PT page */
 name|int
 name|pwchange
-decl_stmt|;
+block|;
 comment|/* no mapping change, just wiring or protection */
 name|int
 name|wchange
-decl_stmt|;
+block|;
 comment|/* no mapping change, just wiring */
 name|int
 name|mchange
-decl_stmt|;
+block|;
 comment|/* was mapped but mapping to different page */
 name|int
 name|managed
-decl_stmt|;
+block|;
 comment|/* a managed page */
 name|int
 name|firstpv
-decl_stmt|;
+block|;
 comment|/* first mapping for this PA */
 name|int
 name|secondpv
-decl_stmt|;
+block|;
 comment|/* second mapping for this PA */
 name|int
 name|ci
-decl_stmt|;
+block|;
 comment|/* cache inhibited */
 name|int
 name|unmanaged
-decl_stmt|;
+block|;
 comment|/* not a managed page */
 name|int
 name|flushes
-decl_stmt|;
+block|;
 comment|/* cache flushes */
 block|}
 name|enter_stats
-struct|;
-end_struct
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -584,7 +591,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|"msgbuf.h"
+file|<sys/msgbuf.h>
 end_include
 
 begin_comment

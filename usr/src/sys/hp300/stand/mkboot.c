@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mkboot.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mkboot.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -55,25 +55,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/exec.h"
+file|<sys/exec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"volhdr.h"
+file|<hp300/stand/volhdr.h>
 end_include
 
 begin_include
@@ -1403,13 +1403,13 @@ end_function
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"/usr/include/time.h"
+file|<time.h>
 end_include
 
 begin_comment

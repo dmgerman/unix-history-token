@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,55 +24,55 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mbuf.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"socket.h"
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"syslog.h"
+file|<sys/syslog.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if.h"
+file|<net/if.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/netisr.h"
+file|<net/netisr.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"net/if_types.h"
+file|<net/if_types.h>
 end_include
 
 begin_ifdef
@@ -84,7 +84,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"netccitt/x25.h"
+file|<netccitt/x25.h>
 end_include
 
 begin_decl_stmt
@@ -105,7 +105,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"if_apxreg.h"
+file|<i386/isa/if_apxreg.h>
 end_include
 
 begin_decl_stmt
@@ -373,7 +373,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"isa_device.h"
+file|<i386/isa/isa_device.h>
 end_include
 
 begin_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.23 92/02/28$  *  *	@(#)ite.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.23 92/02/28$  *  *	@(#)ite.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"samachdep.h"
+file|<hp300/stand/samachdep.h>
 end_include
 
 begin_ifdef
@@ -22,31 +22,31 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/cons.h"
+file|<hp/dev/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/device.h"
+file|<hp/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/itevar.h"
+file|<hp/dev/itevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfreg.h"
+file|<hp/dev/grfreg.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -45,85 +45,85 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/disklabel.h"
+file|<sys/disklabel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/device.h"
+file|<hp/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsireg.h"
+file|<hp300/dev/scsireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|<vm/vm_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/lock.h"
+file|<vm/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_prot.h"
+file|<vm/vm_prot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/pmap.h"
+file|<vm/pmap.h>
 end_include
 
 begin_function_decl

@@ -1,150 +1,150 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.65 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)kern_exec.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"filedesc.h"
+file|<sys/filedesc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acct.h"
+file|<sys/acct.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"exec.h"
+file|<sys/exec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ktrace.h"
+file|<sys/ktrace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mman.h"
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|<vm/vm_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_map.h"
+file|<vm/vm_map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_kern.h"
+file|<vm/vm_kern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_pager.h"
+file|<vm/vm_pager.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signalvar.h"
+file|<sys/signalvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kinfo_proc.h"
+file|<sys/kinfo_proc.h>
 end_include
 
 begin_ifdef
@@ -156,7 +156,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_comment
@@ -166,7 +166,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"hp/hpux/hpux_exec.h"
+file|<hp/hpux/hpux_exec.h>
 end_include
 
 begin_endif

@@ -17,7 +17,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -62,55 +62,55 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/device.h"
+file|<hp/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsivar.h"
+file|<hp300/dev/scsivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsireg.h"
+file|<hp300/dev/scsireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"dmavar.h"
+file|<hp300/dev/dmavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../hp300/isr.h"
+file|<hp300/hp300/isr.h>
 end_include
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)st.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)st.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,61 +28,61 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mtio.h"
+file|<sys/mtio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/tprintf.h"
+file|<sys/tprintf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"device.h"
+file|<luna68k/dev/device.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsireg.h"
+file|<luna68k/dev/scsireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"scsivar.h"
+file|<luna68k/dev/scsivar.h>
 end_include
 
 begin_function_decl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Mark Davies of the Department of Computer  * Science, Victoria University of Wellington, New Zealand.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_hy.c 1.1 92/01/22$  *  *	@(#)grf_hy.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Mark Davies of the Department of Computer  * Science, Victoria University of Wellington, New Zealand.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: grf_hy.c 1.1 92/01/22$  *  *	@(#)grf_hy.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,37 +24,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfioctl.h"
+file|<hp/dev/grfioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"hp/dev/grfvar.h"
+file|<hp/dev/grfvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"grf_hyreg.h"
+file|<hp300/dev/grf_hyreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_decl_stmt
