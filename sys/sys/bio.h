@@ -27,24 +27,6 @@ name|bio
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|buf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|g_consumer
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|g_provider
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|iodone_chain
@@ -320,6 +302,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
 
 begin_function
 specifier|static
