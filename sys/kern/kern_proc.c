@@ -717,7 +717,7 @@ comment|/* INVARIANTS checks go here */
 if|#
 directive|if
 literal|0
-comment|/* See comment in proc_ctor about seperating things */
+comment|/* See comment in proc_ctor about separating things */
 block|mtx_destroy(&p->p_mtx);
 endif|#
 directive|endif
@@ -1068,7 +1068,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXXKSE change name */
-comment|/* link it in now that it's consitant */
+comment|/* link it in now that it's consistent */
 name|p
 operator|->
 name|p_numksegrps
@@ -1279,7 +1279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * No new KSEG: first call: use current KSE, don't schedule an upcall  * All other situations, do alloate a new KSE and schedule an upcall on it.  */
+comment|/*   * No new KSEG: first call: use current KSE, don't schedule an upcall  * All other situations, do allocate a new KSE and schedule an upcall on it.  */
 end_comment
 
 begin_comment
@@ -1505,7 +1505,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Don't set this until we are truely ready, because 		 * things will start acting differently.  Return to the 		 * calling code for the first time.  Assuming we set up 		 * the mailboxes right, all syscalls after this will be 		 * asynchronous. 		 */
+comment|/* 		 * Don't set this until we are truly ready, because 		 * things will start acting differently.  Return to the 		 * calling code for the first time.  Assuming we set up 		 * the mailboxes right, all syscalls after this will be 		 * asynchronous. 		 */
 name|td
 operator|->
 name|td_proc
@@ -3733,7 +3733,7 @@ operator|==
 name|PRS_NORMAL
 condition|)
 block|{
-comment|/*  XXXKSE very aproximate */
+comment|/*  XXXKSE very approximate */
 if|if
 condition|(
 operator|(

@@ -1303,7 +1303,7 @@ operator|=
 name|jobnum
 expr_stmt|;
 block|}
-comment|/* 		 * If there is anything left in the numstr, and if the 		 * original string did not include a userid or a hostname, 		 * then this might be the ancient form of '\d+hostname' 		 * (with no seperator between jobnum and hostname).  Accept 		 * that for backwards compatibility, but otherwise any 		 * remaining characters mean a user-error.  Note that the 		 * ancient form accepted only a single number, but this 		 * will also accept a range of numbers. 		 */
+comment|/* 		 * If there is anything left in the numstr, and if the 		 * original string did not include a userid or a hostname, 		 * then this might be the ancient form of '\d+hostname' 		 * (with no separator between jobnum and hostname).  Accept 		 * that for backwards compatibility, but otherwise any 		 * remaining characters mean a user-error.  Note that the 		 * ancient form accepted only a single number, but this 		 * will also accept a range of numbers. 		 */
 if|if
 condition|(
 operator|*

@@ -567,7 +567,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* stream the output, seperate with commas */
+comment|/* stream the output, separate with commas */
 end_comment
 
 begin_decl_stmt
