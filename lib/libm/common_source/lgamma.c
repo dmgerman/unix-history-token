@@ -204,7 +204,7 @@ value|(x0 - .218)
 end_define
 
 begin_comment
-comment|/* /* Constants for approximation in [1.244,1.712] */
+comment|/*  * Constants for approximation in [1.244,1.712] */
 end_comment
 
 begin_define
