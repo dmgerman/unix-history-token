@@ -171,6 +171,10 @@ name|sb
 operator|->
 name|st_ino
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|->
 name|st_blocks
@@ -270,6 +274,10 @@ name|printf
 argument_list|(
 literal|"%8qd "
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|->
 name|st_size
