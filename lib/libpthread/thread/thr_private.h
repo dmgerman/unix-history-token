@@ -244,8 +244,6 @@ directive|define
 name|GET_STACK_JB
 parameter_list|(
 name|jb
-parameter_list|,
-name|stk
 parameter_list|)
 value|((unsigned long)((jb)[0]._jb[R_SP + 4]))
 end_define
@@ -256,8 +254,6 @@ directive|define
 name|GET_STACK_SJB
 parameter_list|(
 name|sjb
-parameter_list|,
-name|stk
 parameter_list|)
 value|((unsigned long)((sjb)[0]._sjb[R_SP + 4]))
 end_define
@@ -268,8 +264,6 @@ directive|define
 name|GET_STACK_UC
 parameter_list|(
 name|ucp
-parameter_list|,
-name|stk
 parameter_list|)
 value|((ucp)->uc_mcontext.mc_regs[R_SP])
 end_define
