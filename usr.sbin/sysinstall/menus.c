@@ -12455,11 +12455,11 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"System Security Options Menu"
 block|,
-literal|"This menu allows you to configure aspects of the operating systme\n"
-literal|"policy.  If configured improperly, these settings may result in\n"
-literal|"substantially impaired system operation.  Please read the system\n"
-literal|"documentation carefully before modifying these settings.  Many\n"
-literal|"settings will take affect only following a system reboot."
+literal|"This menu allows you to configure aspects of the operating system security\n"
+literal|"policy.  Please read the system documentation carefully before modifying\n"
+literal|"these settings, as they may cause service disruption if used improperly.\n"
+literal|"\n"
+literal|"Most settings will take affect only following a system reboot."
 block|,
 literal|"Configure system security options"
 block|,
