@@ -5713,7 +5713,7 @@ literal|16
 argument_list|,
 name|b
 operator|->
-name|bufsize
+name|maxsize
 operator|/
 literal|2
 argument_list|)
