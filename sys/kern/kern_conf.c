@@ -2702,8 +2702,13 @@ name|si_devsw
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* already NULL for SI_ALIAS */
 while|while
 condition|(
+name|csw
+operator|!=
+name|NULL
+operator|&&
 name|csw
 operator|->
 name|d_purge
@@ -2755,6 +2760,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|csw
+operator|!=
+name|NULL
+operator|&&
 name|csw
 operator|->
 name|d_purge
