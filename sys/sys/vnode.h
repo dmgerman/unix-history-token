@@ -1384,6 +1384,36 @@ define|\
 value|(((vp)->v_flag& VFREE)&& \ 	 ((vp)->v_holdcnt || (vp)->v_usecount))
 end_define
 
+begin_define
+define|#
+directive|define
+name|VI_LOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|mtx_lock(&(vp)->v_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_TRYLOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|mtx_trylock(&(vp)->v_interlock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VI_UNLOCK
+parameter_list|(
+name|vp
+parameter_list|)
+value|mtx_unlock(&(vp)->v_interlock)
+end_define
+
 begin_endif
 endif|#
 directive|endif
