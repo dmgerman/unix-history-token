@@ -2066,6 +2066,10 @@ argument_list|(
 name|of
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|url
+condition|)
 name|fetchFreeURL
 argument_list|(
 name|url
