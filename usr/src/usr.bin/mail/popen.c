@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.17 (Berkeley) %G%"
+literal|"@(#)popen.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,6 +288,24 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * XXX  * The old mail code used getdtablesize() to return the max number of  * file descriptors.  That's a *real* big number now.  Fake it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_FILE_DESCRIPTORS
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_FILE_DESCRIPTORS_TO_CLOSE
+value|20
+end_define
+
 begin_function
 name|FILE
 modifier|*
@@ -333,22 +351,17 @@ literal|0
 condition|)
 name|pid
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
-name|unsigned
+name|u_int
 operator|)
 sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
 operator|*
-name|getdtablesize
-argument_list|()
+name|MAX_FILE_DESCRIPTORS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1085,8 +1098,7 @@ for|for
 control|(
 name|i
 operator|=
-name|getdtablesize
-argument_list|()
+name|MAX_FILE_DESCRIPTORS_TO_CLOSE
 init|;
 operator|--
 name|i
