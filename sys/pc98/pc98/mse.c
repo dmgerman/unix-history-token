@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.10 1997/03/24 12:29:37 bde Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.11 1997/07/21 13:11:06 kato Exp $  */
 end_comment
 
 begin_comment
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -162,8 +168,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|mseselect
+name|d_poll_t
+name|msepoll
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +205,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* mse */
-name|mseselect
+name|msepoll
 block|,
 name|nommap
 block|,
@@ -2080,17 +2086,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mseselect: check for mouse input to be processed.  */
+comment|/*  * msepoll: check for mouse input to be processed.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mseselect
+name|msepoll
 parameter_list|(
 name|dev
 parameter_list|,
-name|rw
+name|events
 parameter_list|,
 name|p
 parameter_list|)
@@ -2098,7 +2104,7 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
-name|rw
+name|events
 decl_stmt|;
 name|struct
 name|proc
@@ -2124,11 +2130,26 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
 name|s
 operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|events
+operator|&
+operator|(
+name|POLLIN
+operator||
+name|POLLRDNORM
+operator|)
+condition|)
 if|if
 condition|(
 name|sc
@@ -2161,19 +2182,19 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
+name|revents
+operator||=
+name|events
+operator|&
 operator|(
-literal|1
+name|POLLIN
+operator||
+name|POLLRDNORM
 operator|)
-return|;
-block|}
-comment|/* 	 * Since this is an exclusive open device, any previous proc. 	 * pointer is trash now, so we can just assign it. 	 */
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Since this is an exclusive open device, any previous 			 * proc pointer is trash now, so we can just assign it. 			 */
 name|selrecord
 argument_list|(
 name|p
@@ -2184,6 +2205,7 @@ operator|->
 name|sc_selp
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -2191,7 +2213,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|revents
 operator|)
 return|;
 block|}

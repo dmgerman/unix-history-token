@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1994 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.10 1997/09/04 13:20:33 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.11 1997/09/07 12:46:44 kato Exp $  */
 end_comment
 
 begin_include
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<sys/filio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
 end_include
 
 begin_include
@@ -264,7 +270,7 @@ name|struct
 name|selinfo
 name|wsel
 decl_stmt|;
-comment|/* select status */
+comment|/* select/poll status */
 name|char
 name|non_block
 decl_stmt|;
@@ -443,8 +449,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_select_t
-name|pcaselect
+name|d_poll_t
+name|pcapoll
 decl_stmt|;
 end_decl_stmt
 
@@ -480,7 +486,7 @@ block|,
 name|nodevtotty
 block|,
 comment|/* pcaudio */
-name|pcaselect
+name|pcapoll
 block|,
 name|nommap
 block|,
@@ -2308,7 +2314,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if(pca_status.current> 2) pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1] || !pca_status.in_use[2]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if(pca_status.current> 2) pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcapoll(dev_t dev, int events, struct proc *p) {  	int s;  	struct proc *p1; 	int revents = 0;   	s = spltty();  	if (events& (POLLOUT | POLLWRNORM))  		if (!pca_status.in_use[0] || !pca_status.in_use[1] ||  		    !pca_status.in_use[2])  			revents |= events& (POLLOUT | POLLWRNORM);  		else { 			if (pca_status.wsel.si_pid&& 			    (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait) 				pca_status.wsel.si_flags = SI_COLL; 			else 				pca_status.wsel.si_pid = p->p_pid; 		}  	splx(s); 	return (revents); }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
 end_function
 
 begin_endif
