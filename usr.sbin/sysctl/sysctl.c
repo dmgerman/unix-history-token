@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.3 1995/02/09 23:16:17 wollman Exp $"
+literal|"$Id: sysctl.c,v 1.4 1995/02/16 00:28:42 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -454,6 +454,13 @@ define|#
 directive|define
 name|CONSDEV
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|DUMPDEV
+value|0x00000008
 end_define
 
 begin_function
@@ -1243,6 +1250,14 @@ operator||=
 name|BOOTTIME
 expr_stmt|;
 break|break;
+case|case
+name|KERN_DUMPDEV
+case|:
+name|special
+operator||=
+name|DUMPDEV
+expr_stmt|;
+break|break;
 block|}
 break|break;
 case|case
@@ -1733,7 +1748,11 @@ if|if
 condition|(
 name|special
 operator|&
+operator|(
 name|CONSDEV
+operator||
+name|DUMPDEV
+operator|)
 condition|)
 block|{
 name|dev_t
@@ -1746,6 +1765,31 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|special
+operator|&
+name|DUMPDEV
+operator|)
+operator|&&
+name|dev
+operator|==
+name|NODEV
+operator|&&
+operator|!
+name|nflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s = disabled\n"
+argument_list|,
+name|string
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -1763,7 +1807,15 @@ name|devname
 argument_list|(
 name|dev
 argument_list|,
+operator|(
+name|special
+operator|&
+name|CONSDEV
+operator|)
+condition|?
 name|S_IFCHR
+else|:
+name|S_IFBLK
 argument_list|)
 argument_list|)
 expr_stmt|;
