@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.20 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,7 @@ name|NOSTR
 condition|)
 name|shell
 operator|=
-name|SHELL
+name|_PATH_CSHELL
 expr_stmt|;
 operator|(
 name|void
@@ -221,7 +221,7 @@ name|NOSTR
 condition|)
 name|shell
 operator|=
-name|SHELL
+name|_PATH_CSHELL
 expr_stmt|;
 operator|(
 name|void
@@ -531,7 +531,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-name|HELPFILE
+name|_PATH_HELP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -542,7 +542,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|HELPFILE
+name|_PATH_HELP
 argument_list|)
 expr_stmt|;
 return|return

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ptx.c	4.4 (Berkeley) %G%"
+literal|"@(#)ptx.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*	permuted title index 	ptx [-t] [-i ignore] [-o only] [-w num] [-f] [input] [output] 	Ptx reads the input file and permutes on words in it. 	It excludes all words in the ignore file. 	Alternately it includes words in the only file. 	if neither is given it excludes the words in /usr/lib/eign.  	The width of the output line can be changed to num 	characters.  If omitted 72 is default unless troff than 100. 	the -f flag tells the program to fold the output 	the -t flag says the output is for troff and the 	output is then wider.  	*/
+comment|/*	permuted title index 	ptx [-t] [-i ignore] [-o only] [-w num] [-f] [input] [output] 	Ptx reads the input file and permutes on words in it. 	It excludes all words in the ignore file. 	Alternately it includes words in the only file. 	if neither is given it excludes the words in _PATH_EIGN.  	The width of the output line can be changed to num 	characters.  If omitted 72 is default unless troff than 100. 	the -f flag tells the program to fold the output 	the -t flag says the output is for troff and the 	output is then wider.  	*/
 end_comment
 
 begin_include
@@ -46,25 +46,17 @@ directive|include
 file|<signal.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEFLTX
-value|"/usr/lib/eign"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_define
 define|#
 directive|define
 name|TILDE
 value|0177
-end_define
-
-begin_define
-define|#
-directive|define
-name|SORT
-value|"/usr/bin/sort"
 end_define
 
 begin_define
@@ -293,7 +285,7 @@ name|char
 name|sortfile
 index|[]
 init|=
-literal|"/tmp/ptxsXXXXX"
+name|_PATH_TMP
 decl_stmt|;
 end_decl_stmt
 
@@ -495,7 +487,7 @@ end_comment
 begin_expr_stmt
 name|xfile
 operator|=
-name|DEFLTX
+name|_PATH_EIGN
 expr_stmt|;
 end_expr_stmt
 
@@ -1210,9 +1202,9 @@ case|:
 comment|/* child */
 name|execl
 argument_list|(
-name|SORT
+name|_PATH_SORT
 argument_list|,
-name|SORT
+literal|"sort"
 argument_list|,
 name|sortopt
 argument_list|,

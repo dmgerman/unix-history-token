@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chpass.c	5.10 (Berkeley) %G%"
+literal|"@(#)chpass.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,13 +115,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<chpass.h>
+file|<strings.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|"chpass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -1291,7 +1297,7 @@ name|tfile
 decl_stmt|;
 name|tfile
 operator|=
-literal|"/tmp/passwd.XXXXXX"
+name|_PATH_TMP
 expr_stmt|;
 if|if
 condition|(

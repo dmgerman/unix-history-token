@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.20 (Berkeley) %G%"
+literal|"@(#)fio.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1595,7 +1595,7 @@ name|NOSTR
 condition|)
 name|shell
 operator|=
-name|SHELL
+name|_PATH_CSHELL
 expr_stmt|;
 name|pid
 operator|=

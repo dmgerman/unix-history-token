@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.13 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -1640,7 +1646,7 @@ expr_stmt|;
 block|}
 name|execl
 argument_list|(
-literal|"/usr/lib/sendmail"
+name|_PATH_SENDMAIL
 argument_list|,
 literal|"sendmail"
 argument_list|,
@@ -1657,7 +1663,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"vacation: can't exec /usr/lib/sendmail.\n"
+literal|"vacation: can't exec %s.\n"
+argument_list|,
+name|_PATH_SENDMAIL
 argument_list|)
 expr_stmt|;
 name|myexit

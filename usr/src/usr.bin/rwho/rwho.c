@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	5.3 (Berkeley) %G%"
+literal|"@(#)rwho.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,13 +146,6 @@ define|#
 directive|define
 name|WHDRSIZE
 value|(sizeof (wd) - sizeof (wd.wd_we))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RWHODIR
-value|"/usr/spool/rwho"
 end_define
 
 begin_comment
@@ -319,7 +312,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 operator|||
 operator|(
@@ -336,7 +329,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	5.5 (Berkeley) %G%"
+literal|"@(#)ruptime.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,13 +127,6 @@ define|#
 directive|define
 name|WHDRSIZE
 value|(sizeof (awhod) - sizeof (awhod.wd_we))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RWHODIR
-value|"/usr/spool/rwho"
 end_define
 
 begin_define
@@ -369,7 +362,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 operator|||
 operator|(
@@ -386,7 +379,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit

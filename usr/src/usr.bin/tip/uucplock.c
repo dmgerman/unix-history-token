@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucplock.c	5.3 (Berkeley) %G%"
+literal|"@(#)uucplock.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,24 +52,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_comment
-comment|/* pick the directory naming scheme you are using */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCKDIRNAME
-value|"/usr/spool/uucp/LCK..%s"
-end_define
-
-begin_comment
-comment|/**/
-end_comment
-
-begin_comment
-comment|/* #define LOCKDIRNAME	"/usr/spool/uucp/LCK/LCK..%s"	/**/
-end_comment
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_comment
 comment|/*   * uucp style locking routines  * return: 0 - success  * 	  -1 - failure  */
@@ -105,7 +92,7 @@ name|tbuf
 index|[
 sizeof|sizeof
 argument_list|(
-name|LOCKDIRNAME
+name|_PATH_LOCKDIRNAME
 argument_list|)
 operator|+
 name|MAXNAMLEN
@@ -122,7 +109,7 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-name|LOCKDIRNAME
+name|_PATH_LOCKDIRNAME
 argument_list|,
 name|ttyname
 argument_list|)
@@ -385,7 +372,7 @@ name|tbuf
 index|[
 sizeof|sizeof
 argument_list|(
-name|LOCKDIRNAME
+name|_PATH_LOCKDIRNAME
 argument_list|)
 operator|+
 name|MAXNAMLEN
@@ -398,7 +385,7 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-name|LOCKDIRNAME
+name|_PATH_LOCKDIRNAME
 argument_list|,
 name|ttyname
 argument_list|)

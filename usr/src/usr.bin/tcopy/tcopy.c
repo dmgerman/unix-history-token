@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tcopy.c	5.11 (Berkeley) %G%"
+literal|"@(#)tcopy.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,25 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -94,6 +88,18 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -106,19 +112,6 @@ define|#
 directive|define
 name|NOCOUNT
 value|(-2)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEFTAPE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DEFTAPE
-value|"/dev/rmt0"
 end_define
 
 begin_decl_stmt
@@ -336,7 +329,7 @@ argument_list|()
 expr_stmt|;
 name|inf
 operator|=
-name|DEFTAPE
+name|_PATH_DEFTAPE
 expr_stmt|;
 break|break;
 case|case

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.9 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"tip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -4172,7 +4178,7 @@ name|NOSTR
 condition|)
 name|Shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|close
 argument_list|(

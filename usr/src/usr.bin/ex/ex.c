@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	7.6.1.1 (Berkeley) %G%"
+literal|"@(#)ex.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|"ex_tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifdef
@@ -953,7 +959,7 @@ argument_list|()
 expr_stmt|;
 name|execl
 argument_list|(
-name|EXRECOVER
+name|_PATH_EXRECOVER
 argument_list|,
 literal|"exrecover"
 argument_list|,
@@ -964,7 +970,7 @@ argument_list|)
 expr_stmt|;
 name|filioerr
 argument_list|(
-name|EXRECOVER
+name|_PATH_EXRECOVER
 argument_list|)
 expr_stmt|;
 name|ex_exit

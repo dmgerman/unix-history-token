@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.18 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1325,7 +1325,7 @@ literal|'\0'
 condition|)
 name|cp
 operator|=
-name|MORE
+name|_PATH_MORE
 expr_stmt|;
 name|obuf
 operator|=

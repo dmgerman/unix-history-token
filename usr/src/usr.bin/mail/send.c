@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.17 (Berkeley) %G%"
+literal|"@(#)send.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1397,7 +1397,7 @@ if|if
 condition|(
 name|access
 argument_list|(
-name|POSTAGE
+name|_PATH_MAIL_LOG
 argument_list|,
 literal|0
 argument_list|)
@@ -1416,7 +1416,7 @@ name|postage
 operator|=
 name|fopen
 argument_list|(
-name|POSTAGE
+name|_PATH_MAIL_LOG
 argument_list|,
 literal|"a"
 argument_list|)
@@ -1518,7 +1518,7 @@ expr_stmt|;
 else|else
 name|cp
 operator|=
-name|SENDMAIL
+name|_PATH_SENDMAIL
 expr_stmt|;
 name|execv
 argument_list|(

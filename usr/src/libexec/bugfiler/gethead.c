@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.6 (Berkeley) %G%"
+literal|"@(#)gethead.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -285,7 +291,7 @@ name|distf
 decl_stmt|;
 name|distf
 operator|=
-literal|"/tmp/BUG_XXXXXX"
+name|_PATH_TMP
 expr_stmt|;
 if|if
 condition|(

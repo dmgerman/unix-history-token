@@ -91,6 +91,12 @@ directive|include
 file|<sys/stat.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_struct
 struct|struct
 name|utimbuf
@@ -553,7 +559,7 @@ name|char
 name|ttyname
 index|[]
 init|=
-literal|"/dev/tty"
+name|_PATH_TTY
 decl_stmt|;
 end_decl_stmt
 

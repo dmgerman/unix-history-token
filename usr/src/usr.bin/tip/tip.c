@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	5.8 (Berkeley) %G%"
+literal|"@(#)tip.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|"tip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -611,7 +617,7 @@ name|NOSTR
 condition|)
 name|PH
 operator|=
-literal|"/etc/phones"
+name|_PATH_PHONES
 expr_stmt|;
 name|vinit
 argument_list|()

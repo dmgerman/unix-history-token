@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.17 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,7 +209,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<paths.h>
 end_include
 
 begin_ifdef
@@ -1103,7 +1103,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|_PATH_SWAP
+name|_PATH_DRUM
 argument_list|)
 expr_stmt|;
 return|return
@@ -1196,7 +1196,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|_PATH_SWAP
+name|_PATH_DRUM
 argument_list|)
 expr_stmt|;
 return|return
@@ -3325,7 +3325,7 @@ name|swap
 operator|=
 name|open
 argument_list|(
-name|_PATH_SWAP
+name|_PATH_DRUM
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3350,7 +3350,7 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|,
-name|_PATH_SWAP
+name|_PATH_DRUM
 argument_list|)
 expr_stmt|;
 name|exit

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.11 (Berkeley) %G%"
+literal|"@(#)ex_subr.c	7.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"ex_vis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -3575,7 +3581,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|EXPRESERVE
+name|_PATH_EXPRESERVE
 argument_list|,
 literal|"expreserve"
 argument_list|,

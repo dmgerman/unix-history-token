@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)look.c	4.6 (Berkeley) %G%"
+literal|"@(#)look.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -138,7 +144,7 @@ name|char
 modifier|*
 name|filename
 init|=
-literal|"/usr/share/dict/words"
+name|_PATH_WORDS
 decl_stmt|;
 specifier|register
 name|off_t

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apply.c	5.2 (Berkeley) %G%"
+literal|"@(#)apply.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ end_endif
 begin_comment
 comment|/*%cc -s -O %  * apply - apply a command to a set of arguments  *  *	apply echo * == ls  *	apply -2 cmp A1 B1 A2 B2   compares A's with B's  *	apply "ln %1 /usr/fred/dir" *  duplicates a directory  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_include
 include|#
@@ -682,7 +688,7 @@ name|shell
 condition|?
 name|shell
 else|:
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,

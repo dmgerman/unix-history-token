@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)crypt.c	4.3 (Berkeley) %G%"
+literal|"@(#)crypt.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -219,16 +225,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/usr/lib/makekey"
-argument_list|,
-literal|"-"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-literal|"/lib/makekey"
+name|_PATH_MAKEKEY
 argument_list|,
 literal|"-"
 argument_list|,

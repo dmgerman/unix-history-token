@@ -1,116 +1,69 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)pathnames.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)pathnames.h	5.7 (Berkeley) %G%  */
 end_comment
 
-begin_comment
-comment|/*  * Declarations and constants specific to an installation.  *  * Vax/Unix version 7.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
 directive|define
-name|SENDMAIL
-value|"/usr/lib/sendmail"
+name|_PATH_EX
+value|"/usr/bin/ex"
 end_define
 
-begin_comment
-comment|/* Name of classy mail deliverer */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|EDITOR
-value|"/usr/ucb/ex"
+name|_PATH_HELP
+value|"/usr/share/misc/Mail.help"
 end_define
 
-begin_comment
-comment|/* Name of text editor */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|VISUAL
-value|"/usr/ucb/vi"
+name|_PATH_TILDE
+value|"/usr/share/misc/Mail.tildehelp"
 end_define
 
-begin_comment
-comment|/* Name of display editor */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|SHELL
-value|"/bin/csh"
-end_define
-
-begin_comment
-comment|/* Standard shell */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MORE
-value|"/usr/ucb/more"
-end_define
-
-begin_comment
-comment|/* Standard output pager */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HELPFILE
-value|"/usr/lib/Mail.help"
-end_define
-
-begin_comment
-comment|/* Name of casual help file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|THELPFILE
-value|"/usr/lib/Mail.tildehelp"
-end_define
-
-begin_comment
-comment|/* Name of casual tilde help */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|POSTAGE
+name|_PATH_MAIL_LOG
 value|"/usr/adm/maillog"
 end_define
 
-begin_comment
-comment|/* Where to audit mail sending */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|MASTER
-value|"/usr/lib/Mail.rc"
+name|_PATH_MASTER_RC
+value|"/usr/share/misc/Mail.rc"
 end_define
 
 begin_define
 define|#
 directive|define
-name|APPEND
+name|_PATH_MBOX
+value|"/var/spool/mail/"
 end_define
 
-begin_comment
-comment|/* New mail goes to end of mailbox */
-end_comment
+begin_define
+define|#
+directive|define
+name|_PATH_MORE
+value|"/usr/bin/more"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAIL
+value|"/usr/libexec/sendmail"
+end_define
 
 end_unit
 

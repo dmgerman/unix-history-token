@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.8 (Berkeley) %G%"
+literal|"@(#)redist.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<bug.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment

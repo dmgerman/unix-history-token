@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.17 (Berkeley) %G%"
+literal|"@(#)collect.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1269,7 +1269,7 @@ name|fbuf
 operator|=
 name|fopen
 argument_list|(
-name|THELPFILE
+name|_PATH_TILDE
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1280,7 +1280,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|THELPFILE
+name|_PATH_TILDE
 argument_list|)
 expr_stmt|;
 break|break;

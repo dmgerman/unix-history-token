@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)field.c	5.8 (Berkeley) %G%"
+literal|"@(#)field.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<chpass.h>
+file|"chpass.h"
 end_include
 
 begin_include

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quit.c	5.11 (Berkeley) %G%"
+literal|"@(#)quit.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1856,7 +1856,14 @@ name|strcpy
 argument_list|(
 name|tempname
 argument_list|,
-literal|"/tmp/mboxXXXXXX"
+name|_PATH_TMP
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|tempname
+argument_list|,
+literal|"/mboxXXXXXX"
 argument_list|)
 expr_stmt|;
 name|mktemp

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_temp.c	7.6.1.1 (Berkeley) %G%"
+literal|"@(#)ex_temp.c	7.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"ex_tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.35 (Berkeley) %G%"
+literal|"@(#)main.c	3.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,6 +43,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -62,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|"local.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_define

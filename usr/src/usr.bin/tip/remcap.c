@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remcap.c	5.2 (Berkeley) %G%"
+literal|"@(#)remcap.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifndef
@@ -71,17 +77,6 @@ end_define
 
 begin_comment
 comment|/* max number of tc= indirections */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SYSREMOTE
-value|"/etc/remote"
-end_define
-
-begin_comment
-comment|/* system remote file */
 end_comment
 
 begin_define
@@ -130,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|E_TERMCAP
-value|RM = SYSREMOTE
+value|RM = _PATH_REMOTE
 end_define
 
 begin_define
@@ -282,7 +277,7 @@ name|strcmp
 argument_list|(
 name|cp
 argument_list|,
-name|SYSREMOTE
+name|_PATH_REMOTE
 argument_list|)
 operator|==
 literal|0
@@ -292,7 +287,7 @@ name|remotefile
 operator|=
 name|cp
 operator|=
-name|SYSREMOTE
+name|_PATH_REMOTE
 expr_stmt|;
 return|return
 operator|(
@@ -335,7 +330,7 @@ name|remotefile
 operator|=
 name|cp
 operator|=
-name|SYSREMOTE
+name|_PATH_REMOTE
 expr_stmt|;
 name|rc2
 operator|=
@@ -948,7 +943,7 @@ name|strcmp
 argument_list|(
 name|remotefile
 argument_list|,
-name|SYSREMOTE
+name|_PATH_REMOTE
 argument_list|)
 operator|==
 literal|0
@@ -967,7 +962,7 @@ name|tcbuf
 argument_list|,
 name|tcname
 argument_list|,
-name|SYSREMOTE
+name|_PATH_REMOTE
 argument_list|)
 operator|!=
 literal|1

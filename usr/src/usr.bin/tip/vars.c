@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vars.c	5.3 (Berkeley) %G%"
+literal|"@(#)vars.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|"tip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -345,7 +351,7 @@ name|ROOT
 block|,
 name|NOSTR
 block|,
-literal|"/usr/adm/aculog"
+name|_PATH_ACULOG
 block|}
 block|,
 block|{
@@ -575,7 +581,7 @@ name|PUBLIC
 block|,
 name|NULL
 block|,
-literal|"/bin/sh"
+name|_PATH_BSHELL
 block|}
 block|,
 block|{

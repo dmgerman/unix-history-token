@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diff.c 4.6 %G%"
+literal|"@(#)diff.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|"diff.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_comment
@@ -24,7 +30,7 @@ name|char
 name|diff
 index|[]
 init|=
-name|DIFF
+name|_PATH_DIFF
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +39,7 @@ name|char
 name|diffh
 index|[]
 init|=
-name|DIFFH
+name|_PATH_DIFFH
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +48,7 @@ name|char
 name|pr
 index|[]
 init|=
-name|PR
+name|_PATH_PR
 decl_stmt|;
 end_decl_stmt
 

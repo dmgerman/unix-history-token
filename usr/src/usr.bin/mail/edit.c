@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.11 (Berkeley) %G%"
+literal|"@(#)edit.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -457,7 +457,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Run an editor on the file at "fpp" of "size" bytes,  * and return a new file pointer.  * Signals must be handled by the caller.  * "Type" is 'e' for EDITOR, 'v' for VISUAL.  */
+comment|/*  * Run an editor on the file at "fpp" of "size" bytes,  * and return a new file pointer.  * Signals must be handled by the caller.  * "Type" is 'e' for _PATH_EX, 'v' for _PATH_VI.  */
 end_comment
 
 begin_function
@@ -731,9 +731,9 @@ name|type
 operator|==
 literal|'e'
 condition|?
-name|EDITOR
+name|_PATH_EX
 else|:
-name|VISUAL
+name|_PATH_VI
 expr_stmt|;
 if|if
 condition|(

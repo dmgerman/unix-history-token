@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)script.c	5.7 (Berkeley) %G%"
+literal|"@(#)script.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,13 +95,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -346,7 +352,7 @@ name|NULL
 condition|)
 name|shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|getmaster
 argument_list|()
@@ -694,7 +700,7 @@ block|{
 name|int
 name|t
 decl_stmt|;
-comment|/*** 	t = open("/dev/tty", O_RDWR); 	if (t>= 0) { 		(void) ioctl(t, TIOCNOTTY, (char *)0); 		(void) close(t); 	} 	***/
+comment|/*** 	t = open(_PATH_TTY, O_RDWR); 	if (t>= 0) { 		(void) ioctl(t, TIOCNOTTY, (char *)0); 		(void) close(t); 	} 	***/
 name|getslave
 argument_list|()
 expr_stmt|;

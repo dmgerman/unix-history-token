@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	4.5	(Berkeley)	%G%"
+literal|"@(#)dc.c	4.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,13 +24,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<paths.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -9160,7 +9166,7 @@ condition|)
 block|{
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dprog.c	4.2	(Berkeley)	82/11/06"
+literal|"@(#)dprog.c	4.3	(Berkeley)	89/05/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -659,7 +665,7 @@ name|wordf
 operator|=
 name|fopen
 argument_list|(
-name|DICT
+name|_PATH_DICT
 argument_list|,
 literal|"r"
 argument_list|)
