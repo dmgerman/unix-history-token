@@ -377,13 +377,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"module_register_init: MOD_LOAD (%s, %lx, %p) error"
+literal|"module_register_init: MOD_LOAD (%s, %p, %p) error"
 literal|" %d\n"
 argument_list|,
 name|data
 operator|->
 name|name
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|data
 operator|->
 name|evhand
