@@ -2339,6 +2339,24 @@ literal|"cannot get disk geometry"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mediasize
+operator|>
+operator|(
+name|off_t
+operator|)
+literal|0xffffffff
+operator|*
+name|secsize
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"disks with more than 2^32-1 sectors are not supported"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
