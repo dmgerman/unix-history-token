@@ -9740,10 +9740,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|firewire_debug
-condition|)
 name|device_printf
 argument_list|(
 name|fc
@@ -13313,9 +13309,13 @@ if|if
 condition|(
 name|stat
 condition|)
-name|printf
+name|device_printf
 argument_list|(
-literal|"XXX stdma2 already done stat:0x%x\n"
+name|fc
+operator|->
+name|dev
+argument_list|,
+literal|"stdma2 already done stat:0x%x\n"
 argument_list|,
 name|stat
 argument_list|)
