@@ -2763,6 +2763,8 @@ condition|(
 name|offset
 operator|>
 literal|0x20000
+operator|-
+name|PAGE_SIZE
 condition|)
 return|return
 operator|-
