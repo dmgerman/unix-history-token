@@ -1802,10 +1802,10 @@ begin_function_decl
 name|struct
 name|tcptemp
 modifier|*
-name|tcp_maketemplate
+name|tcpip_maketemplate
 parameter_list|(
 name|struct
-name|tcpcb
+name|inpcb
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1813,10 +1813,10 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|tcp_fillheaders
+name|tcpip_fillheaders
 parameter_list|(
 name|struct
-name|tcpcb
+name|inpcb
 modifier|*
 parameter_list|,
 name|void

@@ -1318,9 +1318,9 @@ operator|++
 expr_stmt|;
 name|t_template
 operator|=
-name|tcp_maketemplate
+name|tcpip_maketemplate
 argument_list|(
-name|tp
+name|inp
 argument_list|)
 expr_stmt|;
 if|if
