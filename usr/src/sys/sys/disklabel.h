@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)disklabel.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)disklabel.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,9 +10,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_PATH_DISKTAB
+value|"/etc/disktab"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DISKTAB
 value|"/etc/disktab"
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_comment
 comment|/*  * Each disk has a label which includes information about the hardware  * disk geometry, filesystem partitions, and drive specific information.  * The label is in block 0 or 1, possibly offset from the beginning  * to leave room for a bootstrap, etc.  */
@@ -904,7 +915,33 @@ name|LOCORE
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_function_decl
+specifier|extern
+name|struct
+name|disklabel
+modifier|*
+name|getdiskbyname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
 name|struct
 name|disklabel
 modifier|*
@@ -912,6 +949,11 @@ name|getdiskbyname
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
