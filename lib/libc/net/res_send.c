@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.10 1996/08/30 21:13:42 peter Exp $"
+literal|"$Id: res_send.c,v 1.10.2.1 1997/03/10 19:35:22 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2354,7 +2354,7 @@ argument_list|,
 literal|"res_send: too many files"
 argument_list|)
 expr_stmt|;
-name|res_close
+name|_res_close
 argument_list|()
 expr_stmt|;
 goto|goto
