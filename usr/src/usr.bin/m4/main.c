@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,11 +459,6 @@ literal|"m4exit"
 block|,
 name|EXITTYPE
 block|,
-if|#
-directive|if
-name|unix
-operator|||
-name|vms
 literal|"syscmd"
 block|,
 name|SYSCTYPE
@@ -472,29 +467,10 @@ literal|"sysval"
 block|,
 name|SYSVTYPE
 block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|unix
 literal|"unix"
 block|,
 name|MACRTYPE
-block|,
-else|#
-directive|else
-if|#
-directive|if
-name|vms
-literal|"vms"
-block|,
-name|MACRTYPE
-block|,
-endif|#
-directive|endif
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -828,19 +804,6 @@ index|]
 operator|=
 literal|'0'
 expr_stmt|;
-if|#
-directive|if
-name|vms
-operator|(
-name|void
-operator|)
-name|remove
-argument_list|(
-name|m4temp
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 operator|(
 name|void
 operator|)
@@ -849,8 +812,6 @@ argument_list|(
 name|m4temp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|exit
 argument_list|(
