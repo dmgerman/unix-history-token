@@ -97,6 +97,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -563,12 +569,6 @@ parameter_list|,
 name|void
 modifier|*
 name|ptr
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -736,12 +736,6 @@ parameter_list|,
 name|void
 modifier|*
 name|ptr
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
 parameter_list|)
 block|{
 name|struct

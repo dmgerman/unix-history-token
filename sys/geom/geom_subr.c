@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<geom/geom_int.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -2894,8 +2900,6 @@ name|mp
 argument_list|,
 name|pp
 argument_list|,
-name|NULL
-argument_list|,
 name|G_TF_INSIST
 argument_list|)
 expr_stmt|;
@@ -3060,8 +3064,6 @@ argument_list|(
 name|mp
 argument_list|,
 name|pp
-argument_list|,
-name|NULL
 argument_list|,
 name|G_TF_TRANSPARENT
 argument_list|)

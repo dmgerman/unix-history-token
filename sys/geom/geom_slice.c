@@ -1319,12 +1319,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
 parameter_list|)
 block|{
 name|struct

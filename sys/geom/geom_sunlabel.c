@@ -257,11 +257,6 @@ name|g_provider
 modifier|*
 name|pp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-parameter_list|,
 name|int
 name|flags
 parameter_list|)
@@ -438,8 +433,6 @@ name|j
 argument_list|,
 operator|&
 name|secsize
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -479,8 +472,6 @@ name|j
 argument_list|,
 operator|&
 name|mediasize
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if

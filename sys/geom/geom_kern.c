@@ -87,6 +87,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -323,23 +329,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|g_event_proc
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|tp
-init|=
-operator|&
-name|p
-operator|->
-name|p_xxthread
-decl_stmt|;
 name|curthread
 operator|->
 name|td_base_pri
@@ -353,9 +342,7 @@ condition|;
 control|)
 block|{
 name|g_run_events
-argument_list|(
-name|tp
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|mtx_lock
 argument_list|(

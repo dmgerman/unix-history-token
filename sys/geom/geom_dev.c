@@ -384,12 +384,6 @@ name|g_provider
 modifier|*
 name|pp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
-parameter_list|,
 name|int
 name|insist
 name|__unused
@@ -529,8 +523,6 @@ name|j
 argument_list|,
 operator|&
 name|secsize
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -570,8 +562,6 @@ name|j
 argument_list|,
 operator|&
 name|mediasize
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1114,8 +1104,6 @@ operator|&
 name|i
 argument_list|,
 name|data
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1134,8 +1122,6 @@ operator|&
 name|i
 argument_list|,
 name|data
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1154,8 +1140,6 @@ operator|&
 name|i
 argument_list|,
 name|data
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1174,8 +1158,6 @@ operator|&
 name|i
 argument_list|,
 name|data
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1194,8 +1176,6 @@ operator|&
 name|i
 argument_list|,
 name|data
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1258,8 +1238,6 @@ argument_list|,
 name|i
 argument_list|,
 name|gio
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 else|else
@@ -1275,8 +1253,6 @@ operator|&
 name|i
 argument_list|,
 name|gio
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 name|g_free
@@ -1482,8 +1458,6 @@ name|i
 argument_list|,
 operator|&
 name|mediasize
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1754,11 +1728,6 @@ name|struct
 name|g_consumer
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
 parameter_list|)
 block|{
 name|struct

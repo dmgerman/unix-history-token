@@ -36,6 +36,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_function
 name|uint32_t
 name|g_dec_be2

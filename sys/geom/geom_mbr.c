@@ -728,11 +728,6 @@ name|g_provider
 modifier|*
 name|pp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-parameter_list|,
 name|int
 name|insist
 parameter_list|)
@@ -908,8 +903,6 @@ name|j
 argument_list|,
 operator|&
 name|i
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if
@@ -1583,12 +1576,6 @@ name|g_provider
 modifier|*
 name|pp
 parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
-name|__unused
-parameter_list|,
 name|int
 name|insist
 name|__unused
@@ -1750,8 +1737,6 @@ name|j
 argument_list|,
 operator|&
 name|i
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 if|if

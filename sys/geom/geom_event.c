@@ -113,6 +113,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -144,11 +150,6 @@ name|struct
 name|g_event
 modifier|*
 name|ep
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -348,11 +349,6 @@ name|struct
 name|g_provider
 modifier|*
 name|pp
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
 parameter_list|)
 block|{
 name|struct
@@ -444,8 +440,6 @@ operator|->
 name|orphan
 argument_list|(
 name|cp
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 name|cp
@@ -484,11 +478,6 @@ name|struct
 name|g_event
 modifier|*
 name|ep
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|tp
 parameter_list|)
 block|{
 name|struct
@@ -621,8 +610,6 @@ name|class
 argument_list|,
 name|pp
 argument_list|,
-name|tp
-argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -707,8 +694,6 @@ argument_list|,
 name|ep
 operator|->
 name|provider
-argument_list|,
-name|tp
 argument_list|,
 literal|0
 argument_list|)
@@ -859,10 +844,7 @@ specifier|static
 name|int
 name|one_event
 parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|tp
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -930,8 +912,6 @@ break|break;
 name|g_orphan_register
 argument_list|(
 name|pp
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 block|}
@@ -1036,8 +1016,6 @@ expr_stmt|;
 name|g_do_event
 argument_list|(
 name|ep
-argument_list|,
-name|tp
 argument_list|)
 expr_stmt|;
 name|g_pending_events
@@ -1088,19 +1066,12 @@ end_function
 begin_function
 name|void
 name|g_run_events
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|tp
-parameter_list|)
+parameter_list|()
 block|{
 while|while
 condition|(
 name|one_event
-argument_list|(
-name|tp
-argument_list|)
+argument_list|()
 condition|)
 empty_stmt|;
 block|}
