@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -323,10 +329,15 @@ decl_stmt|;
 comment|/* lock on usecount and flag */
 name|struct
 name|lock
+name|v_lock
+decl_stmt|;
+comment|/* used if fs don't have one */
+name|struct
+name|lock
 modifier|*
 name|v_vnlock
 decl_stmt|;
-comment|/* used for non-locking fs's */
+comment|/* pointer to vnode lock */
 name|enum
 name|vtagtype
 name|v_tag

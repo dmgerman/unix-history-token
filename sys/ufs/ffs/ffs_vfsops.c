@@ -5335,12 +5335,21 @@ name|inode
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * FFS supports lock sharing in the stack of vnodes 	 */
+name|vp
+operator|->
+name|v_vnlock
+operator|=
+operator|&
+name|vp
+operator|->
+name|v_lock
+expr_stmt|;
 name|lockinit
 argument_list|(
-operator|&
-name|ip
+name|vp
 operator|->
-name|i_lock
+name|v_vnlock
 argument_list|,
 name|PINOD
 argument_list|,

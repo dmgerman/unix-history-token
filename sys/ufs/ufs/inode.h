@@ -63,11 +63,6 @@ begin_struct
 struct|struct
 name|inode
 block|{
-name|struct
-name|lock
-name|i_lock
-decl_stmt|;
-comment|/* Inode lock.>Keep this first< */
 name|LIST_ENTRY
 argument_list|(
 argument|inode

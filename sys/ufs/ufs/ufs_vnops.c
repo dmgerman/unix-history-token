@@ -8684,9 +8684,9 @@ expr_stmt|;
 name|lockmgr_printinfo
 argument_list|(
 operator|&
-name|ip
+name|vp
 operator|->
-name|i_lock
+name|v_lock
 argument_list|)
 expr_stmt|;
 name|printf
