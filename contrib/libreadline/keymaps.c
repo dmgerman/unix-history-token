@@ -4,7 +4,7 @@ comment|/* keymaps.c -- Functions and keymaps for the GNU Readline library. */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 1, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1988,1989 Free Software Foundation, Inc.     This file is part of GNU Readline, a library for reading lines    of text with interactive input and history editing.     Readline is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     Readline is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with Readline; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_define
@@ -71,13 +71,23 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"rlconf.h"
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* for FILE * definition for readline.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"readline.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"keymaps.h"
+file|"rlconf.h"
 end_include
 
 begin_include
@@ -106,37 +116,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-specifier|extern
-name|int
-name|rl_do_lowercase_version
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rl_rubout
-argument_list|()
-decl_stmt|,
-name|rl_insert
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|xmalloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|xrealloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"xmalloc.h"
+end_include
 
 begin_comment
 comment|/* **************************************************************** */

@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * rl - command-line interface to read a line from the standard input  *      (or another fd) using readline.  *  * usage: rl [-p prompt] [-u unit] [-d default]  */
+comment|/*  * rl - command-line interface to read a line from the standard input  *      (or another fd) using readline.  *  * usage: rl [-p prompt] [-u unit] [-d default] [-n nchars]  */
 end_comment
-
-begin_comment
-comment|/*  * Remove the next line if you're compiling this against an installed  * libreadline.a  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|READLINE_LIBRARY
-end_define
 
 begin_if
 if|#
@@ -51,6 +41,15 @@ directive|include
 file|"posixstat.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|READLINE_LIBRARY
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -62,6 +61,28 @@ include|#
 directive|include
 file|"history.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<readline/readline.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<readline/history.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -157,6 +178,9 @@ operator|)
 name|NULL
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -170,7 +194,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage: %s [-p prompt] [-u unit] [-d default]\n"
+literal|"%s: usage: %s [-p prompt] [-u unit] [-d default] [-n nchars]\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -181,6 +205,7 @@ block|}
 end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -211,6 +236,8 @@ name|int
 name|opt
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|nch
 decl_stmt|;
 name|FILE
 modifier|*
@@ -252,6 +279,8 @@ literal|"readline$ "
 expr_stmt|;
 name|fd
 operator|=
+name|nch
+operator|=
 literal|0
 expr_stmt|;
 name|deftext
@@ -273,7 +302,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p:u:d:"
+literal|"p:u:d:n:"
 argument_list|)
 operator|)
 operator|!=
@@ -335,6 +364,41 @@ name|deftext
 operator|=
 name|optarg
 expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nch
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nch
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: bad value for -n: `%s'\n"
+argument_list|,
+name|progname
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 default|default:
 name|usage
@@ -408,6 +472,16 @@ condition|)
 name|rl_startup_hook
 operator|=
 name|set_deftext
+expr_stmt|;
+if|if
+condition|(
+name|nch
+operator|>
+literal|0
+condition|)
+name|rl_num_chars_to_read
+operator|=
+name|nch
 expr_stmt|;
 name|temp
 operator|=

@@ -3,16 +3,6 @@ begin_comment
 comment|/* fileman.c -- A tiny application which demonstrates how to use the    GNU Readline library.  This application interactively allows users    to manipulate files and their modes. */
 end_comment
 
-begin_comment
-comment|/*  * Remove the next line if you're compiling this against an installed  * libreadline.a  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|READLINE_LIBRARY
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -57,6 +47,29 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_UNISTD_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -113,6 +126,23 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_STDLIB_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|READLINE_LIBRARY
 end_ifdef
 
@@ -149,15 +179,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|getwd
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -1195,6 +1216,24 @@ condition|)
 return|return
 literal|1
 return|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MSDOS__
+argument_list|)
+comment|/* more.com doesn't grok slashes in pathnames */
+name|sprintf
+argument_list|(
+name|syscom
+argument_list|,
+literal|"less %s"
+argument_list|,
+name|arg
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|sprintf
 argument_list|(
 name|syscom
@@ -1204,6 +1243,8 @@ argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|system
@@ -1685,9 +1726,16 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|getwd
+name|getcwd
 argument_list|(
 name|dir
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dir
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

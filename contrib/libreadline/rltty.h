@@ -4,7 +4,7 @@ comment|/* rltty.h - tty driver-related definitions used by some library files. 
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995 Free Software Foundation, Inc.     This file contains the Readline Library (the Library), a set of    routines for providing Emacs style line input to programs that ask    for it.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Copyright (C) 1995 Free Software Foundation, Inc.     This file contains the Readline Library (the Library), a set of    routines for providing Emacs style line input to programs that ask    for it.     The Library is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     The Library is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     The GNU General Public License is often shipped with GNU software, and    is generally kept in a file called COPYING or LICENSE.  If you do not    have a copy of the license, write to the Free Software Foundation,    59 Temple Place, Suite 330, Boston, MA 02111 USA. */
 end_comment
 
 begin_if
@@ -20,7 +20,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|_RLTTY_H
+name|_RLTTY_H_
 end_define
 
 begin_comment
@@ -230,6 +230,64 @@ end_endif
 begin_comment
 comment|/* !NEW_TTY_DRIVER&& !_POSIX_VDISABLE */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_rl_tty_chars
+block|{
+name|char
+name|t_eof
+decl_stmt|;
+name|char
+name|t_eol
+decl_stmt|;
+name|char
+name|t_eol2
+decl_stmt|;
+name|char
+name|t_erase
+decl_stmt|;
+name|char
+name|t_werase
+decl_stmt|;
+name|char
+name|t_kill
+decl_stmt|;
+name|char
+name|t_reprint
+decl_stmt|;
+name|char
+name|t_intr
+decl_stmt|;
+name|char
+name|t_quit
+decl_stmt|;
+name|char
+name|t_susp
+decl_stmt|;
+name|char
+name|t_dsusp
+decl_stmt|;
+name|char
+name|t_start
+decl_stmt|;
+name|char
+name|t_stop
+decl_stmt|;
+name|char
+name|t_lnext
+decl_stmt|;
+name|char
+name|t_flush
+decl_stmt|;
+name|char
+name|t_status
+decl_stmt|;
+block|}
+name|_RL_TTY_CHARS
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
