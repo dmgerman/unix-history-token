@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.1 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,6 +866,10 @@ expr_stmt|;
 comment|/* If errors occured, then we send mail to the owner 		 * telling him/her that we ran into trouble.   		 * 		 * (NOTE: this could easily be modified so that if any  		 * errors occured while running a job, mail is sent regard- 		 * less of whether the -m flag was set or not. 		 * 		 * i.e. rather than: 		 * 		 *	"if (notifybymail)" use 		 * use: 		 * 		 *	"if ((exitstatus == ABNORMAL) || (notifybymail))" 		 * 		 * It's up to you if you want to implement this. 		 * 		 */
 if|if
 condition|(
+name|exitstatus
+operator|==
+name|ABNORMAL
+operator|||
 name|notifybymail
 condition|)
 name|sendmailto
