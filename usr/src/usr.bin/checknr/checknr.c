@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)checknr.c	5.1 (Berkeley) %G%"
+literal|"@(#)checknr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -699,6 +699,8 @@ block|,
 literal|"SP"
 block|,
 literal|"SY"
+block|,
+literal|"T&"
 block|,
 literal|"TA"
 block|,
