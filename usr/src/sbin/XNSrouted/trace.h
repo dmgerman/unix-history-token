@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * This file includes significant work done at Cornell University by  * Bill Nesheim.  That work included by permission.  *  * %sccs.include.redist.c%  *  *	@(#)trace.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This file includes significant work done at Cornell University by  * Bill Nesheim.  That work included by permission.  *  * %sccs.include.redist.c%  *  *	@(#)trace.h	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
