@@ -126,8 +126,7 @@ literal|0x60
 condition|)
 block|{
 name|c
-operator|-
-operator|=
+operator|-=
 operator|(
 literal|0x60
 operator|+
