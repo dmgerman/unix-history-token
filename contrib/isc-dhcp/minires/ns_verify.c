@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_verify.c,v 1.5.2.1 2001/05/17 20:47:34 mellon Exp $"
+literal|"$Id: ns_verify.c,v 1.5.2.2 2002/02/19 19:23:31 mellon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +198,9 @@ decl_stmt|,
 modifier|*
 name|start
 decl_stmt|;
+name|isc_result_t
+name|status
+decl_stmt|;
 if|if
 condition|(
 name|msg
@@ -247,7 +250,7 @@ name|cp
 operator|+=
 name|HFIXEDSZ
 expr_stmt|;
-name|n
+name|status
 operator|=
 name|ns_skiprr
 argument_list|(
@@ -263,13 +266,16 @@ name|hp
 operator|->
 name|qdcount
 argument_list|)
+argument_list|,
+operator|&
+name|n
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
 operator|(
@@ -280,7 +286,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|n
+name|status
 operator|=
 name|ns_skiprr
 argument_list|(
@@ -296,13 +302,16 @@ name|hp
 operator|->
 name|ancount
 argument_list|)
+argument_list|,
+operator|&
+name|n
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
 operator|(
@@ -313,7 +322,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|n
+name|status
 operator|=
 name|ns_skiprr
 argument_list|(
@@ -329,13 +338,16 @@ name|hp
 operator|->
 name|nscount
 argument_list|)
+argument_list|,
+operator|&
+name|n
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
 operator|(
@@ -346,7 +358,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|n
+name|status
 operator|=
 name|ns_skiprr
 argument_list|(
@@ -364,13 +376,16 @@ name|arcount
 argument_list|)
 operator|-
 literal|1
+argument_list|,
+operator|&
+name|n
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|n
-operator|<
-literal|0
+name|status
+operator|!=
+name|ISC_R_SUCCESS
 condition|)
 return|return
 operator|(

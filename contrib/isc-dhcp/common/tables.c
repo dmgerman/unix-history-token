@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: tables.c,v 1.51.2.4 2001/10/17 03:26:26 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: tables.c,v 1.51.2.5 2002/02/09 03:23:54 mellon Exp $ Copyright (c) 1995-2001 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -9458,7 +9458,7 @@ name|store_length
 operator|=
 name|putUChar
 expr_stmt|;
-name|fqdn_universe
+name|nwip_universe
 operator|.
 name|enc_opt
 operator|=
