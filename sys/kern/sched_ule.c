@@ -227,6 +227,9 @@ name|int
 name|ske_ticks
 decl_stmt|;
 comment|/* Tick count */
+name|u_char
+name|ske_cpu
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -264,6 +267,13 @@ define|#
 directive|define
 name|ke_ticks
 value|ke_sched->ske_ticks
+end_define
+
+begin_define
+define|#
+directive|define
+name|ke_cpu
+value|ke_sched->ske_cpu
 end_define
 
 begin_struct
@@ -444,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLICE_MAX
-value|(hz / 10)
+value|(hz / 4)
 end_define
 
 begin_define
@@ -1383,6 +1393,12 @@ name|ke_oncpu
 expr_stmt|;
 name|ke
 operator|->
+name|ke_oncpu
+operator|=
+name|NOCPU
+expr_stmt|;
+name|ke
+operator|->
 name|ke_flags
 operator|&=
 operator|~
@@ -1461,7 +1477,6 @@ argument_list|(
 name|cpuid
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|td
@@ -1597,7 +1612,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (td->td_priority< PZERO) 		kseq_cpu[td->td_kse->ke_oncpu].ksq_load++;
+block|if (td->td_priority< PZERO) 		kseq_cpu[td->td_kse->ke_cpu].ksq_load++;
 endif|#
 directive|endif
 block|}
@@ -1683,7 +1698,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (td->td_priority< PZERO) 		kseq_cpu[td->td_kse->ke_oncpu].ksq_load--;
+block|if (td->td_priority< PZERO) 		kseq_cpu[td->td_kse->ke_cpu].ksq_load--;
 endif|#
 directive|endif
 name|setrunqueue
@@ -1784,7 +1799,7 @@ if|if
 condition|(
 name|pkse
 operator|->
-name|ke_oncpu
+name|ke_cpu
 operator|!=
 name|PCPU_GET
 argument_list|(
@@ -1794,11 +1809,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pkse->ke_oncpu = %d\n"
+literal|"pkse->ke_cpu = %d\n"
 argument_list|,
 name|pkse
 operator|->
-name|ke_oncpu
+name|ke_cpu
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1827,11 +1842,11 @@ name|ke_slice
 expr_stmt|;
 name|ckse
 operator|->
-name|ke_oncpu
+name|ke_cpu
 operator|=
 name|pkse
 operator|->
-name|ke_oncpu
+name|ke_cpu
 expr_stmt|;
 comment|/* sched_pickcpu(); */
 name|ckse
@@ -2524,7 +2539,7 @@ name|NULL
 expr_stmt|;
 name|ke
 operator|->
-name|ke_oncpu
+name|ke_cpu
 operator|=
 name|PCPU_GET
 argument_list|(
@@ -2649,7 +2664,7 @@ name|KSEQ_CPU
 argument_list|(
 name|ke
 operator|->
-name|ke_oncpu
+name|ke_cpu
 argument_list|)
 expr_stmt|;
 if|if
@@ -2705,7 +2720,7 @@ name|KSEQ_CPU
 argument_list|(
 name|ke
 operator|->
-name|ke_oncpu
+name|ke_cpu
 argument_list|)
 operator|->
 name|ksq_load
@@ -2765,7 +2780,7 @@ name|KSEQ_CPU
 argument_list|(
 name|ke
 operator|->
-name|ke_oncpu
+name|ke_cpu
 argument_list|)
 operator|->
 name|ksq_load
