@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.39 (Berkeley) %G%"
+literal|"@(#)main.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables read in from /usr/lib/sendmail.cf **	(read by readcf.c).  Some more static configuration info, **	including some code that you may want to tailor for your **	installation, is in conf.c.  You may also want to touch **	daemon.c (if you have some other IPC mechanism), acct.c **	(to change your accounting), names.c (to adjust the name **	server mechanism). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81) **			     Britton-Lee, Inc., purveyors of fine **				database computers (from 11/81) **		The support of the INGRES Project and Britton-Lee is **			gratefully acknowledged.  Britton-Lee in **			particular had absolutely nothing to gain from **			my involvement in this project. */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables read in from /usr/lib/sendmail.cf **	(read by readcf.c).  Some more static configuration info, **	including some code that you may want to tailor for your **	installation, is in conf.c.  You may also want to touch **	daemon.c (if you have some other IPC mechanism), acct.c **	(to change your accounting), names.c (to adjust the name **	server mechanism). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81) **			     Britton-Lee, Inc., purveyors of fine **				database computers (from 11/81) **			     Now back at UCB at the Mammoth project. **		The support of the INGRES Project and Britton-Lee is **			gratefully acknowledged.  Britton-Lee in **			particular had absolutely nothing to gain from **			my involvement in this project. */
 end_comment
 
 begin_decl_stmt
@@ -224,6 +224,23 @@ endif|#
 directive|endif
 endif|SETPROCTITLE
 end_endif
+
+begin_comment
+comment|/* **  The file in which to log raw recipient information. **	This is logged before aliasing, forwarding, and so forth so we **	can see how our addresses are being used.  For example, this **	would give us the names of aliases (instead of what they alias **	to), the pre-MX hostnames, and so forth. ** **	This is specified on the command line, not in the config file, **	and is therefore really only useful for logging SMTP RCPTs. */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|RcptLogFile
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file name */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2005,7 +2022,62 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|DBM
+comment|/* DBM */
+case|case
+literal|'R'
+case|:
+comment|/* log raw recipient info */
+name|p
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+operator|&&
+operator|(
+operator|(
+name|p
+operator|=
+operator|*
+operator|++
+name|av
+operator|)
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|'-'
+operator|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"Bad -R flag"
+argument_list|)
+expr_stmt|;
+name|ExitStat
+operator|=
+name|EX_USAGE
+expr_stmt|;
+name|av
+operator|--
+expr_stmt|;
+break|break;
+block|}
+name|RcptLogFile
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 block|}
 end_while
