@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.14	81/02/26	*/
+comment|/*	autoconf.c	4.15	81/02/26	*/
 end_comment
 
 begin_comment
 comment|/*  * Configure the system for the current machine.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"mba.h"
+end_include
 
 begin_include
 include|#
@@ -117,6 +123,14 @@ begin_comment
 comment|/* number of dk numbers assigned so far */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+end_if
+
 begin_function_decl
 name|int
 function_decl|(
@@ -138,8 +152,13 @@ operator|,
 function_decl|Xmba3int
 end_function_decl
 
-begin_if
+begin_endif
 unit|};
+endif|#
+directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|VAX780
@@ -203,15 +222,41 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_function_decl
 name|int
 name|c780
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+end_if
+
+begin_function_decl
+name|int
 name|c750
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -515,6 +560,11 @@ block|{
 case|case
 name|NEX_MBA
 case|:
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 if|if
 condition|(
 name|nummba
@@ -550,7 +600,18 @@ expr_stmt|;
 name|nummba
 operator|++
 expr_stmt|;
-break|break;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"mba's"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|unsupp
+goto|;
+endif|#
+directive|endif
 case|case
 name|NEX_UBA0
 case|:
@@ -848,8 +909,18 @@ name|nmcr
 operator|++
 index|]
 operator|=
+operator|(
+expr|struct
+name|mcr
+operator|*
+operator|)
 name|nxv
 expr_stmt|;
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
 for|for
 control|(
 name|nexnum
@@ -916,6 +987,8 @@ name|nummba
 operator|++
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"uba at %x\n"
@@ -973,6 +1046,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|NMBA
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Find devices attached to a particular mba  * and look for each device found in the massbus  * initialization tables.  */
@@ -1548,6 +1629,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Fixctlrmask fixes the masks of the driver ctlr routines  * which otherwise save r10 and r11 where the interrupt and br  * level are passed through.  */
