@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v6mail.c	4.1	(Berkeley)	%G%"
+literal|"@(#)v6mail.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -14,7 +14,7 @@ comment|/*  * Version 6 Cory mail--  *	a clean and simple mail program  *	machin
 end_comment
 
 begin_comment
-comment|/*  * mail command usage  *	mail [-yn]  *		prints your mail  *	mail people  *		sends standard input to people  *  *	mail -r fromaddr people  *		sends mail from the network  *  *	mail -d people  *		don't call delivermail, send mail directly  *	mail msgs  *		send to "msgs"  *	mail filename  *		mail to filename instead of user (must be at least one /)  *	mail -D  *		delete the invokers mailbox (more efficient than   *			mail -n>/dev/null)  */
+comment|/*  * mail command usage  *	mail [-yn]  *		prints your mail  *	mail people  *		sends standard input to people  *  *	mail -r fromaddr people  *		sends mail from the network  *  *	mail -d people  *		don't call sendmail, send mail directly  *	mail msgs  *		send to "msgs"  *	mail filename  *		mail to filename instead of user (must be at least one /)  *	mail -D  *		delete the invokers mailbox (more efficient than   *			mail -n>/dev/null)  */
 end_comment
 
 begin_comment
@@ -621,7 +621,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if true, don't call delivermail */
+comment|/* if true, don't call sendmail */
 end_comment
 
 begin_decl_stmt
@@ -1479,8 +1479,8 @@ name|fdout
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DELIVERM
-comment|/* 	**  Ship off to delivermail if appropriate (and possible) 	*/
+name|SENDMAIL
+comment|/* 	**  Ship off to sendmail if appropriate (and possible) 	*/
 if|if
 condition|(
 operator|!
@@ -1492,7 +1492,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"-delivermail"
+literal|"-sendmail"
 expr_stmt|;
 name|argv
 index|[
@@ -1503,7 +1503,7 @@ literal|0
 expr_stmt|;
 name|execv
 argument_list|(
-literal|"/etc/delivermail"
+literal|"/usr/lib/sendmail"
 argument_list|,
 name|argv
 argument_list|)
@@ -1513,7 +1513,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Not using delivermail\n"
+literal|"Not using sendmail\n"
 argument_list|)
 expr_stmt|;
 name|errno
@@ -1980,7 +1980,7 @@ condition|)
 name|person
 operator|++
 expr_stmt|;
-comment|/* delivermail provides these services */
+comment|/* sendmail provides these services */
 if|if
 condition|(
 name|any

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)mach.h	4.5	(Berkeley)	%G%	*/
+comment|/*	@(#)mach.h	4.6	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  	mach.h	-- define machine-dependent things  *** Pre-processor Flags ***  This set of code is controlled by this set of conditional compilation flags:  TESTING		if defined, do not generate tests, etc. which require 		super-user status.  OLDTTY		if defined, compile for old 1 character TTY names CCTTY		if defined, compile for CC tty name format 		if neither is defined, use v7 ttyname format  PASSWDF		compile in code to handle /etc/passwdf - split passwd files  V6		Assume the v6 features instead of the v7 ones.  FUID		use the funny uid's present on CC V6  DELIVERM	Uses the delivermail program  HPASSWD		The local machine has the hashed password stuff  OLDMAIL		mail is in home-directory/.mail USRMAIL		mail is in /usr/mail/name 		(mail is in /usr/spool/mail/name)  CC		Machine is a Computer Center machine NUID		userid (as returned by getuid()) on this machine UID1CHAR	Uses vanila Version6 userid's (only 1 byte for uid) NOEUID		Does not have the geteuid() system call NFREECMD	doesn't allow any "network" free commands NOFP		floating point just doesn't work on this machine NOREMACCT	allows netlpr's on remote machines without an account CSH		use the /bin/csh shell (Paths.h sets BINSH to this path ). CRN		CC crn's are passed DONTHOLDBIG	large (size> MAXDAYFILE ) jobs wont be held until night for 		transmission  SWAB		this machine has byte-ordering reversed from the DEC VAX  		and PDP-11 standard (the only current example is Onyx) The conditonal flags are first defined in "local.h" in this directory.  For "normal" version 6 machines, there is a dummy machine definition for "VANILLA6" which indicates the v6 UNIX options.  For "normal" version 7 machines, there is a dummy machine definition for "VANILLA7" which indicates the v7 UNIX options. (VM/UNIX and Berkeley VM/VAX/UNIX can use this) */
+comment|/*  	mach.h	-- define machine-dependent things  *** Pre-processor Flags ***  This set of code is controlled by this set of conditional compilation flags:  TESTING		if defined, do not generate tests, etc. which require 		super-user status.  OLDTTY		if defined, compile for old 1 character TTY names CCTTY		if defined, compile for CC tty name format 		if neither is defined, use v7 ttyname format  PASSWDF		compile in code to handle /etc/passwdf - split passwd files  V6		Assume the v6 features instead of the v7 ones.  FUID		use the funny uid's present on CC V6  SENDMAIL	Uses the sendmail program  HPASSWD		The local machine has the hashed password stuff  OLDMAIL		mail is in home-directory/.mail USRMAIL		mail is in /usr/mail/name 		(mail is in /usr/spool/mail/name)  CC		Machine is a Computer Center machine NUID		userid (as returned by getuid()) on this machine UID1CHAR	Uses vanila Version6 userid's (only 1 byte for uid) NOEUID		Does not have the geteuid() system call NFREECMD	doesn't allow any "network" free commands NOFP		floating point just doesn't work on this machine NOREMACCT	allows netlpr's on remote machines without an account CSH		use the /bin/csh shell (Paths.h sets BINSH to this path ). CRN		CC crn's are passed DONTHOLDBIG	large (size> MAXDAYFILE ) jobs wont be held until night for 		transmission  SWAB		this machine has byte-ordering reversed from the DEC VAX  		and PDP-11 standard (the only current example is Onyx) The conditonal flags are first defined in "local.h" in this directory.  For "normal" version 6 machines, there is a dummy machine definition for "VANILLA6" which indicates the v6 UNIX options.  For "normal" version 7 machines, there is a dummy machine definition for "VANILLA7" which indicates the v7 UNIX options. (VM/UNIX and Berkeley VM/VAX/UNIX can use this) */
 end_comment
 
 begin_comment
@@ -364,6 +364,16 @@ name|BERKELEY
 end_ifdef
 
 begin_comment
+comment|/* all berkeley sites use sendmail.....         (someday?) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SENDMAIL
+end_define
+
+begin_comment
 comment|/* CFO - A */
 end_comment
 
@@ -657,12 +667,6 @@ directive|define
 name|FREELPR
 end_define
 
-begin_define
-define|#
-directive|define
-name|DELIVERM
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -691,12 +695,6 @@ define|#
 directive|define
 name|NUID
 value|(35)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
 end_define
 
 begin_define
@@ -787,12 +785,6 @@ define|#
 directive|define
 name|LOCAL
 value|'n'
-end_define
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
 end_define
 
 begin_define
@@ -918,12 +910,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DELIVERM
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXSENDQ
 value|35
 end_define
@@ -1021,12 +1007,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DELIVERM
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXSENDQ
 value|35
 end_define
@@ -1059,12 +1039,6 @@ define|#
 directive|define
 name|NUID
 value|(501)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
 end_define
 
 begin_define
@@ -1158,12 +1132,6 @@ name|PARMLIST
 value|20
 end_define
 
-begin_define
-define|#
-directive|define
-name|DELIVERM
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1213,12 +1181,6 @@ directive|undef
 name|NETLDISC
 end_undef
 
-begin_define
-define|#
-directive|define
-name|DELIVERM
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1247,12 +1209,6 @@ define|#
 directive|define
 name|NUID
 value|((1<< 8) | 104)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DELIVERM
 end_define
 
 begin_endif
