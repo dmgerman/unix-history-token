@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.9 1995/05/08 16:27:10 bde Exp $  */
+comment|/*-  * Copyright (c) 1994 Bruce D. Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: diskslice.h,v 1.10 1995/05/30 08:14:19 rgrimes Exp $  */
 end_comment
 
 begin_ifndef
@@ -101,6 +101,55 @@ modifier|*
 name|ds_label
 decl_stmt|;
 comment|/* BSD label, if any */
+name|void
+modifier|*
+name|ds_bdev
+decl_stmt|;
+comment|/* devfs token for whole slice */
+name|void
+modifier|*
+name|ds_cdev
+decl_stmt|;
+comment|/* devfs token for raw whole slice */
+ifdef|#
+directive|ifdef
+name|MAXPARTITIONS
+comment|/* XXX don't depend on dislabel.h */
+if|#
+directive|if
+name|MAXPARTITIONS
+operator|!=
+literal|8
+comment|/* but check consistency if possible */
+error|#
+directive|error
+literal|"inconsistent MAXPARTITIONS"
+endif|#
+directive|endif
+else|#
+directive|else
+define|#
+directive|define
+name|MAXPARTITIONS
+value|8
+endif|#
+directive|endif
+name|void
+modifier|*
+name|ds_bdevs
+index|[
+name|MAXPARTITIONS
+index|]
+decl_stmt|;
+comment|/* XXX s.b. in label */
+name|void
+modifier|*
+name|ds_cdevs
+index|[
+name|MAXPARTITIONS
+index|]
+decl_stmt|;
+comment|/* XXX s.b. in label */
 name|u_char
 name|ds_bopenmask
 decl_stmt|;
@@ -168,7 +217,11 @@ comment|/* nonzero if label is writable */
 argument|};
 endif|#
 directive|endif
-argument|struct diskslices { 	int	dss_first_bsd_slice;
+argument|struct diskslices { 	struct bdevsw *dss_bdevsw;
+comment|/* for containing device */
+argument|struct cdevsw *dss_cdevsw;
+comment|/* for containing device */
+argument|int	dss_first_bsd_slice;
 comment|/* COMPATIBILTY_SLICE is mapped here */
 argument|u_int	dss_nslices;
 comment|/* actual dimension of dss_slices[] */
@@ -199,7 +252,7 @@ parameter_list|,
 name|ssp
 parameter_list|)
 value|(ssp->dss_slices[dkslice(dev)].ds_label)
-argument|struct buf; struct disklabel;  typedef int ds_setgeom_t __P((struct disklabel *lp));  int	dscheck __P((struct buf *bp, struct diskslices *ssp)); void	dsclose __P((dev_t dev, int mode, struct diskslices *ssp)); void	dsgone __P((struct diskslices **sspp)); int	dsinit __P((char *dname, dev_t dev, d_strategy_t *strat, 		    struct disklabel *lp, struct diskslices **sspp)); int	dsioctl __P((char *dname, dev_t dev, int cmd, caddr_t data, int flags, 		     struct diskslices **sspp, d_strategy_t *strat, 		     ds_setgeom_t *setgeom)); int	dsisopen __P((struct diskslices *ssp)); char	*dsname __P((char *dname, int unit, int slice, int part, 		     char *partname)); int	dsopen __P((char *dname, dev_t dev, int mode, struct diskslices **sspp, 		    struct disklabel *lp, d_strategy_t *strat, 		    ds_setgeom_t *setgeom)); int	dssize __P((dev_t dev, struct diskslices **sspp, d_open_t dopen, 		    d_close_t dclose));
+argument|struct buf; struct disklabel;  typedef int ds_setgeom_t __P((struct disklabel *lp));  int	dscheck __P((struct buf *bp, struct diskslices *ssp)); void	dsclose __P((dev_t dev, int mode, struct diskslices *ssp)); void	dsgone __P((struct diskslices **sspp)); int	dsinit __P((char *dname, dev_t dev, d_strategy_t *strat, 		    struct disklabel *lp, struct diskslices **sspp)); int	dsioctl __P((char *dname, dev_t dev, int cmd, caddr_t data, int flags, 		     struct diskslices **sspp, d_strategy_t *strat, 		     ds_setgeom_t *setgeom)); int	dsisopen __P((struct diskslices *ssp)); char	*dsname __P((char *dname, int unit, int slice, int part, 		     char *partname)); int	dsopen __P((char *dname, dev_t dev, int mode, struct diskslices **sspp, 		    struct disklabel *lp, d_strategy_t *strat, 		    ds_setgeom_t *setgeom, struct bdevsw *bdevsw, 		    struct cdevsw *cdevsw)); int	dssize __P((dev_t dev, struct diskslices **sspp, d_open_t dopen, 		    d_close_t dclose));
 end_decl_stmt
 
 begin_endif
