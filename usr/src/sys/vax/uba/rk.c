@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.13	%G%	*/
+comment|/*	rk.c	4.14	%G%	*/
 end_comment
 
 begin_include
@@ -2928,17 +2928,6 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* -1 makes 0 origin */
-name|printf
-argument_list|(
-literal|"mask %x pos %x\n"
-argument_list|,
-name|mask
-argument_list|,
-name|i
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 name|bit
 operator|=
 name|i
