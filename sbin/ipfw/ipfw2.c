@@ -219,6 +219,9 @@ comment|/* display expired dynamic rules */
 name|do_compact
 decl_stmt|,
 comment|/* show rules in compact mode */
+name|do_force
+decl_stmt|,
+comment|/* do not ask for confirmation */
 name|show_sets
 decl_stmt|,
 comment|/* display rule sets */
@@ -18420,12 +18423,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Show packet/byte count */
-name|int
-name|do_force
-init|=
-literal|0
-decl_stmt|;
-comment|/* Don't ask for confirmation */
 define|#
 directive|define
 name|WHITESP
@@ -18902,6 +18899,11 @@ block|}
 block|}
 block|}
 comment|/* Set the force flag for non-interactive processes */
+if|if
+condition|(
+operator|!
+name|do_force
+condition|)
 name|do_force
 operator|=
 operator|!
@@ -19673,7 +19675,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cNnp:qS"
+literal|"cfNnp:qS"
 argument_list|)
 operator|)
 operator|!=
@@ -19690,6 +19692,14 @@ case|case
 literal|'c'
 case|:
 name|do_compact
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+name|do_force
 operator|=
 literal|1
 expr_stmt|;
