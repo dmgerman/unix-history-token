@@ -2075,6 +2075,12 @@ argument_list|,
 literal|"verbose mode"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|acpi_s4bios
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -7507,19 +7513,18 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
-name|new_state
-operator|!=
-name|old_state
-operator|)
-operator|&&
-operator|(
 name|new_state
 operator|<=
 name|ACPI_S_STATES_MAX
 operator|+
 literal|1
-operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|new_state
+operator|!=
+name|old_state
 condition|)
 block|{
 operator|*
@@ -7533,6 +7538,7 @@ name|oid_arg1
 operator|=
 name|new_state
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
