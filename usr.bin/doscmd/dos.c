@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  *  * $Id: dos.c,v 1.3 1998/07/02 05:12:52 imp Exp $  */
+comment|/*  * Copyright (c) 1996  *	Michael Smith.  All rights reserved.  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI int21.c,v 2.2 1996/04/08 19:32:51 bostic Exp  *  * $Id: dos.c,v 1.4 1998/07/16 23:54:23 imp Exp $  */
 end_comment
 
 begin_include
@@ -3098,6 +3098,39 @@ block|}
 end_function
 
 begin_comment
+comment|/* ** 21:23 ** ** Get file size for fcb ** DS:DX -> unopened FCB, no wildcards. ** pcb random record field filled in with number of records, rounded up. */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|int21_23
+parameter_list|(
+name|regcontext_t
+modifier|*
+name|REGS
+parameter_list|)
+block|{
+name|debug
+argument_list|(
+name|D_HALF
+argument_list|,
+literal|"Returning failure from get file size for fcb 21:23\n"
+argument_list|)
+expr_stmt|;
+name|R_AL
+operator|=
+literal|0xff
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* ** 21:25 ** ** set interrupt vector */
 end_comment
 
@@ -5898,6 +5931,33 @@ name|R_BX
 argument_list|,
 name|R_DX
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* ** 21:44:7 ** ** Get output status */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|int21_44_7
+parameter_list|(
+name|regcontext_t
+modifier|*
+name|REGS
+parameter_list|)
+block|{
+comment|/* XXX Should really check to see if BX is open or not */
+name|R_AX
+operator|=
+literal|0xFF
 expr_stmt|;
 return|return
 operator|(
@@ -8991,6 +9051,16 @@ literal|"get DPB for current drive"
 block|}
 block|,
 block|{
+literal|0x23
+block|,
+name|IFT_NOSUBFUNC
+block|,
+name|int21_23
+block|,
+literal|"Get file size (old)"
+block|}
+block|,
+block|{
 literal|0x25
 block|,
 name|IFT_NOSUBFUNC
@@ -9308,6 +9378,16 @@ block|,
 name|int21_44_1
 block|,
 literal|"ioctl(set)"
+block|}
+block|,
+block|{
+literal|0x44
+block|,
+literal|0x07
+block|,
+name|int21_44_7
+block|,
+literal|"ioctl(Check output status)"
 block|}
 block|,
 block|{
@@ -10159,14 +10239,25 @@ literal|1
 condition|)
 block|{
 comment|/* no matching functions */
-name|unknown_int2
+name|unknown_int3
 argument_list|(
 literal|0x21
+argument_list|,
+name|R_AH
 argument_list|,
 name|R_AL
 argument_list|,
 name|REGS
 argument_list|)
+expr_stmt|;
+name|R_FLAGS
+operator||=
+name|PSL_C
+expr_stmt|;
+comment|/* Flag an error */
+name|R_AX
+operator|=
+literal|0xff
 expr_stmt|;
 return|return;
 block|}
