@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.15 (Berkeley) %G%"
+literal|"@(#)man.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2234,7 +2234,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|easy
+name|next
 goto|;
 name|e_sufp
 operator|=
@@ -2326,21 +2326,9 @@ if|if
 condition|(
 name|found
 condition|)
-block|{
-name|easy
-label|:
-name|anyfound
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_all
-condition|)
-break|break;
-continue|continue;
-block|}
+goto|goto
+name|next
+goto|;
 comment|/* Try the _build key words next. */
 name|e_sufp
 operator|=
@@ -2500,6 +2488,8 @@ condition|(
 name|found
 condition|)
 block|{
+name|next
+label|:
 name|anyfound
 operator|=
 literal|1
@@ -2509,7 +2499,28 @@ condition|(
 operator|!
 name|f_all
 condition|)
+block|{
+comment|/* Delete any other matches. */
+while|while
+condition|(
+operator|++
+name|cnt
+operator|<
+name|pg
+operator|->
+name|gl_pathc
+condition|)
+name|pg
+operator|->
+name|gl_pathv
+index|[
+name|cnt
+index|]
+operator|=
+literal|""
+expr_stmt|;
 break|break;
+block|}
 continue|continue;
 block|}
 comment|/* It's not a man page, forget about it. */
