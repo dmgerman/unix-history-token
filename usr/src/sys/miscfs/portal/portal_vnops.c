@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	1.1 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	1.2 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -227,7 +227,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/*USES_VOP_LOCK;*/
 name|char
 modifier|*
 name|pname
@@ -380,9 +379,6 @@ name|fvp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Save all of the remaining pathname and 	 * advance the namei next pointer to the end 	 * of the string. 	 */
-ifdef|#
-directive|ifdef
-name|notyet
 for|for
 control|(
 name|size
@@ -402,24 +398,20 @@ control|)
 name|size
 operator|++
 expr_stmt|;
-name|ndp
+name|ap
 operator|->
-name|ni_next
+name|a_cnp
+operator|->
+name|cn_consume
 operator|=
-name|path
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_pathlen
-operator|-=
 name|size
 operator|-
-name|ndp
+name|ap
 operator|->
-name|ni_namelen
+name|a_cnp
+operator|->
+name|cn_namelen
 expr_stmt|;
-endif|#
-directive|endif
 name|pt
 operator|->
 name|pt_arg
@@ -914,17 +906,18 @@ endif|#
 directive|endif
 name|res
 operator|=
-name|max
-argument_list|(
-literal|512
-argument_list|,
 name|pt
 operator|->
 name|pt_size
 operator|+
-literal|128
+sizeof|sizeof
+argument_list|(
+name|pcred
 argument_list|)
+operator|+
+literal|512
 expr_stmt|;
+comment|/* XXX */
 name|error
 operator|=
 name|soreserve
@@ -1137,6 +1130,14 @@ endif|#
 directive|endif
 name|pcred
 operator|.
+name|pcr_flag
+operator|=
+name|ap
+operator|->
+name|a_mode
+expr_stmt|;
+name|pcred
+operator|.
 name|pcr_uid
 operator|=
 name|ap
@@ -1147,13 +1148,33 @@ name|cr_uid
 expr_stmt|;
 name|pcred
 operator|.
-name|pcr_gid
+name|pcr_ngroups
 operator|=
 name|ap
 operator|->
 name|a_cred
 operator|->
-name|cr_gid
+name|cr_ngroups
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|ap
+operator|->
+name|a_cred
+operator|->
+name|cr_groups
+argument_list|,
+name|pcred
+operator|.
+name|pcr_groups
+argument_list|,
+name|NGROUPS
+operator|*
+sizeof|sizeof
+argument_list|(
+name|gid_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|aiov
 index|[
@@ -2270,13 +2291,7 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|*
-name|ap
-operator|->
-name|a_eofflagp
-operator|=
-literal|1
-expr_stmt|;
+comment|/* *ap->a_eofflagp = 1; */
 return|return
 operator|(
 literal|0
@@ -2740,13 +2755,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|portal_vget
-value|((int (*) __P((struct  vop_vget_args *)))portal_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
 name|portal_valloc
 value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) portal_enotsupp)
 end_define
@@ -3069,14 +3077,6 @@ name|portal_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|portal_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
