@@ -2511,29 +2511,26 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  * Print trap reason.  */
 end_comment
 
-begin_function
-specifier|static
-name|void
-name|ddbprinttrap
-parameter_list|(
-name|int
-name|vector
-parameter_list|)
-block|{
+begin_comment
+unit|static void ddbprinttrap(int vector) {
 comment|/* XXX Implement. */
-name|printf
-argument_list|(
-literal|"ddbprinttrap(%d)\n"
-argument_list|,
-name|vector
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|printf("ddbprinttrap(%d)\n", vector); }
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
