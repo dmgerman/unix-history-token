@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.33 2000/06/01 15:51:27 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.35 2001/10/26 17:58:21 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1646,9 +1646,6 @@ name|int
 name|ifcno
 parameter_list|,
 name|int
-name|repid
-parameter_list|,
-name|int
 name|size
 parameter_list|,
 name|void
@@ -1679,9 +1676,10 @@ name|wValue
 argument_list|,
 name|UDESC_REPORT
 argument_list|,
-name|repid
+literal|0
 argument_list|)
 expr_stmt|;
+comment|/* report id should be 0 */
 name|USETW
 argument_list|(
 name|req
@@ -1868,7 +1866,7 @@ end_function
 
 begin_function
 name|usbd_status
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 parameter_list|(
 name|usbd_interface_handle
 name|ifc
@@ -1984,7 +1982,6 @@ operator|(
 name|USBD_NOMEM
 operator|)
 return|;
-comment|/* XXX should not use 0 Report ID */
 name|err
 operator|=
 name|usbd_get_report_descriptor
@@ -1994,8 +1991,6 @@ argument_list|,
 name|id
 operator|->
 name|bInterfaceNumber
-argument_list|,
-literal|0
 argument_list|,
 operator|*
 name|sizep

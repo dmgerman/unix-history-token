@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.h,v 1.22 2000/06/01 14:37:52 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.h,v 1.23 2001/10/26 17:58:22 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -203,9 +203,6 @@ name|int
 name|ifcno
 parameter_list|,
 name|int
-name|repid
-parameter_list|,
-name|int
 name|size
 parameter_list|,
 name|void
@@ -314,7 +311,7 @@ end_function_decl
 
 begin_function_decl
 name|usbd_status
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 parameter_list|(
 name|usbd_interface_handle
 name|ifc

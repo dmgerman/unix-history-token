@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhid.c,v 1.44 2001/09/15 16:16:28 yamt Exp $	*/
+comment|/*	$NetBSD: uhid.c,v 1.45 2001/10/26 17:58:21 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1067,7 +1067,7 @@ name|NULL
 expr_stmt|;
 name|err
 operator|=
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 argument_list|(
 name|uaa
 operator|->

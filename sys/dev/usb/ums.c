@@ -660,7 +660,7 @@ operator|)
 return|;
 name|err
 operator|=
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 argument_list|(
 name|uaa
 operator|->
@@ -962,7 +962,7 @@ expr_stmt|;
 block|}
 name|err
 operator|=
-name|usbd_alloc_report_desc
+name|usbd_read_report_desc
 argument_list|(
 name|uaa
 operator|->
