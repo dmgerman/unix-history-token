@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c 1.5 %G%"
+literal|"@(#)func.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,7 +544,9 @@ argument_list|)
 condition|)
 name|convert
 argument_list|(
-name|p1
+name|nl
+operator|+
+name|T4INT
 argument_list|,
 name|nl
 operator|+
