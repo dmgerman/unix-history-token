@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,19 @@ case|case
 name|R_CURSOR
 case|:
 comment|/* 		 * If flags is R_CURSOR, delete the cursor; must already have 		 * started a scan and not have already deleted the record.  For 		 * the delete cursor bit to have been set requires that the 		 * scan be initialized, so no reason to check. 		 */
+if|if
+condition|(
+operator|!
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_SEQINIT
+argument_list|)
+condition|)
+goto|goto
+name|einval
+goto|;
 name|status
 operator|=
 name|ISSET
@@ -197,6 +210,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|einval
+label|:
 name|errno
 operator|=
 name|EINVAL
