@@ -445,7 +445,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int64_t
 name|daddr_t
 typedef|;
 end_typedef
