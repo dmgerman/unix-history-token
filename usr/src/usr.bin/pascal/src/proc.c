@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.15 %G%"
+literal|"@(#)proc.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,17 @@ include|#
 directive|include
 file|"objfmt.h"
 end_include
+
+begin_comment
+comment|/*  * The constant REALSPC defines the amount of forced padding preceeding  * real numbers when they are printed. If REALSPC == 0, then no padding  * is added, REALSPC == 1 adds one extra blank irregardless of the width  * specified by the user.  *  * N.B. - Values greater than one require program mods.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REALSPC
+value|0
+end_define
 
 begin_comment
 comment|/*  * The following array is used to determine which classes may be read  * from textfiles. It is indexed by the return value from classify.  */
@@ -1644,9 +1655,12 @@ break|break;
 case|case
 name|CONWIDTH
 case|:
+name|field
+operator|-=
+name|REALSPC
+expr_stmt|;
 if|if
 condition|(
-operator|--
 name|field
 operator|<
 literal|1
@@ -1704,9 +1718,12 @@ name|CONWIDTH
 operator|+
 name|VARPREC
 case|:
+name|field
+operator|-=
+name|REALSPC
+expr_stmt|;
 if|if
 condition|(
-operator|--
 name|field
 operator|<
 literal|1
@@ -1726,6 +1743,8 @@ expr_stmt|;
 name|fmtstart
 operator|=
 literal|1
+operator|-
+name|REALSPC
 expr_stmt|;
 break|break;
 case|case
@@ -2141,7 +2160,9 @@ literal|3
 argument_list|,
 name|O_MAX
 argument_list|,
-literal|8
+literal|7
+operator|+
+name|REALSPC
 argument_list|,
 literal|1
 argument_list|)
@@ -2154,7 +2175,9 @@ literal|3
 argument_list|,
 name|O_MAX
 argument_list|,
-literal|9
+literal|8
+operator|+
+name|REALSPC
 argument_list|,
 literal|1
 argument_list|)
@@ -2215,7 +2238,7 @@ literal|3
 argument_list|,
 name|O_MAX
 argument_list|,
-literal|1
+name|REALSPC
 argument_list|,
 literal|1
 argument_list|)
