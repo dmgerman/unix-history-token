@@ -264,13 +264,9 @@ directive|ifdef
 name|UFS_EXTATTR
 name|ufs_extattr_vnode_inactive
 argument_list|(
-name|ap
-operator|->
-name|a_vp
+name|vp
 argument_list|,
-name|ap
-operator|->
-name|a_td
+name|td
 argument_list|)
 expr_stmt|;
 endif|#
