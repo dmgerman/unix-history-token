@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.3	81/12/03	*/
+comment|/*	raw_usrreq.c	4.4	82/01/19	*/
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ name|mh
 operator|=
 name|m_get
 argument_list|(
-literal|0
+name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
 if|if

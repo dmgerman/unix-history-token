@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.22	81/12/11	*/
+comment|/*	ip_output.c	1.23	82/01/19	*/
 end_comment
 
 begin_include
@@ -369,7 +369,7 @@ name|mh
 init|=
 name|m_get
 argument_list|(
-literal|0
+name|M_DONTWAIT
 argument_list|)
 decl_stmt|;
 name|struct
