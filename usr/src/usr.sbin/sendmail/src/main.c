@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.27	%G%"
+literal|"@(#)main.c	3.28	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2306,30 +2306,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|frombuf
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|pvp
-operator|!=
-name|NULL
-condition|)
-operator|(
-name|void
-operator|)
-name|strcat
+name|cataddr
 argument_list|(
+name|pvp
+argument_list|,
 name|frombuf
 argument_list|,
-operator|*
-name|pvp
-operator|++
+sizeof|sizeof
+name|frombuf
 argument_list|)
 expr_stmt|;
 name|define
