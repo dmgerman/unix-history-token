@@ -518,7 +518,7 @@ name|maxpipes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max # of pipes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -581,7 +581,28 @@ name|amountpipes
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Current # of pipes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_ipc
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|bigpipes
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nbigpipe
+argument_list|,
+literal|0
+argument_list|,
+literal|"Current # of big pipes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4123,8 +4144,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+name|atomic_add_int
+argument_list|(
+operator|&
 name|nbigpipe
-operator|++
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|PIPE_DROP_GIANT
 argument_list|(
@@ -4241,16 +4267,6 @@ operator|&&
 name|amountpipekvawired
 operator|<
 name|maxpipekvawired
-operator|&&
-operator|(
-name|uio
-operator|->
-name|uio_iov
-operator|->
-name|iov_len
-operator|>=
-name|PIPE_MINDIRECT
-operator|)
 condition|)
 block|{
 name|error
@@ -5934,8 +5950,13 @@ name|size
 operator|>
 name|PIPE_SIZE
 condition|)
-operator|--
+name|atomic_subtract_int
+argument_list|(
+operator|&
 name|nbigpipe
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|atomic_subtract_int
 argument_list|(
