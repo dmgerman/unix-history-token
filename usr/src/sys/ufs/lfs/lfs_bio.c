@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-comment|/* 	 * Set the delayed write flag and use reassignbuf to move the buffer 	 * from the clean list to the dirty one. 	 * 	 * Set the B_LOCKED flag and unlock the buffer, causing brelse to move 	 * the buffer onto the LOCKED free list.  This is necessary, otherwise 	 * getnewbuf() would try to reclaim the buffers using bawrite, which 	 * isn't going to work. 	 */
+comment|/* 	 * Set the delayed write flag and use reassignbuf to move the buffer 	 * from the clean list to the dirty one. 	 * 	 * Set the B_LOCKED flag and unlock the buffer, causing brelse to move 	 * the buffer onto the LOCKED free list.  This is necessary, otherwise 	 * getnewbuf() would try to reclaim the buffers using bawrite, which 	 * isn't going to work. 	 * 	 * XXX we don't let meta-data writes run out of space because they can 	 * come from the segment writer.  We need to make sure that there is 	 * enough space reserved so that there's room to write meta-data 	 * blocks. 	 */
 if|if
 condition|(
 operator|!
@@ -199,14 +199,14 @@ name|IS_IFILE
 argument_list|(
 name|bp
 argument_list|)
-condition|)
-block|{
+operator|&&
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_INVAL
-expr_stmt|;
+name|b_lblkno
+operator|>
+literal|0
+condition|)
+block|{
 name|brelse
 argument_list|(
 name|bp
