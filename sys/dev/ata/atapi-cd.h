@@ -367,9 +367,11 @@ literal|1
 decl_stmt|;
 comment|/* multi-session photo-CD */
 name|u_int8_t
-label|:
+name|burnproof
+range|:
 literal|1
-expr_stmt|;
+decl_stmt|;
+comment|/* supports burnproof */
 name|u_int8_t
 name|cd_da
 range|:
@@ -754,9 +756,20 @@ literal|1
 decl_stmt|;
 comment|/* test write enable */
 name|u_int8_t
-name|reserved2_567
+name|reserved2_5
 range|:
-literal|3
+literal|1
+decl_stmt|;
+name|u_int8_t
+name|burnproof
+range|:
+literal|1
+decl_stmt|;
+comment|/* BurnProof enable */
+name|u_int8_t
+name|reserved2_7
+range|:
+literal|1
 decl_stmt|;
 name|u_int8_t
 name|track_mode
