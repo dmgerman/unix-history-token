@@ -410,6 +410,7 @@ name|file
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -477,6 +478,7 @@ name|show
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
@@ -564,6 +566,7 @@ name|file
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1413,6 +1416,7 @@ name|name
 parameter_list|,
 name|secs
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
