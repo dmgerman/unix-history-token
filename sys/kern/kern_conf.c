@@ -138,7 +138,7 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|specinfo
+name|cdev
 name|devt_stash
 index|[
 name|DEVT_STASH
@@ -151,7 +151,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|specinfo
+argument|cdev
 argument_list|)
 name|dev_hash
 index|[
@@ -165,7 +165,7 @@ specifier|static
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|specinfo
+argument|cdev
 argument_list|)
 name|dev_free
 expr_stmt|;
@@ -628,7 +628,7 @@ name|int
 name|stashed
 decl_stmt|;
 name|struct
-name|specinfo
+name|cdev
 modifier|*
 name|si
 decl_stmt|;
@@ -670,7 +670,7 @@ argument_list|(
 name|si
 argument_list|,
 expr|struct
-name|specinfo
+name|cdev
 operator|*
 argument_list|,
 sizeof|sizeof
@@ -748,7 +748,7 @@ name|y
 parameter_list|)
 block|{
 name|struct
-name|specinfo
+name|cdev
 modifier|*
 name|si
 decl_stmt|;

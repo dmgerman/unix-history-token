@@ -2135,7 +2135,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-comment|/* Check if the type of device node isn't VBAD before 	 * touching v_specinfo.  If the device vnode is revoked, the 	 * field is NULL and touching it causes null pointer derefercence. 	 */
+comment|/* Check if the type of device node isn't VBAD before 	 * touching v_cdev.  If the device vnode is revoked, the 	 * field is NULL and touching it causes null pointer derefercence. 	 */
 if|if
 condition|(
 name|ntmp

@@ -1813,7 +1813,7 @@ name|_debug_sizeof
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|specinfo
+name|cdev
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -1822,10 +1822,10 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|specinfo
+name|cdev
 argument_list|)
 argument_list|,
-literal|"sizeof(struct specinfo)"
+literal|"sizeof(struct cdev)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

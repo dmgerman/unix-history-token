@@ -772,7 +772,7 @@ end_typedef
 
 begin_struct_decl
 struct_decl|struct
-name|specinfo
+name|cdev
 struct_decl|;
 end_struct_decl
 
@@ -790,7 +790,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|specinfo
+name|cdev
 modifier|*
 name|dev_t
 typedef|;

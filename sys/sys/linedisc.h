@@ -63,7 +63,7 @@ end_expr_stmt
 
 begin_struct
 struct|struct
-name|specinfo
+name|cdev
 block|{
 name|u_int
 name|si_flags
@@ -125,7 +125,7 @@ name|si_udev
 decl_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|specinfo
+argument|cdev
 argument_list|)
 name|si_hash
 expr_stmt|;
@@ -139,13 +139,13 @@ expr_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
-argument|specinfo
+argument|cdev
 argument_list|)
 name|si_children
 expr_stmt|;
 name|LIST_ENTRY
 argument_list|(
-argument|specinfo
+argument|cdev
 argument_list|)
 name|si_siblings
 expr_stmt|;

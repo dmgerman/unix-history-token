@@ -4314,7 +4314,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the specinfo structure in the kernel (as pointed to by a dev_t)  * in order to work out the associated udev_t  */
+comment|/*  * Read the cdev structure in the kernel (as pointed to by a dev_t)  * in order to work out the associated udev_t  */
 end_comment
 
 begin_function
@@ -4328,7 +4328,7 @@ name|dev
 decl_stmt|;
 block|{
 name|struct
-name|specinfo
+name|cdev
 name|si
 decl_stmt|;
 if|if

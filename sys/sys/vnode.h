@@ -279,9 +279,9 @@ comment|/* v unix ipc (VSOCK) */
 struct|struct
 block|{
 name|struct
-name|specinfo
+name|cdev
 modifier|*
-name|vu_specinfo
+name|vu_cdev
 decl_stmt|;
 comment|/* v device (VCHR, VBLK) */
 name|SLIST_ENTRY
@@ -449,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|v_rdev
-value|v_un.vu_spec.vu_specinfo
+value|v_un.vu_spec.vu_cdev
 end_define
 
 begin_define
