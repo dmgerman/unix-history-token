@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.56 2001/11/20 13:48:03 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.57 2001/11/20 16:08:37 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1255,7 +1255,7 @@ name|sc_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
+comment|/* 	 * To have the best chance of success we do things in the exact same 	 * order as Windoze98.  This should not be necessary, but some 	 * devices do not follow the USB specs to the letter. 	 * 	 * These are the events on the bus when a hub is attached: 	 *  Get device and config descriptors (see attach code) 	 *  Get hub descriptor (see above) 	 *  For all ports 	 *     turn on power 	 *     wait for power to become stable 	 * (all below happens in explore code) 	 *  For all ports 	 *     clear C_PORT_CONNECTION 	 *  For all ports 	 *     get port status 	 *     if device connected 	 *        wait 100 ms 	 *        turn on reset 	 *        wait 	 *        clear C_PORT_RESET 	 *        get port status 	 *        proceed with device attachment 	 */
 comment|/* Set up data structures */
 for|for
 control|(
