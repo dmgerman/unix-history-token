@@ -188,7 +188,7 @@ name|pcic_ignore_function_1
 argument_list|,
 literal|0
 argument_list|,
-literal|"When set, driver ignores pci function 1 of the bridge"
+literal|"When set, driver ignores pci function 1 of the bridge.  This option\n\ is obsolete and will be deleted before FreeBSD 4.8."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -236,7 +236,7 @@ name|pcic_intr_path
 argument_list|,
 literal|0
 argument_list|,
-literal|"Which path to send the interrupts over."
+literal|"Which path to send the interrupts over.  Normally interrupts for\n\ cardbus bridges are routed over the PCI bus (2).  However, some laptops\n\ will hang when using PCI interrupts due to bugs in this code.  Those\n\ bugs can be worked around by forcings ISA interrupts (1)."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -277,7 +277,7 @@ name|pcic_init_routing
 argument_list|,
 literal|0
 argument_list|,
-literal|"Force the interrupt routing to be initialized on those bridges where\n\ doing so will cause probelms.  Often when no interrupts appear to be routed\n\ setting this tunable to 1 will resolve the problem.  PCI Cards will almost\n\ always require this, while builtin bridges need it less often"
+literal|"Force the interrupt routing to be initialized on those bridges where\n\ doing so will cause probelms.  This is very rare and generally is not\n\ needed.  The default of 0 is almost always appropriate.  Only set to 1 if\n\ instructed to do so for debugging.  This option is obsolete and will be\n\ deleted before FreeBSD 4.8."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -318,7 +318,51 @@ name|pcic_ignore_pci
 argument_list|,
 literal|0
 argument_list|,
-literal|"When set, driver ignores pci cardbus bridges it would otherwise claim."
+literal|"When set, driver ignores pci cardbus bridges it would otherwise claim.\n\ Generally speaking, this option is not needed for anything other than as an\n\ aid in debugging."
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_pd6729_intr_path
+init|=
+operator|(
+name|int
+operator|)
+name|pcic_iw_isa
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.pd6729_intr_path"
+argument_list|,
+operator|&
+name|pcic_pd6729_intr_path
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pcic
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pd6729_intr_path
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pcic_pd6729_intr_path
+argument_list|,
+literal|0
+argument_list|,
+literal|"For Cirrus Logic PD6729 and similar I/O space based pcmcia bridges, this\n\ tells the code if it is wired onto a PCI expansion card (2), or if it is\n\ installed in a laptop (1).  This is similar to hw.pcic.intr_path, but\n\ separate so that it can default to ISA when intr_path defaults to PCI."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1680,7 +1724,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The Cirrus Logic PD6729/30.  These are weird beasts, so be careful.  */
+comment|/*  * The Cirrus Logic PD6729/30.  These are weird beasts, so be careful.  * They are ISA parts glued to the PCI bus and do not follow the yenta  * specification for cardbus bridges.  They seem to be similar to the  * intel parts that were also cloned by o2micro and maybe others, but  * they are so much more common that the author doesn't have experience  * with them to know for sure.  */
 end_comment
 
 begin_function
@@ -1698,8 +1742,43 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
-comment|/* 	 * We're only supporting ISA interrupts, so do nothing for the 	 * moment. 	 */
-comment|/* XXX */
+comment|/* 	 * For pci interrupts, we need to set bit 3 of extension register 	 * 3 to 1.  For ISA interrupts, we need to clear it. 	 */
+name|sp
+operator|->
+name|putb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXT_IND
+argument_list|,
+name|PCIC_EXTCTRL1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|way
+operator|==
+name|pcic_iw_pci
+condition|)
+name|pcic_setb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXTENDED
+argument_list|,
+name|PCIC_EC1_CARD_IRQ_INV
+argument_list|)
+expr_stmt|;
+else|else
+name|pcic_clrb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXTENDED
+argument_list|,
+name|PCIC_EC1_CARD_IRQ_INV
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1723,8 +1802,43 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
-comment|/* 	 * We're only supporting ISA interrupts, so do nothing for the 	 * moment. 	 */
-comment|/* XXX */
+comment|/* 	 * For pci interrupts, we need to set bit 4 of extension register 	 * 3 to 1.  For ISA interrupts, we need to clear it. 	 */
+name|sp
+operator|->
+name|putb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXT_IND
+argument_list|,
+name|PCIC_EXTCTRL1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|way
+operator|==
+name|pcic_iw_pci
+condition|)
+name|pcic_setb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXTENDED
+argument_list|,
+name|PCIC_EC1_CSC_IRQ_INV
+argument_list|)
+expr_stmt|;
+else|else
+name|pcic_clrb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_EXTENDED
+argument_list|,
+name|PCIC_EC1_CSC_IRQ_INV
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1770,7 +1884,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"CL-PD67xx broken for PCI routing.\n"
+literal|"PD67xx maybe broken for PCI routing.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3214,7 +3328,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force the function interrupts to be pulse rather than 	 * edge triggered. 	 */
+comment|/* 	 * Tell the chip to do its routing thing. 	 */
 name|sc
 operator|->
 name|chip
@@ -3229,7 +3343,9 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|pcic_iw_isa
+name|sc
+operator|->
+name|func_route
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4018,8 +4134,6 @@ if|#
 directive|if
 literal|0
 block|struct pcic_softc *sc; 	struct pcic_slot *sp;  	sc = (struct pcic_softc *) device_get_softc(dev); 	sp =&sc->slots[0];
-comment|/* 	 * Make the chips use ISA again. 	 */
-block|sc->chip->func_intr_way(&sc->slots[0], pcic_iw_isa); 	sc->chip->csc_intr_way(&sc->slots[0], pcic_iw_isa);
 comment|/* 	 * Turn off the power to the slot in an attempt to 	 * keep the system from hanging on reboot.  We also turn off 	 * card interrupts in an attempt to control interrupt storms. 	 * on some (all?) this has the effect of also turning off 	 * card status change interrupts.  A side effect of writing 0 	 * to INT_GEN is that the card is placed into "reset" mode 	 * where nothing happens until it is taken out of "reset" 	 * mode. 	 * 	 * Also, turn off the generation of status interrupts too. 	 */
 block|sp->putb(sp, PCIC_INT_GEN, 0); 	sp->putb(sp, PCIC_STAT_INT, 0); 	sp->putb(sp, PCIC_POWER, 0); 	DELAY(4000);
 comment|/* 	 * Writing to INT_GEN can cause an interrupt, so we blindly 	 * ack all possible interrupts here.  Reading the stat change 	 * shouldn't be necessary, but some TI chipsets need it in the 	 * normal course of operations, so we do it here too.  We can't 	 * lose any interrupts after this point, so go ahead and ack 	 * everything.  The bits in INT_GEN clear upon reading them. 	 * We also set the interrupt mask to 0, in an effort to avoid 	 * getting further interrupts. 	 */
@@ -4460,18 +4574,16 @@ operator|)
 literal|1
 expr_stmt|;
 block|}
-comment|/* 		 * We only support isa at this time.  These cards can be 		 * wired up as either ISA cards *OR* PCI cards (well, weird 		 * hybrids are possible, but not seen in the wild).  Since it 		 * is an either or thing, we assume ISA since all laptops that 		 * we supported in 4.3 and earlier work. 		 */
+comment|/* 		 * While one could specify PCI interrupts, that's not 		 * yet supported other places in the code. 		 */
 name|sc
 operator|->
 name|csc_route
 operator|=
-name|pcic_iw_isa
-expr_stmt|;
 name|sc
 operator|->
 name|func_route
 operator|=
-name|pcic_iw_isa
+name|pcic_pd6729_intr_path
 expr_stmt|;
 if|if
 condition|(
@@ -5269,7 +5381,7 @@ name|int
 name|irq
 parameter_list|)
 block|{
-comment|/* 	 * If we're doing ISA interrupt routing, then just go to the 	 * generic ISA routine.  Also, irq 0 means turn off the interrupts 	 * at the bridge.  We do this by making the interrupts edge 	 * triggered rather then level. 	 */
+comment|/* 	 * If we're doing ISA interrupt routing, then just go to the 	 * generic ISA routine.  Also, irq 0 means turn off the interrupts 	 * at the bridge. 	 */
 if|if
 condition|(
 name|sp
@@ -5294,20 +5406,51 @@ name|irq
 argument_list|)
 operator|)
 return|;
-return|return
-operator|(
+comment|/* 	 * Ohterwise we're doing PCI interrupts.  For those cardbus bridges 	 * that follow yenta (and the one pcmcia bridge that does), we don't 	 * do a thing to get the IRQ mapped into the system.  However, 	 * for other controllers that are PCI, but not yetna compliant, we 	 * need to do some special mapping. 	 */
+if|if
+condition|(
 name|sp
 operator|->
-name|sc
+name|controller
+operator|==
+name|PCIC_PD6729
+condition|)
+block|{
+comment|/* 		 * INTA - 3 		 * INTB - 4 		 * INTC - 5 		 * INTD - 7 		 */
+name|sp
 operator|->
-name|chip
-operator|->
-name|func_intr_way
+name|putb
 argument_list|(
 name|sp
 argument_list|,
-name|pcic_iw_pci
+name|PCIC_INT_GEN
+argument_list|,
+comment|/* Assume INTA# */
+operator|(
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_INT_GEN
 argument_list|)
+operator|&
+literal|0xF0
+operator|)
+operator||
+literal|3
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
