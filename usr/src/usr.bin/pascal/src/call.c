@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.16 %G%"
+literal|"@(#)call.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ endif|PC
 end_endif
 
 begin_comment
-comment|/*  * Call generates code for calls to  * user defined procedures and functions  * and is called by proc and funccod.  * P is the result of the lookup  * of the procedure/function symbol,  * and porf is PROC or FUNC.  * Psbn is the block number of p.  *  *	the idea here is that regular scalar functions are just called,  *	while structure functions and formal functions have their results  *	stored in a temporary after the call.  *	structure functions do this because they return pointers  *	to static results, so we copy the static  *	and return a pointer to the copy.  *	formal functions do this because we have to save the result  *	around a call to the runtime routine which restores the display,  *	so we can't just leave the result lying around in registers.  *	calls to formal parameters pass the formal as a hidden argument   *	to a special entry point for the formal call.  *	[this is somewhat dependent on the way arguments are addressed.]  *	so PROCs and scalar FUNCs look like  *		p(...args...)  *	structure FUNCs look like  *		(temp = p(...args...),&temp)  *	formal FPROCs look like  *		( p -> entryaddr )(...args...,p),FRTN( p ))  *	formal scalar FFUNCs look like  *		(temp = ( p -> entryaddr )(...args...,p),FRTN( p ),temp)  *	formal structure FFUNCs look like  *		(temp = ( p -> entryaddr )(...args...,p),FRTN( p ),&temp)  */
+comment|/*  * Call generates code for calls to  * user defined procedures and functions  * and is called by proc and funccod.  * P is the result of the lookup  * of the procedure/function symbol,  * and porf is PROC or FUNC.  * Psbn is the block number of p.  *  *	the idea here is that regular scalar functions are just called,  *	while structure functions and formal functions have their results  *	stored in a temporary after the call.  *	structure functions do this because they return pointers  *	to static results, so we copy the static  *	and return a pointer to the copy.  *	formal functions do this because we have to save the result  *	around a call to the runtime routine which restores the display,  *	so we can't just leave the result lying around in registers.  *	formal calls save the address of the descriptor in a local  *	temporary, so it can be addressed for the call which restores  *	the display (FRTN).  *	calls to formal parameters pass the formal as a hidden argument   *	to a special entry point for the formal call.  *	[this is somewhat dependent on the way arguments are addressed.]  *	so PROCs and scalar FUNCs look like  *		p(...args...)  *	structure FUNCs look like  *		(temp = p(...args...),&temp)  *	formal FPROCs look like  *		( t=p,( t -> entryaddr )(...args...,t),FRTN( t ))  *	formal scalar FFUNCs look like  *		( t=p,temp=( t -> entryaddr )(...args...,t),FRTN( t ),temp)  *	formal structure FFUNCs look like  *		(t=p,temp = ( t -> entryaddr )(...args...,t),FRTN( t ),&temp)  */
 end_comment
 
 begin_function
@@ -179,6 +179,11 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|tempdescrp
+decl_stmt|;
 endif|#
 directive|endif
 endif|PC
@@ -257,6 +262,92 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
+comment|/* 		 *	if this is a formal call, 		 *	stash the address of the descriptor 		 *	in a temporary so we can find it 		 *	after the FCALL for the call to FRTN 		 */
+if|if
+condition|(
+name|p
+operator|->
+name|class
+operator|==
+name|FFUNC
+operator|||
+name|p
+operator|->
+name|class
+operator|==
+name|FPROC
+condition|)
+block|{
+name|tempdescrp
+operator|=
+name|tmpalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|formalrtn
+operator|*
+argument_list|)
+argument_list|,
+name|NIL
+argument_list|,
+name|REGOK
+argument_list|)
+expr_stmt|;
+name|putRV
+argument_list|(
+literal|0
+argument_list|,
+name|cbn
+argument_list|,
+name|tempdescrp
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|tempdescrp
+operator|->
+name|extra_flags
+argument_list|,
+name|P2PTR
+operator||
+name|P2STRTY
+argument_list|)
+expr_stmt|;
+name|putRV
+argument_list|(
+literal|0
+argument_list|,
+name|psbn
+argument_list|,
+name|p
+operator|->
+name|value
+index|[
+name|NL_OFFS
+index|]
+argument_list|,
+name|p
+operator|->
+name|extra_flags
+argument_list|,
+name|P2PTR
+operator||
+name|P2STRTY
+argument_list|)
+expr_stmt|;
+name|putop
+argument_list|(
+name|P2ASSIGN
+argument_list|,
+name|P2PTR
+operator||
+name|P2STRTY
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 		 *	if we have to store a temporary, 		 *	temptype will be its type, 		 *	otherwise, it's P2UNDEF. 		 */
 name|temptype
 operator|=
@@ -438,21 +529,21 @@ case|:
 case|case
 name|FPROC
 case|:
-comment|/* 			     *	... ( p -> entryaddr )( ... 			     */
+comment|/* 			     *	... ( t -> entryaddr )( ... 			     */
 name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|psbn
+name|cbn
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|value
 index|[
 name|NL_OFFS
 index|]
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|extra_flags
 argument_list|,
@@ -1263,16 +1354,16 @@ name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|psbn
+name|cbn
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|value
 index|[
 name|NL_OFFS
 index|]
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|extra_flags
 argument_list|,
@@ -1300,7 +1391,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* 		 *	do the actual call: 		 *	    either	... p( ... ) ... 		 *	    or		... ( p -> entryaddr )( ... ) ... 		 *	and maybe an assignment. 		 */
+comment|/* 		 *	do the actual call: 		 *	    either	... p( ... ) ... 		 *	    or		... ( t -> entryaddr )( ... ) ... 		 *	and maybe an assignment. 		 */
 if|if
 condition|(
 name|porf
@@ -1428,7 +1519,7 @@ name|P2INT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 *	... , FRTN( p ) ... 		 */
+comment|/* 		 *	( t=p , ... , FRTN( t ) ... 		 */
 if|if
 condition|(
 name|p
@@ -1444,6 +1535,13 @@ operator|==
 name|FPROC
 condition|)
 block|{
+name|putop
+argument_list|(
+name|P2COMOP
+argument_list|,
+name|P2INT
+argument_list|)
+expr_stmt|;
 name|putleaf
 argument_list|(
 name|P2ICON
@@ -1468,16 +1566,16 @@ name|putRV
 argument_list|(
 literal|0
 argument_list|,
-name|psbn
+name|cbn
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|value
 index|[
 name|NL_OFFS
 index|]
 argument_list|,
-name|p
+name|tempdescrp
 operator|->
 name|extra_flags
 argument_list|,
