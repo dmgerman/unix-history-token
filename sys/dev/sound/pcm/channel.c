@@ -1119,6 +1119,10 @@ name|timeout
 operator|=
 literal|1
 expr_stmt|;
+name|timeout
+operator|=
+literal|1
+expr_stmt|;
 name|ret
 operator|=
 name|chn_sleep
@@ -1550,7 +1554,7 @@ argument_list|,
 name|PCMTRIG_EMLDMARD
 argument_list|)
 expr_stmt|;
-comment|/* update pointers in primary bufhard */
+comment|/* update pointers in primary buffer */
 name|chn_dmaupdate
 argument_list|(
 name|c
@@ -1861,6 +1865,8 @@ parameter_list|)
 block|{
 name|u_int32_t
 name|i
+decl_stmt|,
+name|j
 decl_stmt|;
 name|struct
 name|snd_dbuf
@@ -1932,6 +1938,26 @@ argument_list|(
 name|bs
 argument_list|)
 expr_stmt|;
+name|j
+operator|=
+operator|(
+name|c
+operator|->
+name|direction
+operator|==
+name|PCMDIR_PLAY
+operator|)
+condition|?
+name|sndbuf_getfree
+argument_list|(
+name|b
+argument_list|)
+else|:
+name|sndbuf_getready
+argument_list|(
+name|b
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|force
@@ -1939,10 +1965,7 @@ operator|||
 operator|(
 name|i
 operator|>=
-name|sndbuf_getblksz
-argument_list|(
-name|b
-argument_list|)
+name|j
 operator|)
 condition|)
 block|{
@@ -1990,6 +2013,12 @@ name|b
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|c
+operator|->
+name|xruns
+operator|=
+literal|0
 expr_stmt|;
 name|chn_trigger
 argument_list|(

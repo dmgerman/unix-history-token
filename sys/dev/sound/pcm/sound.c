@@ -3192,13 +3192,6 @@ if|if
 condition|(
 name|c
 operator|->
-name|pid
-operator|!=
-operator|-
-literal|1
-operator|&&
-name|c
-operator|->
 name|bufhard
 operator|!=
 name|NULL
@@ -3259,18 +3252,11 @@ name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"underruns %d, hready %d, sready %d"
+literal|"underruns %d, ready %d"
 argument_list|,
 name|c
 operator|->
 name|xruns
-argument_list|,
-name|sndbuf_getready
-argument_list|(
-name|c
-operator|->
-name|bufhard
-argument_list|)
 argument_list|,
 name|sndbuf_getready
 argument_list|(
@@ -3306,7 +3292,7 @@ name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"[hardware]%s"
+literal|"{hardware}%s"
 argument_list|,
 name|fsep
 argument_list|)
@@ -3450,7 +3436,7 @@ name|sbuf_printf
 argument_list|(
 name|s
 argument_list|,
-literal|"[userland]"
+literal|"{userland}"
 argument_list|)
 expr_stmt|;
 block|}
