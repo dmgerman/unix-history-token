@@ -564,8 +564,6 @@ literal|"ufs"
 block|,
 literal|"ffs"
 block|,
-literal|"lfs"
-block|,
 literal|"ext2fs"
 block|,
 literal|0
