@@ -2029,6 +2029,14 @@ name|plen
 operator|%
 literal|48
 expr_stmt|;
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|pad
+expr_stmt|;
 if|if
 condition|(
 name|M_WRITABLE
