@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vfprintf.c,v 1.12 1997/02/22 15:02:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,7 +1193,7 @@ value|0x008
 end_define
 
 begin_comment
-comment|/* long double; unimplemented */
+comment|/* long double */
 end_comment
 
 begin_define
@@ -2290,6 +2290,7 @@ name|flags
 operator|&
 name|LONGDBL
 condition|)
+comment|/* XXX this loses precision. */
 name|_double
 operator|=
 operator|(
