@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.23 1997/09/12 02:26:12 ache Exp $"
+literal|"$Id: w.c,v 1.24 1997/10/13 15:17:03 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,7 +1163,7 @@ expr_stmt|;
 define|#
 directive|define
 name|HEADER
-value|"USER             TTY FROM              LOGIN@  IDLE WHAT\n"
+value|"USER             TTY      FROM              LOGIN@  IDLE WHAT\n"
 define|#
 directive|define
 name|WUSED
@@ -2077,7 +2077,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*.*s %-3.3s %-*.*s "
+literal|"%-*.*s %-*.*s %-*.*s "
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -2088,6 +2088,10 @@ operator|->
 name|utmp
 operator|.
 name|ut_name
+argument_list|,
+name|UT_LINESIZE
+argument_list|,
+name|UT_LINESIZE
 argument_list|,
 name|strncmp
 argument_list|(
