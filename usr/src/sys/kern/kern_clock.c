@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.13	kern_clock.c	*/
+comment|/*	%H%	3.14	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -989,9 +989,6 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ERNIE
 if|if
 condition|(
 name|USERMODE
@@ -1006,6 +1003,9 @@ name|u
 operator|.
 name|u_procp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ERNIE
 if|if
 condition|(
 name|pp
@@ -1054,9 +1054,37 @@ name|pp
 operator|->
 name|p_usrpri
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|u
+operator|.
+name|u_vm
+operator|.
+name|vm_utime
+operator|+
+name|u
+operator|.
+name|u_vm
+operator|.
+name|vm_stime
+operator|>
+name|u
+operator|.
+name|u_limit
+index|[
+name|LIM_CPU
+index|]
+condition|)
+name|psignal
+argument_list|(
+name|pp
+argument_list|,
+name|SIGXCPU
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

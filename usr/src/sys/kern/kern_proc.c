@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.15	%G%	*/
+comment|/*	kern_proc.c	3.16	%G%	*/
 end_comment
 
 begin_include
@@ -2446,6 +2446,15 @@ name|u_rdir
 argument_list|)
 expr_stmt|;
 block|}
+name|u
+operator|.
+name|u_limit
+index|[
+name|LIM_FSIZE
+index|]
+operator|=
+name|INFINITY
+expr_stmt|;
 name|acct
 argument_list|()
 expr_stmt|;
@@ -3624,6 +3633,30 @@ operator|.
 name|u_dsize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_dsize
+operator|+
+name|d
+operator|>
+name|u
+operator|.
+name|u_limit
+index|[
+name|LIM_DATA
+index|]
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|chksize
