@@ -67,8 +67,6 @@ name|vchan_fmt
 index|[]
 init|=
 block|{
-name|AFMT_S16_LE
-block|,
 name|AFMT_STEREO
 operator||
 name|AFMT_S16_LE
@@ -382,16 +380,6 @@ name|feeder_vchan_s16_desc
 index|[]
 init|=
 block|{
-block|{
-name|FEEDER_MIXER
-block|,
-name|AFMT_S16_LE
-block|,
-name|AFMT_S16_LE
-block|,
-literal|0
-block|}
-block|,
 block|{
 name|FEEDER_MIXER
 block|,
