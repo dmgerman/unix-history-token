@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	5.3 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -707,14 +707,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error - .netrc file not correct mode.\n"
+literal|"Error: .netrc file is readable by others.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Remove password or correct mode.\n"
+literal|"Remove password or make file unreadable by others.\n\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -794,14 +794,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Error - .netrc file not correct mode.\n"
+literal|"Error: .netrc file is readable by others.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Remove account or correct mode.\n"
+literal|"Remove account or make file unreadable by others.\n\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1260,6 +1260,11 @@ block|;
 if|if
 condition|(
 name|feof
+argument_list|(
+name|cfile
+argument_list|)
+operator|||
+name|ferror
 argument_list|(
 name|cfile
 argument_list|)
