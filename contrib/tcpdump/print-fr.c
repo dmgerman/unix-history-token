@@ -1485,9 +1485,14 @@ case|:
 case|case
 name|LINK_VERIFY_IE_94
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|temp_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp_str
+argument_list|)
 argument_list|,
 literal|"TX Seq: %3d, RX Seq: %3d"
 argument_list|,
@@ -1510,9 +1515,14 @@ break|break;
 case|case
 name|PVC_STATUS_IE
 case|:
-name|sprintf
+name|snprintf
 argument_list|(
 name|temp_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|temp_str
+argument_list|)
 argument_list|,
 literal|"DLCI %d: status %s %s"
 argument_list|,
