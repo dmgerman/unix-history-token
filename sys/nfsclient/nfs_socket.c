@@ -2016,6 +2016,13 @@ condition|(
 name|error
 condition|)
 block|{
+if|if
+condition|(
+name|error
+operator|!=
+name|EPIPE
+condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_INFO
@@ -2035,6 +2042,7 @@ operator|.
 name|f_mntfromname
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Deal with errors for the client side. 		 */
 if|if
 condition|(
