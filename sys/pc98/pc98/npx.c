@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -66,7 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -78,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -2552,21 +2564,8 @@ name|intrframe
 modifier|*
 name|frame
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|PCPU_GET
-argument_list|(
-name|npxproc
-argument_list|)
-operator|==
-name|NULL
-operator|||
 operator|!
 name|npx_exists
 condition|)
@@ -2591,36 +2590,6 @@ literal|"npxintr from nowhere"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|PCPU_GET
-argument_list|(
-name|npxproc
-argument_list|)
-operator|!=
-name|curproc
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"npxintr: npxproc = %p, curproc = %p, npx_exists = %d\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|npxproc
-argument_list|)
-argument_list|,
-name|curproc
-argument_list|,
-name|npx_exists
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"npxintr from non-current process"
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|PC98
@@ -2642,6 +2611,31 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|PCPU_GET
+argument_list|(
+name|npxproc
+argument_list|)
+operator|!=
+name|curproc
+condition|)
+block|{
+comment|/* 		 * Interrupt handling (for this or another interrupt) has 		 * switched npxproc from underneath us before we managed 		 * to handle this interrupt.  Just ignore this interrupt. 		 * Control will eventually return to the instruction that 		 * caused it and it will repeat.  In the npx_ex16 case, 		 * then we will eventually (usually soon) win the race. 		 * In the npx_irq13 case, we will always lose the race 		 * because we have switched to the IRQ13 thread.  This will 		 * be fixed later. 		 */
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|fnstsw
 argument_list|(
 operator|&
@@ -2664,7 +2658,19 @@ expr_stmt|;
 name|fnclex
 argument_list|()
 expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Pass exception to process. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|frame
 operator|=
 operator|(
