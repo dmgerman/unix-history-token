@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.170 (Berkeley) %G%"
+literal|"@(#)conf.c	8.171 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4508,9 +4508,55 @@ operator|==
 name|LA_HPUX
 end_if
 
+begin_comment
+comment|/* forward declarations to keep gcc from complaining */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|pst_dynamic
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_status
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_static
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_vminfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_diskinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_processor
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_lv
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pst_swapinfo
 struct_decl|;
 end_struct_decl
 
