@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mkfifo.c,v 1.3 1997/07/24 07:02:55 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -103,6 +109,13 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|BASEMODE
+value|S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | \ 			S_IROTH | S_IWOTH
+end_define
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -113,6 +126,13 @@ operator|(
 name|void
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|f_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -133,9 +153,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
+name|char
+modifier|*
+name|modestr
+decl_stmt|;
+name|void
+modifier|*
+name|modep
+decl_stmt|;
+name|mode_t
+name|fifomode
 decl_stmt|;
 name|int
 name|ch
@@ -153,7 +180,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"m:"
 argument_list|)
 operator|)
 operator|!=
@@ -165,6 +192,18 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'m'
+case|:
+name|f_mode
+operator|=
+literal|1
+expr_stmt|;
+name|modestr
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'?'
 case|:
@@ -193,6 +232,72 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|f_mode
+condition|)
+block|{
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|modep
+operator|=
+name|setmode
+argument_list|(
+name|modestr
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"setmode"
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"invalid file mode: %s"
+argument_list|,
+name|modestr
+argument_list|)
+expr_stmt|;
+block|}
+name|fifomode
+operator|=
+name|getmode
+argument_list|(
+name|modep
+argument_list|,
+name|BASEMODE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fifomode
+operator|=
+name|BASEMODE
+expr_stmt|;
+block|}
 for|for
 control|(
 name|exitval
@@ -214,11 +319,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-name|S_IRWXU
-operator||
-name|S_IRWXG
-operator||
-name|S_IRWXO
+name|fifomode
 argument_list|)
 operator|<
 literal|0
@@ -258,7 +359,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mkfifo fifoname ...\n"
+literal|"usage: mkfifo [-m mode] fifo_name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
