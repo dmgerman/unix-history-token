@@ -2328,7 +2328,9 @@ name|ad_timeout
 argument_list|,
 name|request
 argument_list|,
-literal|300
+literal|3
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 comment|/* setup transfer parameters */
