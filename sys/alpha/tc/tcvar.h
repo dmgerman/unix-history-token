@@ -213,17 +213,14 @@ begin_comment
 comment|/*  * These functions are private, and may not be called by  * machine-independent code.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|tc_dma_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Address of scatter/gather SRAM on the 3000/500-series.  *  * There is room for 32K entries, yielding 256M of sgva space.  * The page table is readable in both dense and sparse space.  * The page table is writable only in sparse space.  *  * In sparse space, the 32-bit PTEs are followed by 32-bits  * of pad.  */
@@ -328,7 +325,7 @@ modifier|*
 name|tba_builtins
 decl_stmt|;
 comment|/* TC bus resource management; XXX will move elsewhere eventually. */
-comment|/*         void    (*tba_intr_establish) __P((device_t, void *,                     tc_intrlevel_t, int (*)(void *), void *));         void    (*tba_intr_disestablish) __P((device_t, void *)); */
+comment|/*         void    (*tba_intr_establish)(device_t, void *,                     tc_intrlevel_t, int (*)(void *), void *);         void    (*tba_intr_disestablish)(device_t, void *); */
 block|}
 struct|;
 end_struct
@@ -375,49 +372,43 @@ begin_comment
 comment|/*  * Interrupt establishment functions.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|tc_intr_establish
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|tc_intrlevel_t
-operator|,
+parameter_list|,
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|tc_intr_disestablish
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|device_t
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#

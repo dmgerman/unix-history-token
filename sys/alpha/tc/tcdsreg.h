@@ -783,7 +783,7 @@ literal|0
 end_if
 
 begin_comment
-unit|int  tcds_scsi_iserr __P((struct dma_softc *)); int  tcds_scsi_isintr __P((int, int)); void tcds_dma_disable __P((int)); void tcds_dma_enable __P((int)); void tcds_dma_init __P((struct dma_softc *, int)); void tcds_scsi_disable __P((int)); void tcds_scsi_enable __P((int)); void tcds_scsi_reset __P((int));
+unit|int  tcds_scsi_iserr(struct dma_softc *); int  tcds_scsi_isintr(int, int); void tcds_dma_disable(int); void tcds_dma_enable(int); void tcds_dma_init(struct dma_softc *, int); void tcds_scsi_disable(int); void tcds_scsi_enable(int); void tcds_scsi_reset(int);
 comment|/*  * XXX  * Start of MACH #defines, minimal changes to port to NetBSD.  *   * The following register is the SCSI control interrupt register.  It  * starts, stops and resets scsi DMA.  It takes over the SCSI funtions  * that were handled by the ASIC on the 3min.  */
 end_comment
 

@@ -78,22 +78,19 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|dec_le_common_attach
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|am7990_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

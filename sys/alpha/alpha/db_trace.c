@@ -223,49 +223,40 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|db_md_set_watchpoint
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_expr_t
 name|addr
-operator|,
+parameter_list|,
 name|db_expr_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|db_md_clr_watchpoint
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_expr_t
 name|addr
-operator|,
+parameter_list|,
 name|db_expr_t
 name|size
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|db_md_list_watchpoints
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Decode the function prologue for the function we're in, and note  * which registers are stored where, and how large the stack frame is.  */

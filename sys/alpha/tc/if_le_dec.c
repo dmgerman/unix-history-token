@@ -182,23 +182,20 @@ begin_comment
 comment|/* access LANCE registers */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|le_dec_writereg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|volatile
 name|u_short
-operator|*
+modifier|*
 name|regptr
-operator|,
+parameter_list|,
 name|u_short
 name|val
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -226,41 +223,35 @@ parameter_list|)
 value|le_dec_writereg(&(dst), (src))
 end_define
 
-begin_decl_stmt
+begin_function_decl
 name|hide
 name|void
 name|le_dec_wrcsr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|am7990_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|,
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|hide
 name|u_int16_t
 name|le_dec_rdcsr
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|am7990_softc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int16_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char

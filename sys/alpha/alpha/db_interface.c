@@ -170,23 +170,20 @@ name|db_jmpbuf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|gdb_handle_exception
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_regs_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -206,27 +203,24 @@ name|db_active
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|ddbprinttrap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct

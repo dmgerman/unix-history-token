@@ -53,18 +53,15 @@ directive|ifdef
 name|DEC_3000_500
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_3000_500_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -89,18 +86,15 @@ directive|ifdef
 name|DEC_3000_300
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_3000_300_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -125,18 +119,15 @@ directive|ifdef
 name|DEC_AXPPCI_33
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_axppci_33_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -161,18 +152,15 @@ directive|ifdef
 name|DEC_KN8AE
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_kn8ae_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -197,18 +185,15 @@ directive|ifdef
 name|DEC_2100_A50
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_2100_a50_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -233,18 +218,15 @@ directive|ifdef
 name|DEC_KN20AA
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_kn20aa_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -269,18 +251,15 @@ directive|ifdef
 name|DEC_EB64PLUS
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_eb64plus_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -305,18 +284,15 @@ directive|ifdef
 name|DEC_EB164
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_eb164_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -341,18 +317,15 @@ directive|ifdef
 name|DEC_KN300
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_kn300_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -377,18 +350,15 @@ directive|ifdef
 name|AVALON_A12
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|avalon_a12_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -413,18 +383,15 @@ directive|ifdef
 name|DEC_ST550
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|st550_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -449,18 +416,15 @@ directive|ifdef
 name|DEC_ST6600
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|st6600_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -485,18 +449,15 @@ directive|ifdef
 name|DEC_1000A
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_1000a_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -521,18 +482,15 @@ directive|ifdef
 name|DEC_2100_A500
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|dec_2100_a500_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#
@@ -557,18 +515,15 @@ directive|ifdef
 name|API_UP1000
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|api_up1000_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#

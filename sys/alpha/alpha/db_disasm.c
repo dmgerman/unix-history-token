@@ -586,20 +586,17 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|pal_opname
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -930,21 +927,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|arit_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1140,21 +1134,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|logical_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1450,21 +1441,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|bitop_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1649,21 +1637,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|mul_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1783,21 +1768,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|special_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1963,21 +1945,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|__inline
 specifier|const
 name|char
 modifier|*
 name|intmisc_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -2080,30 +2059,27 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|float_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
-expr|struct
+name|struct
 name|tbl
-index|[]
-operator|,
+type|[]
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|type
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -4205,20 +4181,17 @@ begin_comment
 comment|/* which regs used in this inst */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|register_name
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -4288,21 +4261,18 @@ begin_comment
 comment|/*  * Disassemble instruction at 'loc'.  'altfmt' specifies an  * (optional) alternate format.  Return address of start of  * next instruction.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|alpha_print_instruction
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|db_addr_t
-operator|,
+parameter_list|,
 name|alpha_instruction
-operator|,
+parameter_list|,
 name|boolean_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|db_addr_t

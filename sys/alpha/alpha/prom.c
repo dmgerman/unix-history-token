@@ -142,19 +142,16 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|pt_entry_t
 modifier|*
 name|rom_lev1map
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern
@@ -164,18 +161,15 @@ name|Lev1map
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|prom_cache_sync
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -369,31 +363,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|critical_t
 name|enter_prom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|leave_prom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|critical_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * promcnputc:  *  * Remap char before passing off to prom.  *  * Prom only takes 32 bit addresses. Copy char somewhere prom can  * find it. This routine will stop working after pmap_rid_of_console   * is called in alpha_init. This is due to the hard coded address  * of the console area.  */
