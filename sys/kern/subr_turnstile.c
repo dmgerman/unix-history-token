@@ -2405,7 +2405,7 @@ name|td_priority
 operator|=
 name|pri
 expr_stmt|;
-comment|/* 	 * Wake up all the pending threads.  If a thread is not blocked 	 * on a lock, then it is currently executing on another CPU in 	 * turnstile_wait().  Set a flag to force it to try to acquire 	 * the lock again instead of blocking. 	 */
+comment|/* 	 * Wake up all the pending threads.  If a thread is not blocked 	 * on a lock, then it is currently executing on another CPU in 	 * turnstile_wait() or sitting on a run queue waiting to resume 	 * in turnstile_wait().  Set a flag to force it to try to acquire 	 * the lock again instead of blocking. 	 */
 while|while
 condition|(
 operator|!
@@ -2495,6 +2495,11 @@ expr_stmt|;
 name|MPASS
 argument_list|(
 name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
+operator|||
+name|TD_ON_RUNQ
 argument_list|(
 name|td
 argument_list|)
