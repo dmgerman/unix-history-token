@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scandir.c	5.8 (Berkeley) %G%"
+literal|"@(#)scandir.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,13 +485,10 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|struct
-name|dirent
-modifier|*
+name|void
 modifier|*
 name|d1
 decl_stmt|,
-modifier|*
 modifier|*
 name|d2
 decl_stmt|;
@@ -505,6 +502,12 @@ name|strcmp
 argument_list|(
 operator|(
 operator|*
+operator|(
+expr|struct
+name|dirent
+operator|*
+operator|*
+operator|)
 name|d1
 operator|)
 operator|->
@@ -512,6 +515,12 @@ name|d_name
 argument_list|,
 operator|(
 operator|*
+operator|(
+expr|struct
+name|dirent
+operator|*
+operator|*
+operator|)
 name|d2
 operator|)
 operator|->
