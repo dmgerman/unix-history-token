@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ulpt.c,v 1.10 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: ulpt.c,v 1.4 1999/01/07 23:31:35 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: ulpt.c,v 1.5 1999/01/10 18:42:52 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -354,17 +354,71 @@ comment|/* waiting to initialize for open */
 name|u_char
 name|sc_flags
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 define|#
 directive|define
 name|ULPT_NOPRIME
 value|0x40
 comment|/* don't prime on open */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* values taken from i386/isa/lpt.c */
+define|#
+directive|define
+name|ULPT_POS_INIT
+value|0x04
+comment|/* if we are a postive init signal */
+define|#
+directive|define
+name|ULPT_POS_ACK
+value|0x08
+comment|/* if we are a positive going ack */
+define|#
+directive|define
+name|ULPT_NOPRIME
+value|0x10
+comment|/* don't prime the printer at all */
+define|#
+directive|define
+name|ULPT_PRIMEOPEN
+value|0x20
+comment|/* prime on every open */
+define|#
+directive|define
+name|ULPT_AUTOLF
+value|0x40
+comment|/* tell printer to do an automatic lf */
+define|#
+directive|define
+name|ULPT_BYPASS
+value|0x80
+comment|/* bypass  printer ready checks */
+endif|#
+directive|endif
 name|u_char
 name|sc_laststatus
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_decl_stmt
 name|int
@@ -448,18 +502,93 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|void
-name|ulpt_disco
-name|__P
+begin_elif
+elif|#
+directive|elif
+name|defined
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|__FreeBSD__
 argument_list|)
+end_elif
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|ulptopen
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|ulptclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|ulptwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|ulptioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ULPT_CDEV_MAJOR
+value|113
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|ulpt_cdevsw
+init|=
+block|{
+name|ulptopen
+block|,
+name|ulptclose
+block|,
+name|noread
+block|,
+name|ulptwrite
+block|,
+name|ulptioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+name|seltrue
+block|,
+name|nommap
+block|,
+name|nostrat
+block|,
+literal|"ulpt"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -505,6 +634,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -524,6 +662,44 @@ name|s
 parameter_list|)
 value|(minor(s)& 0xe0)
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* defines taken from i386/isa/lpt.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ULPTUNIT
+parameter_list|(
+name|s
+parameter_list|)
+value|(minor(s)& 0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ULPTFLAGS
+parameter_list|(
+name|s
+parameter_list|)
+value|(minor(s)& 0xfc)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|USB_DECLARE_DRIVER
@@ -1197,6 +1373,38 @@ name|flags
 operator|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|USB_DEBUG
+operator|&&
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* Ignoring these flags might not be a good idea */
+if|if
+condition|(
+operator|(
+name|flags
+operator|^
+name|ULPT_NOPRIME
+operator|)
+operator|!=
+literal|0
+condition|)
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"flags ignored: %b\n"
+operator|,
+name|flags
+operator|,
+literal|"\20\3POS_INIT\4POS_ACK\6PRIME_OPEN\7AUTOLF\10BYPASS"
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
