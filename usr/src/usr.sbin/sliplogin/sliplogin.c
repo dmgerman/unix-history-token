@@ -8,12 +8,16 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)sliplogin.c	1.3	MS/ACF	89/04/18"
+literal|"@(#)sliplogin.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* from static char *sccsid = "@(#)sliplogin.c	1.3	MS/ACF	89/04/18"; */
+end_comment
 
 begin_endif
 endif|#
@@ -155,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|DCD_CHECK_INTERVAL
-value|5
+value|0
 end_define
 
 begin_comment
@@ -188,31 +192,6 @@ init|=
 name|DCD_CHECK_INTERVAL
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-name|void
-name|alarm_handler
-parameter_list|()
-block|{
-comment|/*if (timeleft> DCD_SETTLING_TIME) 		(void) alarm(timeleft-DCD_SETTLING_TIME); 	else */
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|DCD_CHECK_INTERVAL
-argument_list|)
-expr_stmt|;
-name|gotalarm
-operator|=
-literal|1
-expr_stmt|;
-name|timeleft
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
 
 begin_if
 if|#
@@ -260,6 +239,61 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+name|DCD_CHECK_INTERVAL
+operator|>
+literal|0
+end_if
+
+begin_function
+name|void
+name|alarm_handler
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|SIGDCD
+if|if
+condition|(
+name|timeleft
+operator|>
+name|DCD_SETTLING_TIME
+condition|)
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|timeleft
+operator|-
+name|DCD_SETTLING_TIME
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* SIGDCD */
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|DCD_CHECK_INTERVAL
+argument_list|)
+expr_stmt|;
+name|gotalarm
+operator|=
+literal|1
+expr_stmt|;
+name|timeleft
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* Use TIOCMGET to test if DCD is low on the port of the passed descriptor */
@@ -310,57 +344,14 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Use TIOCMGET to test if DTR is low on the port of the passed descriptor */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function
-name|int
-name|lowdtr
-parameter_list|(
-name|fd
-parameter_list|)
-name|int
-name|fd
-decl_stmt|;
-block|{
-name|int
-name|mbits
-decl_stmt|;
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|fd
-argument_list|,
-name|TIOCMGET
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|mbits
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-literal|1
-return|;
-comment|/* port is dead, we die */
-return|return
-operator|(
-operator|(
-name|mbits
-operator|&
-name|TIOCM_DTR
-operator|)
-operator|==
-name|TIOCM_DTR
-operator|)
-return|;
-block|}
-end_function
+begin_comment
+comment|/* DCD_CHECK_INTERVAL> 0 */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -450,26 +441,53 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * If we are uncerimoniously dumped, bitch  */
-end_comment
-
 begin_function
 name|void
 name|hup_handler
-parameter_list|()
+parameter_list|(
+name|s
+parameter_list|)
+name|int
+name|s
+decl_stmt|;
 block|{
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
-literal|"connection closed: process aborted %s%d: remote %s\n"
+literal|"%s%d: connection closed: process aborted, sig %d, remote %s\n"
 argument_list|,
 name|SLIPIFNAME
 argument_list|,
 name|unit
 argument_list|,
+name|s
+argument_list|,
 name|dstaddr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|close
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"(hup) close: %m"
+argument_list|)
+expr_stmt|;
+else|else
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"(hup) close completed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -691,18 +709,18 @@ operator|=
 literal|"default"
 expr_stmt|;
 block|}
-block|}
-else|else
-name|findid
+comment|/* 		 * Disassociate from current controlling terminal, if any, 		 * and ensure that the slip line is our controlling terminal. 		 */
+if|#
+directive|if
+operator|!
+name|defined
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|BSD
 argument_list|)
-expr_stmt|;
-comment|/* ensure that the slip line is our controlling terminal */
+operator|||
+name|BSD
+operator|<
+literal|198810
 if|if
 condition|(
 operator|(
@@ -741,6 +759,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* open slip tty again to acquire as controlling tty? */
 name|fd
 operator|=
 name|open
@@ -769,6 +788,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -780,7 +800,40 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|setsid
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* not sure this will work */
+endif|#
+directive|endif
 block|}
+else|else
+name|findid
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 name|fchmod
 argument_list|(
 literal|0
@@ -795,7 +848,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCGETA
+name|TIOCGETA
 argument_list|,
 operator|(
 name|caddr_t
@@ -811,7 +864,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TCGETA): %m"
+literal|"ioctl (TIOCGETA): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -827,14 +880,7 @@ expr_stmt|;
 name|tios
 operator|.
 name|c_cflag
-operator|&=
-literal|0xf
-expr_stmt|;
-comment|/* only save the speed */
-name|tios
-operator|.
-name|c_cflag
-operator||=
+operator|=
 name|CS8
 operator||
 name|CREAD
@@ -863,7 +909,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TIOCSETA
 argument_list|,
 operator|(
 name|caddr_t
@@ -879,7 +925,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TCSETA) (1): %m"
+literal|"ioctl (TIOCSETA) (1): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -946,7 +992,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl(TIOCSETD) (1): %m"
+literal|"ioctl(TIOCSETD): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -989,7 +1035,7 @@ expr_stmt|;
 block|}
 name|syslog
 argument_list|(
-name|LOG_NOTICE
+name|LOG_INFO
 argument_list|,
 literal|"attaching %s%d: local %s remote %s mask %s\n"
 argument_list|,
@@ -1243,6 +1289,8 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioctl
@@ -1274,8 +1322,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* set up signal handlers */
 if|#
 directive|if
@@ -1315,17 +1361,6 @@ name|void
 operator|)
 name|signal
 argument_list|(
-name|SIGALRM
-argument_list|,
-name|alarm_handler
-argument_list|)
-expr_stmt|;
-comment|/* a SIGHUP will kill us */
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
 name|SIGHUP
 argument_list|,
 name|hup_handler
@@ -1341,7 +1376,22 @@ argument_list|,
 name|hup_handler
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DCD_CHECK_INTERVAL
+operator|>
+literal|0
 comment|/* timeleft = 60 * 60 * 24 * 365 ; (void) alarm(timeleft); */
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|alarm_handler
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1350,6 +1400,8 @@ argument_list|(
 name|DCD_CHECK_INTERVAL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* twiddle thumbs until we get a signal */
 while|while
 condition|(
@@ -1361,6 +1413,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|DCD_CHECK_INTERVAL
+operator|>
+literal|0
 operator|(
 name|void
 operator|)
@@ -1382,21 +1439,17 @@ literal|0
 argument_list|)
 condition|)
 break|break;
-if|if
-condition|(
-name|gotalarm
-operator|&&
-name|lowdtr
-argument_list|(
-literal|0
-argument_list|)
-condition|)
-break|break;
 name|gotalarm
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* DCD_CHECK_INTERVAL> 0 */
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|lowdcd
@@ -1417,27 +1470,8 @@ argument_list|,
 name|dstaddr
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|lowdtr
-argument_list|(
-literal|0
-argument_list|)
-condition|)
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"connection closed by foreign host %s%d: remote %s\n"
-argument_list|,
-name|SLIPIFNAME
-argument_list|,
-name|unit
-argument_list|,
-name|dstaddr
-argument_list|)
-expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioctl
@@ -1475,7 +1509,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETA
+name|TIOCSETA
 argument_list|,
 operator|(
 name|caddr_t
@@ -1491,7 +1525,30 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TCSETA) (2): %m"
+literal|"ioctl (TIOCSETA) (2): %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|close
+argument_list|(
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"close: %m"
 argument_list|)
 expr_stmt|;
 name|exit
