@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * main.c  *  * Main routine for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	main.c,v $  * Revision 3.2  85/01/14  04:21:31  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.1  84/10/29  05:47:03  donn  * Added Jerry Berkman's change to line buffer stderr.  *   */
+comment|/*  * main.c  *  * Main routine for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	main.c,v $  * Revision 5.2  85/08/10  04:57:16  donn  * Jerry Berkman's changes to ifdef 66 code and add -r8/double flag..  *   * Revision 5.1  85/08/10  03:48:26  donn  * 4.3 alpha  *   * Revision 3.2  85/01/14  04:21:31  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.1  84/10/29  05:47:03  donn  * Added Jerry Berkman's change to line buffer stderr.  *   */
 end_comment
 
 begin_decl_stmt
@@ -418,6 +418,14 @@ name|YES
 expr_stmt|;
 break|break;
 case|case
+literal|'8'
+case|:
+name|dblflag
+operator|=
+name|YES
+expr_stmt|;
+break|break;
+case|case
 literal|'C'
 case|:
 name|checksubs
@@ -425,6 +433,9 @@ operator|=
 name|YES
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|ONLY66
 case|case
 literal|'6'
 case|:
@@ -437,6 +448,8 @@ operator|=
 name|YES
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 case|case
 literal|'1'
 case|:
