@@ -1542,14 +1542,6 @@ argument_list|(
 name|pf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pf
-operator|->
-name|dev
-operator|!=
-name|NULL
-condition|)
 name|device_delete_child
 argument_list|(
 name|dev
