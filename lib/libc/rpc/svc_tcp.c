@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.8 1996/12/30 15:19:08 peter Exp $"
+literal|"$Id: svc_tcp.c,v 1.11 1997/05/28 05:05:30 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1812,6 +1812,13 @@ name|TRUE
 operator|)
 return|;
 block|}
+name|cd
+operator|->
+name|strm_stat
+operator|=
+name|XPRT_DIED
+expr_stmt|;
+comment|/* XXXX */
 return|return
 operator|(
 name|FALSE
