@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.14	83/01/11	*/
+comment|/*	defs.h	4.15	84/08/29	*/
 end_comment
 
 begin_comment
@@ -73,15 +73,8 @@ directive|include
 file|"af.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|COMPAT
-value|1
-end_define
-
 begin_comment
-comment|/* stay compatible with 4.1a daemons */
+comment|/* #define	COMPAT	1		/* stay compatible with 4.1a daemons */
 end_comment
 
 begin_comment
