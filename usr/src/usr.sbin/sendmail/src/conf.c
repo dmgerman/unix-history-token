@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.32	%G%"
+literal|"@(#)conf.c	3.33	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1054,7 +1054,7 @@ name|q_mailer
 operator|==
 name|s
 operator|->
-name|st_mailer
+name|s_mailer
 operator|->
 name|m_mno
 condition|)
