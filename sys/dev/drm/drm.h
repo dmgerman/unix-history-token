@@ -15,11 +15,14 @@ directive|define
 name|_DRM_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__linux__
-end_ifdef
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -47,26 +50,127 @@ parameter_list|)
 value|_IOC_NR(n)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|DRM_IOC_VOID
+value|_IOC_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_READ
+value|_IOC_READ
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_WRITE
+value|_IOC_WRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_READWRITE
+value|_IOC_READ|_IOC_WRITE
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC
+parameter_list|(
+name|dir
+parameter_list|,
+name|group
+parameter_list|,
+name|nr
+parameter_list|,
+name|size
+parameter_list|)
+value|_IOC(dir, group, nr, size)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|XFree86Server
+argument_list|)
+end_if
 
 begin_comment
-comment|/* __linux__ */
+comment|/* Prevent name collision when including sys/ioccom.h */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
+begin_undef
+undef|#
+directive|undef
+name|ioctl
+end_undef
 
 begin_include
 include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|ioctl
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|xf86ioctl(a,b,c)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__&& xf86ioctl */
+end_comment
 
 begin_define
 define|#
@@ -78,14 +182,54 @@ parameter_list|)
 value|((n)& 0xff)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_IOC_VOID
+value|IOC_VOID
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_READ
+value|IOC_OUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_WRITE
+value|IOC_IN
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC_READWRITE
+value|IOC_INOUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOC
+parameter_list|(
+name|dir
+parameter_list|,
+name|group
+parameter_list|,
+name|nr
+parameter_list|,
+name|size
+parameter_list|)
+value|_IOC(dir, group, nr, size)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_define
 define|#
@@ -266,7 +410,7 @@ begin_define
 define|#
 directive|define
 name|DRM_RAM_PERCENT
-value|50
+value|10
 end_define
 
 begin_comment
@@ -359,6 +503,10 @@ end_typedef
 
 begin_comment
 comment|/* Warning: If you change this structure, make sure you change  * XF86DRIClipRectRec in the server as well */
+end_comment
+
+begin_comment
+comment|/* KW: Actually it's illegal to change either for  * backwards-compatibility reasons.  */
 end_comment
 
 begin_typedef
@@ -1179,6 +1327,94 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+enum|enum
+block|{
+name|_DRM_VBLANK_ABSOLUTE
+init|=
+literal|0x0
+block|,
+comment|/* Wait for specific vblank sequence number */
+name|_DRM_VBLANK_RELATIVE
+init|=
+literal|0x1
+block|,
+comment|/* Wait for given number of vblanks */
+name|_DRM_VBLANK_SIGNAL
+init|=
+literal|0x40000000
+comment|/* Send signal instead of blocking */
+block|}
+name|drm_vblank_seq_type_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_DRM_VBLANK_FLAGS_MASK
+value|_DRM_VBLANK_SIGNAL
+end_define
+
+begin_struct
+struct|struct
+name|drm_wait_vblank_request
+block|{
+name|drm_vblank_seq_type_t
+name|type
+decl_stmt|;
+name|unsigned
+name|int
+name|sequence
+decl_stmt|;
+name|unsigned
+name|long
+name|signal
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|drm_wait_vblank_reply
+block|{
+name|drm_vblank_seq_type_t
+name|type
+decl_stmt|;
+name|unsigned
+name|int
+name|sequence
+decl_stmt|;
+name|long
+name|tval_sec
+decl_stmt|;
+name|long
+name|tval_usec
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+union|union
+name|drm_wait_vblank
+block|{
+name|struct
+name|drm_wait_vblank_request
+name|request
+decl_stmt|;
+name|struct
+name|drm_wait_vblank_reply
+name|reply
+decl_stmt|;
+block|}
+name|drm_wait_vblank_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|drm_agp_mode
 block|{
@@ -1341,9 +1577,9 @@ name|DRM_IOR
 parameter_list|(
 name|nr
 parameter_list|,
-name|size
+name|type
 parameter_list|)
-value|_IOR(DRM_IOCTL_BASE,nr,size)
+value|_IOR(DRM_IOCTL_BASE,nr,type)
 end_define
 
 begin_define
@@ -1353,9 +1589,9 @@ name|DRM_IOW
 parameter_list|(
 name|nr
 parameter_list|,
-name|size
+name|type
 parameter_list|)
-value|_IOW(DRM_IOCTL_BASE,nr,size)
+value|_IOW(DRM_IOCTL_BASE,nr,type)
 end_define
 
 begin_define
@@ -1365,9 +1601,9 @@ name|DRM_IOWR
 parameter_list|(
 name|nr
 parameter_list|,
-name|size
+name|type
 parameter_list|)
-value|_IOWR(DRM_IOCTL_BASE,nr,size)
+value|_IOWR(DRM_IOCTL_BASE,nr,type)
 end_define
 
 begin_define
@@ -1676,6 +1912,24 @@ define|#
 directive|define
 name|DRM_IOCTL_SG_FREE
 value|DRM_IOW( 0x39, drm_scatter_gather_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_WAIT_VBLANK
+value|DRM_IOWR(0x3a, drm_wait_vblank_t)
+end_define
+
+begin_comment
+comment|/* Device specfic ioctls should only be in their respective headers  * The device specific ioctl range is 0x40 to 0x79.                  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRM_COMMAND_BASE
+value|0x40
 end_define
 
 begin_endif

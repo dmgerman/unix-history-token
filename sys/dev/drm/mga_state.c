@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mga_state.c -- State support for MGA G200/G400 -*- linux-c -*-  * Created: Thu Jan 27 02:53:43 2000 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keithw@valinux.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
+comment|/* mga_state.c -- State support for MGA G200/G400 -*- linux-c -*-  * Created: Thu Jan 27 02:53:43 2000 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__NO_VERSION__
-end_define
 
 begin_include
 include|#
@@ -24,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/mga_drm.h"
 end_include
 
@@ -31,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"dev/drm/mga_drv.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/drm.h"
 end_include
 
 begin_comment
@@ -610,6 +604,8 @@ index|]
 decl_stmt|;
 name|DMA_LOCALS
 expr_stmt|;
+comment|/*  	printk("mga_g400_emit_tex0 %x %x %x\n", tex->texorg, */
+comment|/*  	       tex->texctl, tex->texctl2); */
 name|BEGIN_DMA
 argument_list|(
 literal|6
@@ -800,6 +796,8 @@ index|]
 decl_stmt|;
 name|DMA_LOCALS
 expr_stmt|;
+comment|/*  	printk("mga_g400_emit_tex1 %x %x %x\n", tex->texorg,  */
+comment|/*  	       tex->texctl, tex->texctl2); */
 name|BEGIN_DMA
 argument_list|(
 literal|5
@@ -1084,6 +1082,7 @@ name|warp_pipe
 decl_stmt|;
 name|DMA_LOCALS
 expr_stmt|;
+comment|/*  	printk("mga_g400_emit_pipe %x\n", pipe); */
 name|BEGIN_DMA
 argument_list|(
 literal|10
@@ -1674,7 +1673,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -1768,7 +1767,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -1972,7 +1971,7 @@ name|dstorg
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -1995,7 +1994,7 @@ name|MGA_ILOAD_MASK
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -2062,7 +2061,7 @@ name|dstorg
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -2139,9 +2138,7 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|BEGIN_DMA
@@ -2575,9 +2572,7 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|sarea_priv
@@ -2832,7 +2827,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s... done.\n"
 argument_list|,
-name|__func__
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3345,9 +3340,7 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s: buf=%d used=%d\n"
-argument_list|,
-name|__func__
+literal|"buf=%d used=%d\n"
 argument_list|,
 name|buf
 operator|->
@@ -3582,9 +3575,7 @@ name|DMA_LOCALS
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|BEGIN_DMA
@@ -3892,10 +3883,10 @@ begin_function
 name|int
 name|mga_dma_clear
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_mga_private_t
 modifier|*
@@ -3921,7 +3912,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|clear
 argument_list|,
@@ -3983,10 +3974,10 @@ begin_function
 name|int
 name|mga_dma_swap
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_mga_private_t
 modifier|*
@@ -4052,10 +4043,10 @@ begin_function
 name|int
 name|mga_dma_vertex
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_mga_private_t
 modifier|*
@@ -4089,7 +4080,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|vertex
 argument_list|,
@@ -4122,7 +4113,7 @@ operator|->
 name|buf_count
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4204,7 +4195,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4232,10 +4223,10 @@ begin_function
 name|int
 name|mga_dma_indices
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_mga_private_t
 modifier|*
@@ -4269,7 +4260,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|indices
 argument_list|,
@@ -4302,7 +4293,7 @@ operator|->
 name|buf_count
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4376,7 +4367,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4412,10 +4403,10 @@ begin_function
 name|int
 name|mga_dma_iload
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_device_dma_t
 modifier|*
@@ -4446,9 +4437,7 @@ name|iload
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4456,7 +4445,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|iload
 argument_list|,
@@ -4475,7 +4464,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if ( mga_do_wait_for_idle( dev_priv ) ) { 		if ( MGA_DMA_DEBUG ) 			DRM_INFO( "%s: -EBUSY\n", __func__ ); 		return DRM_OS_ERR(EBUSY); 	}
+block|if ( mga_do_wait_for_idle( dev_priv )< 0 ) { 		if ( MGA_DMA_DEBUG ) 			DRM_INFO( "%s: -EBUSY\n", __FUNCTION__ ); 		return DRM_ERR(EBUSY); 	}
 endif|#
 directive|endif
 if|if
@@ -4495,7 +4484,7 @@ operator|->
 name|buf_count
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4541,7 +4530,7 @@ name|buf
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4586,10 +4575,10 @@ begin_function
 name|int
 name|mga_dma_blit
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_mga_private_t
 modifier|*
@@ -4612,9 +4601,7 @@ name|blit
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4622,7 +4609,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|blit
 argument_list|,
@@ -4668,7 +4655,7 @@ name|dstorg
 argument_list|)
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4695,6 +4682,133 @@ name|dirty
 operator||=
 name|MGA_UPLOAD_CONTEXT
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|mga_getparam
+parameter_list|(
+name|DRM_IOCTL_ARGS
+parameter_list|)
+block|{
+name|DRM_DEVICE
+expr_stmt|;
+name|drm_mga_private_t
+modifier|*
+name|dev_priv
+init|=
+name|dev
+operator|->
+name|dev_private
+decl_stmt|;
+name|drm_mga_getparam_t
+name|param
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dev_priv
+condition|)
+block|{
+name|DRM_ERROR
+argument_list|(
+literal|"%s called with no initialization\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
+return|return
+name|DRM_ERR
+argument_list|(
+name|EINVAL
+argument_list|)
+return|;
+block|}
+name|DRM_COPY_FROM_USER_IOCTL
+argument_list|(
+name|param
+argument_list|,
+operator|(
+name|drm_mga_getparam_t
+operator|*
+operator|)
+name|data
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|param
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|DRM_DEBUG
+argument_list|(
+literal|"pid=%d\n"
+argument_list|,
+name|DRM_CURRENTPID
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|param
+operator|.
+name|param
+condition|)
+block|{
+case|case
+name|MGA_PARAM_IRQ_NR
+case|:
+name|value
+operator|=
+name|dev
+operator|->
+name|irq
+expr_stmt|;
+break|break;
+default|default:
+return|return
+name|DRM_ERR
+argument_list|(
+name|EINVAL
+argument_list|)
+return|;
+block|}
+if|if
+condition|(
+name|DRM_COPY_TO_USER
+argument_list|(
+name|param
+operator|.
+name|value
+argument_list|,
+operator|&
+name|value
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|DRM_ERROR
+argument_list|(
+literal|"copy_to_user\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|DRM_ERR
+argument_list|(
+name|EFAULT
+argument_list|)
+return|;
+block|}
 return|return
 literal|0
 return|;

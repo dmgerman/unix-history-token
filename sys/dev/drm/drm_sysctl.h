@@ -3,17 +3,11 @@ begin_comment
 comment|/*  * $FreeBSD$  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"dev/drm/drm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"dev/drm/drmP.h"
-end_include
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_include
 include|#
@@ -694,7 +688,7 @@ name|dev
 init|=
 name|arg1
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|map
 decl_stmt|;
@@ -908,7 +902,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -926,7 +920,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
@@ -1015,8 +1009,8 @@ operator|->
 name|use_count
 argument_list|)
 argument_list|,
-literal|"%5d/0x%03x %5ld %5ld"
-literal|" %5ld/%c%c/%c%c%c %5d %10ld %10ld %10ld\n"
+literal|"%5d/0x%03x %5d %5d"
+literal|" %5d/%c%c/%c%c%c %5d %10d %10d %10d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1096,6 +1090,9 @@ literal|'f'
 else|:
 literal|'-'
 argument_list|,
+operator|(
+name|int
+operator|)
 name|DRM_BUFCOUNT
 argument_list|(
 operator|&
@@ -1171,7 +1168,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -1189,7 +1186,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
@@ -1276,7 +1273,7 @@ name|buf_count
 condition|)
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%2d %8d %5d %5ld %5d %5d %5d\n"
+literal|"%2d %8d %5d %5d %5d %5d %5d\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1464,7 +1461,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -1482,7 +1479,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
@@ -1599,7 +1596,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -1617,7 +1614,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
@@ -2109,7 +2106,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -2127,7 +2124,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
@@ -2864,7 +2861,7 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|DRM_OS_LOCK
+name|DRM_LOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -2879,10 +2876,64 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
-name|DRM_OS_UNLOCK
+name|DRM_UNLOCK
 expr_stmt|;
 return|return
 name|ret
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* stub it out for now, sysctl is only for debugging */
+end_comment
+
+begin_function
+name|int
+name|DRM
+function|(
+name|sysctl_init
+function|)
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|DRM
+function|(
+name|sysctl_cleanup
+function|)
+parameter_list|(
+name|drm_device_t
+modifier|*
+name|dev
+parameter_list|)
+block|{
+return|return
+literal|0
 return|;
 block|}
 end_function

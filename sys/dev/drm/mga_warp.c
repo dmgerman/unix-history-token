@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/mga_drm.h"
 end_include
 
@@ -339,7 +345,7 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
@@ -546,7 +552,7 @@ name|size
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
@@ -666,7 +672,7 @@ argument_list|)
 return|;
 default|default:
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -761,7 +767,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -804,7 +810,7 @@ name|WMISC_EXPECTED
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)

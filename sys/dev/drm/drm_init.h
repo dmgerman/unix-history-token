@@ -3,12 +3,6 @@ begin_comment
 comment|/* drm_init.h -- Setup/Cleanup for DRM -*- linux-c -*-  * Created: Mon Jan  4 08:58:31 1999 by faith@valinux.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__NO_VERSION__
-end_define
-
 begin_include
 include|#
 directive|include
@@ -331,50 +325,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|__linux__
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-if|if
-condition|(
-name|boot_cpu_data
-operator|.
-name|x86
-operator|==
-literal|3
-condition|)
-return|return
-literal|0
-return|;
-comment|/* No cmpxchg on a 386 */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__sparc__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__sparc_v9__
-argument_list|)
-return|return
-literal|0
-return|;
-comment|/* No cmpxchg before v9 sparc. */
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* __linux__ */
 return|return
 literal|1
 return|;

@@ -3,12 +3,6 @@ begin_comment
 comment|/* r128_cce.c -- ATI Rage 128 driver -*- linux-c -*-  * Created: Wed Apr  5 19:24:19 2000 by kevin@precisioninsight.com  *  * Copyright 2000 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__NO_VERSION__
-end_define
-
 begin_include
 include|#
 directive|include
@@ -24,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dev/drm/drm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dev/drm/r128_drm.h"
 end_include
 
@@ -33,54 +33,12 @@ directive|include
 file|"dev/drm/r128_drv.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<linux/interrupt.h>
-end_include
-
-begin_comment
-comment|/* For task queue support */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<linux/delay.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __linux__ */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|R128_FIFO_DEBUG
 value|0
 end_define
-
-begin_function_decl
-name|int
-name|r128_do_wait_for_idle
-parameter_list|(
-name|drm_r128_private_t
-modifier|*
-name|dev_priv
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* CCE microcode (from ATI) */
@@ -1120,6 +1078,17 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|r128_do_wait_for_idle
+parameter_list|(
+name|drm_r128_private_t
+modifier|*
+name|dev_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|R128_READ_PLL
@@ -1335,7 +1304,7 @@ return|return
 literal|0
 return|;
 block|}
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -1346,15 +1315,13 @@ directive|if
 name|R128_FIFO_DEBUG
 name|DRM_ERROR
 argument_list|(
-literal|"%s failed!\n"
-argument_list|,
-name|__func__
+literal|"failed!\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
@@ -1413,7 +1380,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -1424,15 +1391,13 @@ directive|if
 name|R128_FIFO_DEBUG
 name|DRM_ERROR
 argument_list|(
-literal|"%s failed!\n"
-argument_list|,
-name|__func__
+literal|"failed!\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
@@ -1508,7 +1473,7 @@ return|return
 literal|0
 return|;
 block|}
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -1519,15 +1484,13 @@ directive|if
 name|R128_FIFO_DEBUG
 name|DRM_ERROR
 argument_list|(
-literal|"%s failed!\n"
-argument_list|,
-name|__func__
+literal|"failed!\n"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
@@ -1558,9 +1521,7 @@ name|i
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|r128_do_wait_for_idle
@@ -1746,7 +1707,7 @@ argument_list|)
 return|;
 block|}
 block|}
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -1768,7 +1729,7 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
@@ -2084,9 +2045,7 @@ name|tmp
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 comment|/* The manual (p. 2) says this address is in "VM space".  This 	 * means it's an offset from the start of AGP space. 	 */
@@ -2165,9 +2124,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__REALLY_HAVE_SG
 if|if
 condition|(
 operator|!
@@ -2176,8 +2132,6 @@ operator|->
 name|is_pci
 condition|)
 block|{
-endif|#
-directive|endif
 name|R128_WRITE
 argument_list|(
 name|R128_PM4_BUFFER_DL_RPTR_ADDR
@@ -2189,9 +2143,6 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__REALLY_HAVE_SG
 block|}
 else|else
 block|{
@@ -2260,8 +2211,6 @@ name|tmp_ofs
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Set watermark control */
 name|R128_WRITE
 argument_list|(
@@ -2353,32 +2302,9 @@ name|drm_r128_private_t
 modifier|*
 name|dev_priv
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-name|struct
-name|list_head
-modifier|*
-name|list
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|drm_map_list_entry_t
-modifier|*
-name|listentry
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -2403,7 +2329,7 @@ operator|==
 name|NULL
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
@@ -2461,7 +2387,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -2511,7 +2437,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -2593,7 +2519,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -2888,110 +2814,9 @@ literal|5
 operator|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-name|list_for_each
-argument_list|(
-argument|list
-argument_list|,
-argument|&dev->maplist->head
-argument_list|)
-block|{
-name|drm_map_list_t
-modifier|*
-name|r_list
-init|=
-operator|(
-name|drm_map_list_t
-operator|*
-operator|)
-name|list
-decl_stmt|;
-if|if
-condition|(
-name|r_list
-operator|->
-name|map
-operator|&&
-name|r_list
-operator|->
-name|map
-operator|->
-name|type
-operator|==
-name|_DRM_SHM
-operator|&&
-name|r_list
-operator|->
-name|map
-operator|->
-name|flags
-operator|&
-name|_DRM_CONTAINS_LOCK
-condition|)
-block|{
-name|dev_priv
-operator|->
-name|sarea
-operator|=
-name|r_list
-operator|->
-name|map
+name|DRM_GETSAREA
+argument_list|()
 expr_stmt|;
-break|break;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|TAILQ_FOREACH
-argument_list|(
-argument|listentry
-argument_list|,
-argument|dev->maplist
-argument_list|,
-argument|link
-argument_list|)
-block|{
-name|drm_map_t
-modifier|*
-name|map
-init|=
-name|listentry
-operator|->
-name|map
-decl_stmt|;
-if|if
-condition|(
-name|map
-operator|->
-name|type
-operator|==
-name|_DRM_SHM
-operator|&&
-name|map
-operator|->
-name|flags
-operator|&
-name|_DRM_CONTAINS_LOCK
-condition|)
-block|{
-name|dev_priv
-operator|->
-name|sarea
-operator|=
-name|map
-expr_stmt|;
-break|break;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 if|if
 condition|(
 operator|!
@@ -3021,7 +2846,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3067,7 +2892,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3113,7 +2938,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3159,7 +2984,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3205,7 +3030,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3251,7 +3076,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3305,7 +3130,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3410,7 +3235,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
@@ -3622,6 +3447,16 @@ literal|128
 expr_stmt|;
 name|dev_priv
 operator|->
+name|ring
+operator|.
+name|ring_rptr
+operator|=
+name|dev_priv
+operator|->
+name|ring_rptr
+expr_stmt|;
+name|dev_priv
+operator|->
 name|sarea_priv
 operator|->
 name|last_frame
@@ -3711,7 +3546,7 @@ name|dev
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|ENOMEM
 argument_list|)
@@ -3887,22 +3722,20 @@ begin_function
 name|int
 name|r128_cce_init
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_init_t
 name|init
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|init
 argument_list|,
@@ -3948,7 +3781,7 @@ argument_list|)
 return|;
 block|}
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -3960,10 +3793,10 @@ begin_function
 name|int
 name|r128_cce_start
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_private_t
 modifier|*
@@ -3975,9 +3808,7 @@ name|dev_private
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4002,7 +3833,7 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s while CCE running\n"
 argument_list|,
-name|__func__
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 return|return
@@ -4028,10 +3859,10 @@ begin_function
 name|int
 name|r128_cce_stop
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_private_t
 modifier|*
@@ -4049,9 +3880,7 @@ name|ret
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4059,7 +3888,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|stop
 argument_list|,
@@ -4104,24 +3933,6 @@ argument_list|(
 name|dev_priv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__linux__
-if|if
-condition|(
-name|ret
-operator|<
-literal|0
-condition|)
-return|return
-name|ret
-return|;
-endif|#
-directive|endif
-comment|/* __linux__ */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
 if|if
 condition|(
 name|ret
@@ -4129,9 +3940,6 @@ condition|)
 return|return
 name|ret
 return|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 block|}
 comment|/* Finally, we can turn off the CCE.  If the engine isn't idle, 	 * we will get some dropped triangles as they won't be fully 	 * rendered before the CCE is shut down. 	 */
 name|r128_do_cce_stop
@@ -4159,10 +3967,10 @@ begin_function
 name|int
 name|r128_cce_reset
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_private_t
 modifier|*
@@ -4174,9 +3982,7 @@ name|dev_private
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4194,11 +4000,11 @@ name|DRM_DEBUG
 argument_list|(
 literal|"%s called before init done\n"
 argument_list|,
-name|__func__
+name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4226,10 +4032,10 @@ begin_function
 name|int
 name|r128_cce_idle
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_private_t
 modifier|*
@@ -4241,9 +4047,7 @@ name|dev_private
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4277,16 +4081,14 @@ begin_function
 name|int
 name|r128_engine_reset
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|LOCK_TEST_WITH_RETURN
@@ -4327,9 +4129,7 @@ name|dev_private
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|dev_priv
@@ -4407,9 +4207,7 @@ name|dev_private
 decl_stmt|;
 name|DRM_DEBUG
 argument_list|(
-literal|"%s\n"
-argument_list|,
-name|__func__
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|R128_WRITE
@@ -4452,10 +4250,10 @@ begin_function
 name|int
 name|r128_fullscreen
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_r128_fullscreen_t
 name|fs
@@ -4465,7 +4263,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|fs
 argument_list|,
@@ -4508,7 +4306,7 @@ argument_list|)
 return|;
 block|}
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -4541,7 +4339,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int r128_freelist_init( drm_device_t *dev ) { 	drm_device_dma_t *dma = dev->dma; 	drm_r128_private_t *dev_priv = dev->dev_private; 	drm_buf_t *buf; 	drm_r128_buf_priv_t *buf_priv; 	drm_r128_freelist_t *entry; 	int i;  	dev_priv->head = DRM(alloc)( sizeof(drm_r128_freelist_t), 				     DRM_MEM_DRIVER ); 	if ( dev_priv->head == NULL ) 		return DRM_OS_ERR(ENOMEM);  	memset( dev_priv->head, 0, sizeof(drm_r128_freelist_t) ); 	dev_priv->head->age = R128_BUFFER_USED;  	for ( i = 0 ; i< dma->buf_count ; i++ ) { 		buf = dma->buflist[i]; 		buf_priv = buf->dev_private;  		entry = DRM(alloc)( sizeof(drm_r128_freelist_t), 				    DRM_MEM_DRIVER ); 		if ( !entry ) return DRM_OS_ERR(ENOMEM);  		entry->age = R128_BUFFER_FREE; 		entry->buf = buf; 		entry->prev = dev_priv->head; 		entry->next = dev_priv->head->next; 		if ( !entry->next ) 			dev_priv->tail = entry;  		buf_priv->discard = 0; 		buf_priv->dispatched = 0; 		buf_priv->list_entry = entry;  		dev_priv->head->next = entry;  		if ( dev_priv->head->next ) 			dev_priv->head->next->prev = entry; 	}  	return 0;  }
+unit|static int r128_freelist_init( drm_device_t *dev ) { 	drm_device_dma_t *dma = dev->dma; 	drm_r128_private_t *dev_priv = dev->dev_private; 	drm_buf_t *buf; 	drm_r128_buf_priv_t *buf_priv; 	drm_r128_freelist_t *entry; 	int i;  	dev_priv->head = DRM(alloc)( sizeof(drm_r128_freelist_t), 				     DRM_MEM_DRIVER ); 	if ( dev_priv->head == NULL ) 		return DRM_ERR(ENOMEM);  	memset( dev_priv->head, 0, sizeof(drm_r128_freelist_t) ); 	dev_priv->head->age = R128_BUFFER_USED;  	for ( i = 0 ; i< dma->buf_count ; i++ ) { 		buf = dma->buflist[i]; 		buf_priv = buf->dev_private;  		entry = DRM(alloc)( sizeof(drm_r128_freelist_t), 				    DRM_MEM_DRIVER ); 		if ( !entry ) return DRM_ERR(ENOMEM);  		entry->age = R128_BUFFER_FREE; 		entry->buf = buf; 		entry->prev = dev_priv->head; 		entry->next = dev_priv->head->next; 		if ( !entry->next ) 			dev_priv->tail = entry;  		buf_priv->discard = 0; 		buf_priv->dispatched = 0; 		buf_priv->list_entry = entry;  		dev_priv->head->next = entry;  		if ( dev_priv->head->next ) 			dev_priv->head->next->prev = entry; 	}  	return 0;  }
 endif|#
 directive|endif
 end_endif
@@ -4709,7 +4507,7 @@ name|buf
 return|;
 block|}
 block|}
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4851,7 +4649,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|DRM_OS_DELAY
+name|DRM_UDELAY
 argument_list|(
 literal|1
 argument_list|)
@@ -4864,7 +4662,7 @@ literal|"failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EBUSY
 argument_list|)
@@ -4924,7 +4722,7 @@ operator|!
 name|buf
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EAGAIN
 argument_list|)
@@ -4933,11 +4731,11 @@ name|buf
 operator|->
 name|pid
 operator|=
-name|DRM_OS_CURRENTPID
+name|DRM_CURRENTPID
 expr_stmt|;
 if|if
 condition|(
-name|DRM_OS_COPYTOUSR
+name|DRM_COPY_TO_USER
 argument_list|(
 operator|&
 name|d
@@ -4961,14 +4759,14 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EFAULT
 argument_list|)
 return|;
 if|if
 condition|(
-name|DRM_OS_COPYTOUSR
+name|DRM_COPY_TO_USER
 argument_list|(
 operator|&
 name|d
@@ -4992,7 +4790,7 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EFAULT
 argument_list|)
@@ -5013,10 +4811,10 @@ begin_function
 name|int
 name|r128_cce_buffers
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
-name|DRM_OS_DEVICE
+name|DRM_DEVICE
 expr_stmt|;
 name|drm_device_dma_t
 modifier|*
@@ -5039,7 +4837,7 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNFROMUSR
+name|DRM_COPY_FROM_USER_IOCTL
 argument_list|(
 name|d
 argument_list|,
@@ -5069,7 +4867,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"Process %d trying to send %d buffers via drmDMA\n"
 argument_list|,
-name|DRM_OS_CURRENTPID
+name|DRM_CURRENTPID
 argument_list|,
 name|d
 operator|.
@@ -5077,7 +4875,7 @@ name|send_count
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -5105,7 +4903,7 @@ name|DRM_ERROR
 argument_list|(
 literal|"Process %d trying to get %d buffers (of %d max)\n"
 argument_list|,
-name|DRM_OS_CURRENTPID
+name|DRM_CURRENTPID
 argument_list|,
 name|d
 operator|.
@@ -5117,7 +4915,7 @@ name|buf_count
 argument_list|)
 expr_stmt|;
 return|return
-name|DRM_OS_ERR
+name|DRM_ERR
 argument_list|(
 name|EINVAL
 argument_list|)
@@ -5147,7 +4945,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_OS_KRNTOUSR
+name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
 operator|(
 name|drm_dma_t

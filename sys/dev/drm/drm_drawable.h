@@ -3,12 +3,6 @@ begin_comment
 comment|/* drm_drawable.h -- IOCTLs for drawables -*- linux-c -*-  * Created: Tue Feb  2 08:37:54 1999 by faith@valinux.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|__NO_VERSION__
-end_define
-
 begin_include
 include|#
 directive|include
@@ -22,7 +16,7 @@ function|(
 name|adddraw
 function|)
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
 name|drm_draw_t
@@ -44,7 +38,7 @@ operator|.
 name|handle
 argument_list|)
 expr_stmt|;
-name|DRM_OS_KRNTOUSR
+name|DRM_COPY_TO_USER_IOCTL
 argument_list|(
 operator|(
 name|drm_draw_t
@@ -73,7 +67,7 @@ function|(
 name|rmdraw
 function|)
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 block|{
 return|return

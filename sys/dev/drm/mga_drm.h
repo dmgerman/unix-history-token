@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mga_drm.h -- Public header for the Matrox g200/g400 driver -*- linux-c -*-  * Created: Tue Jan 25 01:50:01 1999 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keithw@valinux.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
+comment|/* mga_drm.h -- Public header for the Matrox g200/g400 driver -*- linux-c -*-  * Created: Tue Jan 25 01:50:01 1999 by jhartmann@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * VA LINUX SYSTEMS AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR  * OTHER DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Jeff Hartmann<jhartmann@valinux.com>  *    Keith Whitwell<keith@tungstengraphics.com>  *  * Rewritten by:  *    Gareth Hughes<gareth@valinux.com>  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -757,7 +757,11 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* MGA specific ioctls */
+comment|/* WARNING: If you change any of these defines, make sure to change the  * defines in the Xserver file (xf86drmMga.h)  */
+end_comment
+
+begin_comment
+comment|/* MGA specific ioctls  * The device specific ioctl range is 0x40 to 0x79.  */
 end_comment
 
 begin_define
@@ -823,9 +827,12 @@ name|DRM_IOCTL_MGA_BLIT
 value|DRM_IOW( 0x48, drm_mga_blit_t)
 end_define
 
-begin_comment
-comment|/* WARNING: If you change any of these defines, make sure to change the  * defines in the Xserver file (xf86drmMga.h)  */
-end_comment
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_MGA_GETPARAM
+value|DRM_IOWR(0x49, drm_mga_getparam_t)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -1113,6 +1120,34 @@ name|dest_pitch
 decl_stmt|;
 block|}
 name|drm_mga_blit_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 3.1: An ioctl to get parameters that aren't available to the 3d  * client any other way.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MGA_PARAM_IRQ_NR
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_mga_getparam
+block|{
+name|int
+name|param
+decl_stmt|;
+name|int
+modifier|*
+name|value
+decl_stmt|;
+block|}
+name|drm_mga_getparam_t
 typedef|;
 end_typedef
 

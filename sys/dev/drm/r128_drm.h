@@ -511,7 +511,7 @@ comment|/* WARNING: If you change any of these defines, make sure to change the 
 end_comment
 
 begin_comment
-comment|/* Rage 128 specific ioctls */
+comment|/* Rage 128 specific ioctls  * The device specific ioctl range is 0x40 to 0x79.  */
 end_comment
 
 begin_define
@@ -617,6 +617,20 @@ define|#
 directive|define
 name|DRM_IOCTL_R128_FULLSCREEN
 value|DRM_IOW( 0x50, drm_r128_fullscreen_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_R128_CLEAR2
+value|DRM_IOW( 0x51, drm_r128_clear2_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_R128_GETPARAM
+value|DRM_IOW( 0x52, drm_r128_getparam_t)
 end_define
 
 begin_typedef
@@ -1056,6 +1070,34 @@ name|func
 enum|;
 block|}
 name|drm_r128_fullscreen_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 2.3: An ioctl to get parameters that aren't available to the 3d  * client any other way.    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R128_PARAM_IRQ_NR
+value|1
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_r128_getparam
+block|{
+name|int
+name|param
+decl_stmt|;
+name|int
+modifier|*
+name|value
+decl_stmt|;
+block|}
+name|drm_r128_getparam_t
 typedef|;
 end_typedef
 

@@ -3,85 +3,6 @@ begin_comment
 comment|/* r128_drv.h -- Private header for r128 driver -*- linux-c -*-  * Created: Mon Dec 13 09:51:11 1999 by faith@precisioninsight.com  *  * Copyright 1999 Precision Insight, Inc., Cedar Park, Texas.  * Copyright 2000 VA Linux Systems, Inc., Sunnyvale, California.  * All rights reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * PRECISION INSIGHT AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM, DAMAGES OR  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER  * DEALINGS IN THE SOFTWARE.  *  * Authors:  *    Rickard E. (Rik) Faith<faith@valinux.com>  *    Kevin E. Martin<martin@valinux.com>  *    Gareth Hughes<gareth@valinux.com>  *    Michel Dänzer<daenzerm@student.ethz.ch>  *  * $FreeBSD$  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/endian.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|le32_to_cpu
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_to_le32
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|le32_to_cpu
-parameter_list|(
-name|x
-parameter_list|)
-value|ntohl(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|cpu_to_le32
-parameter_list|(
-name|x
-parameter_list|)
-value|htonl(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -101,8 +22,12 @@ name|GET_RING_HEAD
 parameter_list|(
 name|ring
 parameter_list|)
-value|le32_to_cpu( *(ring)->head )
+value|DRM_READ32(  (ring)->ring_rptr, 0 )
 end_define
+
+begin_comment
+comment|/* (ring)->head */
+end_comment
 
 begin_define
 define|#
@@ -113,8 +38,12 @@ name|ring
 parameter_list|,
 name|val
 parameter_list|)
-value|*(ring)->head = cpu_to_le32( val )
+value|DRM_WRITE32( (ring)->ring_rptr, 0, (val) )
 end_define
+
+begin_comment
+comment|/* (ring)->head */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -180,6 +109,10 @@ decl_stmt|;
 name|int
 name|high_mark
 decl_stmt|;
+name|drm_local_map_t
+modifier|*
+name|ring_rptr
+decl_stmt|;
 block|}
 name|drm_r128_ring_buffer_t
 typedef|;
@@ -224,14 +157,9 @@ name|unsigned
 name|long
 name|phys_pci_gart
 decl_stmt|;
-if|#
-directive|if
-name|__REALLY_HAVE_SG
 name|dma_addr_t
 name|bus_pci_gart
 decl_stmt|;
-endif|#
-directive|endif
 name|unsigned
 name|long
 name|cce_buffers_offset
@@ -297,31 +225,31 @@ decl_stmt|;
 name|u32
 name|span_pitch_offset_c
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|sarea
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|fb
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|mmio
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|cce_ring
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|ring_rptr
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|buffers
 decl_stmt|;
-name|drm_map_t
+name|drm_local_map_t
 modifier|*
 name|agp_textures
 decl_stmt|;
@@ -365,7 +293,7 @@ specifier|extern
 name|int
 name|r128_cce_init
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -375,7 +303,7 @@ specifier|extern
 name|int
 name|r128_cce_start
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -385,7 +313,7 @@ specifier|extern
 name|int
 name|r128_cce_stop
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -395,7 +323,7 @@ specifier|extern
 name|int
 name|r128_cce_reset
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -405,7 +333,7 @@ specifier|extern
 name|int
 name|r128_cce_idle
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -415,7 +343,7 @@ specifier|extern
 name|int
 name|r128_engine_reset
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -425,7 +353,7 @@ specifier|extern
 name|int
 name|r128_fullscreen
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -435,7 +363,17 @@ specifier|extern
 name|int
 name|r128_cce_buffers
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|r128_getparam
+parameter_list|(
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -575,7 +513,7 @@ specifier|extern
 name|int
 name|r128_cce_clear
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -585,7 +523,7 @@ specifier|extern
 name|int
 name|r128_cce_swap
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -595,7 +533,7 @@ specifier|extern
 name|int
 name|r128_cce_vertex
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -605,7 +543,7 @@ specifier|extern
 name|int
 name|r128_cce_indices
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -615,7 +553,7 @@ specifier|extern
 name|int
 name|r128_cce_blit
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -625,7 +563,7 @@ specifier|extern
 name|int
 name|r128_cce_depth
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -635,7 +573,7 @@ specifier|extern
 name|int
 name|r128_cce_stipple
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -645,7 +583,7 @@ specifier|extern
 name|int
 name|r128_cce_indirect
 parameter_list|(
-name|DRM_OS_IOCTL
+name|DRM_IOCTL_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1016,6 +954,41 @@ define|#
 directive|define
 name|R128_DST_TILE
 value|(1<< 31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R128_GEN_INT_CNTL
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
+name|R128_CRTC_VBLANK_INT_EN
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R128_GEN_INT_STATUS
+value|0x0044
+end_define
+
+begin_define
+define|#
+directive|define
+name|R128_CRTC_VBLANK_INT
+value|(1<<  0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|R128_CRTC_VBLANK_INT_AK
+value|(1<<  0)
 end_define
 
 begin_define
@@ -1849,100 +1822,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|R128_BASE
-parameter_list|(
-name|reg
-parameter_list|)
-value|((unsigned long)(dev_priv->mmio->handle))
-end_define
-
-begin_define
-define|#
-directive|define
-name|R128_ADDR
-parameter_list|(
-name|reg
-parameter_list|)
-value|(R128_BASE( reg ) + reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|R128_DEREF
-parameter_list|(
-name|reg
-parameter_list|)
-value|*(volatile u32 *)R128_ADDR( reg )
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_define
-define|#
-directive|define
 name|R128_READ
 parameter_list|(
 name|reg
 parameter_list|)
-value|(_R128_READ((u32 *)R128_ADDR(reg)))
-end_define
-
-begin_function
-specifier|static
-specifier|inline
-name|u32
-name|_R128_READ
-parameter_list|(
-name|u32
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|DRM_OS_READMEMORYBARRIER
-expr_stmt|;
-return|return
-operator|*
-operator|(
-specifier|volatile
-name|u32
-operator|*
-operator|)
-name|addr
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|R128_WRITE
-parameter_list|(
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|do {									\ 	DRM_OS_WRITEMEMORYBARRIER;								\ 	R128_DEREF(reg) = val;						\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|R128_READ
-parameter_list|(
-name|reg
-parameter_list|)
-value|le32_to_cpu( R128_DEREF( reg ) )
+value|DRM_READ32(  dev_priv->mmio, (reg) )
 end_define
 
 begin_define
@@ -1954,30 +1838,8 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-define|\
-value|do {									\ 	R128_DEREF( reg ) = cpu_to_le32( val );				\ } while (0)
+value|DRM_WRITE32( dev_priv->mmio, (reg), (val) )
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|R128_DEREF8
-parameter_list|(
-name|reg
-parameter_list|)
-value|*(volatile u8 *)R128_ADDR( reg )
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
 
 begin_define
 define|#
@@ -1986,60 +1848,7 @@ name|R128_READ8
 parameter_list|(
 name|reg
 parameter_list|)
-value|_R128_READ8((u8 *)R128_ADDR(reg))
-end_define
-
-begin_function
-specifier|static
-specifier|inline
-name|u8
-name|_R128_READ8
-parameter_list|(
-name|u8
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|DRM_OS_READMEMORYBARRIER
-expr_stmt|;
-return|return
-operator|*
-operator|(
-specifier|volatile
-name|u8
-operator|*
-operator|)
-name|addr
-return|;
-block|}
-end_function
-
-begin_define
-define|#
-directive|define
-name|R128_WRITE8
-parameter_list|(
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-define|\
-value|do {									\ 	DRM_OS_WRITEMEMORYBARRIER;								\ 	R128_DEREF8(reg) = val;						\ } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|R128_READ8
-parameter_list|(
-name|reg
-parameter_list|)
-value|R128_DEREF8( reg )
+value|DRM_READ8(   dev_priv->mmio, (reg) )
 end_define
 
 begin_define
@@ -2051,13 +1860,8 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do { R128_DEREF8( reg ) = val; } while (0)
+value|DRM_WRITE8(  dev_priv->mmio, (reg), (val) )
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -2143,7 +1947,7 @@ parameter_list|(
 name|dev
 parameter_list|)
 define|\
-value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_OS_CURRENTPID ) {			\ 		DRM_ERROR( "%s called without lock held\n", __func__ );	\ 		return DRM_OS_ERR(EINVAL);				\ 	}								\ } while (0)
+value|do {									\ 	if ( !_DRM_LOCK_IS_HELD( dev->lock.hw_lock->lock ) ||		\ 	     dev->lock.pid != DRM_CURRENTPID ) {			\ 		DRM_ERROR( "%s called without lock held\n", __FUNCTION__ );	\ 		return DRM_ERR(EINVAL);				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -2154,7 +1958,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( ring );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_OS_DELAY( 1 );				\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		return DRM_OS_ERR(EBUSY);				\ 	}								\  __ring_space_done:							\ 	;								\ } while (0)
+value|do {									\ 	drm_r128_ring_buffer_t *ring =&dev_priv->ring; int i;		\ 	if ( ring->space< ring->high_mark ) {				\ 		for ( i = 0 ; i< dev_priv->usec_timeout ; i++ ) {	\ 			r128_update_ring_snapshot( ring );		\ 			if ( ring->space>= ring->high_mark )		\ 				goto __ring_space_done;			\ 			DRM_UDELAY(1);				\ 		}							\ 		DRM_ERROR( "ring space check failed!\n" );		\ 		return DRM_ERR(EBUSY);				\ 	}								\  __ring_space_done:							\ 	;								\ } while (0)
 end_define
 
 begin_define
@@ -2165,7 +1969,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {									\ 	drm_r128_sarea_t *sarea_priv = dev_priv->sarea_priv;		\ 	if ( sarea_priv->last_dispatch>= R128_MAX_VB_AGE ) {		\ 		int __ret = r128_do_cce_idle( dev_priv );		\ 		if ( __ret< 0 ) return __ret;				\ 		sarea_priv->last_dispatch = 0;				\ 		r128_freelist_reset( dev );				\ 	}								\ } while (0)
+value|do {									\ 	drm_r128_sarea_t *sarea_priv = dev_priv->sarea_priv;		\ 	if ( sarea_priv->last_dispatch>= R128_MAX_VB_AGE ) {		\ 		int __ret = r128_do_cce_idle( dev_priv );		\ 		if ( __ret ) return __ret;				\ 		sarea_priv->last_dispatch = 0;				\ 		r128_freelist_reset( dev );				\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -2180,13 +1984,40 @@ begin_comment
 comment|/* ================================================================  * Ring control  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|r128_flush_write_combine
 parameter_list|()
-value|DRM_OS_READMEMORYBARRIER
+value|(void) GET_RING_HEAD(&dev_priv->ring )
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|r128_flush_write_combine
+parameter_list|()
+value|DRM_WRITEMEMORYBARRIER(dev_priv->ring_rptr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2210,7 +2041,7 @@ name|BEGIN_RING
 parameter_list|(
 name|n
 parameter_list|)
-value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   (n), __func__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		r128_wait_ring( dev_priv, (n) * sizeof(u32) );		\ 	}								\ 	dev_priv->ring.space -= (n) * sizeof(u32);			\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	tail_mask = dev_priv->ring.tail_mask;				\ } while (0)
+value|do {						\ 	if ( R128_VERBOSE ) {						\ 		DRM_INFO( "BEGIN_RING( %d ) in %s\n",			\ 			   (n), __FUNCTION__ );				\ 	}								\ 	if ( dev_priv->ring.space<= (n) * sizeof(u32) ) {		\ 		r128_wait_ring( dev_priv, (n) * sizeof(u32) );		\ 	}								\ 	dev_priv->ring.space -= (n) * sizeof(u32);			\ 	ring = dev_priv->ring.start;					\ 	write = dev_priv->ring.tail;					\ 	tail_mask = dev_priv->ring.tail_mask;				\ } while (0)
 end_define
 
 begin_comment
