@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.15 1994/11/17 19:44:53 ache Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.16 1994/11/18 11:30:04 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -806,7 +806,7 @@ name|dialog_msgbox
 argument_list|(
 name|TITLE
 argument_list|,
-literal|"Remove the floppy from the drive and hit return to reboot from the hard disk"
+literal|"Remove the floppy from the drive\nand hit return to reboot from the hard disk"
 argument_list|,
 operator|-
 literal|1
