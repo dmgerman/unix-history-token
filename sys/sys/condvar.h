@@ -67,7 +67,7 @@ name|mtx
 modifier|*
 name|cv_mtx
 decl_stmt|;
-comment|/* 					 * Mutex passed in by cv_*wait*(), 					 * currently only used for CV_DEBUG. 					 */
+comment|/* 					 * Mutex passed in by cv_*wait*(), 					 * currently only used for INVARIANTS. 					 */
 specifier|const
 name|char
 modifier|*
