@@ -1670,16 +1670,8 @@ argument_list|(
 literal|'C'
 argument_list|)
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 literal|"/"
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -1961,10 +1953,6 @@ argument_list|(
 literal|'R'
 argument_list|)
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 literal|"/"
 argument_list|,
 literal|0

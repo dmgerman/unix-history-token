@@ -520,10 +520,12 @@ name|outb_nullport
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
 name|byte
+name|__unused
 parameter_list|)
 block|{
 comment|/*     debug(D_PORT, "outb_nullport called for port 0x%03X = 0x%02X.\n", 		   port, byte);  */
@@ -538,6 +540,7 @@ name|inb_nullport
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 comment|/*     debug(D_PORT, "inb_nullport called for port 0x%03X.\n", port);  */
@@ -1775,6 +1778,7 @@ name|outb_speaker
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|,
 name|unsigned
 name|char
@@ -1804,6 +1808,7 @@ name|inb_speaker
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 comment|/*    port_61 = (port_61 + 1)& 0xff; */

@@ -554,6 +554,13 @@ modifier|*
 modifier|*
 name|save
 decl_stmt|;
+specifier|static
+name|char
+name|dot
+index|[]
+init|=
+literal|"."
+decl_stmt|;
 name|Hflag
 operator|=
 name|Lflag
@@ -895,7 +902,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"."
+name|dot
 expr_stmt|;
 name|argv
 index|[

@@ -6978,6 +6978,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 ifdef|#

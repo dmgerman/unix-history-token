@@ -412,6 +412,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -491,6 +492,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -702,6 +704,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|fsstat_t
@@ -773,6 +776,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 name|char
@@ -1671,6 +1675,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1718,6 +1723,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -1881,10 +1887,16 @@ name|char
 modifier|*
 name|fname
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|tname
+decl_stmt|;
+specifier|static
+name|char
+name|errmsg
+index|[]
+init|=
+literal|"(failed)"
 decl_stmt|;
 name|int
 name|savedrive
@@ -1948,7 +1960,7 @@ name|error
 condition|)
 name|tname
 operator|=
-literal|"(failed)"
+name|errmsg
 expr_stmt|;
 name|diskdrive
 operator|=
@@ -1986,6 +1998,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return
@@ -2008,6 +2021,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 return|return

@@ -9740,6 +9740,7 @@ name|OP_ST
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|oappend
@@ -9757,6 +9758,7 @@ name|OP_STi
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|sprintf
@@ -11198,6 +11200,7 @@ name|OP_SEG
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 specifier|static
@@ -11360,6 +11363,7 @@ name|OP_OFF
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -11404,6 +11408,7 @@ name|OP_ESDI
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|oappend
@@ -11435,6 +11440,7 @@ name|OP_DSSI
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|oappend
@@ -11466,6 +11472,7 @@ name|OP_C
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|codep
@@ -11496,6 +11503,7 @@ name|OP_D
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|codep
@@ -11526,6 +11534,7 @@ name|OP_T
 parameter_list|(
 name|int
 name|dummy
+name|__unused
 parameter_list|)
 block|{
 name|codep

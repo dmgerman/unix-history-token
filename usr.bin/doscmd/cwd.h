@@ -96,6 +96,7 @@ name|u_char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|s2
@@ -119,6 +120,7 @@ operator|)
 name|s1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -219,10 +221,12 @@ specifier|inline
 name|int
 name|ustrncmp
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|s1
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|s2
@@ -236,12 +240,14 @@ operator|(
 name|strncmp
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
 name|s1
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -260,6 +266,7 @@ specifier|inline
 name|int
 name|ustrlen
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|s
@@ -270,6 +277,7 @@ operator|(
 name|strlen
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -323,6 +331,7 @@ name|u_char
 modifier|*
 name|ustrdup
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 name|s
@@ -337,6 +346,7 @@ operator|)
 name|strdup
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -418,9 +428,11 @@ name|init_path
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 parameter_list|)

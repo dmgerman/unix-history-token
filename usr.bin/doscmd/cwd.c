@@ -239,10 +239,12 @@ parameter_list|(
 name|int
 name|drive
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|base
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|dir
@@ -991,10 +993,6 @@ name|ustrncat
 argument_list|(
 name|tmppath
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 literal|"/"
 argument_list|,
 literal|1024

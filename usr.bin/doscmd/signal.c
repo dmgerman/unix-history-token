@@ -87,6 +87,7 @@ name|struct
 name|sigframe
 modifier|*
 name|sf
+name|__unused
 parameter_list|)
 block|{
 if|#

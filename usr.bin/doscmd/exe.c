@@ -497,6 +497,7 @@ name|start_segment
 parameter_list|,
 name|int
 name|reloc_segment
+name|__unused
 parameter_list|,
 name|struct
 name|exehdr

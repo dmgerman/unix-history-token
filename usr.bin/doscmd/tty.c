@@ -1165,6 +1165,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|fprintf
@@ -1334,10 +1335,12 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|,
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -1845,6 +1848,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 ifndef|#
@@ -5045,6 +5049,7 @@ name|inb_port60
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 name|int
@@ -5137,6 +5142,7 @@ name|void
 name|int09
 parameter_list|(
 name|REGISTERS
+name|__unused
 parameter_list|)
 block|{
 if|if
@@ -11556,6 +11562,7 @@ parameter_list|(
 name|void
 modifier|*
 name|arg
+name|__unused
 parameter_list|)
 block|{
 name|int

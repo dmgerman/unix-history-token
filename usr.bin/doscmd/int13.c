@@ -1322,11 +1322,16 @@ index|]
 operator|.
 name|numSectors
 operator|==
+call|(
+name|u_long
+call|)
+argument_list|(
 name|head
 operator|*
 name|tracksize
 operator|*
 name|cyl
+argument_list|)
 operator|&&
 operator|(
 name|ptab

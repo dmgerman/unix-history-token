@@ -17,6 +17,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{
 operator|*
@@ -102,6 +103,7 @@ parameter_list|(
 name|regcontext_t
 modifier|*
 name|REGS
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -120,6 +122,7 @@ name|inb_timer
 parameter_list|(
 name|int
 name|port
+name|__unused
 parameter_list|)
 block|{
 return|return
