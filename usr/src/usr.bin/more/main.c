@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1137,7 +1137,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy a string to a "safe" place  * (that is, to a buffer allocated by calloc).  */
+comment|/*  * Copy a string to a "safe" place  * (that is, to a buffer allocated by malloc).  */
 end_comment
 
 begin_function
@@ -1153,26 +1153,31 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
+modifier|*
+name|malloc
+argument_list|()
 decl_stmt|;
 name|p
 operator|=
-name|calloc
+name|malloc
 argument_list|(
+operator|(
+name|u_int
+operator|)
 name|strlen
 argument_list|(
 name|s
 argument_list|)
 operator|+
 literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1191,16 +1196,14 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
+return|return
+operator|(
 name|strcpy
 argument_list|(
 name|p
 argument_list|,
 name|s
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|p
 operator|)
 return|;
 block|}
