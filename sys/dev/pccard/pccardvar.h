@@ -1304,12 +1304,23 @@ argument|char *
 argument_list|)
 end_macro
 
+begin_macro
+name|PCCARD_ACCESSOR
+argument_list|(
+argument|cis3_str
+argument_list|,
+argument|CIS3_STR
+argument_list|,
+argument|char *
+argument_list|)
+end_macro
+
 begin_expr_stmt
 name|PCCARD_ACCESSOR
 argument_list|(
-name|cis3_str
+name|cis4_str
 argument_list|,
-name|CIS3_STR
+name|CIS4_STR
 argument_list|,
 name|char
 operator|*
