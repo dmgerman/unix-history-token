@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)random.c	8.2 (Berkeley) %G%"
+literal|"@(#)random.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,7 +443,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: random [-er] [divisor]\n"
+literal|"usage: random [-er] [denominator]\n"
 argument_list|)
 expr_stmt|;
 name|exit
