@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 4.9.1.13 1994/07/19 22:51:24 vixie Exp $"
+literal|"$Id: host.c,v 1.1.1.1 1994/09/22 21:34:21 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../conf/portability.h"
+file|<string.h>
 end_include
 
 begin_decl_stmt
