@@ -21,6 +21,18 @@ directive|include
 file|<sys/fcntl.h>
 end_include
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|StartName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Initial contents of argv[0] */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -71,6 +83,14 @@ name|max
 decl_stmt|,
 name|status
 decl_stmt|;
+comment|/* Record name to be able to restart */
+name|StartName
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* Catch fatal signals and complain about them if running as init */
 if|if
 condition|(

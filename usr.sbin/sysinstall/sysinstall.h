@@ -2333,6 +2333,19 @@ begin_comment
 comment|/* FixItMode starts shell onc urrent device (ie Serial port) */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|StartName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Which name we were started as */
+end_comment
+
 begin_comment
 comment|/* Stuff from libdialog which isn't properly declared outside */
 end_comment
