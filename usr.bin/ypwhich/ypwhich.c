@@ -829,8 +829,7 @@ index|]
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
+name|INADDR_NONE
 condition|)
 block|{
 name|hent
