@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)regular.c	5.3 (Berkeley) %G%"
+literal|"@(#)regular.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|length
 argument_list|,
@@ -258,7 +258,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|length
 argument_list|,
