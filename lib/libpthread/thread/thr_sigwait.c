@@ -671,11 +671,12 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
 name|ret
 operator|=
-operator|-
-literal|1
+name|errno
 expr_stmt|;
+block|}
 name|_thr_cancel_leave
 argument_list|(
 name|curthread
@@ -740,8 +741,7 @@ else|else
 block|{
 name|ret
 operator|=
-operator|-
-literal|1
+name|errno
 expr_stmt|;
 block|}
 return|return
