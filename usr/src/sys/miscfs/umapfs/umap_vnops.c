@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vnops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -111,22 +111,31 @@ name|ucred
 modifier|*
 modifier|*
 name|credpp
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|credp
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|ucred
 modifier|*
 name|savecredp
 decl_stmt|,
 modifier|*
 name|savecompcredp
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|compcredp
+init|=
+literal|0
 decl_stmt|;
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -143,9 +152,13 @@ name|old_vps
 index|[
 name|VDESC_MAX_VPS
 index|]
-decl_stmt|,
+decl_stmt|;
+name|struct
+name|vnode
 modifier|*
 name|vp1
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|vnode
@@ -182,6 +195,8 @@ name|componentname
 modifier|*
 modifier|*
 name|compnamepp
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -767,6 +782,8 @@ condition|(
 name|umap_bug_bypass
 operator|&&
 name|credp
+operator|&&
+name|credp
 operator|->
 name|cr_uid
 operator|!=
@@ -796,6 +813,8 @@ expr_stmt|;
 if|if
 condition|(
 name|umap_bug_bypass
+operator|&&
+name|credpp
 operator|&&
 operator|(
 operator|*
@@ -833,6 +852,8 @@ condition|(
 name|umap_bug_bypass
 operator|&&
 name|compcredp
+operator|&&
+name|compcredp
 operator|->
 name|cr_uid
 operator|!=
@@ -865,6 +886,8 @@ if|if
 condition|(
 name|umap_bug_bypass
 operator|&&
+name|credpp
+operator|&&
 operator|(
 operator|*
 name|credpp
@@ -876,7 +899,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"umap_bypass: returning-component-user now %d\n\n"
+literal|"umap_bypass: returning-component-user now %d\n"
 argument_list|,
 name|compcredp
 operator|->
@@ -919,16 +942,27 @@ name|error
 decl_stmt|,
 name|tmpid
 decl_stmt|,
-modifier|*
-name|mapdata
-decl_stmt|,
 name|nentries
-decl_stmt|,
-modifier|*
-name|gmapdata
 decl_stmt|,
 name|gnentries
 decl_stmt|;
+name|u_long
+argument_list|(
+operator|*
+name|mapdata
+argument_list|)
+index|[
+literal|2
+index|]
+operator|,
+operator|(
+operator|*
+name|gmapdata
+operator|)
+index|[
+literal|2
+index|]
+expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -1046,7 +1080,6 @@ name|info_nentries
 expr_stmt|;
 name|mapdata
 operator|=
-operator|&
 operator|(
 name|MOUNTTOUMAPMOUNT
 argument_list|(
@@ -1059,12 +1092,6 @@ name|v_mount
 argument_list|)
 operator|->
 name|info_mapdata
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
 operator|)
 expr_stmt|;
 name|gnentries
@@ -1083,7 +1110,6 @@ name|info_gnentries
 expr_stmt|;
 name|gmapdata
 operator|=
-operator|&
 operator|(
 name|MOUNTTOUMAPMOUNT
 argument_list|(
@@ -1096,12 +1122,6 @@ name|v_mount
 argument_list|)
 operator|->
 name|info_gmapdata
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
 operator|)
 expr_stmt|;
 comment|/* Reverse map the uid for the vnode.  Since it's a reverse 		map, we can't use umap_mapids() to do it. */
@@ -1478,7 +1498,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -1662,7 +1681,7 @@ comment|/*  * Global vfs data structures  */
 end_comment
 
 begin_comment
-comment|/*  * XXX - strategy,bwrite are hand coded currently.  They should  * go away with a merged buffer/block cache.  *  */
+comment|/*  * XXX - strategy, bwrite are hand coded currently.  They should  * go away with a merged buffer/block cache.  *  */
 end_comment
 
 begin_function_decl

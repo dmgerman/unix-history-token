@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_umap.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -130,7 +130,7 @@ name|gnentries
 decl_stmt|,
 name|count
 decl_stmt|;
-name|int
+name|u_long
 name|mapdata
 index|[
 name|MAPFILEENTRIES
@@ -139,7 +139,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|u_long
 name|gmapdata
 index|[
 name|GMAPFILEENTRIES
@@ -296,16 +296,18 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"mount_umap: can't stat %s\n"
+name|stderr
+argument_list|,
+literal|"mount_umap: can't stat %s: %s\n"
 argument_list|,
 name|mapfile
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|"mount_umap: error status"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|notMounted
@@ -327,8 +329,10 @@ operator|&
 name|S_IWOTH
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: Improper write permissions for %s, mode %x\n"
 argument_list|,
 name|mapfile
@@ -351,8 +355,10 @@ operator|!=
 name|ROOTUSER
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: %s does not belong to root\n"
 argument_list|,
 name|mapfile
@@ -382,11 +388,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"mount_umap: can't open %s\n"
+name|stderr
+argument_list|,
+literal|"mount_umap: can't open %s: %s\n"
 argument_list|,
 name|mapfile
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|notMounted
@@ -409,8 +422,10 @@ name|nentries
 operator|>
 name|MAPFILEENTRIES
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: nentries exceeds maximum\n"
 argument_list|)
 expr_stmt|;
@@ -441,7 +456,7 @@ name|fscanf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%d %d\n"
+literal|"%lu %lu\n"
 argument_list|,
 operator|&
 operator|(
@@ -470,8 +485,10 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: %s, premature eof\n"
 argument_list|,
 name|mapfile
@@ -485,7 +502,7 @@ if|#
 directive|if
 literal|0
 comment|/* fix a security hole */
-block|if (mapdata[count][1] == 0) { 			printf("mount_umap: Mapping to UID 0 not allowed\n"); 			notMounted(); 		}
+block|if (mapdata[count][1] == 0) { 			fprintf(stderr, "mount_umap: Mapping to UID 0 not allowed\n"); 			notMounted(); 		}
 endif|#
 directive|endif
 block|}
@@ -501,16 +518,18 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"mount_umap: can't stat %s\n"
+name|stderr
+argument_list|,
+literal|"mount_umap: can't stat %s: %s\n"
 argument_list|,
 name|gmapfile
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|"mount_umap: error status"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|notMounted
@@ -532,8 +551,10 @@ operator|&
 name|S_IWOTH
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: Improper write permissions for %s, mode %x\n"
 argument_list|,
 name|gmapfile
@@ -553,8 +574,10 @@ operator|!=
 name|ROOTUSER
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: %s does not belong to root\n"
 argument_list|,
 name|mapfile
@@ -578,8 +601,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: can't open %s\n"
 argument_list|,
 name|gmapfile
@@ -605,8 +630,10 @@ name|gnentries
 operator|>
 name|GMAPFILEENTRIES
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: gnentries exceeds maximum\n"
 argument_list|)
 expr_stmt|;
@@ -637,7 +664,7 @@ name|fscanf
 argument_list|(
 name|gfp
 argument_list|,
-literal|"%d %d\n"
+literal|"%lu %lu\n"
 argument_list|,
 operator|&
 operator|(
@@ -666,8 +693,10 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"mount_umap: %s, premature eof on group mapfile\n"
 argument_list|,
 name|gmapfile
@@ -695,16 +724,7 @@ name|args
 operator|.
 name|mapdata
 operator|=
-operator|&
-operator|(
 name|mapdata
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-operator|)
 expr_stmt|;
 name|args
 operator|.
@@ -716,21 +736,12 @@ name|args
 operator|.
 name|gmapdata
 operator|=
-operator|&
-operator|(
 name|gmapdata
-index|[
-literal|0
-index|]
-index|[
-literal|0
-index|]
-operator|)
 expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("calling mount_umap(%s,%d,<%s>)\n",target,mntflags, 	       args.target);
+block|printf("calling mount_umap(%s,%d,<%s>)\n", target, mntflags, 	       args.target);
 endif|#
 directive|endif
 if|if

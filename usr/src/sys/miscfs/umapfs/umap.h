@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap.h	8.1 (Berkeley) %G%  *  * @(#)null_vnops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap.h	8.2 (Berkeley) %G%  *  * @(#)null_vnops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_define
@@ -48,15 +48,25 @@ name|int
 name|gnentries
 decl_stmt|;
 comment|/* # of entries in group map array */
-name|int
-modifier|*
+name|u_long
+argument_list|(
+operator|*
 name|mapdata
-decl_stmt|;
+argument_list|)
+index|[
+literal|2
+index|]
+expr_stmt|;
 comment|/* pointer to array of user mappings */
-name|int
-modifier|*
+name|u_long
+argument_list|(
+operator|*
 name|gmapdata
-decl_stmt|;
+argument_list|)
+index|[
+literal|2
+index|]
+expr_stmt|;
 comment|/* pointer to array of group mappings */
 block|}
 struct|;
@@ -85,7 +95,7 @@ name|int
 name|info_gnentries
 decl_stmt|;
 comment|/* number of gid mappings */
-name|int
+name|u_long
 name|info_mapdata
 index|[
 name|MAPFILEENTRIES
@@ -95,7 +105,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* mapping data for  	    user mapping in ficus */
-name|int
+name|u_long
 name|info_gmapdata
 index|[
 name|GMAPFILEENTRIES
@@ -172,6 +182,51 @@ name|vnode
 operator|*
 operator|*
 name|vpp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|umap_reverse_findid
+name|__P
+argument_list|(
+operator|(
+name|u_long
+name|id
+operator|,
+name|u_long
+name|map
+index|[]
+index|[
+literal|2
+index|]
+operator|,
+name|int
+name|nentries
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|umap_mapids
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mount
+operator|*
+name|v_mount
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|credp
 operator|)
 argument_list|)
 decl_stmt|;
