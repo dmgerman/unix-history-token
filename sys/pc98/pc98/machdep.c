@@ -4100,6 +4100,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * we must absolutely guarentee that hlt is the 			 * absolute next instruction after sti or we 			 * introduce a timing window. 			 */
 asm|__asm __volatile("sti; hlt");
 block|}
 block|}
@@ -7773,7 +7774,7 @@ operator|.
 name|td_contested
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 *	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be under 	 *	     witness. 	 */
+comment|/* 	 * Initialize mutexes. 	 * 	 * icu_lock: in order to allow an interrupt to occur in a critical 	 * 	     section, to set pcpu->ipending (etc...) properly, we 	 *	     must be able to get the icu lock, so it can't be 	 *	     under witness. 	 */
 name|mtx_init
 argument_list|(
 operator|&
