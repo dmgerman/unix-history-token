@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)icheck.c	1.11 (Berkeley) %G%"
+literal|"@(#)icheck.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3313,7 +3313,7 @@ operator|)
 operator|&
 name|sblock
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3543,7 +3543,7 @@ name|SBLOCK
 argument_list|,
 name|fs
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 condition|)
 block|{

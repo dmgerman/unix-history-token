@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dcheck.c	1.4 (Berkeley) %G%"
+literal|"@(#)dcheck.c	1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|MAXNINDIR
-value|(MAXBSIZE/sizeof(daddr_t))
+value|(MAXBSIZE / sizeof (daddr_t))
 end_define
 
 begin_include
@@ -397,7 +397,7 @@ operator|)
 operator|&
 name|sblock
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 expr_stmt|;
 if|if

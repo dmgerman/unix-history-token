@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	1.6 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	1.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,10 +153,10 @@ argument_list|,
 operator|&
 name|afs
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 operator|!=
-name|MAXBSIZE
+name|SBSIZE
 condition|)
 name|perror
 argument_list|(
@@ -324,11 +324,19 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cpg\t%d\nfpg\t%d\nipg\t%d\n"
+literal|"cpg\t%d\nbpg\t%d\nfpg\t%d\nipg\t%d\n"
 argument_list|,
 name|afs
 operator|.
 name|fs_cpg
+argument_list|,
+name|afs
+operator|.
+name|fs_fpg
+operator|/
+name|afs
+operator|.
+name|fs_frag
 argument_list|,
 name|afs
 operator|.
@@ -370,11 +378,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgrotor\t%d\nblocks available in each rotational position"
+literal|"cgrotor\t%d\nfmod\t%d\nronly\t%d\n"
 argument_list|,
 name|afs
 operator|.
 name|fs_cgrotor
+argument_list|,
+name|afs
+operator|.
+name|fs_fmod
+argument_list|,
+name|afs
+operator|.
+name|fs_ronly
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"blocks available in each rotational position"
 argument_list|)
 expr_stmt|;
 for|for
@@ -653,24 +674,50 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"fmod\t%d\n"
-argument_list|,
+if|if
+condition|(
 name|afs
 operator|.
-name|fs_fmod
+name|fs_ncyl
+operator|%
+name|afs
+operator|.
+name|fs_cpg
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cylinders in last group %d\n"
+argument_list|,
+name|i
+operator|=
+name|afs
+operator|.
+name|fs_ncyl
+operator|%
+name|afs
+operator|.
+name|fs_cpg
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ronly\t%d\n"
+literal|"blocks in last group %d\n"
 argument_list|,
+name|i
+operator|*
 name|afs
 operator|.
-name|fs_ronly
+name|fs_spc
+operator|/
+name|NSPB
+argument_list|(
+operator|&
+name|afs
+argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"

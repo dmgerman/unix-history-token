@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.9 %G%"
+literal|"@(#)main.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2866,7 +2866,7 @@ for|for
 control|(
 name|ino
 operator|=
-literal|1
+name|ROOTINO
 init|;
 name|ino
 operator|<=
@@ -3981,7 +3981,7 @@ condition|)
 continue|continue;
 name|ndp
 operator|->
-name|d_mode
+name|d_fmt
 operator|=
 name|IFDIR
 expr_stmt|;

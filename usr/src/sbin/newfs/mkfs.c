@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkfs.c	1.11 (Berkeley) %G%"
+literal|"@(#)mkfs.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,13 @@ define|#
 directive|define
 name|MAXNDIR
 value|(MAXBSIZE / sizeof(struct direct))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXINOPB
+value|(MAXBSIZE / sizeof(struct dinode))
 end_define
 
 begin_define
@@ -1826,41 +1833,47 @@ argument_list|(
 operator|&
 name|sblock
 argument_list|,
-name|sblock
-operator|.
-name|fs_fpg
-argument_list|)
+name|cgsblock
+argument_list|(
+literal|1
 argument_list|,
+operator|&
+name|sblock
+argument_list|)
+argument_list|)
+operator|-
 name|SBLOCK
-operator|+
+argument_list|,
 name|fsbtodb
 argument_list|(
 operator|&
 name|sblock
 argument_list|,
+name|cgsblock
+argument_list|(
+literal|1
+argument_list|,
+operator|&
 name|sblock
-operator|.
-name|fs_fpg
+argument_list|)
 argument_list|)
 argument_list|,
-name|SBLOCK
-operator|+
 name|fsbtodb
 argument_list|(
 operator|&
 name|sblock
 argument_list|,
-operator|(
+name|cgsblock
+argument_list|(
 name|sblock
 operator|.
 name|fs_ncg
 operator|-
 literal|1
-operator|)
-operator|*
+argument_list|,
+operator|&
 name|sblock
-operator|.
-name|fs_fpg
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3655,6 +3668,8 @@ block|{
 name|int
 name|n
 decl_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
 name|fsi
@@ -3665,7 +3680,28 @@ name|DEV_BSIZE
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"seek error: %ld\n"
+argument_list|,
+name|bno
+argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"rdfs"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|n
 operator|=
 name|read
@@ -3689,6 +3725,11 @@ argument_list|(
 literal|"read error: %ld\n"
 argument_list|,
 name|bno
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"rdfs"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3739,17 +3780,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"wtfs: bno %d, size %d, buf %d\n"
-argument_list|,
-name|bno
-argument_list|,
-name|size
-argument_list|,
-name|bf
-argument_list|)
-expr_stmt|;
 name|lseek
 argument_list|(
 name|fso
@@ -3761,6 +3791,40 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fso
+argument_list|,
+name|bno
+operator|*
+name|DEV_BSIZE
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"seek error: %ld\n"
+argument_list|,
+name|bno
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"wtfs"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|n
 operator|=
 name|write
@@ -3784,6 +3848,11 @@ argument_list|(
 literal|"write error: %D\n"
 argument_list|,
 name|bno
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"wtfs"
 argument_list|)
 expr_stmt|;
 name|exit

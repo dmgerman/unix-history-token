@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.15 (Berkeley) %G%"
+literal|"@(#)main.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,15 +94,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAXINOPB
-value|(MAXBSIZE / sizeof(struct dinode))
+name|MAXNINDIR
+value|(MAXBSIZE / sizeof (daddr_t))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXNINDIR
-value|(MAXBSIZE / sizeof(daddr_t))
+name|MAXINOPB
+value|(MAXBSIZE / sizeof (struct dinode))
 end_define
 
 begin_define
@@ -6870,7 +6870,7 @@ name|sblock
 argument_list|,
 name|super
 argument_list|,
-name|MAXBSIZE
+name|SBSIZE
 argument_list|)
 operator|==
 literal|0
@@ -6890,7 +6890,7 @@ name|sblk
 operator|.
 name|b_size
 operator|=
-name|MAXBSIZE
+name|SBSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -7298,6 +7298,8 @@ name|sblock
 operator|.
 name|fs_cgsize
 operator|!=
+name|roundup
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -7311,6 +7313,11 @@ operator|.
 name|fs_fpg
 argument_list|,
 name|NBBY
+argument_list|)
+argument_list|,
+name|sblock
+operator|.
+name|fs_fsize
 argument_list|)
 condition|)
 block|{
