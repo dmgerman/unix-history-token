@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vacation.c	5.10 (Berkeley) %G%"
+literal|"@(#)vacation.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1000,11 +1000,11 @@ name|ignore
 index|[]
 init|=
 block|{
-literal|"-REQUEST"
+literal|"-request"
 block|,
 literal|8
 block|,
-literal|"Postmaster"
+literal|"postmaster"
 block|,
 literal|10
 block|,
@@ -1012,11 +1012,15 @@ literal|"uucp"
 block|,
 literal|4
 block|,
-literal|"MAILER-DAEMON"
+literal|"mailer-daemon"
 block|,
 literal|13
 block|,
-literal|"MAILER"
+literal|"mailer"
+block|,
+literal|6
+block|,
+literal|"-relay"
 block|,
 literal|6
 block|,
