@@ -85,6 +85,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sched.h>
 end_include
 
@@ -1388,6 +1394,9 @@ name|PTHREAD_CANCEL_NEEDED
 value|0x0010
 name|int
 name|cancelflags
+decl_stmt|;
+name|int
+name|suspended
 decl_stmt|;
 name|thread_continuation_t
 name|continuation

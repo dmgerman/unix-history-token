@@ -866,7 +866,10 @@ condition|(
 name|interrupted
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|_thread_run
 operator|->
 name|continuation
@@ -884,6 +887,11 @@ operator|)
 name|_thread_run
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+name|EINTR
+expr_stmt|;
+block|}
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
@@ -1401,7 +1409,10 @@ condition|(
 name|interrupted
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|_thread_run
 operator|->
 name|continuation
@@ -1419,6 +1430,11 @@ operator|)
 name|_thread_run
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+name|EINTR
+expr_stmt|;
+block|}
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
