@@ -366,6 +366,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* debug trap goes here */
+break|break;
 block|}
 name|AcpiOsUnmapMemory
 argument_list|(
@@ -502,6 +503,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* debug trap goes here */
+break|break;
 block|}
 name|AcpiOsUnmapMemory
 argument_list|(

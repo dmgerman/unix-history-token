@@ -622,6 +622,7 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 block|}
 comment|/* 	 * An ACL_OTHER entry should always exist in a valid access 	 * ACL.  If it doesn't, then generate a serious failure.  For now, 	 * this means a debugging message and EPERM, but in the future 	 * should probably be a panic. 	 */
@@ -1087,6 +1088,7 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 block|}
 if|if
@@ -1341,6 +1343,7 @@ literal|0
 operator|)
 return|;
 default|default:
+break|break;
 block|}
 block|}
 comment|/* 		 * Even with privilege, group membership was not sufficient. 		 * Return failure. 		 */

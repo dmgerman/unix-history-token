@@ -167,6 +167,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* debug trap goes here */
+break|break;
 block|}
 return|return
 operator|(
@@ -242,6 +243,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* debug trap goes here */
+break|break;
 block|}
 return|return
 operator|(
@@ -362,6 +364,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* debug trap goes here */
+break|break;
 block|}
 return|return
 operator|(

@@ -3333,6 +3333,7 @@ expr_stmt|;
 block|}
 name|nextproc
 label|:
+continue|continue;
 block|}
 block|}
 name|sx_sunlock

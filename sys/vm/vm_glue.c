@@ -2004,6 +2004,7 @@ expr_stmt|;
 block|}
 name|nextproc
 label|:
+continue|continue;
 block|}
 name|sx_sunlock
 argument_list|(
