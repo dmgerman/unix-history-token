@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.9	82/12/17	*/
+comment|/*	tm.c	4.10	83/03/02	*/
 end_comment
 
 begin_comment
@@ -369,10 +369,21 @@ return|;
 if|if
 condition|(
 name|word
-operator|<
-literal|0
+operator|&
+name|TM_ERR
 condition|)
 block|{
+if|if
+condition|(
+name|word
+operator|&
+name|TMER_EOF
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|errcnt
@@ -383,9 +394,7 @@ name|printf
 argument_list|(
 literal|"te error: er=%b"
 argument_list|,
-name|tmaddr
-operator|->
-name|tmer
+name|word
 argument_list|,
 name|TMER_BITS
 argument_list|)
@@ -432,6 +441,17 @@ argument_list|(
 literal|" recovered by retry\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|word
+operator|&
+name|TMER_EOF
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 name|io
