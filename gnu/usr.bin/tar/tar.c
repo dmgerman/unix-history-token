@@ -1025,6 +1025,26 @@ literal|1
 block|}
 block|,
 block|{
+literal|"bzip2"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'y'
+block|}
+block|,
+block|{
+literal|"bunzip2"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'y'
+block|}
+block|,
+block|{
 literal|"gzip"
 block|,
 literal|0
@@ -1627,7 +1647,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-01234567Ab:BcC:df:F:g:GhikK:lL:mMnN:oOpPrRsStT:uvV:wWxX:zZ"
+literal|"-01234567Ab:BcC:df:F:g:GhikK:lL:mMnN:oOpPrRsStT:uvV:wWxX:yzZ"
 argument_list|,
 name|long_options
 argument_list|,
@@ -2489,6 +2509,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'y'
+case|:
+if|if
+condition|(
+name|f_compressprog
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"Only one compression option permitted\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_ARGSBAD
+argument_list|)
+expr_stmt|;
+block|}
+name|f_compressprog
+operator|=
+literal|"bzip2"
+expr_stmt|;
+break|break;
+case|case
 literal|'z'
 case|:
 if|if
@@ -2717,7 +2761,7 @@ expr_stmt|;
 comment|/* KLUDGE */
 name|fputs
 argument_list|(
-literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude FILE		exclude file FILE\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ --fast-read 		stop after desired names in archive have been found\n\ "
+literal|"\ -W, --verify		attempt to verify the archive after writing it\n\ --exclude FILE		exclude file FILE\n\ -X, --exclude-from FILE	exclude files listed in FILE\n\ -y, --bzip2, --bunzip2  filter the archive through bzip2\n\ -Z, --compress,\n\     --uncompress      	filter the archive through compress\n\ -z, --gzip,\n\     --ungzip		filter the archive through gzip\n\ --use-compress-program PROG\n\ 			filter the archive through PROG (which must accept -d)\n\ --block-compress	block the output of compression program for tapes\n\ -[0-7][lmh]		specify drive and density\n\ --unlink		unlink files before creating them\n\ --fast-read 		stop after desired names in archive have been found\n\ "
 argument_list|,
 name|stdout
 argument_list|)
