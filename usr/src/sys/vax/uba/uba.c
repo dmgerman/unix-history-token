@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.31	81/05/12	*/
+comment|/*	uba.c	4.32	81/06/08	*/
 end_comment
 
 begin_include
@@ -2131,12 +2131,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BBNNET
-end_ifdef
-
 begin_comment
 comment|/*  * This routine allows remapping of previously  * allocated UNIBUS bdp and map resources  * onto different memory addresses.  * It should only be used by routines which need  * small fixed length mappings for long periods of time  * (like the ARPANET ACC IMP interface).  * It only maps kernel addresses.  */
 end_comment
@@ -2389,11 +2383,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
