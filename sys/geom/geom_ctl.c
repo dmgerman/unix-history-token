@@ -2066,13 +2066,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"Found class: %p\n"
-argument_list|,
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -2096,13 +2089,6 @@ operator|=
 name|gctl_get_provider
 argument_list|(
 name|req
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Found provider: %p\n"
-argument_list|,
-name|pp
 argument_list|)
 expr_stmt|;
 name|mp
@@ -2160,13 +2146,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|"Found class: %p\n"
-argument_list|,
-name|mp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mp
@@ -2228,13 +2207,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
-argument_list|(
-literal|"Found geom: %p\n"
-argument_list|,
-name|gp
-argument_list|)
-expr_stmt|;
 name|mp
 operator|->
 name|destroy_geom
@@ -2433,6 +2405,12 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|g_debugflags
+operator|&
+name|G_F_CTLDUMP
+condition|)
 name|gctl_dump
 argument_list|(
 name|req

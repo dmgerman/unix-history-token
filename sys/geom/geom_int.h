@@ -66,6 +66,13 @@ name|G_F_DISKIOCTL
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|G_F_CTLDUMP
+value|128
+end_define
+
 begin_comment
 comment|/*  * Various internal actions are tracked by tagging g_event[s] onto  * an internal eventqueue.  */
 end_comment
