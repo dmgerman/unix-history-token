@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.8 %G%"
+literal|"@(#)msgs.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<sys/dir.h>
 end_include
 
 begin_include
