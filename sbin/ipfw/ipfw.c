@@ -3000,6 +3000,15 @@ else|:
 literal|','
 argument_list|,
 name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|unsigned
+argument_list|)
+operator|*
+literal|8
+operator|+
+name|j
 argument_list|)
 expr_stmt|;
 name|first
