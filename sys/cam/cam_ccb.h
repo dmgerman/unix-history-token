@@ -313,33 +313,38 @@ block|,
 comment|/* The SIM runs in phase mode    */
 name|CAM_MSGB_VALID
 init|=
-literal|0x20000000
+literal|0x10000000
 block|,
 comment|/* Message buffer valid	      */
 name|CAM_STATUS_VALID
 init|=
-literal|0x40000000
+literal|0x20000000
 block|,
 comment|/* Status buffer valid	      */
 name|CAM_DATAB_VALID
 init|=
-literal|0x80000000
+literal|0x40000000
 block|,
 comment|/* Data buffer valid	      */
 comment|/* Host target Mode flags */
+name|CAM_SEND_SENSE
+init|=
+literal|0x08000000
+block|,
+comment|/* Send sense data with status   */
 name|CAM_TERM_IO
 init|=
-literal|0x20000000
+literal|0x10000000
 block|,
 comment|/* Terminate I/O Message sup.    */
 name|CAM_DISCONNECT
 init|=
-literal|0x40000000
+literal|0x20000000
 block|,
 comment|/* Disconnects are mandatory     */
 name|CAM_SEND_STATUS
 init|=
-literal|0x80000000
+literal|0x40000000
 comment|/* Send status after data phase  */
 block|}
 name|ccb_flags
@@ -883,39 +888,10 @@ literal|252
 index|]
 decl_stmt|;
 name|u_int8_t
-name|serial_num_len
+name|inq_len
 decl_stmt|;
 name|u_int8_t
-name|pd_type
-decl_stmt|;
-comment|/* returned peripheral device type */
-comment|/*  * GARBAGE COLLECT  * Moved to ccb_getdevstats but left here for binary compatibility.  * Remove during next bump in CAM major version.  */
-name|int
-name|dev_openings
-decl_stmt|;
-comment|/* Space left for more work on device*/
-name|int
-name|dev_active
-decl_stmt|;
-comment|/* Transactions running on the device */
-name|int
-name|devq_openings
-decl_stmt|;
-comment|/* Space left for more queued work */
-name|int
-name|devq_queued
-decl_stmt|;
-comment|/* Transactions queued to be sent */
-name|int
-name|held
-decl_stmt|;
-comment|/* 				 * CCBs held by peripheral drivers 				 * for this device 				 */
-name|int
-name|maxtags
-decl_stmt|;
-comment|/* 				 * Boundary conditions for number of 				 * tagged operations 				 */
-name|int
-name|mintags
+name|serial_num_len
 decl_stmt|;
 block|}
 struct|;
@@ -1544,7 +1520,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x12
+value|0x13
 end_define
 
 begin_comment
@@ -1932,6 +1908,10 @@ name|u_int8_t
 name|tag_action
 decl_stmt|;
 comment|/* What to do for tag queueing */
+name|u_int8_t
+name|sense_len
+decl_stmt|;
+comment|/* Number of bytes of Sense Data */
 name|u_int
 name|tag_id
 decl_stmt|;
@@ -1940,6 +1920,10 @@ name|u_int
 name|init_id
 decl_stmt|;
 comment|/* initiator id of who selected */
+name|struct
+name|scsi_sense_data
+name|sense_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -2386,7 +2370,7 @@ decl_stmt|;
 name|u_int8_t
 name|sense_len
 decl_stmt|;
-comment|/* Number of bytes in sese buffer */
+comment|/* Number of bytes in sense buffer */
 name|u_int8_t
 name|initiator_id
 decl_stmt|;
