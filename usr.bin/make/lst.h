@@ -78,14 +78,14 @@ begin_define
 define|#
 directive|define
 name|NOFREE
-value|((void (*) __P((void *))) 0)
+value|((void (*)(void *)) 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|NOCOPY
-value|((void * (*) __P((void *))) 0)
+value|((void * (*)(void *)) 0)
 end_define
 
 begin_define
@@ -118,84 +118,72 @@ begin_comment
 comment|/* Create a new list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Lst
 name|Lst_Init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Boolean
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Duplicate an existing list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Lst
 name|Lst_Duplicate
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-call|(
 modifier|*
-call|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Destroy an old one */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|Lst_Destroy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* True if list is empty */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Boolean
 name|Lst_IsEmpty
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Functions to modify a list  */
@@ -205,138 +193,117 @@ begin_comment
 comment|/* Insert an element before another */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Insert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|LstNode
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Insert an element after another */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Append
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|LstNode
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Place an element at the front of a lst. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_AtFront
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Place an element at the end of a lst. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_AtEnd
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Remove an element */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Remove
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|LstNode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Replace a node with a new value */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Replace
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|LstNode
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Concatenate two lists */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Concat
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|Lst
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Node-specific functions  */
@@ -346,66 +313,54 @@ begin_comment
 comment|/* Return first element in list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_First
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return last element in list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Last
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Return successor to given element */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Succ
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|LstNode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Get datum from LstNode */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|Lst_Datum
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|LstNode
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Functions for entire lists  */
@@ -415,149 +370,134 @@ begin_comment
 comment|/* Find an element in a list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Find
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Find an element starting from somewhere */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_FindFrom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|LstNode
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-argument_list|(
-operator|*
+function_decl|(
+modifier|*
 name|cProc
-argument_list|)
-argument_list|(
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * See if the given datum is on the list. Returns the LstNode containing  * the datum  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Member
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Apply a function to all elements of a lst */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|Lst_ForEach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Apply a function to all elements of a lst starting from a certain point.  * If the list is circular, the application will wrap around to the  * beginning of the list again.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|Lst_ForEachFrom
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|LstNode
-operator|,
+parameter_list|,
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-argument_list|)
-operator|,
+modifier|*
+parameter_list|)
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * these functions are for dealing with a list as a table, of sorts.  * An idea of the "current element" is kept and used by all the functions  * between Lst_Open() and Lst_Close().  */
@@ -567,65 +507,53 @@ begin_comment
 comment|/* Open the list */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_Open
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Next element please */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Next
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Done yet? */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Boolean
 name|Lst_IsAtEnd
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Finish table access */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|Lst_Close
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * for using the list as a queue  */
@@ -635,37 +563,31 @@ begin_comment
 comment|/* Place an element at tail of queue */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|ReturnStatus
 name|Lst_EnQueue
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|,
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Remove an element from head of queue */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|Lst_DeQueue
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|Lst
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

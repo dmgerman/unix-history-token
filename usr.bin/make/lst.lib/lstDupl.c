@@ -46,44 +46,30 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a void * is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NULL if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|Lst
 name|Lst_Duplicate
-argument_list|(
+parameter_list|(
 name|l
-argument_list|,
+parameter_list|,
 name|copyProc
-argument_list|)
+parameter_list|)
 name|Lst
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the list to duplicate */
-end_comment
-
-begin_comment
 comment|/* A function to duplicate each void * */
-end_comment
-
-begin_macro
-name|void
-end_macro
+function|void *
+parameter_list|(
+function|*copyProc
+end_function
 
 begin_expr_stmt
-operator|*
-operator|(
-operator|*
-name|copyProc
-operator|)
-name|__P
-argument_list|(
+unit|)
 operator|(
 name|void
 operator|*
 operator|)
-argument_list|)
 expr_stmt|;
 end_expr_stmt
 
