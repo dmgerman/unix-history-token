@@ -3581,9 +3581,11 @@ literal|1
 expr_stmt|;
 name|p
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|zombproc
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again

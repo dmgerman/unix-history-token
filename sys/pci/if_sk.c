@@ -2942,11 +2942,12 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|LIST_NEXT
+argument_list|(
 name|ifma
-operator|->
+argument_list|,
 name|ifma_link
-operator|.
-name|le_next
+argument_list|)
 operator|==
 name|NULL
 condition|)

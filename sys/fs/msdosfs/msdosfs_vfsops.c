@@ -3863,11 +3863,12 @@ name|printf
 argument_list|(
 literal|"freef %p, freeb %p, mount %p\n"
 argument_list|,
+name|TAILQ_NEXT
+argument_list|(
 name|vp
-operator|->
+argument_list|,
 name|v_freelist
-operator|.
-name|tqe_next
+argument_list|)
 argument_list|,
 name|vp
 operator|->

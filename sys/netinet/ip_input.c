@@ -1906,11 +1906,12 @@ name|pfh
 condition|;
 name|pfh
 operator|=
+name|TAILQ_NEXT
+argument_list|(
 name|pfh
-operator|->
+argument_list|,
 name|pfil_link
-operator|.
-name|tqe_next
+argument_list|)
 control|)
 if|if
 condition|(

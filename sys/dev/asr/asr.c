@@ -9925,11 +9925,13 @@ name|NULL
 operator|)
 operator|&&
 operator|(
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|ha_ccb
-operator|.
-name|lh_first
+argument_list|)
 operator|!=
 operator|(
 expr|struct

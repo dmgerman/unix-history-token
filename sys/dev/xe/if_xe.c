@@ -6152,11 +6152,13 @@ name|ac_if
 expr_stmt|;
 name|maddr
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_multiaddrs
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 comment|/* Get length of multicast list */
 for|for
@@ -6171,11 +6173,12 @@ name|NULL
 condition|;
 name|maddr
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|maddr
-operator|->
+argument_list|,
 name|ifma_link
-operator|.
-name|le_next
+argument_list|)
 operator|,
 name|count
 operator|++
@@ -6344,6 +6347,9 @@ name|i
 decl_stmt|;
 name|maddr
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|scp
 operator|->
 name|arpcom
@@ -6351,8 +6357,7 @@ operator|.
 name|ac_if
 operator|.
 name|if_multiaddrs
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 name|XE_SELECT_PAGE
 argument_list|(
@@ -6418,11 +6423,12 @@ name|AF_LINK
 condition|)
 name|maddr
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|maddr
-operator|->
+argument_list|,
 name|ifma_link
-operator|.
-name|le_next
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

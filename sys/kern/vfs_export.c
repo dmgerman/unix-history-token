@@ -5200,11 +5200,12 @@ expr_stmt|;
 comment|/* XXX REMOVE ME */
 if|if
 condition|(
+name|TAILQ_NEXT
+argument_list|(
 name|bp
-operator|->
+argument_list|,
 name|b_vnbufs
-operator|.
-name|tqe_next
+argument_list|)
 operator|!=
 name|NULL
 condition|)

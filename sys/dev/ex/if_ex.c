@@ -1408,11 +1408,13 @@ argument_list|)
 empty_stmt|;
 if|if
 condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_addrhead
-operator|.
-name|tqh_first
+argument_list|)
 operator|==
 name|NULL
 condition|)
