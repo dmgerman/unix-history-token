@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
@@ -96,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_include
@@ -158,6 +158,25 @@ name|NDCA
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DCACONSOLE
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|dcaconsole
+init|=
+name|DCACONSOLE
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|dcaconsole
@@ -167,11 +186,28 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|dcaconsinit
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|int
 name|dcadefaultrate
 init|=
 name|TTYDEF_SPEED
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dcamajor
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +381,12 @@ ifdef|#
 directive|ifdef
 name|KGDB
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"machine/remote-sl.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -554,7 +596,7 @@ name|kgdb_dev
 operator|==
 name|makedev
 argument_list|(
-literal|1
+name|dcamajor
 argument_list|,
 name|unit
 argument_list|)
@@ -580,31 +622,26 @@ operator|)
 name|dcainit
 argument_list|(
 name|unit
+argument_list|,
+name|kgdb_rate
 argument_list|)
 expr_stmt|;
-name|dcaconsole
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-comment|/* XXX */
 if|if
 condition|(
 name|kgdb_debug_init
 condition|)
 block|{
+comment|/* 				 * Print prefix of device name, 				 * let kgdb_connect print the rest. 				 */
 name|printf
 argument_list|(
-literal|"dca%d: kgdb waiting..."
+literal|"dca%d: "
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-comment|/* trap into kgdb */
-asm|asm("trap #15;");
-name|printf
+name|kgdb_connect
 argument_list|(
-literal|"connected.\n"
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -626,7 +663,7 @@ name|dca_ic
 operator|=
 name|IC_IE
 expr_stmt|;
-comment|/* 	 * Need to reset baud rate, etc. of next print so reset dcaconsole. 	 * Also make sure console is always "hardwired" 	 */
+comment|/* 	 * Need to reset baud rate, etc. of next print so reset dcaconsinit. 	 * Also make sure console is always "hardwired." 	 */
 if|if
 condition|(
 name|unit
@@ -634,10 +671,9 @@ operator|==
 name|dcaconsole
 condition|)
 block|{
-name|dcaconsole
+name|dcaconsinit
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|dcasoftCAR
 operator||=
@@ -656,12 +692,44 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|dcaopen
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int flag
+argument_list|,
+argument|int mode
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|dcaopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -670,6 +738,27 @@ name|dev_t
 name|dev
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -768,6 +857,15 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_ispeed
+operator|==
+literal|0
+condition|)
+block|{
 name|tp
 operator|->
 name|t_iflag
@@ -802,6 +900,7 @@ name|t_ospeed
 operator|=
 name|dcadefaultrate
 expr_stmt|;
+block|}
 name|dcaparam
 argument_list|(
 name|tp
@@ -827,9 +926,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 literal|0
 condition|)
@@ -1079,14 +1180,9 @@ name|KGDB
 comment|/* do not disable interrupts if debugging */
 if|if
 condition|(
-name|kgdb_dev
+name|dev
 operator|!=
-name|makedev
-argument_list|(
-literal|1
-argument_list|,
-name|unit
-argument_list|)
+name|kgdb_dev
 condition|)
 endif|#
 directive|endif
@@ -1096,30 +1192,6 @@ name|dca_ier
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|HUPCL
-operator|||
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_WOPEN
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|==
-literal|0
-condition|)
 operator|(
 name|void
 operator|)
@@ -1131,6 +1203,31 @@ literal|0
 argument_list|,
 name|DMSET
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_HUPCLS
+condition|)
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_modem
+operator|)
+operator|(
+name|tp
+operator|,
+literal|0
+operator|)
 expr_stmt|;
 name|ttyclose
 argument_list|(
@@ -1414,26 +1511,21 @@ name|kgdb_dev
 operator|==
 name|makedev
 argument_list|(
-literal|1
+name|dcamajor
 argument_list|,
 name|unit
 argument_list|)
 operator|&&
 name|code
 operator|==
-literal|'!'
+name|FRAME_END
 condition|)
-block|{
-name|printf
+name|kgdb_connect
 argument_list|(
-literal|"kgdb trap from dca%d\n"
-argument_list|,
-name|unit
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* trap into kgdb */
-asm|asm("trap #15;");
-block|}
 endif|#
 directive|endif
 block|}
@@ -1652,26 +1744,21 @@ name|kgdb_dev
 operator|==
 name|makedev
 argument_list|(
-literal|1
+name|dcamajor
 argument_list|,
 name|unit
 argument_list|)
 operator|&&
 name|c
 operator|==
-literal|'!'
+name|FRAME_END
 condition|)
-block|{
-name|printf
+name|kgdb_connect
 argument_list|(
-literal|"kgdb trap from dca%d\n"
-argument_list|,
-name|unit
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* trap into kgdb */
-asm|asm("trap #15;");
-block|}
 endif|#
 directive|endif
 return|return;
@@ -2898,11 +2985,32 @@ name|unit
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|extern
-name|int
+comment|/* locate the major number */
+for|for
+control|(
+name|dcamajor
+operator|=
+literal|0
+init|;
+name|dcamajor
+operator|<
+name|nchrdev
+condition|;
+name|dcamajor
+operator|++
+control|)
+if|if
+condition|(
+name|cdevsw
+index|[
+name|dcamajor
+index|]
+operator|.
+name|d_open
+operator|==
 name|dcaopen
-parameter_list|()
-function_decl|;
+condition|)
+break|break;
 comment|/* XXX: ick */
 name|unit
 operator|=
@@ -2939,32 +3047,6 @@ name|CN_DEAD
 expr_stmt|;
 return|return;
 block|}
-comment|/* locate the major number */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nchrdev
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|cdevsw
-index|[
-name|i
-index|]
-operator|.
-name|d_open
-operator|==
-name|dcaopen
-condition|)
-break|break;
 comment|/* initialize required fields */
 name|cp
 operator|->
@@ -2972,7 +3054,7 @@ name|cn_dev
 operator|=
 name|makedev
 argument_list|(
-name|i
+name|dcamajor
 argument_list|,
 name|unit
 argument_list|)
@@ -3032,6 +3114,41 @@ name|CN_DEAD
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * If dcmconsole is initialized, raise our priority. 	 */
+if|if
+condition|(
+name|dcaconsole
+operator|==
+name|unit
+condition|)
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_REMOTE
+expr_stmt|;
+if|if
+condition|(
+name|major
+argument_list|(
+name|kgdb_dev
+argument_list|)
+operator|==
+literal|1
+condition|)
+comment|/* XXX */
+name|kgdb_dev
+operator|=
+name|makedev
+argument_list|(
+name|dcamajor
+argument_list|,
+name|minor
+argument_list|(
+name|kgdb_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -3065,11 +3182,17 @@ decl_stmt|;
 name|dcainit
 argument_list|(
 name|unit
+argument_list|,
+name|dcadefaultrate
 argument_list|)
 expr_stmt|;
 name|dcaconsole
 operator|=
 name|unit
+expr_stmt|;
+name|dcaconsinit
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_block
@@ -3078,12 +3201,16 @@ begin_macro
 name|dcainit
 argument_list|(
 argument|unit
+argument_list|,
+argument|rate
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
 name|unit
+decl_stmt|,
+name|rate
 decl_stmt|;
 end_decl_stmt
 
@@ -3097,8 +3224,6 @@ name|dca
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|rate
 decl_stmt|;
 name|short
 name|stat
@@ -3156,7 +3281,7 @@ name|rate
 operator|=
 name|ttspeedtab
 argument_list|(
-name|dcadefaultrate
+name|rate
 argument_list|,
 name|dcaspeedtab
 argument_list|)
@@ -3370,12 +3495,22 @@ condition|)
 return|return;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|KGDB
 if|if
 condition|(
-name|dcaconsole
+name|dev
+operator|!=
+name|kgdb_dev
+condition|)
+endif|#
+directive|endif
+if|if
+condition|(
+name|dcaconsinit
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 operator|(
@@ -3387,14 +3522,13 @@ name|UNIT
 argument_list|(
 name|dev
 argument_list|)
+argument_list|,
+name|dcadefaultrate
 argument_list|)
 expr_stmt|;
-name|dcaconsole
+name|dcaconsinit
 operator|=
-name|UNIT
-argument_list|(
-name|dev
-argument_list|)
+literal|1
 expr_stmt|;
 block|}
 comment|/* wait for any pending transmission to finish */

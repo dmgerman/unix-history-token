@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.1 90/07/09$  *  *	@(#)dcm.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.1 90/07/09$  *  *	@(#)dcm.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  *	Timeouts  *	Test console/kgdb support.  */
+comment|/*  * TODO:  *	Timeouts  *	Test console support.  */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|"sys/proc.h"
 end_include
 
 begin_include
@@ -106,7 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../include/cpu.h"
+file|"machine/cpu.h"
 end_include
 
 begin_include
@@ -426,12 +426,42 @@ begin_comment
 comment|/*  * Console support  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DCMCONSOLE
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|dcmconsole
+init|=
+name|DCMCONSOLE
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|dcmconsole
 init|=
 operator|-
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|dcmconsinit
 decl_stmt|;
 end_decl_stmt
 
@@ -448,6 +478,12 @@ name|int
 name|dcmconbrdbusy
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|dcmmajor
 decl_stmt|;
 end_decl_stmt
 
@@ -469,6 +505,12 @@ end_ifdef
 begin_comment
 comment|/*  * Kernel GDB support  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"machine/remote-sl.h"
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -1023,7 +1065,7 @@ argument_list|(
 name|kgdb_dev
 argument_list|)
 operator|==
-literal|2
+name|dcmmajor
 operator|&&
 name|BOARD
 argument_list|(
@@ -1048,6 +1090,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* can't debug over console port */
+comment|/* 		 * The following could potentially be replaced 		 * by the corresponding code in dcmcnprobe. 		 */
 else|else
 block|{
 operator|(
@@ -1067,7 +1110,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dcm%d: kgdb waiting..."
+literal|"dcm%d: "
 argument_list|,
 name|UNIT
 argument_list|(
@@ -1075,11 +1118,9 @@ name|kgdb_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* trap into kgdb */
-asm|asm("trap #15;");
-name|printf
+name|kgdb_connect
 argument_list|(
-literal|"connected.\n"
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1095,6 +1136,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* end could be replaced */
 block|}
 endif|#
 directive|endif
@@ -1227,10 +1269,9 @@ condition|(
 name|isconsole
 condition|)
 block|{
-name|dcmconsole
+name|dcmconsinit
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|dcmsoftCAR
 index|[
@@ -1255,12 +1296,44 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|dcmopen
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int flag
+argument_list|,
+argument|int mode
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|dcmopen
 argument_list|(
 argument|dev
 argument_list|,
 argument|flag
+argument_list|,
+argument|mode
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1269,6 +1342,27 @@ name|dev_t
 name|dev
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
@@ -1326,25 +1420,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|KGDB
-if|if
-condition|(
-name|unit
-operator|==
-name|UNIT
-argument_list|(
-name|kgdb_dev
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-endif|#
-directive|endif
 name|tp
 operator|=
 operator|&
@@ -1395,6 +1470,15 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_ispeed
+operator|==
+literal|0
+condition|)
+block|{
 name|tp
 operator|->
 name|t_iflag
@@ -1429,6 +1513,7 @@ name|t_ospeed
 operator|=
 name|TTYDEF_SPEED
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -1457,9 +1542,11 @@ name|t_state
 operator|&
 name|TS_XCLUDE
 operator|&&
-name|u
-operator|.
-name|u_uid
+name|p
+operator|->
+name|p_ucred
+operator|->
+name|cr_uid
 operator|!=
 literal|0
 condition|)
@@ -1483,6 +1570,7 @@ expr_stmt|;
 comment|/* enable port */
 if|if
 condition|(
+operator|(
 name|dcmsoftCAR
 index|[
 name|brd
@@ -1496,16 +1584,9 @@ argument_list|(
 name|unit
 argument_list|)
 operator|)
-condition|)
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_CARR_ON
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|dcmmctl
 argument_list|(
 name|dev
@@ -1516,6 +1597,7 @@ name|DMGET
 argument_list|)
 operator|&
 name|MI_CD
+operator|)
 condition|)
 name|tp
 operator|->
@@ -1750,30 +1832,17 @@ operator|(
 name|tp
 operator|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KGDB
 if|if
 condition|(
-name|tp
-operator|->
-name|t_cflag
-operator|&
-name|HUPCL
-operator|||
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_WOPEN
-operator|||
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|==
-literal|0
+name|dev
+operator|!=
+name|kgdb_dev
 condition|)
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1785,6 +1854,31 @@ name|MO_OFF
 argument_list|,
 name|DMSET
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_HUPCLS
+condition|)
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_modem
+operator|)
+operator|(
+name|tp
+operator|,
+literal|0
+operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2848,12 +2942,16 @@ directive|ifdef
 name|KGDB
 if|if
 condition|(
-name|unit
-operator|==
-name|UNIT
+operator|(
+name|makedev
 argument_list|(
-name|kgdb_dev
+name|dcmmajor
+argument_list|,
+name|unit
 argument_list|)
+operator|==
+name|kgdb_dev
+operator|)
 operator|&&
 operator|(
 name|head
@@ -2889,7 +2987,7 @@ index|]
 operator|.
 name|data_char
 operator|==
-literal|'!'
+name|FRAME_END
 condition|)
 block|{
 name|pp
@@ -2904,19 +3002,17 @@ operator|)
 operator|&
 name|RX_MASK
 expr_stmt|;
-name|printf
+name|kgdb_connect
 argument_list|(
-literal|"kgdb trap from dcm%d\n"
-argument_list|,
-name|unit
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* trap into kgdb */
-asm|asm("trap #15;");
 return|return;
 block|}
 endif|#
 directive|endif
+comment|/* KGDB */
 name|pp
 operator|->
 name|r_head
@@ -3282,12 +3378,6 @@ operator|&=
 operator|~
 name|TS_FLUSH
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_line
-condition|)
 operator|(
 operator|*
 name|linesw
@@ -3302,12 +3392,6 @@ operator|)
 operator|(
 name|tp
 operator|)
-expr_stmt|;
-else|else
-name|dcmstart
-argument_list|(
-name|tp
-argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -3402,6 +3486,60 @@ index|]
 operator|=
 name|mcnd
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|delta
+operator|&
+name|MI_CTS
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|&&
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|CRTSCTS
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|mcnd
+operator|&
+name|MI_CTS
+condition|)
+block|{
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_TTSTOP
+expr_stmt|;
+name|ttstart
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_TTSTOP
+expr_stmt|;
+comment|/* inline dcmstop */
+block|}
 if|if
 condition|(
 operator|(
@@ -3530,61 +3668,6 @@ argument_list|)
 expr_stmt|;
 comment|/* time to change lines */
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|delta
-operator|&
-name|MI_CTS
-operator|)
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|CRTSCTS
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|mcnd
-operator|&
-name|MI_CTS
-condition|)
-block|{
-name|tp
-operator|->
-name|t_state
-operator|&=
-operator|~
-name|TS_TTSTOP
-expr_stmt|;
-name|ttstart
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|tp
-operator|->
-name|t_state
-operator||=
-name|TS_TTSTOP
-expr_stmt|;
-comment|/* inline dcmstop */
 block|}
 block|}
 end_block
@@ -4363,7 +4446,7 @@ argument_list|(
 name|dcm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Delay for config change to take place. Weighted by buad. 	 * XXX why do we do this? 	 */
+comment|/* 	 * Delay for config change to take place. Weighted by baud. 	 * XXX why do we do this? 	 */
 name|DELAY
 argument_list|(
 literal|16
@@ -5683,14 +5766,33 @@ name|hw
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|,
-name|i
 decl_stmt|;
-specifier|extern
-name|int
+comment|/* locate the major number */
+for|for
+control|(
+name|dcmmajor
+operator|=
+literal|0
+init|;
+name|dcmmajor
+operator|<
+name|nchrdev
+condition|;
+name|dcmmajor
+operator|++
+control|)
+if|if
+condition|(
+name|cdevsw
+index|[
+name|dcmmajor
+index|]
+operator|.
+name|d_open
+operator|==
 name|dcmopen
-parameter_list|()
-function_decl|;
+condition|)
+break|break;
 comment|/* 	 * Implicitly assigns the lowest select code DCM card found to be 	 * logical unit 0 (actually CONUNIT).  If your config file does 	 * anything different, you're screwed. 	 */
 for|for
 control|(
@@ -5764,32 +5866,6 @@ name|hw
 operator|->
 name|hw_addr
 expr_stmt|;
-comment|/* locate the major number */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nchrdev
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|cdevsw
-index|[
-name|i
-index|]
-operator|.
-name|d_open
-operator|==
-name|dcmopen
-condition|)
-break|break;
 comment|/* initialize required fields */
 name|cp
 operator|->
@@ -5797,7 +5873,7 @@ name|cn_dev
 operator|=
 name|makedev
 argument_list|(
-name|i
+name|dcmmajor
 argument_list|,
 name|unit
 argument_list|)
@@ -5854,8 +5930,110 @@ name|cn_pri
 operator|=
 name|CN_DEAD
 expr_stmt|;
-break|break;
+return|return;
 block|}
+comment|/* 	 * If dcmconsole is initialized, raise our priority. 	 */
+if|if
+condition|(
+name|dcmconsole
+operator|==
+name|UNIT
+argument_list|(
+name|unit
+argument_list|)
+condition|)
+name|cp
+operator|->
+name|cn_pri
+operator|=
+name|CN_REMOTE
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KGDB
+if|if
+condition|(
+name|major
+argument_list|(
+name|kgdb_dev
+argument_list|)
+operator|==
+literal|2
+condition|)
+comment|/* XXX */
+name|kgdb_dev
+operator|=
+name|makedev
+argument_list|(
+name|dcmmajor
+argument_list|,
+name|minor
+argument_list|(
+name|kgdb_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * This doesn't currently work, at least not with ite consoles; 	 * the console hasn't been initialized yet. 	 */
+if|if
+condition|(
+name|major
+argument_list|(
+name|kgdb_dev
+argument_list|)
+operator|==
+name|dcmmajor
+operator|&&
+name|BOARD
+argument_list|(
+name|kgdb_dev
+argument_list|)
+operator|==
+name|BOARD
+argument_list|(
+name|unit
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|dcminit
+argument_list|(
+name|kgdb_dev
+argument_list|,
+name|kgdb_rate
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kgdb_debug_init
+condition|)
+block|{
+comment|/* 			 * We assume that console is ready for us... 			 * this assumes that a dca or ite console 			 * has been selected already and will init 			 * on the first putc. 			 */
+name|printf
+argument_list|(
+literal|"dcm%d: "
+argument_list|,
+name|UNIT
+argument_list|(
+name|kgdb_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|kgdb_connect
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -5884,6 +6062,10 @@ name|cn_dev
 argument_list|,
 name|dcmdefaultrate
 argument_list|)
+expr_stmt|;
+name|dcmconsinit
+operator|=
+literal|1
 expr_stmt|;
 name|dcmconsole
 operator|=
@@ -6047,7 +6229,7 @@ argument_list|(
 name|dcm
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Delay for config change to take place. Weighted by buad. 	 * XXX why do we do this? 	 */
+comment|/* 	 * Delay for config change to take place. Weighted by baud. 	 * XXX why do we do this? 	 */
 name|DELAY
 argument_list|(
 literal|16
@@ -6336,10 +6518,9 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|dcmconsole
+name|dcmconsinit
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 operator|(
@@ -6352,12 +6533,9 @@ argument_list|,
 name|dcmdefaultrate
 argument_list|)
 expr_stmt|;
-name|dcmconsole
+name|dcmconsinit
 operator|=
-name|UNIT
-argument_list|(
-name|dev
-argument_list|)
+literal|1
 expr_stmt|;
 block|}
 name|tail
