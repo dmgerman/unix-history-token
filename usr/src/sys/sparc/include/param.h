@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.4 (Berkeley) %G%  *  * from: $Header: param.h,v 1.14 93/04/07 01:34:00 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)param.h	7.5 (Berkeley) %G%  *  * from: $Header: param.h,v 1.13 92/11/26 02:04:38 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -424,16 +424,6 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
-
-begin_decl_stmt
-name|int
-name|cpuspeed
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX for sysctl(hw.cpuspeed) only; should remove */
-end_comment
 
 begin_define
 define|#
