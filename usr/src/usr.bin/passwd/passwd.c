@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.14 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.15 (Berkeley) 85/08/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -883,14 +883,6 @@ block|}
 name|endpwent
 argument_list|()
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|tf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -907,6 +899,37 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Warning: dbm_store failed\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|tf
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Warning: %s write error, %s not updated\n"
+argument_list|,
+name|temp
+argument_list|,
+name|passwd
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|tf
 argument_list|)
 expr_stmt|;
 name|dbm_close
@@ -926,16 +949,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"passwd: "
-argument_list|)
-operator|,
 name|perror
 argument_list|(
-literal|"rename"
+literal|"passwd: rename"
 argument_list|)
 expr_stmt|;
 name|out
