@@ -408,6 +408,13 @@ name|IBCS2_SA_NOCLDSTOP
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|IBCS2_MINSIGSTKSZ
+value|8192
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int

@@ -28,6 +28,13 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|OSF1_MINSIGSTKSZ
+value|4096
+end_define
+
 begin_comment
 comment|/* osf/1 ioctls */
 end_comment

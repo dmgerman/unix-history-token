@@ -470,6 +470,10 @@ block|,
 literal|"SVR4"
 block|,
 name|elf_coredump
+block|,
+name|NULL
+block|,
+name|SVR4_MINSIGSTKSZ
 block|}
 decl_stmt|;
 end_decl_stmt

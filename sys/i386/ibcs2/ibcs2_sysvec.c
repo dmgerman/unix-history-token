@@ -139,7 +139,11 @@ comment|/* prepsyscall */
 literal|"IBCS2 COFF"
 block|,
 name|NULL
+block|,
 comment|/* we don't have a COFF coredump function */
+name|NULL
+block|,
+name|IBCS2_MINSIGSTKSZ
 block|}
 decl_stmt|;
 end_decl_stmt

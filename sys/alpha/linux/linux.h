@@ -752,6 +752,13 @@ parameter_list|)
 value|SIGADDSET(set, sig)
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_MINSIGSTKSZ
+value|4096
+end_define
+
 begin_typedef
 typedef|typedef
 name|void

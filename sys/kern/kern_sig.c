@@ -4057,7 +4057,11 @@ name|ss
 operator|.
 name|ss_size
 operator|<
-name|MINSIGSTKSZ
+name|p
+operator|->
+name|p_sysent
+operator|->
+name|sv_minsigstksz
 condition|)
 return|return
 operator|(

@@ -605,6 +605,13 @@ name|SVR4_SS_ALLBITS
 value|0x00000003
 end_define
 
+begin_define
+define|#
+directive|define
+name|SVR4_MINSIGSTKSZ
+value|8192
+end_define
+
 begin_decl_stmt
 name|void
 name|bsd_to_svr4_sigaltstack
