@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deroff.c	4.6	(Berkeley)	87/09/28"
+literal|"@(#)deroff.c	4.7	(Berkeley)	88/04/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -1479,7 +1479,7 @@ name|textline
 argument_list|(
 argument|str
 argument_list|,
-argument|const
+argument|constant
 argument_list|)
 end_macro
 
@@ -1490,11 +1490,11 @@ name|str
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
-specifier|const
-expr_stmt|;
-end_expr_stmt
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1576,7 +1576,7 @@ name|regline
 argument_list|(
 argument|pfunc
 argument_list|,
-argument|const
+argument|constant
 argument_list|)
 end_macro
 
@@ -1590,11 +1590,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
-specifier|const
-expr_stmt|;
-end_expr_stmt
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1710,7 +1710,7 @@ call|)
 argument_list|(
 name|line
 argument_list|,
-specifier|const
+name|constant
 argument_list|)
 expr_stmt|;
 block|}
@@ -3057,7 +3057,7 @@ name|msputmac
 argument_list|(
 name|s
 argument_list|,
-specifier|const
+name|constant
 argument_list|)
 specifier|register
 name|char
@@ -3066,11 +3066,11 @@ name|s
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
-specifier|const
-expr_stmt|;
-end_expr_stmt
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3167,7 +3167,7 @@ name|t
 operator|>
 name|s
 operator|+
-specifier|const
+name|constant
 operator|&&
 name|chars
 index|[
@@ -3504,7 +3504,7 @@ name|meputmac
 argument_list|(
 argument|cp
 argument_list|,
-argument|const
+argument|constant
 argument_list|)
 end_macro
 
@@ -3516,11 +3516,11 @@ name|cp
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|int
-specifier|const
-expr_stmt|;
-end_expr_stmt
+name|constant
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3751,7 +3751,7 @@ block|}
 endif|#
 directive|endif
 endif|FULLDEBUG
-comment|/* 		 *	Determine if the argument merits being printed 		 * 		 *	const is the cut off point below which something 		 *	is not a word. 		 */
+comment|/* 		 *	Determine if the argument merits being printed 		 * 		 *	constant is the cut off point below which something 		 *	is not a word. 		 */
 if|if
 condition|(
 operator|(
@@ -3761,7 +3761,7 @@ operator|-
 name|cp
 operator|)
 operator|>
-specifier|const
+name|constant
 operator|)
 operator|&&
 operator|(
