@@ -358,6 +358,17 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|nmemb
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * XXX 	 * Stupid subtraction for the Cray. 	 */
 name|iflag
 operator|=
