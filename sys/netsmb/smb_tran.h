@@ -80,6 +80,17 @@ begin_comment
 comment|/* RW - (void *) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SMBTP_UPCALL
+value|5
+end_define
+
+begin_comment
+comment|/* RW - (* void)(void *) */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|smb_tran_ops
