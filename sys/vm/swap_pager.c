@@ -4641,6 +4641,9 @@ block|;
 name|index
 operator|&=
 operator|~
+operator|(
+name|vm_pindex_t
+operator|)
 name|SWAP_META_MASK
 block|;
 name|pswap
@@ -4896,6 +4899,9 @@ operator|=
 name|index
 operator|&
 operator|~
+operator|(
+name|vm_pindex_t
+operator|)
 name|SWAP_META_MASK
 expr_stmt|;
 name|swap
