@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.14 (Berkeley) 88/04/18"
+literal|"@(#)quot.c	4.15 (Berkeley) 89/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,6 +391,11 @@ name|time
 argument_list|(
 operator|&
 name|now
+argument_list|)
+expr_stmt|;
+name|setpassent
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1987,18 +1992,10 @@ modifier|*
 name|getpwent
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|_pw_stayopen
-decl_stmt|;
 specifier|register
 name|int
 name|cp
 decl_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
 name|cp
 operator|=
 name|uid
