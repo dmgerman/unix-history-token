@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	5.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	5.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -756,18 +756,28 @@ name|nss
 decl_stmt|,
 name|v
 decl_stmt|;
+name|va
+operator|=
+name|trunc_page
+argument_list|(
+operator|(
+name|vm_offset_t
+operator|)
+name|rcr2
+argument_list|()
+argument_list|)
+expr_stmt|;
 comment|/* 		 * It is only a kernel address space fault iff: 		 * 	1. (type& USER) == 0  and 		 * 	2. nofault not set or 		 *	3. nofault set but supervisor space data fault 		 * The last can occur during an exec() copyin where the 		 * argument space is lazy-allocated. 		 */
+comment|/*if (type == T_PAGEFLT&& !nofault)*/
 if|if
 condition|(
 name|type
 operator|==
 name|T_PAGEFLT
 operator|&&
-operator|(
-operator|!
-name|nofault
-comment|/*|| (code& PGEX_U) == 0*/
-operator|)
+name|va
+operator|>=
+literal|0xfe000000
 condition|)
 name|map
 operator|=
@@ -799,17 +809,6 @@ name|ftype
 operator|=
 name|VM_PROT_READ
 expr_stmt|;
-name|va
-operator|=
-name|trunc_page
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|rcr2
-argument_list|()
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -838,9 +837,6 @@ block|}
 endif|#
 directive|endif
 comment|/* 		 * XXX: rude hack to make stack limits "work" 		 */
-ifdef|#
-directive|ifdef
-name|notyet
 name|nss
 operator|=
 literal|0
@@ -893,6 +889,11 @@ name|rlim_cur
 argument_list|)
 condition|)
 block|{
+name|pg
+argument_list|(
+literal|"stk fuck"
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
 name|KERN_FAILURE
@@ -902,8 +903,80 @@ name|nogo
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
+comment|/* check if page table is mapped, if not, fault it first */
+if|if
+condition|(
+operator|!
+name|PTD
+index|[
+operator|(
+name|va
+operator|>>
+name|PD_SHIFT
+operator|)
+operator|&
+literal|1023
+index|]
+operator|.
+name|pd_v
+condition|)
+block|{
+name|v
+operator|=
+name|trunc_page
+argument_list|(
+name|vtopte
+argument_list|(
+name|va
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/*pg("pt fault");*/
+name|rv
+operator|=
+name|vm_fault
+argument_list|(
+name|map
+argument_list|,
+name|v
+argument_list|,
+name|ftype
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|!=
+name|KERN_SUCCESS
+condition|)
+goto|goto
+name|nogo
+goto|;
+comment|/* check if page table fault, increment wiring */
+name|vm_map_pageable
+argument_list|(
+name|map
+argument_list|,
+name|v
+argument_list|,
+name|round_page
+argument_list|(
+name|v
+operator|+
+literal|1
+argument_list|)
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|v
+operator|=
+literal|0
+expr_stmt|;
 name|rv
 operator|=
 name|vm_fault
@@ -939,6 +1012,42 @@ name|u_ssize
 operator|=
 name|nss
 expr_stmt|;
+name|va
+operator|=
+name|trunc_page
+argument_list|(
+name|vtopte
+argument_list|(
+name|va
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* for page table, increment wiring 			   as long as not a page table fault as well */
+if|if
+condition|(
+operator|!
+name|v
+operator|&&
+name|type
+operator|!=
+name|T_PAGEFLT
+condition|)
+name|vm_map_pageable
+argument_list|(
+name|map
+argument_list|,
+name|va
+argument_list|,
+name|round_page
+argument_list|(
+name|va
+operator|+
+literal|1
+argument_list|)
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|type
@@ -952,6 +1061,7 @@ goto|;
 block|}
 name|nogo
 label|:
+comment|/*pg("nogo");*/
 if|if
 condition|(
 name|type
@@ -981,7 +1091,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  type %x, code [mmu,,ssw]: %x\n"
+literal|"  type %x, code %x\n"
 argument_list|,
 name|type
 argument_list|,
@@ -1278,6 +1388,10 @@ operator|->
 name|p_pri
 expr_stmt|;
 comment|/*if(u.u_procp->p_pid == 3) 		locr0[tEFLAGS] |= PSL_T; if(u.u_procp->p_pid == 1&& (pc == 0xec9 || pc == 0xebd)) 		locr0[tEFLAGS] |= PSL_T;*/
+name|spl0
+argument_list|()
+expr_stmt|;
+comment|/*XXX*/
 undef|#
 directive|undef
 name|type
