@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85.2.9 2003/01/03 22:14:40 ca Exp $"
+literal|"@(#)$Id: listener.c,v 8.85.2.12 2003/08/04 18:47:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1406,6 +1406,9 @@ name|NETINET
 case|case
 name|AF_INET
 case|:
+operator|(
+name|void
+operator|)
 name|memmove
 argument_list|(
 operator|&
@@ -1440,6 +1443,9 @@ name|NETINET6
 case|case
 name|AF_INET6
 case|:
+operator|(
+name|void
+operator|)
 name|memmove
 argument_list|(
 operator|&
@@ -2233,6 +2239,8 @@ literal|1
 decl_stmt|;
 name|int
 name|r
+decl_stmt|,
+name|mistop
 decl_stmt|;
 name|int
 name|ret
@@ -2324,8 +2332,12 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|mistop
+operator|=
 name|mi_stop
 argument_list|()
+operator|)
 operator|==
 name|MILTER_CONT
 condition|)
@@ -2348,6 +2360,25 @@ name|listenfd
 argument_list|)
 condition|)
 block|{
+name|ret
+operator|=
+name|MI_FAILURE
+expr_stmt|;
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: listenfd=%d corrupted, terminating, errno=%d"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|,
+name|listenfd
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2536,6 +2567,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset error counter for select() */
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 operator|&
@@ -2860,6 +2894,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* reset error counter for malloc() */
+operator|(
+name|void
+operator|)
 name|memset
 argument_list|(
 name|ctx
@@ -3097,9 +3134,30 @@ name|MILTER_ABRT
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|mistop
+operator|!=
+name|MILTER_CONT
+condition|)
+name|smi_log
+argument_list|(
+name|SMI_LOG_INFO
+argument_list|,
+literal|"%s: mi_stop=%d"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|,
+name|mistop
+argument_list|)
+expr_stmt|;
 name|mi_closener
 argument_list|()
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

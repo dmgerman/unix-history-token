@@ -14,7 +14,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: smstdio.c,v 1.32 2002/02/23 20:18:36 gshapiro Exp $"
+literal|"@(#)$Id: smstdio.c,v 1.32.2.2 2003/09/05 20:35:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -160,6 +160,54 @@ operator|=
 literal|"a+"
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|SM_IO_BINARY
+operator|!=
+literal|0
+case|case
+name|SM_IO_RDONLY_B
+case|:
+name|stdiomode
+operator|=
+literal|"rb"
+expr_stmt|;
+break|break;
+case|case
+name|SM_IO_WRONLY_B
+case|:
+name|stdiomode
+operator|=
+literal|"wb"
+expr_stmt|;
+break|break;
+case|case
+name|SM_IO_APPEND_B
+case|:
+name|stdiomode
+operator|=
+literal|"ab"
+expr_stmt|;
+break|break;
+case|case
+name|SM_IO_APPENDRW_B
+case|:
+name|stdiomode
+operator|=
+literal|"a+b"
+expr_stmt|;
+break|break;
+case|case
+name|SM_IO_RDWR_B
+case|:
+name|stdiomode
+operator|=
+literal|"r+b"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* SM_IO_BINARY != 0 */
 case|case
 name|SM_IO_RDWR
 case|:

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197.2.7 2003/03/22 18:54:25 ca Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.9 2003/09/07 00:18:29 ca Exp $"
 argument_list|)
 end_macro
 
@@ -6017,7 +6017,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|dfname
 argument_list|,
-name|SM_IO_RDWR
+name|SM_IO_RDWR_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -6232,7 +6232,7 @@ name|SM_TIME_DEFAULT
 argument_list|,
 name|dfname
 argument_list|,
-name|SM_IO_RDONLY
+name|SM_IO_RDONLY_B
 argument_list|,
 name|NULL
 argument_list|)
@@ -10878,6 +10878,9 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+name|int
+name|olderrors
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -11004,6 +11007,10 @@ argument_list|,
 name|response
 argument_list|)
 expr_stmt|;
+name|olderrors
+operator|=
+name|Errors
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -11022,6 +11029,10 @@ literal|0
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+name|Errors
+operator|=
+name|olderrors
 expr_stmt|;
 return|return;
 block|}

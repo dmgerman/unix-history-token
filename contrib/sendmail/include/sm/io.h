@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.23 2002/02/23 19:32:17 gshapiro Exp $  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990  * 	 The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: io.h,v 1.23.2.2 2003/09/05 20:35:28 ca Exp $  */
 end_comment
 
 begin_comment
@@ -106,6 +106,79 @@ end_define
 begin_comment
 comment|/* read-write with truncation indicated */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_IO_BINARY
+value|0x0
+end_define
+
+begin_comment
+comment|/* binary mode: not used in Unix */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_IS_BINARY
+parameter_list|(
+name|mode
+parameter_list|)
+value|((mode)& SM_IO_BINARY != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_MODE
+parameter_list|(
+name|mode
+parameter_list|)
+value|((mode)& 0x0f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_RDWR_B
+value|(SM_IO_RDWR|SM_IO_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_RDONLY_B
+value|(SM_IO_RDONLY|SM_IO_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_WRONLY_B
+value|(SM_IO_WRONLY|SM_IO_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_APPEND_B
+value|(SM_IO_APPEND|SM_IO_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_APPENDRW_B
+value|(SM_IO_APPENDRW|SM_IO_BINARY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SM_IO_RDWRTR_B
+value|(SM_IO_RDWRTR|SM_IO_BINARY)
+end_define
 
 begin_comment
 comment|/* for sm_io_fseek, et al api's (exposed) */

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: parseaddr.c,v 8.359.2.6 2003/03/27 02:39:53 ca Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.359.2.9 2003/09/16 18:07:50 ca Exp $"
 argument_list|)
 end_macro
 
@@ -3814,8 +3814,8 @@ name|p
 operator|>
 name|addr
 condition|)
-name|p
 operator|--
+name|p
 expr_stmt|;
 operator|*
 name|delimptr
@@ -4525,20 +4525,28 @@ name|avp
 operator|=
 name|NULL
 expr_stmt|;
-name|p
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|delimptr
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|p
+operator|>
+name|addr
+condition|)
+name|p
+operator|--
+expr_stmt|;
 operator|*
 name|delimptr
 operator|=
 name|p
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
@@ -4758,6 +4766,7 @@ index|[
 literal|6
 index|]
 decl_stmt|;
+comment|/* 	**  mlp will not exceed mlist[] because readcf enforces 	**	the upper limit of entries when reading rulesets. 	*/
 if|if
 condition|(
 name|ruleset
@@ -4910,6 +4919,15 @@ condition|(
 name|pvp
 operator|==
 name|NULL
+condition|)
+return|return
+name|EX_USAGE
+return|;
+if|if
+condition|(
+name|maxatom
+operator|<=
+literal|0
 condition|)
 return|return
 name|EX_USAGE
@@ -5979,37 +5997,9 @@ index|[
 name|maxatom
 index|]
 condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"554 5.3.0 rewrite: expansion too long"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LogLevel
-operator|>
-literal|9
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-literal|"rewrite: expansion too long, ruleset=%s, ruleno=%d"
-argument_list|,
-name|rulename
-argument_list|,
-name|ruleno
-argument_list|)
-expr_stmt|;
-return|return
-name|EX_DATAERR
-return|;
-block|}
+goto|goto
+name|toolong
+goto|;
 operator|*
 name|avp
 operator|++
@@ -6460,7 +6450,7 @@ name|char
 modifier|*
 name|argvect
 index|[
-literal|10
+name|MAX_MAP_ARGS
 index|]
 decl_stmt|;
 name|char
@@ -6538,6 +6528,17 @@ operator|*
 operator|++
 name|rvp
 expr_stmt|;
+if|if
+condition|(
+name|mapname
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"554 5.3.0 rewrite: missing mapname"
+argument_list|)
+expr_stmt|;
 block|}
 name|map
 operator|=
@@ -6568,6 +6569,19 @@ name|key_rvp
 operator|=
 operator|++
 name|rvp
+expr_stmt|;
+if|if
+condition|(
+name|key_rvp
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"554 5.3.0 rewrite: missing key for map %s"
+argument_list|,
+name|mapname
+argument_list|)
 expr_stmt|;
 name|default_rvp
 operator|=
@@ -6661,6 +6675,18 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arg_rvp
+operator|<
+operator|&
+name|argvect
+index|[
+name|MAX_MAP_ARGS
+operator|-
+literal|1
+index|]
+condition|)
 operator|*
 operator|++
 name|arg_rvp
@@ -6744,6 +6770,18 @@ argument_list|,
 literal|'\0'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arg_rvp
+operator|<
+operator|&
+name|argvect
+index|[
+name|MAX_MAP_ARGS
+operator|-
+literal|1
+index|]
+condition|)
 operator|*
 operator|++
 name|arg_rvp
@@ -6751,6 +6789,28 @@ operator|=
 name|replac
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|arg_rvp
+operator|>=
+operator|&
+name|argvect
+index|[
+name|MAX_MAP_ARGS
+operator|-
+literal|1
+index|]
+condition|)
+name|argvect
+index|[
+name|MAX_MAP_ARGS
+operator|-
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 operator|*
 operator|++
 name|arg_rvp
@@ -7508,7 +7568,7 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 		**  Now we need to call the ruleset specified for 		**  the subroutine. we can do this inplace since 		**  we call the "last" subroutine first. 		*/
+comment|/* 		**  Now we need to call the ruleset specified for 		**  the subroutine. We can do this in place since 		**  we call the "last" subroutine first. 		*/
 name|status
 operator|=
 name|rewrite
@@ -8272,6 +8332,9 @@ name|tempfail
 init|=
 name|false
 decl_stmt|;
+name|int
+name|maxatom
+decl_stmt|;
 name|struct
 name|mailer
 modifier|*
@@ -8338,6 +8401,10 @@ name|tv
 argument_list|)
 expr_stmt|;
 block|}
+name|maxatom
+operator|=
+name|MAXATOM
+expr_stmt|;
 if|if
 condition|(
 name|a
@@ -8463,6 +8530,9 @@ operator|*
 operator|++
 name|tv
 expr_stmt|;
+operator|--
+name|maxatom
+expr_stmt|;
 comment|/* extract host and user portions */
 if|if
 condition|(
@@ -8482,15 +8552,23 @@ operator|)
 operator|==
 name|CANONHOST
 condition|)
+block|{
 name|hostp
 operator|=
 operator|++
 name|tv
 expr_stmt|;
+operator|--
+name|maxatom
+expr_stmt|;
+block|}
 else|else
 name|hostp
 operator|=
 name|NULL
+expr_stmt|;
+operator|--
+name|maxatom
 expr_stmt|;
 while|while
 condition|(
@@ -8509,9 +8587,14 @@ operator|)
 operator|!=
 name|CANONUSER
 condition|)
+block|{
 name|tv
 operator|++
 expr_stmt|;
+operator|--
+name|maxatom
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -8576,6 +8659,9 @@ name|ubuf
 argument_list|,
 literal|' '
 argument_list|)
+expr_stmt|;
+operator|--
+name|maxatom
 expr_stmt|;
 comment|/* save away the host name */
 if|if
@@ -9066,6 +9152,9 @@ expr_stmt|;
 name|tv
 operator|++
 expr_stmt|;
+operator|--
+name|maxatom
+expr_stmt|;
 name|a
 operator|->
 name|q_flags
@@ -9240,13 +9329,17 @@ comment|/* sender addresses done later */
 operator|(
 name|void
 operator|)
-name|REWRITE
+name|rewrite
 argument_list|(
 name|tv
 argument_list|,
 literal|2
 argument_list|,
+literal|0
+argument_list|,
 name|e
+argument_list|,
+name|maxatom
 argument_list|)
 expr_stmt|;
 if|if
@@ -9260,7 +9353,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|REWRITE
+name|rewrite
 argument_list|(
 name|tv
 argument_list|,
@@ -9268,20 +9361,28 @@ name|m
 operator|->
 name|m_re_rwset
 argument_list|,
+literal|0
+argument_list|,
 name|e
+argument_list|,
+name|maxatom
 argument_list|)
 expr_stmt|;
 block|}
 operator|(
 name|void
 operator|)
-name|REWRITE
+name|rewrite
 argument_list|(
 name|tv
 argument_list|,
 literal|4
 argument_list|,
+literal|0
+argument_list|,
 name|e
+argument_list|,
+name|maxatom
 argument_list|)
 expr_stmt|;
 comment|/* save the result for the command line/RCPT argument */
@@ -9576,7 +9677,7 @@ block|}
 if|#
 directive|if
 name|_FFR_CATCH_LONG_STRINGS
-comment|/* Don't silently truncate long strings */
+comment|/* Don't silently truncate long strings; broken for evp != NULL */
 if|if
 condition|(
 operator|*
@@ -10764,7 +10865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		flags -- fine tune operations. **		pstat -- pointer to status word. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
+comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative to. **		flags -- fine tune operations. **		pstat -- pointer to status word. **		e -- the current envelope. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 end_comment
 
 begin_function
@@ -11472,11 +11573,6 @@ name|a1
 init|=
 name|NULL
 decl_stmt|;
-specifier|auto
-name|char
-modifier|*
-name|delimptr
-decl_stmt|;
 name|char
 name|pvpbuf
 index|[
@@ -11521,8 +11617,7 @@ argument_list|,
 sizeof|sizeof
 name|pvpbuf
 argument_list|,
-operator|&
-name|delimptr
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -13349,7 +13444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RSCAP -- call rewriting set to return capabilities ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		pvp -- pointer to token vector. **		pvpbuf -- buffer space. ** **	Returns: **		EX_UNAVAILABLE -- ruleset doesn't exist. **		EX_DATAERR -- prescan() failed. **		EX_OK -- rewrite() was successful. **		else -- return status from rewrite(). */
+comment|/* **  RSCAP -- call rewriting set to return capabilities ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		pvp -- pointer to token vector. **		pvpbuf -- buffer space. **		size -- size of buffer space. ** **	Returns: **		EX_UNAVAILABLE -- ruleset doesn't exist. **		EX_DATAERR -- prescan() failed. **		EX_OK -- rewrite() was successful. **		else -- return status from rewrite(). */
 end_comment
 
 begin_function
@@ -13648,14 +13743,18 @@ name|NULL
 condition|)
 name|rstat
 operator|=
-name|REWRITE
+name|rewrite
 argument_list|(
 operator|*
 name|pvp
 argument_list|,
 name|rsno
 argument_list|,
+literal|0
+argument_list|,
 name|e
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 else|else

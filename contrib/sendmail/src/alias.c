@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: alias.c,v 8.214 2002/05/24 20:50:16 gshapiro Exp $"
+literal|"@(#)$Id: alias.c,v 8.214.2.1 2003/07/28 17:47:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -241,9 +241,13 @@ name|LogLevel
 operator|>
 literal|8
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_WARNING
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"possible spam from<> to list: %s, redirected to %s\n"
 argument_list|,

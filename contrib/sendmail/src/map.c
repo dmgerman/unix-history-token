@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1992, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.645.2.7 2002/12/03 17:01:15 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.645.2.10 2003/07/24 18:24:17 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1615,10 +1615,10 @@ name|pushc
 label|:
 if|if
 condition|(
-operator|--
 name|len
+operator|--
 operator|<=
-literal|0
+literal|1
 condition|)
 break|break;
 operator|*
@@ -1675,14 +1675,19 @@ argument_list|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|len
+operator|--
+operator|<=
+literal|1
+condition|)
+break|break;
 operator|*
 name|bp
 operator|++
 operator|=
 literal|'%'
-expr_stmt|;
-operator|--
-name|len
 expr_stmt|;
 goto|goto
 name|pushc
@@ -4634,17 +4639,14 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|errno
-operator|==
-name|ETIMEDOUT
-operator|||
 name|h_errno
 operator|==
 name|TRY_AGAIN
 operator|||
+name|transienterror
+argument_list|(
 name|errno
-operator|==
-name|ECONNREFUSED
+argument_list|)
 condition|)
 operator|*
 name|statp
@@ -29227,6 +29229,16 @@ operator|->
 name|map_mflags
 operator||=
 name|MF_MATCHONLY
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_KEEPQUOTES
 expr_stmt|;
 break|break;
 case|case

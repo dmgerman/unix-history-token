@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.44.2.2 2002/08/09 22:23:12 gshapiro Exp $"
+literal|"@(#)$Id: ldap.c,v 1.44.2.3 2003/07/07 20:16:16 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2226,7 +2226,7 @@ operator|=
 name|save_errno
 expr_stmt|;
 return|return
-name|EX_OSERR
+name|EX_TEMPFAIL
 return|;
 block|}
 name|rl

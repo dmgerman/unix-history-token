@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1999-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sfsasl.c,v 8.91.2.2 2002/09/12 21:07:50 ca Exp $"
+literal|"@(#)$Id: sfsasl.c,v 8.91.2.5 2003/08/08 17:30:11 ca Exp $"
 argument_list|)
 end_macro
 
@@ -302,6 +302,22 @@ name|sasl_obj
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|so
 operator|->
 name|fp
@@ -395,6 +411,15 @@ name|fp
 operator|->
 name|f_cookie
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|so
@@ -569,7 +594,7 @@ name|fp
 operator|->
 name|f_cookie
 decl_stmt|;
-comment|/* 	**  sasl_decode() may require more data than a single read() returns. 	**  Hence we have to put a loop around the decoding. 	**  This also requires that we may have to split up the returned 	**  data since it might be larger than the allowed size. 	**  Therefore we use a static pointer and return portions of it 	**  if necessary. 	*/
+comment|/* 	**  sasl_decode() may require more data than a single read() returns. 	**  Hence we have to put a loop around the decoding. 	**  This also requires that we may have to split up the returned 	**  data since it might be larger than the allowed size. 	**  Therefore we use a static pointer and return portions of it 	**  if necessary. 	**  XXX Note: This function is not thread-safe nor can it be used 	**  on more than one file. A correct implementation would store 	**  this data in fp->f_cookie. 	*/
 if|#
 directive|if
 name|SASL
@@ -941,6 +966,15 @@ argument_list|,
 name|outlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<=
+literal|0
+condition|)
+return|return
+name|ret
+return|;
 name|outlen
 operator|-=
 name|ret
@@ -1457,6 +1491,22 @@ name|tls_obj
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|so
 operator|->
 name|fp
@@ -1565,6 +1615,15 @@ name|fp
 operator|->
 name|f_cookie
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|so
@@ -1903,6 +1962,36 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS: read error=%s (%d), errno=%d, get_error=%s"
+argument_list|,
+name|err
+argument_list|,
+name|r
+argument_list|,
+name|errno
+argument_list|,
+name|ERR_error_string
+argument_list|(
+name|ERR_get_error
+argument_list|()
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|LogLevel
+operator|>
 literal|7
 condition|)
 name|sm_syslog
@@ -2201,6 +2290,36 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+literal|9
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS: write error=%s (%d), errno=%d, get_error=%s"
+argument_list|,
+name|err
+argument_list|,
+name|r
+argument_list|,
+name|errno
+argument_list|,
+name|ERR_error_string
+argument_list|(
+name|ERR_get_error
+argument_list|()
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|LogLevel
+operator|>
 literal|7
 condition|)
 name|sm_syslog
@@ -2228,7 +2347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  SFDCTLS -- create tls file type and open in and out file pointers **	      for sendmail to read from and write to. ** **	Parameters: **		fin -- data input source being replaced **		fout -- data output source being replaced **		conn -- the tls connection pointer ** **	Returns: **		-1 on error **		0 on success ** **	Side effects: **		The arguments "fin" and "fout" are replaced with the new **		SM_FILE_T pointers. **		The original "fin" and "fout" are preserved in the tls file **		type but are not actually used because of the design of TLS. */
+comment|/* **  SFDCTLS -- create tls file type and open in and out file pointers **	      for sendmail to read from and write to. ** **	Parameters: **		fin -- data input source being replaced **		fout -- data output source being replaced **		con -- the tls connection pointer ** **	Returns: **		-1 on error **		0 on success ** **	Side effects: **		The arguments "fin" and "fout" are replaced with the new **		SM_FILE_T pointers. **		The original "fin" and "fout" are preserved in the tls file **		type but are not actually used because of the design of TLS. */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: collect.c,v 8.242.2.4 2003/03/28 17:34:39 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.242.2.8 2003/07/08 01:16:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -675,7 +675,7 @@ argument_list|)
 expr_stmt|;
 name|finis
 argument_list|(
-name|true
+name|false
 argument_list|,
 name|true
 argument_list|,
@@ -750,7 +750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		If successful, **		- Data file is created and filled, and e->e_dfp is set. **		- The from person may be set. **		If the "enough disk space" check fails, **		- syserr is called. **		- e->e_dfp is NULL. **		- e->e_flags& EF_FATALERRS is set. **		- collect() returns. **		If data file cannot be created, the process is terminated. */
+comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		smtpmode -- if set, we are running SMTP: give an RFC821 **			style message to say we are ready to collect **			input, and never ignore a single dot to mean **			end of message. **		hdrp -- the location to stash the header. **		e -- the current envelope. **		rsetsize -- reset e_msgsize? ** **	Returns: **		none. ** **	Side Effects: **		If successful, **		- Data file is created and filled, and e->e_dfp is set. **		- The from person may be set. **		If the "enough disk space" check fails, **		- syserr is called. **		- e->e_dfp is NULL. **		- e->e_flags& EF_FATALERRS is set. **		- collect() returns. **		If data file cannot be created, the process is terminated. */
 end_comment
 
 begin_decl_stmt
@@ -897,6 +897,8 @@ parameter_list|,
 name|hdrp
 parameter_list|,
 name|e
+parameter_list|,
+name|rsetsize
 parameter_list|)
 name|SM_FILE_T
 modifier|*
@@ -914,6 +916,9 @@ specifier|register
 name|ENVELOPE
 modifier|*
 name|e
+decl_stmt|;
+name|bool
+name|rsetsize
 decl_stmt|;
 block|{
 specifier|register
@@ -1174,6 +1179,10 @@ name|dbto
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rsetsize
+condition|)
 name|e
 operator|->
 name|e_msgsize
@@ -3281,6 +3290,56 @@ name|OpMode
 operator|!=
 name|MD_VERIFY
 condition|)
+block|{
+comment|/* 		**  Recalculate e_msgpriority, it is done at in eatheader() 		**  which is called (in 8.12) after the header is collected, 		**  hence e_msgsize is (most likely) incorrect. 		*/
+name|e
+operator|->
+name|e_msgpriority
+operator|=
+name|e
+operator|->
+name|e_msgsize
+operator|-
+name|e
+operator|->
+name|e_class
+operator|*
+name|WkClassFact
+operator|+
+name|e
+operator|->
+name|e_nrcpts
+operator|*
+name|WkRecipFact
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|90
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"collect: at end: msgsize=%ld, msgpriority=%ld"
+argument_list|,
+name|e
+operator|->
+name|e_msgsize
+argument_list|,
+name|e
+operator|->
+name|e_msgpriority
+argument_list|)
+expr_stmt|;
 name|markstats
 argument_list|(
 name|e
@@ -3294,6 +3353,7 @@ argument_list|,
 name|STATS_NORMAL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3715,7 +3775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  EATFROM -- chew up a UNIX style from line and process ** **	This does indeed make some assumptions about the format **	of UNIX messages. ** **	Parameters: **		fm -- the from line. ** **	Returns: **		none. ** **	Side Effects: **		extracts what information it can from the header, **		such as the date. */
+comment|/* **  EATFROM -- chew up a UNIX style from line and process ** **	This does indeed make some assumptions about the format **	of UNIX messages. ** **	Parameters: **		fm -- the from line. **		e -- envelope ** **	Returns: **		none. ** **	Side Effects: **		extracts what information it can from the header, **		such as the date. */
 end_comment
 
 begin_ifndef

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.330.2.1 2002/08/27 20:21:02 gshapiro Exp $"
+literal|"@(#)$Id: recipient.c,v 8.330.2.2 2003/09/16 19:56:25 ca Exp $"
 argument_list|)
 end_macro
 
@@ -437,6 +437,10 @@ name|i
 decl_stmt|;
 name|char
 modifier|*
+name|endp
+decl_stmt|;
+name|char
+modifier|*
 name|oldto
 init|=
 name|e
@@ -617,6 +621,12 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+name|endp
+operator|=
+name|bufp
+operator|+
+name|i
+expr_stmt|;
 name|SM_TRY
 block|{
 operator|(
@@ -678,6 +688,13 @@ name|ADDRESS
 modifier|*
 name|a
 decl_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|p
+operator|<
+name|endp
+argument_list|)
+expr_stmt|;
 comment|/* parse the address */
 while|while
 condition|(
@@ -703,6 +720,13 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|p
+operator|<
+name|endp
+argument_list|)
+expr_stmt|;
 name|a
 operator|=
 name|parseaddr
@@ -726,6 +750,13 @@ expr_stmt|;
 name|p
 operator|=
 name|delimptr
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|p
+operator|<
+name|endp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
