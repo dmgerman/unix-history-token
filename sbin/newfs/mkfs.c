@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -633,8 +639,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"preposterous size %qd\n"
+literal|"preposterous size %jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fssize
 argument_list|)
 expr_stmt|;
@@ -1926,8 +1935,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Filesystem size %qd< minimum size of %d\n"
+literal|"Filesystem size %jd< minimum size of %d\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sblock
 operator|.
 name|fs_size
@@ -2478,7 +2490,7 @@ name|B2MBFACTOR
 value|(1 / (1024.0 * 1024.0))
 name|printf
 argument_list|(
-literal|"%s: %.1fMB (%qd sectors) block size %d, fragment size %d\n"
+literal|"%s: %.1fMB (%jd sectors) block size %d, fragment size %d\n"
 argument_list|,
 name|fsys
 argument_list|,
@@ -2495,6 +2507,9 @@ name|fs_fsize
 operator|*
 name|B2MBFACTOR
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtodb
 argument_list|(
 operator|&
@@ -2628,8 +2643,11 @@ argument_list|(
 name|tmpbuf
 argument_list|)
 argument_list|,
-literal|" %qd%s"
+literal|" %jd%s"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtodb
 argument_list|(
 operator|&
