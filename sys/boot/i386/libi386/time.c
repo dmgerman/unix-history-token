@@ -178,7 +178,7 @@ name|addr
 operator|=
 literal|0x15
 expr_stmt|;
-comment|/* int 0x1a, function 0x86 */
+comment|/* int 0x15, function 0x86 */
 name|v86
 operator|.
 name|eax
