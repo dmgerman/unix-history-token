@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * Platform (FreeBSD) dependent common attachment code for Qlogic adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Platform (FreeBSD) dependent common attachment code for Qlogic adapters.  *  * Copyright (c) 1997, 1998, 1999, 2000 by Matthew Jacob  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -248,13 +248,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: could not establish interrupt enable hook\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"could not establish interrupt enable hook"
 argument_list|)
 expr_stmt|;
 name|cam_sim_free
@@ -692,17 +692,10 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVICING_INTERRUPT
-name|isp
-operator|->
-name|isp_osinfo
-operator|.
-name|intsok
-operator|=
-literal|1
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|isp->isp_osinfo.intsok = 1;
 endif|#
 directive|endif
 comment|/* Release our hook so that the boot can continue. */
@@ -7662,13 +7655,13 @@ operator|==
 name|CAM_PATH_INVALID
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: invalid tgt/lun (%d.%d) in XPT_SCSI_IO\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"invalid tgt/lun (%d.%d) in XPT_SCSI_IO"
 argument_list|,
 name|ccb
 operator|->
@@ -7962,9 +7955,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: What's this? 0x%x at %d in file %s\n"
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"What's this? 0x%x at %d in file %s"
 argument_list|,
 name|isp
 operator|->
@@ -8748,20 +8745,13 @@ name|dptr
 operator||=
 name|DPARM_SAFE_DFLT
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|||
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d set %s period 0x%x offset "
-literal|"0x%x flags 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"%d.%d set %s period 0x%x offset 0x%x flags 0x%x"
 argument_list|,
 name|isp
 operator|->
@@ -9177,20 +9167,13 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-operator|||
-name|isp
-operator|->
-name|isp_dblev
-operator|>=
-literal|3
-condition|)
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d get %s period 0x%x offset "
-literal|"0x%x flags 0x%x\n"
+name|isp
+argument_list|,
+name|ISP_LOGDEBUG0
+argument_list|,
+literal|"%d.%d get %s period 0x%x offset 0x%x flags 0x%x"
 argument_list|,
 name|isp
 operator|->
@@ -9265,13 +9248,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: %d.%d XPT_CALC_GEOMETRY block size 0?\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"%d.%d XPT_CALC_GEOMETRY block size 0?"
 argument_list|,
 name|ccg
 operator|->
@@ -10311,17 +10294,13 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
-name|xpt_print_path
+name|isp_prt
 argument_list|(
 name|isp
-operator|->
-name|isp_path
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"isp_async cannot make temp path for "
-literal|"target %d bus %d\n"
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"isp_async cannot make temp path for %d.%d"
 argument_list|,
 name|tgt
 argument_list|,
@@ -11461,13 +11440,13 @@ operator|==
 name|MAX_FC_TARG
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: no more space for fabric devices\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"no more space for fabric devices"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11608,13 +11587,13 @@ name|rqs_entry_type
 condition|)
 block|{
 default|default:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: event 0x%x for unhandled target action\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"event 0x%x for unhandled target action"
 argument_list|,
 operator|(
 operator|(
