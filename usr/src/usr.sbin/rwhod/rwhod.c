@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.19 (Berkeley) 83/07/01"
+literal|"@(#)rwhod.c	4.20 (Berkeley) 83/10/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1149,11 +1149,19 @@ name|name
 argument_list|)
 operator|||
 operator|!
+operator|(
 name|isalnum
 argument_list|(
 operator|*
 name|name
 argument_list|)
+operator|||
+name|ispunct
+argument_list|(
+operator|*
+name|name
+argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
