@@ -2508,7 +2508,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"List of netgraph node ``%s'' (id %08x) hooks:\n"
+literal|"List of netgraph node ``%s'' (id %x) hooks:\n"
 argument_list|,
 name|path
 argument_list|,
@@ -2609,7 +2609,7 @@ name|ngc
 operator|.
 name|path
 argument_list|,
-literal|"[%08x]:"
+literal|"[%x]:"
 argument_list|,
 name|nlink
 operator|->
@@ -2712,7 +2712,7 @@ argument_list|,
 sizeof|sizeof
 name|etherid
 argument_list|,
-literal|"[%08x]:"
+literal|"[%x]:"
 argument_list|,
 name|ninfo
 operator|->
@@ -3499,7 +3499,7 @@ name|log_Printf
 argument_list|(
 name|LogDEBUG
 argument_list|,
-literal|"Using netgraph hook ``.:%s'' -> [%08x]:%s\n"
+literal|"Using netgraph hook ``.:%s'' -> [%x]:%s\n"
 argument_list|,
 name|dev
 operator|->
