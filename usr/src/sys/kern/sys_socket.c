@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_socket.c	4.1	83/05/27	*/
+comment|/*	sys_socket.c	4.2	83/06/11	*/
 end_comment
 
 begin_include
@@ -311,6 +311,23 @@ name|so_state
 operator|&=
 operator|~
 name|SS_ASYNC
+expr_stmt|;
+break|break;
+case|case
+name|FIONREAD
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+operator|=
+name|so
+operator|->
+name|so_rcv
+operator|.
+name|sb_cc
 expr_stmt|;
 break|break;
 case|case
