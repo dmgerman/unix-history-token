@@ -7069,12 +7069,16 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent0[%d]0x%x:%d"
+literal|"isp_send_ctio2: ent0[%d]0x%llx:%lld"
 argument_list|,
 name|cto
 operator|->
 name|ct_seg_count
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dm_segs
 index|[
 name|segcnt
@@ -7082,6 +7086,10 @@ index|]
 operator|.
 name|ds_addr
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dm_segs
 index|[
 name|segcnt
@@ -7275,7 +7283,7 @@ name|isp
 argument_list|,
 name|ISP_LOGTDEBUG1
 argument_list|,
-literal|"isp_send_ctio2: ent%d[%d]%x:%u"
+literal|"isp_send_ctio2: ent%d[%d]0x%llx:%lld"
 argument_list|,
 name|cto
 operator|->
@@ -7287,6 +7295,10 @@ literal|1
 argument_list|,
 name|seg
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dm_segs
 index|[
 name|segcnt
@@ -7294,6 +7306,10 @@ index|]
 operator|.
 name|ds_addr
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|dm_segs
 index|[
 name|segcnt
