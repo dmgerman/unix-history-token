@@ -1099,6 +1099,14 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|!
+name|n_allocated_this_object_header_files
+condition|)
+name|init_header_files
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|n_this_object_header_files
 operator|==
 name|n_allocated_this_object_header_files
@@ -7206,6 +7214,10 @@ expr_stmt|;
 break|break;
 comment|/* Ignore repeated SOs */
 block|}
+ifdef|#
+directive|ifdef
+name|THIS_CODE_IS_BROKEN
+comment|/* XXX 	   * doing this causes the "subfiles" which are allocated for 	   * header files to be freed twice, and otherwise corrupts 	   * gdb's memory& causes it to crash-n-burn -- gallatin 	   */
 name|end_symtab
 argument_list|(
 name|valu
@@ -7218,6 +7230,8 @@ expr_stmt|;
 name|end_stabs
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* Null name means this just marks the end of text for this .o file. 	 Don't start a new symtab in this case.  */
 if|if
