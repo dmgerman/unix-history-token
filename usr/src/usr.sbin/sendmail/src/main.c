@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.110
+literal|3.111
 operator|%
 name|G
 operator|%
@@ -1566,12 +1566,6 @@ directive|endif
 endif|DEBUG
 end_endif
 
-begin_expr_stmt
-name|initsys
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1749,9 +1743,6 @@ expr_stmt|;
 name|openxscrpt
 argument_list|()
 expr_stmt|;
-name|initsys
-argument_list|()
-expr_stmt|;
 block|}
 end_if
 
@@ -1799,28 +1790,11 @@ endif|QUEUE
 end_endif
 
 begin_comment
-comment|/* 	**  Give this envelope a reality. 	**	I.e., an id and a creation time. 	*/
+comment|/* do basic system initialization */
 end_comment
 
 begin_expr_stmt
-operator|(
-name|void
-operator|)
-name|queuename
-argument_list|(
-name|CurEnv
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|CurEnv
-operator|->
-name|e_ctime
-operator|=
-name|curtime
+name|initsys
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -3411,12 +3385,34 @@ specifier|auto
 name|time_t
 name|now
 decl_stmt|;
-comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	*/
+comment|/* 	**  Give this envelope a reality. 	**	I.e., an id and a creation time. 	*/
+operator|(
+name|void
+operator|)
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'\0'
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_ctime
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
+comment|/* 	**  Set OutChannel to something useful if stdout isn't it. 	**	This arranges that any extra stuff the mailer produces 	**	gets sent back to the user on error (because it is 	**	tucked away in the transcript). 	*/
 if|if
 condition|(
+operator|(
 name|Mode
 operator|==
 name|MD_DAEMON
+operator|&&
+name|QueueRun
+operator|)
 operator|||
 name|HoldErrs
 condition|)
