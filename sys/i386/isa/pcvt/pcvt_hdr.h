@@ -239,6 +239,12 @@ directive|include
 file|<i386/isa/pcvt/pcvt_conf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/isa/kbdio.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1100,6 +1106,12 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	Keyboard and Keyboard Controller  *---------------------------------------------------------------------------*/
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1444,6 +1456,15 @@ end_define
 
 begin_comment
 comment|/* set/reset numlock,capslock& scroll lock */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
 end_comment
 
 begin_comment
@@ -5959,6 +5980,45 @@ begin_comment
 comment|/* keyboard is being polled */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+end_ifdef
+
+begin_decl_stmt
+name|u_char
+name|reset_keyboard
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* OK to reset keyboard */
+end_comment
+
+begin_decl_stmt
+name|KBDC
+name|kbdc
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* keyboard controller */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -6895,6 +6955,35 @@ name|kbd_polling
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|u_char
+name|reset_keyboard
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|KBDC
+name|kbdc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -7706,6 +7795,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
+end_ifndef
+
 begin_function_decl
 name|int
 name|kbd_cmd
@@ -7715,6 +7810,24 @@ name|val
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|kbd_response
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _I386_ISA_KBDIO_H_ */
+end_comment
 
 begin_function_decl
 name|void

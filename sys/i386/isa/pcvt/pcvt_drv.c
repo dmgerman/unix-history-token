@@ -413,6 +413,24 @@ endif|#
 directive|endif
 comment|/* PCVT_NETBSD> 100 */
 block|{
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|kbdc
+operator|=
+name|kbdc_open
+argument_list|(
+name|IO_KBD
+argument_list|)
+expr_stmt|;
+name|reset_keyboard
+operator|=
+literal|1
+expr_stmt|;
+comment|/* it's now safe to do kbd reset */
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 name|kbd_code_init
 argument_list|()
 expr_stmt|;
@@ -3038,6 +3056,14 @@ name|s
 decl_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|int
+name|c
+decl_stmt|;
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* !PCVT_KBD_FIFO */
@@ -3072,6 +3098,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 while|while
 condition|(
 name|inb
@@ -3100,6 +3129,35 @@ name|CONTROLLER_DATA
 argument_list|)
 expr_stmt|;
 comment|/* get it 8042 data */
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|read_kbd_data_no_wait
+argument_list|(
+name|kbdc
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+comment|/* got something */
+name|dt
+operator|=
+name|c
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 if|if
 condition|(
 name|pcvt_kbd_count
@@ -3883,6 +3941,24 @@ name|isa_device
 modifier|*
 name|dvp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|_I386_ISA_KBDIO_H_
+name|kbdc
+operator|=
+name|kbdc_open
+argument_list|(
+name|IO_KBD
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Don't reset the keyboard via `kbdio' just yet. 	 * The system clock has not been calibrated... 	 */
+name|reset_keyboard
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _I386_ISA_KBDIO_H_ */
 comment|/* 	 * Take control if we are the highest priority enabled display device. 	 */
 name|dvp
 operator|=
@@ -5148,6 +5224,9 @@ operator|->
 name|Memory
 expr_stmt|;
 comment|/* operate in memory now */
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_SCANSET
@@ -5200,6 +5279,30 @@ comment|/* PCVT_USEKBDSEC */
 endif|#
 directive|endif
 comment|/* PCVT_SCANSET == 2 */
+else|#
+directive|else
+comment|/* _I386_ISA_KBDIO_H_ */
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+comment|/* put keyboard to return ancient PC scan codes */
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
+endif|#
+directive|endif
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|#
 directive|if
 name|PCVT_NETBSD
@@ -5332,6 +5435,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PCVT_SCREENSAVER */
+ifndef|#
+directive|ifndef
+name|_I386_ISA_KBDIO_H_
 if|#
 directive|if
 name|PCVT_SCANSET
@@ -5379,6 +5485,29 @@ comment|/* PCVT_USEKBDSEC */
 endif|#
 directive|endif
 comment|/* PCVT_SCANSET == 2 */
+else|#
+directive|else
+comment|/* _I386_ISA_KBDIO_H_ */
+if|#
+directive|if
+name|PCVT_SCANSET
+operator|==
+literal|2
+name|set_controller_command_byte
+argument_list|(
+name|kbdc
+argument_list|,
+name|KBD_TRANSLATION
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PCVT_SCANSET == 2 */
+endif|#
+directive|endif
+comment|/* !_I386_ISA_KBDIO_H_ */
 if|if
 condition|(
 name|adaptor_type
