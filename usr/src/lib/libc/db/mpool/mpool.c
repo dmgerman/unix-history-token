@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mpool.c	5.1 (Berkeley) %G%"
+literal|"@(#)mpool.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1025,12 +1025,22 @@ endif|#
 directive|endif
 name|baddr
 operator|=
+operator|(
+name|BKT
+operator|*
+operator|)
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|page
 operator|-
 sizeof|sizeof
 argument_list|(
 name|BKT
 argument_list|)
+operator|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
