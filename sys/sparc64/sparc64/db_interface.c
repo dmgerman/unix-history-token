@@ -232,6 +232,11 @@ name|tf
 operator|=
 name|ddb_regs
 expr_stmt|;
+name|TF_DONE
+argument_list|(
+name|tf
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
