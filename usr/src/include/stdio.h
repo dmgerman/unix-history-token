@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  *  *	@(#)stdio.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -452,7 +452,8 @@ define|#
 directive|define
 name|EOF
 value|(-1)
-comment|/*  * FOPEN_MAX is a minimum maximum, and should be the number of descriptors  * that the kernel can provide without allocation of a resource that can  * fail without the process sleeping.  Do not use this for anything.  */
+comment|/*  * FOPEN_MAX is a minimum maximum, and is the number of streams that  * stdio can provide without attempting to allocate further resources  * (which could fail).  Do not use this for anything.  */
+comment|/* must be == _POSIX_STREAM_MAX<limits.h> */
 define|#
 directive|define
 name|FOPEN_MAX
