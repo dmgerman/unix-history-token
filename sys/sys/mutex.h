@@ -887,6 +887,11 @@ directive|if
 name|LOCK_DEBUG
 operator|>
 literal|0
+operator|||
+name|defined
+argument_list|(
+name|MUTEX_NOINLINE
+argument_list|)
 end_if
 
 begin_define
@@ -947,7 +952,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* LOCK_DEBUG == 0 */
+comment|/* LOCK_DEBUG == 0&& !MUTEX_NOINLINE */
 end_comment
 
 begin_define
@@ -1056,7 +1061,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LOCK_DEBUG */
+comment|/* LOCK_DEBUG> 0 || MUTEX_NOINLINE */
 end_comment
 
 begin_define
