@@ -93,6 +93,12 @@ directive|include
 file|<time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -370,7 +376,7 @@ expr_stmt|;
 name|srandom
 argument_list|(
 operator|(
-name|int
+name|unsigned
 operator|)
 name|s
 argument_list|)
@@ -405,7 +411,7 @@ operator|)
 name|random
 argument_list|()
 operator|/
-name|INT_MAX
+name|LONG_MAX
 expr_stmt|;
 name|putdata
 argument_list|(
@@ -1192,8 +1198,11 @@ name|randomize
 condition|?
 name|time
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
+operator|^
+name|getpid
+argument_list|()
 else|:
 name|STEP_DEF
 operator|)
@@ -1253,8 +1262,11 @@ name|randomize
 condition|?
 name|time
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
+operator|^
+name|getpid
+argument_list|()
 else|:
 name|STEP_DEF
 operator|)
@@ -1302,8 +1314,11 @@ name|s
 operator|=
 name|time
 argument_list|(
-literal|0
+name|NULL
 argument_list|)
+operator|^
+name|getpid
+argument_list|()
 expr_stmt|;
 elseif|else
 if|if
