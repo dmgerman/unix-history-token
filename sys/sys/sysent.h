@@ -154,7 +154,7 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|long
+name|register_t
 operator|*
 operator|*
 operator|,
