@@ -507,6 +507,13 @@ argument_list|(
 name|wnd
 argument_list|)
 expr_stmt|;
+name|curcmd
+operator|->
+name|c_flags
+operator|&=
+operator|~
+name|CF_INIT
+expr_stmt|;
 name|wnd
 operator|=
 call|(
