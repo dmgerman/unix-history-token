@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ops.c	8.1 (Berkeley) %G%  *  * $Id: ufs_ops.c,v 5.2.2.1 1992/02/09 15:09:08 jsp beta $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ops.c	8.2 (Berkeley) %G%  *  * $Id: ufs_ops.c,v 5.2.2.1 1992/02/09 15:09:08 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_comment
 comment|/* NFS_3 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -63,12 +69,6 @@ end_endif
 begin_comment
 comment|/* UFS_HDR */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
 
 begin_comment
 comment|/*  * UN*X file system  */

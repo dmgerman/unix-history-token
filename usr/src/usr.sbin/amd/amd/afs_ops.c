@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	8.1 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.4 1992/05/31 16:36:36 jsp Exp $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	8.2 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.4 1992/05/31 16:36:36 jsp Exp $  *  */
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_comment
 comment|/* NFS_3 */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -69,12 +75,6 @@ end_endif
 begin_comment
 comment|/* NFS_HDR */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
 
 begin_include
 include|#
@@ -396,6 +396,17 @@ return|return
 name|EINVAL
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NFS_ARGSVERSION
+name|nfs_args
+operator|.
+name|version
+operator|=
+name|NFS_ARGSVERSION
+expr_stmt|;
+endif|#
+directive|endif
 name|NFS_FH_DREF
 argument_list|(
 name|nfs_args
