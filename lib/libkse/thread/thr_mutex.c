@@ -3853,20 +3853,8 @@ name|m_owner
 operator|!=
 name|curthread
 condition|)
-comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
 name|ret
 operator|=
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_owner
-operator|==
-name|NULL
-condition|?
-name|EINVAL
-else|:
 name|EPERM
 expr_stmt|;
 elseif|else
@@ -3977,20 +3965,8 @@ name|m_owner
 operator|!=
 name|curthread
 condition|)
-comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
 name|ret
 operator|=
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_owner
-operator|==
-name|NULL
-condition|?
-name|EINVAL
-else|:
 name|EPERM
 expr_stmt|;
 elseif|else
@@ -4148,20 +4124,8 @@ name|m_owner
 operator|!=
 name|curthread
 condition|)
-comment|/* 				 * Return an invalid argument error for no 				 * owner and a permission error otherwise: 				 */
 name|ret
 operator|=
-operator|(
-operator|*
-name|m
-operator|)
-operator|->
-name|m_owner
-operator|==
-name|NULL
-condition|?
-name|EINVAL
-else|:
 name|EPERM
 expr_stmt|;
 elseif|else
