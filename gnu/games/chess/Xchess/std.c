@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.1 $ on $Date: 86/11/01 17:08:40 $  *           $Source: /users/faustus/xchess/RCS/std.c,v $  * Copyright (c) 1985 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Utility routines.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:07 $  *           $Source: /a/cvs/386BSD/src/gnu/chess/Xchess/std.c,v $  * Copyright (c) 1985 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Utility routines.  */
 end_comment
 
 begin_include
@@ -1393,6 +1393,9 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__386BSD__
 name|_doprnt
 argument_list|(
 name|s
@@ -1403,6 +1406,8 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|putc
 argument_list|(
 literal|'\n'
