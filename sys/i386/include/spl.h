@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.4 1994/08/15 03:15:11 wollman Exp $  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: spl.h,v 1.5 1994/09/20 05:07:32 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -158,13 +158,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|unsigned
-name|high_imask
+name|ipending
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* group of interrupts masked with splhigh() */
+comment|/* active interrupts masked by cpl */
 end_comment
 
 begin_decl_stmt
@@ -182,32 +183,9 @@ begin_decl_stmt
 specifier|extern
 specifier|volatile
 name|unsigned
-name|ipending
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* active interrupts masked by cpl */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|unsigned
 name|netisr
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|tty_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* group of interrupts masked with spltty() */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -218,6 +196,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* interrupts masked with splstatclock() */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|tty_imask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* group of interrupts masked with spltty() */
 end_comment
 
 begin_comment
@@ -329,15 +318,6 @@ end_macro
 begin_macro
 name|GENSPL
 argument_list|(
-argument|splstatclock
-argument_list|,
-argument|cpl |= stat_imask | SWI_CLOCK_MASK
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
 argument|splimp
 argument_list|,
 argument|cpl |= net_imask
@@ -368,6 +348,15 @@ argument_list|(
 argument|splsofttty
 argument_list|,
 argument|cpl |= SWI_TTY_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splstatclock
+argument_list|,
+argument|cpl |= stat_imask
 argument_list|)
 end_macro
 
@@ -448,7 +437,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LOCORE */
+comment|/* !LOCORE */
 end_comment
 
 begin_endif
@@ -457,7 +446,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_IPL_H_ */
+comment|/* !_MACHINE_IPL_H_ */
 end_comment
 
 end_unit
