@@ -783,6 +783,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* This can be turned off by the very paranoid 	 * a reseed will turn it back on. 	 */
+name|random_state
+operator|.
+name|seeded
+operator|=
+literal|1
+expr_stmt|;
 name|random_state
 operator|.
 name|gengateinterval

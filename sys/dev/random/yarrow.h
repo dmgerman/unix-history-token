@@ -238,7 +238,7 @@ comment|/* toggle - shows the current insertion pool */
 name|int
 name|seeded
 decl_stmt|;
-comment|/* 0 until first reseed, then 1 */
+comment|/* 0 causes blocking 1 allows normal output */
 name|struct
 name|selinfo
 name|rsel
