@@ -351,10 +351,8 @@ condition|)
 block|{
 if|if
 condition|(
-name|getenv
-argument_list|(
-literal|"SYSINSTALL_DEBUG"
-argument_list|)
+name|isDebug
+argument_list|()
 condition|)
 name|DebugFD
 operator|=
