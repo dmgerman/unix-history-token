@@ -1308,6 +1308,11 @@ operator|->
 name|resources
 decl_stmt|;
 name|struct
+name|resource_list_entry
+modifier|*
+name|rle
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|r
@@ -1563,11 +1568,8 @@ name|length
 argument_list|)
 expr_stmt|;
 block|{
-name|struct
-name|resource_list_entry
-modifier|*
 name|rle
-init|=
+operator|=
 name|resource_list_find
 argument_list|(
 name|rl
@@ -1581,7 +1583,7 @@ index|[
 name|i
 index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|rle
 operator|->
 name|res
@@ -1678,11 +1680,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|{
-name|struct
-name|resource_list_entry
-modifier|*
 name|rle
-init|=
+operator|=
 name|resource_list_find
 argument_list|(
 name|rl
@@ -1693,7 +1692,7 @@ name|cfe
 operator|->
 name|irqrid
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|rle
 operator|->
 name|res
@@ -4569,6 +4568,18 @@ name|arg
 parameter_list|)
 block|{
 name|struct
+name|pccard_softc
+modifier|*
+name|sc
+init|=
+operator|(
+expr|struct
+name|pccard_softc
+operator|*
+operator|)
+name|arg
+decl_stmt|;
+name|struct
 name|pccard_function
 modifier|*
 name|pf
@@ -4577,7 +4588,7 @@ name|STAILQ_FOREACH
 argument_list|(
 argument|pf
 argument_list|,
-argument|&((struct pccard_softc*)arg)->card.pf_head
+argument|&sc->card.pf_head
 argument_list|,
 argument|pf_list
 argument_list|)
@@ -4714,7 +4725,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Only one interrupt handler per function allowed for pccard\n"
+literal|"Only one interrupt handler per function allowed\n"
 argument_list|)
 expr_stmt|;
 name|rle
