@@ -677,15 +677,6 @@ specifier|extern
 name|vop_t
 modifier|*
 modifier|*
-name|ffs_specop_p
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|vop_t
-modifier|*
-modifier|*
 name|ffs_fifoop_p
 decl_stmt|;
 end_decl_stmt

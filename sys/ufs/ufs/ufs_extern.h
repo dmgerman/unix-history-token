@@ -141,17 +141,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ufs_vnoperatespec
-parameter_list|(
-name|struct
-name|vop_generic_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ufs_bmap
 parameter_list|(
 name|struct
@@ -593,10 +582,6 @@ name|ufs_vinit
 parameter_list|(
 name|struct
 name|mount
-modifier|*
-parameter_list|,
-name|vop_t
-modifier|*
 modifier|*
 parameter_list|,
 name|vop_t

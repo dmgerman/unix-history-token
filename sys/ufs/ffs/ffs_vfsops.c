@@ -6579,8 +6579,6 @@ name|ufs_vinit
 argument_list|(
 name|mp
 argument_list|,
-name|ffs_specop_p
-argument_list|,
 name|ffs_fifoop_p
 argument_list|,
 operator|&
