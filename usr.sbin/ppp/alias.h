@@ -22,7 +22,8 @@ name|PacketAliasIn
 name|__P
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|ip
 operator|*
 operator|)
 argument_list|)
@@ -36,7 +37,8 @@ name|PacketAliasOut
 name|__P
 argument_list|(
 operator|(
-name|char
+expr|struct
+name|ip
 operator|*
 operator|)
 argument_list|)
