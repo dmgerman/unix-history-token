@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.77 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.78 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.77 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.78 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -838,7 +838,7 @@ name|setproctitle
 argument_list|(
 literal|"server %s cmd read"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|p
@@ -1369,7 +1369,7 @@ name|e
 argument_list|,
 literal|"Host %s didn't use HELO protocol"
 argument_list|,
-name|peerhostname
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 block|}
@@ -1414,7 +1414,7 @@ name|e
 argument_list|,
 literal|"Host %s claimed to be %s"
 argument_list|,
-name|peerhostname
+name|CurSmtpClient
 argument_list|,
 name|sendinghost
 argument_list|)
@@ -2792,7 +2792,7 @@ name|c
 operator|->
 name|cmdname
 argument_list|,
-name|peerhostname
+name|CurSmtpClient
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -4160,7 +4160,7 @@ name|setproctitle
 argument_list|(
 literal|"server %s child wait"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|st
