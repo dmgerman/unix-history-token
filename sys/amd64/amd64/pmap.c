@@ -3254,9 +3254,9 @@ return|;
 block|}
 name|pte
 operator|=
-name|pmap_pte
+name|pmap_pde_to_pte
 argument_list|(
-name|pmap
+name|pdep
 argument_list|,
 name|va
 argument_list|)
@@ -3410,9 +3410,9 @@ block|{
 name|pte
 operator|=
 operator|*
-name|pmap_pte
+name|pmap_pde_to_pte
 argument_list|(
-name|pmap
+name|pdep
 argument_list|,
 name|va
 argument_list|)
@@ -6676,7 +6676,7 @@ operator|=
 operator|*
 name|pde
 expr_stmt|;
-comment|/* 		 * Weed out invalid mappings. Note: we assume that the page 		 * directory table is always allocated, and in kernel virtual. 		 */
+comment|/* 		 * Weed out invalid mappings. 		 */
 if|if
 condition|(
 name|ptpaddr
@@ -7278,7 +7278,7 @@ operator|=
 operator|*
 name|pde
 expr_stmt|;
-comment|/* 		 * Weed out invalid mappings. Note: we assume that the page 		 * directory table is always allocated, and in kernel virtual. 		 */
+comment|/* 		 * Weed out invalid mappings. 		 */
 if|if
 condition|(
 name|ptpaddr
@@ -9324,12 +9324,28 @@ condition|)
 break|break;
 name|dst_pte
 operator|=
-name|pmap_pte
+operator|(
+name|pt_entry_t
+operator|*
+operator|)
+name|PHYS_TO_DMAP
 argument_list|(
-name|dst_pmap
-argument_list|,
+name|VM_PAGE_TO_PHYS
+argument_list|(
+name|dstmpte
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|dst_pte
+operator|=
+operator|&
+name|dst_pte
+index|[
+name|pmap_pte_index
+argument_list|(
 name|addr
 argument_list|)
+index|]
 expr_stmt|;
 if|if
 condition|(
