@@ -4053,13 +4053,6 @@ name|caddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|m_adj
-argument_list|(
-name|m
-argument_list|,
-name|maxlen
-argument_list|)
-expr_stmt|;
 name|n
 operator|->
 name|m_len
@@ -4083,6 +4076,13 @@ operator|->
 name|m_next
 operator|=
 name|m
+expr_stmt|;
+name|m_adj
+argument_list|(
+name|m
+argument_list|,
+name|maxlen
+argument_list|)
 expr_stmt|;
 name|m
 operator|->
