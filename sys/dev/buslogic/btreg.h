@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic register and struct definitions for the BusLogic  * MultiMaster SCSI host adapters.  Product specific probe and  * attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: btreg.h,v 1.1 1998/09/15 07:32:49 gibbs Exp $  */
+comment|/*  * Generic register and struct definitions for the BusLogic  * MultiMaster SCSI host adapters.  Product specific probe and  * attach routines can be found in:  * i386/isa/bt_isa.c	BT-54X, BT-445 cards  * i386/eisa/bt_eisa.c	BT-74x, BT-75x cards  * pci/bt_pci.c		BT-946, BT-948, BT-956, BT-958 cards  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: btreg.h,v 1.2 1998/10/30 02:06:44 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -1412,6 +1412,9 @@ decl_stmt|;
 name|u_int8_t
 name|probed
 decl_stmt|;
+name|u_int8_t
+name|bio
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1930,9 +1933,10 @@ decl_stmt|;
 name|u_int8_t
 name|sense_len
 decl_stmt|;
-name|u_int32_t
+name|int32_t
 name|data_len
 decl_stmt|;
+comment|/* residuals can be negative */
 name|u_int32_t
 name|data_addr
 decl_stmt|;
@@ -2122,6 +2126,9 @@ argument|ccb_hdr
 argument_list|)
 name|pending_ccbs
 expr_stmt|;
+name|u_int
+name|active_ccbs
+decl_stmt|;
 name|u_int32_t
 name|bt_ccb_physbase
 decl_stmt|;
@@ -2442,16 +2449,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
-name|bt_fetch_isa_iop
-parameter_list|(
-name|isa_compat_io_t
-name|port
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|bt_mark_probed_bio
 parameter_list|(
@@ -2467,6 +2464,34 @@ name|bt_mark_probed_iop
 parameter_list|(
 name|u_int
 name|ioport
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|bt_find_probe_range
+parameter_list|(
+name|int
+name|ioport
+parameter_list|,
+name|int
+modifier|*
+name|port_index
+parameter_list|,
+name|int
+modifier|*
+name|max_port_index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bt_iop_from_bio
+parameter_list|(
+name|isa_compat_io_t
+name|bio_index
 parameter_list|)
 function_decl|;
 end_function_decl
