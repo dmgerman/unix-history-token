@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mptable.c,v 1.9 1997/09/25 06:47:33 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -115,18 +121,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/types.h>
 end_include
 
 begin_define
