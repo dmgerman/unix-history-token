@@ -4663,7 +4663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  */
+comment|/*  * Check permissions, allocate an open file structure,  * and call the device open routine if any.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -4916,6 +4916,12 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* XXX check for fdopen */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -4936,6 +4942,12 @@ condition|(
 name|error
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 		 * If the vn_open replaced the method vector, something 		 * wonderous happened deep below and we just pass it up 		 * pretending we know what we do. 		 */
 if|if
 condition|(
@@ -5199,6 +5211,12 @@ operator|->
 name|f_cred
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|fdrop
@@ -5545,6 +5563,12 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Release our private reference, leaving the one associated with 	 * the descriptor table intact. 	 */
 name|fdrop
 argument_list|(
@@ -5569,6 +5593,12 @@ operator|)
 return|;
 name|bad
 label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
@@ -5645,7 +5675,7 @@ name|COMPAT_43
 end_ifdef
 
 begin_comment
-comment|/*  * Create a file.  */
+comment|/*  * Create a file.  *  * MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -5695,45 +5725,27 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|struct
-name|open_args
-comment|/* { 		char *path; 		int flags; 		int mode; 	} */
-name|nuap
-decl_stmt|;
-name|nuap
-operator|.
-name|path
-operator|=
+return|return
+operator|(
+name|kern_open
+argument_list|(
+name|td
+argument_list|,
 name|uap
 operator|->
 name|path
-expr_stmt|;
-name|nuap
-operator|.
-name|mode
-operator|=
-name|uap
-operator|->
-name|mode
-expr_stmt|;
-name|nuap
-operator|.
-name|flags
-operator|=
+argument_list|,
+name|UIO_USERSPACE
+argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
 operator||
 name|O_TRUNC
-expr_stmt|;
-return|return
-operator|(
-name|open
-argument_list|(
-name|td
 argument_list|,
-operator|&
-name|nuap
+name|uap
+operator|->
+name|mode
 argument_list|)
 operator|)
 return|;
