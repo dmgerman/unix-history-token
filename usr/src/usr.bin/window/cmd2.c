@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	3.31 %G%"
+literal|"@(#)cmd2.c	3.32 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,43 +33,57 @@ name|help_shortcmd
 index|[]
 init|=
 block|{
-literal|"#       Select window # and return to conversation mode."
+literal|"#       Select window # and return to conversation mode"
 block|,
-literal|"%#      Select window # but stay in command mode."
+literal|"%#      Select window # but stay in command mode"
 block|,
-literal|"escape  Return to conversation mode without changing window."
+literal|"escape  Return to conversation mode without changing window"
 block|,
-literal|"^^      Return to conversation mode and change to previous window."
+literal|"^^      Return to conversation mode and change to previous window"
 block|,
-literal|"c#      Close window #."
+literal|"c#      Close window #"
 block|,
-literal|"w       Open a new window."
+literal|"w       Open a new window"
 block|,
-literal|"m#      Move window #."
+literal|"m#      Move window #"
 block|,
-literal|"M#      Move window # to its previous position."
+literal|"M#      Move window # to its previous position"
 block|,
-literal|"s#      Change the size of window #."
+literal|"s#      Change the size of window #"
 block|,
-literal|"S#      Change window # to its previous size."
+literal|"S#      Change window # to its previous size"
 block|,
-literal|"^Y,^E   Scroll up, down one line."
+literal|"^Y      Scroll up one line"
 block|,
-literal|"^U,^D   Scroll up, down half a window."
+literal|"^E      Scroll down one line"
 block|,
-literal|"^B,^F   Scroll up, down a full window."
+literal|"^U      Scroll up half a window"
 block|,
-literal|"h,j,k,l Move cursor left, down, up, right."
+literal|"^D      Scroll down half a window"
 block|,
-literal|"^S,^Q   Stop, start output in current window."
+literal|"^B      Scroll up a full window"
 block|,
-literal|"^L      Redraw screen."
+literal|"^F      Scroll down a full window"
 block|,
-literal|"^Z      Suspend."
+literal|"h       Move cursor left"
 block|,
-literal|"q       Quit."
+literal|"j       Move cursor down"
 block|,
-literal|":       Enter a long command."
+literal|"k       Move cursor up"
+block|,
+literal|"l       Move cursor right"
+block|,
+literal|"^S      Stop output in current window"
+block|,
+literal|"^Q      Restart output in current window"
+block|,
+literal|"^L      Redraw screen"
+block|,
+literal|"^Z      Suspend"
+block|,
+literal|"q       Quit"
+block|,
+literal|":       Enter a long command"
 block|,
 literal|0
 block|}
@@ -83,47 +97,49 @@ name|help_longcmd
 index|[]
 init|=
 block|{
-literal|":%#                   Select window #."
+literal|":alias name string ...  Make `name' an alias for `string ...'"
 block|,
-literal|":close # . . .        Close windows."
+literal|":alias                  Show all aliases"
 block|,
-literal|":close all            Close all windows."
+literal|":close # ...            Close windows"
 block|,
-literal|":cursor modes         Set the cursor modes."
+literal|":close all              Close all windows"
 block|,
-literal|":echo # string . . .  Print ``string . . .'' in window #."
+literal|":cursor modes           Set the cursor modes"
 block|,
-literal|":escape C             Set escape character to C."
+literal|":echo # string ...      Print `string ...' in window #"
 block|,
-literal|":foreground # [off]   Make # a foreground window."
+literal|":escape c               Set escape character to `c'"
 block|,
-literal|":label # string       Set label of window # to ``string''."
+literal|":foreground # flag      Make # a foreground window, if `flag' is true"
 block|,
-literal|":list                 Give a list of all windows."
+literal|":label # string         Set label of window # to `string'"
 block|,
-literal|":nline lines          Set the default number of lines"
+literal|":list                   List all open windows"
 block|,
-literal|"                      in window text buffers."
+literal|":nline lines            Set default window buffer size to `lines'"
 block|,
-literal|":shell string . . .   Set default shell program to ``string . . .''"
+literal|":select #               Select window #"
 block|,
-literal|":source filename      Execute commands in ``filename.''"
+literal|":shell string ...       Set default shell program to `string ...'"
 block|,
-literal|":terse [off]          Turn on (or off) terse mode."
+literal|":source filename        Execute commands in `filename'"
 block|,
-literal|":unset variable       Deallocate ``variable''."
+literal|":terse flag             Set terse mode"
 block|,
-literal|":variable             List all variables."
+literal|":unalias name           Undefine `name' as an alias"
+block|,
+literal|":unset variable         Deallocate `variable'"
+block|,
+literal|":variable               List all variables"
 block|,
 literal|":window row col nrow ncol [nline label pty frame shell]"
 block|,
-literal|"                      Open a window at ``row'', ``col''"
+literal|"                        Open a window at `row', `col' of size `nrow', `ncol',"
 block|,
-literal|"                      of size ``nrow'', ``ncol'',"
+literal|"                        with `nline' lines in the buffer, and `label'"
 block|,
-literal|"                      with ``nline'', and ``label''."
-block|,
-literal|":write # string . . . Write ``string . . .'' to window #."
+literal|":write # string ...     Write `string ...' to window # as input"
 block|,
 literal|0
 block|}
@@ -184,7 +200,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"(Below, # is one of the digits from 1 to 9.)\n\n"
+literal|"(# represents one of the digits from 1 to 9.)\n\n"
 argument_list|)
 expr_stmt|;
 if|if
