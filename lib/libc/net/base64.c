@@ -725,6 +725,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
@@ -1049,6 +1053,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
@@ -1102,6 +1110,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|)
