@@ -1442,6 +1442,15 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|si_flags
+operator|&
+name|SI_NAMED
+condition|)
 name|make_dev
 argument_list|(
 operator|&
