@@ -1391,6 +1391,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|vm_map_wire
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
+parameter_list|,
+name|boolean_t
+name|user_wire
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|vmspace_swap_count
 parameter_list|(
 name|struct

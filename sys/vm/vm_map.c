@@ -5487,7 +5487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_unwire:  *  *	Implements both kernel and user unwire.  */
+comment|/*  *	vm_map_unwire:  *  *	Implements both kernel and user unwiring.  */
 end_comment
 
 begin_function
@@ -5574,10 +5574,6 @@ name|map
 operator|->
 name|timestamp
 expr_stmt|;
-name|need_wakeup
-operator|=
-name|FALSE
-expr_stmt|;
 name|entry
 operator|=
 name|first_entry
@@ -5630,21 +5626,6 @@ name|eflags
 operator||=
 name|MAP_ENTRY_NEEDS_WAKEUP
 expr_stmt|;
-if|if
-condition|(
-name|need_wakeup
-condition|)
-block|{
-name|vm_map_wakeup
-argument_list|(
-name|map
-argument_list|)
-expr_stmt|;
-name|need_wakeup
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|vm_map_unlock_and_wait
@@ -5964,6 +5945,10 @@ name|KERN_SUCCESS
 expr_stmt|;
 name|done
 label|:
+name|need_wakeup
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|first_entry
@@ -6085,6 +6070,35 @@ expr_stmt|;
 return|return
 operator|(
 name|rv
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_map_wire:  *  *	Implements both kernel and user wiring.  */
+end_comment
+
+begin_function
+name|int
+name|vm_map_wire
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+name|vm_offset_t
+name|start
+parameter_list|,
+name|vm_offset_t
+name|end
+parameter_list|,
+name|boolean_t
+name|user_wire
+parameter_list|)
+block|{
+return|return
+operator|(
+name|KERN_FAILURE
 operator|)
 return|;
 block|}
