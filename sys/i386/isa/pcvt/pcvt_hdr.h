@@ -135,6 +135,34 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_comment
+comment|/*  * XXX sys/kbio.h declares a lot of junk, but we need it for NUM_KEYS which  * is used in dev/kbd/kbdreg.h.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/kbio.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KB_OTHER
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|S
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|F
+end_undef
+
 begin_if
 if|#
 directive|if
