@@ -82,6 +82,8 @@ expr_stmt|;
 name|__progname
 operator|=
 name|p
+operator|!=
+name|NULL
 condition|?
 name|p
 operator|+
