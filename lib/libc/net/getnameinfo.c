@@ -352,7 +352,7 @@ name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-name|size_t
+name|socklen_t
 name|salen
 decl_stmt|;
 name|char

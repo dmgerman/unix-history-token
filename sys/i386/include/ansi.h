@@ -118,6 +118,17 @@ begin_comment
 comment|/* wchar_t (see below) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_BSD_SOCKLEN_T_
+value|__uint32_t
+end_define
+
+begin_comment
+comment|/* socklen_t */
+end_comment
+
 begin_comment
 comment|/*  * Types which are fundamental to the implementation and must be used  * in more than one standard header although they are only declared in  * one (perhaps nonstandard) header are defined here.  Standard headers  * use _BSD_XXX_T_ without undef'ing it.  */
 end_comment
