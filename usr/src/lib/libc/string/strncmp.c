@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,18 +24,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strncmp.c	5.2 (Berkeley) %G%"
+literal|"@(#)strncmp.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
 
 begin_comment
-comment|/*  * Compare strings (at most n bytes):  s1>s2:>0  s1==s2: 0  s1<s2:<0  */
+comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_expr_stmt
@@ -41,7 +44,7 @@ name|s1
 argument_list|,
 name|s2
 argument_list|,
-name|n
+name|cnt
 argument_list|)
 specifier|register
 name|char
@@ -53,35 +56,40 @@ name|s2
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|register
-name|n
-expr_stmt|;
-end_expr_stmt
+name|int
+name|cnt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-while|while
-condition|(
-operator|--
-name|n
-operator|>=
-literal|0
+for|for
+control|(
+init|;
+name|cnt
 operator|&&
 operator|*
 name|s1
 operator|==
 operator|*
 name|s2
+condition|;
+operator|--
+name|cnt
+operator|,
 operator|++
-condition|)
+name|s1
+operator|,
+operator|++
+name|s2
+control|)
 if|if
 condition|(
+operator|!
 operator|*
 name|s1
-operator|++
-operator|==
-literal|'\0'
 condition|)
 return|return
 operator|(
@@ -90,18 +98,15 @@ operator|)
 return|;
 return|return
 operator|(
-name|n
-operator|<
-literal|0
+name|cnt
 condition|?
-literal|0
-else|:
 operator|*
 name|s1
 operator|-
 operator|*
-operator|--
 name|s2
+else|:
+literal|0
 operator|)
 return|;
 block|}
