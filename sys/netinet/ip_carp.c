@@ -2295,6 +2295,15 @@ argument_list|,
 name|M_CARP
 argument_list|)
 expr_stmt|;
+name|ifpromisc
+argument_list|(
+name|sc
+operator|->
+name|sc_ifp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
