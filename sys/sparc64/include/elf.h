@@ -64,16 +64,6 @@ parameter_list|)
 value|((x) == ELF_ARCH)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ELF_RTLD_ADDR
-parameter_list|(
-name|vm
-parameter_list|)
-value|(0)
-end_define
-
 begin_comment
 comment|/*  * Auxiliary vector entries for passing information to the interpreter.  */
 end_comment
