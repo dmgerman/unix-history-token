@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arcv.c 3.1 %G%"
+literal|"@(#)arcv.c 3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<newar.h>
+file|<ar.h>
 end_include
 
 begin_define
