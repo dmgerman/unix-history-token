@@ -346,6 +346,19 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+comment|/* Check isapnp ids */
+if|if
+condition|(
+name|isa_get_vendorid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 comment|/* Prepare for the softc struct.  */
 name|sc
 operator|=
