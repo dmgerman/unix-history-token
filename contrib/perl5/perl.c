@@ -9840,7 +9840,7 @@ comment|/* try again */
 argument|PerlProc_execv(Perl_form(aTHX_
 literal|"%s/sperl"
 argument|PERL_FS_VER_FMT, BIN_EXP, 				     (int)PERL_REVISION, (int)PERL_VERSION, 				     (int)PERL_SUBVERSION), PL_origargv); 	    Perl_croak(aTHX_
-literal|"Can't do setuid\n"
+literal|"Can't do setuid; ensure that the setuid bit is set on suidperl\n"
 argument|); 	}
 endif|#
 directive|endif
@@ -10083,21 +10083,7 @@ literal|"Permission denied"
 argument|);
 endif|#
 directive|endif
-argument|if (tmpstatbuf.st_dev != PL_statbuf.st_dev || 		tmpstatbuf.st_ino != PL_statbuf.st_ino) { 		(void)PerlIO_close(PL_rsfp); 		if (PL_rsfp = PerlProc_popen(
-literal|"/bin/mail root"
-argument|,
-literal|"w"
-argument|)) {
-comment|/* heh, heh */
-argument|PerlIO_printf(PL_rsfp,
-literal|"User %"
-argument|Uid_t_f
-literal|" tried to run dev %ld ino %ld in place of dev %ld ino %ld!\n\ (Filename of set-id script was %s, uid %"
-argument|Uid_t_f
-literal|" gid %"
-argument|Gid_t_f
-literal|".)\n\nSincerely,\nperl\n"
-argument|, 			PL_uid,(long)tmpstatbuf.st_dev, (long)tmpstatbuf.st_ino, 			(long)PL_statbuf.st_dev, (long)PL_statbuf.st_ino, 			CopFILE(PL_curcop), 			PL_statbuf.st_uid, PL_statbuf.st_gid); 		    (void)PerlProc_pclose(PL_rsfp); 		} 		Perl_croak(aTHX_
+argument|if (tmpstatbuf.st_dev != PL_statbuf.st_dev || 		tmpstatbuf.st_ino != PL_statbuf.st_ino) { 		(void)PerlIO_close(PL_rsfp); 		Perl_croak(aTHX_
 literal|"Permission denied\n"
 argument|); 	    } 	    if (
 ifdef|#
@@ -10211,7 +10197,7 @@ argument|PERL_FS_VER_FMT, BIN_EXP, 				     (int)PERL_REVISION, (int)PERL_VERSIO
 endif|#
 directive|endif
 argument|Perl_croak(aTHX_
-literal|"Can't do setuid\n"
+literal|"Can't do setuid; ensure that the setuid bit is set on suidperl\n"
 argument|); 	}  	if (PL_statbuf.st_mode& S_ISGID&& PL_statbuf.st_gid != PL_egid) {
 ifdef|#
 directive|ifdef
@@ -10371,7 +10357,7 @@ literal|"%s/perl"
 argument|PERL_FS_VER_FMT, BIN_EXP, 			     (int)PERL_REVISION, (int)PERL_VERSION, 			     (int)PERL_SUBVERSION), PL_origargv);
 comment|/* try again */
 argument|Perl_croak(aTHX_
-literal|"Can't do setuid\n"
+literal|"Can't do setuid; ensure that the setuid bit is set on suidperl\n"
 argument|);
 endif|#
 directive|endif

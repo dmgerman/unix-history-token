@@ -9,6 +9,10 @@ begin_comment
 comment|/* do not adjust the whitespace! Configure expects the numbers to be  * exactly on the third column */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -123,6 +127,8 @@ index|[]
 init|=
 block|{
 name|NULL
+block|,
+literal|"SUIDMAIL - fixes for suidperl security"
 block|,
 name|NULL
 block|}
