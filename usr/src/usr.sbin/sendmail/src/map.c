@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.69 (Berkeley) %G%"
+literal|"@(#)map.c	8.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7555,9 +7555,6 @@ name|char
 modifier|*
 modifier|*
 name|hp
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 if|if
 condition|(
