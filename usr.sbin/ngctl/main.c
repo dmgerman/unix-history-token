@@ -2345,11 +2345,16 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|errx
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: ngctl [-d] [-f file] [-n name] [command ...]\n"
+argument_list|)
+expr_stmt|;
+name|exit
 argument_list|(
 name|EX_USAGE
-argument_list|,
-literal|"usage: ngctl [-d] [-f file] [-n name] [command ...]"
 argument_list|)
 expr_stmt|;
 block|}
