@@ -2253,8 +2253,6 @@ name|PGEX_W
 condition|)
 name|ftype
 operator|=
-name|VM_PROT_READ
-operator||
 name|VM_PROT_WRITE
 expr_stmt|;
 else|else
@@ -2692,8 +2690,6 @@ name|PGEX_W
 condition|)
 name|ftype
 operator|=
-name|VM_PROT_READ
-operator||
 name|VM_PROT_WRITE
 expr_stmt|;
 else|else
@@ -3645,8 +3641,6 @@ name|vm_map
 argument_list|,
 name|va
 argument_list|,
-name|VM_PROT_READ
-operator||
 name|VM_PROT_WRITE
 argument_list|,
 name|VM_FAULT_DIRTY
