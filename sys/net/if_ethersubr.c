@@ -534,6 +534,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|etherbroadcastaddr
 index|[
