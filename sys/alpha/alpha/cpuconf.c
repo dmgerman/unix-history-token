@@ -509,6 +509,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEC_2100_A500
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dec_2100_a500_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dec_2100_a500_init
+value|platform_not_configured
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|cpuinit
@@ -576,8 +612,10 @@ literal|"ST_AVALON_A12"
 argument_list|)
 block|,
 comment|/*  8: ST_AVALON_A12 */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
+name|dec_2100_a500_init
+argument_list|,
 literal|"ST_DEC_2100_A500"
 argument_list|)
 block|,
@@ -680,8 +718,10 @@ literal|"ST_DEC_EV45_PBP"
 argument_list|)
 block|,
 comment|/* 23: ST_DEC_EV45_PBP */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
+name|dec_2100_a500_init
+argument_list|,
 literal|"ST_DEC_2100A_A500"
 argument_list|)
 block|,
