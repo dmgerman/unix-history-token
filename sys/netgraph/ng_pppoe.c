@@ -3692,7 +3692,7 @@ name|sp
 operator|->
 name|creator
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3777,7 +3777,7 @@ name|sp
 operator|->
 name|creator
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -7241,7 +7241,7 @@ name|sp
 operator|->
 name|creator
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

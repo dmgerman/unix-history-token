@@ -2161,7 +2161,7 @@ name|inet
 operator|.
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX Now maybe we should set a flag telling 		 * our receiver to send this message when the response comes in 		 * instead of now when the data may be bad. 		 */

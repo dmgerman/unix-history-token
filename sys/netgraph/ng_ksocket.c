@@ -4666,7 +4666,7 @@ name|priv
 operator|->
 name|response_addr
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5588,7 +5588,7 @@ name|priv
 operator|->
 name|response_addr
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|out

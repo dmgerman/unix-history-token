@@ -4908,7 +4908,7 @@ parameter_list|,
 name|hook
 parameter_list|)
 define|\
-value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook), NULL);	\ 		if (error == 0) {					\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|do {								\ 		(error) =						\ 		    ng_address_hook(NULL, (item), (hook), 0);	\ 		if (error == 0) {					\ 			SAVE_LINE(item);				\ 			(error) = ng_snd_item((item), 0);		\ 		}							\ 		(item) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment
@@ -5107,7 +5107,7 @@ parameter_list|,
 name|resp
 parameter_list|)
 define|\
-value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = NULL;			\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					_dest, NULL )) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 1);	\ 			} else {					\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
+value|do {								\ 		if (resp) {						\ 			ng_ID_t _dest = NGI_RETADDR(item);		\ 			NGI_RETADDR(item) = 0;				\ 			NGI_MSG(item) = resp;				\ 			if ((ng_address_ID((here), (item),		\ 					_dest, 0)) == 0) {		\ 				SAVE_LINE(item);			\ 				(error) = ng_snd_item((item), 1);	\ 			} else {					\ 				(error) = EINVAL;			\ 			}						\ 		} else {						\ 			NG_FREE_ITEM(item);				\ 		}							\ 		(item) = NULL;						\ 	} while (0)
 end_define
 
 begin_comment

@@ -1596,7 +1596,7 @@ name|priv
 operator|->
 name|ctrlnode
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|struct
@@ -1641,7 +1641,7 @@ name|priv
 operator|->
 name|ctrlnode
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -1118,7 +1118,7 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2748,7 +2748,7 @@ name|sap
 operator|->
 name|sg_data
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 operator|)
 condition|)

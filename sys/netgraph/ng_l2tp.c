@@ -4714,7 +4714,7 @@ name|priv
 operator|->
 name|ftarget
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

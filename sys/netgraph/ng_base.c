@@ -11516,7 +11516,7 @@ argument_list|(
 name|item
 argument_list|)
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|NG_FREE_MSG
 argument_list|(
@@ -12748,7 +12748,7 @@ argument_list|(
 name|item
 argument_list|)
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 return|return
 operator|(
