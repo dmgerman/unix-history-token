@@ -83,7 +83,7 @@ operator|=
 operator|(
 name|double
 operator|)
-name|rand
+name|random
 argument_list|()
 operator|/
 operator|(
