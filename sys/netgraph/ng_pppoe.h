@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_PPPOE_COOKIE
-value|939032003
+value|1089893072
 end_define
 
 begin_comment
@@ -115,6 +115,24 @@ value|"debug"
 end_define
 
 begin_comment
+comment|/* Mode names */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_STANDARD
+value|"standard"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PPPOE_NONSTANDARD
+value|"3Com"
+end_define
+
+begin_comment
 comment|/**********************************************************************  * Netgraph commands understood by this node type.  * FAIL, SUCCESS, CLOSE and ACNAME are sent by the node rather than received.  ********************************************************************/
 end_comment
 
@@ -174,7 +192,18 @@ comment|/* data in/out */
 name|NGM_PPPOE_SESSIONID
 init|=
 literal|11
+block|,
 comment|/* Session_ID for informational purposes */
+name|NGM_PPPOE_SETMODE
+init|=
+literal|12
+block|,
+comment|/* set to standard or 3Com mode */
+name|NGM_PPPOE_GETMODE
+init|=
+literal|13
+block|,
+comment|/* see current mode */
 block|}
 enum|;
 end_enum
