@@ -4,7 +4,11 @@ comment|/* pam_handlers.c -- pam config file parsing and module loading */
 end_comment
 
 begin_comment
-comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  * $FreeBSD$  *  */
+comment|/*  * created by Marc Ewing.  * Currently maintained by Andrew G. Morgan<morgan@linux.kernel.org>  *  * $Id: pam_handlers.c,v 1.3 2001/02/05 06:50:41 agmorgan Exp $  *  */
+end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 2001 Networks Associates Technologies, Inc.  * All rights reserved.  *  * Portions of this software was developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_include
@@ -1586,8 +1590,56 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+name|PAM_SUCCESS
+condition|)
+block|{
+name|_pam_system_log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"_pam_init_handlers: "
+literal|"error reading %s"
+argument_list|,
+name|PAM_CONFIG
+argument_list|)
+expr_stmt|;
+name|_pam_system_log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"_pam_init_handlers: [%s]"
+argument_list|,
+name|pam_strerror
+argument_list|(
+name|pamh
+argument_list|,
+name|retval
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
+name|read_something
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+name|_pam_system_log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"_pam_init_handlers: "
+literal|"could not open "
+name|PAM_CONFIG
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* PAM_READ_BOTH_CONFS */
