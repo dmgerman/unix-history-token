@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.8 1994/12/16 06:16:30 phk Exp $  */
+comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.9 1994/12/16 07:09:22 phk Exp $  */
 end_comment
 
 begin_include
@@ -417,7 +417,7 @@ block|{
 name|u_long
 name|cf
 decl_stmt|;
-asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		pushl	%%edi 		xorl	%3,%3 		movl	%3,%%esi 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1:	 		popl	%%edi 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
+asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		xorl	%3,%3 		movl	%3,%%esi 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1:	 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
 block|:
 literal|"=a"
 operator|(
