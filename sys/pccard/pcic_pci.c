@@ -194,7 +194,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * The following should be a hint, so we can do it on a per device  * instance, but this is convenient.  Do not set this unless pci  * routing doesn't work.  It is purposely vague and undocumented  * at the moment.  */
+comment|/*  * The following should be a hint, so we can do it on a per device  * instance, but this is convenient.  Do not set this unless pci  * routing doesn't work.  It is purposely vague and undocumented  * at the moment.  Sadly, this seems to be needed way too often.  */
 end_comment
 
 begin_decl_stmt
@@ -278,6 +278,47 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Force the interrupt routing to be initialized on those bridges where\n\ doing so will cause probelms.  Often when no interrupts appear to be routed\n\ setting this tunable to 1 will resolve the problem.  PCI Cards will almost\n\ always require this, while builtin bridges need it less often"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_ignore_pci
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.pcic.ignore_pci"
+argument_list|,
+operator|&
+name|pcic_ignore_pci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_pcic
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ignore_pci
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pcic_ignore_pci
+argument_list|,
+literal|0
+argument_list|,
+literal|"When set, driver ignores pci cardbus bridges it would otherwise claim."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3658,6 +3699,15 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
+if|if
+condition|(
+name|pcic_ignore_pci
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_id
 operator|=
 name|pci_get_devid
