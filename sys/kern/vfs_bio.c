@@ -11857,7 +11857,15 @@ expr_stmt|;
 if|if
 condition|(
 name|obj
+operator|!=
+name|NULL
 condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|vm_object_pip_wakeupn
 argument_list|(
 name|obj
@@ -11865,6 +11873,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * will do a wakeup there if necessary - so no need to do a wakeup 	 * here in the async case. The sync case always needs to do a wakeup. 	 */
 if|if
@@ -11969,6 +11983,11 @@ operator|=
 name|bp
 operator|->
 name|b_object
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
@@ -12093,6 +12112,11 @@ argument_list|(
 name|obj
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
 argument_list|)
 expr_stmt|;
 block|}

@@ -4590,7 +4590,15 @@ comment|/* 	 * adjust pip.  NOTE: the original parent may still have its own 	 *
 if|if
 condition|(
 name|object
+operator|!=
+name|NULL
 condition|)
+block|{
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_object_pip_wakeupn
 argument_list|(
 name|object
@@ -4600,6 +4608,12 @@ operator|->
 name|b_npages
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * release the physical I/O buffer 	 */
 name|relpbuf
 argument_list|(

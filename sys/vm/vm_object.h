@@ -418,6 +418,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_OBJECT_LOCK_ASSERT
+parameter_list|(
+name|object
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|mtx_assert(&(object)->mtx, (type))
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_OBJECT_UNLOCK
 parameter_list|(
 name|object
