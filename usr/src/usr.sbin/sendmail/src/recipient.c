@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.80 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2373,7 +2373,7 @@ name|QBADADDR
 expr_stmt|;
 name|a
 operator|->
-name|q_flags
+name|q_status
 operator|=
 literal|"5.4.6"
 expr_stmt|;
