@@ -1108,15 +1108,6 @@ argument_list|(
 name|atadev
 argument_list|)
 expr_stmt|;
-comment|/* only print probe banner if we are not part of a RAID array */
-if|if
-condition|(
-operator|!
-name|ata_raiddisk_attach
-argument_list|(
-name|adp
-argument_list|)
-condition|)
 if|if
 condition|(
 name|atadev
@@ -1124,6 +1115,11 @@ operator|->
 name|driver
 condition|)
 name|ad_print
+argument_list|(
+name|adp
+argument_list|)
+expr_stmt|;
+name|ata_raiddisk_attach
 argument_list|(
 name|adp
 argument_list|)
@@ -1357,9 +1353,9 @@ operator|&
 name|AD_F_RAID_SUBDISK
 condition|)
 return|return
-name|EBUSY
+name|EPERM
 return|;
-comment|/* hold off access to we are fully attached */
+comment|/* hold off access until we are fully attached */
 while|while
 condition|(
 name|ata_delayed_attach

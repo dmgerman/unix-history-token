@@ -774,6 +774,17 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ata_raid_addspare
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ata_raid_rebuild
 parameter_list|(
 name|int
