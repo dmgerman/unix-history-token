@@ -1441,8 +1441,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|mntflags
+operator|&
+name|MNT_RDONLY
+condition|)
+block|{
+if|if
+condition|(
 name|snapdump
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1450,7 +1457,30 @@ name|msg
 argument_list|(
 literal|"WARNING: %s\n"
 argument_list|,
-literal|"should use -L when dumping live filesystems!"
+literal|"-L ignored for read-only filesystem."
+argument_list|)
+expr_stmt|;
+name|snapdump
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|snapdump
+operator|==
+literal|0
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"WARNING: %s%s\n"
+argument_list|,
+literal|"should use -L when dumping live read-write "
+argument_list|,
+literal|"filesystems!"
 argument_list|)
 expr_stmt|;
 block|}
