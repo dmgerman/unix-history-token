@@ -387,7 +387,7 @@ begin_define
 define|#
 directive|define
 name|ZEROSIZEPTR
-value|((void *)(1<< (malloc_pageshift - 1)))
+value|((void *)(uintptr_t)(1<< (malloc_pageshift - 1)))
 end_define
 
 begin_endif
