@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)siglist.c	5.7 (Berkeley) %G%"
+literal|"@(#)siglist.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
 begin_decl_stmt
 name|char
 modifier|*
+specifier|const
 name|sys_signame
 index|[
 name|NSIG
@@ -154,6 +161,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
+specifier|const
 name|sys_siglist
 index|[
 name|NSIG
