@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanw.c	5.10 (Berkeley) %G%"
+literal|"@(#)scanw.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,26 +65,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|int
-name|__sscans
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * scanw --  *	Implement a scanf on the standard screen.  */
@@ -147,7 +127,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sscans
+name|vwscanw
 argument_list|(
 name|stdscr
 argument_list|,
@@ -240,7 +220,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sscans
+name|vwscanw
 argument_list|(
 name|win
 argument_list|,
@@ -357,7 +337,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sscans
+name|vwscanw
 argument_list|(
 name|stdscr
 argument_list|,
@@ -482,7 +462,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sscans
+name|vwscanw
 argument_list|(
 name|win
 argument_list|,
@@ -505,13 +485,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __sscans --  *	This routine actually executes the scanf from the window.  *	THIS SHOULD BE RENAMED vwscanw AND EXPORTED  */
+comment|/*  * vwscanw --  *	This routine actually executes the scanf from the window.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|__sscans
+name|vwscanw
 parameter_list|(
 name|win
 parameter_list|,

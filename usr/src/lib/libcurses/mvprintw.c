@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mvprintw.c	5.9 (Berkeley) %G%"
+literal|"@(#)mvprintw.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,7 +170,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sprintw
+name|vwprintw
 argument_list|(
 name|stdscr
 argument_list|,
@@ -310,7 +310,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|_sprintw
+name|vwprintw
 argument_list|(
 name|win
 argument_list|,

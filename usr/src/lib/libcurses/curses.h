@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.22 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1314,25 +1314,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_sprintw
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|_BSD_VA_LIST_
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|box
 name|__P
 argument_list|(
@@ -1824,7 +1805,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|_BSD_VA_LIST_
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1919,6 +1900,44 @@ name|__P
 argument_list|(
 operator|(
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vwprintw
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|_BSD_VA_LIST_
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vwscanw
+name|__P
+argument_list|(
+operator|(
+name|WINDOW
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|_BSD_VA_LIST_
 operator|)
 argument_list|)
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	5.11 (Berkeley) %G%"
+literal|"@(#)printw.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,26 +65,6 @@ end_endif
 begin_comment
 comment|/*  * printw and friends.  *  * These routines make nonportable assumptions about varargs if __STDC__  * is not in effect.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|__sprintw
-name|__P
-argument_list|(
-operator|(
-name|WINDOW
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -167,7 +147,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sprintw
+name|vwprintw
 argument_list|(
 name|stdscr
 argument_list|,
@@ -260,7 +240,7 @@ endif|#
 directive|endif
 name|ret
 operator|=
-name|__sprintw
+name|vwprintw
 argument_list|(
 name|win
 argument_list|,
@@ -377,7 +357,7 @@ operator|)
 return|;
 name|ret
 operator|=
-name|__sprintw
+name|vwprintw
 argument_list|(
 name|stdscr
 argument_list|,
@@ -504,7 +484,7 @@ operator|)
 return|;
 name|ret
 operator|=
-name|__sprintw
+name|vwprintw
 argument_list|(
 name|win
 argument_list|,
@@ -608,13 +588,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __sprintw --  *	This routine actually executes the printf and adds it to the window.  *	It must not be declared static as it is used in mvprintw.c.  *	THIS SHOULD BE RENAMED vwprintw AND EXPORTED  */
+comment|/*  * vwprintw --  *	This routine actually executes the printf and adds it to the window.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|__sprintw
+name|vwprintw
 parameter_list|(
 name|win
 parameter_list|,
