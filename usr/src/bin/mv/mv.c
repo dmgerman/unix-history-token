@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mv.c	5.2 (Berkeley) %G%"
+literal|"@(#)mv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -731,6 +731,16 @@ condition|)
 block|{
 name|Perror2
 argument_list|(
+name|errno
+operator|==
+name|ENOENT
+operator|&&
+name|targetexists
+operator|==
+literal|0
+condition|?
+name|target
+else|:
 name|source
 argument_list|,
 literal|"rename"
