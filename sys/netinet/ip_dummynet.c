@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.14 1999/05/04 16:20:30 luigi Exp $  */
+comment|/*  * Copyright (c) 1998 Luigi Rizzo  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_dummynet.c,v 1.15 1999/05/06 22:08:57 peter Exp $  */
 end_comment
 
 begin_comment
@@ -1138,12 +1138,22 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * finally, if some queue has data, restart the timer.      */
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|dn_idle
 operator|=
 literal|1
 expr_stmt|;
 name|dn_restart
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1612,17 +1622,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dn_idle
 condition|)
 name|dn_restart
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -2790,7 +2800,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (990504)\n"
+literal|"DUMMYNET initialized (990811)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
