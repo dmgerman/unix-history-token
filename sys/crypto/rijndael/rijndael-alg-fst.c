@@ -64,7 +64,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<crypto/rijndael/rijndael-alg-fst.h>
+file|<crypto/rijndael/rijndael.h>
 end_include
 
 begin_include

@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<crypto/rijndael/rijndael-alg-fst.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<crypto/rijndael/rijndael-api-fst.h>
 end_include
 
