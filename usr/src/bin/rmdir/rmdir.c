@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)rmdir.c	4.6 (Berkeley) %G%"
+literal|"@(#)rmdir.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,6 +77,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rmdir: "
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 operator|*

@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkdir.c	4.3 (Berkeley) %G%"
+literal|"@(#)mkdir.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,13 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mkdir: "
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
 operator|*
