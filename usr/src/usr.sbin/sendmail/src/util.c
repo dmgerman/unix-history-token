@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.15 (Berkeley) %G%"
+literal|"@(#)util.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1781,6 +1781,10 @@ argument_list|,
 literal|"timeout waiting for input from %s\n"
 argument_list|,
 name|RealHostName
+condition|?
+name|RealHostName
+else|:
+literal|"local"
 argument_list|)
 expr_stmt|;
 endif|#
