@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_options.c,v 4.3 88/09/15 18:57:36 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_options.c,v 5.1 89/02/09 16:20:37 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_options.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_options.c,v $ */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_options.c,v 4.3 88/09/15 18:57:36 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_options.c,v 5.1 89/02/09 16:20:37 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,14 +374,14 @@ decl_stmt|;
 comment|/* beginning of first record rt option */
 name|opt
 operator|=
+name|CLNP_OFFTOOPT
+argument_list|(
+name|options
+argument_list|,
 name|oidx
 operator|->
 name|cni_recrtp
-operator|+
-operator|(
-name|caddr_t
-operator|)
-name|options
+argument_list|)
 expr_stmt|;
 name|off
 operator|=
@@ -767,7 +767,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_opt_sanity  *  * PURPOSE:			Check the options (beginning at opts for len bytes) for  *					sanity. In addition, fill in the option index structure   *					in with information about each option discovered.  *  * RETURNS:			success (options check out) - 0  *					failure - an ER pdu error code describing failure  *  * SIDE EFFECTS:	  *  * NOTES:			Each pointer field of the option index is filled in with  *					the offset from the beginning of the mbuf, not the  *					actual address.  */
+comment|/*  * FUNCTION:		clnp_opt_sanity  *  * PURPOSE:			Check the options (beginning at opts for len bytes) for  *					sanity. In addition, fill in the option index structure   *					in with information about each option discovered.  *  * RETURNS:			success (options check out) - 0  *					failure - an ER pdu error code describing failure  *  * SIDE EFFECTS:	  *  * NOTES:			Each pointer field of the option index is filled in with  *					the offset from the beginning of the mbuf data, not the  *					actual address.  */
 end_comment
 
 begin_macro
@@ -1155,12 +1155,12 @@ name|oidx
 operator|->
 name|cni_securep
 operator|=
-name|opts
-operator|-
-operator|(
-name|caddr_t
-operator|)
+name|CLNP_OPTTOOFF
+argument_list|(
 name|m
+argument_list|,
+name|opts
+argument_list|)
 expr_stmt|;
 name|oidx
 operator|->
@@ -1270,12 +1270,12 @@ name|oidx
 operator|->
 name|cni_srcrt_s
 operator|=
-name|opts
-operator|-
-operator|(
-name|caddr_t
-operator|)
+name|CLNP_OPTTOOFF
+argument_list|(
 name|m
+argument_list|,
+name|opts
+argument_list|)
 expr_stmt|;
 name|oidx
 operator|->
@@ -1394,12 +1394,12 @@ name|oidx
 operator|->
 name|cni_recrtp
 operator|=
-name|opts
-operator|-
-operator|(
-name|caddr_t
-operator|)
+name|CLNP_OPTTOOFF
+argument_list|(
 name|m
+argument_list|,
+name|opts
+argument_list|)
 expr_stmt|;
 name|oidx
 operator|->
@@ -1552,12 +1552,12 @@ name|oidx
 operator|->
 name|cni_qos_formatp
 operator|=
-name|opts
-operator|-
-operator|(
-name|caddr_t
-operator|)
+name|CLNP_OPTTOOFF
+argument_list|(
 name|m
+argument_list|,
+name|opts
+argument_list|)
 expr_stmt|;
 name|oidx
 operator|->
@@ -1602,12 +1602,12 @@ name|oidx
 operator|->
 name|cni_priorp
 operator|=
-name|opts
-operator|-
-operator|(
-name|caddr_t
-operator|)
+name|CLNP_OPTTOOFF
+argument_list|(
 name|m
+argument_list|,
+name|opts
+argument_list|)
 expr_stmt|;
 name|opts
 operator|+=

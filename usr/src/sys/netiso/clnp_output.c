@@ -8,11 +8,11 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_output.c,v 4.5 88/09/15 18:57:57 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_output.c,v 5.0 89/02/08 12:00:15 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_output.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
 begin_ifndef
@@ -27,7 +27,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_output.c,v 4.5 88/09/15 18:57:57 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_output.c,v 5.0 89/02/08 12:00:15 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,37 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECBIT
+end_ifdef
+
+begin_decl_stmt
+name|u_char
+name|qos_option
+index|[]
+init|=
+block|{
+name|CLNPOVAL_QOS
+block|,
+literal|1
+block|,
+name|CLNPOVAL_GLOBAL
+operator||
+name|CLNPOVAL_SEQUENCING
+operator||
+name|CLNPOVAL_LOWDELAY
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|DECBIT
+end_endif
+
 begin_decl_stmt
 name|int
 name|clnp_id
@@ -466,6 +497,11 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* ptr to clc */
+name|int
+name|hdrlen
+init|=
+literal|0
+decl_stmt|;
 name|src
 operator|=
 operator|&
@@ -1535,6 +1571,76 @@ operator|)
 name|clnp
 argument_list|)
 expr_stmt|;
+name|hdrlen
+operator|=
+name|clnp
+operator|->
+name|cnf_hdr_len
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DECBIT
+comment|/* 		 *	Add the globally unique QOS (with room for congestion experienced 		 *	bit). I can safely assume that this option is not in the options 		 *	mbuf below because I checked that the option was not specified 		 *	previously 		 */
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|m_len
+operator|+
+sizeof|sizeof
+argument_list|(
+name|qos_option
+argument_list|)
+operator|)
+operator|<
+name|MLEN
+condition|)
+block|{
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|qos_option
+argument_list|,
+name|hoff
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|qos_option
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|clnp
+operator|->
+name|cnf_hdr_len
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|qos_option
+argument_list|)
+expr_stmt|;
+name|hdrlen
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|qos_option
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|qos_option
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DECBIT
 comment|/* 		 *	If an options mbuf is present, concatenate a copy to the hdr mbuf. 		 */
 if|if
 condition|(
@@ -1598,6 +1704,27 @@ name|opt_copy
 operator|->
 name|m_len
 expr_stmt|;
+name|hdrlen
+operator|+=
+name|opt_copy
+operator|->
+name|m_len
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|hdrlen
+operator|>
+name|CLNP_HDR_MAX
+condition|)
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* 		 *	Now set up the cache entry in the pcb 		 */
 if|if
