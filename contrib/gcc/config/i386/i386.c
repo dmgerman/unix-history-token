@@ -6326,10 +6326,6 @@ name|flag_omit_frame_pointer
 operator|=
 literal|2
 expr_stmt|;
-name|flag_pcc_struct_return
-operator|=
-literal|2
-expr_stmt|;
 name|flag_asynchronous_unwind_tables
 operator|=
 literal|2
