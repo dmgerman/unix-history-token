@@ -2267,6 +2267,18 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|VT_ACTIVATE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* use the .profile from the fixit medium */
 name|setenv
 argument_list|(
