@@ -2927,18 +2927,6 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%9u zero fill pages allocated\n"
-argument_list|,
-name|sum
-operator|.
-name|v_nzfod
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
 literal|"%9u zero fill pages zeroed\n"
 argument_list|,
 name|sum
