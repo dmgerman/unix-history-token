@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sfs_ops.c	5.3 (Berkeley) %G%  *  * $Id: sfs_ops.c,v 5.2.1.3 91/05/07 22:18:33 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sfs_ops.c	5.4 (Berkeley) %G%  *  * $Id: sfs_ops.c,v 5.2.2.1 1992/02/09 15:09:04 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -9,15 +9,63 @@ directive|include
 file|"am.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAS_SFS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAS_SFSX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NEED_SFS_MATCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEED_SFS_UMOUNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Symbol-link file system  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_SFSX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_SFS_MATCH
+end_ifdef
 
 begin_comment
 comment|/*  * SFS needs a link.  */
@@ -178,6 +226,112 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_SFSX
+end_ifdef
+
+begin_comment
+comment|/*ARGUSED*/
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sfsx_mount
+name|P
+argument_list|(
+operator|(
+name|am_node
+operator|*
+name|mp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|int
+name|sfsx_mount
+parameter_list|(
+name|mp
+parameter_list|)
+name|am_node
+modifier|*
+name|mp
+decl_stmt|;
+block|{
+comment|/* 	 * Check for existence of target. 	 */
+name|struct
+name|stat
+name|stb
+decl_stmt|;
+name|char
+modifier|*
+name|ln
+decl_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|am_link
+condition|)
+name|ln
+operator|=
+name|mp
+operator|->
+name|am_link
+expr_stmt|;
+else|else
+comment|/* should never occur */
+name|ln
+operator|=
+name|mp
+operator|->
+name|am_mnt
+operator|->
+name|mf_mount
+expr_stmt|;
+comment|/* 	 * Use lstat, not stat, since we don't 	 * want to know if the ultimate target of 	 * a symlink chain exists, just the first. 	 */
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|ln
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|errno
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_SFS
+end_ifdef
+
 begin_comment
 comment|/*ARGUSED*/
 end_comment
@@ -201,6 +355,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_SFS_UMOUNT
+end_ifdef
+
 begin_comment
 comment|/*ARGUSED*/
 end_comment
@@ -223,9 +388,20 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Ops structure  */
+comment|/*  * Ops structures  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_SFS
+end_ifdef
 
 begin_decl_stmt
 name|am_ops
@@ -284,6 +460,72 @@ end_endif
 
 begin_comment
 comment|/* HAS_SFS */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAS_SFSX
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|am_ops
+name|sfsx_ops
+init|=
+block|{
+literal|"linkx"
+block|,
+name|sfs_match
+block|,
+literal|0
+block|,
+comment|/* sfsx_init */
+name|sfsx_mount
+block|,
+literal|0
+block|,
+name|auto_fumount
+block|,
+name|sfs_fumount
+block|,
+name|efs_lookuppn
+block|,
+name|efs_readdir
+block|,
+literal|0
+block|,
+comment|/* sfsx_readlink */
+literal|0
+block|,
+comment|/* sfsx_mounted */
+literal|0
+block|,
+comment|/* sfsx_umounted */
+name|find_afs_srvr
+block|,
+ifdef|#
+directive|ifdef
+name|FLUSH_KERNEL_NAME_CACHE
+name|FS_BACKGROUND
+else|#
+directive|else
+comment|/* FLUSH_KERNEL_NAME_CACHE */
+name|FS_MBACKGROUND
+endif|#
+directive|endif
+comment|/* FLUSH_KERNEL_NAME_CACHE */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAS_SFSX */
 end_comment
 
 end_unit

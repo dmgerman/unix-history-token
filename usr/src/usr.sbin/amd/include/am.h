@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am.h	5.3 (Berkeley) %G%  *  * $Id: am.h,v 5.2.1.8 91/05/07 22:19:18 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am.h	1.2 (Berkeley) 6/25/91  *  * $Id: am.h,v 5.2.2.1 1992/02/09 15:09:54 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -1350,6 +1350,9 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1699,6 +1702,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|islocalnet
+name|P
+argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|make_nfs_auth
 name|P
 argument_list|(
@@ -1996,6 +2013,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*extern int mount_nfs_fh P((struct fhstatus*, char*, char*, char*, mntfs*));*/
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -2146,6 +2167,9 @@ name|am_ops
 operator|*
 operator|,
 name|am_opts
+operator|*
+operator|,
+name|char
 operator|*
 operator|,
 name|char
@@ -2886,6 +2910,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|opt_opts
+decl_stmt|;
+name|char
+modifier|*
+name|opt_remopts
 decl_stmt|;
 name|char
 modifier|*
@@ -3811,6 +3839,11 @@ modifier|*
 name|mf_mopts
 decl_stmt|;
 comment|/* FS mount opts */
+name|char
+modifier|*
+name|mf_remopts
+decl_stmt|;
+comment|/* Remote FS mount opts */
 name|fserver
 modifier|*
 name|mf_server

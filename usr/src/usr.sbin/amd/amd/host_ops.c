@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)host_ops.c	5.3 (Berkeley) %G%  *  * $Id: host_ops.c,v 5.2.1.6 91/05/07 22:17:53 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)host_ops.c	5.4 (Berkeley) %G%  *  * $Id: host_ops.c,v 5.2.2.1 1992/02/09 15:08:24 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -35,11 +35,9 @@ begin_comment
 comment|/*  * Define HOST_RPC_UDP to use dgram instead of stream RPC.  * Datagrams are generally much faster.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HOST_RPC_UDP
-end_define
+begin_comment
+comment|/*#define	HOST_RPC_UDP*/
+end_comment
 
 begin_comment
 comment|/*  * Define HOST_MKDIRS to make Amd automatically try  * to create the mount points.  */
@@ -833,9 +831,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HOST_RPC_UDP
 name|struct
 name|timeval
 name|tv
@@ -852,9 +847,6 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* HOST_RPC_UDP */
 comment|/* 	 * Read the mount list 	 */
 name|mlist
 operator|=
@@ -886,35 +878,7 @@ name|sin_port
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Make a client end-point 	 */
-ifdef|#
-directive|ifdef
-name|HOST_RPC_UDP
-if|if
-condition|(
-operator|(
-name|client
-operator|=
-name|clntudp_create
-argument_list|(
-operator|&
-name|sin
-argument_list|,
-name|MOUNTPROG
-argument_list|,
-name|MOUNTVERS
-argument_list|,
-name|tv
-argument_list|,
-operator|&
-name|sock
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-else|#
-directive|else
+comment|/* 	 * Make a client end-point. 	 * Try TCP first 	 */
 if|if
 condition|(
 operator|(
@@ -939,10 +903,28 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|&&
+operator|(
+name|client
+operator|=
+name|clntudp_create
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+name|MOUNTPROG
+argument_list|,
+name|MOUNTVERS
+argument_list|,
+name|tv
+argument_list|,
+operator|&
+name|sock
+argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
-endif|#
-directive|endif
-comment|/* HOST_RPC_UDP */
 block|{
 name|plog
 argument_list|(

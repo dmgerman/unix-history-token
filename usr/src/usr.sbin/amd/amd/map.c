@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)map.c	5.3 (Berkeley) %G%  *  * $Id: map.c,v 5.2.1.7 91/05/07 22:18:05 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)map.c	1.2 (Berkeley) 6/25/91  *  * $Id: map.c,v 5.2.2.1 1992/02/09 15:08:36 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -2367,6 +2367,8 @@ argument_list|,
 literal|""
 argument_list|,
 literal|""
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Replace the initial null reference 	 */
@@ -3222,7 +3224,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|unmount_mp
 parameter_list|(
 name|mp
@@ -3232,6 +3234,11 @@ modifier|*
 name|mp
 decl_stmt|;
 block|{
+name|int
+name|was_backgrounded
+init|=
+literal|0
+decl_stmt|;
 name|mntfs
 modifier|*
 name|mf
@@ -3396,6 +3403,10 @@ operator|)
 name|mp
 argument_list|)
 expr_stmt|;
+name|was_backgrounded
+operator|=
+literal|1
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -3469,6 +3480,9 @@ endif|#
 directive|endif
 comment|/* DEBUG */
 block|}
+return|return
+name|was_backgrounded
+return|;
 block|}
 end_function
 
@@ -3508,6 +3522,11 @@ name|now
 init|=
 name|clocktime
 argument_list|()
+decl_stmt|;
+name|int
+name|backoff
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -3634,11 +3653,17 @@ operator|->
 name|am_ttl
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|backoff
+condition|)
+block|{
 name|expired
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 				 * Move the ttl forward to avoid thrashing effects 				 * on the next call to timeout! 				 */
+comment|/* 					 * Move the ttl forward to avoid thrashing effects 					 * on the next call to timeout! 					 */
 comment|/* sun's -tw option */
 if|if
 condition|(
@@ -3666,6 +3691,21 @@ name|mp
 operator|->
 name|am_timeo_w
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 					 * Just backoff this unmount for 					 * a couple of seconds to avoid 					 * many multiple unmounts being 					 * started in parallel. 					 */
+name|mp
+operator|->
+name|am_ttl
+operator|=
+name|now
+operator|+
+name|backoff
+operator|+
+literal|1
+expr_stmt|;
+block|}
 block|}
 comment|/* 			 * If the next ttl is smallest, use that 			 */
 name|t
@@ -3701,11 +3741,28 @@ literal|0
 operator|&&
 name|expired
 condition|)
+block|{
+comment|/* 				 * If the unmount was backgrounded then 				 * bump the backoff counter. 				 */
+if|if
+condition|(
 name|unmount_mp
 argument_list|(
 name|mp
 argument_list|)
+condition|)
+block|{
+name|backoff
+operator|=
+literal|2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+comment|/*dlog("backing off subsequent unmounts by at least %d seconds", backoff);*/
+endif|#
+directive|endif
+block|}
+block|}
 block|}
 elseif|else
 if|if

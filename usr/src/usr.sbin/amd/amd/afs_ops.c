@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.3 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.1.9 91/05/07 22:17:40 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.4 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.2.1 1992/02/09 15:08:11 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -3072,6 +3072,12 @@ operator|->
 name|fs_opts
 operator|.
 name|opt_opts
+argument_list|,
+name|cp
+operator|->
+name|fs_opts
+operator|.
+name|opt_remopts
 argument_list|)
 expr_stmt|;
 name|p
@@ -4037,13 +4043,12 @@ literal|17
 expr_stmt|;
 break|break;
 block|}
+name|new_ttl
+argument_list|(
 name|cp
 operator|->
 name|mp
-operator|->
-name|am_timeo_w
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Make sure that the error value in the mntfs has a 	 * reasonable value. 	 */

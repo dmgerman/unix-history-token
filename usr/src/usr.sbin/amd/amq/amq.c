@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.c	5.3 (Berkeley) %G%  *  * $Id: amq.c,v 5.2.1.5 91/05/07 22:18:45 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.c	5.4 (Berkeley) %G%  *  * $Id: amq.c,v 5.2.2.1 1992/02/09 15:09:16 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: amq.c,v 5.2.1.5 91/05/07 22:18:45 jsp Alpha $"
+literal|"$Id: amq.c,v 5.2.2.1 1992/02/09 15:09:16 jsp beta $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)amq.c	5.3 (Berkeley) %G%"
+literal|"@(#)amq.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1643,7 +1643,47 @@ comment|/* 	 * Create RPC endpoint 	 */
 name|s
 operator|=
 name|privsock
-argument_list|()
+argument_list|(
+name|SOCK_STREAM
+argument_list|)
+expr_stmt|;
+name|clnt
+operator|=
+name|clnttcp_create
+argument_list|(
+operator|&
+name|server_addr
+argument_list|,
+name|AMQ_PROGRAM
+argument_list|,
+name|AMQ_VERSION
+argument_list|,
+operator|&
+name|s
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|clnt
+operator|==
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|privsock
+argument_list|(
+name|SOCK_DGRAM
+argument_list|)
 expr_stmt|;
 name|clnt
 operator|=
@@ -1662,6 +1702,7 @@ operator|&
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|clnt
@@ -2610,8 +2651,13 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|udpresport
-parameter_list|()
+name|inetresport
+parameter_list|(
+name|ty
+parameter_list|)
+name|int
+name|ty
+decl_stmt|;
 block|{
 name|int
 name|alport
@@ -2647,9 +2693,9 @@ name|socket
 argument_list|(
 name|AF_INET
 argument_list|,
-name|SOCK_DGRAM
+name|ty
 argument_list|,
-name|IPPROTO_UDP
+literal|0
 argument_list|)
 operator|)
 operator|<
@@ -2751,20 +2797,27 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Privsock() calls udpresport() to attempt to bind a socket to a secure  * port.  If udpresport() fails, privsock returns a magic socket number which  * indicates to RPC that it should make its own socket.  * returns: A privileged socket # or RPC_ANYSOCK.  */
+comment|/*  * Privsock() calls inetresport() to attempt to bind a socket to a secure  * port.  If inetresport() fails, privsock returns a magic socket number which  * indicates to RPC that it should make its own socket.  * returns: A privileged socket # or RPC_ANYSOCK.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
 name|privsock
-parameter_list|()
+parameter_list|(
+name|ty
+parameter_list|)
+name|int
+name|ty
+decl_stmt|;
 block|{
 name|int
 name|sock
 init|=
-name|udpresport
-argument_list|()
+name|inetresport
+argument_list|(
+name|ty
+argument_list|)
 decl_stmt|;
 if|if
 condition|(

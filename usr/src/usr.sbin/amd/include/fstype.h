@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)fstype.h	5.3 (Berkeley) %G%  *  * $Id: fstype.h,v 5.2.1.3 91/05/07 22:19:21 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)fstype.h	5.4 (Berkeley) %G%  *  * $Id: fstype.h,v 5.2.2.1 1992/02/09 15:09:57 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -342,7 +342,7 @@ comment|/* Un*x file system */
 end_comment
 
 begin_comment
-comment|/*  * Symbolic-link file system  * A "filesystem" which is just a symbol link.  */
+comment|/*  * Symbolic-link file system  * A "filesystem" which is just a symbol link.  *  * sfsx also checks that the target of the link exists.  */
 end_comment
 
 begin_define
@@ -360,6 +360,23 @@ end_decl_stmt
 
 begin_comment
 comment|/* Symlink FS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_SFSX
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|am_ops
+name|sfsx_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Symlink FS with existence check */
 end_comment
 
 begin_comment

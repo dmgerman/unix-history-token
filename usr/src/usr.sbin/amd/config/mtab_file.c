@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_file.c	5.3 (Berkeley) %G%  *  * $Id: mtab_file.c,v 5.2.1.3 91/05/07 22:19:58 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mtab_file.c	5.4 (Berkeley) %G%  *  * $Id: mtab_file.c,v 5.2.2.1 1992/02/09 15:10:42 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -755,6 +755,11 @@ name|FILE
 modifier|*
 name|mfp
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Concoct a temporary name in the same 	 * directory as the target mount table 	 * so that rename() will work. 	 */
 name|char
 name|tmpname
@@ -978,7 +983,13 @@ argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
-return|return;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 while|while
 condition|(
@@ -991,6 +1002,7 @@ name|mp
 operator|->
 name|mnt
 condition|)
+block|{
 if|if
 condition|(
 name|addmntent
@@ -1002,6 +1014,7 @@ operator|->
 name|mnt
 argument_list|)
 condition|)
+block|{
 name|plog
 argument_list|(
 name|XLOG_ERROR
@@ -1011,6 +1024,15 @@ argument_list|,
 name|tmpname
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
 name|mp
 operator|=
 name|mp
@@ -1018,6 +1040,33 @@ operator|->
 name|mnext
 expr_stmt|;
 block|}
+comment|/* 	 * SunOS 4.1 manuals say that the return code from entmntent() 	 * is always 1 and to treat as a void.  That means we need to 	 * call fflush() to make sure the new mtab file got written. 	 */
+if|if
+condition|(
+name|fflush
+argument_list|(
+name|mfp
+argument_list|)
+condition|)
+block|{
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"flush new mtab file: %m"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+operator|(
+name|void
+operator|)
 name|endmntent
 argument_list|(
 name|mfp
@@ -1035,6 +1084,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|plog
 argument_list|(
 name|XLOG_ERROR
@@ -1044,6 +1094,28 @@ argument_list|,
 name|tmpname
 argument_list|,
 name|mtab
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|1
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+name|out
+label|:
+if|if
+condition|(
+name|error
+condition|)
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|tmpname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1182,6 +1254,25 @@ argument_list|,
 name|mtab
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fflush
+argument_list|(
+name|mfp
+argument_list|)
+condition|)
+name|plog
+argument_list|(
+name|XLOG_ERROR
+argument_list|,
+literal|"Couldn't flush %s: %m"
+argument_list|,
+name|mtab
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|endmntent
 argument_list|(
 name|mfp

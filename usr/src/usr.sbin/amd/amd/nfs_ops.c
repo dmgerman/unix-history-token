@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_ops.c	5.3 (Berkeley) %G%  *  * $Id: nfs_ops.c,v 5.2.1.6 91/05/07 22:18:16 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_ops.c	1.3 (Berkeley) 6/26/91  *  * $Id: nfs_ops.c,v 5.2.2.1 1992/02/09 15:08:47 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -1845,6 +1845,37 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|mount_nfs_fh
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|fhstatus
+operator|*
+name|fhp
+operator|,
+name|char
+operator|*
+name|dir
+operator|,
+name|char
+operator|*
+name|fs_name
+operator|,
+name|char
+operator|*
+name|opts
+operator|,
+name|mntfs
+operator|*
+name|mf
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|mount_nfs_fh
@@ -1917,6 +1948,13 @@ name|mf_server
 decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|xopts
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2000,6 +2038,46 @@ endif|#
 directive|endif
 comment|/* NFS_ARGS_NEEDS_PATH */
 comment|/*path = colon + 1;*/
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_remopts
+operator|&&
+operator|*
+name|mf
+operator|->
+name|mf_remopts
+operator|&&
+operator|!
+name|islocalnet
+argument_list|(
+name|fs
+operator|->
+name|fs_ip
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+condition|)
+name|xopts
+operator|=
+name|strdup
+argument_list|(
+name|mf
+operator|->
+name|mf_remopts
+argument_list|)
+expr_stmt|;
+else|else
+name|xopts
+operator|=
+name|strdup
+argument_list|(
+name|opts
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -2036,7 +2114,7 @@ name|mnt
 operator|.
 name|mnt_opts
 operator|=
-name|opts
+name|xopts
 expr_stmt|;
 name|mnt
 operator|.
@@ -2597,7 +2675,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* ULTRIX_HACK */
-return|return
+name|error
+operator|=
 name|mount_fs
 argument_list|(
 operator|&
@@ -2615,6 +2694,14 @@ name|retry
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|xopts
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	5.3 (Berkeley) %G%  *  * $Id: opts.c,v 5.2.1.7 91/05/07 22:18:24 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)opts.c	1.3 (Berkeley) 6/26/91  *  * $Id: opts.c,v 5.2.2.1 1992/02/09 15:08:54 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -450,6 +450,20 @@ block|,
 block|{
 name|S
 argument_list|(
+literal|"remopts"
+argument_list|)
+block|,
+operator|&
+name|fs_static
+operator|.
+name|opt_remopts
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|S
+argument_list|(
 literal|"mount"
 argument_list|)
 block|,
@@ -756,6 +770,15 @@ block|{
 operator|&
 name|fs_static
 operator|.
+name|opt_remopts
+block|,
+literal|"${opts}"
+block|}
+block|,
+block|{
+operator|&
+name|fs_static
+operator|.
 name|opt_mount
 block|,
 literal|0
@@ -859,6 +882,15 @@ operator|&
 name|fs_static
 operator|.
 name|opt_opts
+block|,
+literal|0
+block|}
+block|,
+block|{
+operator|&
+name|fs_static
+operator|.
+name|opt_remopts
 block|,
 literal|0
 block|}
@@ -1722,6 +1754,47 @@ decl_stmt|;
 do|do
 block|{
 comment|/* assert(*f == '/'); */
+if|if
+condition|(
+name|f
+operator|==
+name|t
+operator|&&
+name|f
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+operator|&&
+name|f
+index|[
+literal|1
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+comment|/* copy double slash iff first */
+operator|*
+name|t
+operator|++
+operator|=
+operator|*
+name|f
+operator|++
+expr_stmt|;
+operator|*
+name|t
+operator|++
+operator|=
+operator|*
+name|f
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* copy a single / across */
 operator|*
 name|t
@@ -1731,6 +1804,7 @@ operator|*
 name|f
 operator|++
 expr_stmt|;
+block|}
 comment|/* assert(f[-1] == '/'); */
 comment|/* skip past more /'s */
 while|while

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am_ops.c	5.3 (Berkeley) %G%  *  * $Id: am_ops.c,v 5.2.1.5 91/05/07 22:17:46 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)am_ops.c	5.4 (Berkeley) %G%  *  * $Id: am_ops.c,v 5.2.2.1 1992/02/09 15:08:17 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -54,6 +54,14 @@ directive|ifdef
 name|HAS_SFS
 operator|&
 name|sfs_ops
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAS_SFSX
+operator|&
+name|sfsx_ops
 block|,
 endif|#
 directive|endif
@@ -133,11 +141,10 @@ modifier|*
 modifier|*
 name|ap
 decl_stmt|;
-name|char
-modifier|*
-name|sep
+name|int
+name|l
 init|=
-literal|""
+literal|0
 decl_stmt|;
 for|for
 control|(
@@ -152,14 +159,36 @@ name|ap
 operator|++
 control|)
 block|{
-name|fprintf
+name|fputs
 argument_list|(
+operator|(
+operator|*
+name|ap
+operator|)
+operator|->
+name|fs_type
+argument_list|,
 name|fp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+index|[
+literal|1
+index|]
+condition|)
+name|fputs
+argument_list|(
+literal|", "
 argument_list|,
-literal|"%s%s"
-argument_list|,
-name|sep
-argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|l
+operator|+=
+name|strlen
+argument_list|(
 operator|(
 operator|*
 name|ap
@@ -167,11 +196,28 @@ operator|)
 operator|->
 name|fs_type
 argument_list|)
+operator|+
+literal|2
 expr_stmt|;
-name|sep
+if|if
+condition|(
+name|l
+operator|>
+literal|60
+condition|)
+block|{
+name|l
 operator|=
-literal|", "
+literal|0
 expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n    "
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mntfs.c	5.3 (Berkeley) %G%  *  * $Id: mntfs.c,v 5.2.1.7 91/05/07 22:18:11 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mntfs.c	1.2 (Berkeley) 6/25/91  *  * $Id: mntfs.c,v 5.2.2.1 1992/02/09 15:08:42 jsp beta $  *  */
 end_comment
 
 begin_include
@@ -195,7 +195,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|init_mntfs
 name|P
 argument_list|(
@@ -227,6 +227,10 @@ operator|,
 name|char
 operator|*
 name|mopts
+operator|,
+name|char
+operator|*
+name|remopts
 operator|)
 argument_list|)
 decl_stmt|;
@@ -234,7 +238,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|init_mntfs
 parameter_list|(
 name|mf
@@ -250,6 +254,8 @@ parameter_list|,
 name|auto_opts
 parameter_list|,
 name|mopts
+parameter_list|,
+name|remopts
 parameter_list|)
 name|mntfs
 modifier|*
@@ -278,6 +284,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|mopts
+decl_stmt|;
+name|char
+modifier|*
+name|remopts
 decl_stmt|;
 block|{
 name|mf
@@ -326,6 +336,15 @@ operator|=
 name|strdup
 argument_list|(
 name|mopts
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
+name|mf_remopts
+operator|=
+name|strdup
+argument_list|(
+name|remopts
 argument_list|)
 expr_stmt|;
 name|mf
@@ -500,6 +519,10 @@ operator|,
 name|char
 operator|*
 name|mopts
+operator|,
+name|char
+operator|*
+name|remopts
 operator|)
 argument_list|)
 decl_stmt|;
@@ -522,6 +545,8 @@ parameter_list|,
 name|auto_opts
 parameter_list|,
 name|mopts
+parameter_list|,
+name|remopts
 parameter_list|)
 name|am_ops
 modifier|*
@@ -546,6 +571,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|mopts
+decl_stmt|;
+name|char
+modifier|*
+name|remopts
 decl_stmt|;
 block|{
 name|mntfs
@@ -572,6 +601,8 @@ argument_list|,
 name|auto_opts
 argument_list|,
 name|mopts
+argument_list|,
+name|remopts
 argument_list|)
 expr_stmt|;
 name|ins_que
@@ -624,6 +655,10 @@ operator|,
 name|char
 operator|*
 name|mopts
+operator|,
+name|char
+operator|*
+name|remopts
 operator|)
 argument_list|)
 decl_stmt|;
@@ -645,6 +680,8 @@ parameter_list|,
 name|auto_opts
 parameter_list|,
 name|mopts
+parameter_list|,
+name|remopts
 parameter_list|)
 name|am_ops
 modifier|*
@@ -669,6 +706,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|mopts
+decl_stmt|;
+name|char
+modifier|*
+name|remopts
 decl_stmt|;
 block|{
 name|mntfs
@@ -779,6 +820,8 @@ argument_list|,
 name|auto_opts
 argument_list|,
 name|mopts
+argument_list|,
+name|remopts
 argument_list|)
 decl_stmt|;
 ifdef|#
@@ -889,6 +932,19 @@ argument_list|)
 expr_stmt|;
 name|mf
 operator|->
+name|mf_remopts
+operator|=
+name|strealloc
+argument_list|(
+name|mf
+operator|->
+name|mf_remopts
+argument_list|,
+name|remopts
+argument_list|)
+expr_stmt|;
+name|mf
+operator|->
 name|mf_info
 operator|=
 name|strealloc
@@ -994,6 +1050,8 @@ argument_list|,
 name|auto_opts
 argument_list|,
 name|mopts
+argument_list|,
+name|remopts
 argument_list|)
 return|;
 block|}
@@ -1020,6 +1078,8 @@ argument_list|,
 literal|"//nil//"
 argument_list|,
 literal|"."
+argument_list|,
+literal|""
 argument_list|,
 literal|""
 argument_list|,
@@ -1092,6 +1152,22 @@ operator|)
 name|mf
 operator|->
 name|mf_mopts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_remopts
+condition|)
+name|free
+argument_list|(
+operator|(
+name|voidp
+operator|)
+name|mf
+operator|->
+name|mf_remopts
 argument_list|)
 expr_stmt|;
 if|if
@@ -1553,6 +1629,10 @@ operator|,
 name|char
 operator|*
 name|mopts
+operator|,
+name|char
+operator|*
+name|remopts
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1576,6 +1656,8 @@ parameter_list|,
 name|auto_opts
 parameter_list|,
 name|mopts
+parameter_list|,
+name|remopts
 parameter_list|)
 name|mntfs
 modifier|*
@@ -1604,6 +1686,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|mopts
+decl_stmt|;
+name|char
+modifier|*
+name|remopts
 decl_stmt|;
 block|{
 name|mntfs
@@ -1692,6 +1778,8 @@ argument_list|,
 name|auto_opts
 argument_list|,
 name|mopts
+argument_list|,
+name|remopts
 argument_list|)
 expr_stmt|;
 name|free_mntfs

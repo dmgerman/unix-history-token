@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mapc.c	5.4 (Berkeley) %G%  *  * $Id: mapc.c,v 5.2.1.9 91/05/07 22:18:07 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mapc.c	1.2 (Berkeley) 6/25/91  *  * $Id: mapc.c,v 5.2.2.1 1992/02/09 15:08:38 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -193,6 +193,9 @@ block|,
 name|MAPC_NONE
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|HAS_REGEXP
 block|{
 literal|"re"
 block|,
@@ -205,6 +208,8 @@ block|,
 name|MAPC_RE
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"sync"
 block|,
@@ -1488,7 +1493,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-specifier|const
+name|Const
 name|char
 modifier|*
 name|reg_error
@@ -1503,7 +1508,7 @@ name|regerror
 name|P
 argument_list|(
 operator|(
-specifier|const
+name|Const
 name|char
 operator|*
 name|m
@@ -1518,7 +1523,7 @@ name|regerror
 parameter_list|(
 name|m
 parameter_list|)
-specifier|const
+name|Const
 name|char
 modifier|*
 name|m
@@ -2357,6 +2362,9 @@ name|MAPC_INC
 expr_stmt|;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|HAS_REGEXP
 case|case
 name|MAPC_RE
 case|:
@@ -2404,6 +2412,8 @@ expr_stmt|;
 comment|/* assert: mt->name == "error" */
 block|}
 break|break;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_nis.c	5.3 (Berkeley) %G%  *  * $Id: info_nis.c,v 5.2.1.4 91/05/07 22:18:01 jsp Alpha $  *  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_nis.c	5.4 (Berkeley) %G%  *  * $Id: info_nis.c,v 5.2.2.1 1992/02/09 15:08:32 jsp beta $  *  */
 end_comment
 
 begin_comment
@@ -43,12 +43,25 @@ parameter_list|(
 name|P_void
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|nis_not_running
+init|=
+literal|0
+decl_stmt|;
 name|char
 name|default_domain
 index|[
 name|YPMAXDOMAIN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|nis_not_running
+condition|)
+return|return
+name|ENOENT
+return|;
 if|if
 condition|(
 name|getdomainname
@@ -64,6 +77,10 @@ operator|<
 literal|0
 condition|)
 block|{
+name|nis_not_running
+operator|=
+literal|1
+expr_stmt|;
 name|plog
 argument_list|(
 name|XLOG_ERROR
@@ -82,11 +99,15 @@ operator|*
 name|default_domain
 condition|)
 block|{
+name|nis_not_running
+operator|=
+literal|1
+expr_stmt|;
 name|plog
 argument_list|(
-name|XLOG_ERROR
+name|XLOG_WARNING
 argument_list|,
-literal|"NIS domain name is not set"
+literal|"NIS domain name is not set.  NIS ignored."
 argument_list|)
 expr_stmt|;
 return|return

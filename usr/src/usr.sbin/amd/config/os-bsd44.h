@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-bsd44.h	5.3 (Berkeley) %G%  *  * $Id: os-bsd44.h,v 5.2.1.4 91/05/07 22:19:32 jsp Alpha $  *  * 4.4 BSD definitions for Amd (automounter)  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-bsd44.h	5.4 (Berkeley) %G%  *  * $Id: os-bsd44.h,v 5.2.2.1 1992/02/09 15:10:11 jsp beta $  *  * 4.4 BSD definitions for Amd (automounter)  */
 end_comment
 
 begin_comment
@@ -158,7 +158,7 @@ name|dst
 parameter_list|,
 name|src
 parameter_list|)
-value|{ \ 		(dst).addr = (struct sockaddr *) (src); \ 		(dst).sotype = SOCK_DGRAM; \ 		(dst).proto = 0; \ 	}
+value|{ \ 		(dst).addr = (struct sockaddr *) (src); \ 		(dst).addrlen = sizeof(*src); \ 		(dst).sotype = SOCK_DGRAM; \ 		(dst).proto = 0; \ 	}
 end_define
 
 begin_comment
@@ -312,6 +312,11 @@ directive|define
 name|MNTOPT_INTR
 value|"intr"
 comment|/* interrupts allowed */
+define|#
+directive|define
+name|NFSMNT_HOSTNAME
+value|0
+comment|/* hostname on 4.4 is not optional */
 expr|struct
 name|mntent
 block|{
