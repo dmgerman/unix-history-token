@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: info_hes.c,v 5.2.1.3 91/03/03 20:39:41 jsp Alpha $  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_hes.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)info_hes.c	5.3 (Berkeley) %G%  *  * $Id: info_hes.c,v 5.2.1.5 91/05/07 22:17:58 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -219,6 +219,12 @@ begin_comment
 comment|/*  * Make Hesiod name.  Skip past the "hesiod."  * at the start of the map name and append  * ".automount".  The net effect is that a lookup  * of /defaults in hesiod.home will result in a  * call to hes_resolve("/defaults", "home.automount");  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -230,6 +236,11 @@ name|src
 parameter_list|)
 value|sprintf(dest, "%s%s", src + HES_PREFLEN, ".automount")
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Do a Hesiod nameserver call.  * Modify time is ignored by Hesiod - XXX  */
@@ -302,7 +313,7 @@ name|int
 name|error
 decl_stmt|;
 name|char
-name|hes_map
+name|hes_key
 index|[
 name|MAXPATHLEN
 index|]
@@ -332,11 +343,18 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|MAKE_HES_NAME
+comment|/*MAKE_HES_NAME(hes_map, map);*/
+name|sprintf
 argument_list|(
-name|hes_map
+name|hes_key
+argument_list|,
+literal|"%s.%s"
+argument_list|,
+name|key
 argument_list|,
 name|map
+operator|+
+name|HES_PREFLEN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Call the resolver 	 */
@@ -347,9 +365,9 @@ name|dlog
 argument_list|(
 literal|"hesiod_search: hes_resolve(%s, %s)"
 argument_list|,
-name|key
+name|hes_key
 argument_list|,
-name|hes_map
+literal|"automount"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -375,9 +393,9 @@ name|rvec
 operator|=
 name|hes_resolve
 argument_list|(
-name|key
+name|hes_key
 argument_list|,
-name|hes_map
+literal|"automount"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If a reply was forthcoming then return 	 * it (and free subsequent replies) 	 */
@@ -605,12 +623,6 @@ end_function_decl
 begin_block
 block|{
 name|char
-name|hes_map
-index|[
-name|MAXPATHLEN
-index|]
-decl_stmt|;
-name|char
 modifier|*
 name|zone_name
 decl_stmt|,
@@ -683,20 +695,15 @@ argument_list|(
 name|hostdomain
 argument_list|)
 expr_stmt|;
-name|MAKE_HES_NAME
-argument_list|(
-name|hes_map
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
 name|zone_name
 operator|=
 name|hes_to_bind
 argument_list|(
-literal|""
+name|map
+operator|+
+name|HES_PREFLEN
 argument_list|,
-name|hes_map
+literal|"automount"
 argument_list|)
 expr_stmt|;
 if|if

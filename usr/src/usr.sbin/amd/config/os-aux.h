@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-aux.h,v 5.2.1.1 90/10/21 22:30:42 jsp Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * A/UX macII definitions for Amd (automounter)  * Contributed by Julian Onions<jpo@cs.nott.ac.uk>  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aux.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-aux.h	5.3 (Berkeley) %G%  *  * $Id: os-aux.h,v 5.2.1.2 91/05/07 22:19:31 jsp Alpha $  *  * A/UX macII definitions for Amd (automounter)  * Contributed by Julian Onions<jpo@cs.nott.ac.uk>  */
 end_comment
 
 begin_comment

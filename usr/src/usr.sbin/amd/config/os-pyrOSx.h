@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-pyrOSx.h,v 5.2.1.1 90/10/21 22:31:02 jsp Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * Pyramid OSx definitions for Amd (automounter)  *		from Stefan Petri<petri@tubsibr.UUCP>  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-pyrOSx.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-pyrOSx.h	5.3 (Berkeley) %G%  *  * $Id: os-pyrOSx.h,v 5.2.1.2 91/05/07 22:19:53 jsp Alpha $  *  * Pyramid OSx definitions for Amd (automounter)  *		from Stefan Petri<petri@tubsibr.UUCP>  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: sched.c,v 5.2.1.3 91/03/17 17:42:03 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sched.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)sched.c	5.3 (Berkeley) %G%  *  * $Id: sched.c,v 5.2.1.5 91/05/07 22:18:32 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -417,11 +417,16 @@ argument_list|)
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
-comment|/*dlog("sleep(%#x)", wchan);*/
+name|DEBUG_SLEEP
+name|dlog
+argument_list|(
+literal|"SLEEP on %#x"
+argument_list|,
+name|wchan
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 name|p
 operator|->
 name|wchan
@@ -509,6 +514,16 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG_SLEEP
+name|int
+name|done
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -517,11 +532,10 @@ condition|)
 return|return;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|DEBUG_SLEEP
 comment|/*dlog("wakeup(%#x)", wchan);*/
 endif|#
 directive|endif
-comment|/* DEBUG */
 comment|/* 	 * Can't user ITER() here because 	 * wakeupjob() juggles the list. 	 */
 for|for
 control|(
@@ -567,12 +581,40 @@ name|wchan
 operator|==
 name|wchan
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG_SLEEP
+name|done
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|wakeupjob
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG_SLEEP
+if|if
+condition|(
+operator|!
+name|done
+condition|)
+name|dlog
+argument_list|(
+literal|"Nothing SLEEPing on %#x"
+argument_list|,
+name|wchan
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

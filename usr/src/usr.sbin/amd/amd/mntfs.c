@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mntfs.c,v 5.2.1.4 91/03/17 17:46:40 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mntfs.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mntfs.c	5.3 (Berkeley) %G%  *  * $Id: mntfs.c,v 5.2.1.7 91/05/07 22:18:11 jsp Alpha $  *  */
 end_comment
 
 begin_include
@@ -1636,6 +1636,43 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * If we are inheriting then just return 		 * the same node... 		 */
+return|return
+name|mf
+return|;
+block|}
+comment|/* 	 * Re-use the existing mntfs if it is mounted. 	 * This traps a race in nfsx. 	 */
+if|if
+condition|(
+name|mf
+operator|->
+name|mf_ops
+operator|!=
+operator|&
+name|efs_ops
+operator|&&
+operator|(
+name|mf
+operator|->
+name|mf_flags
+operator|&
+name|MFF_MOUNTED
+operator|)
+operator|&&
+operator|!
+name|FSRV_ISDOWN
+argument_list|(
+name|mf
+operator|->
+name|mf_server
+argument_list|)
+condition|)
+block|{
+name|mf
+operator|->
+name|mf_fo
+operator|=
+name|mo
+expr_stmt|;
 return|return
 name|mf
 return|;

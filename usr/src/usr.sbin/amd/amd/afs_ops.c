@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: afs_ops.c,v 5.2.1.6 91/03/17 17:49:10 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)afs_ops.c	5.3 (Berkeley) %G%  *  * $Id: afs_ops.c,v 5.2.1.9 91/05/07 22:17:40 jsp Alpha $  *  */
 end_comment
 
 begin_include
@@ -893,19 +893,6 @@ name|mp
 operator|->
 name|am_mnt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * Make sure fattr is set up correctly 	 */
-name|mk_fattr
-argument_list|(
-name|mp
-argument_list|,
-name|NFDIR
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|mf
 operator|->
 name|mf_mount
@@ -986,19 +973,6 @@ name|mp
 operator|->
 name|am_mnt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * Make sure fattr is set up correctly 	 */
-name|mk_fattr
-argument_list|(
-name|mp
-argument_list|,
-name|NFDIR
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Pseudo-directories are used to provide some structure 	 * to the automounted directories instead 	 * of putting them all in the top-level automount directory. 	 * 	 * Here, just increment the parent's link count. 	 */
 name|mp
 operator|->
@@ -1306,19 +1280,8 @@ argument_list|,
 endif|#
 directive|endif
 comment|/* MNTOPT_INTR */
-ifdef|#
-directive|ifdef
-name|AUTOMOUNT_RO
-name|MNTOPT_RO
-argument_list|,
-comment|/* You don't really want this... */
-else|#
-directive|else
 literal|"rw"
 argument_list|,
-endif|#
-directive|endif
-comment|/* AUTOMOUNT_RO */
 literal|"port"
 argument_list|,
 name|nfs_port
@@ -1946,6 +1909,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|IN_PROGRESS
+parameter_list|(
+name|cp
+parameter_list|)
+value|((cp)->mp->am_mnt->mf_flags& MFF_MOUNTING)
+end_define
+
 begin_comment
 comment|/*  * Discard an old continuation  */
 end_comment
@@ -2487,6 +2460,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+name|new_ttl
+argument_list|(
+name|cp
+operator|->
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2519,13 +2499,6 @@ name|error
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
-name|new_ttl
-argument_list|(
-name|cp
-operator|->
-name|mp
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -2539,6 +2512,17 @@ name|ivec
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|||
+operator|!
+name|IN_PROGRESS
+argument_list|(
+name|cp
+argument_list|)
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -2549,6 +2533,7 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
 name|reschedule_timeout_mp
 argument_list|()
 expr_stmt|;
@@ -2954,6 +2939,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|SUNOS4_COMPAT
+ifdef|#
+directive|ifdef
+name|nomore
 comment|/* 		 * By default, you only get this bit on SunOS4. 		 * If you want this anyway, then define SUNOS4_COMPAT 		 * in the relevant "os-blah.h" file. 		 * 		 * We make the observation that if the local key line contains 		 * no '=' signs then either it is sick, or it is a SunOS4-style 		 * "host:fs[:link]" line.  In the latter case the am_opts field 		 * is also assumed to be in old-style, so you can't mix& match. 		 * You can use ${} expansions for the fs and link bits though... 		 * 		 * Actually, this doesn't really cover all the possibilities for 		 * the latest SunOS automounter and it is debatable whether there 		 * is any point bothering. 		 */
 if|if
 condition|(
@@ -3005,6 +2993,8 @@ name|mf_info
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* SUNOS4_COMPAT */
@@ -3268,6 +3258,13 @@ argument_list|,
 literal|"/"
 argument_list|,
 name|link_dir
+argument_list|)
+expr_stmt|;
+name|normalize_slash
+argument_list|(
+name|mp
+operator|->
+name|am_link
 argument_list|)
 expr_stmt|;
 block|}
@@ -3723,6 +3720,32 @@ operator|)
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|this_error
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|mf_retry
+condition|)
+name|mf_retry
+operator|=
+name|dup_mntfs
+argument_list|(
+name|mf
+argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|retry
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3922,7 +3945,7 @@ operator|<
 literal|0
 operator|||
 name|this_error
-operator|!=
+operator|==
 literal|0
 condition|)
 name|hard_error

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: amq.c,v 5.2.1.3 91/03/17 17:33:42 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)amq.c	5.3 (Berkeley) %G%  *  * $Id: amq.c,v 5.2.1.5 91/05/07 22:18:45 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: amq.c,v 5.2.1.3 91/03/17 17:33:42 jsp Alpha $"
+literal|"$Id: amq.c,v 5.2.1.5 91/05/07 22:18:45 jsp Alpha $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)amq.c	5.2 (Berkeley) %G%"
+literal|"@(#)amq.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1550,6 +1550,15 @@ argument_list|)
 operator|)
 operator|==
 literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|server
+argument_list|,
+name|localhost
+argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|fprintf
@@ -1584,6 +1593,11 @@ name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
+if|if
+condition|(
+name|hp
+condition|)
+block|{
 name|bcopy
 argument_list|(
 operator|(
@@ -1609,6 +1623,22 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* fake "localhost" */
+name|server_addr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+literal|0x7f000001
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Create RPC endpoint 	 */
 name|s
 operator|=
@@ -2149,7 +2179,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: failed to get version infromation\n"
+literal|"%s: failed to get version information\n"
 argument_list|,
 name|progname
 argument_list|)

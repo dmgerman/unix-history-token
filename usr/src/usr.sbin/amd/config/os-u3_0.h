@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-u3_0.h,v 5.2.1.2 90/11/04 23:17:44 jsp Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * Ultrix 3.0 definitions for Amd (automounter)  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-u3_0.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-u3_0.h	5.3 (Berkeley) %G%  *  * $Id: os-u3_0.h,v 5.2.1.3 91/05/07 22:20:03 jsp Alpha $  *  * Ultrix 3.0 definitions for Amd (automounter)  */
 end_comment
 
 begin_comment

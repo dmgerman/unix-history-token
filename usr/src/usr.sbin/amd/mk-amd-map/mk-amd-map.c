@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mk-amd-map.c,v 5.2.1.2 91/03/17 17:37:27 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)mk-amd-map.c	5.4 (Berkeley) %G%  *  * $Id: mk-amd-map.c,v 5.2.1.4 91/05/07 22:18:47 jsp Alpha $  */
 end_comment
 
 begin_comment
@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mk-amd-map.c,v 5.2.1.2 91/03/17 17:37:27 jsp Alpha $"
+literal|"$Id: mk-amd-map.c,v 5.2.1.4 91/05/07 22:18:47 jsp Alpha $"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mk-amd-map.c	5.3 (Berkeley) %G%"
+literal|"@(#)mk-amd-map.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,6 +320,18 @@ operator|-=
 name|len
 operator|-
 literal|2
+expr_stmt|;
+operator|*
+name|buf
+operator|=
+literal|'\n'
+expr_stmt|;
+name|buf
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 comment|/* 				 * Skip leading white space on next line 				 */
 while|while
@@ -832,9 +844,10 @@ name|DBM
 modifier|*
 name|mapd
 decl_stmt|;
+specifier|static
 name|char
-modifier|*
 name|maptmp
+index|[]
 init|=
 literal|"dbmXXXXXX"
 decl_stmt|;
@@ -1408,19 +1421,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-operator|*
-operator|%
-name|sccs
-operator|.
-name|include
-operator|.
-name|redist
-operator|.
-name|c
-operator|%
-end_expr_stmt
 
 begin_endif
 endif|#

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: os-xinu43.h,v 5.2.1.2 90/11/04 23:17:45 jsp Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * mt Xinu 4.3 (MORE/bsd) definitions for Amd (automounter)  * Should work on both Vax and HP ...  *  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-xinu43.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Jan-Simon Pendry  * Copyright (c) 1989 Imperial College of Science, Technology& Medicine  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-xinu43.h	5.3 (Berkeley) %G%  *  * $Id: os-xinu43.h,v 5.2.1.3 91/05/07 22:20:07 jsp Alpha $  *  * mt Xinu 4.3 (MORE/bsd) definitions for Amd (automounter)  * Should work on both Vax and HP ...  */
 end_comment
 
 begin_comment

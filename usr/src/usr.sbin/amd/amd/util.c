@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: util.c,v 5.2.1.4 91/03/17 17:44:16 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)util.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)util.c	5.3 (Berkeley) %G%  *  * $Id: util.c,v 5.2.1.8 91/05/07 22:18:41 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -1432,16 +1432,19 @@ block|{
 name|int
 name|quoted
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|int
+name|wasmounted
+init|=
 name|mf
 operator|->
 name|mf_flags
 operator|&
 name|MFF_MOUNTED
-operator|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|wasmounted
 condition|)
 block|{
 comment|/* 		 * If this is a freshly mounted 		 * filesystem then update the 		 * mntfs structure... 		 */
@@ -1503,7 +1506,7 @@ name|plog
 argument_list|(
 name|XLOG_INFO
 argument_list|,
-literal|"%s%s%s mounted fstype %s on %s"
+literal|"%s%s%s %s fstype %s on %s"
 argument_list|,
 name|quoted
 condition|?
@@ -1520,6 +1523,12 @@ condition|?
 literal|"\""
 else|:
 literal|""
+argument_list|,
+name|wasmounted
+condition|?
+literal|"referenced"
+else|:
+literal|"mounted"
 argument_list|,
 name|mf
 operator|->
@@ -1880,6 +1889,12 @@ name|mp
 operator|->
 name|am_mnt
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|>=
+literal|0
+condition|)
 name|mf
 operator|->
 name|mf_flags
@@ -2132,7 +2147,6 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|INLINE
 specifier|static
 name|int
 name|dofork
@@ -2224,7 +2238,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 name|foreground
 operator|=
 literal|0
@@ -2235,6 +2248,10 @@ name|pid
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Make all the directories in the path.  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -2345,7 +2362,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 block|}
 operator|*
 name|sp
@@ -2384,7 +2400,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 block|}
 ifdef|#
 directive|ifdef
@@ -2428,6 +2443,10 @@ name|error_so_far
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Remove as many directories in the path as possible.  * Give up if the directory doesn't appear to have  * been created by Amd (not mode dr-x) or an rmdir  * fails for any reason.  */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -2520,6 +2539,10 @@ operator|&&
 name|errno
 operator|!=
 name|EEXIST
+operator|&&
+name|errno
+operator|!=
+name|EINVAL
 condition|)
 name|plog
 argument_list|(
@@ -2546,7 +2569,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
 block|}
 block|}
 else|else

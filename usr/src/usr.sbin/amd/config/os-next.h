@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-next.h	5.3 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/* $Id: os-next.h,v 5.2.1.1 90/10/21 22:31:00 jsp Exp $ */
-end_comment
-
-begin_comment
-comment|/*  * NeXT OS definitions for Amd (automounter)  *  * By Bill Trost, Reed College  * trost%reed@cse.ogi.edu,  *  * Derived from the Sun 3.2 definitions for Amd (os-sos3.h).  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)os-next.h	5.4 (Berkeley) %G%  *  * $Id: os-next.h,v 5.2.1.3 91/05/07 22:19:51 jsp Alpha $  *  * NeXT OS definitions for Amd (automounter)  * By Bill Trost, Reed College  * trost%reed@cse.ogi.edu,  *  * Derived from the Sun 3.2 definitions for Amd (os-sos3.h).  */
 end_comment
 
 begin_comment
@@ -75,19 +67,6 @@ end_define
 begin_comment
 comment|/*  * Where to get NFS definitions  */
 end_comment
-
-begin_expr_stmt
-operator|*
-operator|%
-name|sccs
-operator|.
-name|include
-operator|.
-name|redist
-operator|.
-name|c
-operator|%
-end_expr_stmt
 
 begin_define
 define|#

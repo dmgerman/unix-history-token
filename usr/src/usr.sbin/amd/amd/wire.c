@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: wire.c,v 5.2.1.1 91/03/17 17:42:58 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)wire.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)wire.c	5.3 (Berkeley) %G%  *  * $Id: wire.c,v 5.2.1.5 91/05/07 22:14:21 jsp Alpha $  *  */
 end_comment
 
 begin_comment
@@ -240,18 +240,18 @@ define|#
 directive|define
 name|size
 parameter_list|(
-name|p
+name|ifr
 parameter_list|)
-value|max((p).sa_len, sizeof(p))
+value|(max((ifr)->ifr_addr.sa_len, sizeof((ifr)->ifr_addr)) + sizeof(ifr->ifr_name))
 else|#
 directive|else
 define|#
 directive|define
 name|size
 parameter_list|(
-name|p
+name|ifr
 parameter_list|)
-value|sizeof(p)
+value|sizeof(*ifr)
 endif|#
 directive|endif
 comment|/* 	 * Scan the list looking for a suitable interface 	 */
@@ -267,18 +267,9 @@ name|cplim
 condition|;
 name|cp
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|ifr
-operator|->
-name|ifr_name
-argument_list|)
-operator|+
 name|size
 argument_list|(
 name|ifr
-operator|->
-name|ifr_addr
 argument_list|)
 control|)
 block|{
@@ -421,6 +412,46 @@ name|address
 operator|&
 name|netmask
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IN_CLASSA
+if|if
+condition|(
+name|IN_CLASSA
+argument_list|(
+name|subnet
+argument_list|)
+condition|)
+name|subnet
+operator|>>=
+name|IN_CLASSA_NSHIFT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IN_CLASSB
+argument_list|(
+name|subnet
+argument_list|)
+condition|)
+name|subnet
+operator|>>=
+name|IN_CLASSB_NSHIFT
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IN_CLASSC
+argument_list|(
+name|subnet
+argument_list|)
+condition|)
+name|subnet
+operator|>>=
+name|IN_CLASSC_NSHIFT
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 		 * Now get a usable name. 		 * First use the network database, 		 * then the host database, 		 * and finally just make a dotted quad. 		 */
 name|np
 operator|=
@@ -443,6 +474,12 @@ name|n_name
 expr_stmt|;
 else|else
 block|{
+name|subnet
+operator|=
+name|address
+operator|&
+name|netmask
+expr_stmt|;
 name|hp
 operator|=
 name|gethostbyaddr
@@ -544,19 +581,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_expr_stmt
-operator|*
-operator|%
-name|sccs
-operator|.
-name|include
-operator|.
-name|redist
-operator|.
-name|c
-operator|%
-end_expr_stmt
 
 begin_endif
 endif|#

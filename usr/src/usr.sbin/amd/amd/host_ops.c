@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: host_ops.c,v 5.2.1.3 91/03/03 20:42:25 jsp Alpha $  *  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)host_ops.c	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 Jan-Simon Pendry  * Copyright (c) 1990 Imperial College of Science, Technology& Medicine  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry at Imperial College, London.  *  * %sccs.include.redist.c%  *  *	@(#)host_ops.c	5.3 (Berkeley) %G%  *  * $Id: host_ops.c,v 5.2.1.6 91/05/07 22:17:53 jsp Alpha $  *  */
 end_comment
 
 begin_include
@@ -518,7 +518,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|=
-literal|10
+literal|20
 expr_stmt|;
 name|tv
 operator|.
@@ -967,25 +967,18 @@ operator|!
 name|nfs_auth
 condition|)
 block|{
-name|nfs_auth
+name|error
 operator|=
-name|authunix_create_default
+name|make_nfs_auth
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|nfs_auth
-condition|)
-block|{
 name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
+condition|)
 goto|goto
 name|out
 goto|;
-block|}
 block|}
 name|client
 operator|->
@@ -1826,17 +1819,7 @@ operator|!
 name|xerror
 condition|)
 block|{
-name|plog
-argument_list|(
-name|XLOG_INFO
-argument_list|,
-literal|"Remounted host %s"
-argument_list|,
-name|mf
-operator|->
-name|mf_info
-argument_list|)
-expr_stmt|;
+comment|/* 			 * Don't log this - it's usually too verbose 			plog(XLOG_INFO, "Remounted host %s", mf->mf_info); 			 */
 name|xerror
 operator|=
 name|EBUSY
