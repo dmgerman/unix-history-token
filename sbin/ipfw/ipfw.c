@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.15.4.2 1996/02/26 15:27:00 phk Exp $  *  */
+comment|/*  * Copyright (c) 1996 Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.15.4.3 1996/04/02 11:43:53 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -4096,6 +4096,14 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+name|strcpy
+argument_list|(
+name|progname
+argument_list|,
+operator|*
+name|av
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|socket
@@ -4135,14 +4143,6 @@ argument_list|(
 name|stdout
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|progname
-argument_list|,
-operator|*
-name|av
 argument_list|)
 expr_stmt|;
 if|if
