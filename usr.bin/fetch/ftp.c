@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*-  * Copyright 1997 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ftp.c,v 1.1 1997/01/30 21:43:40 wollman Exp $  */
 end_comment
 
 begin_include
@@ -463,24 +463,11 @@ literal|1
 expr_stmt|;
 name|ftps
 operator|=
-name|malloc
+name|safe_malloc
 argument_list|(
 sizeof|sizeof
 expr|*
 name|ftps
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ftps
-operator|==
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"malloc"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now, we have a copy of the hostname in hostname, the specified port 	 * (or the default value) in port, and p points to the filename part 	 * of the URI.  We just need to check for a user in the hostname, 	 * and then save all the bits in our state. 	 */
@@ -609,8 +596,12 @@ operator|->
 name|fs_outputfile
 operator|=
 name|slash
+condition|?
+name|slash
 operator|+
 literal|1
+else|:
+name|p
 expr_stmt|;
 block|}
 name|ftps
@@ -685,7 +676,7 @@ argument_list|)
 expr_stmt|;
 name|pw
 operator|=
-name|malloc
+name|safe_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -700,19 +691,6 @@ name|localhost
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pw
-operator|==
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1074,7 +1052,7 @@ literal|"anonymous"
 expr_stmt|;
 name|newpass
 operator|=
-name|malloc
+name|safe_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1099,19 +1077,6 @@ name|ftp_hostname
 argument_list|)
 operator|+
 literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|newpass
-operator|==
-literal|0
-condition|)
-name|err
-argument_list|(
-name|EX_OSERR
-argument_list|,
-literal|"malloc"
 argument_list|)
 expr_stmt|;
 name|strcpy

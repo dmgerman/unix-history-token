@@ -1272,7 +1272,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|=
-name|malloc
+name|safe_malloc
 argument_list|(
 name|strlen
 argument_list|(
