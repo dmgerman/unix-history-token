@@ -1035,8 +1035,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|aifp
-operator|==
+name|ap
+operator|!=
 literal|0
 operator|&&
 name|ap
