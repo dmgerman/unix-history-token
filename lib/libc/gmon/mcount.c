@@ -24,26 +24,13 @@ name|LIBC_SCCS
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)mcount.c	8.1 (Berkeley) 6/4/93";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)mcount.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +38,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -94,53 +95,41 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|bintr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|btrap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|eintr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|user
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -151,21 +140,26 @@ begin_comment
 comment|/*  * mcount is called on entry to each function compiled with the profiling  * switch set.  _mcount(), which is declared in a machine-dependent way  * with _MCOUNT_DECL, does the actual work and is either inlined into a  * C routine or called by an assembly stub.  In any case, this magic is  * taken care of by the MCOUNT definition in<machine/profile.h>.  *  * _mcount updates data structures that represent traversals of the  * program's call graph edges.  frompc and selfpc are the return  * address and function address that represents the given call graph edge.  *  * Note: the original BSD code used the same variable (frompcindex) for  * both frompcindex and frompc.  Any reasonable, modern compiler will  * perform this optimization.  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|_MCOUNT_DECL
 argument_list|(
-name|frompc
+argument|frompc
 argument_list|,
-name|selfpc
+argument|selfpc
 argument_list|)
+end_macro
+
+begin_comment
 comment|/* _mcount; may be static, inline, etc */
-specifier|register
+end_comment
+
+begin_decl_stmt
 name|uintfptr_t
 name|frompc
-operator|,
+decl_stmt|,
 name|selfpc
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -177,16 +171,13 @@ name|delta
 decl_stmt|;
 endif|#
 directive|endif
-specifier|register
 name|fptrdiff_t
 name|frompci
 decl_stmt|;
-specifier|register
 name|u_short
 modifier|*
 name|frompcindex
 decl_stmt|;
-specifier|register
 name|struct
 name|tostruct
 modifier|*
@@ -195,13 +186,11 @@ decl_stmt|,
 modifier|*
 name|prevtop
 decl_stmt|;
-specifier|register
 name|struct
 name|gmonparam
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
 name|long
 name|toindex
 decl_stmt|;
