@@ -4470,144 +4470,6 @@ comment|/* PCI_QUIET */
 end_comment
 
 begin_function
-specifier|const
-name|char
-modifier|*
-name|ide_pci_match
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|pci_get_devid
-argument_list|(
-name|dev
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0x12308086
-case|:
-return|return
-operator|(
-literal|"Intel PIIX IDE controller"
-operator|)
-return|;
-case|case
-literal|0x70108086
-case|:
-return|return
-operator|(
-literal|"Intel PIIX3 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x71118086
-case|:
-return|return
-operator|(
-literal|"Intel PIIX4 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x4d33105a
-case|:
-return|return
-operator|(
-literal|"Promise Ultra/33 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x522910b9
-case|:
-return|return
-operator|(
-literal|"AcerLabs Aladdin IDE controller"
-operator|)
-return|;
-case|case
-literal|0x15711106
-case|:
-case|case
-literal|0x05711106
-case|:
-return|return
-operator|(
-literal|"VIA Apollo IDE controller"
-operator|)
-return|;
-case|case
-literal|0x06401095
-case|:
-return|return
-operator|(
-literal|"CMD 640 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x06461095
-case|:
-return|return
-operator|(
-literal|"CMD 646 IDE controller"
-operator|)
-return|;
-case|case
-literal|0xc6931080
-case|:
-return|return
-operator|(
-literal|"Cypress 82C693 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x01021078
-case|:
-return|return
-operator|(
-literal|"Cyrix 5530 IDE controller"
-operator|)
-return|;
-case|case
-literal|0x55131039
-case|:
-return|return
-operator|(
-literal|"SiS 5591 IDE controller"
-operator|)
-return|;
-default|default:
-if|if
-condition|(
-name|pci_get_class
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIC_STORAGE
-operator|&&
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-name|PCIS_STORAGE_IDE
-condition|)
-return|return
-operator|(
-literal|"Unknown PCI IDE controller"
-operator|)
-return|;
-block|}
-return|return
-name|NULL
-return|;
-block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|chipset_attach
@@ -5968,6 +5830,362 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|const
+name|char
+modifier|*
+name|pci_usb_match
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+comment|/* Intel -- vendor 0x8086 */
+case|case
+literal|0x70208086
+case|:
+return|return
+operator|(
+literal|"Intel 82371SB (PIIX3) USB controller"
+operator|)
+return|;
+case|case
+literal|0x71128086
+case|:
+return|return
+operator|(
+literal|"Intel 82371AB/EB (PIIX4) USB controller"
+operator|)
+return|;
+comment|/* VIA Technologies -- vendor 0x1106 (0x1107 on the Apollo Master) */
+case|case
+literal|0x30381106
+case|:
+return|return
+operator|(
+literal|"VIA 83C572 USB controller"
+operator|)
+return|;
+comment|/* AcerLabs -- vendor 0x10b9 */
+case|case
+literal|0x523710b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M5237 (Aladdin-V) USB controller"
+operator|)
+return|;
+comment|/* OPTi -- vendor 0x1045 */
+case|case
+literal|0xc8611045
+case|:
+return|return
+operator|(
+literal|"OPTi 82C861 (FireLink) USB controller"
+operator|)
+return|;
+comment|/* NEC -- vendor 0x1033 */
+case|case
+literal|0x00351033
+case|:
+return|return
+operator|(
+literal|"NEC uPD 9210 USB controller"
+operator|)
+return|;
+comment|/* CMD Tech -- vendor 0x1095 */
+case|case
+literal|0x06701095
+case|:
+return|return
+operator|(
+literal|"CMD Tech 670 (USB0670) USB controller"
+operator|)
+return|;
+case|case
+literal|0x06731095
+case|:
+return|return
+operator|(
+literal|"CMD Tech 673 (USB0673) USB controller"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_SERIALBUS
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_SERIALBUS_USB
+condition|)
+block|{
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x00
+comment|/* UHCI */
+condition|)
+block|{
+return|return
+operator|(
+literal|"UHCI USB controller"
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pci_get_progif
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0x10
+comment|/* OHCI */
+condition|)
+block|{
+return|return
+operator|(
+literal|"OHCI USB controller"
+operator|)
+return|;
+block|}
+else|else
+block|{
+return|return
+operator|(
+literal|"USB controller"
+operator|)
+return|;
+block|}
+block|}
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|pci_ata_match
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|pci_get_devid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+comment|/* Intel -- vendor 0x8086 */
+case|case
+literal|0x12308086
+case|:
+return|return
+operator|(
+literal|"Intel PIIX ATA controller"
+operator|)
+return|;
+case|case
+literal|0x70108086
+case|:
+return|return
+operator|(
+literal|"Intel PIIX3 ATA controller"
+operator|)
+return|;
+case|case
+literal|0x71118086
+case|:
+return|return
+operator|(
+literal|"Intel PIIX4 ATA controller"
+operator|)
+return|;
+case|case
+literal|0x12348086
+case|:
+return|return
+operator|(
+literal|"Intel 82371MX mobile PCI ATA accelerator (MPIIX)"
+operator|)
+return|;
+comment|/* Promise -- vendor 0x105a */
+case|case
+literal|0x4d33105a
+case|:
+return|return
+operator|(
+literal|"Promise Ultra/33 ATA controller"
+operator|)
+return|;
+case|case
+literal|0x4d38105a
+case|:
+return|return
+operator|(
+literal|"Promise Ultra/66 ATA controller"
+operator|)
+return|;
+comment|/* AcerLabs -- vendor 0x10b9 */
+case|case
+literal|0x522910b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs Aladdin ATA controller"
+operator|)
+return|;
+comment|/* VIA Technologies -- vendor 0x1106 (0x1107 on the Apollo Master) */
+case|case
+literal|0x05711106
+case|:
+switch|switch
+condition|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x08
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+case|case
+literal|1
+case|:
+return|return
+operator|(
+literal|"VIA 85C586 ATA controller"
+operator|)
+return|;
+case|case
+literal|6
+case|:
+return|return
+operator|(
+literal|"VIA 85C586 ATA controller"
+operator|)
+return|;
+block|}
+comment|/* FALL THROUGH */
+case|case
+literal|0x15711106
+case|:
+return|return
+operator|(
+literal|"VIA Apollo ATA controller"
+operator|)
+return|;
+comment|/* CMD Tech -- vendor 0x1095 */
+case|case
+literal|0x06401095
+case|:
+return|return
+operator|(
+literal|"CMD 640 ATA controller"
+operator|)
+return|;
+case|case
+literal|0x06461095
+case|:
+return|return
+operator|(
+literal|"CMD 646 ATA controller"
+operator|)
+return|;
+comment|/* Cypress -- vendor 0x1080 */
+case|case
+literal|0xc6931080
+case|:
+return|return
+operator|(
+literal|"Cypress 82C693 ATA controller"
+operator|)
+return|;
+comment|/* Cyrix -- vendor 0x1078 */
+case|case
+literal|0x01021078
+case|:
+return|return
+operator|(
+literal|"Cyrix 5530 ATA controller"
+operator|)
+return|;
+comment|/* SiS -- vendor 0x1039 */
+case|case
+literal|0x55131039
+case|:
+return|return
+operator|(
+literal|"SiS 5591 ATA controller"
+operator|)
+return|;
+comment|/* Highpoint tech -- vendor 0x1103 */
+case|case
+literal|0x00041103
+case|:
+return|return
+operator|(
+literal|"HighPoint HPT366 ATA controller"
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|pci_get_class
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIC_STORAGE
+operator|&&
+name|pci_get_subclass
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|PCIS_STORAGE_IDE
+condition|)
+return|return
+operator|(
+literal|"Unknown PCI ATA controller"
+operator|)
+return|;
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
 specifier|static
 specifier|const
 name|char
@@ -6138,14 +6356,6 @@ literal|"Intel 82437FX PCI cache memory controller"
 operator|)
 return|;
 case|case
-literal|0x12348086
-case|:
-return|return
-operator|(
-literal|"Intel 82371MX mobile PCI I/O IDE accelerator (MPIIX)"
-operator|)
-return|;
-case|case
 literal|0x12358086
 case|:
 return|return
@@ -6198,12 +6408,6 @@ operator|(
 literal|"Intel 82440FX (Natoma) PCI and memory controller"
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|case 0x70208086: 		return ("Intel 82371SB (PIIX3) USB controller"); 	case 0x71128086: 		return ("Intel 82371AB/EB (PIIX4) USB controller");
-endif|#
-directive|endif
 case|case
 literal|0x84c58086
 case|:
@@ -6351,14 +6555,6 @@ literal|"VIA 82C586B ACPI interface"
 operator|)
 return|;
 case|case
-literal|0x05711106
-case|:
-return|return
-operator|(
-literal|"VIA 82C586B IDE controller"
-operator|)
-return|;
-case|case
 literal|0x30571106
 case|:
 return|return
@@ -6382,12 +6578,6 @@ operator|(
 literal|"VIA 82C686 AC97 Modem"
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|case 0x30381106: 		return ("VIA 83C572 USB controller");
-endif|#
-directive|endif
 comment|/* AMD -- vendor 0x1022 */
 case|case
 literal|0x70061022
@@ -6425,12 +6615,6 @@ operator|(
 literal|"AcerLabs M1541 (Aladdin-V) PCI host bridge"
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|case 0x523710b9: 		return ("AcerLabs M5237 (Aladdin-V) USB controller");
-endif|#
-directive|endif
 case|case
 literal|0x710110b9
 case|:
@@ -6448,12 +6632,6 @@ operator|(
 literal|"OPTi 82C822 host to PCI Bridge"
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-block|case 0xc8611045: 		return ("OPTi 82C861 (FireLink) USB controller");
-endif|#
-directive|endif
 comment|/* NEC -- vendor 0x1033 */
 comment|/* PCI to C-bus bridge */
 comment|/* The following chipsets are PCI to PC98 C-bus bridge. 	 * The C-bus is the 16-bits bus on PC98 and it should be probed as 	 * PCI to ISA bridge.  Because class of the C-bus is not defined, 	 * C-bus bridges are recognized as "other bridge."  To make C-bus 	 * bridge be recognized as ISA bridge, this function returns NULL. 	 */
@@ -6469,19 +6647,6 @@ case|:
 return|return
 name|NULL
 return|;
-if|#
-directive|if
-literal|0
-block|case 0x00351033: 		return ("NEC uPD 9210 USB controller");
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* CMD Tech -- vendor 0x1095 */
-block|case 0x06701095: 		return ("CMD Tech 670 (USB0670) USB controller"); 	case 0x06731095: 		return ("CMD Tech 673 (USB0673) USB controller");
-endif|#
-directive|endif
 block|}
 empty_stmt|;
 if|if
@@ -6520,16 +6685,6 @@ argument_list|(
 name|dev
 argument_list|)
 return|;
-if|#
-directive|if
-literal|0
-block|if (pci_get_class(dev) == PCIC_SERIALBUS&& pci_get_subclass(dev) == PCIS_SERIALBUS_USB) { 		if (pci_get_progif(dev) == 0x00
-comment|/* UHCI */
-block|) { 			return ("UHCI USB controller"); 		} else if (pci_get_progif(dev) == 0x10
-comment|/* OHCI */
-block|) { 			return ("OHCI USB controller"); 		} else { 			return ("USB controller"); 		} 	}
-endif|#
-directive|endif
 return|return
 name|NULL
 return|;
@@ -6553,19 +6708,6 @@ decl_stmt|;
 name|desc
 operator|=
 name|chip_match
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|desc
-operator|==
-name|NULL
-condition|)
-name|desc
-operator|=
-name|ide_pci_match
 argument_list|(
 name|dev
 argument_list|)
