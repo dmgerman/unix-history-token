@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.39	81/12/12	*/
+comment|/*	tcp_input.c	1.40	81/12/12	*/
 end_comment
 
 begin_include
@@ -281,15 +281,6 @@ name|tcpiphdr
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"m->m_len %d\n"
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|m_pullup
@@ -306,11 +297,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"tcp_input: header drop\n"
-argument_list|)
-expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_hdrops
@@ -459,11 +445,6 @@ operator|>
 name|tlen
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"tcp_input: bad offset\n"
-argument_list|)
-expr_stmt|;
 name|tcpstat
 operator|.
 name|tcps_badoff
@@ -594,118 +575,6 @@ condition|)
 goto|goto
 name|dropwithreset
 goto|;
-name|printf
-argument_list|(
-literal|"tcp_input: segment seq %x ack %x win %x inp %x flags"
-argument_list|,
-name|ti
-operator|->
-name|ti_seq
-argument_list|,
-name|ti
-operator|->
-name|ti_ack
-argument_list|,
-name|ti
-operator|->
-name|ti_win
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_FIN
-condition|)
-name|printf
-argument_list|(
-literal|" FIN"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_SYN
-condition|)
-name|printf
-argument_list|(
-literal|" SYN"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_RST
-condition|)
-name|printf
-argument_list|(
-literal|" RST"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_PUSH
-condition|)
-name|printf
-argument_list|(
-literal|" PUSH"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_ACK
-condition|)
-name|printf
-argument_list|(
-literal|" ACK"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_flags
-operator|&
-name|TH_URG
-condition|)
-name|printf
-argument_list|(
-literal|" URG"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: "
-argument_list|)
-expr_stmt|;
-name|pseqno
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|so
 operator|=
 name|inp
@@ -903,11 +772,6 @@ index|]
 operator|=
 name|TCPTV_KEEP
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: out of LISTEN: "
-argument_list|)
-expr_stmt|;
 goto|goto
 name|trimthenstep6
 goto|;
@@ -1079,11 +943,6 @@ name|t_state
 operator|=
 name|TCPS_SYN_RECEIVED
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: out of SYN_SENT: "
-argument_list|)
-expr_stmt|;
 goto|goto
 name|trimthenstep6
 goto|;
@@ -1140,20 +999,6 @@ operator|~
 name|TH_FIN
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"ti->ti_len %d\n"
-argument_list|,
-name|ti
-operator|->
-name|ti_len
-argument_list|)
-expr_stmt|;
-name|pseqno
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 goto|goto
 name|step6
 goto|;
@@ -1209,13 +1054,6 @@ name|TH_FIN
 operator|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"tcp_input %x: window 0, drop text and FIN\n"
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1243,15 +1081,6 @@ operator|-
 name|ti
 operator|->
 name|ti_seq
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input %x: drop %d dup bytes\n"
-argument_list|,
-name|tp
-argument_list|,
-name|todrop
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1670,16 +1499,6 @@ name|ti_seq
 operator|-
 literal|1
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: to ESTAB:\n"
-argument_list|)
-expr_stmt|;
-name|pseqno
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 comment|/* fall into ... */
 comment|/* 	 * In ESTABLISHED state: drop duplicate ACKs; ACK out of range 	 * ACKs.  If the ack is in the range 	 *	tp->snd_una< ti->ti_ack<= tp->snd_max 	 * then advance tp->snd_una to ti->ti_ack and drop 	 * data from the retransmission queue.  If this ACK reflects 	 * more up to date window information we update our window information. 	 */
 case|case
@@ -1746,13 +1565,6 @@ operator|-
 name|tp
 operator|->
 name|snd_una
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: got ack of %d bytes\n"
-argument_list|,
-name|acked
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1899,26 +1711,6 @@ name|tp
 operator|->
 name|t_rtt
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_input: rtt sampled %d, srtt now %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_rtt
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-literal|100
-operator|*
-name|tp
-operator|->
-name|t_srtt
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_rtt
@@ -1994,18 +1786,11 @@ if|if
 condition|(
 name|ourfinisacked
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"tcp_input: LAST ACK close\n"
-argument_list|)
-expr_stmt|;
 name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-block|}
 goto|goto
 name|drop
 goto|;
@@ -2013,11 +1798,6 @@ comment|/* 		 * In TIME_WAIT state the only thing that should arrive 		 * is a r
 case|case
 name|TCPS_TIME_WAIT
 case|:
-name|printf
-argument_list|(
-literal|"tcp_input: TIME_WAIT restart timer\n"
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_timer
@@ -2040,23 +1820,6 @@ block|}
 name|step6
 label|:
 comment|/* 	 * Update window information. 	 */
-name|printf
-argument_list|(
-literal|"update win wl1 %x ti->ti_seq %x wl2 %x?"
-argument_list|,
-name|tp
-operator|->
-name|snd_wl1
-argument_list|,
-name|ti
-operator|->
-name|ti_seq
-argument_list|,
-name|tp
-operator|->
-name|snd_wl2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SEQ_LT
@@ -2090,11 +1853,6 @@ name|ti_seq
 argument_list|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"yes\n"
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|snd_wnd
@@ -2137,12 +1895,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"no\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If an URG bit is set in the segment and is greater than the 	 * current known urgent pointer, then signal the user that the 	 * remote side has out of band data.  This should not happen 	 * in CLOSE_WAIT, CLOSING, LAST-ACK or TIME_WAIT STATES since 	 * a FIN has been received from the remote side.  In these states 	 * we ignore the URG. 	 */
 if|if
 condition|(
@@ -2309,13 +2061,6 @@ name|rcv_nxt
 operator|++
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"tcp_input: %x got FIN\n"
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|tp
@@ -2408,11 +2153,6 @@ return|return;
 name|dropafterack
 label|:
 comment|/* 	 * Generate an ACK dropping incoming segment. 	 * Make ACK reflect our state. 	 */
-name|printf
-argument_list|(
-literal|"tcp_input: dropafterack\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|tiflags
@@ -2440,11 +2180,6 @@ expr_stmt|;
 return|return;
 name|dropwithreset
 label|:
-name|printf
-argument_list|(
-literal|"tcp_input: dropwithreset\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Generate a RST, dropping incoming segment. 	 * Make ACK acceptable to originator of segment. 	 */
 if|if
 condition|(
@@ -2516,11 +2251,6 @@ block|}
 return|return;
 name|drop
 label|:
-name|printf
-argument_list|(
-literal|"tcp_input: drop\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
 name|m_freem
 argument_list|(
@@ -2918,19 +2648,6 @@ name|ti_flags
 operator|&
 name|TH_FIN
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"move %d bytes to user; rcv_nxt now %x\n"
-argument_list|,
-name|ti
-operator|->
-name|ti_len
-argument_list|,
-name|tp
-operator|->
-name|rcv_nxt
-argument_list|)
-expr_stmt|;
 name|remque
 argument_list|(
 name|ti
@@ -2990,11 +2707,6 @@ operator|)
 return|;
 name|drop
 label|:
-name|printf
-argument_list|(
-literal|"tcp_reass drop\n"
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|dtom

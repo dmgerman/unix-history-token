@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.40 81/12/12 */
+comment|/* tcp_usrreq.c 1.41 81/12/12 */
 end_comment
 
 begin_include
@@ -216,17 +216,6 @@ name|TCP_USRREQ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure attached.  If not, 	 * only PRU_ATTACH is valid. 	 */
-name|printf
-argument_list|(
-literal|"tcp_usrreq %d so %x inp %x\n"
-argument_list|,
-name|req
-argument_list|,
-name|so
-argument_list|,
-name|inp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|inp
@@ -742,81 +731,6 @@ block|}
 end_block
 
 begin_macro
-name|pseqno
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|tcpcb
-modifier|*
-name|tp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"tp %x state %s rcv_nxt %x rcv_wnd %d irs %x\n"
-argument_list|,
-name|tp
-argument_list|,
-name|tcpstates
-index|[
-name|tp
-operator|->
-name|t_state
-index|]
-argument_list|,
-name|tp
-operator|->
-name|rcv_nxt
-argument_list|,
-name|tp
-operator|->
-name|rcv_wnd
-argument_list|,
-name|tp
-operator|->
-name|irs
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"snd_una %x snd_nxt %x snd_wnd %d snd_wl1 %x snd_wl2 %x iss %x\n"
-argument_list|,
-name|tp
-operator|->
-name|snd_una
-argument_list|,
-name|tp
-operator|->
-name|snd_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_wnd
-argument_list|,
-name|tp
-operator|->
-name|snd_wl1
-argument_list|,
-name|tp
-operator|->
-name|snd_wl2
-argument_list|,
-name|tp
-operator|->
-name|iss
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
 name|tcp_usrclosed
 argument_list|(
 argument|tp
@@ -833,18 +747,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|printf
-argument_list|(
-literal|"usrclosed in %s\n"
-argument_list|,
-name|tcpstates
-index|[
-name|tp
-operator|->
-name|t_state
-index|]
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|tp
@@ -894,18 +796,6 @@ name|TCPS_LAST_ACK
 expr_stmt|;
 break|break;
 block|}
-name|printf
-argument_list|(
-literal|"after usrclosed state %s\n"
-argument_list|,
-name|tcpstates
-index|[
-name|tp
-operator|->
-name|t_state
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 

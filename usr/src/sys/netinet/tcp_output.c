@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.22	81/12/12	*/
+comment|/*	tcp_output.c	4.23	81/12/12	*/
 end_comment
 
 begin_include
@@ -373,11 +373,6 @@ goto|goto
 name|send
 goto|;
 comment|/* 	 * No reason to send a segment, just return. 	 */
-name|printf
-argument_list|(
-literal|"tcp_output: nothing to send\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -459,28 +454,6 @@ condition|)
 name|len
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|->
-name|m_next
-condition|)
-name|printf
-argument_list|(
-literal|"copy *mtod()=%x\n"
-argument_list|,
-operator|*
-name|mtod
-argument_list|(
-name|m
-operator|->
-name|m_next
-argument_list|,
-name|char
-operator|*
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 name|ti
@@ -824,46 +797,6 @@ operator|+
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"tcp_output: ti %x flags %x seq %x ack %x win %d len %d sum %x\n"
-argument_list|,
-name|ti
-argument_list|,
-name|ti
-operator|->
-name|ti_flags
-argument_list|,
-name|htonl
-argument_list|(
-name|ti
-operator|->
-name|ti_seq
-argument_list|)
-argument_list|,
-name|htonl
-argument_list|(
-name|ti
-operator|->
-name|ti_ack
-argument_list|)
-argument_list|,
-name|htons
-argument_list|(
-name|ti
-operator|->
-name|ti_win
-argument_list|)
-argument_list|,
-name|ti
-operator|->
-name|ti_len
-argument_list|,
-name|ti
-operator|->
-name|ti_sum
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Advance snd_nxt over sequence space of this segment 	 */
 if|if
 condition|(
@@ -1012,18 +945,6 @@ argument_list|,
 name|TCPTV_MAX
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"rexmt timer set to %d\n"
-argument_list|,
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_rxtshift
@@ -1031,27 +952,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|printf
-argument_list|(
-literal|"REXMT timer is already %d, snd_nxt %x snd_una %x\n"
-argument_list|,
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_REXMT
-index|]
-argument_list|,
-name|tp
-operator|->
-name|snd_nxt
-argument_list|,
-name|tp
-operator|->
-name|snd_una
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Fill in IP length and desired time to live and 	 * send to IP level. 	 */
 operator|(
 operator|(
@@ -1098,18 +998,11 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ip_output failed\n"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 comment|/* 	 * Data sent (as far as we can tell). 	 * If this advertises a larger window than any other segment, 	 * then remember the size of the advertised window. 	 * Drop send for purpose of ACK requirements. 	 */
 if|if
 condition|(
@@ -1130,7 +1023,6 @@ operator|->
 name|rcv_adv
 argument_list|)
 condition|)
-block|{
 name|tp
 operator|->
 name|rcv_adv
@@ -1141,7 +1033,6 @@ name|rcv_nxt
 operator|+
 name|win
 expr_stmt|;
-block|}
 name|tp
 operator|->
 name|t_flags

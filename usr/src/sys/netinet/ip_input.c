@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip_input.c 1.26 81/12/12 */
+comment|/* ip_input.c 1.27 81/12/12 */
 end_comment
 
 begin_include
@@ -870,11 +870,6 @@ name|next
 goto|;
 name|bad
 label|:
-name|printf
-argument_list|(
-literal|"ip_input bad!\n"
-argument_list|)
-expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
