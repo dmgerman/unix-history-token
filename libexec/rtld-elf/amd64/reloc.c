@@ -817,6 +817,12 @@ name|done
 goto|;
 block|}
 block|}
+name|r
+operator|=
+literal|0
+expr_stmt|;
+name|done
+label|:
 if|if
 condition|(
 name|cache
@@ -828,12 +834,6 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-name|r
-operator|=
-literal|0
-expr_stmt|;
-name|done
-label|:
 return|return
 operator|(
 name|r
