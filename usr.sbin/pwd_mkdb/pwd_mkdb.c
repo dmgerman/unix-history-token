@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pwd_mkdb.c,v 1.23 1998/02/16 19:08:18 guido Exp $"
+literal|"$Id: pwd_mkdb.c,v 1.24 1998/02/19 08:12:11 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -520,7 +520,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cd:pu:v"
+literal|"Cd:ps:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -564,6 +564,24 @@ comment|/* create V7 "file.orig" */
 name|makeold
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* change default cachesize */
+name|openinfo
+operator|.
+name|cachesize
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
+operator|*
+literal|1024
+operator|*
+literal|1024
 expr_stmt|;
 break|break;
 case|case
