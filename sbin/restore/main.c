@@ -1130,15 +1130,15 @@ name|stderr
 argument_list|,
 literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"restore -i [-chkmuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -i [-cdhkmNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -r [-ckuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -r [-cdkNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -R [-ckuvy] [-b blocksize] [-f file] [-s fileno]"
+literal|"restore -R [-cdkNuvy] [-b blocksize] [-f file] [-s fileno]"
 argument_list|,
-literal|"restore -x [-chkmuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -x [-cdhkmNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|,
-literal|"restore -t [-chkuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
+literal|"restore -t [-cdhkNuvy] [-b blocksize] [-f file] [-s fileno] [file ...]"
 argument_list|)
 expr_stmt|;
 name|done
