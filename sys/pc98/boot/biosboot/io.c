@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.4 1996/10/09 21:45:29 asami Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:57  rpd  *	$Id: io.c,v 1.5 1996/10/23 07:24:32 asami Exp $  */
 end_comment
 
 begin_include
@@ -1057,7 +1057,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-literal|0x11501
+name|V
+argument_list|(
+literal|0xA1501
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1073,7 +1076,10 @@ name|unsigned
 name|short
 operator|*
 operator|)
-literal|0x50000
+name|V
+argument_list|(
+literal|0xE0000
+argument_list|)
 expr_stmt|;
 name|crtat
 operator|=
@@ -1097,7 +1103,10 @@ name|unsigned
 name|short
 operator|*
 operator|)
-literal|0x10000
+name|V
+argument_list|(
+literal|0xA0000
+argument_list|)
 expr_stmt|;
 name|crtat
 operator|=
@@ -1353,9 +1362,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-operator|(
-literal|0x11624
-operator|)
+name|V
+argument_list|(
+literal|0xA1624
+argument_list|)
 decl_stmt|;
 comment|/* PC98_SYSTEM_PARAMETER(0x501) */
 name|ret
@@ -1368,7 +1378,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-literal|0x11501
+name|V
+argument_list|(
+literal|0xA1501
+argument_list|)
 operator|)
 operator|&
 literal|0x08
@@ -1440,7 +1453,10 @@ name|unsigned
 name|long
 operator|*
 operator|)
-literal|0x14000
+name|V
+argument_list|(
+literal|0xA4000
+argument_list|)
 operator|+
 name|i
 operator|)
@@ -1492,7 +1508,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-literal|0x11400
+name|V
+argument_list|(
+literal|0xA1400
+argument_list|)
 operator|)
 operator|&
 literal|0x80
@@ -1520,7 +1539,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-literal|0x11458
+name|V
+argument_list|(
+literal|0xA1458
+argument_list|)
 operator|)
 operator|&
 literal|0x80
@@ -1582,9 +1604,10 @@ name|unsigned
 name|long
 operator|*
 operator|)
-operator|(
-literal|0x11620
-operator|)
+name|V
+argument_list|(
+literal|0xA1620
+argument_list|)
 operator|)
 operator|=
 name|ret

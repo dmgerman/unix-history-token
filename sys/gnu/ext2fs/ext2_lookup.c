@@ -3165,7 +3165,7 @@ name|dsize
 operator|=
 name|EXT2_DIR_REC_LEN
 argument_list|(
-name|ep
+name|nep
 operator|->
 name|name_len
 argument_list|)

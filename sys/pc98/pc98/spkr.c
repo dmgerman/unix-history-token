@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.4 1996/09/04 09:52:27 asami Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.5 1996/10/30 22:40:14 asami Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.4 1996/09/04 09:52:27 asami Exp $  */
+comment|/*  * modified for PC98 by Kakefuda  */
 end_comment
 
 begin_include
@@ -408,47 +408,12 @@ operator|<=
 literal|0
 condition|)
 return|return;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|AUTO_CLOCK
-argument_list|)
-if|if
-condition|(
-name|pc98_machine_type
-operator|&
-name|M_8M
-condition|)
-name|divisor
-operator|=
-literal|1996800L
-operator|/
-name|thz
-expr_stmt|;
-else|else
-name|divisor
-operator|=
-literal|2457600L
-operator|/
-name|thz
-expr_stmt|;
-else|#
-directive|else
 name|divisor
 operator|=
 name|timer_freq
 operator|/
 name|thz
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* PC98 */
 ifdef|#
 directive|ifdef
 name|DEBUG

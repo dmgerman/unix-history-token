@@ -25,7 +25,10 @@ name|unsigned
 name|char
 operator|*
 operator|)
-literal|0x11481
+name|V
+argument_list|(
+literal|0xA1481
+argument_list|)
 operator|&
 literal|0x48
 condition|)

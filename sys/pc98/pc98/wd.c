@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.8 1996/10/09 21:46:52 asami Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)wd.c	7.2 (Berkeley) 5/9/91  *	$Id: wd.c,v 1.9 1996/10/23 07:25:35 asami Exp $  */
 end_comment
 
 begin_comment
@@ -197,18 +197,6 @@ directive|include
 file|<pc98/pc98/epsonio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/wdreg.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -217,14 +205,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<i386/i386/cons.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -237,11 +224,6 @@ include|#
 directive|include
 file|<i386/isa/wdreg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -285,33 +267,11 @@ directive|ifdef
 name|ATAPI
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/atapi.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<i386/isa/atapi.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1103,6 +1063,21 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|struct
+name|isa_driver
+name|wdcdriver
+init|=
+block|{
+name|wdprobe
+block|,
+name|wdattach
+block|,
+literal|"wdc"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|d_open_t
 name|wdopen
@@ -1196,21 +1171,6 @@ block|,
 operator|-
 literal|1
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|isa_driver
-name|wdcdriver
-init|=
-block|{
-name|wdprobe
-block|,
-name|wdattach
-block|,
-literal|"wdc"
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2240,6 +2200,69 @@ else|:
 literal|"fake"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* XXX */
+if|if
+condition|(
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secperunit
+operator|>
+literal|8
+operator|*
+literal|1024
+operator|*
+literal|1024
+condition|)
+block|{
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ncylinders
+operator|=
+name|bootinfo
+operator|.
+name|bi_bios_geom
+index|[
+name|du
+operator|->
+name|dk_unit
+index|]
+operator|>>
+literal|16
+expr_stmt|;
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secperunit
+operator|=
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ncylinders
+operator|*
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_ntracks
+operator|*
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_nsectors
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"wd%d: %luMB (%lu sectors), %lu cyls, %lu heads, %lu S/T, %lu B/S\n"
@@ -2251,6 +2274,24 @@ operator|->
 name|dk_dd
 operator|.
 name|d_secperunit
+ifdef|#
+directive|ifdef
+name|PC98
+operator|/
+operator|(
+literal|1024
+operator|*
+literal|1024
+operator|/
+name|du
+operator|->
+name|dk_dd
+operator|.
+name|d_secsize
+operator|)
+argument_list|,
+else|#
+directive|else
 operator|*
 name|du
 operator|->
@@ -2264,6 +2305,8 @@ operator|*
 literal|1024
 operator|)
 argument_list|,
+endif|#
+directive|endif
 name|du
 operator|->
 name|dk_dd
