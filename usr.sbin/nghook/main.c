@@ -121,6 +121,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|outfd
+init|=
+name|STDOUT_FILENO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|infd
+init|=
+name|STDIN_FILENO
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * main()  */
 end_comment
@@ -188,7 +206,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"adln"
+literal|"adlnsS"
 argument_list|)
 operator|)
 operator|!=
@@ -237,6 +255,22 @@ case|:
 name|noInput
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|outfd
+operator|=
+name|STDIN_FILENO
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|infd
+operator|=
+name|STDOUT_FILENO
 expr_stmt|;
 break|break;
 case|case
@@ -428,7 +462,7 @@ name|noInput
 condition|)
 name|FD_SET
 argument_list|(
-literal|0
+name|infd
 argument_list|,
 operator|&
 name|rfds
@@ -558,7 +592,7 @@ name|wl
 operator|=
 name|write
 argument_list|(
-name|STDOUT_FILENO
+name|outfd
 argument_list|,
 name|buf
 argument_list|,
@@ -634,7 +668,7 @@ if|if
 condition|(
 name|FD_ISSET
 argument_list|(
-literal|0
+name|infd
 argument_list|,
 operator|&
 name|rfds
@@ -658,7 +692,7 @@ name|rl
 operator|=
 name|read
 argument_list|(
-literal|0
+name|infd
 argument_list|,
 name|buf
 argument_list|,
@@ -991,7 +1025,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-name|STDOUT_FILENO
+name|outfd
 argument_list|,
 name|sbuf
 argument_list|,
@@ -1008,7 +1042,7 @@ literal|'\n'
 expr_stmt|;
 name|write
 argument_list|(
-literal|1
+name|outfd
 argument_list|,
 operator|&
 name|ch
@@ -1035,7 +1069,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"usage: nghook [-adln] path [hookname]"
+literal|"usage: nghook [-adlnsS] path [hookname]"
 argument_list|)
 expr_stmt|;
 block|}
