@@ -2682,7 +2682,7 @@ operator|)
 name|data
 expr_stmt|;
 break|break;
-comment|/* 	 * Set the memory window to be used for the read/write interface. 	 * Not available on the alpha. 	 */
+comment|/* 	 * Set the memory window to be used for the read/write interface. 	 */
 case|case
 name|PIOCRWMEM
 case|:
