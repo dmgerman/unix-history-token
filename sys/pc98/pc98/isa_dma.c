@@ -457,7 +457,7 @@ specifier|static
 name|int
 name|dmapageport
 index|[
-literal|8
+literal|4
 index|]
 init|=
 block|{
