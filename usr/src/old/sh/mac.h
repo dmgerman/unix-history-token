@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac.h	4.1	82/05/07	*/
+comment|/*	mac.h	4.2	82/12/24	*/
 end_comment
 
 begin_empty
@@ -164,6 +164,12 @@ directive|define
 name|PER
 value|}while(
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DONE
+end_undef
 
 begin_define
 define|#
