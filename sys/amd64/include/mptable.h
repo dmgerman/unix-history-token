@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.23 1997/07/30 22:51:11 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.26 1997/08/09 22:12:14 smp Exp $  */
 end_comment
 
 begin_include
@@ -169,6 +169,43 @@ end_endif
 
 begin_comment
 comment|/* APIC_IO */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|TEST_DEFAULT_CONFIG
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MPFPS_MPFB1
+value|TEST_DEFAULT_CONFIG
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MPFPS_MPFB1
+value|mpfps->mpfb1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* TEST_DEFAULT_CONFIG */
 end_comment
 
 begin_define
@@ -965,6 +1002,16 @@ name|default_mp_table
 parameter_list|(
 name|int
 name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fix_mp_table
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1812,6 +1859,10 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+comment|/* post scan cleanup */
+name|fix_mp_table
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -2475,19 +2526,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|fix_mp_table
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|processor_entry
 name|__P
@@ -2657,9 +2695,7 @@ expr_stmt|;
 comment|/* check for use of 'default' configuration */
 if|if
 condition|(
-name|mpfps
-operator|->
-name|mpfb1
+name|MPFPS_MPFB1
 operator|!=
 literal|0
 condition|)
@@ -2686,9 +2722,7 @@ name|mp_nbusses
 operator|=
 name|default_data
 index|[
-name|mpfps
-operator|->
-name|mpfb1
+name|MPFPS_MPFB1
 operator|-
 literal|1
 index|]
@@ -3154,34 +3188,16 @@ else|:
 literal|0
 expr_stmt|;
 comment|/* check for use of 'default' configuration */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TEST_DEFAULT_CONFIG
-argument_list|)
-return|return
-name|TEST_DEFAULT_CONFIG
-return|;
-else|#
-directive|else
 if|if
 condition|(
-name|mpfps
-operator|->
-name|mpfb1
+name|MPFPS_MPFB1
 operator|!=
 literal|0
 condition|)
 return|return
-name|mpfps
-operator|->
-name|mpfb1
+name|MPFPS_MPFB1
 return|;
 comment|/* return default configuration type */
-endif|#
-directive|endif
-comment|/* TEST_DEFAULT_CONFIG */
 if|if
 condition|(
 operator|(
@@ -3374,10 +3390,6 @@ name|panic
 argument_list|(
 literal|"NO BSP found!"
 argument_list|)
-expr_stmt|;
-comment|/* post scan cleanup */
-name|fix_mp_table
-argument_list|()
 expr_stmt|;
 comment|/* report fact that its NOT a default configuration */
 return|return
