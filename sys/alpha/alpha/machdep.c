@@ -2896,6 +2896,22 @@ name|hwrpb
 operator|->
 name|rpb_cc_freq
 expr_stmt|;
+comment|/* Get the loader(8) metadata */
+name|preload_metadata
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|bootinfo
+operator|.
+name|modptr
+expr_stmt|;
+name|kern_envp
+operator|=
+name|bootinfo
+operator|.
+name|envp
+expr_stmt|;
 comment|/* 	 * Initalize the (temporary) bootstrap console interface, so 	 * we can use printf until the VM system starts being setup. 	 * The real console is initialized before then. 	 */
 name|init_bootstrap_console
 argument_list|()
@@ -3189,21 +3205,6 @@ name|bootinfo
 operator|.
 name|kernend
 argument_list|)
-expr_stmt|;
-name|preload_metadata
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|bootinfo
-operator|.
-name|modptr
-expr_stmt|;
-name|kern_envp
-operator|=
-name|bootinfo
-operator|.
-name|envp
 expr_stmt|;
 name|p
 operator|=
