@@ -41,7 +41,7 @@ comment|/* LIBC_SCCS and not lint */
 end_comment
 
 begin_endif
-unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.58 2003/04/14 11:24:53 das Exp");
+unit|__FBSDID("FreeBSD: src/lib/libc/stdio/vfprintf.c,v 1.62 2004/01/18 10:32:49 das Exp");
 endif|#
 directive|endif
 end_endif
@@ -161,13 +161,19 @@ file|"fvwrite.h"
 end_include
 
 begin_comment
-comment|/* Define FLOATING_POINT to get floating point. */
+comment|/* Define FLOATING_POINT to get floating point, HEXFLOAT to get %a. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLOATING_POINT
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEXFLOAT
 end_define
 
 begin_union
@@ -379,7 +385,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|wchar_t
+name|char
 modifier|*
 parameter_list|,
 name|int
@@ -409,7 +415,7 @@ parameter_list|,
 name|int
 parameter_list|,
 specifier|const
-name|wchar_t
+name|char
 modifier|*
 parameter_list|,
 name|int
@@ -841,7 +847,7 @@ name|int
 name|octzero
 parameter_list|,
 specifier|const
-name|wchar_t
+name|char
 modifier|*
 name|xdigs
 parameter_list|,
@@ -1121,7 +1127,7 @@ name|int
 name|octzero
 parameter_list|,
 specifier|const
-name|wchar_t
+name|char
 modifier|*
 name|xdigs
 parameter_list|,
@@ -2179,7 +2185,7 @@ name|prsize
 decl_stmt|;
 comment|/* max size of printed field */
 specifier|const
-name|wchar_t
+name|char
 modifier|*
 name|xdigs
 decl_stmt|;
@@ -2314,23 +2320,23 @@ block|}
 decl_stmt|;
 specifier|static
 specifier|const
-name|wchar_t
+name|char
 name|xdigs_lower
 index|[
 literal|16
 index|]
 init|=
-literal|L"0123456789abcdef"
+literal|"0123456789abcdef"
 decl_stmt|;
 specifier|static
 specifier|const
-name|wchar_t
+name|char
 name|xdigs_upper
 index|[
 literal|16
 index|]
 init|=
-literal|L"0123456789ABCDEF"
+literal|"0123456789ABCDEF"
 decl_stmt|;
 comment|/* 	 * BEWARE, these `goto error' on error, PRINT uses `n2' and 	 * PAD uses `n'. 	 */
 define|#
@@ -3224,7 +3230,15 @@ operator|=
 literal|'P'
 expr_stmt|;
 block|}
-comment|/* 			 * XXX We don't actually have a conversion 			 * XXX routine for this yet. 			 */
+if|if
+condition|(
+name|prec
+operator|>=
+literal|0
+condition|)
+name|prec
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -3236,9 +3250,6 @@ name|fparg
 operator|.
 name|ldbl
 operator|=
-operator|(
-name|double
-operator|)
 name|GETARG
 argument_list|(
 argument|long double
@@ -3303,6 +3314,31 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|prec
+operator|<
+literal|0
+condition|)
+name|prec
+operator|=
+name|dtoaend
+operator|-
+name|dtoaresult
+expr_stmt|;
+if|if
+condition|(
+name|expt
+operator|==
+name|INT_MAX
+condition|)
+name|ox
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
 name|convbuf
 operator|!=
 name|NULL
@@ -3311,6 +3347,12 @@ name|free
 argument_list|(
 name|convbuf
 argument_list|)
+expr_stmt|;
+name|ndig
+operator|=
+name|dtoaend
+operator|-
+name|dtoaresult
 expr_stmt|;
 name|cp
 operator|=
@@ -3330,10 +3372,11 @@ name|dtoaresult
 argument_list|)
 expr_stmt|;
 goto|goto
-name|fp_begin
+name|fp_common
 goto|;
 endif|#
 directive|endif
+comment|/* HEXFLOAT */
 case|case
 literal|'e'
 case|:
@@ -3541,6 +3584,8 @@ argument_list|(
 name|dtoaresult
 argument_list|)
 expr_stmt|;
+name|fp_common
+label|:
 if|if
 condition|(
 name|signflag
@@ -4498,7 +4543,6 @@ condition|)
 name|realsz
 operator|++
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|ox
@@ -4569,7 +4613,6 @@ if|if
 condition|(
 name|sign
 condition|)
-block|{
 name|PRINT
 argument_list|(
 operator|&
@@ -4578,8 +4621,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|ox
