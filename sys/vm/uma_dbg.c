@@ -176,11 +176,16 @@ name|uma_junk
 condition|)
 name|panic
 argument_list|(
-literal|"Memory modified after free %p(%d)\n"
+literal|"Memory modified after free %p(%d) val=%x @ %p\n"
 argument_list|,
 name|mem
 argument_list|,
 name|size
+argument_list|,
+operator|*
+name|p
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -402,11 +407,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Memory modified after free %p(%d)\n"
+literal|"Memory modified after free %p(%d) val=%x @ %p\n"
 argument_list|,
 name|mem
 argument_list|,
 name|size
+argument_list|,
+operator|*
+name|p
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|panic
