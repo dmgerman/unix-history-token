@@ -327,6 +327,12 @@ directive|include
 file|<machine/unwind.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<i386/include/specialreg.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -3076,6 +3082,29 @@ name|curthread
 argument_list|,
 operator|&
 name|thread0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set ia32 control registers. 	 */
+name|ia64_set_cflg
+argument_list|(
+operator|(
+name|CR0_PE
+operator||
+name|CR0_PG
+operator|)
+operator||
+operator|(
+call|(
+name|long
+call|)
+argument_list|(
+name|CR4_XMM
+operator||
+name|CR4_FXSR
+argument_list|)
+operator|<<
+literal|32
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* We pretend to own FP state so that ia64_fpstate_check() works */
