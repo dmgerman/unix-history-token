@@ -229,6 +229,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|spx_backoff
 index|[
