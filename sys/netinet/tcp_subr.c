@@ -1485,6 +1485,11 @@ operator|*
 operator|)
 name|tcp_ptr
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3338,6 +3343,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Make sure that all of our timers are stopped before we 	 * delete the PCB. 	 */
 name|callout_stop
 argument_list|(
@@ -3686,6 +3696,11 @@ name|inp_socket
 decl_stmt|;
 endif|#
 directive|endif
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 name|tcp_discardcb
 argument_list|(
 name|tp
@@ -3900,6 +3915,11 @@ name|inp
 operator|->
 name|inp_ppcb
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Ignore some errors if we are hooked up. 	 * If connection hasn't completed, has retransmitted several times, 	 * and receives a second error, give up now.  This is better 	 * than waiting a long time to establish a connection that 	 * can never complete. 	 */
 if|if
 condition|(
@@ -6265,6 +6285,13 @@ operator|&
 name|tcbinfo
 argument_list|)
 expr_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 comment|/* Seed if this is the first use, reseed if requested. */
 if|if
 condition|(
@@ -7838,7 +7865,7 @@ comment|/*IPSEC*/
 end_comment
 
 begin_comment
-comment|/*  * Move a TCP connection into TIME_WAIT state.  *    tcbinfo is unlocked.  *    inp is locked, and is unlocked before returning.  */
+comment|/*  * Move a TCP connection into TIME_WAIT state.  *    tcbinfo is locked.  *    inp is locked, and is unlocked before returning.  */
 end_comment
 
 begin_function
@@ -9096,6 +9123,13 @@ decl_stmt|;
 name|int
 name|save_ticks
 decl_stmt|;
+name|INP_LOCK_ASSERT
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If inflight_enable is disabled in the middle of a tcp connection, 	 * make sure snd_bwnd is effectively disabled. 	 */
 if|if
 condition|(
