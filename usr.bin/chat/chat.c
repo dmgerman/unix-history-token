@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chat.c,v 1.1.1.1 1994/11/12 05:25:32 lars Exp $"
+literal|"$Id: chat.c,v 1.4 1995/10/31 23:28:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2224,11 +2224,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|sysfatal
-argument_list|(
-literal|"Can't get terminal parameters"
-argument_list|)
+name|have_tty_parameters
+operator|=
+literal|0
 expr_stmt|;
+return|return;
 block|}
 name|saved_tty_parameters
 operator|=
