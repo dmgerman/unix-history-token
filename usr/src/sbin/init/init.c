@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.6 (Berkeley) %G%"
+literal|"@(#)init.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,16 +344,37 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_function
 name|main
 parameter_list|()
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+specifier|register
+name|int
+name|r12
+decl_stmt|;
+comment|/* make sure r11 gets bootflags */
+endif|#
+directive|endif
 specifier|register
 name|int
 name|r11
@@ -387,9 +408,17 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
 name|howto
 operator|=
 name|r11
