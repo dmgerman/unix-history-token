@@ -726,6 +726,17 @@ begin_comment
 comment|/* get retry timeout (timeval) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLSET_CONNECT
+value|20
+end_define
+
+begin_comment
+comment|/* Use connect() for UDP. (int) */
+end_comment
+
 begin_comment
 comment|/*  * Operations which GSSAPI needs. (Bletch.)  */
 end_comment
