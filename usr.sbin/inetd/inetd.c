@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.65 1999/07/22 14:47:29 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.66 1999/07/22 15:57:37 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,18 +314,6 @@ name|sep
 parameter_list|)
 define|\
 value|( ((wrap_ex&& !(sep)->se_bi) || (wrap_bi&& (sep)->se_bi)) \&& ( ((sep)->se_accept&& (sep)->se_socktype == SOCK_STREAM) \ 	    || (sep)->se_socktype == SOCK_DGRAM))
-end_define
-
-begin_define
-define|#
-directive|define
-name|LARGEST
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((x)> (y) ? (x) : (y))
 end_define
 
 begin_ifdef
@@ -1399,7 +1387,16 @@ literal|0
 index|]
 operator|>
 name|maxsock
-operator|||
+condition|)
+name|maxsock
+operator|=
+name|signalpipe
+index|[
+literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
 name|signalpipe
 index|[
 literal|1
@@ -1409,18 +1406,10 @@ name|maxsock
 condition|)
 name|maxsock
 operator|=
-name|LARGEST
-argument_list|(
-name|signalpipe
-index|[
-literal|0
-index|]
-argument_list|,
 name|signalpipe
 index|[
 literal|1
 index|]
-argument_list|)
 expr_stmt|;
 for|for
 control|(
