@@ -1117,6 +1117,10 @@ condition|)
 endif|#
 directive|endif
 block|{
+name|try
+operator|=
+literal|0
+expr_stmt|;
 comment|/* match!  now find the last acceptable one in this line */
 do|do
 block|{
@@ -1125,6 +1129,8 @@ directive|ifdef
 name|REGEX
 name|last
 operator|=
+name|try
+operator|+
 name|rm
 index|[
 literal|0
@@ -1133,7 +1139,7 @@ operator|.
 name|rm_so
 expr_stmt|;
 name|try
-operator|=
+operator|+=
 name|rm
 index|[
 literal|0
