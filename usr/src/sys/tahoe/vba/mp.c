@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mp.c	1.1	87/11/17	*/
+comment|/*	mp.c	1.2	87/11/24	*/
 end_comment
 
 begin_include
@@ -6814,6 +6814,25 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|mpreset
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+comment|/* XXX */
 block|}
 end_block
 
