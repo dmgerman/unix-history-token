@@ -3118,10 +3118,6 @@ operator|)
 name|pcpup
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Initialize the virtual memory system. 	 */
-name|pmap_bootstrap
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Initialize the rest of proc 0's PCB. 	 * 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 * Initialise proc0's backing store to start after u area. 	 * 	 * XXX what is all this +/- 16 stuff? 	 */
 name|thread0
 operator|.
@@ -3168,6 +3164,15 @@ comment|/* Setup curproc so that mutexes work */
 name|PCPU_SET
 argument_list|(
 name|curthread
+argument_list|,
+operator|&
+name|thread0
+argument_list|)
+expr_stmt|;
+comment|/* We pretend to own FP state so that ia64_fpstate_check() works */
+name|PCPU_SET
+argument_list|(
+name|fpcurthread
 argument_list|,
 operator|&
 name|thread0
@@ -3223,6 +3228,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize the virtual memory system. 	 */
+name|pmap_bootstrap
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
@@ -5912,7 +5921,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"ia64_check_fpcurthread: bogus"
+literal|"ia64_fpstate_check: bogus"
 argument_list|)
 expr_stmt|;
 block|}
