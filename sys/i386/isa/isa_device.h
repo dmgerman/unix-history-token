@@ -68,6 +68,10 @@ name|int
 name|id_iobase
 decl_stmt|;
 comment|/* base i/o address */
+name|int
+name|id_iosize
+decl_stmt|;
+comment|/* base i/o length */
 name|u_int
 name|id_irq
 decl_stmt|;
