@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)param.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -86,6 +86,17 @@ end_define
 
 begin_comment
 comment|/* start of kernel virtual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERNTEXTOFF
+value|(KERNBASE + 0x800)
+end_define
+
+begin_comment
+comment|/* start of kernel text */
 end_comment
 
 begin_define
