@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	6.4	84/08/29	*/
+comment|/*	if_en.c	6.5	84/12/20	*/
 end_comment
 
 begin_include
@@ -2702,10 +2702,10 @@ operator|->
 name|m_off
 condition|)
 block|{
-name|m
-operator|=
-name|m_get
+name|MGET
 argument_list|(
+name|m
+argument_list|,
 name|M_DONTWAIT
 argument_list|,
 name|MT_HEADER
