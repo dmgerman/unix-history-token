@@ -2458,6 +2458,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|back_color_erase
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"back_color_erase, turning attributes off"
+operator|)
+argument_list|)
+expr_stmt|;
+name|vidattr
+argument_list|(
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|parm_dch
 condition|)
 block|{
