@@ -474,13 +474,13 @@ name|kse
 modifier|*
 name|td_last_kse
 decl_stmt|;
-comment|/* Where it wants to be if possible. */
+comment|/* (j) Previous value of td_kse */
 name|struct
 name|kse
 modifier|*
 name|td_kse
 decl_stmt|;
-comment|/* Current KSE if running. */
+comment|/* (j) Current KSE if running. */
 name|int
 name|td_dupfd
 decl_stmt|;
@@ -3499,6 +3499,20 @@ end_comment
 
 begin_function_decl
 name|void
+name|adjustrunqueue
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+name|int
+name|newpri
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ast
 parameter_list|(
 name|struct
@@ -3886,17 +3900,6 @@ name|struct
 name|proc
 modifier|*
 name|newparent
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|remrunqueue
-parameter_list|(
-name|struct
-name|thread
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
