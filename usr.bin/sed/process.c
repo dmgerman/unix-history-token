@@ -2360,6 +2360,11 @@ argument_list|(
 literal|"COLUMNS"
 argument_list|)
 operator|)
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
 condition|)
 name|termwidth
 operator|=
