@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.5 1998/07/12 16:32:10 dfr Exp $ */
+comment|/* $Id: param.h,v 1.6 1998/07/30 08:12:14 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -61,6 +61,24 @@ include|#
 directive|include
 file|<machine/cpu.h>
 end_include
+
+begin_comment
+comment|/*  * OBJFORMAT_NAMES is a comma-separated list of the object formats  * that are supported on the architecture.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJFORMAT_NAMES
+value|"elf"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBJFORMAT_DEFAULT
+value|"elf"
+end_define
 
 begin_comment
 comment|/*  * Round p (pointer or byte index) up to a correctly-aligned value for all  * data types (int, long, ...).   The result is u_long and must be cast to  * any desired pointer type.  *  * ALIGNED_POINTER is a boolean macro that checks whether an address  * is valid to fetch data elements of type t from on this architecture.  * This does not reflect the optimal alignment, just the possibility  * (within reasonable limits).   *  */
