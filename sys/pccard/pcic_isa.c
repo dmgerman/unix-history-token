@@ -1199,13 +1199,13 @@ name|sc
 operator|->
 name|csc_route
 operator|=
-name|isa_parallel
+name|pcic_iw_isa
 expr_stmt|;
 name|sc
 operator|->
 name|func_route
 operator|=
-name|isa_parallel
+name|pcic_iw_isa
 expr_stmt|;
 name|rid
 operator|=

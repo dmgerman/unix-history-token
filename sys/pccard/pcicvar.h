@@ -83,17 +83,15 @@ end_struct
 
 begin_enum
 enum|enum
-name|pcic_irq_type
+name|pcic_intr_way
 block|{
-name|isa_parallel
+name|pcic_iw_isa
 init|=
 literal|1
 block|,
-name|isa_serial
-block|,
-name|pci_parallel
-block|,
-name|pci_serial
+name|pcic_iw_pci
+init|=
+literal|2
 block|}
 enum|;
 end_enum
@@ -141,12 +139,12 @@ name|PCIC_RICOH_POWER
 value|0x0000020
 comment|/* Uses the ricoh power regs */
 name|enum
-name|pcic_irq_type
+name|pcic_intr_way
 name|csc_route
 decl_stmt|;
 comment|/* How to route csc interrupts */
 name|enum
-name|pcic_irq_type
+name|pcic_intr_way
 name|func_route
 decl_stmt|;
 comment|/* How to route function ints */
