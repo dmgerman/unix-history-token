@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.128 2002/09/27 15:37:35 provos Exp $  *	$NetBSD: ohci.c,v 1.129 2002/09/29 20:58:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.130 2002/09/29 20:59:30 augustss Exp $  *	$NetBSD: ohci.c,v 1.131 2002/09/30 16:36:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.132 2002/12/07 06:52:11 toshii Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.128 2002/09/27 15:37:35 provos Exp $  *	$NetBSD: ohci.c,v 1.129 2002/09/29 20:58:25 augustss Exp $  *	$NetBSD: ohci.c,v 1.130 2002/09/29 20:59:30 augustss Exp $  *	$NetBSD: ohci.c,v 1.131 2002/09/30 16:36:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.132 2002/12/07 06:52:11 toshii Exp $  *	$NetBSD: ohci.c,v 1.133 2002/12/07 07:14:28 toshii Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
 end_comment
 
 begin_comment
@@ -7024,9 +7024,19 @@ name|status
 operator|=
 name|USBD_NORMAL_COMPLETION
 expr_stmt|;
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
 name|usb_transfer_complete
 argument_list|(
 name|xfer
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -7205,9 +7215,19 @@ name|status
 operator|=
 name|USBD_IOERROR
 expr_stmt|;
+name|s
+operator|=
+name|splusb
+argument_list|()
+expr_stmt|;
 name|usb_transfer_complete
 argument_list|(
 name|xfer
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
