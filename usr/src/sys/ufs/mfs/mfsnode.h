@@ -287,14 +287,14 @@ begin_define
 define|#
 directive|define
 name|mfs_update
-value|((int (*) __P((struct  vop_update_args *)))nullop)
+value|((int (*) __P((struct  vop_update_args *)))mfs_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|mfs_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))nullop)
+value|((int (*) __P((struct  vop_bwrite_args *)))vn_bwrite)
 end_define
 
 end_unit
