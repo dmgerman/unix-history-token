@@ -20,12 +20,23 @@ begin_comment
 comment|/* All remotely requested trace files must either start with this prefix  * or be the same as the tracefile specified when the daemon was started.  * If this is a directory, routed will create log files in it.  That  * might be a security problem.  *  * Leave this undefined, and only the trace file originally specified  * when routed was started, if any, will be appended to.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
 name|_PATH_TRACE
-value|"/etc/routed.trace"
+value|"/var/log/routed.trace"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
