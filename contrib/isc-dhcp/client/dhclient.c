@@ -19,7 +19,7 @@ name|char
 name|ocopyright
 index|[]
 init|=
-literal|"$Id: dhclient.c,v 1.129.2.12 2002/11/07 23:26:38 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: dhclient.c,v 1.129.2.16 2003/04/26 21:51:39 dhankins Exp $ Copyright (c) 1995-2002 Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -991,6 +991,26 @@ index|[
 name|i
 index|]
 argument_list|,
+literal|"-nw"
+argument_list|)
+condition|)
+block|{
+name|nowait
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
 literal|"-n"
 argument_list|)
 condition|)
@@ -1138,26 +1158,6 @@ name|exit
 argument_list|(
 literal|0
 argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
-literal|"-nw"
-argument_list|)
-condition|)
-block|{
-name|nowait
-operator|=
-literal|1
 expr_stmt|;
 block|}
 elseif|else
@@ -1405,49 +1405,98 @@ condition|(
 name|release_mode
 condition|)
 block|{
-comment|/* XXX inelegant hack to prove concept */
-name|char
-name|command
-index|[
-literal|1024
-index|]
+name|FILE
+modifier|*
+name|pidfd
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
+name|pid_t
+name|oldpid
+decl_stmt|;
+name|long
+name|temp
+decl_stmt|;
+name|int
+name|e
+decl_stmt|;
+name|oldpid
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pidfd
+operator|=
+name|fopen
 argument_list|(
-name|NO_SNPRINTF
+name|path_dhclient_pid
+argument_list|,
+literal|"r"
 argument_list|)
-name|snprintf
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|e
+operator|=
+name|fscanf
 argument_list|(
-name|command
+name|pidfd
 argument_list|,
-literal|1024
+literal|"%ld\n"
 argument_list|,
-literal|"kill `cat %s`"
+operator|&
+name|temp
+argument_list|)
+expr_stmt|;
+name|oldpid
+operator|=
+operator|(
+name|pid_t
+operator|)
+name|temp
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|!=
+literal|0
+operator|&&
+name|e
+operator|!=
+name|EOF
+condition|)
+block|{
+if|if
+condition|(
+name|oldpid
+condition|)
+block|{
+if|if
+condition|(
+name|kill
+argument_list|(
+name|oldpid
 argument_list|,
+name|SIGTERM
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|unlink
+argument_list|(
 name|path_dhclient_pid
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|sprintf
+block|}
+block|}
+name|fclose
 argument_list|(
-name|command
-argument_list|,
-literal|"kill `cat %s`"
-argument_list|,
-name|path_dhclient_pid
+name|pidfd
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-name|system
-argument_list|(
-name|command
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -8679,7 +8728,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -8690,13 +8740,17 @@ literal|0
 argument_list|,
 name|options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
@@ -9151,7 +9205,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -9164,13 +9219,17 @@ name|client
 operator|->
 name|sent_options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
@@ -10079,7 +10138,8 @@ literal|0
 argument_list|,
 name|client
 argument_list|,
-literal|0
+comment|/* maximum packet size */
+literal|1500
 argument_list|,
 operator|(
 expr|struct
@@ -10090,13 +10150,17 @@ literal|0
 argument_list|,
 name|options
 argument_list|,
+comment|/* scope */
 operator|&
 name|global_scope
 argument_list|,
+comment|/* overload */
 literal|0
 argument_list|,
+comment|/* terminate */
 literal|0
 argument_list|,
+comment|/* bootpp    */
 literal|0
 argument_list|,
 operator|(
