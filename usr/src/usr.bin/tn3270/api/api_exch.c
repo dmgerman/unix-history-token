@@ -25,6 +25,18 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
+name|whoarewe
+index|[
+literal|40
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|ibuffer
 index|[
 literal|40
@@ -198,9 +210,18 @@ operator|!=
 name|length
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(API %s) "
+argument_list|,
+name|whoarewe
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"writing to API client"
+literal|"write"
 argument_list|)
 expr_stmt|;
 return|return
@@ -289,9 +310,40 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(API %s) "
+argument_list|,
+name|whoarewe
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"reading from API client"
+literal|"read"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* Reading past end-of-file */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(API %s) End of file read\r\n"
+argument_list|,
+name|whoarewe
 argument_list|)
 expr_stmt|;
 return|return
@@ -575,9 +627,18 @@ operator|!=
 name|length
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(API %s) "
+argument_list|,
+name|whoarewe
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"writing to API client"
+literal|"write"
 argument_list|)
 expr_stmt|;
 return|return
@@ -728,9 +789,18 @@ operator|<
 literal|0
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"(API %s) "
+argument_list|,
+name|whoarewe
+argument_list|)
+expr_stmt|;
 name|perror
 argument_list|(
-literal|"reading from API client"
+literal|"read"
 argument_list|)
 expr_stmt|;
 return|return
@@ -758,15 +828,29 @@ name|int
 name|api_exch_init
 parameter_list|(
 name|sock_number
+parameter_list|,
+name|ourname
 parameter_list|)
 name|int
 name|sock_number
+decl_stmt|;
+name|char
+modifier|*
+name|ourname
 decl_stmt|;
 block|{
 name|sock
 operator|=
 name|sock_number
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|whoarewe
+argument_list|,
+name|ourname
+argument_list|)
+expr_stmt|;
+comment|/* For error messages */
 name|IBUFRESET
 argument_list|()
 expr_stmt|;
