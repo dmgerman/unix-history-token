@@ -2022,6 +2022,11 @@ name|c
 operator|==
 literal|','
 operator|&&
+operator|*
+name|cp
+operator|==
+literal|' '
+operator|&&
 operator|!
 name|gotlt
 condition|)
@@ -2032,17 +2037,14 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 operator|*
+operator|++
 name|cp
 operator|==
 literal|' '
-condition|;
-name|cp
-operator|++
-control|)
+condition|)
 empty_stmt|;
 name|lastsp
 operator|=
@@ -2063,7 +2065,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|nbuf
+name|cp
 operator|=
 name|realloc
 argument_list|(
@@ -2077,15 +2079,12 @@ operator|+
 literal|1
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"Out of memory"
-argument_list|)
+name|nbuf
+operator|=
+name|cp
 expr_stmt|;
 return|return
 operator|(
