@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_kstack_pages.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -1034,9 +1028,9 @@ condition|(
 name|ctob
 argument_list|(
 operator|(
-name|UAREA_PAGES
+name|uarea_pages
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 operator|)
 operator|+
 name|vm
@@ -1061,9 +1055,9 @@ name|malloc
 argument_list|(
 name|ctob
 argument_list|(
-name|UAREA_PAGES
+name|uarea_pages
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 argument_list|,
 name|M_TEMP
@@ -1109,7 +1103,7 @@ name|tempuser
 operator|+
 name|ctob
 argument_list|(
-name|UAREA_PAGES
+name|uarea_pages
 argument_list|)
 operator|+
 operator|(
@@ -1172,9 +1166,9 @@ name|tempuser
 argument_list|,
 name|ctob
 argument_list|(
-name|UAREA_PAGES
+name|uarea_pages
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 argument_list|,
 operator|(
@@ -1239,9 +1233,9 @@ name|off_t
 operator|)
 name|ctob
 argument_list|(
-name|UAREA_PAGES
+name|uarea_pages
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 argument_list|,
 name|UIO_USERSPACE
@@ -1307,9 +1301,9 @@ name|off_t
 operator|)
 name|ctob
 argument_list|(
-name|UAREA_PAGES
+name|uarea_pages
 operator|+
-name|KSTACK_PAGES
+name|kstack_pages
 argument_list|)
 operator|+
 name|ctob
