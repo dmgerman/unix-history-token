@@ -484,6 +484,12 @@ argument_list|,
 name|n1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n1
+operator|>
+literal|0
+condition|)
 name|n
 operator|+=
 name|n1
