@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dispatch.c,v 1.15 2002/01/11 13:39:36 markus Exp $"
+literal|"$OpenBSD: dispatch.c,v 1.16 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -92,7 +92,7 @@ modifier|*
 name|ctxt
 parameter_list|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"dispatch_protocol_error: type %d seq %u"
 argument_list|,
@@ -145,7 +145,7 @@ modifier|*
 name|ctxt
 parameter_list|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"dispatch_protocol_ignore: type %d seq %u"
 argument_list|,

@@ -12,14 +12,10 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp.c,v 1.34 2003/01/10 08:19:07 fgsch Exp $"
+literal|"$OpenBSD: sftp.c,v 1.37 2003/07/10 20:05:55 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* XXX: short-form remote directory listings (like 'ls -C') */
-end_comment
 
 begin_include
 include|#
@@ -130,11 +126,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|pid_t
+name|sshpid
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|showprogress
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|killchild
+parameter_list|(
+name|int
+name|signo
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sshpid
+operator|>
+literal|1
+condition|)
+name|kill
+argument_list|(
+name|sshpid
+argument_list|,
+name|signo
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -157,10 +193,6 @@ parameter_list|,
 name|int
 modifier|*
 name|out
-parameter_list|,
-name|pid_t
-modifier|*
-name|sshpid
 parameter_list|)
 block|{
 name|int
@@ -305,7 +337,6 @@ comment|/* USE_PIPES */
 if|if
 condition|(
 operator|(
-operator|*
 name|sshpid
 operator|=
 name|fork
@@ -328,7 +359,6 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|*
 name|sshpid
 operator|==
 literal|0
@@ -428,6 +458,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|killchild
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|killchild
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|killchild
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|c_in
@@ -458,8 +509,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-vC1] [-b batchfile] [-o option] [-s subsystem|path] [-B buffer_size]\n"
-literal|"            [-F config] [-P direct server path] [-S program]\n"
+literal|"usage: %s [-vC1] [-b batchfile] [-o ssh_option] [-s subsystem | sftp_server]\n"
+literal|"            [-B buffer_size] [-F ssh_config] [-P sftp_server path]\n"
+literal|"            [-R num_requests] [-S program]\n"
 literal|"            [user@]host[:file [file]]\n"
 argument_list|,
 name|__progname
@@ -494,9 +546,6 @@ decl_stmt|,
 name|ch
 decl_stmt|,
 name|err
-decl_stmt|;
-name|pid_t
-name|sshpid
 decl_stmt|;
 name|char
 modifier|*
@@ -561,7 +610,7 @@ name|optarg
 decl_stmt|;
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|argv
 index|[
@@ -1127,9 +1176,6 @@ name|in
 argument_list|,
 operator|&
 name|out
-argument_list|,
-operator|&
-name|sshpid
 argument_list|)
 expr_stmt|;
 block|}
@@ -1171,9 +1217,6 @@ name|in
 argument_list|,
 operator|&
 name|out
-argument_list|,
-operator|&
-name|sshpid
 argument_list|)
 expr_stmt|;
 block|}

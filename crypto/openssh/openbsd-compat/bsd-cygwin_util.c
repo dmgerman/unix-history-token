@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * cygwin_util.c  *  * Copyright (c) 2000, 2001, Corinna Vinschen<vinschen@cygnus.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Sat Sep 02 12:17:00 2000 cv  *  * This file contains functions for forcing opened file descriptors to  * binary mode on Windows systems.  */
+comment|/*  * Copyright (c) 2000, 2001, Corinna Vinschen<vinschen@cygnus.com>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Sat Sep 02 12:17:00 2000 cv  *  * This file contains functions for forcing opened file descriptors to  * binary mode on Windows systems.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-cygwin_util.c,v 1.9 2002/11/09 15:59:29 mouring Exp $"
+literal|"$Id: bsd-cygwin_util.c,v 1.11 2003/08/07 06:23:43 dtucker Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -181,6 +181,7 @@ name|ap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|open
 argument_list|(
 name|filename
@@ -191,6 +192,7 @@ name|O_BINARY
 argument_list|,
 name|mode
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -242,7 +244,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -270,7 +274,6 @@ name|int
 name|what
 parameter_list|)
 block|{
-comment|/* has_capability() basically calls uname() and checks if 	   specific capabilities of Cygwin can be evaluated from that. 	   This simplifies the calling functions which only have to ask 	   for a capability using has_capability() instead of having 	   to figure that out by themselves. */
 specifier|static
 name|int
 name|inited
@@ -283,6 +286,7 @@ specifier|static
 name|int
 name|has_ntsec_by_default
 decl_stmt|;
+comment|/*  	 * has_capability() basically calls uname() and checks if 	 * specific capabilities of Cygwin can be evaluated from that. 	 * This simplifies the calling functions which only have to ask 	 * for a capability using has_capability() instead of having 	 * to figure that out by themselves. 	 */
 if|if
 condition|(
 operator|!
@@ -311,13 +315,11 @@ name|int
 name|major_high
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|major_low
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|minor
 init|=
 literal|0
@@ -326,8 +328,7 @@ name|int
 name|api_major_version
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|api_minor_version
 init|=
 literal|0
@@ -354,6 +355,9 @@ operator|&
 name|minor
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|c
 operator|=
 name|strchr
@@ -364,11 +368,11 @@ name|release
 argument_list|,
 literal|'('
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|c
+operator|)
+operator|!=
+name|NULL
 condition|)
+block|{
 name|sscanf
 argument_list|(
 name|c
@@ -384,6 +388,7 @@ operator|&
 name|api_minor_version
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|major_high
@@ -445,17 +450,23 @@ case|case
 name|HAS_CREATE_TOKEN
 case|:
 return|return
+operator|(
 name|has_create_token
+operator|)
 return|;
 case|case
 name|HAS_NTSEC_BY_DEFAULT
 case|:
 return|return
+operator|(
 name|has_ntsec_by_default
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -564,11 +575,15 @@ operator|->
 name|pw_uid
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -591,8 +606,7 @@ name|int
 name|allow_ntea
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
 name|allow_ntsec
 init|=
 literal|0
@@ -608,7 +622,9 @@ operator|!
 name|is_winnt
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* Evaluate current CYGWIN settings. */
 name|cygwin
@@ -651,7 +667,9 @@ condition|(
 name|allow_ntea
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* 	 * Retrieve file system flags. In Cygwin, file system flags are 	 * copied to f_type which has no meaning in Win32 itself. 	 */
 if|if
@@ -665,7 +683,9 @@ name|fsstat
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 comment|/* 	 * Only file systems supporting ACLs are able to set permissions. 	 * `ntsec' is the setting in Cygwin which switches using of NTFS 	 * ACLs to support POSIX permissions on files. 	 */
 if|if
@@ -677,10 +697,14 @@ operator|&
 name|FS_PERSISTENT_ACLS
 condition|)
 return|return
+operator|(
 name|allow_ntsec
+operator|)
 return|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-server.c,v 1.41 2003/03/26 04:02:51 deraadt Exp $"
+literal|"$OpenBSD: sftp-server.c,v 1.43 2003/06/25 22:39:36 miod Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -154,7 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* portable attibutes, etc. */
+comment|/* portable attributes, etc. */
 end_comment
 
 begin_typedef
@@ -1994,7 +1994,7 @@ operator|=
 sizeof|sizeof
 name|buf
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"read change len %d"
 argument_list|,
@@ -2280,7 +2280,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"nothing at all written"
 argument_list|)
@@ -4889,7 +4889,7 @@ decl_stmt|;
 comment|/* XXX should use getopt */
 name|__progname
 operator|=
-name|get_progname
+name|ssh_get_progname
 argument_list|(
 name|av
 index|[

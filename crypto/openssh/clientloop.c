@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.107 2003/04/01 10:22:21 markus Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.112 2003/06/28 16:23:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1349,7 +1349,7 @@ literal|0
 condition|)
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fileno
 argument_list|(
@@ -1378,7 +1378,7 @@ literal|0
 condition|)
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fileno
 argument_list|(
@@ -1816,7 +1816,7 @@ literal|'R'
 operator|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Invalid command."
 argument_list|)
@@ -1847,7 +1847,7 @@ operator|!
 name|compat20
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Not supported for SSH protocol version 1."
 argument_list|)
@@ -1907,7 +1907,7 @@ operator|!=
 literal|3
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Bad forwarding specification."
 argument_list|)
@@ -1941,7 +1941,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Bad forwarding port(s)."
 argument_list|)
@@ -1973,7 +1973,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Port forwarding failed."
 argument_list|)
@@ -1993,7 +1993,7 @@ argument_list|,
 name|fwd_host_port
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Forwarding port."
 argument_list|)
@@ -2194,6 +2194,57 @@ expr_stmt|;
 comment|/* We have been continued. */
 continue|continue;
 case|case
+literal|'B'
+case|:
+if|if
+condition|(
+name|compat20
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|string
+argument_list|,
+sizeof|sizeof
+name|string
+argument_list|,
+literal|"%cB\r\n"
+argument_list|,
+name|escape_char
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+name|berr
+argument_list|,
+name|string
+argument_list|,
+name|strlen
+argument_list|(
+name|string
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|channel_request_start
+argument_list|(
+name|session_ident
+argument_list|,
+literal|"break"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|packet_put_int
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|packet_send
+argument_list|()
+expr_stmt|;
+block|}
+continue|continue;
+case|case
 literal|'R'
 case|:
 if|if
@@ -2207,7 +2258,7 @@ name|datafellows
 operator|&
 name|SSH_BUG_NOREKEY
 condition|)
-name|log
+name|logit
 argument_list|(
 literal|"Server does not support re-keying"
 argument_list|)
@@ -2375,7 +2426,9 @@ argument_list|,
 sizeof|sizeof
 name|string
 argument_list|,
-literal|"%c?\r\n\ Supported escape sequences:\r\n\ %c.  - terminate connection\r\n\ %cC  - open a command line\r\n\ %cR  - Request rekey (SSH protocol 2 only)\r\n\ %c^Z - suspend ssh\r\n\ %c#  - list forwarded connections\r\n\ %c&  - background ssh (when waiting for connections to terminate)\r\n\ %c?  - this message\r\n\ %c%c  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
+literal|"%c?\r\n\ Supported escape sequences:\r\n\ %c.  - terminate connection\r\n\ %cB  - send a BREAK to the remote system\r\n\ %cC  - open a command line\r\n\ %cR  - Request rekey (SSH protocol 2 only)\r\n\ %c^Z - suspend ssh\r\n\ %c#  - list forwarded connections\r\n\ %c&  - background ssh (when waiting for connections to terminate)\r\n\ %c?  - this message\r\n\ %c%c  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
+argument_list|,
+name|escape_char
 argument_list|,
 name|escape_char
 argument_list|,
@@ -3562,11 +3615,14 @@ expr_stmt|;
 if|if
 condition|(
 name|need_rekeying
+operator|||
+name|packet_need_rekeying
+argument_list|()
 condition|)
 block|{
 name|debug
 argument_list|(
-literal|"user requests rekeying"
+literal|"need rekeying"
 argument_list|)
 expr_stmt|;
 name|xxx_kex
@@ -4295,10 +4351,7 @@ name|CHAN_TCP_WINDOW_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 name|originator_address
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -4457,10 +4510,7 @@ name|CHAN_X11_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"x11"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)
@@ -4558,10 +4608,7 @@ name|CHAN_TCP_WINDOW_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
-name|xstrdup
-argument_list|(
 literal|"authentication agent connection"
-argument_list|)
 argument_list|,
 literal|1
 argument_list|)

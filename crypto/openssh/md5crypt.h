@@ -4,15 +4,7 @@ comment|/*  * ------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*  * Ported from FreeBSD to Linux, only minimal changes.  --marekm  */
-end_comment
-
-begin_comment
-comment|/*  * Adapted from shadow-19990607 by Tudor Bosman, tudorb@jm.nu  */
-end_comment
-
-begin_comment
-comment|/* $Id: md5crypt.h,v 1.3 2001/02/09 01:55:36 djm Exp $ */
+comment|/* $Id: md5crypt.h,v 1.4 2003/05/18 14:46:46 djm Exp $ */
 end_comment
 
 begin_ifndef
@@ -55,7 +47,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|salt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -68,12 +59,10 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|pw
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|salt
 parameter_list|)
 function_decl|;
 end_function_decl

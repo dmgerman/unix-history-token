@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.42 2003/03/05 22:33:43 markus Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.44 2003/06/28 16:23:06 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -207,7 +207,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -235,7 +235,7 @@ if|if
 condition|(
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|fd
 argument_list|,
@@ -2489,7 +2489,7 @@ literal|"Server version does not support lstat operation"
 argument_list|)
 expr_stmt|;
 else|else
-name|log
+name|logit
 argument_list|(
 literal|"Server version does not support lstat operation"
 argument_list|)
@@ -4425,7 +4425,7 @@ literal|1
 operator|||
 name|atomicio
 argument_list|(
-name|write
+name|vwrite
 argument_list|,
 name|local_fd
 argument_list|,

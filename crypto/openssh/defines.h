@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * Copyright (c) 1999-2003 Damien Miller.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -12,7 +16,7 @@ name|_DEFINES_H
 end_define
 
 begin_comment
-comment|/* $Id: defines.h,v 1.97 2003/01/24 00:50:32 djm Exp $ */
+comment|/* $Id: defines.h,v 1.103 2003/09/16 01:52:19 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -1113,13 +1117,6 @@ name|int64_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
-
 begin_else
 else|#
 directive|else
@@ -1143,13 +1140,6 @@ name|int
 name|int64_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|HAVE_INT64_T
-value|1
-end_define
 
 begin_endif
 endif|#
@@ -1191,13 +1181,6 @@ name|u_int64_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT64_T
-value|1
-end_define
-
 begin_else
 else|#
 directive|else
@@ -1223,13 +1206,6 @@ name|u_int64_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|HAVE_U_INT64_T
-value|1
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -1239,34 +1215,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_LONG_LONG_INT
-argument_list|)
-operator|&&
-operator|(
-name|SIZEOF_LONG_LONG_INT
-operator|==
-literal|8
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_LONG_LONG_INT
-value|1
-end_define
 
 begin_endif
 endif|#
@@ -1768,6 +1716,24 @@ define|#
 directive|define
 name|_PATH_STDPATH
 value|"/usr/bin:/bin:/usr/sbin:/sbin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SUPERUSER_PATH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUPERUSER_PATH
+value|_PATH_STDPATH
 end_define
 
 begin_endif
@@ -2339,6 +2305,65 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* given pointer to struct cmsghdr, return pointer to data */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CMSG_DATA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CMSG_DATA
+parameter_list|(
+name|cmsg
+parameter_list|)
+value|((u_char *)(cmsg) + __CMSG_ALIGN(sizeof(struct cmsghdr)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CMSG_DATA */
+end_comment
+
+begin_comment
+comment|/*  * RFC 2292 requires to check msg_controllen, in case that the kernel returns  * an empty list for some reasons.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CMSG_FIRSTHDR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CMSG_FIRSTHDR
+parameter_list|(
+name|mhdr
+parameter_list|)
+define|\
+value|((mhdr)->msg_controllen>= sizeof(struct cmsghdr) ? \ 	 (struct cmsghdr *)(mhdr)->msg_control : \ 	 (struct cmsghdr *)NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CMSG_FIRSTHDR */
+end_comment
+
+begin_comment
 comment|/* Function replacement / compatibility hacks */
 end_comment
 
@@ -2793,6 +2818,38 @@ define|#
 directive|define
 name|__func__
 value|""
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KRB5
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|HEIMDAL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|krb5_get_err_text
+parameter_list|(
+name|context
+parameter_list|,
+name|code
+parameter_list|)
+value|error_message(code)
 end_define
 
 begin_endif

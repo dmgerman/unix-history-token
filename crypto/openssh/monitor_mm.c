@@ -37,12 +37,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"openbsd-compat/xmmap.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ssh.h"
 end_include
 

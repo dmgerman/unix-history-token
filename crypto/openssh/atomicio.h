@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: atomicio.h,v 1.4 2001/06/26 06:32:46 itojun Exp $	*/
+comment|/*	$OpenBSD: atomicio.h,v 1.5 2003/06/28 16:23:06 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1995,1999 Theo de Raadt.  All rights reserved.  * Al
 end_comment
 
 begin_comment
-comment|/*  * Ensure all of data on socket comes through. f==read || f==write  */
+comment|/*  * Ensure all of data on socket comes through. f==read || f==vwrite  */
 end_comment
 
 begin_function_decl
@@ -19,7 +19,14 @@ name|ssize_t
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
 parameter_list|,
 name|int
 parameter_list|,
@@ -30,6 +37,13 @@ name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|vwrite
+value|(ssize_t (*)(int, void *, size_t))write
+end_define
 
 end_unit
 

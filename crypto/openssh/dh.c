@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dh.c,v 1.23 2002/11/21 22:22:50 markus Exp $"
+literal|"$OpenBSD: dh.c,v 1.24 2003/04/08 20:21:28 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -539,7 +539,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"WARNING: %s does not exist, using old modulus"
 argument_list|,
@@ -693,7 +693,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"WARNING: no suitable primes in %s"
 argument_list|,
@@ -871,7 +871,7 @@ operator|->
 name|neg
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"invalid public DH value: negativ"
 argument_list|)
@@ -943,7 +943,7 @@ condition|)
 return|return
 literal|1
 return|;
-name|log
+name|logit
 argument_list|(
 literal|"invalid public DH value (%d/%d)"
 argument_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: atomicio.c,v 1.10 2001/05/08 22:48:07 markus Exp $"
+literal|"$OpenBSD: atomicio.c,v 1.12 2003/07/31 15:50:16 avsm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,7 +24,7 @@ file|"atomicio.h"
 end_include
 
 begin_comment
-comment|/*  * ensure all of data on socket comes through. f==read || f==write  */
+comment|/*  * ensure all of data on socket comes through. f==read || f==vwrite  */
 end_comment
 
 begin_decl_stmt
@@ -44,7 +44,14 @@ argument_list|(
 operator|*
 name|f
 argument_list|)
-argument_list|()
+argument_list|(
+name|int
+argument_list|,
+name|void
+operator|*
+argument_list|,
+name|size_t
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

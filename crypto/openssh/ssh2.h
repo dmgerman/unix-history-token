@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: ssh2.h,v 1.8 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: ssh2.h,v 1.9 2003/05/14 00:52:59 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -41,6 +41,20 @@ define|#
 directive|define
 name|SSH2_MSG_USERAUTH_MAX
 value|79
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_PER_METHOD_MIN
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_PER_METHOD_MAX
+value|SSH2_MSG_USERAUTH_MAX
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * $Id: bsd-cray.c,v 1.8 2002/09/26 00:38:51 tim Exp $  *  * bsd-cray.c  *  * Copyright (c) 2002, Cray Inc.  (Wendy Palm<wendyp@cray.com>)  * Significant portions provided by   *          Wayne Schroeder, SDSC<schroeder@sdsc.edu>  *          William Jones, UTexas<jones@tacc.utexas.edu>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Apr 22 16.34:00 2002 wp  *  * This file contains functions required for proper execution  * on UNICOS systems.  *  */
+comment|/*   * $Id: bsd-cray.c,v 1.12 2003/06/03 02:45:27 dtucker Exp $  *  * bsd-cray.c  *  * Copyright (c) 2002, Cray Inc.  (Wendy Palm<wendyp@cray.com>)  * Significant portions provided by   *          Wayne Schroeder, SDSC<schroeder@sdsc.edu>  *          William Jones, UTexas<jones@tacc.utexas.edu>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Created: Apr 22 16.34:00 2002 wp  *  * This file contains functions required for proper execution  * on UNICOS systems.  *  */
 end_comment
 
 begin_ifdef
@@ -213,7 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* user   security structure */
+comment|/* user security structure */
 end_comment
 
 begin_comment
@@ -358,13 +358,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
 name|debug
 argument_list|(
 literal|"cray_login_failure(): getjtab error"
 argument_list|)
 expr_stmt|;
-block|}
 name|getsysudb
 argument_list|()
 expr_stmt|;
@@ -381,15 +379,26 @@ operator|)
 operator|==
 name|UDB_NULL
 condition|)
-block|{
 name|debug
 argument_list|(
 literal|"cray_login_failure(): getudbname() returned NULL"
 argument_list|)
 expr_stmt|;
-block|}
 name|endudb
 argument_list|()
+expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|fsent
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fsent
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|fsent
 operator|.
@@ -415,7 +424,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 name|fsent
@@ -535,19 +544,19 @@ operator|)
 operator|==
 name|UDB_NULL
 condition|)
-block|{
 name|debug
 argument_list|(
 literal|"cray_login_failure(): getudbname() returned NULL"
 argument_list|)
 expr_stmt|;
-block|}
 name|endudb
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|ueptr
+operator|!=
+name|NULL
 operator|&&
 name|ueptr
 operator|->
@@ -573,6 +582,39 @@ operator|(
 name|errcode
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * record_failed_login: generic "login failed" interface function  */
+end_comment
+
+begin_function
+name|void
+name|record_failed_login
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|user
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|ttyname
+parameter_list|)
+block|{
+name|cray_login_failure
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|user
+argument_list|,
+name|IA_UDBERR
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -707,6 +749,7 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+comment|/* passwd stuff for ia_user */
 name|passwd_t
 name|pwdacm
 decl_stmt|,
@@ -718,14 +761,12 @@ name|pwdwal
 decl_stmt|,
 name|pwddce
 decl_stmt|;
-comment|/* passwd stuff for ia_user */
 name|ia_user_ret_t
 name|uret
 decl_stmt|;
 comment|/* stuff returned from ia_user */
 name|ia_user_t
 name|usent
-decl_stmt|;
 comment|/* ia_user main structure */
 name|int
 name|ia_rcode
@@ -796,20 +837,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|debug
+name|fatal
 argument_list|(
 literal|"getusrv() failed, errno = %d"
 argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|hostname
 index|[
@@ -818,7 +852,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|hostname
 argument_list|,
@@ -830,13 +864,13 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 argument_list|,
 name|MAXHOSTNAMELEN
 argument_list|)
 expr_stmt|;
-comment|/*          *  Fetch user's UDB entry.          */
+comment|/* 	 *  Fetch user's UDB entry. 	 */
 name|getsysudb
 argument_list|()
 expr_stmt|;
@@ -853,19 +887,12 @@ operator|)
 operator|==
 name|UDB_NULL
 condition|)
-block|{
-name|debug
+name|fatal
 argument_list|(
 literal|"cannot fetch user's UDB entry"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*          *  Prevent any possible fudging so perform a data          *  safety check and compare the supplied uid against          *  the udb's uid.          */
+comment|/* 	 *  Prevent any possible fudging so perform a data 	 *  safety check and compare the supplied uid against 	 *  the udb's uid. 	 */
 if|if
 condition|(
 name|up
@@ -874,18 +901,11 @@ name|ue_uid
 operator|!=
 name|uid
 condition|)
-block|{
-name|debug
+name|fatal
 argument_list|(
 literal|"IA uid missmatch"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|endudb
 argument_list|()
 expr_stmt|;
@@ -910,8 +930,10 @@ literal|"getjtab"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 name|pid
@@ -934,8 +956,9 @@ block|{
 if|if
 condition|(
 name|ttyn
+operator|!=
+name|NULL
 condition|)
-block|{
 name|secstatrc
 operator|=
 name|secstat
@@ -946,9 +969,7 @@ operator|&
 name|secinfo
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|secstatrc
 operator|=
 name|fsecstat
@@ -959,35 +980,25 @@ operator|&
 name|secinfo
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|secstatrc
 operator|==
 literal|0
 condition|)
-block|{
 name|debug
 argument_list|(
 literal|"[f]secstat() successful"
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
-name|debug
+name|fatal
 argument_list|(
 literal|"[f]secstat() error, rc = %d"
 argument_list|,
 name|secstatrc
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1015,7 +1026,7 @@ operator|*
 operator|)
 name|command
 expr_stmt|;
-comment|/*          *  Initialize all structures to call ia_user          */
+comment|/* 	 *  Initialize all structures to call ia_user 	 */
 name|usent
 operator|.
 name|revision
@@ -1137,7 +1148,7 @@ name|pwdp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* pwddialup.next  =&pwdwal; */
+comment|/* pwddialup.next =&pwdwal; */
 name|pwddialup
 operator|.
 name|next
@@ -1196,7 +1207,7 @@ condition|(
 name|ia_rcode
 condition|)
 block|{
-comment|/*                  *  These are acceptable return codes from ia_user()                  */
+comment|/* 	 *  These are acceptable return codes from ia_user() 	 */
 case|case
 name|IA_UDBWEEK
 case|:
@@ -1277,77 +1288,99 @@ break|break;
 case|case
 name|IA_BACKDOOR
 case|:
-name|strcpy
+comment|/* XXX: can we memset it to zero here so save some of this */
+name|strlcpy
 argument_list|(
 name|ue
 operator|.
 name|ue_name
 argument_list|,
 literal|"root"
-argument_list|)
-expr_stmt|;
-name|strcpy
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|ue
 operator|.
-name|ue_passwd
-argument_list|,
-literal|""
+name|ue_name
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ue
 operator|.
 name|ue_dir
 argument_list|,
 literal|"/"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ue
+operator|.
+name|ue_dir
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ue
 operator|.
 name|ue_shell
 argument_list|,
 literal|"/bin/sh"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ue
+operator|.
+name|ue_shell
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
+name|ue
+operator|.
+name|ue_passwd
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|ue
 operator|.
 name|ue_age
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|ue
 operator|.
 name|ue_comment
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|ue
 operator|.
 name|ue_loghost
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
-name|strcpy
-argument_list|(
 name|ue
 operator|.
 name|ue_logline
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|ue
 operator|.
@@ -1397,14 +1430,10 @@ name|ue
 operator|.
 name|ue_minlvl
 operator|=
-name|minslevel
-expr_stmt|;
 name|ue
 operator|.
 name|ue_maxlvl
 operator|=
-name|minslevel
-expr_stmt|;
 name|ue
 operator|.
 name|ue_deflvl
@@ -1467,7 +1496,7 @@ condition|)
 break|break;
 comment|/* Accept root login */
 default|default:
-comment|/*                  *  These are failed return codes from ia_user()                  */
+comment|/* 	 *  These are failed return codes from ia_user() 	 */
 switch|switch
 condition|(
 name|ia_rcode
@@ -1481,10 +1510,6 @@ argument_list|(
 literal|"Bad authorization, access denied.\n"
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|IA_DIALUPERR
-case|:
 break|break;
 case|case
 name|IA_DISABLED
@@ -1512,10 +1537,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IA_LOCALHOST
-case|:
-break|break;
-case|case
 name|IA_MAXLOGS
 case|:
 name|printf
@@ -1530,63 +1551,22 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IA_NOPASS
-case|:
-break|break;
-case|case
-name|IA_PUBLIC
-case|:
-break|break;
-case|case
-name|IA_SECURIDERR
-case|:
-break|break;
-case|case
-name|IA_CONSOLE
-case|:
-break|break;
-case|case
-name|IA_TRUSTED
-case|:
-break|break;
-case|case
-name|IA_UDBERR
-case|:
-break|break;
-case|case
 name|IA_UDBPWDNULL
 case|:
-comment|/*  			  * NULL password not allowed on MLS systems 			  */
 if|if
 condition|(
 name|SecureSys
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"NULL Password not allowed on MLS systems.\n"
 argument_list|)
 expr_stmt|;
-block|}
-break|break;
-case|case
-name|IA_UNKNOWN
-case|:
-break|break;
-case|case
-name|IA_UNKNOWNYP
-case|:
-break|break;
-case|case
-name|IA_WALERR
-case|:
 break|break;
 default|default:
-comment|/* nothing special */
-empty_stmt|;
+break|break;
 block|}
-comment|/* 2. switch  (ia_rcode) */
-comment|/* 		      *  Authentication failed. 		      */
+comment|/* 		 *  Authentication failed. 		 */
 name|printf
 argument_list|(
 literal|"sshd: Login incorrect, (0%o)\n"
@@ -1596,7 +1576,7 @@ operator|-
 name|IA_ERRORCODE
 argument_list|)
 expr_stmt|;
-comment|/* 		      *  Initialize structure for ia_failure 		      *  which will exit. 		      */
+comment|/* 		 *  Initialize structure for ia_failure 		 *  which will exit. 		 */
 name|fsent
 operator|.
 name|revision
@@ -1678,7 +1658,7 @@ name|normal
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		      *  Call ia_failure because of an IA failure. 		      *  There is no return because ia_failure exits. 		      */
+comment|/* 		*  Call ia_failure because of an IA failure. 		*  There is no return because ia_failure exits. 		*/
 name|ia_failure
 argument_list|(
 operator|&
@@ -1694,7 +1674,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 1. switch  (ia_rcode) */
 name|ia_mlsrcode
 operator|=
 name|IA_NORMAL
@@ -1744,7 +1723,7 @@ operator|-
 name|IA_ERRORCODE
 argument_list|)
 expr_stmt|;
-comment|/*  		 *  Initialize structure for ia_failure  		 *  which will exit. 		*/
+comment|/* 		 *  Initialize structure for ia_failure 		 *  which will exit. 		 */
 name|fsent
 operator|.
 name|revision
@@ -1826,7 +1805,7 @@ name|normal
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		*  Call ia_failure because of an IA failure. 		*  There is no return because ia_failure exits. 		*/
+comment|/* 		 *  Call ia_failure because of an IA failure. 		 *  There is no return because ia_failure exits. 		 */
 name|ia_failure
 argument_list|(
 operator|&
@@ -1884,6 +1863,7 @@ name|ue_loghost
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"from %.*s\n"
@@ -1900,7 +1880,9 @@ operator|.
 name|ue_loghost
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"on %.*s\n"
@@ -1917,6 +1899,7 @@ operator|.
 name|ue_logline
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|SecureSys
@@ -1929,6 +1912,7 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"  followed by %d failed attempts\n"
@@ -1938,6 +1922,7 @@ operator|.
 name|ue_logfails
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Call ia_success to process successful I/A. 	 */
 name|ssent
@@ -2029,7 +2014,7 @@ operator|&
 name|sret
 argument_list|)
 expr_stmt|;
-comment|/*          * Query for account, iff> 1 valid acid& askacid permbit          */
+comment|/* 	 * Query for account, iff> 1 valid acid& askacid permbit 	 */
 if|if
 condition|(
 operator|(
@@ -2112,9 +2097,13 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 name|acct_name
+argument_list|,
+name|MAXACID
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2146,7 +2135,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|acct_name
 argument_list|,
@@ -2154,6 +2143,8 @@ name|acid2nam
 argument_list|(
 name|valid_acct
 argument_list|)
+argument_list|,
+name|MAXACID
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2241,6 +2232,7 @@ name|ue_permbits
 operator|&
 name|PERMBITS_ACCTID
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\"acctid\" permbit also allows"
@@ -2248,6 +2240,7 @@ literal|" you to select any valid "
 literal|"account name.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -2255,20 +2248,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|if
-condition|(
-operator|(
 name|valid_acct
 operator|=
 name|nam2acid
 argument_list|(
 name|acct_name
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|valid_acct
 operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Account id not found for"
@@ -2279,7 +2273,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*                          * If an account was given, search the user's                          * acids array to verify they can use this account.                          */
+comment|/* 					 * If an account was given, search the user's 					 * acids array to verify they can use this account. 					 */
 if|if
 condition|(
 operator|(
@@ -2379,7 +2373,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 			 * The client isn't connected to a terminal and can't 			 * respond to an acid prompt.  Use default acid. 			 */
+comment|/* 				 * The client isn't connected to a terminal and can't 				 * respond to an acid prompt.  Use default acid. 				 */
 name|debug
 argument_list|(
 literal|"cray_setup: ttyname false case, %.100s"
@@ -2400,7 +2394,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*                  * The user doesn't have the askacid permbit set or                  * only has one valid account to use.                  */
+comment|/* 			 * The user doesn't have the askacid permbit set or 			 * only has one valid account to use. 			 */
 name|valid_acct
 operator|=
 name|ue
@@ -2436,8 +2430,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* set up shares and quotas */
-comment|/* Now set shares, quotas, limits, including CPU time for the (interactive)   * job and process, and set up permissions (for chown etc), etc.  */
+comment|/*  	 * Now set shares, quotas, limits, including CPU time for the  	 * (interactive) job and process, and set up permissions  	 * (for chown etc), etc. 	 */
 if|if
 condition|(
 name|setshares
@@ -2547,20 +2540,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * Place the service provider information into 	 * the session table (Unicos) or job table (Unicos/mk). 	 * There exist double defines for the job/session table in 	 * unicos/mk (jtab.h) so no need for a compile time switch. 	 */
-name|bzero
+comment|/* 	 * Place the service provider information into 	 * the session table (Unicos) or job table (Unicos/mk). 	 * There exist double defines for the job/session table in 	 * unicos/mk (jtab.h) so no need for a compile time switch. 	 */
+name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|init_info
 argument_list|,
+literal|'\0'
+argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|servprov
+name|init_info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2588,22 +2578,6 @@ operator|.
 name|si_sid
 operator|=
 name|jid
-expr_stmt|;
-name|init_info
-operator|.
-name|s_routing
-operator|.
-name|seqno
-operator|=
-literal|0
-expr_stmt|;
-name|init_info
-operator|.
-name|s_routing
-operator|.
-name|iadrs
-operator|=
-literal|0
 expr_stmt|;
 name|sesscntl
 argument_list|(
@@ -2656,13 +2630,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * The rc.* and /etc/sdaemon methods of starting a program on unicos/unicosmk  * can have pal privileges that sshd can inherit which  * could allow a user to su to root with out a password.  * This subroutine clears all privileges.  */
-end_comment
-
-begin_function
 name|void
 name|drop_cray_privs
 parameter_list|()
@@ -2818,6 +2786,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 name|fatal
 argument_list|(
 literal|"%s(%d): setusrv(): %s"
@@ -2832,6 +2801,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2857,6 +2827,7 @@ name|result
 operator|!=
 literal|0
 condition|)
+block|{
 name|fatal
 argument_list|(
 literal|"%s(%d): priv_set_proc(): %s"
@@ -2871,6 +2842,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|priv_free_proc
 argument_list|(
 name|privstate
@@ -2891,13 +2863,7 @@ error|Cray systems must be run with _SC_CRAY_PRIV_SU on!
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_comment
 comment|/*  *  Retain utmp/wtmp information - used by cray accounting.  */
-end_comment
-
-begin_function
 name|void
 name|cray_retain_utmp
 parameter_list|(
@@ -2934,6 +2900,7 @@ operator|-
 literal|1
 condition|)
 block|{
+comment|/* XXX use atomicio */
 while|while
 condition|(
 name|read
@@ -3046,17 +3013,8 @@ literal|"Unable to open utmp file"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * tmpdir support.  */
-end_comment
-
-begin_comment
 comment|/*  * find and delete jobs tmpdir.  */
-end_comment
-
-begin_function
 name|void
 name|cray_delete_tmpdir
 parameter_list|(
@@ -3071,9 +3029,6 @@ name|uid_t
 name|uid
 parameter_list|)
 block|{
-name|int
-name|child
-decl_stmt|;
 specifier|static
 name|char
 name|jtmp
@@ -3086,9 +3041,10 @@ name|stat
 name|statbuf
 decl_stmt|;
 name|int
+name|child
+decl_stmt|,
 name|c
-decl_stmt|;
-name|int
+decl_stmt|,
 name|wstat
 decl_stmt|;
 for|for
@@ -3203,13 +3159,7 @@ name|EINTR
 condition|)
 empty_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Remove tmpdir on job termination.  */
-end_comment
-
-begin_function
 name|void
 name|cray_job_termination_handler
 parameter_list|(
@@ -3278,13 +3228,7 @@ name|j_uid
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set job id and create tmpdir directory.  */
-end_comment
-
-begin_function
 name|void
 name|cray_init_job
 parameter_list|(
@@ -3404,9 +3348,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|cray_set_tmpdir
 parameter_list|(

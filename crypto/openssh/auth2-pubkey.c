@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2-pubkey.c,v 1.2 2002/05/31 11:35:15 markus Exp $"
+literal|"$OpenBSD: auth2-pubkey.c,v 1.4 2003/06/24 08:23:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -128,7 +128,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|session_id2_len
 decl_stmt|;
 end_decl_stmt
@@ -292,7 +292,7 @@ name|KEY_UNSPEC
 condition|)
 block|{
 comment|/* this is perfectly legal */
-name|log
+name|logit
 argument_list|(
 literal|"userauth_pubkey: unsupported public key algorithm: %s"
 argument_list|,
@@ -851,7 +851,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|log
+name|logit
 argument_list|(
 literal|"Authentication refused: %s"
 argument_list|,

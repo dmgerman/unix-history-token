@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-rhosts.c,v 1.28 2002/05/13 21:26:49 markus Exp $"
+literal|"$OpenBSD: auth-rhosts.c,v 1.31 2003/06/02 09:17:34 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -244,7 +244,7 @@ name|sscanf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s %s %s"
+literal|"%1023s %1023s %1023s"
 argument_list|,
 name|hostbuf
 argument_list|,
@@ -583,7 +583,7 @@ name|get_canonical_hostname
 argument_list|(
 name|options
 operator|.
-name|verify_reverse_mapping
+name|use_dns
 argument_list|)
 expr_stmt|;
 name|ipaddr
@@ -864,7 +864,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Rhosts authentication refused for %.100s: "
 literal|"no home directory %.200s"
@@ -931,7 +931,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Rhosts authentication refused for %.100s: "
 literal|"bad ownership or modes for home directory."
@@ -1046,7 +1046,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|log
+name|logit
 argument_list|(
 literal|"Rhosts authentication refused for %.100s: bad modes for %.200s"
 argument_list|,

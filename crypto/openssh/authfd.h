@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: authfd.h,v 1.32 2003/01/23 13:50:27 markus Exp $	*/
+comment|/*	$OpenBSD: authfd.h,v 1.33 2003/06/11 11:18:38 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -197,6 +197,13 @@ define|#
 directive|define
 name|SSH2_AGENTC_ADD_ID_CONSTRAINED
 value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENTC_ADD_SMARTCARD_KEY_CONSTRAINED
+value|26
 end_define
 
 begin_define
@@ -448,6 +455,10 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
