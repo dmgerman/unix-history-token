@@ -9693,6 +9693,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -11176,6 +11179,8 @@ operator|=
 name|crackaddr
 argument_list|(
 name|p
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 name|printf

@@ -8840,6 +8840,9 @@ argument_list|(
 operator|(
 name|char
 operator|*
+operator|,
+name|ENVELOPE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8944,6 +8947,8 @@ operator|=
 name|crackaddr
 argument_list|(
 name|name
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Turn the name into canonical form. 	**	Normally this will be RFC 822 style, i.e., "user@domain". 	**	If this only resolves to "user", and the "C" flag is 	**	specified in the sending mailer, then the sender's 	**	domain will be appended. 	*/
