@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hgraph.c	1.7	(Berkeley) 83/10/12  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
+comment|/*	hgraph.c	1.8	(Berkeley) 83/10/12  *  *     This file contains the graphics routines for converting gremlin  * pictures to troff input.  */
 end_comment
 
 begin_include
@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|MAXVECT
-value|50
+value|40
 end_define
 
 begin_define
