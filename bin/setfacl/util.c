@@ -57,14 +57,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|ptr
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"malloc() failed"
+literal|"calloc() failed"
 argument_list|)
 expr_stmt|;
 return|return
