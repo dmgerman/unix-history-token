@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -136,8 +136,15 @@ end_include
 begin_define
 define|#
 directive|define
+name|ttystopsigmask
+value|(sigmask(SIGTSTP)|sigmask(SIGTTIN)|sigmask(SIGTTOU))
+end_define
+
+begin_define
+define|#
+directive|define
 name|stopsigmask
-value|(sigmask(SIGSTOP)|sigmask(SIGTSTP)| \ 			sigmask(SIGTTIN)|sigmask(SIGTTOU))
+value|(sigmask(SIGSTOP)|ttystopsigmask)
 end_define
 
 begin_define
@@ -2566,37 +2573,10 @@ operator|=
 name|SIG_CATCH
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|p_pgrp
-operator|->
-name|pg_jobc
-operator|==
-literal|0
-operator|&&
-operator|(
-name|sig
-operator|==
-name|SIGTTIN
-operator|||
-name|sig
-operator|==
-name|SIGTTOU
-operator|||
-name|sig
-operator|==
-name|SIGTSTP
-operator|)
-condition|)
-return|return;
 name|action
 operator|=
 name|SIG_DFL
 expr_stmt|;
-block|}
 block|}
 switch|switch
 condition|(
@@ -3270,7 +3250,7 @@ literal|0
 condition|)
 break|break;
 comment|/* == ignore */
-comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal. 			 */
+comment|/* 			 * If there is a pending stop signal to process 			 * with default action, stop here, 			 * then clear the signal.  However, 			 * if process is member of an orphaned 			 * process group, ignore tty stop signals. 			 */
 if|if
 condition|(
 name|mask
@@ -3285,6 +3265,20 @@ operator|->
 name|p_flag
 operator|&
 name|STRC
+operator|||
+operator|(
+name|p
+operator|->
+name|p_pgrp
+operator|->
+name|pg_jobc
+operator|==
+literal|0
+operator|&&
+name|mask
+operator|&
+name|ttystopsigmask
+operator|)
 condition|)
 break|break;
 comment|/* == ignore */
