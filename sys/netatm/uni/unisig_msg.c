@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -61,6 +55,18 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -208,14 +214,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Local variables  */
+comment|/*  * net.harp.uni.unisig_print_msg  *  * 0 - disable  * 1 - dump UNI message  * 2 - dump UNI message + print decoded form  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -226,10 +226,26 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_harp_uni
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unisig_print_msg
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|unisig_print_msg
+argument_list|,
+literal|0
+argument_list|,
+literal|"dump UNI messages"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Set a Cause IE based on information in an ATM attribute block  *  * Arguments:  *	iep	pointer to a cause IE  *	aap	pointer to attribute block  *  * Returns:  *	0	message sent OK  *	errno	error encountered  *  */
@@ -586,9 +602,6 @@ operator|(
 name|ENETDOWN
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 comment|/* 	 * Print the message we're sending. 	 */
 if|if
 condition|(
@@ -601,8 +614,6 @@ argument_list|,
 name|UNISIG_MSG_OUT
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Convert message to network order 	 */
 name|err
 operator|=
@@ -670,9 +681,6 @@ name|EIO
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 comment|/* 	 * Print the converted message 	 */
 if|if
 condition|(
@@ -687,8 +695,6 @@ operator|.
 name|usf_m_base
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Send the message 	 */
 name|err
 operator|=
@@ -2661,9 +2667,6 @@ goto|goto
 name|done
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 comment|/* 	 * Debug--print some information about the message 	 */
 if|if
 condition|(
@@ -2676,8 +2679,6 @@ argument_list|,
 name|UNISIG_MSG_IN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Get the call reference value 	 */
 name|cref
 operator|=

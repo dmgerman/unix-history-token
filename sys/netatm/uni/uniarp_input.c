@@ -358,9 +358,6 @@ expr|struct
 name|atmarp_hdr
 argument_list|)
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|uniarp_print
@@ -374,8 +371,6 @@ argument_list|,
 literal|"receive"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Verify IP's VCC state 	 */
 if|if
 condition|(
