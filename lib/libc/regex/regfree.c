@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<regex.h>
 end_include
 
@@ -221,9 +227,13 @@ name|NULL
 condition|)
 name|free
 argument_list|(
+operator|&
 name|g
 operator|->
 name|charjump
+index|[
+name|CHAR_MIN
+index|]
 argument_list|)
 expr_stmt|;
 if|if
