@@ -1502,15 +1502,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_POSIX_THREAD_PRIO_PROTECT
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|pthread_mutexattr_getprioceiling
@@ -1576,25 +1567,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_POSIX_THREAD_PRIO_PROTECT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_POSIX_THREAD_PRIO_INHERIT
-argument_list|)
-end_if
-
 begin_decl_stmt
 name|int
 name|pthread_mutexattr_getprotocol
@@ -1625,20 +1597,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_POSIX_THREAD_PRIORITY_SCHEDULING
-argument_list|)
-end_if
 
 begin_decl_stmt
 name|int
@@ -1810,11 +1768,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
