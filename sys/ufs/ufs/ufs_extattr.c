@@ -757,7 +757,7 @@ argument_list|(
 literal|"ufs_extattr_uepm_destroy: called while still started"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: It's not clear that either order for the next two lines is 	 * ideal, and it should never be a problem if this is only called 	 * during unmount, and with vfs_busy(). 	 */
+comment|/* 	 * It's not clear that either order for the next two lines is 	 * ideal, and it should never be a problem if this is only called 	 * during unmount, and with vfs_busy(). 	 */
 name|uepm
 operator|->
 name|uepm_flags
