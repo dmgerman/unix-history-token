@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.125 1999/04/24 01:53:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.126 1999/04/27 14:33:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2240,6 +2240,8 @@ name|desk
 decl_stmt|;
 name|int
 name|ret
+init|=
+name|DITEM_SUCCESS
 decl_stmt|;
 if|if
 condition|(
@@ -2326,11 +2328,29 @@ argument_list|)
 operator|!=
 name|DITEM_FAILURE
 condition|)
-name|write_root_xprofile
+block|{
+name|ret
+operator|=
+name|package_add
 argument_list|(
-literal|"exec gnome-session\n"
+literal|"@afterstep"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|ret
+argument_list|)
+operator|!=
+name|DITEM_FAILURE
+condition|)
+name|write_root_xprofile
+argument_list|(
+literal|"gnome-session&\nexec afterstep"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2394,11 +2414,18 @@ argument_list|)
 operator|!=
 name|DITEM_FAILURE
 condition|)
-name|write_root_xprofile
+block|{
+name|vsystem
 argument_list|(
-literal|"xterm&\nexec windowmaker\n"
+literal|"/usr/X11R6/bin/wmaker.inst"
 argument_list|)
 expr_stmt|;
+name|write_root_xprofile
+argument_list|(
+literal|"xterm&\nexec wmaker\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2434,6 +2461,23 @@ literal|"xterm&\nexec enlightenment\n"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|ret
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"An error occurred while adding the package(s) required\n"
+literal|"by this desktop type.  Please change installation media\n"
+literal|"and/or select a different, perhaps simpler, desktop\n"
+literal|"environment and try again."
+argument_list|)
+expr_stmt|;
 return|return
 name|ret
 return|;
