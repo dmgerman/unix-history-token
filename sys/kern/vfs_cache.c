@@ -619,42 +619,31 @@ begin_comment
 comment|/*  * Add an entry to the cache  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cache_enter
-argument_list|(
-argument|dvp
-argument_list|,
-argument|vp
-argument_list|,
-argument|cnp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dvp
+parameter_list|,
+name|vp
+parameter_list|,
+name|cnp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|dvp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|componentname
 modifier|*
 name|cnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -964,18 +953,16 @@ operator|=
 name|ncp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Name cache initialization, from vfs_init() when we are booting  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nchinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|nchtail
 operator|=
@@ -995,28 +982,23 @@ name|nchash
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Cache flush, a particular vnode; called when a vnode is renamed to  * hide entries that would now be invalid  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cache_purge
-argument_list|(
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|namecache
@@ -1097,28 +1079,23 @@ operator|++
 name|nextvnodeid
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Cache flush, a whole filesystem; called when filesys is umounted to  * remove entries that would now be invalid  *  * The line "nxtcp = nchhead" near the end is to avoid potential problems  * if the cache lru chain is modified while we are dumping the  * inode.  This makes the algorithm O(n^2), but do you think I care?  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cache_purgevfs
-argument_list|(
-argument|mp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1299,7 +1276,7 @@ name|nchhead
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

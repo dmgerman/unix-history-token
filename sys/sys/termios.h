@@ -721,12 +721,8 @@ begin_define
 define|#
 directive|define
 name|CRTSCTS
-value|CCTS_OFLOW
+value|(CCTS_OFLOW | CRTS_IFLOW)
 end_define
-
-begin_comment
-comment|/* ??? */
-end_comment
 
 begin_define
 define|#
@@ -737,6 +733,17 @@ end_define
 
 begin_comment
 comment|/* RTS flow control of input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDSR_OFLOW
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* DSR flow control of output */
 end_comment
 
 begin_define

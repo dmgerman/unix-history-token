@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"imgact.h"
 end_include
 

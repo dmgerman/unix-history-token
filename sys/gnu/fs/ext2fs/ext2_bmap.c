@@ -250,6 +250,8 @@ name|int
 name|error
 decl_stmt|,
 name|maxrun
+init|=
+literal|0
 decl_stmt|,
 name|num
 decl_stmt|;

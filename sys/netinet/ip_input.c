@@ -4566,6 +4566,8 @@ init|=
 literal|0
 decl_stmt|,
 name|code
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mbuf

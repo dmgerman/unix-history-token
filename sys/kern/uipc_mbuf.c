@@ -76,6 +76,17 @@ file|<vm/vm.h>
 end_include
 
 begin_decl_stmt
+name|void
+name|m_reclaim
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|vm_map_t
 name|mb_map
@@ -97,12 +108,10 @@ name|mclrefcnt
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|mbinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|s
@@ -157,7 +166,7 @@ literal|"mbinit"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Allocate some number of mbuf clusters  * and place on cluster free list.  * Must be called at splimp.  */
@@ -167,26 +176,21 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|m_clalloc
-argument_list|(
+parameter_list|(
 name|ncl
-argument_list|,
+parameter_list|,
 name|nowait
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|ncl
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|nowait
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|int
@@ -324,7 +328,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When MGET failes, ask protocols to free space when short of memory,  * then re-attempt to allocate an mbuf.  */
@@ -442,12 +446,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|m_reclaim
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -523,7 +525,7 @@ name|m_drain
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Space allocation routines.  * These are also available as macros  * for critical paths.  */
@@ -1280,46 +1282,35 @@ begin_comment
 comment|/*  * Copy data from an mbuf chain starting "off" bytes from the beginning,  * continuing for "len" bytes, into the indicated buffer.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|m_copydata
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|off
-argument_list|,
+parameter_list|,
 name|len
-argument_list|,
+parameter_list|,
 name|cp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|off
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|unsigned
@@ -1447,29 +1438,30 @@ name|m_next
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Concatenate mbuf chain n to m.  * Both chains must be of the same type (e.g. MT_DATA).  * Any m_pkthdr is not updated.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|m_cat
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|n
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -1576,30 +1568,22 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|m_adj
-argument_list|(
-argument|mp
-argument_list|,
-argument|req_len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|req_len
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|req_len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1884,7 +1868,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */

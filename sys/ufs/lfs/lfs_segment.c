@@ -5535,20 +5535,18 @@ begin_comment
 comment|/*  * Check VXLOCK.  Return 1 if the vnode is locked.  Otherwise, vget it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lfs_vref
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -5574,7 +5572,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

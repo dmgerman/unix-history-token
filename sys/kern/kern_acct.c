@@ -57,41 +57,30 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|acct
-argument_list|(
-argument|a1
-argument_list|,
-argument|a2
-argument_list|,
-argument|a3
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a1
+parameter_list|,
+name|a2
+parameter_list|,
+name|a3
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|a1
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|acct_args
 modifier|*
 name|a2
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|a3
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Body deleted. 	 */
 return|return
@@ -100,29 +89,24 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|acct_process
-argument_list|(
-argument|a1
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a1
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|a1
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Body deleted. 	 */
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */

@@ -35,6 +35,23 @@ name|hostnamelen
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|domainname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|domainnamelen
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* 1.2 */
 end_comment
@@ -139,6 +156,91 @@ end_decl_stmt
 begin_comment
 comment|/* once a second sleep address */
 end_comment
+
+begin_comment
+comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `struct linker_set' as defined below.  *  * NB: the constants defined below must match those defined in  * ld/ld.h.  Since their calculation requires arithmetic, we  * can't name them symbolically (e.g., 23 is N_SETT | N_EXT).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAKE_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|asm(".stabs \"_" #set "\", " #type ", 0, 0, _" #sym)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TEXT_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DATA_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 25)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ABS_SET
+parameter_list|(
+name|set
+parameter_list|,
+name|sym
+parameter_list|)
+value|MAKE_SET(set, sym, 21)
+end_define
+
+begin_struct
+struct|struct
+name|linker_set
+block|{
+name|int
+name|ls_length
+decl_stmt|;
+name|caddr_t
+name|ls_items
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* really ls_length of them, trailing NULL */
+block|}
+struct|;
+end_struct
 
 end_unit
 

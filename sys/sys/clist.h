@@ -13,6 +13,7 @@ modifier|*
 name|c_next
 decl_stmt|;
 comment|/* next cblock in queue */
+name|unsigned
 name|char
 name|c_quote
 index|[
@@ -20,6 +21,7 @@ name|CBQSIZE
 index|]
 decl_stmt|;
 comment|/* quoted characters */
+name|unsigned
 name|char
 name|c_info
 index|[

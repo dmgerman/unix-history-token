@@ -691,6 +691,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TIOCMSBIDIR
+value|_IOW('t', 93, int)
+end_define
+
+begin_comment
+comment|/* modem: set bidir cap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMGBIDIR
+value|_IOR('t', 92, int)
+end_define
+
+begin_comment
+comment|/* modem: get bidir cap. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMSDTRWAIT
+value|_IOW('t', 91, int)
+end_define
+
+begin_comment
+comment|/* modem: set wait on close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCMGDTRWAIT
+value|_IOR('t', 90, int)
+end_define
+
+begin_comment
+comment|/* modem: get wait on close */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCTIMESTAMP
+value|_IOR('t', 89, struct timeval)
+end_define
+
+begin_comment
+comment|/* get timestamp of  						last interrupt for xntp. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TTYDISC
 value|0
 end_define
@@ -719,6 +774,17 @@ end_define
 
 begin_comment
 comment|/* serial IP discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPDISC
+value|5
+end_define
+
+begin_comment
+comment|/* PPP discipline */
 end_comment
 
 begin_endif

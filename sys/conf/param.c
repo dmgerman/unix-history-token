@@ -182,12 +182,20 @@ begin_define
 define|#
 directive|define
 name|NTEXT
-value|(80 + NPROC / 8)
+value|NPROC
 end_define
 
-begin_comment
-comment|/* actually the object cache */
-end_comment
+begin_decl_stmt
+name|int
+name|vm_cache_max
+init|=
+name|NTEXT
+operator|/
+literal|2
+operator|+
+literal|16
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

@@ -502,6 +502,16 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|pseudo_set
+argument_list|,
+name|slattach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1389,6 +1399,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|len
+init|=
+literal|0
 decl_stmt|;
 endif|#
 directive|endif
@@ -1693,30 +1705,13 @@ name|if_lastchange
 operator|=
 name|time
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 		 * If system is getting low on clists, just flush our 		 * output queue (if the stuff was important, it'll get 		 * retransmitted). 		 */
-if|if
-condition|(
-name|cfreecount
-operator|<
-name|CLISTRESERVE
-operator|+
-name|SLMTU
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_collisions
-operator|++
-expr_stmt|;
-continue|continue;
-block|}
+block|if (cfreecount< CLISTRESERVE + SLMTU) { 			m_freem(m); 			sc->sc_if.if_collisions++; 			continue; 		}
+endif|#
+directive|endif
 comment|/* 		 * The extra FRAME_END will start up a new packet, and thus 		 * will flush any accumulated garbage.  We do this whenever 		 * the line may have been idle for some time. 		 */
 if|if
 condition|(

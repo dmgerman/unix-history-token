@@ -23,12 +23,18 @@ end_define
 begin_include
 include|#
 directive|include
-file|"machine/db_machdep.h"
+file|<machine/db_machdep.h>
 end_include
 
 begin_comment
 comment|/* type definitions */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
 
 begin_comment
 comment|/*  * Global variables...  */

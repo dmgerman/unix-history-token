@@ -15,12 +15,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vm_map_t
-name|exec_map
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vm_map_t
 name|kernel_map
 decl_stmt|;
 end_decl_stmt
@@ -34,6 +28,24 @@ end_decl_stmt
 begin_decl_stmt
 name|vm_map_t
 name|mb_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|io_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|clean_map
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vm_map_t
+name|pager_map
 decl_stmt|;
 end_decl_stmt
 

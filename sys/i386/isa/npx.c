@@ -1460,7 +1460,9 @@ block|{
 comment|/* 		 * Interrupt is essentially a trap, so we can afford to call 		 * the SIGFPE handler (if any) as soon as the interrupt 		 * returns. 		 * 		 * XXX little or nothing is gained from this, and plenty is 		 * lost - the interrupt frame has to contain the trap frame 		 * (this is otherwise only necessary for the rescheduling trap 		 * in doreti, and the frame for that could easily be set up 		 * just before it is used). 		 */
 name|curproc
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 operator|=
 operator|(
 name|int

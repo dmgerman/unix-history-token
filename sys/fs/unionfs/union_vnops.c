@@ -470,6 +470,8 @@ name|struct
 name|ucred
 modifier|*
 name|saved_cred
+init|=
+literal|0
 decl_stmt|;
 name|cnp
 operator|->

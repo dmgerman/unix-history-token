@@ -5709,14 +5709,9 @@ name|void
 name|chan_attn_timeout
 parameter_list|(
 name|rock
-parameter_list|,
-name|arg2
 parameter_list|)
 name|caddr_t
 name|rock
-decl_stmt|;
-name|int
-name|arg2
 decl_stmt|;
 block|{
 operator|*

@@ -17,7 +17,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|int
+name|char
 name|vm_inherit_t
 typedef|;
 end_typedef
@@ -130,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_param.h>
 end_include
 
@@ -236,6 +242,10 @@ decl_stmt|;
 comment|/* user virtual address of data XXX */
 name|caddr_t
 name|vm_maxsaddr
+decl_stmt|;
+comment|/* user VA at max stack growth */
+name|caddr_t
+name|vm_minsaddr
 decl_stmt|;
 comment|/* user VA at max stack growth */
 block|}

@@ -1739,8 +1739,6 @@ name|void
 name|bt_timeout
 parameter_list|(
 name|caddr_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6316,9 +6314,6 @@ name|bt_timeout
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|struct

@@ -130,12 +130,10 @@ begin_comment
 comment|/*  * Initialize hash links for nfsnodes  * and build nfsnode free list.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nfs_nhinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 ifndef|#
 directive|ifndef
@@ -185,7 +183,7 @@ name|nheadhash
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute an entry in the NFS hash table structure  */
@@ -270,43 +268,32 @@ begin_comment
 comment|/*  * Look up a vnode/nfsnode by file handle.  * Callers must check for mount points!!  * In all cases, a pointer to a  * nfsnode structure is returned.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_nget
-argument_list|(
-argument|mntp
-argument_list|,
-argument|fhp
-argument_list|,
-argument|npp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mntp
+parameter_list|,
+name|fhp
+parameter_list|,
+name|npp
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mntp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|nfsv2fh_t
 modifier|*
 name|fhp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|nfsnode
 modifier|*
 modifier|*
 name|npp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -639,25 +626,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|nfs_inactive
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_inactive_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -815,29 +797,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reclaim an nfsnode so that it can be used for other purposes.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_reclaim
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_reclaim_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1035,29 +1012,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lock an nfsnode  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_lock
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_lock_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1115,29 +1087,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock an nfsnode  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_unlock
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_unlock_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1145,29 +1112,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check for a locked nfsnode  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_islocked
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_islocked_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1175,7 +1137,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Nfs abort op, called after namei() when a CREATE/DELETE isn't actually  * done. Currently nothing to do.  */

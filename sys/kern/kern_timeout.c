@@ -1562,28 +1562,23 @@ begin_comment
 comment|/*  * Return information about system clocks.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|sysctl_clockrate
-argument_list|(
+parameter_list|(
 name|where
-argument_list|,
+parameter_list|,
 name|sizep
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|where
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|size_t
 modifier|*
 name|sizep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|clockinfo
@@ -1639,7 +1634,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1326,23 +1326,18 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lfs_fsync
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_fsync_args
 comment|/* { 		struct vnode *a_vp; 		struct ucred *a_cred; 		int a_waitfor; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|timeval
@@ -1379,7 +1374,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * These macros are used to bracket UFS directory ops, so that we can  * identify all the pages touched during directory ops which need to  * be ordered and flushed atomically, so that they may be recovered.  */

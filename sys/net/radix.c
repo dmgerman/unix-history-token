@@ -1921,6 +1921,8 @@ name|t
 decl_stmt|,
 modifier|*
 name|x
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|tt

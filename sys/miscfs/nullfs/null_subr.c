@@ -126,12 +126,10 @@ begin_comment
 comment|/*  * Initialise cache headers  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nullfs_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|null_node_cache
@@ -179,8 +177,13 @@ operator|*
 operator|)
 name|ac
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute hash list for given lower vnode  */

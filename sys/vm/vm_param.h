@@ -61,9 +61,21 @@ name|DEFAULT_PAGE_SIZE
 value|4096
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/*  *	All references to the size of a page should be done with PAGE_SIZE  *	or PAGE_SHIFT.  The fact they are variables is hidden here so that  *	we can easily make them constant if we so desire.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAGE_SIZE
+end_ifndef
 
 begin_define
 define|#
@@ -76,6 +88,17 @@ begin_comment
 comment|/* size of page */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAGE_MASK
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -87,6 +110,17 @@ begin_comment
 comment|/* size of page - 1 */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PAGE_SHIFT
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -97,6 +131,16 @@ end_define
 begin_comment
 comment|/* bits to shift for pages */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -250,6 +294,18 @@ directive|ifdef
 name|KERNEL
 end_ifdef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|atop
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -259,6 +315,17 @@ name|x
 parameter_list|)
 value|(((unsigned)(x))>> PAGE_SHIFT)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ptoa
+end_ifndef
 
 begin_define
 define|#
@@ -270,9 +337,20 @@ parameter_list|)
 value|((vm_offset_t)((x)<< PAGE_SHIFT))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Round off or truncate to the nearest page.  These will work  * for either addresses or counts (i.e., 1 byte rounds to 1 page).  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|round_page
+end_ifndef
 
 begin_define
 define|#
@@ -285,6 +363,17 @@ define|\
 value|((vm_offset_t)((((vm_offset_t)(x)) + PAGE_MASK)& ~PAGE_MASK))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|trunc_page
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -295,6 +384,38 @@ parameter_list|)
 define|\
 value|((vm_offset_t)(((vm_offset_t)(x))& ~PAGE_MASK))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|num_pages
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|num_pages
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|((vm_offset_t)((((vm_offset_t)(x)) + PAGE_MASK)>> PAGE_SHIFT))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -345,6 +466,12 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_comment
 comment|/* out-of-kernel versions of round_page and trunc_page */
 end_comment
@@ -370,6 +497,11 @@ parameter_list|)
 define|\
 value|((((vm_offset_t)(x)) / vm_page_size) * vm_page_size)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

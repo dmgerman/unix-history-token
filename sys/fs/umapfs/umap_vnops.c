@@ -123,6 +123,8 @@ name|struct
 name|ucred
 modifier|*
 name|savecredp
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|savecompcredp

@@ -74,23 +74,18 @@ begin_comment
 comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|cd9660_lookup
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_lookup_args
 comment|/* { 		struct vnode *a_dvp; 		struct vnode **a_vpp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -123,6 +118,8 @@ name|struct
 name|iso_directory_record
 modifier|*
 name|ep
+init|=
+literal|0
 decl_stmt|;
 comment|/* the current directory entry */
 name|int
@@ -131,6 +128,8 @@ decl_stmt|;
 comment|/* offset of ep in bp's buffer */
 name|int
 name|saveoffset
+init|=
+literal|0
 decl_stmt|;
 comment|/* offset of last directory entry in dir */
 name|int
@@ -1577,47 +1576,36 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return buffer with contents of block "offset"  * from the beginning of directory "ip".  If "res"  * is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_blkatoff
-argument_list|(
-argument|ip
-argument_list|,
-argument|offset
-argument_list|,
-argument|bpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|,
+name|bpp
+parameter_list|)
 name|struct
 name|iso_node
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|doff_t
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|buf
 modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1708,7 +1696,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

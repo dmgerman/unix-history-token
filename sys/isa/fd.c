@@ -1059,8 +1059,6 @@ name|void
 name|fd_turnoff
 parameter_list|(
 name|caddr_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1685,8 +1683,6 @@ operator|(
 name|caddr_t
 operator|)
 name|fdu
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|hdr
@@ -2030,6 +2026,9 @@ argument_list|)
 expr_stmt|;
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_turnoff
 argument_list|,
 operator|(
@@ -2254,9 +2253,6 @@ name|fd_turnoff
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|fdu_t
@@ -2318,9 +2314,6 @@ name|fd_motor_on
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|fdu_t
@@ -2446,6 +2439,9 @@ name|FD_MOTOR_WAIT
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_motor_on
 argument_list|,
 operator|(
@@ -3234,9 +3230,6 @@ name|fd_timeout
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|fdcu_t
@@ -3816,6 +3809,9 @@ argument_list|)
 expr_stmt|;
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_turnoff
 argument_list|,
 operator|(
@@ -3826,6 +3822,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_turnoff
 argument_list|,
 operator|(
@@ -4036,6 +4035,9 @@ name|SEEKWAIT
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_timeout
 argument_list|,
 operator|(
@@ -4059,6 +4061,9 @@ name|SEEKWAIT
 case|:
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_timeout
 argument_list|,
 operator|(
@@ -4070,6 +4075,9 @@ expr_stmt|;
 comment|/* allow heads to settle */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_pseudointr
 argument_list|,
 operator|(
@@ -4493,6 +4501,9 @@ name|IOCOMPLETE
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_timeout
 argument_list|,
 operator|(
@@ -4517,6 +4528,9 @@ case|:
 comment|/* IO DONE, post-analyze */
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_timeout
 argument_list|,
 operator|(
@@ -4723,7 +4737,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4885,6 +4899,9 @@ case|:
 comment|/* allow heads to settle */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|fd_pseudointr
 argument_list|,
 operator|(
@@ -5426,7 +5443,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 name|fdc
 operator|->

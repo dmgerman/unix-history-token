@@ -92,19 +92,24 @@ decl_stmt|;
 comment|/* offset into object */
 name|boolean_t
 name|is_a_map
-decl_stmt|;
+range|:
+literal|1
+decl_stmt|,
 comment|/* Is "object" a map? */
-name|boolean_t
 name|is_sub_map
-decl_stmt|;
+range|:
+literal|1
+decl_stmt|,
 comment|/* Is "object" a submap? */
 comment|/* Only in sharing maps: */
-name|boolean_t
 name|copy_on_write
-decl_stmt|;
+range|:
+literal|1
+decl_stmt|,
 comment|/* is data copy-on-write */
-name|boolean_t
 name|needs_copy
+range|:
+literal|1
 decl_stmt|;
 comment|/* does object need to be copied */
 comment|/* Only in task maps: */
@@ -319,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|MAX_KMAPENT
-value|500
+value|128
 end_define
 
 begin_ifdef

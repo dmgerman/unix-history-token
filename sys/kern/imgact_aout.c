@@ -6,49 +6,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"exec.h"
+file|<sys/exec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"mman.h"
+file|<sys/mman.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"imgact.h"
+file|<sys/imgact.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_function
@@ -376,13 +376,14 @@ operator||
 name|VM_PROT_WRITE
 argument_list|,
 comment|/* max protection */
-name|MAP_FILE
-operator||
 name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
 argument_list|,
 comment|/* flags */
+operator|(
+name|caddr_t
+operator|)
 name|iparams
 operator|->
 name|vnodep
@@ -442,12 +443,13 @@ operator|)
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
-name|MAP_FILE
-operator||
 name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|iparams
 operator|->
 name|vnodep

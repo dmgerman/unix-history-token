@@ -6,91 +6,79 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/vmmeter.h"
+file|<sys/map.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mbuf.h"
+file|<sys/msgbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/msgbuf.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/resourcevar.h"
+file|<machine/trap.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/trap.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<sys/syscall.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/syscall.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/vm_map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/pmap.h"
+file|<sys/user.h>
 end_include
 
 begin_function
@@ -250,7 +238,7 @@ argument_list|,
 operator|&
 name|p
 operator|->
-name|p_link
+name|p_forw
 argument_list|)
 expr_stmt|;
 name|printf
@@ -260,7 +248,7 @@ argument_list|,
 operator|&
 name|p
 operator|->
-name|p_rlink
+name|p_back
 argument_list|)
 expr_stmt|;
 name|printf
@@ -300,7 +288,7 @@ argument_list|,
 operator|&
 name|p
 operator|->
-name|p_pri
+name|p_priority
 argument_list|)
 expr_stmt|;
 name|printf
@@ -407,16 +395,7 @@ operator|->
 name|v_soft
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_PDMA %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_pdma
-argument_list|)
-expr_stmt|;
+comment|/*	printf("#define\tV_PDMA %d\n",&vm->v_pdma); */
 name|printf
 argument_list|(
 literal|"#define\tV_FAULTS %d\n"
@@ -427,26 +406,8 @@ operator|->
 name|v_faults
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_PGREC %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_pgrec
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tV_FASTPGREC %d\n"
-argument_list|,
-operator|&
-name|vm
-operator|->
-name|v_fastpgrec
-argument_list|)
-expr_stmt|;
+comment|/*	printf("#define\tV_PGREC %d\n",&vm->v_pgrec); */
+comment|/*	printf("#define\tV_FASTPGREC %d\n",&vm->v_fastpgrec); */
 name|printf
 argument_list|(
 literal|"#define\tUPAGES %d\n"

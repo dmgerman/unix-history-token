@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -1674,12 +1680,10 @@ begin_comment
 comment|/*  * Initialize the kernel memory allocator  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kmeminit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|long
@@ -1903,7 +1907,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 

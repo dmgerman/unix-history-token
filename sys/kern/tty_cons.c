@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sys/proc.h"
 end_include
 
@@ -19,12 +25,6 @@ begin_include
 include|#
 directive|include
 file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/systm.h"
 end_include
 
 begin_include
@@ -412,7 +412,6 @@ name|cn_dev
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|vfinddev
 argument_list|(
 name|dev
@@ -422,9 +421,6 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
-operator|==
-literal|0
-operator|)
 operator|&&
 name|vcount
 argument_list|(
@@ -516,7 +512,6 @@ name|cn_dev
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|vfinddev
 argument_list|(
 name|dev
@@ -526,9 +521,6 @@ argument_list|,
 operator|&
 name|vp
 argument_list|)
-operator|==
-literal|0
-operator|)
 operator|&&
 name|vcount
 argument_list|(

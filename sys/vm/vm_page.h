@@ -74,6 +74,14 @@ name|u_short
 name|flags
 decl_stmt|;
 comment|/* see below */
+name|short
+name|hold_count
+decl_stmt|;
+comment|/* page hold count */
+name|u_short
+name|act_count
+decl_stmt|;
+comment|/* page usage count */
 name|vm_offset_t
 name|phys_addr
 decl_stmt|;
@@ -470,7 +478,7 @@ name|PAGE_WAKEUP
 parameter_list|(
 name|m
 parameter_list|)
-value|{ \ 				(m)->flags&= ~PG_BUSY; \ 				if ((m)->flags& PG_WANTED) { \ 					(m)->flags&= ~PG_WANTED; \ 					thread_wakeup((int) (m)); \ 				} \ 			}
+value|{ \ 				(m)->flags&= ~PG_BUSY; \ 				if ((m)->flags& PG_WANTED) { \ 					(m)->flags&= ~PG_WANTED; \ 					wakeup((caddr_t) (m)); \ 				} \ 			}
 end_define
 
 begin_define
@@ -510,7 +518,7 @@ name|object
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->wire_count = 0; \ }
+value|{ \ 	(mem)->flags = PG_BUSY | PG_CLEAN | PG_FAKE; \ 	vm_page_insert((mem), (object), (offset)); \ 	(mem)->wire_count = 0; \ 	(mem)->hold_count = 0; \ 	(mem)->act_count = 0; \ }
 end_define
 
 begin_decl_stmt
@@ -636,16 +644,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|vm_offset_t
 name|vm_page_startup
 name|__P
 argument_list|(
 operator|(
 name|vm_offset_t
-operator|*
 operator|,
 name|vm_offset_t
-operator|*
+operator|,
+name|vm_offset_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -686,6 +694,59 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Keep page from being freed by the page daemon  * much of the same effect as wiring, except much lower  * overhead and should be used only for *very* temporary  * holding ("wiring").  */
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_hold
+parameter_list|(
+name|mem
+parameter_list|)
+name|vm_page_t
+name|mem
+decl_stmt|;
+block|{
+name|mem
+operator|->
+name|hold_count
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|vm_page_unhold
+parameter_list|(
+name|mem
+parameter_list|)
+name|vm_page_t
+name|mem
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|--
+name|mem
+operator|->
+name|hold_count
+operator|<
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_unhold: hold count< 0!!!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

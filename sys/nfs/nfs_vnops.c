@@ -2568,6 +2568,8 @@ name|u_quad_t
 name|frev
 decl_stmt|,
 name|tsize
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -3210,6 +3212,8 @@ name|cp2
 decl_stmt|;
 name|time_t
 name|reqtime
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mbuf
@@ -3256,8 +3260,12 @@ literal|0
 decl_stmt|;
 name|int
 name|nqlflag
+init|=
+literal|0
 decl_stmt|,
 name|cachable
+init|=
+literal|0
 decl_stmt|;
 name|u_quad_t
 name|frev
@@ -5402,6 +5410,8 @@ name|struct
 name|vnode
 modifier|*
 name|newvp
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|vattr
@@ -8993,6 +9003,8 @@ name|struct
 name|dirent
 modifier|*
 name|dp
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|u_long
@@ -9011,6 +9023,8 @@ name|long
 name|tlen
 decl_stmt|,
 name|lastlen
+init|=
+literal|0
 decl_stmt|;
 name|caddr_t
 name|bpos
@@ -9061,11 +9075,15 @@ name|u_long
 name|off
 decl_stmt|,
 name|savoff
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|dirent
 modifier|*
 name|savdp
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|nfsmount
@@ -9711,6 +9729,8 @@ name|struct
 name|dirent
 modifier|*
 name|dp
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|u_long
@@ -9773,6 +9793,8 @@ name|u_long
 name|off
 decl_stmt|,
 name|endoff
+init|=
+literal|0
 decl_stmt|,
 name|fileno
 decl_stmt|;
@@ -9780,6 +9802,8 @@ name|time_t
 name|reqtime
 decl_stmt|,
 name|ltime
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|nfsmount
@@ -9824,6 +9848,8 @@ name|i
 decl_stmt|;
 name|int
 name|cachable
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -12053,23 +12079,18 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfs_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -12077,7 +12098,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * NFS advisory byte-level locks.  * Currently unsupported.  */
@@ -12183,6 +12204,11 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

@@ -125,54 +125,6 @@ parameter_list|)
 value|{ netisr |= 1<<(anisr); setsoftnet(); }
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|i386
-end_ifdef
-
-begin_comment
-comment|/* XXX Temporary -- soon to vanish - wfj */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_SCLK
-value|11
-end_define
-
-begin_comment
-comment|/* softclock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETISR_AST
-value|12
-end_define
-
-begin_comment
-comment|/* ast -- resched */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|schednetisr
-end_undef
-
-begin_define
-define|#
-directive|define
-name|schednetisr
-parameter_list|(
-name|anisr
-parameter_list|)
-value|{\ 	if(netisr == 0) { \ 		softem++; \ 	} \ 	netisr |= 1<<(anisr); \ }
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -186,43 +138,8 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|softem
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* i386 */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_decl_stmt
+specifier|volatile
+name|unsigned
 name|int
 name|netisr
 decl_stmt|;

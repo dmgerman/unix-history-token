@@ -3,6 +3,19 @@ begin_comment
 comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mtio.h	8.1 (Berkeley) 6/2/93  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_MTIO_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SYS_MTIO_H_
+value|1
+end_define
+
 begin_comment
 comment|/*  * Structures and definitions for mag tape io control commands  */
 end_comment
@@ -141,6 +154,62 @@ begin_comment
 comment|/* disable controller cache */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Set block size for device. If device is a variable size dev		*/
+end_comment
+
+begin_comment
+comment|/* a non zero parameter will change the device to a fixed block size	*/
+end_comment
+
+begin_comment
+comment|/* device with block size set to that of the parameter passed in.	*/
+end_comment
+
+begin_comment
+comment|/* Resetting the block size to 0 will restore the device to a variable	*/
+end_comment
+
+begin_comment
+comment|/* block size device. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTSETBSIZ
+value|10
+end_define
+
+begin_comment
+comment|/* Set density values for device. Thye aredefined in  the SCSI II spec	*/
+end_comment
+
+begin_comment
+comment|/* and range from 0 to 0x17. Sets the value for the openned mode only	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTSETDNSTY
+value|11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* structure for MTIOCGET - mag tape get status command */
 end_comment
@@ -167,6 +236,54 @@ name|short
 name|mt_resid
 decl_stmt|;
 comment|/* residual count */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|daddr_t
+name|mt_blksiz
+decl_stmt|;
+comment|/* presently operatin blocksize */
+name|daddr_t
+name|mt_density
+decl_stmt|;
+comment|/* presently operatin density */
+name|daddr_t
+name|mt_blksiz0
+decl_stmt|;
+comment|/* blocksize for mode 0 */
+name|daddr_t
+name|mt_blksiz1
+decl_stmt|;
+comment|/* blocksize for mode 1 */
+name|daddr_t
+name|mt_blksiz2
+decl_stmt|;
+comment|/* blocksize for mode 2 */
+name|daddr_t
+name|mt_blksiz3
+decl_stmt|;
+comment|/* blocksize for mode 3 */
+name|daddr_t
+name|mt_density0
+decl_stmt|;
+comment|/* density for mode 0 */
+name|daddr_t
+name|mt_density1
+decl_stmt|;
+comment|/* density for mode 1 */
+name|daddr_t
+name|mt_density2
+decl_stmt|;
+comment|/* density for mode 2 */
+name|daddr_t
+name|mt_density3
+decl_stmt|;
+comment|/* density for mode 3 */
+endif|#
+directive|endif
 comment|/* the following two are not yet implemented */
 name|daddr_t
 name|mt_fileno
@@ -463,7 +580,7 @@ begin_define
 define|#
 directive|define
 name|DEFTAPE
-value|"/dev/rmt12"
+value|"/dev/nrst0"
 end_define
 
 begin_endif
@@ -562,6 +679,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS_MTIO_H_ */
+end_comment
 
 end_unit
 

@@ -232,12 +232,10 @@ begin_comment
 comment|/*  * Initialise cache headers  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fdesc_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|fdcache
@@ -283,8 +281,13 @@ operator|*
 operator|)
 name|fc
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute hash list for given target vnode  */
@@ -653,6 +656,8 @@ name|nfiles
 decl_stmt|;
 name|unsigned
 name|fd
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|error
@@ -3188,23 +3193,18 @@ begin_comment
 comment|/*  * Return POSIX pathconf information applicable to special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fdesc_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -3312,7 +3312,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the contents of a /dev/fd vnode.  */

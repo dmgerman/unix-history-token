@@ -33,38 +33,30 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_expr_stmt
+begin_function
+name|int
 name|uiomove
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|n
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|)
+parameter_list|)
 specifier|register
 name|caddr_t
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -314,35 +306,30 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Give next character to user as result of read.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ureadc
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -489,7 +476,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -505,22 +492,17 @@ begin_comment
 comment|/*  * Get next character written in by user from uio.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|uwritec
-argument_list|(
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|uio
+parameter_list|)
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -687,7 +669,7 @@ name|c
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

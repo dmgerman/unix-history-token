@@ -730,23 +730,18 @@ begin_comment
 comment|/*  * vp is the current namei directory  * ndp is the name to locate in that directory...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_lookup
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_lookup_args
 comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -1180,25 +1175,20 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_open
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_open_args
 comment|/* { 		struct vnode *a_vp; 		int  a_mode; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -1281,7 +1271,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1430,23 +1420,18 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_getattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_getattr_args
 comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -1760,25 +1745,20 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_setattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_setattr_args
 comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Silently ignore attribute changes. 	 * This allows for open with truncate to have no 	 * effect until some data is written.  I want to 	 * do it this way because all writes are atomic. 	 */
 return|return
@@ -1787,7 +1767,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -2097,23 +2077,18 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_readdir
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_readdir_args
 comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|uio
@@ -2306,25 +2281,20 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_inactive
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_inactive_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -2360,25 +2330,20 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|kernfs_reclaim
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_reclaim_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -2430,29 +2395,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return POSIX pathconf information applicable to special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2560,7 +2520,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the contents of a /dev/fd vnode.  */
@@ -2570,23 +2530,18 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_print
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_print_args
 comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2599,29 +2554,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*void*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_vfree
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_vfree_args
 comment|/* { 		struct vnode *a_pvp; 		ino_t a_ino; 		int a_mode; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2629,18 +2579,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * /dev/fd vnode unsupported operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_enotsupp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -2648,18 +2596,16 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * /dev/fd "should never get here" operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_badop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|panic
 argument_list|(
@@ -2668,18 +2614,16 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * kernfs vnode null operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernfs_nullop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -2687,7 +2631,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#

@@ -142,7 +142,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|regs
+name|reg
 block|{
 name|unsigned
 name|int
@@ -166,6 +166,10 @@ name|r_ebp
 decl_stmt|;
 name|unsigned
 name|int
+name|r_isp
+decl_stmt|;
+name|unsigned
+name|int
 name|r_ebx
 decl_stmt|;
 name|unsigned
@@ -179,6 +183,14 @@ decl_stmt|;
 name|unsigned
 name|int
 name|r_eax
+decl_stmt|;
+name|unsigned
+name|int
+name|r_trapno
+decl_stmt|;
+name|unsigned
+name|int
+name|r_err
 decl_stmt|;
 name|unsigned
 name|int
@@ -200,14 +212,25 @@ name|unsigned
 name|int
 name|r_ss
 decl_stmt|;
-name|unsigned
-name|int
-name|r_fs
-decl_stmt|;
-name|unsigned
-name|int
-name|r_gs
-decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Register set accessible via /proc/$pid/fpreg  */
+end_comment
+
+begin_struct
+struct|struct
+name|fpreg
+block|{
+if|#
+directive|if
+literal|0
+block|int	fpr_xxx;
+comment|/* not implemented */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

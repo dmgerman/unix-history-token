@@ -1348,6 +1348,8 @@ block|{
 specifier|register
 name|u_long
 name|i
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(

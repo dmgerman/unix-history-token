@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -226,6 +232,8 @@ name|struct
 name|inode
 modifier|*
 name|ip
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|lfs

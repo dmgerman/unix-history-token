@@ -93,6 +93,40 @@ directive|include
 file|<sys/tty.h>
 end_include
 
+begin_decl_stmt
+name|void
+name|pgdelete
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pgrp
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fixjobc
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+expr|struct
+name|pgrp
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Structure associated with user cacheing.  */
 end_comment
@@ -149,12 +183,10 @@ begin_comment
 comment|/*  * Allocate a hash table.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|usrinfoinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|uihashtbl
 operator|=
@@ -171,7 +203,7 @@ name|uihash
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change the count associated with number of processes  * a given user is using.  */
@@ -415,20 +447,18 @@ begin_comment
 comment|/*  * Is p an inferior of the current process?  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|inferior
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 for|for
 control|(
@@ -462,7 +492,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Locate a process by number  */
@@ -600,36 +630,28 @@ begin_comment
 comment|/*  * Move p to a new or existing process group (and session)  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|enterpgrp
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pgid
-argument_list|,
+parameter_list|,
 name|mksess
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|pid_t
 name|pgid
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mksess
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1065,26 +1087,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * remove process from process group  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|leavepgrp
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1179,26 +1199,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * delete a process group  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|pgdelete
-argument_list|(
+parameter_list|(
 name|pgrp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|pgrp
-operator|*
+modifier|*
 name|pgrp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1327,7 +1345,7 @@ name|M_PGRP
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -1341,39 +1359,31 @@ begin_comment
 comment|/*  * Adjust pgrp jobc counters when specified process changes process group.  * We count the number of processes in each process group that "qualify"  * the group for terminal job control (those with a parent in a different  * process group of the same session).  If that count reaches zero, the  * process group becomes orphaned.  Check both the specified process'  * process group and that of its children.  * entering == 0 => p is leaving specified group.  * entering == 1 => p is entering specified group.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|fixjobc
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|pgrp
-argument_list|,
+parameter_list|,
 name|entering
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|pgrp
 modifier|*
 name|pgrp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|entering
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1502,7 +1512,7 @@ name|hispgrp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   * A process group has become orphaned;  * if there are any stopped processes in the group,  * hang-up all process in that group.  */

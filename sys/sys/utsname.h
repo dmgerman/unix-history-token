@@ -15,6 +15,13 @@ directive|define
 name|_SYS_UTSNAME_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYS_NMLN
+value|32
+end_define
+
 begin_struct
 struct|struct
 name|utsname
@@ -22,35 +29,35 @@ block|{
 name|char
 name|sysname
 index|[
-literal|256
+name|SYS_NMLN
 index|]
 decl_stmt|;
 comment|/* Name of this OS. */
 name|char
 name|nodename
 index|[
-literal|256
+name|SYS_NMLN
 index|]
 decl_stmt|;
 comment|/* Name of this network node. */
 name|char
 name|release
 index|[
-literal|256
+name|SYS_NMLN
 index|]
 decl_stmt|;
 comment|/* Release level. */
 name|char
 name|version
 index|[
-literal|256
+name|SYS_NMLN
 index|]
 decl_stmt|;
 comment|/* Version level. */
 name|char
 name|machine
 index|[
-literal|256
+name|SYS_NMLN
 index|]
 decl_stmt|;
 comment|/* Hardware type. */
@@ -63,6 +70,18 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -79,9 +98,43 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function_decl
 name|__END_DECLS
-end_macro
+else|#
+directive|else
+specifier|extern
+name|int
+name|uname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|utsname
+name|utsname
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_endif
 endif|#

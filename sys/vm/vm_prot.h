@@ -25,7 +25,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|u_char
 name|vm_prot_t
 typedef|;
 end_typedef

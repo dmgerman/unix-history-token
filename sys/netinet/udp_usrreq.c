@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1707,6 +1713,8 @@ name|laddr
 decl_stmt|;
 name|int
 name|s
+init|=
+literal|0
 decl_stmt|,
 name|error
 init|=
@@ -2676,64 +2684,44 @@ begin_comment
 comment|/*  * Sysctl for udp variables.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|udp_sysctl
-argument_list|(
-argument|name
-argument_list|,
-argument|namelen
-argument_list|,
-argument|oldp
-argument_list|,
-argument|oldlenp
-argument_list|,
-argument|newp
-argument_list|,
-argument|newlen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|namelen
+parameter_list|,
+name|oldp
+parameter_list|,
+name|oldlenp
+parameter_list|,
+name|newp
+parameter_list|,
+name|newlen
+parameter_list|)
 name|int
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|namelen
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 modifier|*
 name|oldp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 modifier|*
 name|newp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|size_t
 name|newlen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* All sysctl names at this level are terminal. */
 if|if
@@ -2784,7 +2772,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 

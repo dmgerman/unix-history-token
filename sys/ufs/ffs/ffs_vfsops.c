@@ -200,12 +200,10 @@ name|ROOTNAME
 value|"root_device"
 end_define
 
-begin_macro
+begin_function
+name|int
 name|ffs_mountroot
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|struct
@@ -527,7 +525,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  */
@@ -584,6 +582,8 @@ name|struct
 name|ufsmount
 modifier|*
 name|ump
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -1084,40 +1084,32 @@ begin_comment
 comment|/*  * Reload all incore data for a filesystem (used after running fsck on  * the root filesystem and finding things to fix). The filesystem must  * be mounted read-only.  *  * Things to do to update the mount:  *	1) invalidate all cached meta-data.  *	2) re-read superblock from disk.  *	3) re-read summary information from disk.  *	4) invalidate all inactive vnodes.  *	5) invalidate all cached file data.  *	6) re-read inode data for all active vnodes.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ffs_reload
-argument_list|(
+parameter_list|(
 name|mountp
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mountp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1684,7 +1676,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Common code for mount and mountroot  */
@@ -2464,22 +2456,17 @@ begin_comment
 comment|/*  * Sanity checks for old file systems.  *  * XXX - goes away some day.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ffs_oldfscompat
-argument_list|(
-argument|fs
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fs
+parameter_list|)
 name|struct
 name|fs
 modifier|*
 name|fs
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -2622,7 +2609,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * unmount system call  */
@@ -2829,38 +2816,30 @@ begin_comment
 comment|/*  * Flush out all the files in a filesystem.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ffs_flushfiles
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -2983,7 +2962,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get file system statistics.  */
@@ -4142,32 +4121,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ffs_vptofh
-argument_list|(
-argument|vp
-argument_list|,
-argument|fhp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|fhp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|fid
 modifier|*
 name|fhp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4229,7 +4200,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write a superblock and associated information back to disk.  */

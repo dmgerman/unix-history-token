@@ -66,12 +66,12 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|argp
+name|argv
 decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|envp
+name|envv
 decl_stmt|;
 block|}
 struct|;

@@ -2192,12 +2192,10 @@ begin_comment
 comment|/*  * Initialize the (doubly-linked) run queues  * to be empty.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rqinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -2242,7 +2240,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change process state to be runnable,  * placing it on the run queue if it is in memory,  * and awakening the swapper if it isn't in memory.  */

@@ -706,8 +706,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_LAST
+name|M_TTYS
 value|75
+end_define
+
+begin_comment
+comment|/* tty data structures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LAST
+value|76
 end_define
 
 begin_comment
@@ -838,6 +849,8 @@ value|\ 	"ISOFS node",
 comment|/* 58 M_ISOFSNODE */
 value|\ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
 comment|/* 74 M_TEMP */
+value|\ 	"ttys",
+comment|/* 75 M_TTYS */
 value|\ }
 end_define
 

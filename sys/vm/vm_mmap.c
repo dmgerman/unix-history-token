@@ -810,6 +810,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|i386
 if|if
 condition|(
 name|VM_MIN_ADDRESS
@@ -825,6 +828,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|addr
@@ -1569,6 +1574,9 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|i386
 if|if
 condition|(
 name|VM_MIN_ADDRESS
@@ -1584,6 +1592,8 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|addr

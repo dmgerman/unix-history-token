@@ -200,11 +200,8 @@ begin_function
 name|void
 name|loopattach
 parameter_list|(
-name|n
+name|void
 parameter_list|)
-name|int
-name|n
-decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -215,16 +212,6 @@ init|=
 operator|&
 name|loif
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|lint
-name|n
-operator|=
-name|n
-expr_stmt|;
-comment|/* Highlander: there can only be one... */
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_name
@@ -306,6 +293,16 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_expr_stmt
+name|TEXT_SET
+argument_list|(
+name|pseudo_set
+argument_list|,
+name|loopattach
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

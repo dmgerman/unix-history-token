@@ -517,23 +517,18 @@ begin_comment
 comment|/*  * Truncate the inode oip to at most length size, freeing the  * disk blocks.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ffs_truncate
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_truncate_args
 comment|/* { 		struct vnode *a_vp; 		off_t a_length; 		int a_flags; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1880,7 +1875,7 @@ name|allerror
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Release blocks associated with the inode ip and stored in the indirect  * block bn.  Blocks are free'd in LIFO order up to (but not including)  * lastbn.  If level is greater than SINGLE, the block is an indirect block  * and recursive calls to indirtrunc must be used to cleanse other indirect  * blocks.  *  * NB: triple indirect blocks are untested.  */

@@ -58,28 +58,6 @@ name|VN_PAGER_NULL
 value|((vn_pager_t)0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VNP_PAGING
-value|0x01
-end_define
-
-begin_comment
-comment|/* vnode used for pageout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VNP_CACHED
-value|0x02
-end_define
-
-begin_comment
-comment|/* vnode is cached */
-end_comment
-
 begin_endif
 endif|#
 directive|endif

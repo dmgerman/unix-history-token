@@ -69,22 +69,11 @@ directive|include
 file|<miscfs/union/union.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/proc.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* must be power of two, otherwise change UNION_HASH() */
@@ -182,6 +171,11 @@ name|unvplock
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -687,6 +681,8 @@ name|struct
 name|union_node
 modifier|*
 name|un
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|union_node
@@ -703,6 +699,8 @@ name|NULLVP
 decl_stmt|;
 name|int
 name|hash
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|try

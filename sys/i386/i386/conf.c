@@ -10,38 +10,195 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/vnode.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
+end_include
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_open_t
+name|__P
+typedef|((
+name|dev_t
+typedef|,
+name|int
+typedef|,
+name|int
+typedef|, struct
+name|proc
+modifier|*
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_close_t
+name|__P
+typedef|((
+name|dev_t
+typedef|,
+name|int
+typedef|,
+name|int
+typedef|, struct
+name|proc
+modifier|*
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_strategy_t
+name|__P
+typedef|((struct
+name|buf
+modifier|*
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_ioctl_t
+name|__P
+typedef|((
+name|dev_t
+typedef|,
+name|int
+typedef|,
+name|caddr_t
+typedef|,
+name|int
+typedef|, struct
+name|proc
+modifier|*
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_dump_t
+name|__P
+typedef|(());
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_psize_t
+name|__P
+typedef|((
+name|dev_t
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_rdwr_t
+name|__P
+typedef|((
+name|dev_t
+typedef|, struct
+name|uio
+modifier|*
+typedef|,
+name|int
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_stop_t
+name|__P
+typedef|((struct
+name|tty
+modifier|*
+typedef|,
+name|int
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_reset_t
+name|__P
+typedef|((
+name|int
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_select_t
+name|__P
+typedef|((
+name|dev_t
+typedef|,
+name|int
+typedef|, struct
+name|proc
+modifier|*
+typedef|));
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|d_mmap_t
+name|__P
+typedef|((
+comment|/* XXX */
+typedef|));
+end_typedef
 
 begin_decl_stmt
 name|int
@@ -1161,8 +1318,8 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tty
-modifier|*
 name|pccons
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,7 +1464,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tty
-modifier|*
 name|pt_tty
 index|[]
 decl_stmt|;
@@ -1468,7 +1624,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tty
-modifier|*
 name|com_tty
 index|[]
 decl_stmt|;
@@ -2511,7 +2666,6 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|tty
-modifier|*
 name|sio_tty
 index|[]
 decl_stmt|;
@@ -3152,7 +3306,6 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-operator|&
 name|pccons
 block|,
 comment|/* pc */
@@ -3714,6 +3867,350 @@ literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Routine that identifies /dev/mem and /dev/kmem.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_function
+name|int
+name|iskmemdev
+parameter_list|(
+name|dev
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|2
+operator|&&
+operator|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|1
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|iszerodev
+parameter_list|(
+name|dev
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|2
+operator|&&
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|12
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Routine to determine if a device is a disk.  *  * A minimal stub routine can always return 0.  */
+end_comment
+
+begin_function
+name|int
+name|isdisk
+parameter_list|(
+name|dev
+parameter_list|,
+name|type
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+name|int
+name|type
+decl_stmt|;
+block|{
+switch|switch
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+block|{
+case|case
+literal|0
+case|:
+case|case
+literal|2
+case|:
+case|case
+literal|4
+case|:
+case|case
+literal|6
+case|:
+case|case
+literal|7
+case|:
+if|if
+condition|(
+name|type
+operator|==
+name|VBLK
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+literal|3
+case|:
+case|case
+literal|9
+case|:
+case|case
+literal|13
+case|:
+case|case
+literal|15
+case|:
+case|case
+literal|29
+case|:
+if|if
+condition|(
+name|type
+operator|==
+name|VCHR
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* fall through */
+default|default:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|MAXDEV
+value|32
+end_define
+
+begin_decl_stmt
+specifier|static
+name|int
+name|chrtoblktbl
+index|[
+name|MAXDEV
+index|]
+init|=
+block|{
+comment|/* VCHR */
+comment|/* VBLK */
+comment|/* 0 */
+name|NODEV
+block|,
+comment|/* 1 */
+name|NODEV
+block|,
+comment|/* 2 */
+name|NODEV
+block|,
+comment|/* 3 */
+literal|0
+block|,
+comment|/* 4 */
+name|NODEV
+block|,
+comment|/* 5 */
+name|NODEV
+block|,
+comment|/* 6 */
+name|NODEV
+block|,
+comment|/* 7 */
+name|NODEV
+block|,
+comment|/* 8 */
+name|NODEV
+block|,
+comment|/* 9 */
+literal|2
+block|,
+comment|/* 10 */
+literal|3
+block|,
+comment|/* 11 */
+name|NODEV
+block|,
+comment|/* 12 */
+name|NODEV
+block|,
+comment|/* 13 */
+literal|4
+block|,
+comment|/* 14 */
+literal|5
+block|,
+comment|/* 15 */
+literal|6
+block|,
+comment|/* 16 */
+name|NODEV
+block|,
+comment|/* 17 */
+name|NODEV
+block|,
+comment|/* 18 */
+name|NODEV
+block|,
+comment|/* 19 */
+name|NODEV
+block|,
+comment|/* 20 */
+name|NODEV
+block|,
+comment|/* 21 */
+name|NODEV
+block|,
+comment|/* 22 */
+name|NODEV
+block|,
+comment|/* 23 */
+name|NODEV
+block|,
+comment|/* 25 */
+name|NODEV
+block|,
+comment|/* 26 */
+name|NODEV
+block|,
+comment|/* 27 */
+name|NODEV
+block|,
+comment|/* 28 */
+name|NODEV
+block|,
+comment|/* 29 */
+literal|7
+block|,
+comment|/* 30 */
+name|NODEV
+block|,
+comment|/* 31 */
+name|NODEV
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Routine to convert from character to block device number.  *  * A minimal stub routine can always return NODEV.  */
+end_comment
+
+begin_function
+name|int
+name|chrtoblk
+parameter_list|(
+name|dev
+parameter_list|)
+name|dev_t
+name|dev
+decl_stmt|;
+block|{
+name|int
+name|blkmaj
+decl_stmt|;
+if|if
+condition|(
+name|major
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
+name|MAXDEV
+operator|||
+operator|(
+name|blkmaj
+operator|=
+name|chrtoblktbl
+index|[
+name|major
+argument_list|(
+name|dev
+argument_list|)
+index|]
+operator|)
+operator|==
+name|NODEV
+condition|)
+return|return
+operator|(
+name|NODEV
+operator|)
+return|;
+return|return
+operator|(
+name|makedev
+argument_list|(
+name|blkmaj
+argument_list|,
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

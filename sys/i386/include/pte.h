@@ -164,8 +164,44 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_MASK
+value|0x003ff000UL
+end_define
+
+begin_comment
+comment|/* page table address bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_SHIFT
+value|12
+end_define
+
+begin_comment
+comment|/* page table address shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PG_V
 value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_RW
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_u
+value|0x00000004
 end_define
 
 begin_define
@@ -233,6 +269,13 @@ end_define
 begin_comment
 comment|/* page was modified */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_W
+value|0x00000200
+end_define
 
 begin_define
 define|#

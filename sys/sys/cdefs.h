@@ -356,10 +356,6 @@ operator|||
 name|__GNUC__
 operator|<
 literal|2
-operator|||
-name|__GNUC_MINOR__
-operator|<
-literal|5
 end_if
 
 begin_define

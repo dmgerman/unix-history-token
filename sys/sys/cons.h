@@ -183,8 +183,7 @@ specifier|extern
 name|int
 name|cnopen
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -202,8 +201,7 @@ specifier|extern
 name|int
 name|cnclose
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -221,8 +219,7 @@ specifier|extern
 name|int
 name|cnread
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|struct
 name|uio
@@ -238,8 +235,7 @@ specifier|extern
 name|int
 name|cnwrite
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|struct
 name|uio
@@ -255,8 +251,7 @@ specifier|extern
 name|int
 name|cnioctl
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|int
 parameter_list|,
@@ -276,8 +271,7 @@ specifier|extern
 name|int
 name|cnselect
 parameter_list|(
-name|int
-comment|/*dev_t*/
+name|dev_t
 parameter_list|,
 name|int
 parameter_list|,

@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -2389,6 +2395,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|optval
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|error

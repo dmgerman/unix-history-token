@@ -607,12 +607,10 @@ begin_comment
 comment|/*  * Initialize the vnode structures and initialize each file system type.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vfsinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|vfsops
@@ -687,7 +685,7 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

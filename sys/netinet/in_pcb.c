@@ -705,6 +705,8 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|ifaddr
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -1349,7 +1351,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_pcbdisconnect
 parameter_list|(
 name|inp
@@ -1393,7 +1395,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_pcbdetach
 parameter_list|(
 name|inp
@@ -1480,7 +1482,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_setsockaddr
 parameter_list|(
 name|inp
@@ -1576,7 +1578,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|in_setpeeraddr
 parameter_list|(
 name|inp
@@ -1675,7 +1677,7 @@ comment|/*  * Pass some notification to all connections of a protocol  * associa
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|in_pcbnotify
 parameter_list|(
 name|head
@@ -1959,7 +1961,7 @@ comment|/*  * Check for alternatives when higher level complains  * about servic
 end_comment
 
 begin_function
-name|int
+name|void
 name|in_losing
 parameter_list|(
 name|inp

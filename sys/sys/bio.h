@@ -79,6 +79,10 @@ name|b_flags
 decl_stmt|;
 comment|/* B_* flags. */
 name|int
+name|b_qindex
+decl_stmt|;
+comment|/* buffer queue index */
+name|int
 name|b_error
 decl_stmt|;
 comment|/* Errno value. */
@@ -172,6 +176,37 @@ name|int
 name|b_validend
 decl_stmt|;
 comment|/* Offset of end of valid region. */
+name|daddr_t
+name|b_pblkno
+decl_stmt|;
+comment|/* physical block number */
+name|caddr_t
+name|b_savekva
+decl_stmt|;
+comment|/* saved kva for transfer while bouncing */
+name|TAILQ_HEAD
+argument_list|(
+argument|b_clusterhd
+argument_list|,
+argument|buf
+argument_list|)
+name|b_cluster
+expr_stmt|;
+comment|/* low level clustering */
+name|void
+modifier|*
+name|b_driver1
+decl_stmt|;
+comment|/* for private use by the driver */
+name|void
+modifier|*
+name|b_driver2
+decl_stmt|;
+comment|/* for private use by the driver */
+name|void
+modifier|*
+name|b_spc
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -536,6 +571,28 @@ begin_comment
 comment|/* Debugging flag. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|B_CLUSTER
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* pagein op, so swap() can count it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_BOUNCE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* bounce buffer flag */
+end_comment
+
 begin_comment
 comment|/*  * This structure describes a clustered I/O.  It is stored in the b_saveaddr  * field of the buffer on which I/O is done.  At I/O completion, cluster  * callback uses the structure to parcel I/O's to individual buffers, and  * then free's this structure.  */
 end_comment
@@ -683,16 +740,19 @@ begin_comment
 comment|/* Number of swap I/O buffer headers. */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|buf
-name|bswlist
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|TAILQ_HEAD
+argument_list|(
+argument|swqueue
+argument_list|,
+argument|buf
+argument_list|)
+end_macro
 
-begin_comment
-comment|/* Head of swap I/O buffer headers free list. */
-end_comment
+begin_expr_stmt
+name|bswlist
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -708,7 +768,7 @@ end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-name|int
+name|void
 name|allocbuf
 name|__P
 argument_list|(
@@ -724,7 +784,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|bawrite
 name|__P
 argument_list|(
@@ -738,7 +798,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|bdwrite
 name|__P
 argument_list|(
@@ -842,7 +902,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|brelse
 name|__P
 argument_list|(

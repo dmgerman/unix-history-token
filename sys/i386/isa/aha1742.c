@@ -1322,8 +1322,6 @@ name|void
 name|ahb_timeout
 parameter_list|(
 name|caddr_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4338,6 +4336,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|ahb_timeout
 argument_list|,
 operator|(
@@ -5021,6 +5022,9 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|ahb_timeout
 argument_list|,
 operator|(
@@ -5215,9 +5219,6 @@ name|ahb_timeout
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|struct
@@ -5433,6 +5434,9 @@ expr_stmt|;
 comment|/* 2 secs for the abort */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|ahb_timeout
 argument_list|,
 operator|(

@@ -52,25 +52,67 @@ name|sc_mask
 decl_stmt|;
 comment|/* signal mask to restore */
 name|int
+name|sc_esp
+decl_stmt|;
+comment|/* machine state */
+name|int
+name|sc_ebp
+decl_stmt|;
+name|int
+name|sc_isp
+decl_stmt|;
+name|int
+name|sc_eip
+decl_stmt|;
+name|int
+name|sc_efl
+decl_stmt|;
+name|int
+name|sc_es
+decl_stmt|;
+name|int
+name|sc_ds
+decl_stmt|;
+name|int
+name|sc_cs
+decl_stmt|;
+name|int
+name|sc_ss
+decl_stmt|;
+name|int
+name|sc_edi
+decl_stmt|;
+name|int
+name|sc_esi
+decl_stmt|;
+name|int
+name|sc_ebx
+decl_stmt|;
+name|int
+name|sc_edx
+decl_stmt|;
+name|int
+name|sc_ecx
+decl_stmt|;
+name|int
+name|sc_eax
+decl_stmt|;
+define|#
+directive|define
 name|sc_sp
-decl_stmt|;
-comment|/* sp to restore */
-name|int
+value|sc_esp
+define|#
+directive|define
 name|sc_fp
-decl_stmt|;
-comment|/* fp to restore */
-name|int
-name|sc_ap
-decl_stmt|;
-comment|/* ap to restore */
-name|int
+value|sc_ebp
+define|#
+directive|define
 name|sc_pc
-decl_stmt|;
-comment|/* pc to restore */
-name|int
+value|sc_eip
+define|#
+directive|define
 name|sc_ps
-decl_stmt|;
-comment|/* psl to restore */
+value|sc_efl
 block|}
 struct|;
 end_struct

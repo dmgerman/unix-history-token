@@ -167,6 +167,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|len

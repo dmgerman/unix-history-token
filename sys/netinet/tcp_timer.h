@@ -255,7 +255,7 @@ name|tvmin
 parameter_list|,
 name|tvmax
 parameter_list|)
-value|{ \ 	(tv) = (value); \ 	if ((tv)< (tvmin)) \ 		(tv) = (tvmin); \ 	else if ((tv)> (tvmax)) \ 		(tv) = (tvmax); \ }
+value|{ \ 	(tv) = (value); \ 	if ((u_long)(tv)< (u_long)(tvmin)) \ 		(tv) = (tvmin); \ 	else if ((u_long)(tv)> (u_long)(tvmax)) \ 		(tv) = (tvmax); \ }
 end_define
 
 begin_ifdef

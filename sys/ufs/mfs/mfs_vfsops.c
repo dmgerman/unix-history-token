@@ -200,12 +200,10 @@ name|ROOTNAME
 value|"mfs_root"
 end_define
 
-begin_macro
+begin_function
+name|int
 name|mfs_mountroot
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|struct
@@ -615,26 +613,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This is called early in boot to set the base address and size  * of the mini-root.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mfs_initminiroot
-argument_list|(
-argument|base
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|base
+parameter_list|)
 name|caddr_t
 name|base
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|fs
@@ -724,7 +717,7 @@ name|mfs_rootsize
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * VFS Operations.  *  * mount system call  */
@@ -1479,42 +1472,31 @@ begin_comment
 comment|/*  * Get file system statistics.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mfs_statfs
-argument_list|(
-argument|mp
-argument_list|,
-argument|sbp
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|sbp
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|statfs
 modifier|*
 name|sbp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -1542,7 +1524,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -210,6 +210,8 @@ name|struct
 name|tcpcb
 modifier|*
 name|tp
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|s

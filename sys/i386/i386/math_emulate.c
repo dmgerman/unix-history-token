@@ -14,61 +14,61 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/reg.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<machine/reg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|<sys/user.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"acct.h"
+file|<sys/acct.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|<sys/signal.h>
 end_include
 
 begin_define
@@ -81,7 +81,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"i386/i386/math_emu.h"
+file|"math_emu.h"
 end_include
 
 begin_define
@@ -3646,7 +3646,7 @@ name|REG
 parameter_list|(
 name|x
 parameter_list|)
-value|(curproc->p_regs[__regoffset[(x)]])
+value|(curproc->p_md.md_regs[__regoffset[(x)]])
 end_define
 
 begin_function

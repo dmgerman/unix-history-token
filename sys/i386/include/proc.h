@@ -28,16 +28,11 @@ name|int
 name|md_flags
 decl_stmt|;
 comment|/* machine-dependent flags */
-ifdef|#
-directive|ifdef
-name|notyet
 name|int
 modifier|*
-name|p_regs
+name|md_regs
 decl_stmt|;
 comment|/* registers on current frame */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

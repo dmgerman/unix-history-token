@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)device_pager.c	8.5 (Berkeley) 1/12/94  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)device_pager.c	8.1 (Berkeley) 6/11/93  */
 end_comment
 
 begin_comment
@@ -172,9 +172,6 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
-operator|*
-operator|,
-name|int
 operator|,
 name|boolean_t
 operator|)
@@ -220,9 +217,6 @@ operator|(
 name|vm_pager_t
 operator|,
 name|vm_page_t
-operator|*
-operator|,
-name|int
 operator|,
 name|boolean_t
 operator|)
@@ -270,11 +264,13 @@ name|dev_pager_dealloc
 block|,
 name|dev_pager_getpage
 block|,
+literal|0
+block|,
 name|dev_pager_putpage
 block|,
-name|dev_pager_haspage
+literal|0
 block|,
-name|vm_pager_clusternull
+name|dev_pager_haspage
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -361,6 +357,7 @@ decl_stmt|;
 name|dev_pager_t
 name|devp
 decl_stmt|;
+name|unsigned
 name|int
 name|npages
 decl_stmt|,
@@ -413,6 +410,9 @@ operator|=
 operator|(
 name|dev_t
 operator|)
+operator|(
+name|u_long
+operator|)
 name|handle
 expr_stmt|;
 name|mapfunc
@@ -451,7 +451,11 @@ if|if
 condition|(
 name|foff
 operator|&
-name|PAGE_MASK
+operator|(
+name|PAGE_SIZE
+operator|-
+literal|1
+operator|)
 condition|)
 return|return
 operator|(
@@ -615,15 +619,18 @@ name|PG_DEVICE
 expr_stmt|;
 name|pager
 operator|->
-name|pg_flags
+name|pg_data
 operator|=
-literal|0
+operator|(
+name|caddr_t
+operator|)
+name|devp
 expr_stmt|;
 name|pager
 operator|->
-name|pg_data
+name|pg_flags
 operator|=
-name|devp
+literal|0
 expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
@@ -661,7 +668,7 @@ argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-literal|0
+name|foff
 argument_list|,
 name|FALSE
 argument_list|)
@@ -877,7 +884,6 @@ directive|endif
 comment|/* 	 * Free up our fake pages. 	 */
 while|while
 condition|(
-operator|(
 name|m
 operator|=
 name|devp
@@ -885,9 +891,6 @@ operator|->
 name|devp_pglist
 operator|.
 name|tqh_first
-operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -938,9 +941,7 @@ name|dev_pager_getpage
 parameter_list|(
 name|pager
 parameter_list|,
-name|mlist
-parameter_list|,
-name|npages
+name|m
 parameter_list|,
 name|sync
 parameter_list|)
@@ -948,11 +949,7 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 name|vm_page_t
-modifier|*
-name|mlist
-decl_stmt|;
-name|int
-name|npages
+name|m
 decl_stmt|;
 name|boolean_t
 name|sync
@@ -974,6 +971,9 @@ name|dev_t
 name|dev
 decl_stmt|;
 name|int
+name|s
+decl_stmt|;
+name|int
 argument_list|(
 operator|*
 name|mapfunc
@@ -981,9 +981,6 @@ argument_list|)
 argument_list|()
 decl_stmt|,
 name|prot
-decl_stmt|;
-name|vm_page_t
-name|m
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -996,35 +993,15 @@ name|DDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"dev_pager_getpage(%x, %x, %x, %x)\n"
+literal|"dev_pager_getpage(%x, %x)\n"
 argument_list|,
 name|pager
 argument_list|,
-name|mlist
-argument_list|,
-name|npages
-argument_list|,
-name|sync
+name|m
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|npages
-operator|!=
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"dev_pager_getpage: cannot handle multiple pages"
-argument_list|)
-expr_stmt|;
-name|m
-operator|=
-operator|*
-name|mlist
-expr_stmt|;
 name|object
 operator|=
 name|m
@@ -1035,6 +1012,9 @@ name|dev
 operator|=
 operator|(
 name|dev_t
+operator|)
+operator|(
+name|u_long
 operator|)
 name|pager
 operator|->
@@ -1067,9 +1047,6 @@ index|]
 operator|.
 name|d_mmap
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|mapfunc
@@ -1089,8 +1066,6 @@ argument_list|(
 literal|"dev_pager_getpage: no map function"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|paddr
 operator|=
 name|pmap_phys_address
@@ -1100,6 +1075,9 @@ modifier|*
 name|mapfunc
 call|)
 argument_list|(
+operator|(
+name|dev_t
+operator|)
 name|dev
 argument_list|,
 operator|(
@@ -1168,6 +1146,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|vm_page_insert
 argument_list|(
 name|page
@@ -1177,8 +1163,10 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|PAGE_WAKEUP
 argument_list|(
@@ -1224,9 +1212,7 @@ name|dev_pager_putpage
 parameter_list|(
 name|pager
 parameter_list|,
-name|mlist
-parameter_list|,
-name|npages
+name|m
 parameter_list|,
 name|sync
 parameter_list|)
@@ -1234,11 +1220,7 @@ name|vm_pager_t
 name|pager
 decl_stmt|;
 name|vm_page_t
-modifier|*
-name|mlist
-decl_stmt|;
-name|int
-name|npages
+name|m
 decl_stmt|;
 name|boolean_t
 name|sync
@@ -1255,15 +1237,11 @@ name|DDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"dev_pager_putpage(%x, %x, %x, %x)\n"
+literal|"dev_pager_putpage(%x, %x)\n"
 argument_list|,
 name|pager
 argument_list|,
-name|mlist
-argument_list|,
-name|npages
-argument_list|,
-name|sync
+name|m
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1274,7 +1252,9 @@ name|pager
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|panic
 argument_list|(
 literal|"dev_pager_putpage called"
@@ -1432,15 +1412,15 @@ name|PG_FICTITIOUS
 expr_stmt|;
 name|m
 operator|->
-name|phys_addr
-operator|=
-name|paddr
-expr_stmt|;
-name|m
-operator|->
 name|wire_count
 operator|=
 literal|1
+expr_stmt|;
+name|m
+operator|->
+name|phys_addr
+operator|=
+name|paddr
 expr_stmt|;
 return|return
 operator|(

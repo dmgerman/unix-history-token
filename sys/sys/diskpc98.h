@@ -399,6 +399,13 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|cpu_disklabel
+block|{ }
+struct|;
+end_struct
+
 begin_else
 else|#
 directive|else
@@ -498,6 +505,25 @@ directive|define
 name|DTYPE_FLOPPY
 value|10
 comment|/* floppy */
+comment|/* d_subtype values: */
+define|#
+directive|define
+name|DSTYPE_INDOSPART
+value|0x8
+comment|/* is inside dos partition */
+define|#
+directive|define
+name|DSTYPE_DOSPART
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)& 3)
+comment|/* dos partition number */
+define|#
+directive|define
+name|DSTYPE_GEOMETRY
+value|0x10
+comment|/* drive params in label */
 ifdef|#
 directive|ifdef
 name|DKTYPENAMES
@@ -956,6 +982,139 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* DOS partition table -- located in boot block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSBBSECTOR
+value|0
+end_define
+
+begin_comment
+comment|/* DOS boot block relative sector number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPARTOFF
+value|446
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDOSPART
+value|4
+end_define
+
+begin_struct
+struct|struct
+name|dos_partition
+block|{
+name|unsigned
+name|char
+name|dp_flag
+decl_stmt|;
+comment|/* bootstrap flags */
+name|unsigned
+name|char
+name|dp_shd
+decl_stmt|;
+comment|/* starting head */
+name|unsigned
+name|char
+name|dp_ssect
+decl_stmt|;
+comment|/* starting sector */
+name|unsigned
+name|char
+name|dp_scyl
+decl_stmt|;
+comment|/* starting cylinder */
+name|unsigned
+name|char
+name|dp_typ
+decl_stmt|;
+comment|/* partition type */
+define|#
+directive|define
+name|DOSPTYP_386BSD
+value|0xa5
+comment|/* 386BSD partition type */
+name|unsigned
+name|char
+name|dp_ehd
+decl_stmt|;
+comment|/* end head */
+name|unsigned
+name|char
+name|dp_esect
+decl_stmt|;
+comment|/* end sector */
+name|unsigned
+name|char
+name|dp_ecyl
+decl_stmt|;
+comment|/* end cylinder */
+name|unsigned
+name|long
+name|dp_start
+decl_stmt|;
+comment|/* absolute starting sector number */
+name|unsigned
+name|long
+name|dp_size
+decl_stmt|;
+comment|/* partition size in sectors */
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|dos_partition
+name|dos_partitions
+index|[
+name|NDOSPART
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DPSECT
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)& 0x3f)
+end_define
+
+begin_comment
+comment|/* isolate relevant bits of sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPCYL
+parameter_list|(
+name|c
+parameter_list|,
+name|s
+parameter_list|)
+value|((c) + (((s)& 0xc0)<<2))
+end_define
+
+begin_comment
+comment|/* and those that are cylinder */
+end_comment
 
 begin_comment
 comment|/*  * Disk-specific ioctls.  */

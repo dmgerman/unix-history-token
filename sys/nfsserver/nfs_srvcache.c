@@ -331,12 +331,10 @@ begin_comment
 comment|/*  * Initialize the server request cache list  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nfsrv_initcache
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|rheadhtbl
 operator|=
@@ -351,50 +349,39 @@ name|rheadhash
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look for the request in the cache  * If found then  *    return action and optionally reply  * else  *    insert it in the cache  *  * The rules are as follows:  * - if in progress, return DROP request  * - if completed within DELAY of the current time, return DROP it  * - if completed a longer time ago return REPLY if the reply was cached or  *   return DOIT  * Update/add new request at end of lru list  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nfsrv_getcache
-argument_list|(
-argument|nam
-argument_list|,
-argument|nd
-argument_list|,
-argument|repp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nam
+parameter_list|,
+name|nd
+parameter_list|,
+name|repp
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|nam
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|nfsd
 modifier|*
 name|nd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|repp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1160,7 +1147,7 @@ name|RC_DOIT
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Update a request cache entry after the rpc has been done  */

@@ -29,12 +29,10 @@ begin_comment
 comment|/*  * Unsupported device function (e.g. writing to read-only device).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|enodev
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -42,18 +40,16 @@ name|ENODEV
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unconfigured device function; driver not configured.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|enxio
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -61,18 +57,16 @@ name|ENXIO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unsupported ioctl function.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|enoioctl
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -80,18 +74,16 @@ name|ENOTTY
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unsupported system function.  * This is used for an otherwise-reasonable operation  * that is not supported by the current system binary.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|enosys
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -99,18 +91,16 @@ name|ENOSYS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return error for operation not supported  * on a specific object or file type.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|eopnotsupp
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -118,18 +108,16 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Generic null operation, always returns success.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|nullop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -137,7 +125,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

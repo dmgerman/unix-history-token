@@ -36,31 +36,6 @@ end_include
 
 begin_struct
 struct|struct
-name|execve_args
-block|{
-name|char
-modifier|*
-name|fname
-decl_stmt|;
-comment|/* file name */
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-comment|/* pointer to table of argument pointers */
-name|char
-modifier|*
-modifier|*
-name|envv
-decl_stmt|;
-comment|/* pointer to table of environment pointers */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|image_params
 block|{
 name|struct

@@ -56,13 +56,15 @@ comment|/* 	 *	Initializes resident memory structures. 	 *	From here on, all phy
 name|vm_set_page_size
 argument_list|()
 expr_stmt|;
+name|virtual_avail
+operator|=
 name|vm_page_startup
 argument_list|(
-operator|&
 name|avail_start
 argument_list|,
-operator|&
 name|avail_end
+argument_list|,
+name|virtual_avail
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize other VM packages 	 */

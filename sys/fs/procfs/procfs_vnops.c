@@ -234,22 +234,17 @@ begin_comment
 comment|/*  * set things up for doing i/o on  * the pfsnode (vp).  (vp) is locked  * on entry, and should be left locked  * on exit.  *  * for procfs we don't need to do anything  * in particular for i/o.  all that is done  * is to support exclusive open on process  * memory images.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_open
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_open_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pfsnode
@@ -365,28 +360,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * close the pfsnode (vp) after doing i/o.  * (vp) is not locked on entry or exit.  *  * nothing to do for procfs other than undo  * any exclusive open flag (see _open above).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_close
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_close_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pfsnode
@@ -447,28 +437,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * do an ioctl operation on pfsnode (vp).  * (vp) is not locked on entry or exit.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_ioctl
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_ioctl_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -476,28 +461,23 @@ name|ENOTTY
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * do block mapping for pfsnode (vp).  * since we don't use the buffer cache  * for procfs this function should never  * be called.  in any case, it's not clear  * what part of the kernel ever makes use  * of this function.  for sanity, this is the  * usual no-op bmap, although returning  * (EIO) would be a reasonable alternative.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_bmap
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_bmap_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -539,28 +519,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * _inactive is called when the pfsnode  * is vrele'd and the reference count goes  * to zero.  (vp) will be on the vnode free  * list, so to get it back vget() must be  * used.  *  * for procfs, check if the process is still  * alive and if it isn't then just throw away  * the vnode by calling vgone().  this may  * be overkill and a waste of time since the  * chances are that the process will still be  * there and PFIND is not free.  *  * (vp) is not locked on entry or exit.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_inactive
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_inactive_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pfsnode
@@ -598,28 +573,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * _reclaim is called when getnewvnode()  * wants to make use of an entry on the vnode  * free list.  at this time the filesystem needs  * to free any private data and remove the node  * from any private lists.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_reclaim
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_reclaim_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -639,29 +609,24 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return POSIX pathconf information applicable to special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -769,28 +734,23 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * _print is used for debugging.  * just print a readable description  * of (vp).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_print
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_print_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pfsnode
@@ -821,29 +781,29 @@ operator|->
 name|pfs_flags
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * _abortop is called when operations such as  * rename and create fail.  this entry is responsible  * for undoing any side-effects caused by the lookup.  * this will always include freeing the pathname buffer.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_abortop
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_abortop_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -880,18 +840,16 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * generic entry point for unsupported operations  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_badop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -899,28 +857,23 @@ name|EIO
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Invent attributes for pfsnode (vp) and store  * them in (vap).  * Directories lengths are returned as zero since  * any real length would require the genuine size  * to be computed, and nothing cares anyway.  *  * this is relatively minimal for procfs.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_getattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_getattr_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pfsnode
@@ -1314,24 +1267,19 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|procfs_setattr
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_setattr_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * just fake out attribute setting 	 * it's not good to generate an error 	 * return, otherwise things like creat() 	 * will fail when they try to set the 	 * file length to 0.  worse, this means 	 * that echo $note> /proc/$pid/note will fail. 	 */
 return|return
@@ -1340,28 +1288,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * implement access checking.  *  * something very similar to this code is duplicated  * throughout the 4bsd kernel and should be moved  * into kern/vfs_subr.c sometime.  *  * actually, the check for super-user is slightly  * broken since it will allow read access to write-only  * objects.  this doesn't cause any particular trouble  * but does mean that the i/o entry points need to check  * that the operation really does make sense.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_access
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_access_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vattr
@@ -1531,28 +1474,23 @@ name|EACCES
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lookup.  this is incredibly complicated in the  * general case, however for most pseudo-filesystems  * very little needs to be done.  *  * unless you want to get a migraine, just make sure your  * filesystem doesn't do any locking of its own.  otherwise  * read and inwardly digest ufs_lookup().  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_lookup
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_lookup_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|componentname
@@ -2010,28 +1948,23 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * readdir returns directory entries from pfsnode (vp).  *  * the strategy here with procfs is to generate a single  * directory entry at a time (struct pfsdent) and then  * copy that out to userland using uiomove.  a more efficent  * though more complex implementation, would try to minimize  * the number of calls to uiomove().  for procfs, this is  * hardly worth the added code complexity.  *  * this should just be done through read()  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|procfs_readdir
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_readdir_args
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|uio
@@ -2501,7 +2434,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * convert decimal ascii to pid_t  */

@@ -14,7 +14,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"machine/../isa/ipl.h"
+file|<machine/ipl.h>
 end_include
 
 begin_comment
@@ -314,6 +314,15 @@ end_macro
 begin_macro
 name|GENSPL
 argument_list|(
+argument|splstatclock
+argument_list|,
+argument|cpl = HWI_MASK | SWI_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
 argument|splimp
 argument_list|,
 argument|cpl |= net_imask
@@ -355,6 +364,14 @@ argument_list|,
 argument|cpl |= tty_imask
 argument_list|)
 end_macro
+
+begin_define
+define|#
+directive|define
+name|splnone
+parameter_list|()
+value|spl0()
+end_define
 
 begin_function
 specifier|static

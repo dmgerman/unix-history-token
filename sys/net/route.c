@@ -713,7 +713,7 @@ comment|/*  * Force a routing table entry to the specified  * destination to go 
 end_comment
 
 begin_function
-name|int
+name|void
 name|rtredirect
 parameter_list|(
 name|dst

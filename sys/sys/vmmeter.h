@@ -127,6 +127,14 @@ name|v_kernel_pages
 decl_stmt|;
 comment|/* number of pages in use by kernel */
 name|unsigned
+name|v_page_count
+decl_stmt|;
+comment|/* total number of pages in system */
+name|unsigned
+name|v_free_reserved
+decl_stmt|;
+comment|/* number of pages reserved for deadlock */
+name|unsigned
 name|v_free_target
 decl_stmt|;
 comment|/* number of pages desired free */

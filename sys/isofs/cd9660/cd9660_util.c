@@ -446,6 +446,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+name|unsigned
 name|char
 name|c
 decl_stmt|;

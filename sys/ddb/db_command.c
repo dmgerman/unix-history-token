@@ -997,13 +997,9 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|db_ps
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* extern void	db_ps(); */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -1030,19 +1026,9 @@ block|{
 if|#
 directive|if
 literal|0
-block|{ "threads",	db_show_all_threads,	0,	0 },
+block|{ "threads",	db_show_all_threads,	0,	0 }, 	{ "procs",	db_ps,			0,	0 },
 endif|#
 directive|endif
-block|{
-literal|"procs"
-block|,
-name|db_ps
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
 block|{
 operator|(
 name|char
@@ -1474,16 +1460,12 @@ block|,
 name|db_show_cmds
 block|}
 block|,
-block|{
-literal|"ps"
-block|,
-name|db_ps
-block|,
+if|#
+directive|if
 literal|0
-block|,
-literal|0
-block|}
-block|,
+block|{ "ps",		db_ps,			0,	0 },
+endif|#
+directive|endif
 block|{
 operator|(
 name|char

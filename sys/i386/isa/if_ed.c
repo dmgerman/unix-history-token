@@ -224,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|IFF_ALTPHYS
-value|IFF_LLC0
+value|IFF_LINK0
 end_define
 
 begin_endif
@@ -423,8 +423,6 @@ begin_function_decl
 name|void
 name|ed_reset
 parameter_list|(
-name|int
-parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -4377,16 +4375,10 @@ name|void
 name|ed_reset
 parameter_list|(
 name|unit
-parameter_list|,
-name|uban
 parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-name|int
-name|uban
-decl_stmt|;
-comment|/* XXX */
 block|{
 name|int
 name|s
@@ -4557,8 +4549,6 @@ expr_stmt|;
 name|ed_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5767,7 +5757,7 @@ operator|->
 name|txb_new
 index|]
 operator|=
-name|MAX
+name|max
 argument_list|(
 name|len
 argument_list|,
@@ -6291,8 +6281,6 @@ expr_stmt|;
 name|ed_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6724,8 +6712,6 @@ comment|/* 				 * Stop/reset/re-init NIC 				 */
 name|ed_reset
 argument_list|(
 name|unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -8944,8 +8930,6 @@ operator|.
 name|ac_if
 operator|.
 name|if_unit
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}

@@ -7280,6 +7280,8 @@ specifier|register
 name|char
 modifier|*
 name|cp
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int

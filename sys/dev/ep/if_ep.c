@@ -407,8 +407,6 @@ name|__P
 argument_list|(
 operator|(
 name|caddr_t
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4680,14 +4678,9 @@ name|void
 name|epmbuffill
 parameter_list|(
 name|sp
-parameter_list|,
-name|dummy_arg
 parameter_list|)
 name|caddr_t
 name|sp
-decl_stmt|;
-name|int
-name|dummy_arg
 decl_stmt|;
 block|{
 name|struct

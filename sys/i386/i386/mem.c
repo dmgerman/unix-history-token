@@ -10,92 +10,86 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/cpu.h"
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"machine/psl.h"
+file|<machine/psl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|<vm/vm_param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/lock.h"
+file|<vm/lock.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_statistics.h"
+file|<vm/vm_prot.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_prot.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vm/pmap.h"
+file|<vm/pmap.h>
 end_include
 
 begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|vmmap
+name|ptvmmap
 decl_stmt|;
 end_decl_stmt
 
@@ -154,7 +148,9 @@ operator|*
 operator|)
 name|curproc
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 name|fp
 operator|->
@@ -226,7 +222,9 @@ operator|*
 operator|)
 name|curproc
 operator|->
-name|p_regs
+name|p_md
+operator|.
+name|md_regs
 expr_stmt|;
 name|fp
 operator|->
@@ -371,13 +369,12 @@ name|uio_offset
 expr_stmt|;
 name|pmap_enter
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|vmmap
+name|ptvmmap
 argument_list|,
 name|v
 argument_list|,
@@ -427,7 +424,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|c
 argument_list|,
@@ -443,7 +440,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|c
 argument_list|,
@@ -463,7 +460,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|vmmap
+name|ptvmmap
 index|[
 name|o
 index|]
@@ -478,19 +475,18 @@ argument_list|)
 expr_stmt|;
 name|pmap_remove
 argument_list|(
-name|pmap_kernel
-argument_list|()
+name|kernel_pmap
 argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
-name|vmmap
+name|ptvmmap
 argument_list|,
 operator|(
 name|vm_offset_t
 operator|)
 operator|&
-name|vmmap
+name|ptvmmap
 index|[
 name|NBPG
 index|]
@@ -514,6 +510,9 @@ name|kernacc
 argument_list|(
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|int
 operator|)
 name|uio
 operator|->
@@ -543,6 +542,9 @@ name|uiomove
 argument_list|(
 operator|(
 name|caddr_t
+operator|)
+operator|(
+name|int
 operator|)
 name|uio
 operator|->
@@ -633,7 +635,7 @@ expr_stmt|;
 block|}
 name|c
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|iov
 operator|->

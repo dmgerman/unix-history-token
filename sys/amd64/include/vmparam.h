@@ -392,52 +392,6 @@ comment|/* klusters advance/retard for seq. fifo */
 end_comment
 
 begin_comment
-comment|/*  * Paging thresholds (see vm_sched.c).  * Strategy of 1/19/85:  *	lotsfree is 512k bytes, but at most 1/4 of memory  *	desfree is 200k bytes, but at most 1/8 of memory  *	minfree is 64k bytes, but at most 1/2 of desfree  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOTSFREE
-value|(512 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOTSFREEFRACT
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|DESFREE
-value|(200 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DESFREEFRACT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINFREE
-value|(64 * 1024)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MINFREEFRACT
-value|2
-end_define
-
-begin_comment
 comment|/*  * There are two clock hands, initially separated by HANDSPREAD bytes  * (but at most all of user memory).  The amount of time to reclaim  * a page once the pageout process examines it increases with this  * distance and decreases as the scan rate rises.  */
 end_comment
 

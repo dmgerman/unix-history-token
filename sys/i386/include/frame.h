@@ -184,6 +184,82 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* frame of clock (same as interrupt frame) */
+end_comment
+
+begin_struct
+struct|struct
+name|clockframe
+block|{
+name|int
+name|cf_vec
+decl_stmt|;
+name|int
+name|cf_ppl
+decl_stmt|;
+name|int
+name|cf_es
+decl_stmt|;
+name|int
+name|cf_ds
+decl_stmt|;
+name|int
+name|cf_edi
+decl_stmt|;
+name|int
+name|cf_esi
+decl_stmt|;
+name|int
+name|cf_ebp
+decl_stmt|;
+name|int
+label|:
+literal|32
+expr_stmt|;
+name|int
+name|cf_ebx
+decl_stmt|;
+name|int
+name|cf_edx
+decl_stmt|;
+name|int
+name|cf_ecx
+decl_stmt|;
+name|int
+name|cf_eax
+decl_stmt|;
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* for compat with trap frame - trapno */
+name|int
+label|:
+literal|32
+expr_stmt|;
+comment|/* for compat with trap frame - err */
+comment|/* below portion defined in 386 hardware */
+name|int
+name|cf_eip
+decl_stmt|;
+name|int
+name|cf_cs
+decl_stmt|;
+name|int
+name|cf_eflags
+decl_stmt|;
+comment|/* below only when transitting rings (e.g. user to kernel) */
+name|int
+name|cf_esp
+decl_stmt|;
+name|int
+name|cf_ss
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Signal frame  */
 end_comment
 

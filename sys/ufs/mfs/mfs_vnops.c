@@ -1787,12 +1787,10 @@ begin_comment
 comment|/*  * Memory based filesystem initialization.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mfs_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|#
 directive|if
@@ -1846,8 +1844,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -170,7 +170,7 @@ name|KERNEL
 end_ifdef
 
 begin_decl_stmt
-name|int
+name|void
 name|in_losing
 name|__P
 argument_list|(
@@ -238,7 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|in_pcbdetach
 name|__P
 argument_list|(
@@ -252,7 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|in_pcbdisconnect
 name|__P
 argument_list|(
@@ -294,7 +294,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|in_pcbnotify
 name|__P
 argument_list|(
@@ -349,7 +349,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|in_setpeeraddr
 name|__P
 argument_list|(
@@ -367,7 +367,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|in_setsockaddr
 name|__P
 argument_list|(

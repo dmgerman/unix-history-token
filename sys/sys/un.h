@@ -30,23 +30,11 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|KERNEL
-end_ifdef
-
-begin_function_decl
-name|int
-name|unp_discard
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
+end_ifndef
 
 begin_comment
 comment|/* actual length of an initialized sockaddr_un */

@@ -1960,23 +1960,18 @@ begin_comment
 comment|/*  * Return POSIX pathconf information applicable to special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|portal_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -2084,7 +2079,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the contents of a Portal vnode.  */

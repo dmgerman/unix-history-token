@@ -147,6 +147,24 @@ begin_comment
 comment|/*KERNEL */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NetBSD
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|timeout_func_t
+name|timeout_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/************************** board definitions *******************************/
 end_comment
@@ -1552,8 +1570,6 @@ name|void
 name|aha_timeout
 parameter_list|(
 name|caddr_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2859,6 +2875,9 @@ condition|)
 block|{
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|aha_timeout
 argument_list|,
 operator|(
@@ -5211,6 +5230,9 @@ expr_stmt|;
 comment|/* stop instant timeouts */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|aha_timeout
 argument_list|,
 operator|(
@@ -5413,13 +5435,14 @@ operator|(
 name|caddr_t
 operator|)
 name|ccb
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * because we are polling, 		 * take out the timeout entry aha_timeout made 		 */
 name|untimeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|aha_timeout
 argument_list|,
 operator|(
@@ -5493,8 +5516,6 @@ operator|(
 name|caddr_t
 operator|)
 name|ccb
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -6008,9 +6029,6 @@ name|aha_timeout
 parameter_list|(
 name|caddr_t
 name|arg1
-parameter_list|,
-name|int
-name|arg2
 parameter_list|)
 block|{
 name|struct
@@ -6150,6 +6168,9 @@ expr_stmt|;
 comment|/* 4 secs for the abort */
 name|timeout
 argument_list|(
+operator|(
+name|timeout_t
+operator|)
 name|aha_timeout
 argument_list|,
 operator|(

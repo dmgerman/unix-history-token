@@ -817,6 +817,8 @@ name|NULL
 decl_stmt|;
 name|int
 name|optlen
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|len
@@ -841,6 +843,8 @@ name|struct
 name|socket
 modifier|*
 name|so
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|todrop
@@ -855,6 +859,8 @@ literal|0
 decl_stmt|;
 name|short
 name|ostate
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|in_addr
@@ -4711,6 +4717,9 @@ name|ti
 operator|->
 name|ti_urp
 operator|<=
+operator|(
+name|u_long
+operator|)
 name|ti
 operator|->
 name|ti_len

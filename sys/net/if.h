@@ -208,7 +208,7 @@ block|}
 name|if_data
 struct|;
 comment|/* procedure handles */
-name|int
+name|void
 argument_list|(
 argument|*if_init
 argument_list|)
@@ -246,7 +246,7 @@ operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-name|int
+name|void
 argument_list|(
 argument|*if_start
 argument_list|)
@@ -293,7 +293,7 @@ name|caddr_t
 operator|)
 argument_list|)
 expr_stmt|;
-name|int
+name|void
 argument_list|(
 argument|*if_reset
 argument_list|)
@@ -305,7 +305,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* new autoconfig will permit removal */
-name|int
+name|void
 argument_list|(
 argument|*if_watchdog
 argument_list|)
@@ -1494,7 +1494,7 @@ name|loopattach
 name|__P
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

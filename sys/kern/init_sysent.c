@@ -893,6 +893,34 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|getdomainname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|setdomainname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|uname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysarch
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2033,7 +2061,7 @@ comment|/* 70 = sstk */
 block|{
 name|compat
 argument_list|(
-literal|7
+literal|6
 argument_list|,
 argument|mmap
 argument_list|)
@@ -2805,33 +2833,33 @@ comment|/* 161 = nosys */
 endif|#
 directive|endif
 block|{
-literal|0
+literal|2
 block|,
-name|nosys
+name|getdomainname
 block|}
 block|,
-comment|/* 162 = nosys */
+comment|/* 162 = getdomainname */
 block|{
-literal|0
+literal|2
 block|,
-name|nosys
+name|setdomainname
 block|}
 block|,
-comment|/* 163 = nosys */
+comment|/* 163 = setdomainname */
 block|{
-literal|0
+literal|1
 block|,
-name|nosys
+name|uname
 block|}
 block|,
-comment|/* 164 = nosys */
+comment|/* 164 = uname */
 block|{
-literal|0
+literal|2
 block|,
-name|nosys
+name|sysarch
 block|}
 block|,
-comment|/* 165 = nosys */
+comment|/* 165 = sysarch */
 block|{
 literal|0
 block|,

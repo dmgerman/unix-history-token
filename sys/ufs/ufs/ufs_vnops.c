@@ -7059,6 +7059,7 @@ name|i_size
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|isize
 operator|<
 name|vp
@@ -7066,8 +7067,20 @@ operator|->
 name|v_mount
 operator|->
 name|mnt_maxsymlinklen
+operator|)
+operator|||
+operator|(
+name|ip
+operator|->
+name|i_din
+operator|.
+name|di_blocks
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
+comment|/* XXX - for old fastlink support */
 name|uiomove
 argument_list|(
 operator|(
@@ -8274,23 +8287,18 @@ begin_comment
 comment|/*  * Close wrapper for fifo's.  *  * Update the times on the inode then do device close.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ufsfifo_close
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_close_args
 comment|/* { 		struct vnode *a_vp; 		int  a_fflag; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|int
@@ -8360,7 +8368,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -8375,23 +8383,18 @@ begin_comment
 comment|/*  * Return POSIX pathconf information applicable to ufs filesystems.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ufs_pathconf
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ap
+parameter_list|)
 name|struct
 name|vop_pathconf_args
 comment|/* { 		struct vnode *a_vp; 		int a_name; 		int *a_retval; 	} */
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -8499,7 +8502,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Advisory record locking support  */

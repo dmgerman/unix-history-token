@@ -685,22 +685,21 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (canwait)
+comment|/* XXX  should wait */
+block|panic("kmem_malloc: %s too small", 			    map == kmem_map ? "kmem_map" : "mb_map");
+endif|#
+directive|endif
 if|if
 condition|(
 name|canwait
 condition|)
-comment|/* XXX  should wait */
 name|panic
 argument_list|(
-literal|"kmem_malloc: %s too small"
-argument_list|,
-name|map
-operator|==
-name|kmem_map
-condition|?
-literal|"kmem_map"
-else|:
-literal|"mb_map"
+literal|"kmem_malloc: map too small"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1116,7 +1115,9 @@ name|map
 argument_list|)
 expr_stmt|;
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"kmaw"
+argument_list|)
 expr_stmt|;
 block|}
 name|vm_map_insert

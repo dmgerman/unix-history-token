@@ -546,18 +546,18 @@ block|,
 comment|/* 161 = nosys */
 endif|#
 directive|endif
-literal|"#162"
+literal|"getdomainname"
 block|,
-comment|/* 162 = nosys */
-literal|"#163"
+comment|/* 162 = getdomainname */
+literal|"setdomainname"
 block|,
-comment|/* 163 = nosys */
-literal|"#164"
+comment|/* 163 = setdomainname */
+literal|"uname"
 block|,
-comment|/* 164 = nosys */
-literal|"#165"
+comment|/* 164 = uname */
+literal|"sysarch"
 block|,
-comment|/* 165 = nosys */
+comment|/* 165 = sysarch */
 literal|"#166"
 block|,
 comment|/* 166 = nosys */

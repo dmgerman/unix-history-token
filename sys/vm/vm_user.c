@@ -489,6 +489,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  *	vm_inherit sets the inheritence of the specified range in the  *	specified map.  */
 end_comment
@@ -627,11 +632,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  *	vm_allocate allocates "zero fill" memory in the specfied  *	map.  */
@@ -827,6 +827,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
 
 begin_comment
 comment|/*  * Similar to vm_allocate but assigns an explicit pager.  */
@@ -1043,6 +1049,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

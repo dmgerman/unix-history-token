@@ -451,7 +451,7 @@ name|q
 parameter_list|,
 name|f
 parameter_list|)
-value|(f.aborting | curproc->p_sig)
+value|(f.aborting | curproc->p_siglist)
 end_define
 
 begin_comment

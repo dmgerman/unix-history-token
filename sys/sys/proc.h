@@ -200,9 +200,13 @@ name|p_stat
 decl_stmt|;
 comment|/* S* process status. */
 name|char
+name|p_lock
+decl_stmt|;
+comment|/* process lock count */
+name|char
 name|p_pad1
 index|[
-literal|3
+literal|2
 index|]
 decl_stmt|;
 name|pid_t

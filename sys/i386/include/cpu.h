@@ -32,6 +32,12 @@ directive|include
 file|"machine/segments.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/spl.h>
+end_include
+
 begin_comment
 comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
 end_comment
@@ -59,17 +65,42 @@ begin_comment
 comment|/* nothing */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|cpu_swapin
+parameter_list|(
+name|p
+parameter_list|)
+end_define
+
 begin_comment
-comment|/*  * Arguments to hardclock, softclock and gatherstats  * encapsulate the previous machine state in an opaque  * clockframe; for now, use generic intrframe.  * XXX softclock() has been fixed.  It never needed a  * whole frame, only a usermode flag, at least on this  * machine.  Fix the rest.  */
+comment|/* nothing */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|intrframe
-name|clockframe
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|cpu_setstack
+parameter_list|(
+name|p
+parameter_list|,
+name|ap
+parameter_list|)
+value|(p)->p_md.md_regs = ap
+end_define
+
+begin_define
+define|#
+directive|define
+name|cpu_set_init_frame
+parameter_list|(
+name|p
+parameter_list|,
+name|fp
+parameter_list|)
+value|(p)->p_md.md_regs = fp
+end_define
 
 begin_define
 define|#
@@ -78,7 +109,17 @@ name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|(ISPL((framep)->if_cs) == SEL_UPL)
+value|(ISPL((framep)->cf_cs) == SEL_UPL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKF_INTR
+parameter_list|(
+name|framep
+parameter_list|)
+value|(0)
 end_define
 
 begin_define
@@ -88,7 +129,7 @@ name|CLKF_BASEPRI
 parameter_list|(
 name|framep
 parameter_list|)
-value|(((framep)->if_ppl& ~SWI_AST_MASK) == 0)
+value|(((framep)->cf_ppl& ~SWI_AST_MASK) == 0)
 end_define
 
 begin_define
@@ -98,8 +139,19 @@ name|CLKF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->if_eip)
+value|((framep)->cf_eip)
 end_define
+
+begin_define
+define|#
+directive|define
+name|resettodr
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* no todr to set */
+end_comment
 
 begin_comment
 comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
@@ -120,13 +172,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|profile_tick
+name|need_proftick
 parameter_list|(
 name|p
-parameter_list|,
-name|framep
 parameter_list|)
-value|{ (p)->p_flag |= SOWEUPC; aston(); }
+value|{ (p)->p_flag |= P_OWEUPC; aston(); }
 end_define
 
 begin_comment
@@ -182,6 +232,39 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * CTL_MACHDEP definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONSDEV
+value|1
+end_define
+
+begin_comment
+comment|/* dev_t: console terminal device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_MAXID
+value|2
+end_define
+
+begin_comment
+comment|/* number of valid machdep ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_MACHDEP_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ }
+end_define
 
 begin_ifdef
 ifdef|#

@@ -3336,6 +3336,8 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|pass
@@ -3344,6 +3346,8 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|ifnet

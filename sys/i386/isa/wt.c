@@ -700,8 +700,6 @@ name|void
 name|wtimer
 parameter_list|(
 name|caddr_t
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4436,9 +4434,6 @@ name|wtimer
 parameter_list|(
 name|caddr_t
 name|xt
-parameter_list|,
-name|int
-name|dummy
 parameter_list|)
 block|{
 name|wtinfo_t

@@ -280,12 +280,10 @@ begin_comment
 comment|/*  * Initialize hash links for inodes and dnodes.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|cd9660_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -385,8 +383,13 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -649,53 +652,42 @@ begin_comment
 comment|/*  * Look up a ISOFS dinode number to find its incore vnode.  * If it is not in core, read it in from the specified device.  * If it is in core, wait for the lock bit to clear, then  * return the inode locked. Detection and handling of mount  * points must be done by the calling routine.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_iget
-argument_list|(
-argument|xp
-argument_list|,
-argument|ino
-argument_list|,
-argument|relocated
-argument_list|,
-argument|ipp
-argument_list|,
-argument|isodir
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|xp
+parameter_list|,
+name|ino
+parameter_list|,
+name|relocated
+parameter_list|,
+name|ipp
+parameter_list|,
+name|isodir
+parameter_list|)
 name|struct
 name|iso_node
 modifier|*
 name|xp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+name|int
+name|relocated
+decl_stmt|;
 name|struct
 name|iso_node
 modifier|*
 modifier|*
 name|ipp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|iso_directory_record
 modifier|*
 name|isodir
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -1542,26 +1534,24 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock and decrement the reference count of an inode structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iso_iput
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iso_node
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1593,8 +1583,13 @@ name|ip
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
@@ -1819,20 +1814,18 @@ begin_comment
 comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iso_ilock
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iso_node
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -1906,27 +1899,30 @@ name|i_flag
 operator||=
 name|ILOCKED
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock an inode.  If WANT bit is on, wakeup.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iso_iunlock
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iso_node
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1988,8 +1984,13 @@ name|ip
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * File attributes  */
