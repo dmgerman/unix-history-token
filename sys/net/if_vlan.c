@@ -1246,6 +1246,12 @@ expr_stmt|;
 comment|/* Now undo some of the damage... */
 name|ifp
 operator|->
+name|if_baudrate
+operator|=
+literal|0
+expr_stmt|;
+name|ifp
+operator|->
 name|if_data
 operator|.
 name|ifi_type
