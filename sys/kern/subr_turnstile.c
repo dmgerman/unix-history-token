@@ -2174,6 +2174,19 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|!
+name|mtx_owned
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+operator|(
+literal|"mtx_trylock() called on a mutex already owned"
+operator|)
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|_obtain_lock
@@ -2205,21 +2218,6 @@ if|if
 condition|(
 name|rval
 condition|)
-block|{
-comment|/* 		 * We do not handle recursion in _mtx_trylock; see the 		 * note at the top of the routine. 		 */
-name|KASSERT
-argument_list|(
-operator|!
-name|mtx_recursed
-argument_list|(
-name|m
-argument_list|)
-argument_list|,
-operator|(
-literal|"mtx_trylock() called on a recursed mutex"
-operator|)
-argument_list|)
-expr_stmt|;
 name|WITNESS_LOCK
 argument_list|(
 operator|&
@@ -2238,7 +2236,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|rval
