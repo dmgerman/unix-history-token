@@ -1708,54 +1708,6 @@ parameter_list|)
 value|{							\ 	bzero((bp)->b_data, (u_int)(bp)->b_bcount);			\ 	(bp)->b_resid = 0;						\ }
 end_define
 
-begin_comment
-comment|/* Flags to low-level allocation routines. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_CLRBUF
-value|0x01
-end_define
-
-begin_comment
-comment|/* Request allocated buffer be cleared. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_SYNC
-value|0x02
-end_define
-
-begin_comment
-comment|/* Do all allocations synchronously. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_METAONLY
-value|0x04
-end_define
-
-begin_comment
-comment|/* Return indirect block buffer. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|B_NOWAIT
-value|0x08
-end_define
-
-begin_comment
-comment|/* do not sleep to await lock */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
