@@ -1867,7 +1867,7 @@ name|fd
 decl_stmt|;
 name|char
 modifier|*
-name|_tmpfile
+name|tmpfilename
 decl_stmt|;
 for|for
 control|(
@@ -2333,7 +2333,7 @@ name|strtab_sz
 argument_list|)
 expr_stmt|;
 block|}
-name|_tmpfile
+name|tmpfilename
 operator|=
 name|concat
 argument_list|(
@@ -2357,7 +2357,7 @@ name|fd
 operator|=
 name|mkstemp
 argument_list|(
-name|_tmpfile
+name|tmpfilename
 argument_list|)
 operator|)
 operator|==
@@ -2369,7 +2369,7 @@ name|warn
 argument_list|(
 literal|"%s"
 argument_list|,
-name|_tmpfile
+name|tmpfilename
 argument_list|)
 expr_stmt|;
 return|return
@@ -2545,7 +2545,7 @@ if|if
 condition|(
 name|rename
 argument_list|(
-name|_tmpfile
+name|tmpfilename
 argument_list|,
 name|hints_file
 argument_list|)
