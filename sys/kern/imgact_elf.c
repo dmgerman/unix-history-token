@@ -5642,7 +5642,9 @@ expr|*
 name|psinfo
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We want to start with the registers of the first thread in the 	 * process so that the .reg and .reg2 pseudo-sections created by bfd 	 * will be identical to the .reg/$PID and .reg2/$PID pseudo-sections. 	 * This makes sure that any tool that only looks for .reg and .reg2 	 * and not for .reg/$PID and .reg2/$PID will behave the same as 	 * before. The first thread is the thread with an ID equal to the  	 * process' ID. 	 */
+comment|/* 	 * We want to start with the registers of the initial thread in the 	 * process so that the .reg and .reg2 pseudo-sections created by bfd 	 * will be identical to the .reg/$PID and .reg2/$PID pseudo-sections. 	 * This makes sure that any tool that only looks for .reg and .reg2 	 * and not for .reg/$PID and .reg2/$PID will behave the same as 	 * before. The first thread is the thread with an ID equal to the 	 * process' ID. 	 * Note that the initial thread may already be gone. In that case 	 * 'first' is NULL. 	 */
+name|thr
+operator|=
 name|first
 operator|=
 name|TAILQ_FIRST
@@ -5655,6 +5657,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+name|first
+operator|!=
+name|NULL
+operator|&&
 name|first
 operator|->
 name|td_tid
@@ -5670,6 +5676,12 @@ argument_list|,
 name|td_plist
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|first
+operator|!=
+name|NULL
+condition|)
 name|thr
 operator|=
 name|first
@@ -5825,6 +5837,10 @@ condition|(
 name|thr
 operator|==
 name|first
+operator|&&
+name|thr
+operator|!=
+name|NULL
 condition|)
 name|thr
 operator|=
