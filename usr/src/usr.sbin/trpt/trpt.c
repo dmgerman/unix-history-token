@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trpt.c	5.8 (Berkeley) %G%"
+literal|"@(#)trpt.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1530,9 +1530,10 @@ if|if
 condition|(
 name|aflag
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"(src=%s,%u, dst=%s,%u)"
+literal|"(src=%s,%u, "
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1547,6 +1548,11 @@ name|ti
 operator|->
 name|ti_sport
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"dst=%s,%u)"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1563,6 +1569,7 @@ name|ti_dport
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|seq
 operator|=
 name|ti
