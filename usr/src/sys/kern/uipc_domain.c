@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_domain.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_domain.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"domain.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mbuf.h"
 end_include
 
 begin_include
@@ -82,6 +88,11 @@ argument_list|(
 name|unix
 argument_list|)
 expr_stmt|;
+name|ADDDOMAIN
+argument_list|(
+name|route
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -98,6 +109,16 @@ name|NS
 name|ADDDOMAIN
 argument_list|(
 name|ns
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ISO
+name|ADDDOMAIN
+argument_list|(
+name|iso
 argument_list|)
 expr_stmt|;
 endif|#
@@ -180,8 +201,28 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-name|null_init
-argument_list|()
+if|if
+condition|(
+name|max_linkhdr
+operator|<
+literal|16
+condition|)
+comment|/* XXX */
+name|max_linkhdr
+operator|=
+literal|16
+expr_stmt|;
+name|max_hdr
+operator|=
+name|max_linkhdr
+operator|+
+name|max_protohdr
+expr_stmt|;
+name|max_datalen
+operator|=
+name|MHLEN
+operator|-
+name|max_hdr
 expr_stmt|;
 name|pffasttimo
 argument_list|()
