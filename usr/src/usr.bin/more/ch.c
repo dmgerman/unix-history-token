@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ch.c	5.5 (Berkeley) %G%"
+literal|"@(#)ch.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,11 +35,28 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_decl_stmt
-name|public
 name|int
 name|file
 init|=
@@ -92,14 +109,13 @@ struct|;
 end_struct
 
 begin_decl_stmt
-name|public
 name|int
 name|nbufs
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The buffer pool is kept as a doubly-linked circular list,  * in order from most- to least-recently used.  * The circular list is anchored by buf_anchor.  */
+comment|/*  * The buffer pool is kept as a doubly-linked circular list, in order from  * most- to least-recently used.  The circular list is anchored by buf_anchor.  */
 end_comment
 
 begin_define
@@ -149,34 +165,10 @@ end_struct
 begin_decl_stmt
 specifier|extern
 name|int
-name|clean_data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|ispipe
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|autobuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
+decl_stmt|,
 name|cbufs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
+decl_stmt|,
 name|sigs
 decl_stmt|;
 end_decl_stmt
@@ -200,29 +192,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Length of file, needed if input is a pipe.  */
+comment|/* Length of file, needed if input is a pipe. */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|POSITION
+name|off_t
 name|ch_fsize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Number of bytes read, if input is standard input (a pipe).  */
+comment|/* Number of bytes read, if input is standard input (a pipe). */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|POSITION
+name|off_t
 name|last_piped_pos
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Get the character pointed to by the read pointer.  * ch_get() is a macro which is more efficient to call  * than fch_get (the function), in the usual case   * that the block desired is at the head of the chain.  */
+comment|/*  * Get the character pointed to by the read pointer.  ch_get() is a macro  * which is more efficient to call than fch_get (the function), in the usual  * case that the block desired is at the head of the chain.  */
 end_comment
 
 begin_define
@@ -230,34 +222,37 @@ define|#
 directive|define
 name|ch_get
 parameter_list|()
-value|((buf_head->block == ch_block&& \ 		     ch_offset< buf_head->datasize) ? \ 			buf_head->data[ch_offset] : fch_get())
+define|\
+value|((buf_head->block == ch_block&& \ 	    ch_offset< buf_head->datasize) ? \ 	    buf_head->data[ch_offset] : fch_get())
 end_define
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|int
 name|fch_get
-parameter_list|()
+argument_list|()
 block|{
 specifier|register
-name|struct
+expr|struct
 name|buf
-modifier|*
+operator|*
 name|bp
-decl_stmt|;
+block|;
 specifier|register
 name|int
 name|n
-decl_stmt|;
+block|;
 specifier|register
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|;
-name|POSITION
+block|;
+name|off_t
 name|pos
-decl_stmt|;
-comment|/* 	 * Look for a buffer holding the desired block. 	 */
+block|,
+name|lseek
+argument_list|()
+block|;
+comment|/* look for a buffer holding the desired block. */
 for|for
 control|(
 name|bp
@@ -314,11 +309,15 @@ goto|goto
 name|found
 goto|;
 block|}
-comment|/* 	 * Block is not in a buffer.   	 * Take the least recently used buffer  	 * and read the desired block into it. 	 * If the LRU buffer has data in it,  	 * and autobuf is true, and input is a pipe,  	 * then try to allocate a new buffer first. 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* 	 * Block is not in a buffer.  Take the least recently used buffer 	 * and read the desired block into it.  If the LRU buffer has data 	 * in it, and input is a pipe, then try to allocate a new buffer first. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
-name|autobuf
-operator|&&
 name|ispipe
 operator|&&
 name|buf_tail
@@ -341,24 +340,39 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|bp
 operator|=
 name|buf_tail
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bp
 operator|->
 name|block
 operator|=
 name|ch_block
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bp
 operator|->
 name|datasize
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|read_more
 label|:
+end_label
+
+begin_expr_stmt
 name|pos
 operator|=
 operator|(
@@ -371,6 +385,9 @@ name|bp
 operator|->
 name|datasize
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|ispipe
@@ -407,7 +424,13 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_comment
 comment|/* 	 * Read the block. 	 * If we read less than a full block, we just return the 	 * partial block and pick up the rest next time. 	 */
+end_comment
+
+begin_expr_stmt
 name|n
 operator|=
 name|iread
@@ -431,6 +454,9 @@ operator|->
 name|datasize
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|n
@@ -442,6 +468,9 @@ operator|(
 name|EOI
 operator|)
 return|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|n
@@ -458,6 +487,9 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ispipe
@@ -466,13 +498,22 @@ name|last_piped_pos
 operator|+=
 name|n
 expr_stmt|;
+end_if
+
+begin_expr_stmt
 name|bp
 operator|->
 name|datasize
 operator|+=
 name|n
 expr_stmt|;
-comment|/* 	 * Set an EOI marker in the buffered data itself. 	 * Then ensure the data is "clean": there are no  	 * extra EOI chars in the data and that the "meta" 	 * bit (the 0200 bit) is reset in each char. 	 */
+end_expr_stmt
+
+begin_comment
+comment|/* 	 * Set an EOI marker in the buffered data itself.  Then ensure the 	 * data is "clean": there are no extra EOI chars in the data and 	 * that the "meta" bit (the 0200 bit) is reset in each char. 	 */
+end_comment
+
+begin_if
 if|if
 condition|(
 name|n
@@ -497,12 +538,11 @@ operator|=
 name|EOI
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|clean_data
-condition|)
-block|{
+end_if
+
+begin_for
+for|for
+control|(
 name|p
 operator|=
 operator|&
@@ -514,14 +554,13 @@ name|bp
 operator|->
 name|datasize
 index|]
-expr_stmt|;
-while|while
-condition|(
+init|;
 operator|--
 name|n
 operator|>=
 literal|0
-condition|)
+condition|;
+control|)
 block|{
 operator|*
 operator|--
@@ -539,12 +578,17 @@ condition|)
 operator|*
 name|p
 operator|=
-literal|'@'
+literal|0200
 expr_stmt|;
 block|}
-block|}
+end_for
+
+begin_label
 name|found
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 name|buf_head
@@ -596,6 +640,9 @@ operator|=
 name|bp
 expr_stmt|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|ch_offset
@@ -608,6 +655,9 @@ comment|/* 		 * After all that, we still don't have enough data. 		 * Go back an
 goto|goto
 name|read_more
 goto|;
+end_if
+
+begin_return
 return|return
 operator|(
 name|bp
@@ -618,23 +668,28 @@ name|ch_offset
 index|]
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/*  * Determine if a specific block is currently in one of the buffers.  */
 end_comment
 
-begin_function
-specifier|static
-name|int
+begin_macro
+unit|static
 name|buffered
-parameter_list|(
-name|block
-parameter_list|)
+argument_list|(
+argument|block
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|long
 name|block
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -677,23 +732,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Seek to a specified position in the file.  * Return 0 if successful, non-zero if can't seek there.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_expr_stmt
 name|ch_seek
-parameter_list|(
+argument_list|(
 name|pos
-parameter_list|)
+argument_list|)
 specifier|register
-name|POSITION
+name|off_t
 name|pos
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 name|long
 name|new_block
@@ -742,18 +798,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Seek to the end of the file.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|ch_end_seek
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
+name|off_t
+name|ch_length
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -791,17 +852,18 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Seek to the beginning of the file, or as close to it as we can get.  * We may not be able to seek there if input is a pipe and the  * beginning of the pipe is no longer buffered.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|ch_beg_seek
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -818,7 +880,7 @@ condition|(
 name|ch_seek
 argument_list|(
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 argument_list|)
@@ -890,18 +952,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Return the length of the file, if known.  */
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|ch_length
 parameter_list|()
 block|{
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|ispipe
@@ -914,7 +979,7 @@ return|;
 return|return
 operator|(
 call|(
-name|POSITION
+name|off_t
 call|)
 argument_list|(
 name|lseek
@@ -939,8 +1004,7 @@ comment|/*  * Return the current position in the file.  */
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|ch_tell
 parameter_list|()
 block|{
@@ -960,11 +1024,12 @@ begin_comment
 comment|/*  * Get the current char and post-increment the read pointer.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|ch_forw_get
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -991,8 +1056,8 @@ name|ch_offset
 operator|=
 literal|0
 expr_stmt|;
-name|ch_block
 operator|++
+name|ch_block
 expr_stmt|;
 block|}
 return|return
@@ -1001,17 +1066,18 @@ name|c
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Pre-decrement the read pointer and get the new current char.  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|ch_back_get
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -1067,27 +1133,34 @@ argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Allocate buffers.  * Caller wants us to have a total of at least want_nbufs buffers.  * keep==1 means keep the data in the current buffers;  * otherwise discard the old data.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|ch_init
-parameter_list|(
-name|want_nbufs
-parameter_list|,
-name|keep
-parameter_list|)
+argument_list|(
+argument|want_nbufs
+argument_list|,
+argument|keep
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|want_nbufs
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|keep
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -1187,7 +1260,7 @@ expr_stmt|;
 name|last_piped_pos
 operator|=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 expr_stmt|;
@@ -1201,28 +1274,30 @@ operator|)
 name|ch_seek
 argument_list|(
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Allocate some new buffers.  * The buffers are added to the tail of the buffer chain.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|int
 name|ch_addbuf
-parameter_list|(
-name|nnew
-parameter_list|)
+argument_list|(
+argument|nnew
+argument_list|)
 name|int
 name|nnew
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -1236,6 +1311,11 @@ name|buf
 modifier|*
 name|newbufs
 decl_stmt|;
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
 comment|/* 	 * We don't have enough buffers.   	 * Allocate some new ones. 	 */
 name|newbufs
 operator|=
@@ -1375,7 +1455,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linenum.c	5.4 (Berkeley) %G%"
+literal|"@(#)linenum.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"position.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_comment
@@ -64,11 +70,11 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* Line to previous in the list */
-name|POSITION
+name|off_t
 name|pos
 decl_stmt|;
 comment|/* File position */
-name|POSITION
+name|off_t
 name|gap
 decl_stmt|;
 comment|/* Gap between prev and next */
@@ -107,7 +113,6 @@ comment|/* In seconds */
 end_comment
 
 begin_decl_stmt
-name|public
 name|int
 name|lnloop
 init|=
@@ -190,11 +195,12 @@ begin_comment
 comment|/*  * Initialize the line number structures.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|clr_linenum
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -278,7 +284,7 @@ operator|.
 name|pos
 operator|=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 expr_stmt|;
@@ -289,25 +295,27 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Calculate the gap for an entry.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|void
 name|calcgap
-parameter_list|(
+argument_list|(
 name|p
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|linenum
-modifier|*
+operator|*
 name|p
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 comment|/* 	 * Don't bother to compute a gap for the anchor. 	 * Also don't compute a gap for the last one in the list. 	 * The gap for that last one should be considered infinite, 	 * but we never look at it anyway. 	 */
 if|if
@@ -342,27 +350,34 @@ operator|->
 name|pos
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Add a new line number to the cache.  * The specified position (pos) should be the file position of the  * FIRST character in the specified line.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|add_lnum
-parameter_list|(
-name|line
-parameter_list|,
-name|pos
-parameter_list|)
+argument_list|(
+argument|line
+argument_list|,
+argument|pos
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|line
 decl_stmt|;
-name|POSITION
+end_decl_stmt
+
+begin_decl_stmt
+name|off_t
 name|pos
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -389,7 +404,7 @@ modifier|*
 name|prevp
 decl_stmt|;
 specifier|register
-name|POSITION
+name|off_t
 name|mingap
 decl_stmt|;
 comment|/* 	 * Find the proper place in the list for the new one. 	 * The entries are sorted by position. 	 */
@@ -603,45 +618,38 @@ name|next
 expr_stmt|;
 block|}
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * If we get stuck in a long loop trying to figure out the  * line number, print a message to tell the user what we're doing.  */
 end_comment
 
-begin_function
+begin_expr_stmt
 specifier|static
-name|void
 name|longloopmessage
-parameter_list|()
+argument_list|()
 block|{
 name|ierror
 argument_list|(
 literal|"Calculating line numbers"
 argument_list|)
-expr_stmt|;
+block|;
 comment|/* 	 * Set the lnloop flag here, so if the user interrupts while 	 * we are calculating line numbers, the signal handler will  	 * turn off line numbers (linenums=0). 	 */
 name|lnloop
 operator|=
 literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
+block|; }
 comment|/*  * Find the line number associated with a given position.  * Return 0 if we can't figure it out.  */
-end_comment
-
-begin_function
-name|public
-name|int
 name|find_linenum
-parameter_list|(
+argument_list|(
+argument|pos
+argument_list|)
+name|off_t
 name|pos
-parameter_list|)
-name|POSITION
-name|pos
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
@@ -657,11 +665,20 @@ specifier|register
 name|int
 name|loopcount
 decl_stmt|;
-name|POSITION
+name|off_t
 name|cpos
+decl_stmt|,
+name|back_raw_line
+argument_list|()
+decl_stmt|,
+name|forw_raw_line
+argument_list|()
 decl_stmt|;
-name|long
+name|time_t
 name|startime
+decl_stmt|,
+name|time
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -691,7 +708,7 @@ condition|(
 name|pos
 operator|==
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 condition|)
@@ -748,10 +765,14 @@ comment|/* 	 * This is the (possibly) time-consuming part. 	 * We start at the l
 name|flush
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
 name|startime
-operator|=
-name|get_time
-argument_list|()
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -861,8 +882,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|get_time
-argument_list|()
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
+argument_list|)
 operator|>=
 name|startime
 operator|+
@@ -977,8 +1004,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|get_time
-argument_list|()
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
+argument_list|)
 operator|>=
 name|startime
 operator|+
@@ -1015,36 +1048,46 @@ name|lno
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Return the line number of the "current" line.  * The argument "where" tells which line is to be considered  * the "current" line (e.g. TOP, BOTTOM, MIDDLE, etc).  */
 end_comment
 
-begin_function
-name|public
-name|int
+begin_macro
 name|currline
-parameter_list|(
-name|where
-parameter_list|)
+argument_list|(
+argument|where
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|where
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
-name|POSITION
+name|off_t
 name|pos
+decl_stmt|,
+name|ch_length
+argument_list|()
+decl_stmt|,
+name|position
+argument_list|()
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|pos
 operator|=
 name|position
 argument_list|(
 name|where
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pos
+operator|)
 operator|==
 name|NULL_POSITION
 condition|)
@@ -1062,104 +1105,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|DEBUG_STUFF
-end_if
-
-begin_macro
-name|debug
-argument_list|()
-end_macro
-
-begin_block
-block|{
-specifier|register
-name|struct
-name|linenum
-modifier|*
-name|p
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|20
-index|]
-decl_stmt|;
-name|lower_left
-argument_list|()
-expr_stmt|;
-name|clear_eol
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|anchor
-operator|.
-name|next
-init|;
-name|p
-operator|!=
-operator|&
-name|anchor
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|next
-control|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"%d-%d "
-argument_list|,
-name|p
-operator|->
-name|line
-argument_list|,
-name|p
-operator|->
-name|pos
-argument_list|)
-expr_stmt|;
-name|putstr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
-name|putstr
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"DEBUG"
-argument_list|)
-expr_stmt|;
-block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEBUG_STUFF*/
-end_comment
 
 end_unit
 

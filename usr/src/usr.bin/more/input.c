@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.2 (Berkeley) %G%"
+literal|"@(#)input.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_decl_stmt
@@ -60,22 +66,28 @@ name|line
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|off_t
+name|ch_tell
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Get the next line.  * A "current" position is passed and a "new" position is returned.  * The current position is the position of the first character of  * a line.  The new position is the position of the first character  * of the NEXT line.  The line obtained is the line starting at curr_pos.  */
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|forw_line
 parameter_list|(
 name|curr_pos
 parameter_list|)
-name|POSITION
+name|off_t
 name|curr_pos
 decl_stmt|;
 block|{
-name|POSITION
+name|off_t
 name|new_pos
 decl_stmt|;
 specifier|register
@@ -246,17 +258,16 @@ comment|/*  * Get the previous line.  * A "current" position is passed and a "ne
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|back_line
 parameter_list|(
 name|curr_pos
 parameter_list|)
-name|POSITION
+name|off_t
 name|curr_pos
 decl_stmt|;
 block|{
-name|POSITION
+name|off_t
 name|new_pos
 decl_stmt|,
 name|begin_new_pos
@@ -273,7 +284,7 @@ operator|||
 name|curr_pos
 operator|<=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 operator|||

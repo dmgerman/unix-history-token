@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)help.c	5.4 (Berkeley) %G%"
+literal|"@(#)help.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,25 +31,35 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/param.h>
 end_include
 
-begin_comment
-comment|/*  * Display some help.  * Just invoke another "less" to display the help file.  *  * {{ This makes this function very simple, and makes changing the  *    help file very easy, but it may present difficulties on  *    (non-Unix) systems which do not supply the "system()" function. }}  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<less.h>
+end_include
 
-begin_function
-name|public
-name|void
+begin_define
+define|#
+directive|define
+name|HELPFILE
+value|"/usr/lib/more.help"
+end_define
+
+begin_macro
 name|help
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|char
 name|cmd
 index|[
 name|MAXPATHLEN
 operator|+
-literal|100
+literal|20
 index|]
 decl_stmt|;
 operator|(
@@ -59,7 +69,7 @@ name|sprintf
 argument_list|(
 name|cmd
 argument_list|,
-literal|"-less -m '-PmHELP -- ?eEND -- Press g to see it again:Press RETURN for more., or q when done ' %s"
+literal|"-more %s"
 argument_list|,
 name|HELPFILE
 argument_list|)
@@ -70,7 +80,7 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)line.c	5.2 (Berkeley) %G%"
+literal|"@(#)line.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"less.h"
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<less.h>
 end_include
 
 begin_decl_stmt
@@ -76,7 +88,7 @@ comment|/* Printable length, accounting for 				   backspaces, etc. */
 end_comment
 
 begin_comment
-comment|/*  * A ridiculously complex state machine takes care of backspaces   * when in BS_SPECIAL mode.  The complexity arises from the attempt  * to deal with all cases, especially involving long lines with underlining,  * boldfacing or whatever.  There are still some cases which will break it.  *  * There are four states:  *	LN_NORMAL is the normal state (not in underline mode).  *	LN_UNDERLINE means we are in underline mode.  We expect to get  *		either a sequence like "_\bX" or "X\b_" to continue  *		underline mode, or anything else to end underline mode.  *	LN_BOLDFACE means we are in boldface mode.  We expect to get sequences  *		like "X\bX\b...X\bX" to continue boldface mode, or anything  *		else to end boldface mode.  *	LN_UL_X means we are one character after LN_UNDERLINE  *		(we have gotten the '_' in "_\bX" or the 'X' in "X\b_").  *	LN_UL_XB means we are one character after LN_UL_X   *		(we have gotten the backspace in "_\bX" or "X\b_";  *		we expect one more ordinary character,   *		which will put us back in state LN_UNDERLINE).  *	LN_BO_X means we are one character after LN_BOLDFACE  *		(we have gotten the 'X' in "X\bX").  *	LN_BO_XB means we are one character after LN_BO_X  *		(we have gotten the backspace in "X\bX";  *		we expect one more 'X' which will put us back  *		in LN_BOLDFACE).  */
+comment|/*  * A ridiculously complex state machine takes care of backspaces.  The  * complexity arises from the attempt to deal with all cases, especially  * involving long lines with underlining, boldfacing or whatever.  There  * are still some cases which will break it.  *  * There are four states:  *	LN_NORMAL is the normal state (not in underline mode).  *	LN_UNDERLINE means we are in underline mode.  We expect to get  *		either a sequence like "_\bX" or "X\b_" to continue  *		underline mode, or anything else to end underline mode.  *	LN_BOLDFACE means we are in boldface mode.  We expect to get sequences  *		like "X\bX\b...X\bX" to continue boldface mode, or anything  *		else to end boldface mode.  *	LN_UL_X means we are one character after LN_UNDERLINE  *		(we have gotten the '_' in "_\bX" or the 'X' in "X\b_").  *	LN_UL_XB means we are one character after LN_UL_X   *		(we have gotten the backspace in "_\bX" or "X\b_";  *		we expect one more ordinary character,   *		which will put us back in state LN_UNDERLINE).  *	LN_BO_X means we are one character after LN_BOLDFACE  *		(we have gotten the 'X' in "X\bX").  *	LN_BO_XB means we are one character after LN_BO_X  *		(we have gotten the backspace in "X\bX";  *		we expect one more 'X' which will put us back  *		in LN_BOLDFACE).  */
 end_comment
 
 begin_decl_stmt
@@ -168,7 +180,6 @@ comment|/* In boldface, got char& \b, need same char */
 end_comment
 
 begin_decl_stmt
-name|public
 name|char
 modifier|*
 name|line
@@ -224,11 +235,12 @@ begin_comment
 comment|/*  * Rewind the line buffer.  */
 end_comment
 
-begin_function
-name|public
-name|void
+begin_macro
 name|prewind
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|line
 operator|=
@@ -245,7 +257,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Append a character to the line buffer.  * Expand tabs into spaces, handle underlining, boldfacing, etc.  * Returns 0 if ok, 1 if couldn't fit in buffer.  */
@@ -256,21 +268,26 @@ define|#
 directive|define
 name|NEW_COLUMN
 parameter_list|(
-name|newcol
+name|addon
 parameter_list|)
-value|if ((newcol) + ((ln_state)?ue_width:0)> sc_width) \ 					return (1); else column = (newcol)
+define|\
+value|if (column + addon + (ln_state ? ue_width : 0)> sc_width) \ 		return(1); \ 	else \ 		column += addon
 end_define
 
-begin_function
-name|public
-name|int
+begin_macro
 name|pappend
-parameter_list|(
-name|c
-parameter_list|)
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|c
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 if|if
 condition|(
@@ -400,9 +417,8 @@ operator|)
 return|;
 if|if
 condition|(
+operator|!
 name|bs_mode
-operator|==
-name|BS_SPECIAL
 condition|)
 block|{
 comment|/* 		 * Advance the state machine. 		 */
@@ -428,9 +444,20 @@ operator|-
 literal|1
 index|]
 operator|!=
-literal|'\b'
+call|(
+name|char
+call|)
+argument_list|(
+literal|'H'
+operator||
+literal|0200
+argument_list|)
 condition|)
 break|break;
+name|column
+operator|-=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|c
@@ -1038,8 +1065,6 @@ do|do
 block|{
 name|NEW_COLUMN
 argument_list|(
-name|column
-operator|+
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1076,18 +1101,18 @@ condition|)
 block|{
 if|if
 condition|(
-name|bs_mode
+name|ln_state
 operator|==
-name|BS_CONTROL
+name|LN_NORMAL
 condition|)
-block|{
-comment|/* 			 * Treat backspace as a control char: output "^H". 			 */
 name|NEW_COLUMN
 argument_list|(
-name|column
-operator|+
 literal|2
 argument_list|)
+expr_stmt|;
+else|else
+name|column
+operator|--
 expr_stmt|;
 operator|*
 name|curr
@@ -1099,20 +1124,6 @@ operator||
 literal|0200
 operator|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 			 * Output a real backspace. 			 */
-name|column
-operator|--
-expr_stmt|;
-operator|*
-name|curr
-operator|++
-operator|=
-literal|'\b'
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
@@ -1121,17 +1132,15 @@ return|;
 block|}
 if|if
 condition|(
-name|control_char
+name|CONTROL_CHAR
 argument_list|(
 name|c
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * Put a "^X" into the buffer. 		 * The 0200 bit is used to tell put_line() to prefix 		 * the char with a ^.  We don't actually put the ^ 		 * in the buffer because we sometimes need to move 		 * chars around, and such movement might separate  		 * the ^ from its following character. 		 * {{ This should be redone so that we can use an 		 *    8 bit (e.g. international) character set. }} 		 */
+comment|/* 		 * Put a "^X" into the buffer.  The 0200 bit is used to tell 		 * put_line() to prefix the char with a ^.  We don't actually 		 * put the ^ in the buffer because we sometimes need to move 		 * chars around, and such movement might separate the ^ from 		 * its following character. 		 */
 name|NEW_COLUMN
 argument_list|(
-name|column
-operator|+
 literal|2
 argument_list|)
 expr_stmt|;
@@ -1140,7 +1149,7 @@ name|curr
 operator|++
 operator|=
 operator|(
-name|carat_char
+name|CARAT_CHAR
 argument_list|(
 name|c
 argument_list|)
@@ -1157,8 +1166,6 @@ block|}
 comment|/* 	 * Ordinary character.  Just put it in the buffer. 	 */
 name|NEW_COLUMN
 argument_list|(
-name|column
-operator|+
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1174,20 +1181,19 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Analogous to forw_line(), but deals with "raw lines":  * lines which are not split for screen width.  * {{ This is supposed to be more efficient than forw_line(). }}  */
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|forw_raw_line
 parameter_list|(
 name|curr_pos
 parameter_list|)
-name|POSITION
+name|off_t
 name|curr_pos
 decl_stmt|;
 block|{
@@ -1200,8 +1206,11 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|POSITION
+name|off_t
 name|new_pos
+decl_stmt|,
+name|ch_tell
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1316,13 +1325,12 @@ comment|/*  * Analogous to back_line(), but deals with "raw lines".  * {{ This i
 end_comment
 
 begin_function
-name|public
-name|POSITION
+name|off_t
 name|back_raw_line
 parameter_list|(
 name|curr_pos
 parameter_list|)
-name|POSITION
+name|off_t
 name|curr_pos
 decl_stmt|;
 block|{
@@ -1335,8 +1343,11 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
-name|POSITION
+name|off_t
 name|new_pos
+decl_stmt|,
+name|ch_tell
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1347,7 +1358,7 @@ operator|||
 name|curr_pos
 operator|<=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 operator|||
@@ -1419,7 +1430,7 @@ comment|/* 			 * We have hit the beginning of the file. 			 * This must be the f
 name|new_pos
 operator|=
 operator|(
-name|POSITION
+name|off_t
 operator|)
 literal|0
 expr_stmt|;
