@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.7 1999/01/06 19:55:49 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.8 1999/01/07 23:01:11 n_hibma Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/* Universal Host Controller Interface  *  * UHCI spec: http://www.intel.com/  */
+end_comment
+
+begin_comment
+comment|/* The low level controller code for UHCI has been split into  * PCI probes and UHCI specific code. This was done to facilitate the  * sharing of code between *BSD's  */
 end_comment
 
 begin_include
@@ -494,6 +502,9 @@ name|unit
 parameter_list|)
 block|{
 name|int
+name|legsup
+decl_stmt|;
+name|int
 name|id
 decl_stmt|;
 name|char
@@ -733,6 +744,67 @@ name|id
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* verify that the PRIQDEN bit is set in the LEGSUP register */
+name|legsup
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_LEGSUP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|legsup
+operator|&
+name|PCI_LEGSUP_USBPIRQDEN
+operator|)
+condition|)
+block|{
+if|#
+directive|if
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|USBVERBOSE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|USB_DEBUG
+argument_list|)
+operator|)
+if|if
+condition|(
+name|bootverbose
+condition|)
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"uhci%d: PIRQD enable not set\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|legsup
+operator||=
+name|PCI_LEGSUP_USBPIRQDEN
+expr_stmt|;
+name|pci_conf_write
+argument_list|(
+name|config_id
+argument_list|,
+name|PCI_LEGSUP
+argument_list|,
+name|legsup
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* We add a child to the root bus. After PCI configuration 	 * has completed the root bus will start to probe and 	 * attach all the devices attached to it, including our new 	 * kid. 	 * 	 * FIXME Sometime in the future the UHCI controller itself will 	 * become a kid of PCI device and this device add will no longer 	 * be necessary. 	 * 	 * See README for an elaborate description of the bus 	 * structure in spe. 	 */
 name|sc
 operator|->
