@@ -600,7 +600,7 @@ name|struct
 name|vr_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|int
 parameter_list|)
@@ -665,11 +665,11 @@ name|vr_miibus_writereg
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|,
-name|int
+name|uint16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1061,13 +1061,11 @@ specifier|static
 name|void
 name|vr_mii_sync
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1115,7 +1113,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1128,23 +1125,17 @@ specifier|static
 name|void
 name|vr_mii_send
 parameter_list|(
-name|sc
-parameter_list|,
-name|bits
-parameter_list|,
-name|cnt
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|u_int32_t
+parameter_list|,
+name|uint32_t
 name|bits
-decl_stmt|;
+parameter_list|,
 name|int
 name|cnt
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1234,20 +1225,16 @@ specifier|static
 name|int
 name|vr_mii_readreg
 parameter_list|(
-name|sc
-parameter_list|,
-name|frame
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vr_mii_frame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 ifdef|#
 directive|ifdef
 name|VR_USESWSHIFT
@@ -1262,7 +1249,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up frame for RX. 	 */
+comment|/* Set up frame for RX. */
 name|frame
 operator|->
 name|mii_stdelim
@@ -1305,7 +1292,7 @@ argument_list|,
 name|VR_MIICMD_DIRECTPGM
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Turn on data xmit. 	 */
+comment|/* Turn on data xmit. */
 name|SIO_SET
 argument_list|(
 name|VR_MIICMD_DIR
@@ -1316,7 +1303,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Send command/address info. 	 */
+comment|/* Send command/address info. */
 name|vr_mii_send
 argument_list|(
 name|sc
@@ -1361,7 +1348,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|/* Idle bit */
+comment|/* Idle bit. */
 name|SIO_CLR
 argument_list|(
 operator|(
@@ -1593,7 +1580,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* Set the PHY-adress */
+comment|/* Set the PHY address. */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1616,7 +1603,7 @@ operator|->
 name|mii_phyaddr
 argument_list|)
 expr_stmt|;
-comment|/* Set the register-adress */
+comment|/* Set the register address. */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1714,20 +1701,16 @@ specifier|static
 name|int
 name|vr_mii_writereg
 parameter_list|(
-name|sc
-parameter_list|,
-name|frame
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vr_mii_frame
 modifier|*
 name|frame
-decl_stmt|;
+parameter_list|)
 ifdef|#
 directive|ifdef
 name|VR_USESWSHIFT
@@ -1755,7 +1738,7 @@ argument_list|,
 name|VR_MIICMD_DIRECTPGM
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up frame for TX. 	 */
+comment|/* Set up frame for TX. */
 name|frame
 operator|->
 name|mii_stdelim
@@ -1774,7 +1757,7 @@ name|mii_turnaround
 operator|=
 name|VR_MII_TURNAROUND
 expr_stmt|;
-comment|/*  	 * Turn on data output. 	 */
+comment|/* Turn on data output. */
 name|SIO_SET
 argument_list|(
 name|VR_MIICMD_DIR
@@ -1872,7 +1855,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Turn off xmit. 	 */
+comment|/* Turn off xmit. */
 name|SIO_CLR
 argument_list|(
 name|VR_MIICMD_DIR
@@ -1908,7 +1891,7 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
-comment|/* Set the PHY-adress */
+comment|/* Set the PHY address. */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -1931,7 +1914,7 @@ operator|->
 name|mii_phyaddr
 argument_list|)
 expr_stmt|;
-comment|/* Set the register-adress and data to write */
+comment|/* Set the register address and data to write. */
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -2025,37 +2008,30 @@ specifier|static
 name|int
 name|vr_miibus_readreg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|,
 name|int
 name|phy
-decl_stmt|,
+parameter_list|,
+name|int
 name|reg
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|vr_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|struct
 name|vr_mii_frame
 name|frame
 decl_stmt|;
+name|struct
+name|vr_softc
+modifier|*
 name|sc
-operator|=
+init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -2073,7 +2049,9 @@ operator|!=
 literal|1
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 break|break;
@@ -2128,41 +2106,33 @@ specifier|static
 name|int
 name|vr_miibus_writereg
 parameter_list|(
-name|dev
-parameter_list|,
-name|phy
-parameter_list|,
-name|reg
-parameter_list|,
-name|data
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
-name|u_int16_t
+parameter_list|,
+name|uint16_t
 name|phy
-decl_stmt|,
+parameter_list|,
+name|uint16_t
 name|reg
-decl_stmt|,
+parameter_list|,
+name|uint16_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|vr_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|struct
 name|vr_mii_frame
 name|frame
 decl_stmt|;
+name|struct
+name|vr_softc
+modifier|*
 name|sc
-operator|=
+init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -2180,7 +2150,9 @@ operator|!=
 literal|1
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 default|default:
 break|break;
@@ -2239,29 +2211,25 @@ specifier|static
 name|void
 name|vr_miibus_statchg
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|vr_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|struct
 name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|struct
+name|vr_softc
+modifier|*
 name|sc
-operator|=
+init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|VR_LOCK
 argument_list|(
 name|sc
@@ -2290,7 +2258,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2303,13 +2270,11 @@ specifier|static
 name|void
 name|vr_setmulti
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -2321,7 +2286,7 @@ name|h
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hashes
 index|[
 literal|2
@@ -2338,7 +2303,7 @@ name|ifmultiaddr
 modifier|*
 name|ifma
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|rxfilt
 decl_stmt|;
 name|int
@@ -2412,7 +2377,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* first, zot all the existing hash bits */
+comment|/* First, zero out all the existing hash bits. */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -2431,7 +2396,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* now program new ones */
+comment|/* Now program new ones. */
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -2557,7 +2522,6 @@ argument_list|,
 name|rxfilt
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2570,18 +2534,14 @@ specifier|static
 name|void
 name|vr_setcfg
 parameter_list|(
-name|sc
-parameter_list|,
-name|media
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|int
 name|media
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|restart
@@ -2666,7 +2626,6 @@ operator||
 name|VR_CMD_RX_ON
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2675,13 +2634,11 @@ specifier|static
 name|void
 name|vr_reset
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2784,7 +2741,6 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2797,21 +2753,17 @@ specifier|static
 name|int
 name|vr_probe
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_type
 modifier|*
 name|t
-decl_stmt|;
-name|t
-operator|=
+init|=
 name|vr_devs
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 name|t
@@ -3370,7 +3322,7 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
-comment|/* 	 * Do MII setup. 	 */
+comment|/* Do MII setup. */
 if|if
 condition|(
 name|mii_phy_probe
@@ -3413,7 +3365,7 @@ operator|->
 name|vr_stat_ch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call MI attach routine. 	 */
+comment|/* Call MI attach routine. */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -3493,29 +3445,25 @@ specifier|static
 name|int
 name|vr_detach
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
-name|struct
-name|vr_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+name|struct
+name|vr_softc
+modifier|*
 name|sc
-operator|=
+init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|mtx_initialized
@@ -3693,13 +3641,11 @@ specifier|static
 name|int
 name|vr_list_tx_init
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_chain_data
@@ -3839,13 +3785,11 @@ specifier|static
 name|int
 name|vr_list_rx_init
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_chain_data
@@ -4056,27 +4000,21 @@ specifier|static
 name|int
 name|vr_newbuf
 parameter_list|(
-name|sc
-parameter_list|,
-name|c
-parameter_list|,
-name|m
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vr_chain_onefrag
 modifier|*
 name|c
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -4190,7 +4128,7 @@ name|m_new
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int64_t
+name|uint64_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4251,13 +4189,11 @@ specifier|static
 name|void
 name|vr_rxeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|mbuf
@@ -4282,7 +4218,7 @@ name|total_len
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxstat
 decl_stmt|;
 name|VR_LOCK_ASSERT
@@ -4379,7 +4315,7 @@ name|cur_rx
 operator|->
 name|vr_mbuf
 expr_stmt|;
-comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 	 	 * comes up in the ring. 		 */
+comment|/* 		 * If an error occurs, update stats, clear the 		 * status word and leave the mbuf cluster in place: 		 * it should simply get re-used next time this descriptor 		 * comes up in the ring. 		 */
 if|if
 condition|(
 name|rxstat
@@ -4510,7 +4446,7 @@ operator|->
 name|vr_status
 argument_list|)
 expr_stmt|;
-comment|/* 		 * XXX The VIA Rhine chip includes the CRC with every 		 * received frame, and there's no way to turn this 		 * behavior off (at least, I can't find anything in 	 	 * the manual that explains how to do it) so we have 		 * to trim off the CRC manually. 		 */
+comment|/* 		 * XXX The VIA Rhine chip includes the CRC with every 		 * received frame, and there's no way to turn this 		 * behavior off (at least, I can't find anything in 		 * the manual that explains how to do it) so we have 		 * to trim off the CRC manually. 		 */
 name|total_len
 operator|-=
 name|ETHER_CRC_LEN
@@ -4591,7 +4527,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4600,13 +4535,11 @@ specifier|static
 name|void
 name|vr_rxeoc
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|ifnet
@@ -4644,6 +4577,7 @@ argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
+comment|/* Wait for receiver to stop */
 for|for
 control|(
 name|i
@@ -4666,8 +4600,9 @@ condition|;
 name|i
 operator|--
 control|)
+block|{
 empty_stmt|;
-comment|/* Wait for receiver to stop */
+block|}
 if|if
 condition|(
 operator|!
@@ -4732,7 +4667,6 @@ argument_list|,
 name|VR_CMD_RX_GO
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4745,13 +4679,11 @@ specifier|static
 name|void
 name|vr_txeof
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_chain
@@ -4763,6 +4695,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+comment|/* XXX: lock assertion? */
 name|ifp
 operator|=
 operator|&
@@ -4790,7 +4723,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|txstat
 decl_stmt|;
 name|int
@@ -5005,27 +4938,23 @@ specifier|static
 name|void
 name|vr_tick
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
 modifier|*
 name|sc
+init|=
+name|xsc
 decl_stmt|;
 name|struct
 name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
-name|sc
-operator|=
-name|xsc
-expr_stmt|;
 name|VR_LOCK
 argument_list|(
 name|sc
@@ -5104,7 +5033,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5182,7 +5110,7 @@ operator|==
 name|POLL_DEREGISTER
 condition|)
 block|{
-comment|/* final call, enable interrupts */
+comment|/* Final call, enable interrupts. */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -5234,10 +5162,10 @@ operator|==
 name|POLL_AND_CHECK_STATUS
 condition|)
 block|{
-comment|/* also check status register */
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
+comment|/* Also check status register. */
 name|status
 operator|=
 name|CSR_READ_2
@@ -5490,30 +5418,26 @@ specifier|static
 name|void
 name|vr_intr
 parameter_list|(
-name|arg
-parameter_list|)
 name|void
 modifier|*
 name|arg
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
 modifier|*
 name|sc
+init|=
+name|arg
 decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|status
 decl_stmt|;
-name|sc
-operator|=
-name|arg
-expr_stmt|;
 name|VR_LOCK
 argument_list|(
 name|sc
@@ -5560,7 +5484,7 @@ name|ifp
 argument_list|)
 condition|)
 block|{
-comment|/* ok, disable interrupts */
+comment|/* OK, disable interrupts. */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -5915,13 +5839,11 @@ name|ifq_head
 operator|!=
 name|NULL
 condition|)
-block|{
 name|vr_start
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -5935,7 +5857,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5948,27 +5869,21 @@ specifier|static
 name|int
 name|vr_encap
 parameter_list|(
-name|sc
-parameter_list|,
-name|c
-parameter_list|,
-name|m_head
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|,
 name|struct
 name|vr_chain
 modifier|*
 name|c
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m_head
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_desc
@@ -5998,13 +5913,11 @@ name|m
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 literal|1
 operator|)
 return|;
-block|}
 comment|/* 	 * The Rhine chip doesn't auto-pad, so we have to make 	 * sure to pad short frames out to the minimum frame length 	 * ourselves. 	 */
 if|if
 condition|(
@@ -6124,13 +6037,11 @@ specifier|static
 name|void
 name|vr_start
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
@@ -6314,7 +6225,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6323,12 +6233,10 @@ specifier|static
 name|void
 name|vr_init
 parameter_list|(
-name|xsc
-parameter_list|)
 name|void
 modifier|*
 name|xsc
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
@@ -6371,7 +6279,7 @@ operator|->
 name|vr_miibus
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Cancel pending I/O and free all RX/TX buffers. 	 */
+comment|/* Cancel pending I/O and free all RX/TX buffers. */
 name|vr_stop
 argument_list|(
 name|sc
@@ -6382,7 +6290,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set our station address. 	 */
+comment|/* Set our station address. */
 for|for
 control|(
 name|i
@@ -6414,7 +6322,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* Set DMA size */
+comment|/* Set DMA size. */
 name|VR_CLRBIT
 argument_list|(
 name|sc
@@ -6433,7 +6341,7 @@ argument_list|,
 name|VR_BCR0_DMA_STORENFWD
 argument_list|)
 expr_stmt|;
-comment|/*  	 * BCR0 and BCR1 can override the RXCFG and TXCFG registers, 	 * so we must set both. 	 */
+comment|/* 	 * BCR0 and BCR1 can override the RXCFG and TXCFG registers, 	 * so we must set both. 	 */
 name|VR_CLRBIT
 argument_list|(
 name|sc
@@ -6519,8 +6427,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"vr%d: initialization failed: no "
-literal|"memory for rx buffers\n"
+literal|"vr%d: initialization failed: no memory for rx buffers\n"
 argument_list|,
 name|sc
 operator|->
@@ -6539,7 +6446,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Init tx descriptors. 	 */
+comment|/* Init tx descriptors. */
 name|vr_list_tx_init
 argument_list|(
 name|sc
@@ -6744,7 +6651,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6757,25 +6663,21 @@ specifier|static
 name|int
 name|vr_ifmedia_upd
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
+init|=
 name|ifp
 operator|->
 name|if_softc
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6806,20 +6708,16 @@ specifier|static
 name|void
 name|vr_ifmedia_sts
 parameter_list|(
-name|ifp
-parameter_list|,
-name|ifmr
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|ifmediareq
 modifier|*
 name|ifmr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
@@ -6867,7 +6765,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6876,23 +6773,17 @@ specifier|static
 name|int
 name|vr_ioctl
 parameter_list|(
-name|ifp
-parameter_list|,
-name|command
-parameter_list|,
-name|data
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|,
 name|u_long
 name|command
-decl_stmt|;
+parameter_list|,
 name|caddr_t
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
@@ -7066,13 +6957,11 @@ specifier|static
 name|void
 name|vr_watchdog
 parameter_list|(
-name|ifp
-parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
@@ -7139,7 +7028,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7152,13 +7040,11 @@ specifier|static
 name|void
 name|vr_stop
 parameter_list|(
-name|sc
-parameter_list|)
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -7442,7 +7328,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -7455,30 +7340,25 @@ specifier|static
 name|void
 name|vr_shutdown
 parameter_list|(
-name|dev
-parameter_list|)
 name|device_t
 name|dev
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|vr_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|sc
-operator|=
+init|=
 name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|vr_stop
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
