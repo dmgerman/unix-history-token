@@ -346,6 +346,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -356,7 +360,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|ENOMEM
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -381,6 +385,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|TMP_substitute_table
@@ -396,7 +404,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|ENOMEM
+name|saverr
 expr_stmt|;
 return|return
 operator|(
@@ -421,6 +429,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|saverr
+operator|=
+name|errno
+expr_stmt|;
 name|free
 argument_list|(
 name|TMP_substitute_table
@@ -441,7 +453,7 @@ argument_list|)
 expr_stmt|;
 name|errno
 operator|=
-name|ENOMEM
+name|saverr
 expr_stmt|;
 return|return
 operator|(
