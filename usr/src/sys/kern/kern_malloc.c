@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_malloc.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_malloc.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -710,14 +710,6 @@ operator|->
 name|ku_pagecnt
 operator|=
 literal|0
-expr_stmt|;
-name|kbp
-operator|->
-name|kb_total
-operator|-=
-name|kbp
-operator|->
-name|kb_elmpercl
 expr_stmt|;
 name|kmemstats
 index|[
