@@ -4222,7 +4222,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"isipv6addr: got %d for %sn"
+literal|"isipv6addr: got %d for %s\n"
 argument_list|,
 name|rv
 argument_list|,
