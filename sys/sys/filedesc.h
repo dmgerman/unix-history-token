@@ -233,28 +233,6 @@ begin_comment
 comment|/* auto-close on exec */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|UF_MAPPED
-value|0x02
-end_define
-
-begin_comment
-comment|/* mapped from device */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Storage required per open file descriptor.  */
 end_comment

@@ -369,19 +369,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|munmapfd
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|swapout_procs
 parameter_list|(
 name|int

@@ -2382,12 +2382,6 @@ literal|"dup() picked an open file"
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (delfp&& (fdp->fd_ofileflags[new]& UF_MAPPED)) 		(void) munmapfd(td, new);
-endif|#
-directive|endif
 comment|/* 	 * Duplicate the source descriptor, update lastfile 	 */
 name|fdp
 operator|->
@@ -3521,12 +3515,6 @@ goto|goto
 name|done2
 goto|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (fdp->fd_ofileflags[fd]& UF_MAPPED) 		(void) munmapfd(td, fd);
-endif|#
-directive|endif
 name|fdp
 operator|->
 name|fd_ofiles
@@ -7257,12 +7245,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((fdp->fd_ofileflags[i]& UF_MAPPED) != 0) 				(void) munmapfd(td, i);
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -7476,12 +7458,6 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fdp->fd_ofileflags[i]& UF_MAPPED) 				(void) munmapfd(td, i);
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -9730,12 +9706,6 @@ index|[
 name|indx
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fp&& fdp->fd_ofileflags[indx]& UF_MAPPED) 			(void) munmapfd(td, indx);
-endif|#
-directive|endif
 name|fdp
 operator|->
 name|fd_ofiles
@@ -9831,12 +9801,6 @@ index|[
 name|indx
 index|]
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (fp&& fdp->fd_ofileflags[indx]& UF_MAPPED) 			(void) munmapfd(td, indx);
-endif|#
-directive|endif
 name|fdp
 operator|->
 name|fd_ofiles
