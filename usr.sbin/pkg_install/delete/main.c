@@ -61,7 +61,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"adDfGhinp:vx"
+literal|"adDfGhinp:rvx"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,6 +93,14 @@ end_decl_stmt
 begin_decl_stmt
 name|Boolean
 name|NoDeInstall
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Boolean
+name|Recursive
 init|=
 name|FALSE
 decl_stmt|;
@@ -267,6 +275,14 @@ case|case
 literal|'i'
 case|:
 name|Interactive
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|Recursive
 operator|=
 name|TRUE
 expr_stmt|;
@@ -502,7 +518,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_delete [-dDfGinvx] [-p prefix] pkg-name ..."
+literal|"usage: pkg_delete [-dDfGinrvx] [-p prefix] pkg-name ..."
 argument_list|,
 literal|"       pkg_delete -a [flags]"
 argument_list|)
