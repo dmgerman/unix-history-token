@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.36 1997/11/20 15:48:23 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.37 1998/02/09 06:08:23 eivind Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3853,62 +3853,53 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pccard/driver.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pccard/slot.h>
 end_include
 
-begin_function_decl
-specifier|static
-name|int
-name|aicinit
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* init device */
-end_comment
-
-begin_function_decl
-specifier|static
-name|void
-name|aicunload
-parameter_list|(
-name|struct
-name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Disable driver */
-end_comment
-
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|aic_card_intr
-parameter_list|(
-name|struct
+name|__P
+argument_list|(
+operator|(
+expr|struct
 name|pccard_devinfo
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* Interrupt handler */
-end_comment
+begin_decl_stmt
+specifier|static
+name|int
+name|aicinit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pccard_devinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|aicunload
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pccard_devinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -3930,7 +3921,6 @@ block|,
 comment|/* Attributes - presently unused */
 operator|&
 name|bio_imask
-comment|/* Interrupt mask for device */
 block|}
 decl_stmt|;
 end_decl_stmt
