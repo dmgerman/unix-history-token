@@ -1264,8 +1264,7 @@ name|nopsize
 block|,
 literal|0
 block|,
-operator|-
-literal|1
+name|nokqfilter
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -13953,8 +13952,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -14013,8 +14011,7 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)
@@ -14076,8 +14073,7 @@ parameter_list|,
 name|int32_t
 name|flag
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
 name|p
 parameter_list|)

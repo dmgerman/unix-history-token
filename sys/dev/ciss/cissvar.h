@@ -74,6 +74,37 @@ value|32
 end_define
 
 begin_comment
+comment|/************************************************************************  * Compatibility with older versions of FreeBSD  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|440001
+end_if
+
+begin_warning
+warning|#
+directive|warning
+warning|testing old-FreeBSD compat
+end_warning
+
+begin_typedef
+typedef|typedef
+name|struct
+name|proc
+name|d_thread_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/************************************************************************  * Command queue statistics  */
 end_comment
 
@@ -127,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|CISS_DRIVER_VERSION
-value|20011009
+value|20011201
 end_define
 
 begin_comment
