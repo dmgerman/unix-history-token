@@ -2036,10 +2036,12 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Enter/exit standout mode as appropriate. */
+comment|/* don't use simple ! here due to gcc -O bug */
 if|if
 condition|(
 name|SO
 operator|&&
+operator|!
 operator|!
 operator|(
 name|nsp
@@ -2049,6 +2051,7 @@ operator|&
 name|__STANDOUT
 operator|)
 operator|!=
+operator|!
 operator|!
 operator|(
 name|curscr
