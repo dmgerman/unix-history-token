@@ -951,12 +951,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_dump_t
-name|vinumdump
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|d_psize_t
 name|vinumsize
 decl_stmt|;

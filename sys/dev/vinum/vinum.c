@@ -116,7 +116,7 @@ literal|"vinum"
 block|,
 name|VINUM_CDEV_MAJOR
 block|,
-name|vinumdump
+name|nodump
 block|,
 name|vinumsize
 block|,
@@ -1992,21 +1992,6 @@ return|;
 comment|/* err on the size of conservatism */
 return|return
 name|size
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|vinumdump
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|)
-block|{
-comment|/* Not implemented. */
-return|return
-name|ENXIO
 return|;
 block|}
 end_function
