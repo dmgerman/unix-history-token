@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.34 (Berkeley) %G%"
+literal|"@(#)main.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2540,8 +2540,14 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-default|default:
-comment|/* find our real host name */
+block|}
+end_switch
+
+begin_comment
+comment|/* 	**  Find our real host name for future logging. 	*/
+end_comment
+
+begin_expr_stmt
 name|p
 operator|=
 name|getrealhostname
@@ -2549,6 +2555,9 @@ argument_list|(
 name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|p
@@ -2567,9 +2576,7 @@ name|RealHostName
 operator|=
 literal|"localhost"
 expr_stmt|;
-break|break;
-block|}
-end_switch
+end_if
 
 begin_comment
 comment|/* do heuristic mode adjustment */
