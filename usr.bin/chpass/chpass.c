@@ -627,8 +627,12 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown user: uid %u"
+literal|"unknown user: uid %lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
