@@ -98,6 +98,22 @@ decl_stmt|,
 modifier|*
 name|mprev
 decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|n
+decl_stmt|,
+modifier|*
+name|mfirst
+decl_stmt|,
+modifier|*
+name|mlast
+decl_stmt|;
+name|int
+name|len
+decl_stmt|,
+name|off
+decl_stmt|;
 name|KASSERT
 argument_list|(
 name|m0
@@ -130,7 +146,7 @@ operator|->
 name|m_next
 control|)
 block|{
-comment|/* 		 * Regular mbufs are ignored unless there's a cluster 		 * in front of it that we can use to coalesce.  We do 		 * the latter mainly so later clusters can be coalesced 		 * also w/o having to handle them specially (i.e. convert 		 * mbuf+cluster -> cluster).  This optimization is heavily 		 * influenced by the assumption that we're running over 		 * Ethernet where MCBYTES is large enough that the max 		 * packet size will permit lots of coalescing into a 		 * single cluster.  This in turn permits efficient 		 * crypto operations, especially when using hardware. 		 */
+comment|/* 		 * Regular mbufs are ignored unless there's a cluster 		 * in front of it that we can use to coalesce.  We do 		 * the latter mainly so later clusters can be coalesced 		 * also w/o having to handle them specially (i.e. convert 		 * mbuf+cluster -> cluster).  This optimization is heavily 		 * influenced by the assumption that we're running over 		 * Ethernet where MCLBYTES is large enough that the max 		 * packet size will permit lots of coalescing into a 		 * single cluster.  This in turn permits efficient 		 * crypto operations, especially when using hardware. 		 */
 if|if
 condition|(
 operator|(
@@ -230,7 +246,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 		 * Cluster'd mbufs are left alone (for now). 		 */
+comment|/* 		 * Writable mbufs are left alone (for now). 		 */
 if|if
 condition|(
 operator|!
@@ -247,7 +263,6 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * Not writable, replace with a copy or coalesce with 		 * the previous mbuf if possible (since we have to copy 		 * it anyway, we try to reduce the number of mbufs and 		 * clusters so that future work is easier). 		 */
-comment|/* XXX why can M_PKTHDR be set past the first mbuf? */
 name|KASSERT
 argument_list|(
 name|m
@@ -265,13 +280,13 @@ name|m_flags
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NB: we only coalesce into a cluster */
+comment|/* NB: we only coalesce into a cluster or larger */
 if|if
 condition|(
 name|mprev
-operator|==
+operator|!=
 name|NULL
-operator|||
+operator|&&
 operator|(
 name|mprev
 operator|->
@@ -279,25 +294,75 @@ name|m_flags
 operator|&
 name|M_EXT
 operator|)
-operator|==
-literal|0
-operator|||
+operator|&&
 name|m
 operator|->
 name|m_len
-operator|>
+operator|<=
 name|M_TRAILINGSPACE
 argument_list|(
 name|mprev
 argument_list|)
 condition|)
 block|{
-name|struct
-name|mbuf
-modifier|*
-name|n
-decl_stmt|;
-comment|/* 			 * Allocate a new page, copy the data to the front 			 * and release the reference to the old page. 			 */
+comment|/* XXX: this ignores mbuf types */
+name|memcpy
+argument_list|(
+name|mtod
+argument_list|(
+name|mprev
+argument_list|,
+name|caddr_t
+argument_list|)
+operator|+
+name|mprev
+operator|->
+name|m_len
+argument_list|,
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+argument_list|,
+name|m
+operator|->
+name|m_len
+argument_list|)
+expr_stmt|;
+name|mprev
+operator|->
+name|m_len
+operator|+=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+name|mprev
+operator|->
+name|m_next
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+comment|/* unlink from chain */
+name|m_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* reclaim mbuf */
+name|newipsecstat
+operator|.
+name|ips_clcoalesced
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Allocate new space to hold the copy... 		 */
+comment|/* XXX why can M_PKTHDR be set past the first mbuf? */
 if|if
 condition|(
 name|mprev
@@ -313,7 +378,7 @@ name|M_PKTHDR
 operator|)
 condition|)
 block|{
-comment|/* 				 * NB: if a packet header is present we 				 * must allocate the mbuf separately from 				 * the cluster 'cuz M_COPY_PKTHDR will 				 * smash the data pointer and drop the 				 * M_EXT marker. 				 */
+comment|/* 			 * NB: if a packet header is present we must 			 * allocate the mbuf separately from any cluster 			 * because M_MOVE_PKTHDR will smash the data 			 * pointer and drop the M_EXT marker. 			 */
 name|MGETHDR
 argument_list|(
 name|n
@@ -423,6 +488,41 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 		 * ... and copy the data.  We deal with jumbo mbufs 		 * (i.e. m_len> MCLBYTES) by splitting them into 		 * clusters.  We could just malloc a buffer and make 		 * it external but too many device drivers don't know 		 * how to break up the non-contiguous memory when 		 * doing DMA. 		 */
+name|len
+operator|=
+name|m
+operator|->
+name|m_len
+expr_stmt|;
+name|off
+operator|=
+literal|0
+expr_stmt|;
+name|mfirst
+operator|=
+name|n
+expr_stmt|;
+name|mlast
+operator|=
+name|NULL
+expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+name|int
+name|cc
+init|=
+name|min
+argument_list|(
+name|len
+argument_list|,
+name|MCLBYTES
+argument_list|)
+decl_stmt|;
 name|memcpy
 argument_list|(
 name|mtod
@@ -438,20 +538,93 @@ name|m
 argument_list|,
 name|caddr_t
 argument_list|)
+operator|+
+name|off
 argument_list|,
-name|m
-operator|->
-name|m_len
+name|cc
 argument_list|)
 expr_stmt|;
 name|n
 operator|->
 name|m_len
 operator|=
+name|cc
+expr_stmt|;
+if|if
+condition|(
+name|mlast
+operator|!=
+name|NULL
+condition|)
+name|mlast
+operator|->
+name|m_next
+operator|=
+name|n
+expr_stmt|;
+name|mlast
+operator|=
+name|n
+expr_stmt|;
+name|newipsecstat
+operator|.
+name|ips_clcopied
+operator|++
+expr_stmt|;
+name|len
+operator|-=
+name|cc
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+break|break;
+name|off
+operator|+=
+name|cc
+expr_stmt|;
+name|n
+operator|=
+name|m_getcl
+argument_list|(
+name|M_DONTWAIT
+argument_list|,
 name|m
 operator|->
-name|m_len
+name|m_type
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+name|NULL
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|mfirst
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+block|}
 name|n
 operator|->
 name|m_next
@@ -468,7 +641,7 @@ name|NULL
 condition|)
 name|m0
 operator|=
-name|n
+name|mfirst
 expr_stmt|;
 comment|/* new head of chain */
 else|else
@@ -476,7 +649,7 @@ name|mprev
 operator|->
 name|m_next
 operator|=
-name|n
+name|mfirst
 expr_stmt|;
 comment|/* replace old mbuf */
 name|m_free
@@ -487,71 +660,8 @@ expr_stmt|;
 comment|/* release old mbuf */
 name|mprev
 operator|=
-name|n
+name|mfirst
 expr_stmt|;
-name|newipsecstat
-operator|.
-name|ips_clcopied
-operator|++
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* XXX: this ignores mbuf types */
-name|memcpy
-argument_list|(
-name|mtod
-argument_list|(
-name|mprev
-argument_list|,
-name|caddr_t
-argument_list|)
-operator|+
-name|mprev
-operator|->
-name|m_len
-argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|mprev
-operator|->
-name|m_len
-operator|+=
-name|m
-operator|->
-name|m_len
-expr_stmt|;
-name|mprev
-operator|->
-name|m_next
-operator|=
-name|m
-operator|->
-name|m_next
-expr_stmt|;
-comment|/* unlink from chain */
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* reclaim mbuf */
-name|newipsecstat
-operator|.
-name|ips_clcoalesced
-operator|++
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
@@ -562,7 +672,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make space for a new header of length hlen at offset off  * in the packet.  When doing this we allocate new mbufs only  * when absolutely necessary.  The mbuf where the new header  * is to go is returned together with an offset into the mbuf.  * If NULL is returned then the mbuf chain may have been modified;  * the caller is assumed to always free the chain.  */
+comment|/*  * Make space for a new header of length hlen at skip bytes  * into the packet.  When doing this we allocate new mbufs only  * when absolutely necessary.  The mbuf where the new header  * is to go is returned together with an offset into the mbuf.  * If NULL is returned then the mbuf chain may have been modified;  * the caller is assumed to always free the chain.  */
 end_comment
 
 begin_function
