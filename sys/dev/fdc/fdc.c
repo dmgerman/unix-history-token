@@ -9398,9 +9398,7 @@ name|device_get_unit
 argument_list|(
 name|fd
 operator|->
-name|fdc
-operator|->
-name|fdc_dev
+name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
