@@ -371,6 +371,10 @@ decl_stmt|;
 name|u_long
 name|s
 decl_stmt|;
+comment|/* 	 * It is important that we are not interrupted or preempted while 	 * doing the IPIs. The interrupted CPU may hold locks, and since 	 * it will wait for the CPU that sent the IPI, this can lead 	 * to a deadlock when an interrupt comes in on that CPU and it's 	 * handler tries to grab one of that locks. This will only happen for 	 * spin locks, but these IPI types are delivered even if normal 	 * interrupts are disabled, so the lock critical section will not 	 * protect the target processor from entering the IPI handler with 	 * the lock held. 	 */
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_context_demap
@@ -453,6 +457,9 @@ argument_list|(
 name|cookie
 argument_list|)
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -484,6 +491,9 @@ decl_stmt|;
 name|u_long
 name|s
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_page_demap
@@ -616,6 +626,9 @@ argument_list|(
 name|cookie
 argument_list|)
 expr_stmt|;
+name|critical_exit
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -650,6 +663,9 @@ decl_stmt|;
 name|u_long
 name|s
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 name|cookie
 operator|=
 name|ipi_tlb_range_demap
@@ -776,6 +792,9 @@ name|ipi_wait
 argument_list|(
 name|cookie
 argument_list|)
+expr_stmt|;
+name|critical_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
