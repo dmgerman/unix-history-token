@@ -8956,7 +8956,7 @@ name|bge_cdata
 operator|.
 name|bge_parent_tag
 argument_list|,
-name|ETHER_ALIGN
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -9330,7 +9330,7 @@ name|bge_cdata
 operator|.
 name|bge_parent_tag
 argument_list|,
-name|ETHER_ALIGN
+literal|1
 argument_list|,
 literal|0
 argument_list|,
