@@ -4716,7 +4716,9 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_flag
 operator|&
@@ -4726,7 +4728,9 @@ condition|)
 block|{
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -4737,7 +4741,9 @@ argument_list|)
 expr_stmt|;
 name|thread_stopped
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|thread_exit
