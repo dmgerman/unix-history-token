@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.11 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -704,6 +704,9 @@ name|bt_flag
 condition|)
 block|{
 case|case
+operator|(
+name|u_short
+operator|)
 operator|-
 literal|1
 case|:
