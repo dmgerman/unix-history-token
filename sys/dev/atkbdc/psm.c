@@ -11563,7 +11563,7 @@ comment|/* PSM_HOOKAPM */
 end_comment
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|psm
 argument_list|,
@@ -11572,8 +11572,6 @@ argument_list|,
 name|psm_driver
 argument_list|,
 name|psm_devclass
-argument_list|,
-name|psm_cdevsw
 argument_list|,
 literal|0
 argument_list|,
