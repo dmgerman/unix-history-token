@@ -6340,6 +6340,7 @@ name|shadow
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|suser
@@ -6353,6 +6354,9 @@ name|curproc
 operator|->
 name|p_acflag
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 break|break;
 if|if

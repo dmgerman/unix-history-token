@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.37 1998/09/15 08:15:26 gibbs Exp $ */
+comment|/* $Id: ccd.c,v 1.38 1999/01/22 22:38:28 peter Exp $ */
 end_comment
 
 begin_comment
@@ -1331,6 +1331,7 @@ expr_stmt|;
 comment|/* sanity */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|copyinstr
@@ -1349,6 +1350,9 @@ name|ci
 operator|->
 name|ci_pathlen
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -1445,6 +1449,7 @@ expr_stmt|;
 comment|/* 		 * XXX: Cache the component's dev_t. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -1460,6 +1465,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -1542,6 +1550,7 @@ expr_stmt|;
 comment|/* 		 * Get partition information for the component. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_IOCTL
@@ -1564,6 +1573,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -2788,12 +2800,16 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlock
 argument_list|(
 name|cs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -3045,12 +3061,16 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlock
 argument_list|(
 name|cs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5098,12 +5118,16 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlock
 argument_list|(
 name|cs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -5425,6 +5449,7 @@ endif|#
 directive|endif
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlookup
@@ -5442,6 +5467,9 @@ index|[
 name|i
 index|]
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 for|for
@@ -5530,6 +5558,7 @@ expr_stmt|;
 comment|/* 		 * Initialize the ccd.  Fills in the softc for us. 		 */
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdinit
@@ -5541,6 +5570,9 @@ name|cpp
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 for|for
@@ -5697,12 +5729,16 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlock
 argument_list|(
 name|cs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6132,12 +6168,16 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|ccdlock
 argument_list|(
 name|cs
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
@@ -6529,6 +6569,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|vn_open
@@ -6542,6 +6583,9 @@ name|FWRITE
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -6620,6 +6664,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -6635,6 +6680,9 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 ifdef|#
@@ -7038,6 +7086,7 @@ expr_stmt|;
 comment|/* 	 * Call the generic disklabel extraction routine. 	 */
 if|if
 condition|(
+operator|(
 name|errstring
 operator|=
 name|readdisklabel
@@ -7056,6 +7105,9 @@ name|sc_dkdev
 operator|.
 name|dk_label
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|ccdmakedisklabel
 argument_list|(
