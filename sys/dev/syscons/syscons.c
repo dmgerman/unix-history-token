@@ -2596,6 +2596,8 @@ comment|/* If the Delete key is preferable, an stty is necessary     */
 if|if
 condition|(
 name|sc
+operator|->
+name|kbd
 operator|!=
 name|NULL
 condition|)
@@ -11540,7 +11542,7 @@ return|return
 name|EINVAL
 return|;
 block|}
-comment|/*      * Is the wanted vty open? Don't allow switching to a closed vty.      * Note that we always allow the user to switch to the kernel       * console even if it is closed.      */
+comment|/*      * Is the wanted vty open? Don't allow switching to a closed vty.      * If we are in DDB, don't switch to a vty in the VT_PROCESS mode.      * Note that we always allow the user to switch to the kernel       * console even if it is closed.      */
 if|if
 condition|(
 operator|(
@@ -11609,6 +11611,48 @@ literal|5
 argument_list|,
 operator|(
 literal|"error 2, requested vty isn't open!\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|debugger
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+name|SC_STAT
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+operator|->
+name|smode
+operator|.
+name|mode
+operator|==
+name|VT_PROCESS
+operator|)
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"error 3, requested vty is in the VT_PROCESS mode\n"
 operator|)
 argument_list|)
 expr_stmt|;

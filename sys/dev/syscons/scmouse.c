@@ -3522,7 +3522,9 @@ operator|&
 literal|0x7
 index|]
 expr_stmt|;
-break|break;
+return|return
+literal|0
+return|;
 default|default:
 return|return
 name|EINVAL

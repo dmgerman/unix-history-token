@@ -307,6 +307,10 @@ name|TS_ISOPEN
 operator|)
 condition|)
 block|{
+name|sysmouse_tty
+operator|=
+name|tp
+expr_stmt|;
 name|tp
 operator|->
 name|t_oproc
@@ -1189,17 +1193,6 @@ argument_list|,
 literal|0600
 argument_list|,
 literal|"sysmouse"
-argument_list|)
-expr_stmt|;
-name|dev
-operator|->
-name|si_tty
-operator|=
-name|sysmouse_tty
-operator|=
-name|ttymalloc
-argument_list|(
-name|sysmouse_tty
 argument_list|)
 expr_stmt|;
 comment|/* sysmouse doesn't have scr_stat */
