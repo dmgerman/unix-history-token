@@ -131,6 +131,13 @@ begin_define
 define|#
 directive|define
 name|NICHOST
+value|"whois.crsnic.net"
+end_define
+
+begin_define
+define|#
+directive|define
+name|INICHOST
 value|"whois.internic.net"
 end_define
 
@@ -274,7 +281,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"adgh:prR"
+literal|"adgh:iprR"
 argument_list|)
 operator|)
 operator|!=
@@ -319,6 +326,14 @@ case|:
 name|host
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|host
+operator|=
+name|INICHOST
 expr_stmt|;
 break|break;
 case|case
@@ -660,7 +675,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-adgprR] [-h hostname] name ...\n"
+literal|"usage: whois [-adgiprR] [-h hostname] name ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
