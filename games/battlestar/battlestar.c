@@ -93,12 +93,7 @@ name|open_score_file
 argument_list|()
 expr_stmt|;
 comment|/* revoke privs. */
-name|egid
-operator|=
-name|getegid
-argument_list|()
-expr_stmt|;
-name|setegid
+name|setgid
 argument_list|(
 name|getgid
 argument_list|()
