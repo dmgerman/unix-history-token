@@ -1609,7 +1609,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_bootstrap: no local apic!"
+literal|"pmap_bootstrap: no local apic! (non-SMP hardware?)"
 argument_list|)
 expr_stmt|;
 comment|/* local apic is mapped on last page */
