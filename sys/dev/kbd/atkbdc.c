@@ -655,6 +655,21 @@ name|tag
 operator|=
 name|busspace_isa_io
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+name|tag
+operator|=
+name|IA64_BUS_SPACE_IO
+expr_stmt|;
+else|#
+directive|else
+error|#
+directive|error
+literal|"define tag!"
 endif|#
 directive|endif
 if|#
