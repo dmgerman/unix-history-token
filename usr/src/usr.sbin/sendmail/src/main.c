@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.138 (Berkeley) %G%"
+literal|"@(#)main.c	8.139 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6580,12 +6580,29 @@ break|break;
 case|case
 literal|'C'
 case|:
-name|setclass
+name|mid
+operator|=
+name|macid
 argument_list|(
+operator|&
 name|line
 index|[
 literal|2
 index|]
+argument_list|,
+operator|&
+name|delimptr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|!=
+literal|'\0'
+condition|)
+name|setclass
+argument_list|(
+name|mid
 argument_list|,
 operator|&
 name|line

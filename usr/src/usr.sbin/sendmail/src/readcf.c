@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.112 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.113 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1989,6 +1989,27 @@ operator|*
 name|p
 operator|=
 literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|35
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"redefine('w' as %s)\n"
+argument_list|,
+name|macvalue
+argument_list|(
+literal|'w'
+argument_list|,
+name|e
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -8079,9 +8100,12 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"setclass(%c, %s)\n"
+literal|"setclass(%s, %s)\n"
 argument_list|,
+name|macname
+argument_list|(
 name|class
+argument_list|)
 argument_list|,
 name|str
 argument_list|)
