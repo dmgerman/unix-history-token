@@ -444,28 +444,41 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Test to see if the passed string is a ctime(3) generated  * date string as documented in the manual.  The template  * below is used as the criterion of correctness.  * Also, we check for a possible trailing time zone using  * the tmztype template.  */
+comment|/*  * Test to see if the passed string is a ctime(3) generated  * date string as documented in the manual.  The template  * below is used as the criterion of correctness.  * Also, we check for a possible trailing time zone using  * the tmztype template.  *  * If the mail file is created by Sys V (Solaris), there are  * no seconds in the time. If the mail is created by another  * program such as imapd, it might have timezone as  *<-|+>nnnn (-0800 for instance) at the end.  */
 end_comment
 
 begin_comment
-comment|/*  * 'A'	An upper case char  * 'a'	A lower case char  * ' '	A space  * '0'	A digit  * 'O'	An optional digit or space  * ':'	A colon  * 'N'	A new line  */
+comment|/*  * 'A'	An upper case char  * 'a'	A lower case char  * ' '	A space  * '0'	A digit  * 'O'	A digit or space  * 'p'	A punctuation char  * 'P'	A punctuation char or space  * ':'	A colon  * 'N'	A new line  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
-name|ctype
+modifier|*
+name|date_formats
 index|[]
 init|=
+block|{
 literal|"Aaa Aaa O0 00:00:00 0000"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|tmztype
-index|[]
-init|=
+block|,
+comment|/* Mon Jan 01 23:59:59 2001 */
 literal|"Aaa Aaa O0 00:00:00 AAA 0000"
+block|,
+comment|/* Mon Jan 01 23:59:59 PST 2001 */
+literal|"Aaa Aaa O0 00:00:00 0000 p0000"
+block|,
+comment|/* Mon Jan 01 23:59:59 2001 -0800 */
+literal|"Aaa Aaa O0 00:00 0000"
+block|,
+comment|/* Mon Jan 01 23:59 2001 */
+literal|"Aaa Aaa O0 00:00 AAA 0000"
+block|,
+comment|/* Mon Jan 01 23:59 PST 2001 */
+literal|"Aaa Aaa O0 00:00 0000 p0000"
+block|,
+comment|/* Mon Jan 01 23:59 2001 -0800 */
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -480,21 +493,47 @@ name|date
 index|[]
 decl_stmt|;
 block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|date_formats
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|cmatch
+argument_list|(
+name|date
+argument_list|,
+name|date_formats
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
 return|return
 operator|(
-name|cmatch
-argument_list|(
-name|date
-argument_list|,
-name|ctype
-argument_list|)
-operator|||
-name|cmatch
-argument_list|(
-name|date
-argument_list|,
-name|tmztype
-argument_list|)
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -628,6 +667,51 @@ literal|' '
 operator|&&
 operator|!
 name|isdigit
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|cp
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+if|if
+condition|(
+operator|!
+name|ispunct
+argument_list|(
+operator|*
+name|cp
+operator|++
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+break|break;
+case|case
+literal|'P'
+case|:
+if|if
+condition|(
+operator|*
+name|cp
+operator|!=
+literal|' '
+operator|&&
+operator|!
+name|ispunct
 argument_list|(
 operator|*
 name|cp
