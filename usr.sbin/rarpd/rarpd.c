@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.8 1996/11/18 22:07:41 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: rarpd.c,v 1.22 96/06/14 20:40:14 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -241,10 +241,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SUNOS4
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DIRENT_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|HAVE_DIRENT_H
 end_ifdef
 
 begin_include
@@ -2005,7 +2034,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s %s 0x%x %s"
+literal|"%s %s 0x%08x %s"
 argument_list|,
 name|ii
 operator|->
@@ -2013,14 +2042,20 @@ name|ii_ifname
 argument_list|,
 name|intoa
 argument_list|(
+name|ntohl
+argument_list|(
 name|ii
 operator|->
 name|ii_ipaddr
 argument_list|)
+argument_list|)
 argument_list|,
+name|ntohl
+argument_list|(
 name|ii
 operator|->
 name|ii_netmask
+argument_list|)
 argument_list|,
 name|eatoa
 argument_list|(
@@ -2532,6 +2567,9 @@ argument_list|,
 literal|"truncated request"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"len: %d expected: %d\n"
@@ -2551,6 +2589,8 @@ name|ap
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -2880,7 +2920,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* 	 * Find the highest numbered file descriptor for select(). 	 * Initialize the set of descriptors to listen to. 	 */
+comment|/* 		 * Find the highest numbered file descriptor for select(). 		 * Initialize the set of descriptors to listen to. 		 */
 name|FD_ZERO
 argument_list|(
 operator|&
@@ -3208,7 +3248,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|HAVE_DIRENT_H
 specifier|register
 name|struct
 name|dirent
@@ -3256,7 +3296,10 @@ operator|(
 name|unsigned
 name|int
 operator|)
+name|ntohl
+argument_list|(
 name|addr
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If directory is already open, rewind it.  Otherwise, open it. 	 */
@@ -3485,6 +3528,7 @@ operator|*
 operator|)
 name|pkt
 expr_stmt|;
+comment|/* should this be arp_tha? */
 if|if
 condition|(
 name|ether_ntohost
@@ -3528,19 +3572,15 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"cannot handle non IP addresses"
+literal|"cannot handle non IP addresses for %s"
+argument_list|,
+name|ename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|target_ipaddr
 operator|=
-name|htonl
-argument_list|(
 name|choose_ipaddr
 argument_list|(
 operator|(
@@ -3564,7 +3604,6 @@ name|ii
 operator|->
 name|ii_netmask
 argument_list|)
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3583,7 +3622,7 @@ name|ename
 argument_list|,
 name|intoa
 argument_list|(
-name|htonl
+name|ntohl
 argument_list|(
 name|ii
 operator|->
@@ -3625,7 +3664,7 @@ literal|1
 condition|)
 name|syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_INFO
 argument_list|,
 literal|"%s %s at %s DENIED (not bootable)"
 argument_list|,
@@ -3635,16 +3674,17 @@ name|ii_ifname
 argument_list|,
 name|eatoa
 argument_list|(
-name|ii
+name|ep
 operator|->
-name|ii_eaddr
+name|ether_shost
 argument_list|)
 argument_list|,
 name|intoa
 argument_list|(
-name|ii
-operator|->
-name|ii_ipaddr
+name|ntohl
+argument_list|(
+name|target_ipaddr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3848,10 +3888,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|htonl
-argument_list|(
 name|ipaddr
-argument_list|)
 expr_stmt|;
 name|ll
 operator|=
@@ -3984,11 +4021,7 @@ argument_list|,
 literal|"rtmsg get write: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 do|do
 block|{
@@ -4042,11 +4075,7 @@ argument_list|,
 literal|"rtmsg get read: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 name|ll2
 operator|=
@@ -4081,11 +4110,13 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"bogus link family (%d) wrong net?\n"
+literal|"bogus link family (%d) wrong net for %08X?\n"
 argument_list|,
 name|ll2
 operator|->
 name|sdl_family
+argument_list|,
+name|ipaddr
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4279,11 +4310,7 @@ argument_list|,
 literal|"rtmsg add write: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 do|do
 block|{
@@ -4337,11 +4364,7 @@ argument_list|,
 literal|"rtmsg add read: %m"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 block|}
 block|}
 end_function
@@ -4406,10 +4429,7 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|=
-name|htonl
-argument_list|(
 name|ipaddr
-argument_list|)
 expr_stmt|;
 name|request
 operator|.
@@ -4626,13 +4646,6 @@ argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|ipaddr
-operator|=
-name|htonl
-argument_list|(
-name|ipaddr
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -4756,9 +4769,9 @@ name|verbose
 condition|)
 name|syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_INFO
 argument_list|,
-literal|"%s %s at %s"
+literal|"%s %s at %s REPLIED"
 argument_list|,
 name|ii
 operator|->
@@ -4766,16 +4779,17 @@ name|ii_ifname
 argument_list|,
 name|eatoa
 argument_list|(
-name|ii
+name|ap
 operator|->
-name|ii_eaddr
+name|arp_sha
 argument_list|)
 argument_list|,
 name|intoa
 argument_list|(
-name|ii
-operator|->
-name|ii_ipaddr
+name|ntohl
+argument_list|(
+name|ipaddr
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4796,6 +4810,13 @@ name|u_long
 name|addr
 decl_stmt|;
 block|{
+name|addr
+operator|=
+name|ntohl
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|IN_CLASSA
@@ -4804,7 +4825,10 @@ name|addr
 argument_list|)
 condition|)
 return|return
+name|htonl
+argument_list|(
 name|IN_CLASSA_NET
+argument_list|)
 return|;
 if|if
 condition|(
@@ -4814,7 +4838,10 @@ name|addr
 argument_list|)
 condition|)
 return|return
+name|htonl
+argument_list|(
 name|IN_CLASSB_NET
+argument_list|)
 return|;
 if|if
 condition|(
@@ -4824,7 +4851,10 @@ name|addr
 argument_list|)
 condition|)
 return|return
+name|htonl
+argument_list|(
 name|IN_CLASSC_NET
+argument_list|)
 return|;
 name|syslog
 argument_list|(
@@ -4835,12 +4865,12 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-name|exit
+return|return
+name|htonl
 argument_list|(
-literal|1
+literal|0xffffffff
 argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
+return|;
 block|}
 end_function
 
