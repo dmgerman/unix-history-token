@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.8	81/11/20	*/
+comment|/*	uipc_socket.c	4.9	81/11/21	*/
 end_comment
 
 begin_include
@@ -295,6 +295,8 @@ name|so_proto
 operator|=
 name|prp
 expr_stmt|;
+name|error
+operator|=
 call|(
 modifier|*
 name|prp
@@ -313,17 +315,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|so
-operator|->
-name|so_error
+name|error
 condition|)
 block|{
-name|error
-operator|=
-name|so
-operator|->
-name|so_error
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1340,6 +1334,24 @@ operator|=
 operator|&
 name|top
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|u
+operator|.
+name|u_count
+operator|==
+literal|0
+condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+goto|goto
+name|release
+goto|;
 block|}
 if|if
 condition|(
