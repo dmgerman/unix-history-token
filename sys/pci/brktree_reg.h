@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Tinguely and Jim Lowe  * 4. The name of the author may not be used to endorse or promote products   *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1999 Roger Hardiman  * Copyright (c) 1998 Amancio Hasty  * Copyright (c) 1995 Mark Tinguely and Jim Lowe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Mark Tinguely and Jim Lowe  * 4. The name of the author may not be used to endorse or promote products   *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -26,7 +26,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Definitions for the Philips SAA7116 digital video to pci interface.  */
+comment|/*  * Definitions for the Brooktree 848/878 video capture to pci interface.  */
 end_comment
 
 begin_define
@@ -1725,9 +1725,12 @@ begin_struct
 struct|struct
 name|bktr_softc
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__bsdi__
+argument_list|)
 name|struct
 name|device
 name|bktr_dev
@@ -1751,19 +1754,166 @@ endif|#
 directive|endif
 if|#
 directive|if
-operator|(
-operator|(
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|struct
+name|device
+name|bktr_dev
+decl_stmt|;
+comment|/* base device */
+name|bus_space_tag_t
+name|memt
+decl_stmt|;
+name|bus_space_handle_t
+name|memh
+decl_stmt|;
+name|bus_size_t
+name|obmemsz
+decl_stmt|;
+comment|/* size of en card (bytes) */
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_prog
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_oprog
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_mem
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_vbidata
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_vbibuffer
+decl_stmt|;
+name|vm_offset_t
+name|phys_base
+decl_stmt|;
+comment|/* Bt848 register physical address */
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+name|struct
+name|device
+name|bktr_dev
+decl_stmt|;
+comment|/* base device */
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+comment|/* DMA tag */
+name|bus_space_tag_t
+name|memt
+decl_stmt|;
+name|bus_space_handle_t
+name|memh
+decl_stmt|;
+name|bus_size_t
+name|obmemsz
+decl_stmt|;
+comment|/* size of en card (bytes) */
+name|void
+modifier|*
+name|ih
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_prog
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_oprog
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_mem
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_vbidata
+decl_stmt|;
+name|bus_dmamap_t
+name|dm_vbibuffer
+decl_stmt|;
+name|size_t
+name|dm_mapsize
+decl_stmt|;
+name|pci_chipset_tag_t
+name|pc
+decl_stmt|;
+comment|/* Opaque PCI chipset tag */
+name|pcitag_t
+name|tag
+decl_stmt|;
+comment|/* PCI tag, for doing PCI commands */
+name|vm_offset_t
+name|phys_base
+decl_stmt|;
+comment|/* Bt848 register physical address */
+endif|#
+directive|endif
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
 operator|)
-operator|&&
+name|vm_offset_t
+name|phys_base
+decl_stmt|;
+comment|/* 2.x Bt848 register physical address */
+name|pcici_t
+name|tag
+decl_stmt|;
+comment|/* 2.x PCI tag, for doing PCI commands */
+endif|#
+directive|endif
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|400000
+operator|)
+name|struct
+name|resource
+modifier|*
+name|res_mem
+decl_stmt|;
+comment|/* 4.x resource descriptor for registers */
+name|struct
+name|resource
+modifier|*
+name|res_irq
+decl_stmt|;
+comment|/* 4.x resource descriptor for interrupt */
+name|void
+modifier|*
+name|res_ih
+decl_stmt|;
+comment|/* 4.x newbus interrupt handler cookie */
+endif|#
+directive|endif
+if|#
+directive|if
 operator|(
 name|NSMBUS
 operator|>
 literal|0
-operator|)
 operator|)
 name|struct
 name|bktr_i2c_softc
@@ -1772,18 +1922,13 @@ decl_stmt|;
 comment|/* bt848_i2c device */
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* the following definitions are common over all platforms */
 name|bt848_ptr_t
 name|base
 decl_stmt|;
 comment|/* Bt848 register physical address */
-name|vm_offset_t
-name|phys_base
-decl_stmt|;
-comment|/* Bt848 register physical address */
-name|pcici_t
-name|tag
-decl_stmt|;
-comment|/* PCI tag, for doing PCI commands */
 name|vm_offset_t
 name|bigbuf
 decl_stmt|;
@@ -1812,6 +1957,19 @@ name|int
 name|vbisize
 decl_stmt|;
 comment|/* Number of bytes in the circular buffer */
+name|u_long
+name|vbi_sequence_number
+decl_stmt|;
+comment|/* sequence number for VBI */
+name|int
+name|vbi_read_blocked
+decl_stmt|;
+comment|/* user process blocked on read() from /dev/vbi */
+name|struct
+name|selinfo
+name|vbi_select
+decl_stmt|;
+comment|/* Data used by select() on /dev/vbi */
 name|struct
 name|proc
 modifier|*
@@ -2234,6 +2392,13 @@ name|int
 name|remote_control_addr
 decl_stmt|;
 comment|/* remote control i2c address */
+name|char
+name|msp_version_string
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* MSP version string 34xxx-xx */
 block|}
 struct|;
 end_struct
