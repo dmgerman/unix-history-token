@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.6 1994/12/27 12:37:35 bde Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.7 1995/01/09 16:04:59 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -1603,7 +1603,7 @@ return|return
 name|error
 return|;
 block|}
-comment|/* vnode_pager_uncache(DETOV(dep));	/* what's this for? */
+comment|/* vnode_pager_uncache(DETOV(dep));	what's this for? */
 comment|/* 		 * is this the right place for it? 		 */
 name|bzero
 argument_list|(
