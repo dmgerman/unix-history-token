@@ -1402,6 +1402,27 @@ literal|0
 block|}
 block|,
 block|{
+comment|/* 		 * These are the large storage arrays. 		 * Submitted by:  William Carrel<william.carrel@infospace.com> 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"HITACHI"
+block|,
+literal|"OPEN*"
+block|,
+literal|"*"
+block|}
+block|,
+name|CAM_QUIRK_HILUNS
+block|,
+literal|2
+block|,
+literal|1024
+block|}
+block|,
+block|{
 comment|/* 		 * This old revision of the TDC3600 is also SCSI-1, and 		 * hangs upon serial number probing. 		 */
 block|{
 name|T_SEQUENTIAL
