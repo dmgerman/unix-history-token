@@ -3243,15 +3243,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dbuf %.14s\n"
-argument_list|,
-name|U
-operator|.
-name|u_dbuf
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"dirp %.1x\n"
 argument_list|,
 name|U
