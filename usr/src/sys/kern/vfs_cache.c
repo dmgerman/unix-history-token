@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cache.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vfs_cache.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -33,8 +33,14 @@ directive|include
 file|"namei.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"errno.h"
+end_include
+
 begin_comment
-comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (ino,dev,name) where ino& dev refer to the  * directory containing name.  *  * For simplicity (and economy of storage), names longer than  * a maximum length of NCHNAMLEN are not cached; they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
+comment|/*  * Name caching works as follows:  *  * Names found by directory scans are retained in a cache  * for future reference.  It is managed LRU, so frequently  * used names will hang around.  Cache is indexed by hash value  * obtained from (vp, name) where vp refers to the directory  * containing name.  *  * For simplicity (and economy of storage), names longer than  * a maximum length of NCHNAMLEN are not cached; they occur  * infrequently in any case, and are almost never of interest.  *  * Upon reaching the last segment of a path, if the reference  * is for DELETE, or NOCACHE is set (rewrite), and the  * name is located in the cache, it will be dropped.  */
 end_comment
 
 begin_comment
@@ -77,9 +83,11 @@ define|#
 directive|define
 name|NHASH
 parameter_list|(
+name|vp
+parameter_list|,
 name|h
 parameter_list|)
-value|(((unsigned)(h)>> 6) % (NCHHASH))
+value|((((unsigned)(h)>> 6) + (h)) % (NCHHASH))
 end_define
 
 begin_else
@@ -92,9 +100,11 @@ define|#
 directive|define
 name|NHASH
 parameter_list|(
+name|vp
+parameter_list|,
 name|h
 parameter_list|)
-value|(((unsigned)(h)>> 6)& ((NCHHASH)-1))
+value|((((unsigned)(h)>> 6) + (h))& ((NCHHASH)-1))
 end_define
 
 begin_endif
@@ -171,30 +181,42 @@ begin_comment
 comment|/* cache effectiveness statistics */
 end_comment
 
+begin_decl_stmt
+name|int
+name|doingcache
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Look for a the name in the cache. We don't do this  * if the segment name is long, simply so the cache can avoid  * holding long names (which would either waste space, or  * add greatly to the complexity).  */
+comment|/* 1 => enable the cache */
 end_comment
 
-begin_function
-name|struct
-name|vnode
-modifier|*
+begin_comment
+comment|/*  * Look for a the name in the cache. We don't do this  * if the segment name is long, simply so the cache can avoid  * holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with ni_dvp pointing to the directory to search,  * ni_ptr pointing to the name of the entry being sought, ni_namelen  * tells the length of the name, and ni_hash contains a hash of  * the name. If the lookup succeeds, the vnode is returned in ni_vp  * and a status of -1 is returned. If the lookup determines that  * the name does not exist (negative cacheing), a status of ENOENT  * is returned. If the lookup fails, a status of zero is returned.  */
+end_comment
+
+begin_expr_stmt
 name|cache_lookup
-parameter_list|(
+argument_list|(
 name|ndp
-parameter_list|)
+argument_list|)
 specifier|register
-name|struct
+expr|struct
 name|nameidata
-modifier|*
+operator|*
 name|ndp
-decl_stmt|;
+expr_stmt|;
+end_expr_stmt
+
+begin_block
 block|{
 specifier|register
 name|struct
 name|vnode
 modifier|*
-name|dp
+name|dvp
 decl_stmt|;
 specifier|register
 name|struct
@@ -207,19 +229,21 @@ name|nchash
 modifier|*
 name|nhp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|doingcache
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-comment|/* XXX for now */
 if|if
 condition|(
 name|ndp
 operator|->
-name|ni_dent
-operator|.
-name|d_namlen
+name|ni_namelen
 operator|>
 name|NCHNAMLEN
 condition|)
@@ -241,11 +265,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|dp
+name|dvp
 operator|=
 name|ndp
 operator|->
-name|ni_vp
+name|ni_dvp
 expr_stmt|;
 name|nhp
 operator|=
@@ -254,7 +278,11 @@ name|nchash
 index|[
 name|NHASH
 argument_list|(
-name|dp
+name|dvp
+argument_list|,
+name|ndp
+operator|->
+name|ni_hash
 argument_list|)
 index|]
 expr_stmt|;
@@ -286,9 +314,17 @@ if|if
 condition|(
 name|ncp
 operator|->
-name|nc_vp
+name|nc_dvp
 operator|==
-name|dp
+name|dvp
+operator|&&
+name|ncp
+operator|->
+name|nc_dvpid
+operator|==
+name|dvp
+operator|->
+name|v_id
 operator|&&
 name|ncp
 operator|->
@@ -296,9 +332,7 @@ name|nc_nlen
 operator|==
 name|ndp
 operator|->
-name|ni_dent
-operator|.
-name|d_namlen
+name|ni_namelen
 operator|&&
 operator|!
 name|bcmp
@@ -309,9 +343,7 @@ name|nc_name
 argument_list|,
 name|ndp
 operator|->
-name|ni_dent
-operator|.
-name|d_name
+name|ni_ptr
 argument_list|,
 operator|(
 name|unsigned
@@ -340,10 +372,6 @@ operator|.
 name|ncs_miss
 operator|++
 expr_stmt|;
-name|ncp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -352,12 +380,34 @@ return|;
 block|}
 if|if
 condition|(
+operator|!
 name|ndp
 operator|->
 name|ni_makeentry
 condition|)
 block|{
-comment|/* 		 * move this slot to end of LRU 		 * chain, if not already there 		 */
+name|nchstats
+operator|.
+name|ncs_badhits
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ncp
+operator|->
+name|nc_vp
+operator|==
+name|NULL
+condition|)
+block|{
+name|nchstats
+operator|.
+name|ncs_neghits
+operator|++
+expr_stmt|;
+comment|/* 		 * move this slot to end of LRU chain, if not already there 		 */
 if|if
 condition|(
 name|ncp
@@ -411,27 +461,109 @@ operator|->
 name|nc_nxt
 expr_stmt|;
 block|}
-comment|/* ndp->ni_dent.d_ino = dp->i_number; */
-comment|/* ni_dent.d_reclen is garbage ... */
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ncp
+operator|->
+name|nc_vpid
+operator|!=
+name|ncp
+operator|->
+name|nc_vp
+operator|->
+name|v_id
+condition|)
+block|{
+name|nchstats
+operator|.
+name|ncs_falsehits
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|nchstats
 operator|.
 name|ncs_goodhits
 operator|++
 expr_stmt|;
-return|return
-operator|(
+comment|/* 		 * move this slot to end of LRU chain, if not already there 		 */
+if|if
+condition|(
+name|ncp
+operator|->
+name|nc_nxt
+condition|)
+block|{
+comment|/* remove from LRU chain */
+operator|*
+name|ncp
+operator|->
+name|nc_prev
+operator|=
+name|ncp
+operator|->
+name|nc_nxt
+expr_stmt|;
+name|ncp
+operator|->
+name|nc_nxt
+operator|->
+name|nc_prev
+operator|=
+name|ncp
+operator|->
+name|nc_prev
+expr_stmt|;
+comment|/* and replace at end of it */
+name|ncp
+operator|->
+name|nc_nxt
+operator|=
+name|NULL
+expr_stmt|;
+name|ncp
+operator|->
+name|nc_prev
+operator|=
+name|nchtail
+expr_stmt|;
+operator|*
+name|nchtail
+operator|=
+name|ncp
+expr_stmt|;
+name|nchtail
+operator|=
+operator|&
+name|ncp
+operator|->
+name|nc_nxt
+expr_stmt|;
+block|}
+name|ndp
+operator|->
+name|ni_vp
+operator|=
 name|ncp
 operator|->
 name|nc_vp
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
 operator|)
 return|;
 block|}
 comment|/* 	 * Last component and we are renaming or deleting, 	 * the cache entry is invalid, or otherwise don't 	 * want cache entry to exist. 	 */
-name|nchstats
-operator|.
-name|ncs_badhits
-operator|++
-expr_stmt|;
 comment|/* remove from LRU chain */
 operator|*
 name|ncp
@@ -465,12 +597,12 @@ name|ncp
 operator|->
 name|nc_prev
 expr_stmt|;
+comment|/* remove from hash chain */
 name|remque
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-comment|/* remove from hash chain */
 comment|/* insert at head of LRU list (first to grab) */
 name|ncp
 operator|->
@@ -511,17 +643,13 @@ name|nc_back
 operator|=
 name|ncp
 expr_stmt|;
-name|ncp
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * Add an entry to the cache  */
@@ -553,8 +681,12 @@ name|nchash
 modifier|*
 name|nhp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|doingcache
+condition|)
 return|return;
-comment|/* XXX for now */
 comment|/* 	 * Free the cache slot at head of lru chain. 	 */
 if|if
 condition|(
@@ -596,12 +728,12 @@ name|ncp
 operator|->
 name|nc_prev
 expr_stmt|;
+comment|/* remove from old hash chain */
 name|remque
 argument_list|(
 name|ncp
 argument_list|)
 expr_stmt|;
-comment|/* remove from old hash chain */
 comment|/* grab the inode we just found */
 name|ncp
 operator|->
@@ -611,33 +743,61 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
+if|if
+condition|(
+name|ndp
+operator|->
+name|ni_vp
+condition|)
+name|ncp
+operator|->
+name|nc_vpid
+operator|=
+name|ndp
+operator|->
+name|ni_vp
+operator|->
+name|v_id
+expr_stmt|;
+else|else
+name|ncp
+operator|->
+name|nc_vpid
+operator|=
+literal|0
+expr_stmt|;
 comment|/* fill in cache info */
 name|ncp
 operator|->
-name|nc_dp
+name|nc_dvp
 operator|=
 name|ndp
 operator|->
 name|ni_dvp
 expr_stmt|;
-comment|/* parents vnode */
+name|ncp
+operator|->
+name|nc_dvpid
+operator|=
+name|ndp
+operator|->
+name|ni_dvp
+operator|->
+name|v_id
+expr_stmt|;
 name|ncp
 operator|->
 name|nc_nlen
 operator|=
 name|ndp
 operator|->
-name|ni_dent
-operator|.
-name|d_namlen
+name|ni_namelen
 expr_stmt|;
 name|bcopy
 argument_list|(
 name|ndp
 operator|->
-name|ni_dent
-operator|.
-name|d_name
+name|ni_ptr
 argument_list|,
 name|ncp
 operator|->
@@ -687,6 +847,10 @@ argument_list|(
 name|ndp
 operator|->
 name|ni_vp
+argument_list|,
+name|ndp
+operator|->
+name|ni_hash
 argument_list|)
 index|]
 expr_stmt|;
@@ -832,159 +996,83 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Cache flush, a particular vnode; called when a vnode is renamed to  * remove entries that would now be invalid  *  * The line "nxtcp = nchhead" near the end is to avoid potential problems  * if the cache lru chain is modified while we are dumping the  * inode.  This makes the algorithm O(n^2), but do you think I care?  */
+comment|/*  * Cache flush, a particular vnode; called when a vnode is renamed to  * hide entries that would now be invalid  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|cache_purge
 argument_list|(
-name|vp
+argument|vp
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|struct
 name|namecache
 modifier|*
 name|ncp
-decl_stmt|,
-modifier|*
-name|nxtcp
 decl_stmt|;
+name|vp
+operator|->
+name|v_id
+operator|=
+operator|++
+name|nextvnodeid
+expr_stmt|;
+if|if
+condition|(
+name|nextvnodeid
+operator|!=
+literal|0
+condition|)
+return|return;
 for|for
 control|(
 name|ncp
 operator|=
-name|nchhead
+name|namecache
 init|;
 name|ncp
+operator|<
+operator|&
+name|namecache
+index|[
+name|nchsize
+index|]
 condition|;
 name|ncp
-operator|=
-name|nxtcp
+operator|++
 control|)
 block|{
-name|nxtcp
+name|ncp
+operator|->
+name|nc_vpid
 operator|=
-name|ncp
-operator|->
-name|nc_nxt
-expr_stmt|;
-if|if
-condition|(
-name|ncp
-operator|->
-name|nc_vp
-operator|==
-name|NULL
-operator|||
-name|ncp
-operator|->
-name|nc_vp
-operator|!=
-name|vp
-condition|)
-continue|continue;
-comment|/* free the resources we had */
-name|ncp
-operator|->
-name|nc_vp
-operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|ncp
 operator|->
-name|nc_dp
+name|nc_dvpid
 operator|=
-name|NULL
-expr_stmt|;
-name|remque
-argument_list|(
-name|ncp
-argument_list|)
-expr_stmt|;
-comment|/* remove entry from its hash chain */
-name|ncp
-operator|->
-name|nc_forw
-operator|=
-name|ncp
-expr_stmt|;
-comment|/* and make a dummy one */
-name|ncp
-operator|->
-name|nc_back
-operator|=
-name|ncp
-expr_stmt|;
-comment|/* delete this entry from LRU chain */
-operator|*
-name|ncp
-operator|->
-name|nc_prev
-operator|=
-name|nxtcp
-expr_stmt|;
-if|if
-condition|(
-name|nxtcp
-condition|)
-name|nxtcp
-operator|->
-name|nc_prev
-operator|=
-name|ncp
-operator|->
-name|nc_prev
-expr_stmt|;
-else|else
-name|nchtail
-operator|=
-name|ncp
-operator|->
-name|nc_prev
-expr_stmt|;
-comment|/* cause rescan of list, it may have altered */
-name|nxtcp
-operator|=
-name|nchhead
-expr_stmt|;
-comment|/* put the now-free entry at head of LRU */
-name|ncp
-operator|->
-name|nc_nxt
-operator|=
-name|nxtcp
-expr_stmt|;
-name|ncp
-operator|->
-name|nc_prev
-operator|=
-operator|&
-name|nchhead
-expr_stmt|;
-name|nxtcp
-operator|->
-name|nc_prev
-operator|=
-operator|&
-name|ncp
-operator|->
-name|nc_nxt
-expr_stmt|;
-name|nchhead
-operator|=
-name|ncp
+literal|0
 expr_stmt|;
 block|}
+name|vp
+operator|->
+name|v_id
+operator|=
+operator|++
+name|nextvnodeid
+expr_stmt|;
 block|}
 end_block
 
@@ -1039,13 +1127,13 @@ if|if
 condition|(
 name|ncp
 operator|->
-name|nc_vp
+name|nc_dvp
 operator|==
 name|NULL
 operator|||
 name|ncp
 operator|->
-name|nc_vp
+name|nc_dvp
 operator|->
 name|v_mount
 operator|!=
@@ -1061,7 +1149,7 @@ name|NULL
 expr_stmt|;
 name|ncp
 operator|->
-name|nc_dp
+name|nc_dvp
 operator|=
 name|NULL
 expr_stmt|;
