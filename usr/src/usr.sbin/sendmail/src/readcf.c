@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.103 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.104 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6462,7 +6462,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|NoMXforCanon
+name|HasWildcardMX
 operator|=
 operator|!
 name|clearmode
@@ -6556,7 +6556,7 @@ name|_res
 operator|.
 name|options
 argument_list|,
-name|NoMXforCanon
+name|HasWildcardMX
 argument_list|)
 expr_stmt|;
 else|#
