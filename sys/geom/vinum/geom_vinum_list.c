@@ -2032,14 +2032,42 @@ operator|->
 name|state
 operator|==
 name|GV_SD_INITIALIZING
+operator|||
+name|s
+operator|->
+name|state
+operator|==
+name|GV_SD_REVIVING
 condition|)
 block|{
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|==
+name|GV_SD_INITIALIZING
+condition|)
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"\t\tInitialized: %16jd bytes "
-literal|"(%d%%)\n"
+literal|"\t\tInitialized: "
+argument_list|)
+expr_stmt|;
+else|else
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"\t\tRevived: "
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%16jd bytes (%d%%)\n"
 argument_list|,
 operator|(
 name|intmax_t
@@ -2104,17 +2132,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|s
-operator|->
-name|state
-operator|==
-name|GV_SD_REVIVING
-condition|)
-block|{
-comment|/* XXX */
-block|}
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -2159,7 +2176,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* XXX reviving and initializing... */
 name|sbuf_printf
 argument_list|(
 name|sb
@@ -2178,13 +2194,42 @@ operator|->
 name|state
 operator|==
 name|GV_SD_INITIALIZING
+operator|||
+name|s
+operator|->
+name|state
+operator|==
+name|GV_SD_REVIVING
 condition|)
 block|{
+if|if
+condition|(
+name|s
+operator|->
+name|state
+operator|==
+name|GV_SD_INITIALIZING
+condition|)
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"I %d%%\t"
+literal|"I "
+argument_list|)
+expr_stmt|;
+else|else
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"R "
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"%d%%\t"
 argument_list|,
 call|(
 name|int
