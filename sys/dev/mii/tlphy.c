@@ -617,6 +617,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 block|}
 name|mii
 operator|->
