@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.12 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3094,7 +3094,7 @@ block|}
 end_block
 
 begin_macro
-name|abort
+name|tipabort
 argument_list|(
 argument|msg
 argument_list|)
@@ -3204,7 +3204,7 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-name|abort
+name|tipabort
 argument_list|(
 name|NOSTR
 argument_list|)
