@@ -11772,6 +11772,19 @@ decl_stmt|,
 endif|#
 directive|endif
 comment|/* defined(unix) */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SKEY
+argument_list|)
+name|skeyhelp
+index|[]
+init|=
+literal|"compute response to s/key challenge"
+decl_stmt|,
+endif|#
+directive|endif
 name|shellhelp
 index|[]
 init|=
@@ -12054,7 +12067,7 @@ argument_list|)
 block|{
 literal|"skey"
 block|,
-name|NULL
+name|skeyhelp
 block|,
 name|skey_calc
 block|,
