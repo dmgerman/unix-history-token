@@ -615,6 +615,7 @@ value|67
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|meteor_cdevsw

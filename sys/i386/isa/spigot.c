@@ -263,6 +263,7 @@ value|11
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|spigot_cdevsw

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.25 1995/12/06 23:44:14 bde Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.26 1995/12/08 11:18:40 julian Exp $  */
 end_comment
 
 begin_include
@@ -491,6 +491,7 @@ value|17
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|ch_cdevsw

@@ -699,6 +699,7 @@ value|47
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|gsc_cdevsw

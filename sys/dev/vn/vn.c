@@ -251,6 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bdevsw
 name|vn_bdevsw
@@ -283,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|vn_cdevsw

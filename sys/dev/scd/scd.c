@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.12 1995/11/29 14:39:53 julian Exp $ */
+comment|/* $Id: scd.c,v 1.13 1995/12/08 11:15:01 julian Exp $ */
 end_comment
 
 begin_comment
@@ -1039,6 +1039,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|bdevsw
 name|scd_bdevsw
@@ -1071,6 +1072,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|scd_cdevsw

@@ -443,6 +443,7 @@ value|44
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|gp_cdevsw

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.9 1995/12/07 12:45:18 davidg Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.10 1995/12/08 11:12:42 julian Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -921,6 +921,7 @@ value|58
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cdevsw
 name|dgb_cdevsw
