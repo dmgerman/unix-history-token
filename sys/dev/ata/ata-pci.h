@@ -1140,15 +1140,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SII_SETCLK
-value|1
+name|SII_INTR
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|SII_INTR
-value|0x01
+name|SII_SETCLK
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|SII_ENINTR
+value|0x04
 end_define
 
 begin_define
