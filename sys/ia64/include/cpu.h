@@ -132,30 +132,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPU_ROOT_DEVICE
-value|2
-end_define
-
-begin_comment
-comment|/* string: root device name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPU_BOOTED_KERNEL
-value|3
-end_define
-
-begin_comment
-comment|/* string: booted kernel name */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CPU_ADJKERNTZ
-value|4
+value|2
 end_define
 
 begin_comment
@@ -166,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|CPU_DISRTCSET
-value|5
+value|3
 end_define
 
 begin_comment
@@ -177,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|CPU_WALLCLOCK
-value|6
+value|4
 end_define
 
 begin_comment
@@ -188,7 +166,7 @@ begin_define
 define|#
 directive|define
 name|CPU_MAXID
-value|7
+value|5
 end_define
 
 begin_comment
@@ -199,7 +177,7 @@ begin_define
 define|#
 directive|define
 name|CTL_MACHDEP_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "root_device", CTLTYPE_STRING }, \ 	{ "booted_kernel", CTLTYPE_STRING }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ 	{ "adjkerntz", CTLTYPE_INT }, \ 	{ "disable_rtc_set", CTLTYPE_INT }, \ 	{ "wall_cmos_clock", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -237,52 +215,6 @@ struct_decl|struct
 name|trapframe
 struct_decl|;
 end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|rpb
-modifier|*
-name|hwrpb
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|int
-name|mc_expected
-decl_stmt|,
-name|mc_received
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|badaddr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|badaddr_read
-parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|u_int64_t
@@ -427,24 +359,6 @@ name|long
 parameter_list|,
 name|unsigned
 name|long
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int64_t
-name|hwrpb_checksum
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|hwrpb_restart_setup
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

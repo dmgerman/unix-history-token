@@ -30,13 +30,17 @@ value|struct pcb	*pc_pcb;
 comment|/* Used by IPI_STOP */
 value|\ 	struct pmap	*pc_current_pmap;
 comment|/* active pmap */
-value|\ 	u_int64_t	pc_lid;
+value|\ 	uint64_t	pc_lid;
 comment|/* local CPU ID */
-value|\ 	u_int32_t	pc_awake:1;
+value|\ 	uint32_t	pc_awake:1;
+comment|/* CPU is awake? */
+value|\ 	uint64_t	pc_clock;
+comment|/* Clock counter. */
+value|\ 	uint64_t	pc_clockadj;
 end_define
 
 begin_comment
-comment|/* CPU is awake? */
+comment|/* Clock adjust. */
 end_comment
 
 begin_struct_decl
@@ -89,6 +93,15 @@ name|value
 parameter_list|)
 value|(pcpup->pc_ ## member = (value))
 end_define
+
+begin_function_decl
+name|void
+name|pcpu_initclock
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

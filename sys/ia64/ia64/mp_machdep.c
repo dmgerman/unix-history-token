@@ -482,34 +482,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* kick off the clock on this AP */
-end_comment
-
-begin_expr_stmt
-name|ia64_set_itm
-argument_list|(
-name|ia64_get_itc
-argument_list|()
-operator|+
-name|itm_reload
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ia64_set_itv
-argument_list|(
-name|CLOCK_VECTOR
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_expr_stmt
 name|ia64_set_tpr
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* kick off the clock on this AP */
+end_comment
+
+begin_expr_stmt
+name|pcpu_initclock
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

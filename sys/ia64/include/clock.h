@@ -31,6 +31,13 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
+name|adjkerntz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|disable_rtc_set
 decl_stmt|;
 end_decl_stmt
@@ -44,22 +51,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|adjkerntz
+name|uint64_t
+name|ia64_clock_reload
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|u_int64_t
+name|uint64_t
 name|itc_frequency
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_int64_t
-name|itm_reload
 decl_stmt|;
 end_decl_stmt
 
@@ -72,25 +72,6 @@ name|pitch
 parameter_list|,
 name|int
 name|period
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acquire_timer2
-parameter_list|(
-name|int
-name|mode
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|release_timer2
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
