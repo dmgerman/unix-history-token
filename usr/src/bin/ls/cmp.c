@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmp.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,13 +145,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
 name|st_mtime
 operator|-
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
@@ -184,13 +184,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
 name|st_mtime
 operator|-
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
@@ -223,13 +223,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
 name|st_atime
 operator|-
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
@@ -262,13 +262,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
 name|st_atime
 operator|-
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
@@ -301,13 +301,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
 name|st_ctime
 operator|-
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
@@ -340,13 +340,13 @@ begin_block
 block|{
 return|return
 operator|(
-name|b
+name|a
 operator|->
 name|lstat
 operator|.
 name|st_ctime
 operator|-
-name|a
+name|b
 operator|->
 name|lstat
 operator|.
