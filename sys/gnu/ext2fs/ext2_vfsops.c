@@ -4243,7 +4243,9 @@ name|g_wither_geom_close
 argument_list|(
 name|ump
 operator|->
-name|um_gp
+name|um_cp
+operator|->
+name|geom
 argument_list|,
 name|ENXIO
 argument_list|)

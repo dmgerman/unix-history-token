@@ -95,11 +95,6 @@ name|um_seqinc
 decl_stmt|;
 comment|/* inc between seq blocks */
 name|struct
-name|g_geom
-modifier|*
-name|um_gp
-decl_stmt|;
-name|struct
 name|g_consumer
 modifier|*
 name|um_cp
