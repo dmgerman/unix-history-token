@@ -708,7 +708,15 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Parent notified of success.\n"
+literal|"Parent notified of %s\n"
+argument_list|,
+name|c
+operator|==
+name|EX_NORMAL
+condition|?
+literal|"success"
+else|:
+literal|"failure"
 argument_list|)
 expr_stmt|;
 else|else
