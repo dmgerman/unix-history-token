@@ -253,6 +253,47 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|int
+name|pccard_module_handler
+name|__P
+argument_list|(
+operator|(
+name|module_t
+name|mod
+operator|,
+name|int
+name|what
+operator|,
+name|void
+operator|*
+name|arg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|PCCARD_MODULE
+parameter_list|(
+name|name
+parameter_list|,
+name|enable
+parameter_list|,
+name|disable
+parameter_list|,
+name|handler
+parameter_list|,
+name|attr
+parameter_list|,
+name|imask
+parameter_list|)
+define|\
+value|static struct pccard_device name ## _info = {				\ 	#name,								\ 	enable,								\ 	disable,							\ 	handler,							\ 	attr,								\&imask								\ };									\ static moduledata_t name ## _mod = {					\ 	"pccard_" #name,						\ 	pccard_module_handler,						\&name ## _info							\ };									\ DECLARE_MODULE(name, name ## _mod, SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+end_define
+
 begin_comment
 comment|/*  *	Device structure for cards. Each card may have one  *	or more pccard drivers attached to it; each driver is assumed  *	to require at most one interrupt handler, one I/O block  *	and one memory block. This structure is used to link the different  *	devices together.  */
 end_comment
