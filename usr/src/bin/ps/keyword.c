@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.4 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3355,6 +3355,11 @@ operator|=
 literal|"\n"
 expr_stmt|;
 block|}
+else|else
+name|sep
+operator|=
+literal|" "
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -3366,10 +3371,6 @@ name|sep
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-name|sep
-operator|=
-literal|" "
 expr_stmt|;
 block|}
 operator|(
