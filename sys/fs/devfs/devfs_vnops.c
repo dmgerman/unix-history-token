@@ -410,6 +410,14 @@ name|devfs_vnodeops
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|devfs_specops
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -6898,6 +6906,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|vop_vector
 name|devfs_specops

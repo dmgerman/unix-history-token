@@ -9920,13 +9920,6 @@ name|v_tag
 operator|=
 literal|"orphanchr"
 expr_stmt|;
-name|vp
-operator|->
-name|v_op
-operator|=
-operator|&
-name|devfs_specops
-expr_stmt|;
 name|delmntque
 argument_list|(
 name|vp
@@ -9957,13 +9950,6 @@ literal|0
 argument_list|,
 name|td
 argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|v_op
-operator|=
-operator|&
-name|devfs_specops
 expr_stmt|;
 name|vx_unlock
 argument_list|(
