@@ -1704,13 +1704,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|linkTableOut
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 while|while
 condition|(
 name|link
@@ -5788,7 +5781,6 @@ name|addr
 operator|.
 name|s_addr
 condition|)
-block|{
 name|CleanupAliasData
 argument_list|()
 expr_stmt|;
@@ -5796,7 +5788,6 @@ name|aliasAddress
 operator|=
 name|addr
 expr_stmt|;
-block|}
 block|}
 end_function
 
