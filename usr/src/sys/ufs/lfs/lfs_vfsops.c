@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.69 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.70 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2224,12 +2224,6 @@ name|crashandburn
 decl_stmt|,
 name|syncprt
 decl_stmt|;
-specifier|static
-name|int
-name|sync_lock
-decl_stmt|,
-name|sync_want
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2257,44 +2251,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* 	 * Meta data blocks are only marked dirty, not busy, so LFS syncs 	 * must be single threaded. 	 */
-while|while
-condition|(
-name|sync_lock
-condition|)
-block|{
-name|sync_want
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|=
-name|tsleep
-argument_list|(
-operator|&
-name|sync_lock
-argument_list|,
-name|PLOCK
-operator||
-name|PCATCH
-argument_list|,
-literal|"lfs sync"
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-name|sync_lock
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|syncprt
@@ -2322,26 +2278,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sync_lock
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|sync_want
-condition|)
-block|{
-name|sync_want
-operator|=
-literal|0
-expr_stmt|;
-name|wakeup
-argument_list|(
-operator|&
-name|sync_lock
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
