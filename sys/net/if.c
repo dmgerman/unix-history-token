@@ -1106,15 +1106,6 @@ name|kn
 operator|->
 name|kn_hook
 decl_stmt|;
-if|if
-condition|(
-name|kn
-operator|->
-name|kn_status
-operator|&
-name|KN_DETACHED
-condition|)
-return|return;
 name|knlist_remove
 argument_list|(
 name|klist
