@@ -2819,6 +2819,22 @@ block|,
 literal|0x10
 block|}
 block|,
+block|{
+literal|0x01101407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x01111407
+block|,
+literal|"Koutech IOFLEX-2S PCI Dual Port Serial"
+block|,
+literal|0x10
+block|}
+block|,
 comment|/* { 0xXXXXXXXX, "Xircom Cardbus modem", 0x10 }, */
 block|{
 literal|0x00000000
