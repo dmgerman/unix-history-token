@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	3.1	%H%	*/
+comment|/*	hp.c	3.2	%H%	*/
 end_comment
 
 begin_comment
@@ -2226,8 +2226,12 @@ function_decl|;
 specifier|extern
 name|char
 name|buffers
-index|[]
-index|[]
+index|[
+name|NBUF
+index|]
+index|[
+name|BSIZE
+index|]
 decl_stmt|;
 name|b
 operator|=

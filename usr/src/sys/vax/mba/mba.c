@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	3.1	%H%	*/
+comment|/*	mba.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -184,8 +184,12 @@ decl_stmt|;
 specifier|extern
 name|char
 name|buffers
-index|[]
-index|[]
+index|[
+name|NBUF
+index|]
+index|[
+name|BSIZE
+index|]
 decl_stmt|;
 name|mbap
 operator|=
@@ -595,8 +599,12 @@ block|;
 specifier|extern
 name|char
 name|buffers
-index|[]
-index|[]
+index|[
+name|NBUF
+index|]
+index|[
+name|BSIZE
+index|]
 block|;
 name|io0
 operator|=
