@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resolv.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -279,32 +279,6 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-comment|/* THESE SHOULD ALL BE PREFIXED WITH UNDERSCORES */
-specifier|extern
-name|char
-modifier|*
-name|p_cdname
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_rr
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_type
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_class
-argument_list|()
-decl_stmt|,
-modifier|*
-name|p_time
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dn_comp
 name|__P
