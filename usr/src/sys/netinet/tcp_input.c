@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_input.c	6.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -763,6 +763,8 @@ name|int
 name|todrop
 decl_stmt|,
 name|acked
+decl_stmt|,
+name|newwin
 decl_stmt|;
 name|short
 name|ostate
@@ -1494,9 +1496,11 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* 	 * Calculate amount of space in receive window, 	 * and then do TCP input processing. 	 * Receive window is amount of space in rcv queue, 	 * but not less than advertised window. 	 */
-name|tp
-operator|->
-name|rcv_wnd
+block|{
+name|int
+name|win
+decl_stmt|;
+name|win
 operator|=
 name|sbspace
 argument_list|(
@@ -1508,15 +1512,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tp
-operator|->
-name|rcv_wnd
+name|win
 operator|<
 literal|0
 condition|)
-name|tp
-operator|->
-name|rcv_wnd
+name|win
 operator|=
 literal|0
 expr_stmt|;
@@ -1526,12 +1526,10 @@ name|rcv_wnd
 operator|=
 name|MAX
 argument_list|(
-name|tp
-operator|->
-name|rcv_wnd
+name|win
 argument_list|,
 call|(
-name|short
+name|int
 call|)
 argument_list|(
 name|tp
@@ -1544,6 +1542,7 @@ name|rcv_nxt
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|tp
@@ -1749,9 +1748,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|in_pcbdisconnect
+name|tp
+operator|=
+name|tcp_drop
 argument_list|(
-name|inp
+name|tp
 argument_list|)
 expr_stmt|;
 name|dropsocket
@@ -1759,10 +1760,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* socket is already gone */
-name|tp
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -1815,6 +1812,12 @@ name|tcp_rcvseqinit
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
 expr_stmt|;
 name|tp
 operator|->
@@ -2087,9 +2090,7 @@ name|tp
 operator|->
 name|rcv_wnd
 expr_stmt|;
-name|ti
-operator|->
-name|ti_flags
+name|tiflags
 operator|&=
 operator|~
 name|TH_FIN
@@ -2104,6 +2105,14 @@ operator|->
 name|ti_seq
 operator|-
 literal|1
+expr_stmt|;
+name|tp
+operator|->
+name|rcv_up
+operator|=
+name|ti
+operator|->
+name|ti_seq
 expr_stmt|;
 goto|goto
 name|step6
@@ -2190,9 +2199,7 @@ name|ti_len
 operator|=
 literal|0
 expr_stmt|;
-name|ti
-operator|->
-name|ti_flags
+name|tiflags
 operator|&=
 operator|~
 operator|(
@@ -2231,13 +2238,6 @@ name|TH_SYN
 condition|)
 block|{
 name|tiflags
-operator|&=
-operator|~
-name|TH_SYN
-expr_stmt|;
-name|ti
-operator|->
-name|ti_flags
 operator|&=
 operator|~
 name|TH_SYN
@@ -2337,13 +2337,6 @@ name|TH_URG
 expr_stmt|;
 name|ti
 operator|->
-name|ti_flags
-operator|&=
-operator|~
-name|TH_URG
-expr_stmt|;
-name|ti
-operator|->
 name|ti_urp
 operator|=
 literal|0
@@ -2405,9 +2398,7 @@ name|ti_len
 operator|-=
 name|todrop
 expr_stmt|;
-name|ti
-operator|->
-name|ti_flags
+name|tiflags
 operator|&=
 operator|~
 operator|(
@@ -3096,9 +3087,16 @@ name|ourfinisacked
 block|}
 name|step6
 label|:
-comment|/* 	 * Update window information. 	 */
+comment|/* 	 * Update window information. 	 * Don't look at window if no ACK: TAC's send garbage on first SYN. 	 */
 if|if
 condition|(
+operator|(
+name|tiflags
+operator|&
+name|TH_ACK
+operator|)
+operator|&&
+operator|(
 name|SEQ_LT
 argument_list|(
 name|tp
@@ -3146,6 +3144,7 @@ name|tp
 operator|->
 name|snd_wnd
 operator|)
+operator|)
 condition|)
 block|{
 name|tp
@@ -3190,7 +3189,16 @@ name|tp
 operator|->
 name|snd_wnd
 expr_stmt|;
+name|newwin
+operator|=
+literal|1
+expr_stmt|;
 block|}
+else|else
+name|newwin
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Process segments with URG. 	 */
 if|if
 condition|(
@@ -3214,7 +3222,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * This is a kludge, but if we receive accept 		 * random urgent pointers, we'll crash in 		 * soreceive.  It's hard to imagine someone 		 * actually wanting to send this much urgent data. 		 */
+comment|/* 		 * This is a kludge, but if we receive and accept 		 * random urgent pointers, we'll crash in 		 * soreceive.  It's hard to imagine someone 		 * actually wanting to send this much urgent data. 		 */
 if|if
 condition|(
 name|ti
@@ -3243,16 +3251,8 @@ operator|~
 name|TH_URG
 expr_stmt|;
 comment|/* XXX */
-name|ti
-operator|->
-name|ti_flags
-operator|&=
-operator|~
-name|TH_URG
-expr_stmt|;
-comment|/* XXX */
 goto|goto
-name|badurp
+name|dodata
 goto|;
 comment|/* XXX */
 block|}
@@ -3359,7 +3359,30 @@ name|ti
 argument_list|)
 expr_stmt|;
 block|}
-name|badurp
+elseif|else
+comment|/* 		 * If no out of band data is expected, 		 * pull receive urgent pointer along 		 * with the receive window. 		 */
+if|if
+condition|(
+name|SEQ_GT
+argument_list|(
+name|tp
+operator|->
+name|rcv_nxt
+argument_list|,
+name|tp
+operator|->
+name|rcv_up
+argument_list|)
+condition|)
+name|tp
+operator|->
+name|rcv_up
+operator|=
+name|tp
+operator|->
+name|rcv_nxt
+expr_stmt|;
+name|dodata
 label|:
 comment|/* XXX */
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
@@ -3608,6 +3631,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
+ifdef|#
+directive|ifdef
+name|notyet
+if|if
+condition|(
+name|newwin
+operator|||
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|TF_ACKNOW
+condition|)
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
