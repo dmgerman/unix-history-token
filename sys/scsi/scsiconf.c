@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: scsiconf.c,v 1.13 1994/11/12 17:13:23 ats Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: scsiconf.c,v 1.14 1994/11/14 23:39:32 ats Exp $  */
 end_comment
 
 begin_include
@@ -2775,6 +2775,9 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+name|int
+name|z
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -3284,6 +3287,37 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|z
+operator|=
+literal|0
+init|;
+name|z
+operator|<
+literal|4
+condition|;
+name|z
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|version
+index|[
+name|z
+index|]
+operator|<
+literal|' '
+condition|)
+name|version
+index|[
+name|z
+index|]
+operator|=
+literal|'?'
+expr_stmt|;
+block|}
 block|}
 else|else
 comment|/* 		 * If not advanced enough, use default values 		 */
