@@ -159,18 +159,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_UDFSTABLE
-argument_list|,
-literal|"UDF s_table"
-argument_list|,
-literal|"UDF sparing table"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* Zones */
 end_comment
@@ -2279,7 +2267,7 @@ name|udfmp
 operator|->
 name|s_table
 argument_list|,
-name|M_UDFSTABLE
+name|M_UDFMOUNT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3521,7 +3509,7 @@ name|pms
 operator|->
 name|st_size
 argument_list|,
-name|M_UDFSTABLE
+name|M_UDFMOUNT
 argument_list|,
 name|M_NOWAIT
 operator||
