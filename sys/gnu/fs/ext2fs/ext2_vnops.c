@@ -282,6 +282,18 @@ operator|(
 name|vop_t
 operator|*
 operator|)
+name|vfs_cache_lookup
+block|}
+block|,
+comment|/* lookup */
+block|{
+operator|&
+name|vop_cachedlookup_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
 name|ext2_lookup
 block|}
 block|,

@@ -348,7 +348,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vop_lookup_args
+name|vop_cachedlookup_args
 operator|*
 operator|)
 argument_list|)

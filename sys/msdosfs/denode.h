@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.11 1997/02/22 09:40:44 peter Exp $ */
+comment|/*	$Id: denode.h,v 1.12 1997/02/26 14:23:09 bde Exp $ */
 end_comment
 
 begin_comment
@@ -402,7 +402,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vop_lookup_args
+name|vop_cachedlookup_args
 operator|*
 operator|)
 argument_list|)

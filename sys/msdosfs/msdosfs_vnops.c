@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.41 1997/04/10 14:56:49 bde Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.42 1997/05/17 18:32:40 phk Exp $ */
 end_comment
 
 begin_comment
@@ -8322,6 +8322,18 @@ block|,
 block|{
 operator|&
 name|vop_lookup_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|vfs_cache_lookup
+block|}
+block|,
+comment|/* lookup */
+block|{
+operator|&
+name|vop_cachedlookup_desc
 block|,
 operator|(
 name|vop_t
