@@ -225,38 +225,6 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|OK_TO_PLAY
-end_ifdef
-
-begin_expr_stmt
-name|printf
-argument_list|(
-literal|"Restricted playing enabled.\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|printf
-argument_list|(
-literal|"Playing unrestricted.\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|ENEMY
 end_ifdef
 

@@ -1209,28 +1209,6 @@ begin_comment
 comment|/* tax percent */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OK_TO_PLAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|N_MAXUSERS
-value|30
-end_define
-
-begin_comment
-comment|/* max. number of users allowed on system */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define

@@ -168,28 +168,6 @@ begin_comment
 comment|/* line on screen counter for fight routines	*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|OK_TO_PLAY
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|Okcount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* counter for checking ok_to_play		*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|extern
 name|jmp_buf
