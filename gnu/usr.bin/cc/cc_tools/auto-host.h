@@ -3,6 +3,12 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_comment
 comment|/* auto-host.h.  Generated automatically by configure.  */
 end_comment
@@ -269,11 +275,13 @@ begin_comment
 comment|/* Define if you have the atoll function.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BOOTSTRAPPING
-end_ifndef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500027
+end_if
 
 begin_comment
 comment|/* FreeBSD didn't always have atoll(3). */
