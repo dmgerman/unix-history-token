@@ -523,11 +523,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INVARIANT_SUPPORT
-end_ifdef
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -1379,11 +1387,19 @@ begin_comment
 comment|/*  * The INVARIANTS-enabled mtx_assert() functionality.  *  * The constants need to be defined for INVARIANT_SUPPORT infrastructure  * support as _mtx_assert() itself uses them and the latter implies that  * _mtx_assert() must build.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INVARIANTS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|INVARIANT_SUPPORT
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1417,10 +1433,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* INVARIANT_SUPPORT */
-end_comment
 
 begin_ifdef
 ifdef|#
