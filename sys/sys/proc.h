@@ -324,6 +324,12 @@ name|nlminfo
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|trapframe
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|proc
@@ -809,6 +815,12 @@ modifier|*
 name|p_emuldata
 decl_stmt|;
 comment|/* (c) Emulator state data. */
+name|struct
+name|trapframe
+modifier|*
+name|p_frame
+decl_stmt|;
+comment|/* (k) */
 block|}
 struct|;
 end_struct
@@ -2016,18 +2028,6 @@ end_define
 begin_comment
 comment|/* Priorities per nice level. */
 end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|mtx
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|trapframe
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 name|struct

@@ -40,7 +40,7 @@ name|cpu_getstack
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->p_md.md_tf->tf_r[FRAME_SP])
+value|((p)->p_frame->tf_r[FRAME_SP])
 end_define
 
 begin_comment

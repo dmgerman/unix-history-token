@@ -61,12 +61,6 @@ name|u_long
 name|md_flags
 decl_stmt|;
 name|struct
-name|trapframe
-modifier|*
-name|md_tf
-decl_stmt|;
-comment|/* trap/syscall registers */
-name|struct
 name|pcb
 modifier|*
 name|md_pcbpaddr

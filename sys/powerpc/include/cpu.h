@@ -292,7 +292,7 @@ name|cpu_getstack
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->p_md.md_regs[1])
+value|((p)->p_frame->fixreg[1])
 end_define
 
 begin_decl_stmt

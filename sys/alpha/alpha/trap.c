@@ -1509,9 +1509,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -1799,9 +1797,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -2823,9 +2819,7 @@ operator|++
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -3577,9 +3571,7 @@ name|p_sticks
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -3866,7 +3858,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|((reg_to_framereg[(reg)] == -1) ? NULL :			\&(p)->p_md.md_tf->tf_regs[reg_to_framereg[(reg)]])
+value|((reg_to_framereg[(reg)] == -1) ? NULL :			\&(p)->p_frame->tf_regs[reg_to_framereg[(reg)]])
 end_define
 
 begin_define
@@ -5006,9 +4998,7 @@ name|va
 argument_list|,
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -5017,9 +5007,7 @@ index|]
 argument_list|,
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -5277,9 +5265,7 @@ decl_stmt|;
 comment|/* 	 * Read USP into frame in case it's going to be used or modified. 	 * This keeps us from having to check for it in lots of places 	 * later. 	 */
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -5295,9 +5281,7 @@ name|memaddr
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -5905,9 +5889,7 @@ name|alpha_pal_wrusp
 argument_list|(
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -5941,9 +5923,7 @@ name|SIGSEGV
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[

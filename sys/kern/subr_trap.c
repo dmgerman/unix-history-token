@@ -1082,9 +1082,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|=
 operator|&
 name|frame
@@ -3907,9 +3905,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|=
 operator|&
 name|frame
@@ -4653,9 +4649,7 @@ name|p_sticks
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;

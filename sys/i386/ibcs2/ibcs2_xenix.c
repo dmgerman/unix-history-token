@@ -130,9 +130,7 @@ name|tf
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 decl_stmt|;
 name|struct
 name|sysent

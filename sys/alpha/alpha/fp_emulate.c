@@ -1582,9 +1582,7 @@ name|frame
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 decl_stmt|;
 name|u_int64_t
 name|pc

@@ -526,9 +526,7 @@ expr_stmt|;
 comment|/* 	 * and make idleproc's trapframe pointer point to its 	 * stack pointer for sanity. 	 */
 name|curproc
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 operator|(
 expr|struct

@@ -2413,9 +2413,7 @@ argument_list|)
 expr_stmt|;
 name|proc0
 operator|.
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 operator|(
 expr|struct
@@ -3068,9 +3066,7 @@ name|frame
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 expr_stmt|;
 name|oonstack
 operator|=
@@ -4108,9 +4104,7 @@ name|frame
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 decl_stmt|;
 name|struct
 name|__mcontext
@@ -4595,9 +4589,7 @@ name|frame
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 expr_stmt|;
 comment|/* 	 * Make sure that we restore the entire trapframe after an 	 * execve. 	 */
 name|frame
@@ -4840,9 +4832,7 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|-
 operator|(
 name|char
@@ -4931,9 +4921,7 @@ operator|*
 operator|)
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|-
 operator|(
 name|char
@@ -4968,7 +4956,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|tp = p->p_md.md_tf; 		frame_copy = *tp; 		*(int *)((char *)&frame_copy + (off - min)) = data; 		if (!EFLAGS_SECURE(frame_copy.tf_eflags, tp->tf_eflags) || 		    !CS_SECURE(frame_copy.tf_cs)) 			return (EINVAL);
+block|tp = p->p_frame; 		frame_copy = *tp; 		*(int *)((char *)&frame_copy + (off - min)) = data; 		if (!EFLAGS_SECURE(frame_copy.tf_eflags, tp->tf_eflags) || 		    !CS_SECURE(frame_copy.tf_cs)) 			return (EINVAL);
 endif|#
 directive|endif
 operator|*
@@ -5457,9 +5445,7 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_ipsr
 operator|&
@@ -5531,9 +5517,7 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_ipsr
 operator||=
@@ -5577,9 +5561,7 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_ipsr
 operator||=
@@ -5638,9 +5620,7 @@ argument_list|(
 name|fpcurproc
 argument_list|)
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_ipsr
 operator||=
@@ -5668,9 +5648,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_ipsr
 operator|&=

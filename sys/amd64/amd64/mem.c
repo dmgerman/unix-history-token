@@ -285,9 +285,7 @@ literal|14
 case|:
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator|&=
@@ -392,9 +390,7 @@ operator|)
 return|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator||=

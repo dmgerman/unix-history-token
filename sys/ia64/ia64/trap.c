@@ -912,9 +912,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -1653,9 +1651,7 @@ name|curproc
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -2237,9 +2233,7 @@ name|p_sticks
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|=
 name|framep
 expr_stmt|;
@@ -2594,9 +2588,7 @@ name|va
 argument_list|,
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_cr_iip
 argument_list|)

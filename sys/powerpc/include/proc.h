@@ -16,14 +16,7 @@ end_comment
 begin_struct
 struct|struct
 name|mdproc
-block|{
-name|int
-name|md_regs
-index|[
-literal|32
-index|]
-decl_stmt|;
-block|}
+block|{ }
 struct|;
 end_struct
 

@@ -841,9 +841,7 @@ endif|#
 directive|endif
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator||=
@@ -856,9 +854,7 @@ case|:
 comment|/* deny access to the IO PAGE */
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator|&=

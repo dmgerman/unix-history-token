@@ -383,9 +383,7 @@ name|tf
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 decl_stmt|;
 name|svr4_greg_t
 modifier|*
@@ -930,9 +928,7 @@ name|tf
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 comment|/* 	 * Restore register context. 	 */
 ifdef|#
@@ -1725,9 +1721,7 @@ name|tf
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 name|oonstack
 operator|=

@@ -3691,7 +3691,7 @@ name|REG
 parameter_list|(
 name|x
 parameter_list|)
-value|(((int *)curproc->p_md.md_regs)[__regoffset[(x)]])
+value|(((int *)curproc->p_frame)[__regoffset[(x)]])
 end_define
 
 begin_function

@@ -1344,9 +1344,7 @@ name|regs
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 name|oonstack
 operator|=
@@ -2240,9 +2238,7 @@ name|regs
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 name|oonstack
 operator|=
@@ -2891,9 +2887,7 @@ name|regs
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3326,9 +3320,7 @@ name|regs
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 expr_stmt|;
 ifdef|#
 directive|ifdef

@@ -11425,9 +11425,7 @@ name|fp
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 decl_stmt|;
 name|error
 operator|=
@@ -11480,9 +11478,7 @@ name|fp
 init|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 decl_stmt|;
 name|fp
 operator|->

@@ -5643,9 +5643,7 @@ directive|ifdef
 name|__i386__
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator||=
@@ -5665,9 +5663,7 @@ directive|ifdef
 name|__i386__
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator|&=

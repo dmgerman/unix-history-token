@@ -44,12 +44,6 @@ name|vm_offset_t
 name|md_bspstore
 decl_stmt|;
 comment|/* initial ar.bspstore */
-name|struct
-name|trapframe
-modifier|*
-name|md_tf
-decl_stmt|;
-comment|/* trap/syscall registers */
 block|}
 struct|;
 end_struct

@@ -3054,9 +3054,7 @@ name|frame
 operator|=
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 expr_stmt|;
 name|oonstack
 operator|=
@@ -3839,9 +3837,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -3854,9 +3850,7 @@ name|sc_pc
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[
@@ -3876,9 +3870,7 @@ name|ALPHA_PSL_USERCLR
 expr_stmt|;
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_tf
+name|p_frame
 operator|->
 name|tf_regs
 index|[

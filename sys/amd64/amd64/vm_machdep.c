@@ -567,9 +567,7 @@ expr_stmt|;
 comment|/* 	 * Create a new fresh stack for the new process. 	 * Copy the trap frame for the return to user mode as if from a 	 * syscall.  This copies most of the user mode register values. 	 */
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|=
 operator|(
 expr|struct
@@ -597,32 +595,22 @@ name|bcopy
 argument_list|(
 name|p1
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 argument_list|,
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
-name|p2
-operator|->
-name|p_md
-operator|.
-name|md_regs
+expr|struct
+name|trapframe
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eax
 operator|=
@@ -631,9 +619,7 @@ expr_stmt|;
 comment|/* Child returns zero */
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_eflags
 operator|&=
@@ -643,9 +629,7 @@ expr_stmt|;
 comment|/* success */
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|->
 name|tf_edx
 operator|=
@@ -699,9 +683,7 @@ name|int
 operator|)
 name|p2
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1171,9 +1153,7 @@ name|bcopy
 argument_list|(
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 argument_list|,
 name|tempuser
 operator|+
@@ -1183,9 +1163,7 @@ name|caddr_t
 operator|)
 name|p
 operator|->
-name|p_md
-operator|.
-name|md_regs
+name|p_frame
 operator|-
 operator|(
 name|caddr_t

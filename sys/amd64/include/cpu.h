@@ -90,7 +90,7 @@ name|cpu_getstack
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)->p_md.md_regs->tf_esp)
+value|((p)->p_frame->tf_esp)
 end_define
 
 begin_define
@@ -102,7 +102,7 @@ name|p
 parameter_list|,
 name|ap
 parameter_list|)
-value|((p)->p_md.md_regs->tf_esp = (ap))
+value|((p)->p_frame->tf_esp = (ap))
 end_define
 
 begin_define

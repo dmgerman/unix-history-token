@@ -28,14 +28,7 @@ end_comment
 begin_struct
 struct|struct
 name|mdproc
-block|{
-name|struct
-name|trapframe
-modifier|*
-name|md_regs
-decl_stmt|;
-comment|/* registers on current frame */
-block|}
+block|{ }
 struct|;
 end_struct
 
