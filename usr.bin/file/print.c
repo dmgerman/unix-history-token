@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: print.c,v 1.7 1998/01/28 07:36:25 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,7 +296,12 @@ operator|->
 name|mask
 operator|!=
 operator|~
-literal|0L
+operator|(
+operator|(
+name|uint32
+operator|)
+literal|0
+operator|)
 condition|)
 operator|(
 name|void
