@@ -2255,7 +2255,7 @@ argument|ntpclocks
 argument_list|,
 argument|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_MIDDLE
 argument_list|,
 argument|ntp_init
 argument_list|,

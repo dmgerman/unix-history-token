@@ -3231,7 +3231,7 @@ argument|timecounter
 argument_list|,
 argument|SI_SUB_CLOCKS
 argument_list|,
-argument|SI_ORDER_FIRST
+argument|SI_ORDER_SECOND
 argument_list|,
 argument|inittimecounter
 argument_list|,
