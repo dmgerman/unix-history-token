@@ -4716,6 +4716,9 @@ name|CSUM_DELAY_DATA
 comment|/* 	 * disable delayed checksums. 	 */
 if|if
 condition|(
+name|out
+operator|&&
+operator|(
 name|m
 operator|->
 name|m_pkthdr
@@ -4723,6 +4726,7 @@ operator|.
 name|csum_flags
 operator|&
 name|CSUM_DELAY_DATA
+operator|)
 condition|)
 block|{
 name|in_delayed_cksum
