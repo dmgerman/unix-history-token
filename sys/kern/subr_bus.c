@@ -7559,7 +7559,12 @@ name|DS_BUSY
 condition|)
 name|panic
 argument_list|(
-literal|"device_unbusy: called for non-busy device"
+literal|"device_unbusy: called for non-busy device %s"
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dev
