@@ -86,20 +86,16 @@ file|<netinet/ip_fw.h>
 end_include
 
 begin_decl_stmt
-name|struct
-name|ip_fw
-modifier|*
-name|ip_fw_chain
-init|=
-name|NULL
+name|u_short
+name|ip_fw_policy
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
-name|ip_fw_policy
-init|=
-literal|0
+name|struct
+name|ip_fw
+modifier|*
+name|ip_fw_chain
 decl_stmt|;
 end_decl_stmt
 
@@ -108,8 +104,6 @@ name|struct
 name|ip_fw
 modifier|*
 name|ip_acct_chain
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -187,8 +181,6 @@ name|struct
 name|ip_fw
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -205,8 +197,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -293,8 +283,6 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
@@ -311,8 +299,6 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|)
-init|=
-name|NULL
 function_decl|;
 end_function_decl
 
