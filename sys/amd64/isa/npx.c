@@ -3005,7 +3005,7 @@ decl_stmt|;
 define|#
 directive|define
 name|BUFSIZE
-value|1000000
+value|1048576
 name|long
 name|usec
 decl_stmt|;
@@ -3097,20 +3097,23 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s bandwidth = %ld bytes/sec\n"
+literal|"%s bandwidth = %lu kBps\n"
 argument_list|,
 name|funcname
 argument_list|,
 call|(
-name|long
+name|u_int32_t
 call|)
 argument_list|(
-name|BUFSIZE
-operator|*
 operator|(
-name|int64_t
+operator|(
+name|BUFSIZE
+operator|>>
+literal|10
 operator|)
+operator|*
 literal|1000000
+operator|)
 operator|/
 name|usec
 argument_list|)
