@@ -3776,7 +3776,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"\tchar *msg;\n"
+literal|"\tconst char *msg;\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3786,7 +3786,7 @@ name|f_print
 argument_list|(
 name|fout
 argument_list|,
-literal|"void _msgout(char* msg)\n"
+literal|"void _msgout(const char* msg)\n"
 argument_list|)
 expr_stmt|;
 block|}
