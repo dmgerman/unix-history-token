@@ -116,13 +116,6 @@ directive|include
 file|"job.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * The following array is used to make a fast determination of which  * characters are interpreted specially by the shell.  If a command  * contains any of these characters, it is executed by the shell, not  * directly by us.  */
 end_comment

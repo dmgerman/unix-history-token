@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -3012,10 +3018,6 @@ specifier|register
 name|char
 modifier|*
 name|bp
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|bp
 operator|=

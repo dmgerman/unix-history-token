@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -426,10 +432,6 @@ decl_stmt|;
 block|{
 name|int
 name|oldprio
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|errno
 operator|=

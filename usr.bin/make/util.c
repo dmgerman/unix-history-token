@@ -33,6 +33,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"make.h"
 end_include
 
@@ -767,10 +773,6 @@ name|struct
 name|dirent
 modifier|*
 name|d
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|struct
 name|stat
