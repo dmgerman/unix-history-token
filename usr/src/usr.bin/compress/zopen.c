@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)zopen.c	5.1 (Berkeley) %G%"
+literal|"@(#)zopen.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1219,7 +1219,7 @@ name|htabof
 argument_list|(
 name|i
 argument_list|)
-operator|>
+operator|>=
 literal|0
 condition|)
 goto|goto
