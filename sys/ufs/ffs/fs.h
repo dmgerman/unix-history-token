@@ -88,14 +88,14 @@ value|512
 end_define
 
 begin_comment
-comment|/*  * There is a 128-byte region in the superblock reserved for in-core  * pointers to summary information. Originally this included an array  * of pointers to blocks of struct csum; now there are just three  * pointers and the remaining space is padded with fs_ocsp[].  *  * NOCSPTRS determines the size of this padding. One pointer (fs_csp)  * is taken away to point to a contiguous array of struct csum for  * all cylinder groups; a second (fs_maxcluster) points to an array  * of cluster sizes that is computed as cylinder groups are inspected,  * and the third points to an array that tracks the creation of new  * directories.  */
+comment|/*  * There is a 128-byte region in the superblock reserved for in-core  * pointers to summary information. Originally this included an array  * of pointers to blocks of struct csum; now there are just a few  * pointers and the remaining space is padded with fs_ocsp[].  *  * NOCSPTRS determines the size of this padding. One pointer (fs_csp)  * is taken away to point to a contiguous array of struct csum for  * all cylinder groups; a second (fs_maxcluster) points to an array  * of cluster sizes that is computed as cylinder groups are inspected,  * and the third points to an array that tracks the creation of new  * directories. A fourth pointer, fs_active, is used when creating  * snapshots; it points to a bitmap of cylinder groups for which the  * free-block bitmap has changed since the snapshot operation began.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NOCSPTRS
-value|((128 / sizeof(void *)) - 3)
+value|((128 / sizeof(void *)) - 4)
 end_define
 
 begin_comment
@@ -599,6 +599,11 @@ modifier|*
 name|fs_maxcluster
 decl_stmt|;
 comment|/* max cluster in each cyl group */
+name|u_int8_t
+modifier|*
+name|fs_active
+decl_stmt|;
+comment|/* used by snapshots to track fs */
 name|int32_t
 name|fs_cpc
 decl_stmt|;
@@ -628,15 +633,10 @@ name|int32_t
 name|fs_avgfpdir
 decl_stmt|;
 comment|/* expected # of files per directory */
-name|u_int8_t
-modifier|*
-name|fs_active
-decl_stmt|;
-comment|/* used by snapshots to track fs */
 name|int32_t
 name|fs_sparecon
 index|[
-literal|25
+literal|26
 index|]
 decl_stmt|;
 comment|/* reserved for future constants */
