@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.9	82/09/06	*/
+comment|/*	vm_swap.c	4.10	82/10/21	*/
 end_comment
 
 begin_include
@@ -508,7 +508,7 @@ name|swblk_t
 name|vsbase
 decl_stmt|;
 specifier|register
-name|int
+name|long
 name|blk
 decl_stmt|;
 name|swdevt

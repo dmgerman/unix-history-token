@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.20	82/10/20	*/
+comment|/*	trap.c	4.21	82/10/21	*/
 end_comment
 
 begin_include
@@ -815,6 +815,9 @@ name|bcopy
 argument_list|(
 name|params
 argument_list|,
+operator|(
+name|caddr_
+operator|)
 name|u
 operator|.
 name|u_arg

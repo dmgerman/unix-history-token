@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_subr.c	4.1	82/10/20	*/
+comment|/*	ffs_subr.c	4.2	82/10/21	*/
 end_comment
 
 begin_ifdef
@@ -546,8 +546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|cp
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ikreg.h	4.2	82/08/01	*/
+comment|/*	ikreg.h	4.3	82/10/21	*/
 end_comment
 
 begin_struct
@@ -8,49 +8,34 @@ struct|struct
 name|ikdevice
 block|{
 name|short
-name|int
 name|ik_wc
 decl_stmt|;
 comment|/* Unibus word count reg */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_ubaddr
 decl_stmt|;
 comment|/* Unibus address register */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_ustat
 decl_stmt|;
 comment|/* Unibus status/command reg */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_data
 decl_stmt|;
 comment|/* Data register */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_xaddr
 decl_stmt|;
 comment|/* X address in frame buffer */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_yaddr
 decl_stmt|;
 comment|/* Y address in frame buffer */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_istat
 decl_stmt|;
 comment|/* Ikonas status/command reg */
-name|unsigned
-name|short
-name|int
+name|u_short
 name|ik_dummy
 decl_stmt|;
 block|}

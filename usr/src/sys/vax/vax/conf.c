@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.58	82/10/20	*/
+comment|/*	conf.c	4.59	82/10/21	*/
 end_comment
 
 begin_include
@@ -3234,6 +3234,8 @@ name|nulldev
 block|,
 literal|0
 block|,
+name|seltrue
+block|,
 name|mtopen
 block|,
 name|mtclose
@@ -3252,8 +3254,6 @@ block|,
 literal|0
 block|,
 name|seltrue
-block|,
-name|nodev
 block|,
 name|ptsopen
 block|,

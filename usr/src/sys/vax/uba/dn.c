@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.12	82/10/20	*/
+comment|/*	dn.c	4.13	82/10/21	*/
 end_comment
 
 begin_include
@@ -118,6 +118,9 @@ name|dnprobe
 argument_list|()
 decl_stmt|,
 name|dnattach
+argument_list|()
+decl_stmt|,
+name|dnintr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -372,6 +375,11 @@ expr_stmt|;
 name|cvec
 operator|=
 name|br
+expr_stmt|;
+name|dnintr
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.c	4.8	82/10/20	*/
+comment|/*	in.c	4.9	82/10/21	*/
 end_comment
 
 begin_include
@@ -136,8 +136,8 @@ operator|->
 name|afh_hosthash
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -380,11 +380,11 @@ return|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_ifndef
+end_ifdef
 
 begin_comment
 comment|/*  * Return the host portion of an internet address.  */

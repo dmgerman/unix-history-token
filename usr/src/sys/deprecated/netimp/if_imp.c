@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.41	82/10/20	*/
+comment|/*	if_imp.c	4.42	82/10/21	*/
 end_comment
 
 begin_include
@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vax/ubareg.h"
+file|"../vaxuba/ubareg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/ubavar.h"
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_include
@@ -1731,8 +1731,6 @@ init|=
 name|m0
 decl_stmt|;
 name|int
-name|x
-decl_stmt|,
 name|dhost
 decl_stmt|,
 name|dimp
@@ -2455,9 +2453,6 @@ name|struct
 name|control_leader
 modifier|*
 name|cp
-decl_stmt|;
-name|int
-name|x
 decl_stmt|;
 name|sc
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.13	82/10/17	*/
+comment|/*	uda.c	4.14	82/10/21	*/
 end_comment
 
 begin_include
@@ -640,6 +640,11 @@ expr_stmt|;
 name|reg
 operator|=
 name|reg
+expr_stmt|;
+name|udintr
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif

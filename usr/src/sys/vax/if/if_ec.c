@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.24	82/10/10	*/
+comment|/*	if_ec.c	4.25	82/10/21	*/
 end_comment
 
 begin_include
@@ -318,7 +318,8 @@ name|short
 name|es_oactive
 decl_stmt|;
 comment|/* is output active? */
-name|caddr_t
+name|u_char
+modifier|*
 name|es_buf
 index|[
 literal|16
@@ -435,6 +436,9 @@ operator|=
 name|EC_AROM
 expr_stmt|;
 comment|/* 	 * Disable map registers for ec unibus space, 	 * but don't allocate yet. 	 */
+operator|(
+name|void
+operator|)
 name|ubamem
 argument_list|(
 name|numuba
@@ -471,6 +475,9 @@ argument_list|)
 expr_stmt|;
 name|bad2
 label|:
+operator|(
+name|void
+operator|)
 name|ubamem
 argument_list|(
 name|numuba
@@ -1075,6 +1082,10 @@ index|[
 name|i
 index|]
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 operator|&
 name|umem
 index|[
@@ -1164,6 +1175,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ubamem
 argument_list|(
 name|uban
@@ -1177,7 +1191,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* map register disable (no alloc) */
+comment|/* mr disable (no alloc) */
 name|ecinit
 argument_list|(
 name|unit
@@ -1347,8 +1361,6 @@ name|ECUNIT
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|,
-name|dest
 decl_stmt|;
 name|struct
 name|ec_softc
@@ -1370,9 +1382,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
-name|caddr_t
-name|ecbuf
 decl_stmt|;
 if|if
 condition|(
@@ -1944,7 +1953,7 @@ name|resid
 decl_stmt|,
 name|ecoff
 decl_stmt|,
-name|buf
+name|rbuf
 decl_stmt|;
 specifier|register
 name|struct
@@ -1952,7 +1961,8 @@ name|ifqueue
 modifier|*
 name|inq
 decl_stmt|;
-name|caddr_t
+name|u_char
+modifier|*
 name|ecbuf
 decl_stmt|;
 name|es
@@ -1962,7 +1972,7 @@ operator|.
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|buf
+name|rbuf
 operator|=
 name|addr
 operator|->
@@ -1972,11 +1982,11 @@ name|EC_RBN
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|rbuf
 operator|<
 name|ECRLBF
 operator|||
-name|buf
+name|rbuf
 operator|>
 name|ECRHBF
 condition|)
@@ -1991,7 +2001,7 @@ name|es
 operator|->
 name|es_buf
 index|[
-name|buf
+name|rbuf
 index|]
 expr_stmt|;
 name|ecoff
@@ -2315,7 +2325,7 @@ name|EC_READ
 operator||
 name|EC_RCLR
 operator||
-name|buf
+name|rbuf
 expr_stmt|;
 block|}
 end_block
@@ -2464,6 +2474,9 @@ name|m
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|long
+operator|)
 name|M_COPYALL
 argument_list|)
 expr_stmt|;

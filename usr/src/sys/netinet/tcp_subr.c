@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.32	82/10/17	*/
+comment|/*	tcp_subr.c	4.33	82/10/21	*/
 end_comment
 
 begin_include
@@ -1024,6 +1024,9 @@ name|t_state
 operator|=
 name|TCPS_CLOSED
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|tcp_output
 argument_list|(
 name|tp

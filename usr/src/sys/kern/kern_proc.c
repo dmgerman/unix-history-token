@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.42	82/10/17	*/
+comment|/*	kern_proc.c	4.43	82/10/21	*/
 end_comment
 
 begin_include
@@ -1116,6 +1116,9 @@ name|rmalloc
 argument_list|(
 name|argmap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctod
 argument_list|(
 name|clrnd
@@ -2369,11 +2372,16 @@ name|p_textp
 operator|->
 name|x_iptr
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 literal|1
 operator|+
 name|ts
 operator|/
 name|CLSIZE
+argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -2451,6 +2459,9 @@ name|u_gid
 operator|=
 name|gid
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|entergroup
 argument_list|(
 name|gid
@@ -3853,6 +3864,9 @@ operator|->
 name|p_ru
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom

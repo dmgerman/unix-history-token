@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	2.17	82/10/19	*/
+comment|/*	ffs_alloc.c	2.18	82/10/21	*/
 end_comment
 
 begin_include
@@ -3126,7 +3126,7 @@ operator|->
 name|cg_free
 argument_list|,
 call|(
-name|int
+name|long
 call|)
 argument_list|(
 name|bno

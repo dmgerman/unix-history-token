@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kernel.h	4.6	82/10/21	*/
+comment|/*	kernel.h	4.7	82/10/21	*/
 end_comment
 
 begin_comment
@@ -96,6 +96,15 @@ name|realitexpire
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|double
+name|avenrun
+index|[
+literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.41	82/10/17	*/
+comment|/*	kern_clock.c	4.42	82/10/21	*/
 end_comment
 
 begin_include
@@ -159,11 +159,6 @@ name|int
 name|s
 decl_stmt|,
 name|cpstate
-decl_stmt|;
-specifier|extern
-name|double
-name|avenrun
-index|[]
 decl_stmt|;
 comment|/* 	 * Update real-time timeout queue. 	 * At front of queue are some number of events which are ``due''. 	 * The time to these is<= 0 and if negative represents the 	 * number of ticks which have passed since it was supposed to happen. 	 * The rest of the q elements (times> 0) are events yet to happen, 	 * where the time for each is given as a delta from the previous. 	 * Decrementing just the first of these serves to decrement the time 	 * to all events. 	 */
 for|for

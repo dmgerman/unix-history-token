@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nsp_output.c	1.3	82/10/09	*/
+comment|/*	nsp_output.c	1.4	82/10/21	*/
 end_comment
 
 begin_include
@@ -297,6 +297,9 @@ name|n_node
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -329,6 +332,9 @@ if|if
 condition|(
 name|len
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|np
@@ -496,6 +502,9 @@ name|n_node
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -682,6 +691,9 @@ name|n_node
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -834,6 +846,9 @@ name|n_node
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -852,6 +867,9 @@ operator|&=
 operator|~
 name|NF_OTHACK
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -1042,6 +1060,9 @@ name|n_node
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
@@ -1060,6 +1081,9 @@ operator|&=
 operator|~
 name|NF_DATACK
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m

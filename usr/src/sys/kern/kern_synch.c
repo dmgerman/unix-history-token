@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.23	82/10/17	*/
+comment|/*	kern_synch.c	4.24	82/10/21	*/
 end_comment
 
 begin_include
@@ -163,13 +163,6 @@ name|int
 name|nrscale
 init|=
 literal|2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|double
-name|avenrun
-index|[]
 decl_stmt|;
 end_decl_stmt
 

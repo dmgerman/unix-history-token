@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_rmap.c	4.6	82/10/10	*/
+comment|/*	subr_rmap.c	4.7	82/10/21	*/
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"../h/text.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_comment
@@ -157,22 +163,23 @@ begin_comment
 comment|/*  * Allocate 'size' units from the given  * map. Return the base of the allocated space.  * In a map, the addresses are increasing and the  * list is terminated by a 0 size.  *  * Algorithm is first-fit.  *  * This routine knows about the interleaving of the swapmap  * and handles that.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|long
 name|rmalloc
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|,
+parameter_list|,
 name|size
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|map
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
+name|long
+name|size
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -417,7 +424,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free the previously allocated space at addr  * of size units into the specified map.  * Sort addr into map and combine on  * one or both ends if possible.  */
@@ -443,8 +450,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
-name|int
+name|long
 name|size
 decl_stmt|,
 name|addr

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.54	82/10/20	*/
+comment|/*	ip_input.c	1.55	82/10/21	*/
 end_comment
 
 begin_include
@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/kernel.h"
 end_include
 
@@ -49,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -2740,7 +2740,7 @@ block|{
 name|struct
 name|in_addr
 modifier|*
-name|sin
+name|in
 decl_stmt|;
 name|int
 name|tcp_abort
@@ -2784,7 +2784,7 @@ name|cmd
 operator|==
 name|PRC_IFDOWN
 condition|)
-name|sin
+name|in
 operator|=
 operator|&
 operator|(
@@ -2809,7 +2809,7 @@ name|cmd
 operator|==
 name|PRC_HOSTUNREACH
 condition|)
-name|sin
+name|in
 operator|=
 operator|(
 expr|struct
@@ -2819,7 +2819,7 @@ operator|)
 name|arg
 expr_stmt|;
 else|else
-name|sin
+name|in
 operator|=
 operator|&
 operator|(
@@ -2841,15 +2841,7 @@ argument_list|(
 operator|&
 name|tcb
 argument_list|,
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
-operator|&
-name|sin
-operator|->
-name|sin_addr
+name|in
 argument_list|,
 operator|(
 name|int
@@ -2867,15 +2859,7 @@ argument_list|(
 operator|&
 name|udb
 argument_list|,
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|)
-operator|&
-name|sin
-operator|->
-name|sin_addr
+name|in
 argument_list|,
 operator|(
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.34	82/10/20	*/
+comment|/*	uipc_syscalls.c	4.35	82/10/21	*/
 end_comment
 
 begin_include
@@ -242,6 +242,9 @@ name|uap
 operator|->
 name|opt
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -453,6 +456,9 @@ name|uap
 operator|->
 name|opt
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -1178,6 +1184,9 @@ name|uap
 operator|->
 name|opt
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom
@@ -1473,6 +1482,9 @@ name|uap
 operator|->
 name|opt
 condition|)
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|dtom

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.19	82/10/19	*/
+comment|/*	sys_generic.c	5.20	82/10/21	*/
 end_comment
 
 begin_include
@@ -1870,6 +1870,9 @@ name|u
 operator|.
 name|u_error
 operator|=
+operator|(
+name|void
+operator|)
 name|uiomove
 argument_list|(
 name|bp
@@ -2445,6 +2448,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
 begin_comment
 comment|/*  * Get next character written in by user from uio.  */
 end_comment
@@ -2614,6 +2623,11 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ioctl system call  * Check legality, execute common code,  * and switch out to individual device routine.  */

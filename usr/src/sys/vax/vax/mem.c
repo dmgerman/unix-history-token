@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.8	82/10/20	*/
+comment|/*	mem.c	4.9	82/10/21	*/
 end_comment
 
 begin_comment
@@ -383,6 +383,9 @@ index|[
 name|o
 index|]
 argument_list|,
+operator|(
+name|int
+operator|)
 name|c
 argument_list|,
 name|rw
@@ -504,6 +507,9 @@ name|uio
 operator|->
 name|uio_offset
 argument_list|,
+operator|(
+name|int
+operator|)
 name|c
 argument_list|,
 name|rw

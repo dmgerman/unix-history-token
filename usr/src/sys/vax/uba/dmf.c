@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.12	82/10/20	*/
+comment|/*	dmf.c	4.13	82/10/21	*/
 end_comment
 
 begin_include
@@ -1014,6 +1014,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|ndmf
@@ -1023,6 +1029,15 @@ operator|*
 literal|8
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* used by iostat */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int

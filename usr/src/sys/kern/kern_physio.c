@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.33	82/10/17	*/
+comment|/*	kern_physio.c	4.34	82/10/21	*/
 end_comment
 
 begin_include
@@ -152,9 +152,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|flag
-decl_stmt|,
 name|nbytes
+decl_stmt|,
+name|rdflg
+decl_stmt|,
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +167,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+name|u_int
 name|pfcent
 decl_stmt|;
 end_decl_stmt
