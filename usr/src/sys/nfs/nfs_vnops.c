@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3176,11 +3176,6 @@ name|struct
 name|nfsmount
 modifier|*
 name|nmp
-decl_stmt|;
-name|struct
-name|nfsnode
-modifier|*
-name|tp
 decl_stmt|;
 name|caddr_t
 name|bpos
@@ -9771,9 +9766,6 @@ name|struct
 name|nfsnode
 modifier|*
 name|np
-decl_stmt|,
-modifier|*
-name|tp
 decl_stmt|;
 name|struct
 name|vnode
@@ -11176,9 +11168,6 @@ decl_stmt|,
 name|dpos
 decl_stmt|,
 name|cp2
-decl_stmt|;
-name|u_long
-name|xid
 decl_stmt|;
 name|int
 name|error
