@@ -2721,7 +2721,9 @@ operator|)
 expr_stmt|;
 comment|/* XXX Don't actually map */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 break|break;
 comment|/* 	 * Set memory window flags for read/write interface. 	 */
@@ -2963,7 +2965,9 @@ name|pccard_failure_beep
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 comment|/* 	 * Virtual removal/insertion 	 */
 case|case
@@ -2993,7 +2997,9 @@ operator|!=
 name|filled
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|pccard_event
 argument_list|(
@@ -3026,7 +3032,9 @@ operator|!=
 name|inactive
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|pccard_event
 argument_list|(
@@ -3054,7 +3062,9 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 break|break;

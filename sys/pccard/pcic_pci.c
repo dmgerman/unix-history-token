@@ -955,7 +955,9 @@ name|desc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* exact match */
 block|}
@@ -1359,7 +1361,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1374,7 +1378,9 @@ name|dev
 parameter_list|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

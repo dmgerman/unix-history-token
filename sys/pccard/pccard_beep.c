@@ -609,10 +609,12 @@ literal|1
 operator|<
 name|type
 condition|)
+block|{
 name|errcode
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 block|{
 name|allow_beep
@@ -625,7 +627,9 @@ name|type
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|errcode
+operator|)
 return|;
 block|}
 end_function

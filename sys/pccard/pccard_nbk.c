@@ -675,7 +675,9 @@ operator|!=
 name|SYS_RES_DRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -684,7 +686,9 @@ operator|<
 literal|0
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -697,7 +701,9 @@ operator|>=
 name|PCCARD_NPORT
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -710,7 +716,9 @@ operator|>=
 name|PCCARD_NMEM
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -723,7 +731,9 @@ operator|>=
 name|PCCARD_NIRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -736,7 +746,9 @@ operator|>=
 name|PCCARD_NDRQ
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|resource_list_add
 argument_list|(
@@ -758,7 +770,9 @@ name|count
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -831,7 +845,9 @@ operator|!
 name|rle
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 if|if
 condition|(
@@ -856,7 +872,9 @@ operator|->
 name|count
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1067,7 +1085,9 @@ operator|<
 literal|0
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 switch|switch
 condition|(
@@ -1085,7 +1105,9 @@ operator|>=
 name|PCCARD_NIRQ
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1099,7 +1121,9 @@ operator|>=
 name|PCCARD_NDRQ
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1113,7 +1137,9 @@ operator|>=
 name|PCCARD_NMEM
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 case|case
@@ -1127,12 +1153,16 @@ operator|>=
 name|PCCARD_NPORT
 condition|)
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 break|break;
 default|default:
 return|return
-literal|0
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 name|resource_list_add
@@ -1228,6 +1258,7 @@ operator|->
 name|resources
 decl_stmt|;
 return|return
+operator|(
 name|resource_list_release
 argument_list|(
 name|rl
@@ -1242,6 +1273,7 @@ name|rid
 argument_list|,
 name|r
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1295,11 +1327,15 @@ name|ETHER_ADDR_LEN
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -1326,6 +1362,7 @@ name|value
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_RES_FLAGS
 argument_list|(
 name|device_get_parent
@@ -1341,6 +1378,7 @@ name|rid
 argument_list|,
 name|value
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1368,6 +1406,7 @@ name|value
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_GET_RES_FLAGS
 argument_list|(
 name|device_get_parent
@@ -1383,6 +1422,7 @@ name|rid
 argument_list|,
 name|value
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1410,6 +1450,7 @@ name|deltap
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_SET_MEMORY_OFFSET
 argument_list|(
 name|device_get_parent
@@ -1425,6 +1466,7 @@ name|offset
 argument_list|,
 name|deltap
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1449,6 +1491,7 @@ name|offset
 parameter_list|)
 block|{
 return|return
+operator|(
 name|CARD_GET_MEMORY_OFFSET
 argument_list|(
 name|device_get_parent
@@ -1462,6 +1505,7 @@ name|rid
 argument_list|,
 name|offset
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1561,7 +1605,9 @@ name|matchfn
 parameter_list|)
 block|{
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 end_function
