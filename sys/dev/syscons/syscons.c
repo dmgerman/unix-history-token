@@ -691,7 +691,7 @@ name|enable_panic_key
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable panic via keypress specified in kbdmap(5)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
