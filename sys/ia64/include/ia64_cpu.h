@@ -714,6 +714,24 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Flush Cache.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_fc
+parameter_list|(
+name|u_int64_t
+name|va
+parameter_list|)
+block|{
+asm|__asm __volatile("fc %0" :: "r"(va));
+block|}
+end_function
+
+begin_comment
 comment|/*  * Calculate address in VHPT for va.  */
 end_comment
 
