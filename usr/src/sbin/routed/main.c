@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,7 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|s
 operator|=
 name|socket
@@ -864,6 +865,9 @@ name|type
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|perror
