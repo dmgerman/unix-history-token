@@ -8,6 +8,10 @@ comment|/* $Id: com_err.h,v 1.3 1998/05/02 20:13:28 assar Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* MIT compatible com_err library */
 end_comment
 
@@ -23,6 +27,12 @@ directive|define
 name|__COM_ERR_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -34,53 +44,6 @@ include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|X
-parameter_list|)
-value|X
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|X
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -219,17 +182,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|const
 name|char
 modifier|*
 name|error_table_name
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|int
 name|num
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
