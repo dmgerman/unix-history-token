@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 111 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 113 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -180,6 +180,7 @@ operator|!
 name|NewNode
 operator|)
 condition|)
+comment|/* Must be on same line for code converter */
 block|{
 name|DEBUG_PRINT
 argument_list|(
@@ -583,7 +584,7 @@ decl_stmt|;
 name|OBJECT_TYPE_INTERNAL
 name|ThisSearchType
 decl_stmt|;
-name|DEBUG_EXEC
+name|DEBUG_ONLY_MEMBERS
 argument_list|(
 argument|UINT32 i
 argument_list|)

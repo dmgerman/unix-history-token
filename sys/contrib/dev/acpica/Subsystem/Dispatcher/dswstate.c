@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 31 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -220,10 +220,10 @@ condition|)
 block|{
 name|DEBUG_PRINT
 argument_list|(
-name|ACPI_ERROR
+name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"DsResultStackPop: Underflow! State=%p Cur=%X Num=%X\n"
+literal|"DsResultStackPop: Underflow - State=%p Cur=%X Num=%X\n"
 operator|,
 name|WalkState
 operator|,
@@ -1035,6 +1035,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AcpiDsPushWalkState
 parameter_list|(
@@ -1263,11 +1264,16 @@ operator|=
 name|MthDesc
 expr_stmt|;
 comment|/* Init the method args/local */
+ifndef|#
+directive|ifndef
+name|_ACPI_ASL_COMPILER
 name|AcpiDsMethodDataInit
 argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Put the new state at the head of the walk list */
 name|AcpiDsPushWalkState
 argument_list|(

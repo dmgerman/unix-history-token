@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amresnte - AML Interpreter object resolution  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amresnte - AML Interpreter object resolution  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -87,6 +87,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 modifier|*
 name|StackPtr
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -1368,7 +1372,7 @@ name|AML_ONES_OP
 case|:
 name|TempVal
 operator|=
-name|ACPI_UINT32_MAX
+name|ACPI_INTEGER_MAX
 expr_stmt|;
 break|break;
 default|default:
@@ -1420,6 +1424,14 @@ operator|.
 name|Value
 operator|=
 name|TempVal
+expr_stmt|;
+comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+name|AcpiAmlTruncateFor32bitTable
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|WalkState
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Default case is for unknown types */

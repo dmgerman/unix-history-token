@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,21 +151,21 @@ name|Context
 operator|=
 name|Context
 expr_stmt|;
+name|Status
+operator|=
+name|AcpiEnableEvent
+argument_list|(
+name|Event
+argument_list|,
+name|ACPI_EVENT_FIXED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|!=
-name|AcpiHwRegisterAccess
+operator|!
+name|ACPI_SUCCESS
 argument_list|(
-name|ACPI_WRITE
-argument_list|,
-name|ACPI_MTX_LOCK
-argument_list|,
-name|Event
-operator|+
-name|TMR_EN
-argument_list|,
-literal|1
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -174,7 +174,7 @@ argument_list|(
 name|ACPI_WARN
 argument_list|,
 operator|(
-literal|"Could not write to fixed event enable register.\n"
+literal|"Could not enable fixed event.\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -278,21 +278,21 @@ name|ACPI_MTX_EVENTS
 argument_list|)
 expr_stmt|;
 comment|/* Disable the event before removing the handler - just in case... */
+name|Status
+operator|=
+name|AcpiDisableEvent
+argument_list|(
+name|Event
+argument_list|,
+name|ACPI_EVENT_FIXED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|!=
-name|AcpiHwRegisterAccess
+operator|!
+name|ACPI_SUCCESS
 argument_list|(
-name|ACPI_WRITE
-argument_list|,
-name|ACPI_MTX_LOCK
-argument_list|,
-name|Event
-operator|+
-name|TMR_EN
-argument_list|,
-literal|0
+name|Status
 argument_list|)
 condition|)
 block|{
@@ -309,9 +309,16 @@ name|Status
 operator|=
 name|AE_ERROR
 expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
+name|AcpiCmReleaseMutex
+argument_list|(
+name|ACPI_MTX_EVENTS
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Remove the handler */
 name|AcpiGbl_FixedEventHandlers
@@ -343,8 +350,6 @@ name|Event
 operator|)
 argument_list|)
 expr_stmt|;
-name|Cleanup
-label|:
 name|AcpiCmReleaseMutex
 argument_list|(
 name|ACPI_MTX_EVENTS

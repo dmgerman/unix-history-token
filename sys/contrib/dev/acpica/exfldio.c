@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amfldio - Aml Field I/O  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amfldio - Aml Field I/O  *              $Revision: 30 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ name|RgnDesc
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 decl_stmt|;
 name|UINT32
@@ -860,6 +860,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiAmlWriteFieldData
 parameter_list|(
@@ -888,7 +889,7 @@ name|RgnDesc
 init|=
 name|NULL
 decl_stmt|;
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 decl_stmt|;
 name|UINT32
@@ -1107,6 +1108,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiAmlWriteFieldDataWithUpdateRule
 parameter_list|(

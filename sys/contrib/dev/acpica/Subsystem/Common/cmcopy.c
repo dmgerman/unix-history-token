@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmcopy - Internal to external object translation utilities  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmcopy - Internal to external object translation utilities  *              $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -84,6 +84,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiCmBuildExternalSimpleObject
 parameter_list|(
@@ -426,6 +427,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiCmBuildExternalPackageObject
 parameter_list|(
@@ -1153,11 +1155,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_FUTURE_IMPLEMENTATION
+end_ifdef
+
+begin_comment
+comment|/* Code to convert packages that are parameters to control methods */
+end_comment
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiCmBuildInternalPackageObject  *  * PARAMETERS:  *InternalObj    - Pointer to the object we are returning  *              *Buffer         - Where the object is returned  *              *SpaceUsed      - Where the length of the object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: This function is called to place a package object in a user  *              buffer.  A package object by definition contains other objects.  *  *              The buffer is assumed to have sufficient space for the object.  *              The caller must have verified the buffer length needed using the  *              AcpiCmGetObjectSize function before calling this function.  *  ******************************************************************************/
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiCmBuildInternalPackageObject
 parameter_list|(
@@ -1575,6 +1588,15 @@ comment|/* while (1)  */
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Future implementation */
+end_comment
+
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiCmBuildInternalObject  *  * PARAMETERS:  *InternalObj    - The external object to be converted  *              *BufferPtr      - Where the internal object is returned  *  * RETURN:      Status          - the status of the call  *  * DESCRIPTION: Converts an external object to an internal object.  *  ******************************************************************************/
 end_comment
@@ -1609,7 +1631,7 @@ operator|==
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-comment|/*          * Package objects contain other objects (which can be objects)          * buildpackage does it all          */
+comment|/*          * Package objects contain other objects (which can be objects)          * buildpackage does it all          *          * TBD: Package conversion must be completed and tested          * NOTE: this code converts packages as input parameters to          * control methods only.  This is a very, very rare case.          */
 comment|/*         Status = AcpiCmBuildInternalPackageObject(InternalObj,                                                   RetBuffer->Pointer,&RetBuffer->Length); */
 name|DEBUG_PRINT
 argument_list|(

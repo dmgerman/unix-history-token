@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwcpu32.c - CPU support for IA32 (Throttling, CxStates)  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwcpu32.c - CPU support for IA32 (Throttling, CxStates)  *              $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -185,14 +185,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Perform Dummy Op:      * -----------------      * We have to do something useless after reading LVL2 because chipsets      * cannot guarantee that STPCLK# gets asserted in time to freeze execution.      */
-name|AcpiOsIn8
+name|AcpiHwRegisterRead
 argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|PM2_CONTROL
 argument_list|)
 expr_stmt|;
 comment|/*      * Compute Time in C2:      * -------------------      */
@@ -241,11 +238,6 @@ name|Timer
 init|=
 literal|0
 decl_stmt|;
-name|UINT8
-name|Pm2CntBlk
-init|=
-literal|0
-decl_stmt|;
 name|UINT32
 name|BusMasterStatus
 init|=
@@ -274,7 +266,7 @@ operator|==
 operator|(
 name|BusMasterStatus
 operator|=
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_READ
 argument_list|,
@@ -286,7 +278,7 @@ operator|)
 condition|)
 block|{
 comment|/*          * Clear the BM_STS bit by setting it.          */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -313,32 +305,15 @@ name|disable
 argument_list|()
 expr_stmt|;
 comment|/*      * Disable Bus Mastering:      * ----------------------      * Set the PM2_CNT.ARB_DIS bit (bit #0), preserving all other bits.      */
-name|Pm2CntBlk
-operator|=
-name|AcpiOsIn8
+name|AcpiHwRegisterBitAccess
 argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
-argument_list|)
-expr_stmt|;
-name|Pm2CntBlk
-operator||=
-literal|0x01
-expr_stmt|;
-name|AcpiOsOut8
-argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
+name|ACPI_WRITE
 argument_list|,
-name|Pm2CntBlk
+name|ACPI_MTX_LOCK
+argument_list|,
+name|ARB_DIS
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/*      * Get the timer base before entering C state      */
@@ -361,14 +336,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Perform Dummy Op:      * -----------------      * We have to do something useless after reading LVL3 because chipsets      * cannot guarantee that STPCLK# gets asserted in time to freeze execution.      */
-name|AcpiOsIn8
+name|AcpiHwRegisterRead
 argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|PM2_CONTROL
 argument_list|)
 expr_stmt|;
 comment|/*      * Immediately compute the time in the C state      */
@@ -380,32 +352,15 @@ operator|-
 name|Timer
 expr_stmt|;
 comment|/*      * Re-Enable Bus Mastering:      * ------------------------      * Clear the PM2_CNT.ARB_DIS bit (bit #0), preserving all other bits.      */
-name|Pm2CntBlk
-operator|=
-name|AcpiOsIn8
+name|AcpiHwRegisterBitAccess
 argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
-argument_list|)
-expr_stmt|;
-name|Pm2CntBlk
-operator|&=
-literal|0xFE
-expr_stmt|;
-name|AcpiOsOut8
-argument_list|(
-operator|(
-name|ACPI_IO_ADDRESS
-operator|)
-name|AcpiGbl_FACP
-operator|->
-name|Pm2CntBlk
+name|ACPI_WRITE
 argument_list|,
-name|Pm2CntBlk
+name|ACPI_MTX_LOCK
+argument_list|,
+name|ARB_DIS
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* TBD: [Unhandled]: Support 24-bit timers (this algorithm assumes 32-bit) */
@@ -545,7 +500,7 @@ block|{
 case|case
 literal|3
 case|:
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -567,7 +522,7 @@ block|{
 case|case
 literal|3
 case|:
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
@@ -661,7 +616,7 @@ expr_stmt|;
 comment|/*      * C2 Supported?      * -------------      * We're only supporting C2 when the latency is<= 100 microseconds,      * and on SMP systems when P_LVL2_UP (which indicates C2 only on UP)      * is not set.      */
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl2Lat
 operator|<=
@@ -686,7 +641,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl2Lat
 expr_stmt|;
@@ -695,7 +650,7 @@ elseif|else
 if|if
 condition|(
 operator|!
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl2Up
 condition|)
@@ -712,7 +667,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl2Lat
 expr_stmt|;
@@ -721,7 +676,7 @@ block|}
 comment|/*      * C3 Supported?      * -------------      * We're only supporting C3 on UP systems when the latency is      *<= 1000 microseconds and that include the ability to disable      * Bus Mastering while in C3 (ARB_DIS) but allows Bus Mastering      * requests to wake the system from C3 (BM_RLD).  Note his method      * of maintaining cache coherency (disabling of bus mastering)      * cannot be used on SMP systems, and flushing caches (e.g. WBINVD)      * is simply too costly (at this time).      */
 if|if
 condition|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl3Lat
 operator|<=
@@ -734,11 +689,13 @@ operator|!
 name|SMP_system
 operator|&&
 operator|(
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
-name|Pm2CntBlk
+name|XPm2CntBlk
+operator|.
+name|Address
 operator|&&
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Pm2CntLen
 operator|)
@@ -756,7 +713,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|->
 name|Plvl3Lat
 expr_stmt|;

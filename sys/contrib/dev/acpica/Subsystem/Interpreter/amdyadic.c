@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -373,9 +373,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|ACPI_INTEGER
-name|Remainder
-decl_stmt|;
 name|UINT32
 name|NumOperands
 init|=
@@ -719,11 +716,7 @@ name|AML_DIVIDE_OP
 case|:
 if|if
 condition|(
-operator|(
-name|UINT32
-operator|)
-literal|0
-operator|==
+operator|!
 name|ObjDesc2
 operator|->
 name|Number
@@ -767,27 +760,27 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-name|Remainder
-operator|=
-name|ObjDesc
-operator|->
-name|Number
-operator|.
-name|Value
-operator|%
-name|ObjDesc2
-operator|->
-name|Number
-operator|.
-name|Value
-expr_stmt|;
+comment|/* Remainder (modulo) */
 name|RetDesc
 operator|->
 name|Number
 operator|.
 name|Value
 operator|=
-name|Remainder
+name|ACPI_MODULO
+argument_list|(
+name|ObjDesc
+operator|->
+name|Number
+operator|.
+name|Value
+argument_list|,
+name|ObjDesc2
+operator|->
+name|Number
+operator|.
+name|Value
+argument_list|)
 expr_stmt|;
 comment|/* Result (what we used to call the quotient) */
 name|RetDesc2
@@ -796,17 +789,20 @@ name|Number
 operator|.
 name|Value
 operator|=
+name|ACPI_DIVIDE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Number
 operator|.
 name|Value
-operator|/
+argument_list|,
 name|ObjDesc2
 operator|->
 name|Number
 operator|.
 name|Value
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* DefMultiply :=  MultiplyOp  Operand1    Operand2    Result  */

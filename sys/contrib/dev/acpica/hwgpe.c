@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -45,33 +45,6 @@ literal|"hwgpe"
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|UINT8
-name|DecodeTo8bit
-index|[
-literal|8
-index|]
-init|=
-block|{
-literal|1
-block|,
-literal|2
-block|,
-literal|4
-block|,
-literal|8
-block|,
-literal|16
-block|,
-literal|32
-block|,
-literal|64
-block|,
-literal|128
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiHwEnableGpe  *  * PARAMETERS:  GpeNumber       - The GPE  *  * RETURN:      None  *  * DESCRIPTION: Enable a single GPE.  *  ******************************************************************************/
 end_comment
@@ -104,7 +77,7 @@ expr_stmt|;
 comment|/*      * Figure out the bit offset for this GPE within the target register.      */
 name|BitMask
 operator|=
-name|DecodeTo8bit
+name|AcpiGbl_DecodeTo8bit
 index|[
 name|MOD_8
 argument_list|(
@@ -179,7 +152,7 @@ expr_stmt|;
 comment|/*      * Figure out the bit offset for this GPE within the target register.      */
 name|BitMask
 operator|=
-name|DecodeTo8bit
+name|AcpiGbl_DecodeTo8bit
 index|[
 name|MOD_8
 argument_list|(
@@ -252,7 +225,7 @@ expr_stmt|;
 comment|/*      * Figure out the bit offset for this GPE within the target register.      */
 name|BitMask
 operator|=
-name|DecodeTo8bit
+name|AcpiGbl_DecodeTo8bit
 index|[
 name|MOD_8
 argument_list|(
@@ -333,7 +306,7 @@ expr_stmt|;
 comment|/*      * Figure out the bit offset for this GPE within the target register.      */
 name|BitMask
 operator|=
-name|DecodeTo8bit
+name|AcpiGbl_DecodeTo8bit
 index|[
 name|MOD_8
 argument_list|(

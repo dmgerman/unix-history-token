@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - AcpiRsAddress16Resource  *                       AcpiRsAddress16Stream  *                       AcpiRsAddress32Resource  *                       AcpiRsAddress32Stream  *              $Revision: 11 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - AcpiRsAddress16Resource  *                       AcpiRsAddress16Stream  *                       AcpiRsAddress32Resource  *                       AcpiRsAddress32Stream  *              $Revision: 12 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acresrc.h"
 end_include
 
 begin_define

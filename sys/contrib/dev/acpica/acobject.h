@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 75 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -355,7 +355,7 @@ decl_stmt|;
 name|UINT32
 name|Length
 decl_stmt|;
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 decl_stmt|;
 name|union

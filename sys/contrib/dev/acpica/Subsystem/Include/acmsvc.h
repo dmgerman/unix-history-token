@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmsvc.h - VC specific defines, etc.  *       $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmsvc.h - VC specific defines, etc.  *       $Revision: 2 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,6 +53,21 @@ name|(
 name|disable
 name|:
 name|4127
+name|)
+end_pragma
+
+begin_comment
+comment|/* warn C4706: assignment within conditional expression */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|disable
+name|:
+name|4706
 name|)
 end_pragma
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: ammonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 81 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: ammonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -68,6 +68,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiAmlGetObjectReference
 parameter_list|(
@@ -824,6 +825,7 @@ comment|/*  DefFromBDC  :=  FromBCDOp   BCDValue    Result  */
 case|case
 name|AML_FROM_BCD_OP
 case|:
+comment|/* TBD: for ACPI 2.0, expand to 64 bits */
 name|d0
 operator|=
 call|(
@@ -959,6 +961,7 @@ comment|/*  DefToBDC    :=  ToBCDOp Operand Result  */
 case|case
 name|AML_TO_BCD_OP
 case|:
+comment|/* TBD: for ACPI 2.0, expand to 64 bits */
 if|if
 condition|(
 name|ObjDesc
@@ -999,52 +1002,73 @@ name|Number
 operator|.
 name|Value
 operator|=
+name|ACPI_MODULO
+argument_list|(
 name|ObjDesc
 operator|->
 name|Number
 operator|.
 name|Value
-operator|%
+argument_list|,
 literal|10
+argument_list|)
 operator|+
 operator|(
+name|ACPI_MODULO
+argument_list|(
+name|ACPI_DIVIDE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Number
 operator|.
 name|Value
-operator|/
+argument_list|,
 literal|10
-operator|%
+argument_list|)
+argument_list|,
 literal|10
+argument_list|)
 operator|<<
 literal|4
 operator|)
 operator|+
 operator|(
+name|ACPI_MODULO
+argument_list|(
+name|ACPI_DIVIDE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Number
 operator|.
 name|Value
-operator|/
+argument_list|,
 literal|100
-operator|%
+argument_list|)
+argument_list|,
 literal|10
+argument_list|)
 operator|<<
 literal|8
 operator|)
 operator|+
 operator|(
+name|ACPI_MODULO
+argument_list|(
+name|ACPI_DIVIDE
+argument_list|(
 name|ObjDesc
 operator|->
 name|Number
 operator|.
 name|Value
-operator|/
+argument_list|,
 literal|1000
-operator|%
+argument_list|)
+argument_list|,
 literal|10
+argument_list|)
 operator|<<
 literal|12
 operator|)

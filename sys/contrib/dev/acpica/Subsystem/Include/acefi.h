@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 1 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 3 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -43,6 +43,54 @@ include|#
 directive|include
 file|<efilib.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|UINT8
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|BOOLEAN
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UCHAR
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UINT16
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|INT32
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UINT32
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|INT64
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|UINT64
+end_undef
 
 begin_endif
 endif|#

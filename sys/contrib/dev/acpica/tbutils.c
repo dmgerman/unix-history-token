@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 30 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -507,8 +507,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiTbMapAcpiTable
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
 name|UINT32

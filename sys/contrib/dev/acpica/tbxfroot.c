@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 28 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -45,6 +45,13 @@ literal|"tbxfroot"
 argument_list|)
 end_macro
 
+begin_define
+define|#
+directive|define
+name|RSDP_CHECKSUM_LENGTH
+value|20
+end_define
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpPhysicalAddress       - Where to place the RSDP address  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
 end_comment
@@ -53,8 +60,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiFindRootPointer
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|RsdpPhysicalAddress
 parameter_list|)
@@ -87,8 +93,10 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|REPORT_WARNING
+name|DEBUG_PRINT
 argument_list|(
+name|ACPI_ERROR
+argument_list|,
 operator|(
 literal|"RSDP structure not found\n"
 operator|)
@@ -105,7 +113,7 @@ name|RsdpPhysicalAddress
 operator|=
 name|TableInfo
 operator|.
-name|Pointer
+name|PhysicalAddress
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -195,10 +203,7 @@ name|AcpiTbChecksum
 argument_list|(
 name|MemRover
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
-argument_list|)
+name|RSDP_CHECKSUM_LENGTH
 argument_list|)
 operator|==
 literal|0
@@ -242,8 +247,7 @@ name|UINT8
 modifier|*
 name|MemRover
 decl_stmt|;
-name|UINT8
-modifier|*
+name|UINT64
 name|PhysAddr
 decl_stmt|;
 name|ACPI_STATUS
@@ -326,12 +330,8 @@ operator|)
 expr_stmt|;
 name|TableInfo
 operator|->
-name|Pointer
+name|PhysicalAddress
 operator|=
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
 name|PhysAddr
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -409,12 +409,8 @@ operator|)
 expr_stmt|;
 name|TableInfo
 operator|->
-name|Pointer
+name|PhysicalAddress
 operator|=
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
 name|PhysAddr
 expr_stmt|;
 name|return_ACPI_STATUS

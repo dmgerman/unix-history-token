@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: cmdelete - object deletion and reference count utilities  *              $Revision: 57 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: cmdelete - object deletion and reference count utilities  *              $Revision: 59 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -329,7 +329,7 @@ operator|.
 name|Extra
 condition|)
 block|{
-comment|/*               * Free the RegionContext if and only if the handler is one of the              * default handlers -- and therefore, we created the context object              * locally, it was not created by an external caller.              */
+comment|/*              * Free the RegionContext if and only if the handler is one of the              * default handlers -- and therefore, we created the context object              * locally, it was not created by an external caller.              */
 name|HandlerDesc
 operator|=
 name|Object
@@ -609,6 +609,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AcpiCmUpdateRefCount
 parameter_list|(

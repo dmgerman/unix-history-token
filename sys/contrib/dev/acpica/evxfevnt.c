@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 26 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -333,17 +333,46 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*          * Enable the requested fixed event (by writing a one to the          * enable register bit)          */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
-name|TRUE
+name|ACPI_MTX_LOCK
 argument_list|,
 name|RegisterId
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|1
+operator|!=
+name|AcpiHwRegisterBitAccess
+argument_list|(
+name|ACPI_READ
+argument_list|,
+name|ACPI_MTX_LOCK
+argument_list|,
+name|RegisterId
+argument_list|)
+condition|)
+block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Fixed event bit clear when it should be set,\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_ERROR
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_EVENT_GPE
@@ -486,17 +515,46 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*          * Disable the requested fixed event (by writing a zero to the          * enable register bit)          */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
-name|TRUE
+name|ACPI_MTX_LOCK
 argument_list|,
 name|RegisterId
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|!=
+name|AcpiHwRegisterBitAccess
+argument_list|(
+name|ACPI_READ
+argument_list|,
+name|ACPI_MTX_LOCK
+argument_list|,
+name|RegisterId
+argument_list|)
+condition|)
+block|{
+name|DEBUG_PRINT
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"Fixed event bit set when it should be clear,\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_ERROR
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_EVENT_GPE
@@ -639,11 +697,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/*          * Clear the requested fixed event (By writing a one to the          * status register bit)          */
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
-name|TRUE
+name|ACPI_MTX_LOCK
 argument_list|,
 name|RegisterId
 argument_list|,
@@ -810,11 +868,11 @@ comment|/* Get the status of the requested fixed event */
 operator|*
 name|EventStatus
 operator|=
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_READ
 argument_list|,
-name|TRUE
+name|ACPI_MTX_LOCK
 argument_list|,
 name|RegisterId
 argument_list|)

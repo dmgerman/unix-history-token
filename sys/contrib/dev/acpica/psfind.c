@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 17 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psfind - Parse tree search routine  *              $Revision: 18 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -50,6 +50,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsGetParent
@@ -124,6 +125,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiPsFindName

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 16 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 18 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -513,6 +513,12 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_BUFFER
+name|ReturnObj
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
 name|UINT32
 name|PreviousAllocations
 decl_stmt|;
@@ -525,9 +531,6 @@ decl_stmt|;
 name|UINT32
 name|Size
 decl_stmt|;
-name|ACPI_BUFFER
-name|ReturnObj
-decl_stmt|;
 comment|/* Memory allocation tracking */
 name|PreviousAllocations
 operator|=
@@ -537,6 +540,8 @@ name|PreviousSize
 operator|=
 name|AcpiGbl_CurrentAllocSize
 expr_stmt|;
+endif|#
+directive|endif
 name|Info
 operator|.
 name|Name
@@ -572,6 +577,9 @@ operator|&
 name|ReturnObj
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
 comment|/* Memory allocation tracking */
 name|Allocations
 operator|=
@@ -607,6 +615,8 @@ name|Size
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|ACPI_FAILURE

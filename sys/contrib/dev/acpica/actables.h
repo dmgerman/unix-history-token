@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 27 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -46,6 +46,45 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * tbconvrt - Table conversion routines  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbConvertToXsdt
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|,
+name|UINT32
+modifier|*
+name|NumberOfTables
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbConvertTableFadt
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiTbBuildCommonFacs
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * tbget - Table "get" routines  */
 end_comment
 
@@ -71,8 +110,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbGetTable
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
 name|ACPI_TABLE_HEADER
@@ -90,8 +128,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbVerifyRsdp
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|RSDP_PhysicalAddress
 parameter_list|)
 function_decl|;
@@ -295,8 +332,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbMapAcpiTable
 parameter_list|(
-name|void
-modifier|*
+name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 parameter_list|,
 name|UINT32

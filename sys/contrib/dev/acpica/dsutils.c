@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 45 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 48 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -227,7 +227,7 @@ case|:
 case|case
 name|AML_WHILE_OP
 case|:
-comment|/*               * If we are executing the predicate AND this is the predicate op,               * we will use the return value!              */
+comment|/*              * If we are executing the predicate AND this is the predicate op,              * we will use the return value!              */
 if|if
 condition|(
 operator|(
@@ -575,6 +575,14 @@ name|ParentOp
 operator|->
 name|Opcode
 operator|!=
+name|AML_REGION_OP
+operator|)
+operator|&&
+operator|(
+name|ParentOp
+operator|->
+name|Opcode
+operator|!=
 name|AML_NAMEPATH_OP
 operator|)
 condition|)
@@ -842,7 +850,12 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"DsCreateOperand: Could not pop result\n"
+literal|"DsCreateOperand: Missing or null operand, %s\n"
+operator|,
+name|AcpiCmFormatException
+argument_list|(
+name|Status
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;

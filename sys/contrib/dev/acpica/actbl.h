@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,6 +22,13 @@ end_define
 begin_comment
 comment|/*  *  Values for description table header signatures  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RSDP_NAME
+value|"RSDP"
+end_define
 
 begin_define
 define|#
@@ -59,7 +66,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FACP_SIG
+name|FADT_SIG
 value|"FACP"
 end_define
 
@@ -98,6 +105,17 @@ end_define
 
 begin_comment
 comment|/* Root System Description Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XSDT_SIG
+value|"XSDT"
+end_define
+
+begin_comment
+comment|/* Extended  System Description Table */
 end_comment
 
 begin_define
@@ -192,6 +210,47 @@ value|1
 end_define
 
 begin_comment
+comment|/*  * Common table types.  The base code can remain  * constant if the underlying tables are changed  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSDT_DESCRIPTOR
+value|RSDT_DESCRIPTOR_REV2
+end_define
+
+begin_define
+define|#
+directive|define
+name|XSDT_DESCRIPTOR
+value|XSDT_DESCRIPTOR_REV2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FACS_DESCRIPTOR
+value|FACS_DESCRIPTOR_REV2
+end_define
+
+begin_define
+define|#
+directive|define
+name|FADT_DESCRIPTOR
+value|FADT_DESCRIPTOR_REV2
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|1
+name|)
+end_pragma
+
+begin_comment
 comment|/*  * Architecture-independent tables  * The architecture dependent tables are in separate files  */
 end_comment
 
@@ -219,15 +278,34 @@ index|]
 decl_stmt|;
 comment|/* OEM identification */
 name|UINT8
-name|Reserved
+name|Revision
 decl_stmt|;
-comment|/* reserved - must be zero */
+comment|/* Must be 0 for 1.0, 2 for 2.0 */
 name|UINT32
 name|RsdtPhysicalAddress
 decl_stmt|;
-comment|/* physical address of RSDT */
+comment|/* 32-bit physical address of RSDT */
+name|UINT32
+name|Length
+decl_stmt|;
+comment|/* XSDT Length in bytes including hdr */
+name|UINT64
+name|XsdtPhysicalAddress
+decl_stmt|;
+comment|/* 64-bit physical address of XSDT */
+name|UINT8
+name|ExtendedChecksum
+decl_stmt|;
+comment|/* Checksum of entire table */
+name|NATIVE_CHAR
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* reserved field must be 0 */
 block|}
-name|ROOT_SYSTEM_DESCRIPTOR_POINTER
+name|RSDP_DESCRIPTOR
 typedef|;
 end_typedef
 
@@ -286,6 +364,27 @@ decl_stmt|;
 comment|/* ASL compiler revision number */
 block|}
 name|ACPI_TABLE_HEADER
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+comment|/* Common FACS for internal use */
+block|{
+name|UINT32
+modifier|*
+name|GlobalLock
+decl_stmt|;
+name|UINT64
+modifier|*
+name|FirmwareWakingVector
+decl_stmt|;
+name|UINT8
+name|VectorWidth
+decl_stmt|;
+block|}
+name|ACPI_COMMON_FACS
 typedef|;
 end_typedef
 
@@ -427,6 +526,14 @@ name|SMART_BATTERY_DESCRIPTION_TABLE
 typedef|;
 end_typedef
 
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|)
+end_pragma
+
 begin_comment
 comment|/*  * ACPI Table information.  We save the table address, length,  * and type of memory allocation (mapped or allocated) for each  * table for 1) when we exit, and 2) if a new table is installed  */
 end_comment
@@ -510,33 +617,35 @@ begin_comment
 comment|/*  * Get the architecture-specific tables  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IA64
-end_ifdef
+begin_include
+include|#
+directive|include
+file|"actbl1.h"
+end_include
+
+begin_comment
+comment|/* Acpi 1.0 table defintions */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"actbl64.h"
+file|"actbl71.h"
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* Acpi 0.71 IA-64 Extension table defintions */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|"actbl32.h"
+file|"actbl2.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* Acpi 2.0 table definitions */
+end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -62,6 +62,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AcpiAmlDecodeFieldAccessType
 parameter_list|(
@@ -137,6 +138,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|ACPI_STATUS
 name|AcpiAmlPrepCommonFieldObject
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: accommon.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -118,7 +118,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiCmValidateFacp
+name|AcpiCmValidateFadt
 parameter_list|(
 name|void
 parameter_list|)

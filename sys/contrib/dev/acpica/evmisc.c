@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 15 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evmisc - ACPI device notification handler dispatch  *                       and ACPI Global Lock support  *              $Revision: 19 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -328,6 +328,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AcpiEvGlobalLockThread
 parameter_list|(
@@ -359,6 +360,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|UINT32
 name|AcpiEvGlobalLockHandler
 parameter_list|(
@@ -379,7 +381,6 @@ decl_stmt|;
 comment|/*      * Attempt to get the lock      * If we don't get it now, it will be marked pending and we will      * take another interrupt when it becomes free.      */
 name|GlobalLock
 operator|=
-operator|&
 name|AcpiGbl_FACS
 operator|->
 name|GlobalLock
@@ -520,7 +521,6 @@ block|}
 comment|/* We must acquire the actual hardware lock */
 name|GlobalLock
 operator|=
-operator|&
 name|AcpiGbl_FACS
 operator|->
 name|GlobalLock
@@ -640,7 +640,6 @@ block|{
 comment|/*          * No more threads holding lock, we can do the actual hardware          * release          */
 name|GlobalLock
 operator|=
-operator|&
 name|AcpiGbl_FACS
 operator|->
 name|GlobalLock
@@ -662,14 +661,12 @@ condition|(
 name|Pending
 condition|)
 block|{
-name|AcpiHwRegisterAccess
+name|AcpiHwRegisterBitAccess
 argument_list|(
 name|ACPI_WRITE
 argument_list|,
 name|ACPI_MTX_LOCK
 argument_list|,
-name|PM1_CONTROL
-operator||
 name|GBL_RLS
 argument_list|,
 literal|1

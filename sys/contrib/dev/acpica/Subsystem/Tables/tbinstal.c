@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -742,14 +742,6 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TABLE_APIC
-case|:
-name|AcpiGbl_APIC
-operator|=
-name|NULL
-expr_stmt|;
-break|break;
-case|case
 name|ACPI_TABLE_DSDT
 case|:
 name|AcpiGbl_DSDT
@@ -758,9 +750,9 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TABLE_FACP
+name|ACPI_TABLE_FADT
 case|:
-name|AcpiGbl_FACP
+name|AcpiGbl_FADT
 operator|=
 name|NULL
 expr_stmt|;
@@ -774,13 +766,9 @@ name|NULL
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_TABLE_PSDT
+name|ACPI_TABLE_XSDT
 case|:
-break|break;
-case|case
-name|ACPI_TABLE_RSDT
-case|:
-name|AcpiGbl_RSDT
+name|AcpiGbl_XSDT
 operator|=
 name|NULL
 expr_stmt|;
@@ -788,18 +776,9 @@ break|break;
 case|case
 name|ACPI_TABLE_SSDT
 case|:
-break|break;
 case|case
-name|ACPI_TABLE_SBST
+name|ACPI_TABLE_PSDT
 case|:
-name|AcpiGbl_SBST
-operator|=
-name|NULL
-expr_stmt|;
-case|case
-name|ACPI_TABLE_SPIC
-case|:
-break|break;
 default|default:
 break|break;
 block|}

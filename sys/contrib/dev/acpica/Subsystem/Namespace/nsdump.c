@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1212,6 +1212,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ACPI_ASL_COMPILER
+end_ifndef
+
 begin_comment
 comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpOneDevice  *  * PARAMETERS:  Handle              - Node to be dumped  *              Level               - Nesting level of the handle  *              Context             - Passed into WalkNamespace  *  * DESCRIPTION: Dump a single Node that represents a device  *              This procedure is a UserFunction called by AcpiNsWalkNamespace.  *  ***************************************************************************/
 end_comment
@@ -1395,6 +1401,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/****************************************************************************  *  * FUNCTION:    AcpiNsDumpTables  *  * PARAMETERS:  SearchBase          - Root of subtree to be dumped, or  *                                    NS_ALL to dump the entire namespace  *              MaxDepth            - Maximum depth of dump.  Use INT_MAX  *                                    for an effectively unlimited depth.  *  * DESCRIPTION: Dump the name space, or a portion of it.  *  ***************************************************************************/

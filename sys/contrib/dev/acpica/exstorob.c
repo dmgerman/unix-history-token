@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 16 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amstorob - AML Interpreter object store support, store to object  *              $Revision: 17 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -859,6 +859,14 @@ operator|->
 name|Number
 operator|.
 name|Value
+expr_stmt|;
+comment|/* Truncate value if we are executing from a 32-bit ACPI table */
+name|AcpiAmlTruncateFor32bitTable
+argument_list|(
+name|DestDesc
+argument_list|,
+name|WalkState
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:

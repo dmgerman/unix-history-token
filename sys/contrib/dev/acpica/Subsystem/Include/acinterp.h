@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acinterp.h - Interpreter subcomponent prototypes and defines  *       $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -826,6 +826,10 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 modifier|*
 name|StackPtr
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1118,6 +1122,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AcpiAmlTruncateFor32bitTable
+parameter_list|(
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
+parameter_list|,
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|BOOLEAN
 name|AcpiAmlValidateObjectType
 parameter_list|(
@@ -1143,15 +1162,6 @@ name|AcpiAmlReleaseGlobalLock
 parameter_list|(
 name|BOOLEAN
 name|Locked
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|UINT32
-name|AcpiAmlBufSeq
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1227,7 +1237,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -1255,7 +1265,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -1283,7 +1293,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -1311,7 +1321,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -1339,7 +1349,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32

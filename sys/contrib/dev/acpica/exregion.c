@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: amregion - ACPI default OpRegion (address space) handlers  *              $Revision: 36 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: amregion - ACPI default OpRegion (address space) handlers  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -173,9 +173,6 @@ condition|(
 operator|(
 name|Address
 operator|<
-operator|(
-name|ACPI_INTEGER
-operator|)
 name|MemInfo
 operator|->
 name|MappedPhysicalAddress
@@ -188,10 +185,7 @@ operator|+
 name|Length
 operator|)
 operator|>
-call|(
-name|ACPI_INTEGER
-call|)
-argument_list|(
+operator|(
 name|MemInfo
 operator|->
 name|MappedPhysicalAddress
@@ -199,7 +193,7 @@ operator|+
 name|MemInfo
 operator|->
 name|MappedLength
-argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -236,13 +230,6 @@ name|Status
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|UINT32
-operator|)
 name|Address
 argument_list|,
 name|SYSMEM_REGION_WINDOW_SIZE
@@ -277,13 +264,6 @@ name|MemInfo
 operator|->
 name|MappedPhysicalAddress
 operator|=
-operator|(
-name|UINT8
-operator|*
-operator|)
-operator|(
-name|UINT32
-operator|)
 name|Address
 expr_stmt|;
 name|MemInfo
@@ -302,13 +282,6 @@ operator|->
 name|MappedLogicalAddress
 operator|+
 operator|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-operator|(
-name|UINT32
-operator|)
 name|Address
 operator|-
 name|MemInfo
@@ -483,7 +456,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32
@@ -737,7 +710,7 @@ parameter_list|(
 name|UINT32
 name|Function
 parameter_list|,
-name|ACPI_INTEGER
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
 name|UINT32

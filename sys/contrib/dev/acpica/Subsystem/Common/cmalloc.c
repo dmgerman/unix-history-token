@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmalloc - local memory allocation routines  *              $Revision: 76 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmalloc - local memory allocation routines  *              $Revision: 78 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -861,13 +861,10 @@ literal|"Current allocations"
 operator|,
 name|AcpiGbl_CurrentAllocCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_CurrentAllocSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -884,13 +881,10 @@ literal|"Max concurrent allocations"
 operator|,
 name|AcpiGbl_MaxConcurrentAllocCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_MaxConcurrentAllocSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -907,13 +901,10 @@ literal|"Current Internal objects"
 operator|,
 name|AcpiGbl_CurrentObjectCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_CurrentObjectSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -930,13 +921,10 @@ literal|"Max internal objects"
 operator|,
 name|AcpiGbl_MaxConcurrentObjectCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_MaxConcurrentObjectSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -953,13 +941,10 @@ literal|"Current Nodes"
 operator|,
 name|AcpiGbl_CurrentNodeCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_CurrentNodeSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -976,7 +961,8 @@ literal|"Max Nodes"
 operator|,
 name|AcpiGbl_MaxConcurrentNodeCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 operator|(
 name|AcpiGbl_MaxConcurrentNodeCount
 operator|*
@@ -985,11 +971,7 @@ argument_list|(
 name|ACPI_NAMESPACE_NODE
 argument_list|)
 operator|)
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1006,13 +988,10 @@ literal|"Total (all) internal objects"
 operator|,
 name|AcpiGbl_RunningObjectCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_RunningObjectSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1029,13 +1008,10 @@ literal|"Total (all) allocations"
 operator|,
 name|AcpiGbl_RunningAllocCount
 operator|,
-operator|(
+name|ROUND_UP_TO_1K
+argument_list|(
 name|AcpiGbl_RunningAllocSize
-operator|+
-literal|1023
-operator|)
-operator|/
-literal|1024
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1403,7 +1379,7 @@ name|Address
 init|=
 name|NULL
 decl_stmt|;
-name|DEBUG_EXEC
+name|DEBUG_ONLY_MEMBERS
 argument_list|(\
 argument|ACPI_STATUS             Status
 argument_list|)
@@ -1565,7 +1541,7 @@ name|Address
 init|=
 name|NULL
 decl_stmt|;
-name|DEBUG_EXEC
+name|DEBUG_ONLY_MEMBERS
 argument_list|(\
 argument|ACPI_STATUS             Status
 argument_list|)
