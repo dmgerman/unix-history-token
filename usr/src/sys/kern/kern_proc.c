@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.43	82/10/21	*/
+comment|/*	kern_proc.c	4.44	82/10/22	*/
 end_comment
 
 begin_include
@@ -1867,6 +1867,9 @@ name|rmfree
 argument_list|(
 name|argmap
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ctod
 argument_list|(
 name|clrnd

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.11	82/10/21	*/
+comment|/*	vm_swap.c	4.12	82/10/22	*/
 end_comment
 
 begin_include
@@ -259,6 +259,8 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|physio
 argument_list|(
 name|swstrategy
@@ -274,7 +276,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -303,6 +306,8 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
 name|physio
 argument_list|(
 name|swstrategy
@@ -318,7 +323,8 @@ name|minphys
 argument_list|,
 name|uio
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

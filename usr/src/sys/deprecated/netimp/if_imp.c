@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.42	82/10/21	*/
+comment|/*	if_imp.c	4.43	82/10/22	*/
 end_comment
 
 begin_include
@@ -235,6 +235,8 @@ begin_macro
 name|impattach
 argument_list|(
 argument|ui
+argument_list|,
+argument|reset
 argument_list|)
 end_macro
 
@@ -245,6 +247,16 @@ modifier|*
 name|ui
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|reset
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_block
 block|{
@@ -311,6 +323,12 @@ operator|=
 name|ui
 operator|->
 name|ui_flags
+expr_stmt|;
+name|ifp
+operator|->
+name|if_ubareset
+operator|=
+name|reset
 expr_stmt|;
 comment|/* the host and imp fields will be filled in by the imp */
 name|sin

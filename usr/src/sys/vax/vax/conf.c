@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.60	82/10/21	*/
+comment|/*	conf.c	4.61	82/10/22	*/
 end_comment
 
 begin_include
@@ -3055,7 +3055,7 @@ block|,
 name|udwrite
 block|,
 comment|/*9*/
-name|udioctl
+name|nodev
 block|,
 name|nodev
 block|,

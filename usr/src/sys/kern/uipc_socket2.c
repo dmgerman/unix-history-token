@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.29	82/10/16	*/
+comment|/*	uipc_socket2.c	4.30	82/10/22	*/
 end_comment
 
 begin_include
@@ -544,6 +544,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|m_free
 argument_list|(
 name|m
