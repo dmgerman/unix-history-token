@@ -866,7 +866,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/soundcard.h>
+file|<sys/soundcard.h>
 end_include
 
 begin_comment
