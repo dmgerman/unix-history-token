@@ -131,6 +131,12 @@ begin_comment
 comment|/* Cache Line setting */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|ubsec_dma_alloc
@@ -899,6 +905,15 @@ comment|/* [3]DES iv */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_struct
 struct|struct
