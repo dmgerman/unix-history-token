@@ -899,6 +899,7 @@ argument|p
 argument_list|,
 argument|ttd
 argument_list|)
+block|{
 if|if
 condition|(
 name|ttd
@@ -908,6 +909,7 @@ operator|->
 name|id
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|ttd
