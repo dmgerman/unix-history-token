@@ -12711,7 +12711,16 @@ operator|!
 name|sc
 operator|->
 name|dc_link
+operator|&&
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_len
+operator|<
+literal|10
 condition|)
+block|{
 return|return;
 if|if
 condition|(
@@ -12901,9 +12910,6 @@ literal|5
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|dc_init
@@ -13576,13 +13582,7 @@ endif|#
 directive|endif
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Set media options.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|dc_ifmedia_upd
@@ -13675,13 +13675,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Report current media status.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|dc_ifmedia_sts
@@ -13798,9 +13792,6 @@ name|mii_media_status
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|dc_ioctl
@@ -14101,9 +14092,6 @@ name|error
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|dc_watchdog
@@ -14173,13 +14161,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop the adapter and free any mbufs allocated to the  * RX and TX lists.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|dc_stop
@@ -14469,13 +14451,7 @@ operator|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Stop all chip I/O so that the kernel's probe routines don't  * get confused by errant DMAs when rebooting.  */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|dc_shutdown
