@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.1 (Berkeley) %G%"
+literal|"@(#)itime.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1007,6 +1007,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This is an estimation of the size of the file.  * It assumes that there are no unallocated blocks; hence  * the estimate may be high  */
+end_comment
+
 begin_macro
 name|est
 argument_list|(
@@ -1052,17 +1056,26 @@ if|if
 condition|(
 name|s
 operator|>
-name|NADDR
-operator|-
-literal|3
+name|NDADDR
 condition|)
 block|{
-comment|/* 		 *	This code is only appproximate. 		 *	it totally estimates low on doubly and triply indirect 		 *	files. 		 */
 name|s
 operator|-=
-name|NADDR
-operator|-
-literal|3
+name|NDADDR
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>
+name|BSIZE
+operator|/
+sizeof|sizeof
+argument_list|(
+name|daddr_t
+argument_list|)
+condition|)
+name|esize
+operator|++
 expr_stmt|;
 name|s
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.1 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.2 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -32,43 +32,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"../../h/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"../../h/stat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/filsys.h>
+file|"../../h/fs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ino.h>
+file|"../../h/inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/inode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fblk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
+file|"../../h/dir.h"
 end_include
 
 begin_include
@@ -88,6 +76,17 @@ include|#
 directive|include
 file|<signal.h>
 end_include
+
+begin_expr_stmt
+name|int
+argument_list|(
+operator|*
+name|signal
+argument_list|()
+argument_list|)
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -490,6 +489,15 @@ begin_function_decl
 name|char
 modifier|*
 name|rawname
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|dinode
+modifier|*
+name|getino
 parameter_list|()
 function_decl|;
 end_function_decl
