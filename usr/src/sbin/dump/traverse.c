@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.21 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,7 +314,7 @@ operator|=
 literal|0
 init|;
 name|ino
-operator|<
+operator|<=
 name|maxino
 condition|;
 name|ino
