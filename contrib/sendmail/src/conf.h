@@ -387,6 +387,50 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXHDRLINES
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXHDRLINES
+value|1000
+end_define
+
+begin_comment
+comment|/* max lines in a message header */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXHDRLINELEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MAXHDRLINELEN
+value|SMTPLINELIM
+end_define
+
+begin_comment
+comment|/* max length of a header line */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/********************************************************************** **  Compilation options. **	#define these to 1 if they are available; **	#define them to 0 otherwise. **  All can be overridden from Makefile. **********************************************************************/
 end_comment

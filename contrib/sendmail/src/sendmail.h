@@ -8104,6 +8104,28 @@ begin_comment
 comment|/* override connection address (for testing) */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxHeaderLines
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max lines of headers per message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxHeaderLineLength
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max length of a header line */
+end_comment
+
 begin_if
 if|#
 directive|if

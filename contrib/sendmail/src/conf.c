@@ -1121,6 +1121,14 @@ name|DoubleBounceAddr
 operator|=
 literal|"postmaster"
 expr_stmt|;
+name|MaxHeaderLines
+operator|=
+name|MAXHDRLINES
+expr_stmt|;
+name|MaxHeaderLineLength
+operator|=
+name|MAXHDRLINELEN
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|buf
