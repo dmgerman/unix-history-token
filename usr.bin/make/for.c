@@ -500,7 +500,7 @@ directive|define
 name|ADDWORD
 parameter_list|()
 define|\
-value|Buf_AddBytes(buf, ptr - wrd, (Byte *) wrd), \ 	Buf_AddByte(buf, (Byte) '\0'), \ 	Lst_AtEnd(forLst, (ClientData) Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
+value|Buf_AddBytes(buf, ptr - wrd, (Byte *) wrd), \ 	Buf_AddByte(buf, (Byte) '\0'), \ 	Lst_AtFront(forLst, (ClientData) Buf_GetAll(buf,&varlen)), \ 	Buf_Destroy(buf, FALSE)
 for|for
 control|(
 name|ptr
