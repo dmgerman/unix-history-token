@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.4 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,7 +122,7 @@ begin_define
 define|#
 directive|define
 name|RES_TIMEOUT
-value|10
+value|4
 end_define
 
 begin_endif
