@@ -1367,7 +1367,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVMatch --  *	Check word against pattern for a match (% is wild),  *  * Results:  *	Returns the beginning position of a match or null. The number  *	of characters matched is returned in len.  *  * Side Effects:  *	None  *  *-----------------------------------------------------------------------  */
+comment|/**  * Str_SYSVMatch  *	Check word against pattern for a match (% is wild),  *  * Results:  *	Returns the beginning position of a match or null. The number  *	of characters matched is returned in len.  */
 end_comment
 
 begin_function
@@ -1579,7 +1579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Str_SYSVSubst --  *	Substitute '%' on the pattern with len characters from src.  *	If the pattern does not contain a '%' prepend len characters  *	from src.  *  * Results:  *	None  *  * Side Effects:  *	Places result on buf  *  *-----------------------------------------------------------------------  */
+comment|/**  * Str_SYSVSubst  *	Substitute '%' on the pattern with len characters from src.  *	If the pattern does not contain a '%' prepend len characters  *	from src.  *  * Side Effects:  *	Places result on buf  */
 end_comment
 
 begin_function
