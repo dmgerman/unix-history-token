@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)kernfs_vnops.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1281,6 +1281,8 @@ operator|&
 name|FWRITE
 operator|)
 operator|&&
+operator|!
+operator|(
 name|VTOKERN
 argument_list|(
 name|vp
@@ -1289,8 +1291,9 @@ operator|->
 name|kf_kt
 operator|->
 name|kt_rw
-operator|!=
+operator|&
 name|VWRITE
+operator|)
 condition|)
 return|return
 operator|(
@@ -1399,11 +1402,12 @@ operator|&
 name|VWRITE
 operator|)
 operator|&&
+operator|!
 operator|(
 name|kt
 operator|->
 name|kt_rw
-operator|!=
+operator|&
 name|VWRITE
 operator|)
 condition|)
