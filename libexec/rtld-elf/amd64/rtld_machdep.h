@@ -28,6 +28,13 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|CACHE_LINE_SIZE
+value|64
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|Struct_Obj_Entry
