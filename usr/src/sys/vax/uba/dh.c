@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.26	81/02/27	*/
+comment|/*	dh.c	4.27	81/03/06	*/
 end_comment
 
 begin_include
@@ -1842,6 +1842,11 @@ name|uba_dinfo
 modifier|*
 name|ui
 decl_stmt|;
+name|int
+name|overrun
+init|=
+literal|0
+decl_stmt|;
 name|ui
 operator|=
 name|dhinfo
@@ -1973,15 +1978,29 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|c
 operator|&
 name|DH_DO
+operator|)
+operator|&&
+name|overrun
+operator|==
+literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"O"
+literal|"dh%d: silo overflow\n"
+argument_list|,
+name|dh
 argument_list|)
 expr_stmt|;
+name|overrun
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -2579,7 +2598,7 @@ name|DH_CNI
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dh%d NXM\n"
+literal|"dh%d: NXM\n"
 argument_list|,
 name|dh
 argument_list|)
@@ -3280,11 +3299,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
-argument_list|(
-literal|" dh"
-argument_list|)
-expr_stmt|;
 name|ubarelse
 argument_list|(
 name|uban
@@ -3379,6 +3393,13 @@ operator|!=
 name|uban
 condition|)
 continue|continue;
+name|printf
+argument_list|(
+literal|" dh%d"
+argument_list|,
+name|dh
+argument_list|)
+expr_stmt|;
 operator|(
 operator|(
 expr|struct

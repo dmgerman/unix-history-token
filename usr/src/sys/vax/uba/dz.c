@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.19	%G%	*/
+comment|/*	dz.c	4.20	%G%	*/
 end_comment
 
 begin_include
@@ -1297,6 +1297,11 @@ specifier|register
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|overrun
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1430,12 +1435,24 @@ condition|(
 name|c
 operator|&
 name|DZ_DO
+operator|&&
+name|overrun
+operator|==
+literal|0
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"o"
+literal|"dz%d: silo overflow\n"
+argument_list|,
+name|dz
 argument_list|)
 expr_stmt|;
+name|overrun
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -2822,11 +2839,6 @@ name|uba_dinfo
 modifier|*
 name|ui
 decl_stmt|;
-name|int
-name|any
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 name|unit
@@ -2871,20 +2883,21 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|any
+name|unit
+operator|%
+literal|8
 operator|==
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|" dz"
+literal|" dz%d"
+argument_list|,
+name|unit
+operator|>>
+literal|3
 argument_list|)
 expr_stmt|;
-name|any
-operator|++
-expr_stmt|;
-block|}
 name|tp
 operator|=
 operator|&
