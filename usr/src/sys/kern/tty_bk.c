@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_bk.c	4.5	82/10/13	*/
+comment|/*	tty_bk.c	4.6	82/10/17	*/
 end_comment
 
 begin_include
@@ -129,31 +129,18 @@ name|bp
 decl_stmt|;
 if|if
 condition|(
-name|u
-operator|.
-name|u_error
-condition|)
-return|return;
-comment|/* paranoia */
-if|if
-condition|(
 name|tp
 operator|->
 name|t_line
 operator|==
 name|NETLDISC
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-comment|/* sometimes the network */
-return|return;
-comment|/* ... opens /dev/tty */
-block|}
+operator|)
+return|;
+comment|/* sometimes the network opens /dev/tty */
 name|bp
 operator|=
 name|geteblk
@@ -202,6 +189,11 @@ name|t_rec
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -225,8 +217,9 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spl5
@@ -593,7 +586,8 @@ literal|'t'
 condition|)
 return|return
 operator|(
-name|cmd
+operator|-
+literal|1
 operator|)
 return|;
 switch|switch
@@ -615,19 +609,14 @@ name|TIOCGETC
 case|:
 return|return
 operator|(
-name|cmd
+operator|-
+literal|1
 operator|)
 return|;
 block|}
-name|u
-operator|.
-name|u_error
-operator|=
-name|ENOTTY
-expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOTTY
 operator|)
 return|;
 block|}
