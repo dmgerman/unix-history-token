@@ -3020,7 +3020,11 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|uniqtag
+name|sp
+operator|->
+name|neg
+operator|->
+name|service
 operator|.
 name|hdr
 argument_list|)
@@ -3030,11 +3034,7 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
-name|sp
-operator|->
-name|neg
-operator|->
-name|service
+name|uniqtag
 operator|.
 name|hdr
 argument_list|)
@@ -3121,6 +3121,11 @@ name|code
 decl_stmt|;
 name|struct
 name|pppoe_tag
+modifier|*
+name|utag
+init|=
+name|NULL
+decl_stmt|,
 modifier|*
 name|tag
 init|=
@@ -3480,7 +3485,7 @@ case|case
 name|PADO_CODE
 case|:
 comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * Received #2, now send #3 				 * For now simply accept the first we receive. 				 */
-name|tag
+name|utag
 operator|=
 name|get_tag
 argument_list|(
@@ -3492,7 +3497,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tag
+name|utag
 operator|==
 name|NULL
 operator|)
@@ -3500,7 +3505,7 @@ operator|||
 operator|(
 name|ntohs
 argument_list|(
-name|tag
+name|utag
 operator|->
 name|tag_len
 argument_list|)
@@ -3529,7 +3534,7 @@ name|pppoe_finduniq
 argument_list|(
 name|node
 argument_list|,
-name|tag
+name|utag
 argument_list|)
 expr_stmt|;
 if|if
@@ -3652,14 +3657,9 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* Service */
-name|insert_tag
-argument_list|(
-name|sp
-argument_list|,
-name|tag
-argument_list|)
-expr_stmt|;
-comment|/* Host Unique */
+if|if
+condition|(
+operator|(
 name|tag
 operator|=
 name|get_tag
@@ -3668,10 +3668,7 @@ name|ph
 argument_list|,
 name|PTT_AC_COOKIE
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
+operator|)
 condition|)
 name|insert_tag
 argument_list|(
@@ -3681,6 +3678,9 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* return cookie */
+if|if
+condition|(
+operator|(
 name|tag
 operator|=
 name|get_tag
@@ -3689,10 +3689,7 @@ name|ph
 argument_list|,
 name|PTT_AC_NAME
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
+operator|)
 condition|)
 name|insert_tag
 argument_list|(
@@ -3701,7 +3698,15 @@ argument_list|,
 name|tag
 argument_list|)
 expr_stmt|;
-comment|/* return cookie */
+comment|/* return it */
+name|insert_tag
+argument_list|(
+name|sp
+argument_list|,
+name|utag
+argument_list|)
+expr_stmt|;
+comment|/* Host Unique */
 name|scan_tags
 argument_list|(
 name|sp
@@ -3730,7 +3735,7 @@ case|case
 name|PADR_CODE
 case|:
 comment|/* 				 * We are a server: 				 * Use the ac_cookie tag to find the  				 * hook this is in response to. 				 */
-name|tag
+name|utag
 operator|=
 name|get_tag
 argument_list|(
@@ -3742,7 +3747,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tag
+name|utag
 operator|==
 name|NULL
 operator|)
@@ -3750,7 +3755,7 @@ operator|||
 operator|(
 name|ntohs
 argument_list|(
-name|tag
+name|utag
 operator|->
 name|tag_len
 argument_list|)
@@ -3774,7 +3779,7 @@ name|pppoe_finduniq
 argument_list|(
 name|node
 argument_list|,
-name|tag
+name|utag
 argument_list|)
 expr_stmt|;
 if|if
@@ -3914,28 +3919,17 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* AC_NAME */
-name|insert_tag
-argument_list|(
-name|sp
-argument_list|,
-name|tag
-argument_list|)
-expr_stmt|;
-comment|/* ac_cookie */
-name|tag
-operator|=
+if|if
+condition|(
+operator|(
 name|get_tag
 argument_list|(
 name|ph
 argument_list|,
 name|PTT_SRV_NAME
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
+operator|)
 condition|)
-block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -3944,7 +3938,9 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* return service */
-block|}
+if|if
+condition|(
+operator|(
 name|tag
 operator|=
 name|get_tag
@@ -3953,24 +3949,8 @@ name|ph
 argument_list|,
 name|PTT_HOST_UNIQ
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
-operator|&&
-name|ntohs
-argument_list|(
-name|tag
-operator|->
-name|tag_len
-argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|sp
-argument_list|)
+operator|)
 condition|)
-block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -3979,7 +3959,14 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* return it */
-block|}
+name|insert_tag
+argument_list|(
+name|sp
+argument_list|,
+name|utag
+argument_list|)
+expr_stmt|;
+comment|/* ac_cookie */
 name|scan_tags
 argument_list|(
 name|sp
@@ -4053,7 +4040,7 @@ case|case
 name|PADS_CODE
 case|:
 comment|/* 				 * We are a client: 				 * Use the host_uniq tag to find the  				 * hook this is in response to. 				 * take the session ID and store it away. 				 * Also make sure the pre-made header is 				 * correct and set us into Session mode. 				 */
-name|tag
+name|utag
 operator|=
 name|get_tag
 argument_list|(
@@ -4065,7 +4052,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|tag
+name|utag
 operator|==
 name|NULL
 operator|)
@@ -4073,7 +4060,7 @@ operator|||
 operator|(
 name|ntohs
 argument_list|(
-name|tag
+name|utag
 operator|->
 name|tag_len
 argument_list|)
@@ -4098,7 +4085,7 @@ name|pppoe_finduniq
 argument_list|(
 name|node
 argument_list|,
-name|tag
+name|utag
 argument_list|)
 expr_stmt|;
 if|if
@@ -4828,6 +4815,30 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* AC_NAME */
+if|if
+condition|(
+operator|(
+name|tag
+operator|=
+name|get_tag
+argument_list|(
+name|ph
+argument_list|,
+name|PTT_SRV_NAME
+argument_list|)
+operator|)
+condition|)
+name|insert_tag
+argument_list|(
+name|sp
+argument_list|,
+name|tag
+argument_list|)
+expr_stmt|;
+comment|/* return service */
+if|if
+condition|(
+operator|(
 name|tag
 operator|=
 name|get_tag
@@ -4836,24 +4847,8 @@ name|ph
 argument_list|,
 name|PTT_HOST_UNIQ
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
-operator|&&
-name|ntohs
-argument_list|(
-name|tag
-operator|->
-name|tag_len
-argument_list|)
-operator|==
-sizeof|sizeof
-argument_list|(
-name|sp
-argument_list|)
+operator|)
 condition|)
-block|{
 name|insert_tag
 argument_list|(
 name|sp
@@ -4862,7 +4857,6 @@ name|tag
 argument_list|)
 expr_stmt|;
 comment|/* returned hostunique */
-block|}
 name|insert_tag
 argument_list|(
 name|sp
@@ -4873,30 +4867,6 @@ operator|.
 name|hdr
 argument_list|)
 expr_stmt|;
-comment|/* AC cookie */
-name|tag
-operator|=
-name|get_tag
-argument_list|(
-name|ph
-argument_list|,
-name|PTT_SRV_NAME
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|tag
-condition|)
-block|{
-name|insert_tag
-argument_list|(
-name|sp
-argument_list|,
-name|tag
-argument_list|)
-expr_stmt|;
-comment|/* return service */
-block|}
 comment|/* XXX maybe put the tag in the session store */
 name|scan_tags
 argument_list|(
