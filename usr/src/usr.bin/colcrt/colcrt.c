@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)colcrt.c	4.1 (Berkeley) %G%"
+literal|"@(#)colcrt.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ begin_decl_stmt
 name|char
 name|buf
 index|[
-literal|256
+name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
