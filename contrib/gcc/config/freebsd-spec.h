@@ -185,7 +185,7 @@ define|#
 directive|define
 name|FBSD_CPP_PREDEFINES
 define|\
-value|"-D__FreeBSD__=5 -D__FreeBSD_cc_version=500003 -Dunix -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
+value|"-D__FreeBSD__=5 -D__FreeBSD_cc_version=500004 -Dunix -D__KPRINTF_ATTRIBUTE__ -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
 end_define
 
 begin_endif
