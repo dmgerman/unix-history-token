@@ -188,6 +188,12 @@ name|USB_PRODUCT_CATC_NETMATE2
 block|}
 block|,
 block|{
+name|USB_VENDOR_SMARTBRIDGES
+block|,
+name|USB_PRODUCT_SMARTBRIDGES_SMARTLINK
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
