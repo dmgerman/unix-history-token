@@ -458,6 +458,26 @@ define|\
 value|(((event) == EC_EVENT_OUTPUT_BUFFER_FULL&&	\ 	 ((status)& EC_FLAG_OUTPUT_BUFFER) != 0) ||	\ 	 ((event) == EC_EVENT_INPUT_BUFFER_EMPTY&& 	\ 	 ((status)& EC_FLAG_INPUT_BUFFER) == 0))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ec_poll_timeout
+init|=
+name|EC_POLL_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.acpi.ec.poll_timeout"
+argument_list|,
+operator|&
+name|ec_poll_timeout
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|__inline
@@ -2778,7 +2798,7 @@ name|ec_polldelay
 operator|=
 literal|100
 expr_stmt|;
-comment|/*      * If we still don't have a response, wait up to EC_POLL_TIMEOUT ms      * for completion, sleeping for chunks of 10 ms.      */
+comment|/*      * If we still don't have a response, wait up to ec_poll_timeout ms      * for completion, sleeping for chunks of 10 ms.      */
 if|if
 condition|(
 name|Status
@@ -2799,7 +2819,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|EC_POLL_TIMEOUT
+name|ec_poll_timeout
 operator|/
 literal|10
 condition|;
