@@ -3187,7 +3187,7 @@ argument_list|(
 name|proc
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Since funsetownlst() is called without the proctree 		 * locked, we need to check for P_WEXIT. 		 * XXX: is ESRCH correct? 		 */
+comment|/* 		 * Since funsetownlst() is called without the proctree 		 * locked, we need to check for P_WEXIT. 		 * XXX: is ESRCH correct? 		 */
 if|if
 condition|(
 operator|(
@@ -6798,7 +6798,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*  				 * Ensure that fdtol->fdl_leader 				 * remains valid in closef(). 				 */
+comment|/* 				 * Ensure that fdtol->fdl_leader 				 * remains valid in closef(). 				 */
 name|fdtol
 operator|->
 name|fdl_wakeup
