@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)startup.c	3.12 84/04/16"
+literal|"@(#)startup.c	3.13 84/05/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,7 +98,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%.*s/.windrc"
+literal|"%.*s/%s"
 argument_list|,
 operator|(
 sizeof|sizeof
@@ -125,7 +125,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * The default is two windows of equal sizes.  */
+comment|/*  * The default is two windows of equal size.  */
 end_comment
 
 begin_macro
@@ -187,9 +187,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 if|if
 condition|(
 name|openwin
@@ -230,9 +228,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return;
 name|wwprintf
 argument_list|(
 name|w
@@ -248,14 +244,6 @@ expr_stmt|;
 name|setselwin
 argument_list|(
 name|w
-argument_list|)
-expr_stmt|;
-return|return;
-name|bad
-label|:
-name|error
-argument_list|(
-literal|"Can't open default windows."
 argument_list|)
 expr_stmt|;
 block|}
