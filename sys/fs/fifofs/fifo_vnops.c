@@ -2232,6 +2232,11 @@ name|caddr_t
 operator|)
 name|so
 expr_stmt|;
+name|SOCKBUF_LOCK
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -2253,6 +2258,11 @@ operator|->
 name|sb_flags
 operator||=
 name|SB_KNOTE
+expr_stmt|;
+name|SOCKBUF_UNLOCK
+argument_list|(
+name|sb
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
