@@ -278,7 +278,7 @@ literal|'='
 condition|)
 break|break;
 block|}
-comment|/* Save flag, or fail if option is not recognised. */
+comment|/* Save flag, or fail if option is not recognized. */
 if|if
 condition|(
 name|m

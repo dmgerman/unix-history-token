@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.16 1998/05/15 12:33:37 danny Exp $  *  */
+comment|/*  * Copyright (c) 1996 Alex Nash, Paul Traina, Poul-Henning Kamp  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Idea and grammar partially left from:  * Copyright (c) 1993 Daniel Boulet  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * NEW command line interface for IP firewall facility  *  * $Id: ipfw.c,v 1.34.2.17 1998/08/04 13:55:45 thepish Exp $  *  */
 end_comment
 
 begin_include
@@ -175,7 +175,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Would try to resolv all */
+comment|/* Would try to resolve all */
 end_comment
 
 begin_decl_stmt
@@ -819,7 +819,7 @@ condition|)
 name|setservent
 argument_list|(
 literal|1
-comment|/*stayopen*/
+comment|/*stay open*/
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6889,7 +6889,7 @@ condition|)
 block|{
 name|show_usage
 argument_list|(
-literal|"Bad arguments"
+literal|"bad arguments"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7225,7 +7225,7 @@ else|else
 block|{
 name|show_usage
 argument_list|(
-literal|"Bad arguments"
+literal|"bad arguments"
 argument_list|)
 expr_stmt|;
 block|}

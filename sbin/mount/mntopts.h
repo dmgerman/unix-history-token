@@ -16,11 +16,11 @@ comment|/* option name */
 name|int
 name|m_inverse
 decl_stmt|;
-comment|/* if a negative option, eg "dev" */
+comment|/* if a negative option, e.g. "dev" */
 name|int
 name|m_flag
 decl_stmt|;
-comment|/* bit to set, eg. MNT_RDONLY */
+comment|/* bit to set, e.g. MNT_RDONLY */
 name|int
 name|m_altloc
 decl_stmt|;

@@ -374,7 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Map from mount otions to printable formats. */
+comment|/* Map from mount options to printable formats. */
 end_comment
 
 begin_struct
@@ -654,7 +654,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"only one -t option may be specified."
+literal|"only one -t option may be specified"
 argument_list|)
 expr_stmt|;
 name|vfslist
@@ -1002,7 +1002,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown special file or file system %s."
+literal|"unknown special file or file system %s"
 argument_list|,
 operator|*
 name|argv
@@ -1027,7 +1027,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't find fstab entry for %s."
+literal|"can't find fstab entry for %s"
 argument_list|,
 operator|*
 name|argv
@@ -1079,7 +1079,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: unknown special file or file system."
+literal|"%s: unknown special file or file system"
 argument_list|,
 operator|*
 name|argv
@@ -1098,7 +1098,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown file system type."
+literal|"%s has unknown file system type"
 argument_list|,
 operator|*
 name|argv
@@ -1413,7 +1413,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: Not a directory"
+literal|"%s: not a directory"
 argument_list|,
 name|mntpath
 argument_list|)
@@ -1539,7 +1539,7 @@ argument_list|,
 literal|"ro"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX 	 * The mount_mfs (newfs) command uses -o to select the 	 * optimisation mode.  We don't pass the default "-o rw" 	 * for that reason. 	 */
+comment|/* 	 * XXX 	 * The mount_mfs (newfs) command uses -o to select the 	 * optimization mode.  We don't pass the default "-o rw" 	 * for that reason. 	 */
 if|if
 condition|(
 name|flags
@@ -1814,18 +1814,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|warn
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-block|}
 name|cp
 index|[
 literal|0
@@ -2502,9 +2497,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2639,11 +2634,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-name|NULL
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 operator|(

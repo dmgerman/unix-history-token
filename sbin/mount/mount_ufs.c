@@ -409,7 +409,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * If we are mounting root, and we have a mount of something that 	 * might be the compatability slice, try mounting other slices 	 * first.  If the kernel has done the right thing and mounted 	 * the slice because the disk is really sliced, this will find 	 * the real root filesystem.  If not, we'll try what was supplied. 	 */
+comment|/* 	 * If we are mounting root, and we have a mount of something that 	 * might be the compatibility slice, try mounting other slices 	 * first.  If the kernel has done the right thing and mounted 	 * the slice because the disk is really sliced, this will find 	 * the real root filesystem.  If not, we'll try what was supplied. 	 */
 if|if
 condition|(
 operator|!
