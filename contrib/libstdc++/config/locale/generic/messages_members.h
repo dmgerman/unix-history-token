@@ -154,7 +154,7 @@ operator|>
 operator|::
 name|messages
 argument_list|(
-argument|__c_locale __cloc
+argument|__c_locale
 argument_list|,
 argument|const char*
 argument_list|,

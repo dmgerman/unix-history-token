@@ -4,7 +4,7 @@ comment|// Locale support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
 end_comment
 
 begin_comment
@@ -158,12 +158,24 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ios>
+file|<iosfwd>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bits/ios_base.h>
 end_include
 
 begin_comment
-comment|// For ios_base
+comment|// For ios_base, ios_base::iostate
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<streambuf>
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -185,6 +197,180 @@ name|_GLIBCPP_NUM_FACETS
 value|14
 endif|#
 directive|endif
+comment|// Convert string to numeric value of type _Tv and store results.
+comment|// NB: This is specialized for all required types, there is no
+comment|// generic definition.
+name|template
+operator|<
+name|typename
+name|_Tv
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+argument|const char* __in
+argument_list|,
+argument|_Tv& __out
+argument_list|,
+argument|ios_base::iostate& __err
+argument_list|,
+argument|const __c_locale& __cloc
+argument_list|,
+argument|int __base =
+literal|10
+argument_list|)
+expr_stmt|;
+comment|// Explicit specializations for required types.
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|long
+operator|&
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+argument_list|,
+specifier|const
+name|__c_locale
+operator|&
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+argument|const char*
+argument_list|,
+argument|unsigned long&
+argument_list|,
+argument|ios_base::iostate&
+argument_list|,
+argument|const __c_locale&
+argument_list|,
+argument|int
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_USE_LONG_LONG
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+argument|const char*
+argument_list|,
+argument|long long&
+argument_list|,
+argument|ios_base::iostate&
+argument_list|,
+argument|const __c_locale&
+argument_list|,
+argument|int
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+argument|const char*
+argument_list|,
+argument|unsigned long long&
+argument_list|,
+argument|ios_base::iostate&
+argument_list|,
+argument|const __c_locale&
+argument_list|,
+argument|int
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|float
+operator|&
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+argument_list|,
+specifier|const
+name|__c_locale
+operator|&
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|double
+operator|&
+argument_list|,
+name|ios_base
+operator|::
+name|iostate
+operator|&
+argument_list|,
+specifier|const
+name|__c_locale
+operator|&
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|template
+operator|<
+operator|>
+name|void
+name|__convert_to_v
+argument_list|(
+argument|const char*
+argument_list|,
+argument|long double&
+argument_list|,
+argument|ios_base::iostate&
+argument_list|,
+argument|const __c_locale&
+argument_list|,
+argument|int
+argument_list|)
+expr_stmt|;
+comment|// NB: __pad is a struct, rather than a function, so it can be
+comment|// partially-specialized.
 name|template
 operator|<
 name|typename
@@ -195,13 +381,191 @@ name|_Traits
 operator|>
 expr|struct
 name|__pad
+block|{
+specifier|static
+name|void
+name|_S_pad
+argument_list|(
+argument|ios_base& __io
+argument_list|,
+argument|_CharT __fill
+argument_list|,
+argument|_CharT* __news
+argument_list|,
+argument|const _CharT* __olds
+argument_list|,
+argument|const streamsize __newlen
+argument_list|,
+argument|const streamsize __oldlen
+argument_list|,
+argument|const bool __num
+argument_list|)
+block|;     }
 expr_stmt|;
+comment|// Used by both numeric and monetary facets.
+comment|// Check to make sure that the __grouping_tmp string constructed in
+comment|// money_get or num_get matches the canonical grouping for a given
+comment|// locale.
+comment|// __grouping_tmp is parsed L to R
+comment|// 1,222,444 == __grouping_tmp of "\1\3\3"
+comment|// __grouping is parsed R to L
+comment|// 1,222,444 == __grouping of "\3" == "\3\3\3"
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|bool
+name|__verify_grouping
+argument_list|(
+specifier|const
+name|basic_string
+operator|<
+name|_CharT
+operator|>
+operator|&
+name|__grouping
+argument_list|,
+name|basic_string
+operator|<
+name|_CharT
+operator|>
+operator|&
+name|__grouping_tmp
+argument_list|)
+expr_stmt|;
+comment|// Used by both numeric and monetary facets.
+comment|// Inserts "group separator" characters into an array of characters.
+comment|// It's recursive, one iteration per group.  It moves the characters
+comment|// in the buffer this way: "xxxx12345" -> "12,345xxx".  Call this
+comment|// only with __gbeg != __gend.
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|_CharT
+operator|*
+name|__add_grouping
+argument_list|(
+argument|_CharT* __s
+argument_list|,
+argument|_CharT __sep
+argument_list|,
+argument|const char* __gbeg
+argument_list|,
+argument|const char* __gend
+argument_list|,
+argument|const _CharT* __first
+argument_list|,
+argument|const _CharT* __last
+argument_list|)
+expr_stmt|;
+comment|// This template permits specializing facet output code for
+comment|// ostreambuf_iterator.  For ostreambuf_iterator, sputn is
+comment|// significantly more efficient than incrementing iterators.
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+specifier|inline
+name|ostreambuf_iterator
+operator|<
+name|_CharT
+operator|>
+name|__write
+argument_list|(
+argument|ostreambuf_iterator<_CharT> __s
+argument_list|,
+argument|const _CharT* __ws
+argument_list|,
+argument|int __len
+argument_list|)
+block|{
+name|__s
+operator|.
+name|_M_put
+argument_list|(
+name|__ws
+argument_list|,
+name|__len
+argument_list|)
+block|;
+return|return
+name|__s
+return|;
+block|}
+comment|// This is the unspecialized form of the template.
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|,
+name|typename
+name|_OutIter
+operator|>
+specifier|inline
+name|_OutIter
+name|__write
+argument_list|(
+argument|_OutIter __s
+argument_list|,
+argument|const _CharT* __ws
+argument_list|,
+argument|int __len
+argument_list|)
+block|{
+for|for
+control|(
+name|int
+name|__j
+init|=
+literal|0
+init|;
+name|__j
+operator|<
+name|__len
+condition|;
+name|__j
+operator|++
+operator|,
+operator|++
+name|__s
+control|)
+operator|*
+name|__s
+operator|=
+name|__ws
+index|[
+name|__j
+index|]
+expr_stmt|;
+return|return
+name|__s
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|// 22.2.1.1  Template class ctype
+end_comment
+
+begin_comment
 comment|// Include host and configuration specific ctype enums for ctype_base.
+end_comment
+
+begin_include
 include|#
 directive|include
 file|<bits/ctype_base.h>
+end_include
+
+begin_comment
 comment|// Common base for ctype<_CharT>.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -524,6 +888,9 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|virtual
 specifier|const
 name|char_type
@@ -548,6 +915,9 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|virtual
 specifier|const
 name|char_type
@@ -571,6 +941,9 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|virtual
 specifier|const
 name|char_type
@@ -594,146 +967,166 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-name|virtual
-name|char_type
-name|do_toupper
-argument_list|(
-name|char_type
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-specifier|const
-name|char_type
-modifier|*
-name|do_toupper
-argument_list|(
-name|char_type
-operator|*
-name|__lo
-argument_list|,
-specifier|const
-name|char_type
-operator|*
-name|__hi
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|char_type
-name|do_tolower
-argument_list|(
-name|char_type
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-specifier|const
-name|char_type
-modifier|*
-name|do_tolower
-argument_list|(
-name|char_type
-operator|*
-name|__lo
-argument_list|,
-specifier|const
-name|char_type
-operator|*
-name|__hi
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|char_type
-name|do_widen
-argument_list|(
-name|char
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-specifier|const
-name|char
-modifier|*
-name|do_widen
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|__lo
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|__hi
-argument_list|,
-name|char_type
-operator|*
-name|__dest
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-name|char
-name|do_narrow
-argument_list|(
-name|char_type
-argument_list|,
-name|char
-name|__dfault
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-specifier|const
-name|char_type
-modifier|*
-name|do_narrow
-argument_list|(
-specifier|const
-name|char_type
-operator|*
-name|__lo
-argument_list|,
-specifier|const
-name|char_type
-operator|*
-name|__hi
-argument_list|,
-name|char
-name|__dfault
-argument_list|,
-name|char
-operator|*
-name|__dest
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+name|virtual
+name|char_type
+name|do_toupper
+argument_list|(
+name|char_type
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|char_type
+modifier|*
+name|do_toupper
+argument_list|(
+name|char_type
+operator|*
+name|__lo
+argument_list|,
+specifier|const
+name|char_type
+operator|*
+name|__hi
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|char_type
+name|do_tolower
+argument_list|(
+name|char_type
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|char_type
+modifier|*
+name|do_tolower
+argument_list|(
+name|char_type
+operator|*
+name|__lo
+argument_list|,
+specifier|const
+name|char_type
+operator|*
+name|__hi
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|char_type
+name|do_widen
+argument_list|(
+name|char
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|char
+modifier|*
+name|do_widen
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|__lo
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|__hi
+argument_list|,
+name|char_type
+operator|*
+name|__dest
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+name|char
+name|do_narrow
+argument_list|(
+name|char_type
+argument_list|,
+name|char
+name|__dfault
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|char_type
+modifier|*
+name|do_narrow
+argument_list|(
+specifier|const
+name|char_type
+operator|*
+name|__lo
+argument_list|,
+specifier|const
+name|char_type
+operator|*
+name|__hi
+argument_list|,
+name|char
+name|__dfault
+argument_list|,
+name|char
+operator|*
+name|__dest
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
+unit|};
 comment|// NB: Generic, mostly useless implementation.
 end_comment
 
@@ -2097,6 +2490,68 @@ begin_decl_stmt
 name|class
 name|__num_base
 block|{
+name|public
+label|:
+comment|// NB: Code depends on the order of _S_atoms_out elements.
+comment|// Below are the indices into _S_atoms_out.
+enum|enum
+block|{
+name|_S_minus
+block|,
+name|_S_plus
+block|,
+name|_S_x
+block|,
+name|_S_X
+block|,
+name|_S_digits
+block|,
+name|_S_digits_end
+init|=
+name|_S_digits
+operator|+
+literal|16
+block|,
+name|_S_udigits
+init|=
+name|_S_digits_end
+block|,
+name|_S_udigits_end
+init|=
+name|_S_udigits
+operator|+
+literal|16
+block|,
+name|_S_e
+init|=
+name|_S_digits
+operator|+
+literal|14
+block|,
+comment|// For scientific notation, 'e'
+name|_S_E
+init|=
+name|_S_udigits
+operator|+
+literal|14
+block|,
+comment|// For scientific notation, 'E'
+name|_S_end
+init|=
+name|_S_udigits_end
+block|}
+enum|;
+comment|// A list of valid numeric literals for output.  This array
+comment|// contains chars that will be passed through the current locale's
+comment|// ctype<_CharT>.widen() and then used to render numbers.
+comment|// For the standard "C" locale, this is
+comment|// "-+xX0123456789abcdef0123456789ABCDEF".
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|_S_atoms_out
+decl_stmt|;
 name|protected
 label|:
 comment|// String literal of acceptable (narrow) input, for num_get.
@@ -2104,8 +2559,8 @@ comment|// "0123456789eEabcdfABCDF"
 specifier|static
 specifier|const
 name|char
-name|_S_atoms
-index|[]
+modifier|*
+name|_S_atoms_in
 decl_stmt|;
 enum|enum
 block|{
@@ -2133,7 +2588,7 @@ enum|;
 comment|// num_put
 comment|// Construct and return valid scanf format for floating point types.
 specifier|static
-name|bool
+name|void
 name|_S_format_float
 parameter_list|(
 specifier|const
@@ -2187,6 +2642,17 @@ name|typename
 name|_CharT
 operator|>
 name|class
+name|__locale_cache
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|class
 name|numpunct
 operator|:
 name|public
@@ -2212,6 +2678,19 @@ operator|>
 name|string_type
 expr_stmt|;
 end_typedef
+
+begin_expr_stmt
+name|friend
+name|class
+name|__locale_cache
+operator|<
+name|numpunct
+operator|<
+name|_CharT
+operator|>
+expr|>
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -4014,6 +4493,133 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|void
+name|_M_group_float
+argument_list|(
+specifier|const
+name|string
+operator|&
+name|__grouping
+argument_list|,
+name|char_type
+name|__sep
+argument_list|,
+specifier|const
+name|char_type
+operator|*
+name|__p
+argument_list|,
+name|char_type
+operator|*
+name|__new
+argument_list|,
+name|char_type
+operator|*
+name|__cs
+argument_list|,
+name|int
+operator|&
+name|__len
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_ValueT
+operator|>
+name|iter_type
+name|_M_convert_int
+argument_list|(
+argument|iter_type
+argument_list|,
+argument|ios_base& __io
+argument_list|,
+argument|char_type __fill
+argument_list|,
+argument|_ValueT __v
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|_M_group_int
+argument_list|(
+specifier|const
+name|string
+operator|&
+name|__grouping
+argument_list|,
+name|char_type
+name|__sep
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|char_type
+operator|*
+name|__new
+argument_list|,
+name|char_type
+operator|*
+name|__cs
+argument_list|,
+name|int
+operator|&
+name|__len
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|_M_pad
+argument_list|(
+name|char_type
+name|__fill
+argument_list|,
+name|streamsize
+name|__w
+argument_list|,
+name|ios_base
+operator|&
+name|__io
+argument_list|,
+name|char_type
+operator|*
+name|__new
+argument_list|,
+specifier|const
+name|char_type
+operator|*
+name|__cs
+argument_list|,
+name|int
+operator|&
+name|__len
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|// XXX GLIBCXX_ABI Deprecated, compatibility only.
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
@@ -4111,6 +4717,11 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|virtual
@@ -9444,7 +10055,301 @@ block|}
 end_expr_stmt
 
 begin_comment
-unit|}
+comment|/**    * @if maint    * __locale_cache objects hold information extracted from facets in    * a form optimized for parsing and formatting.  They are stored in    * a locale's facet array and accessed via __use_cache<_Facet>.    *    * The intent twofold: to avoid the costs of creating a locale    * object and to avoid calling the virtual functions in a locale's    * facet to look up data.    * @endif    */
+end_comment
+
+begin_decl_stmt
+name|class
+name|__locale_cache_base
+block|{
+name|friend
+name|class
+name|std
+operator|::
+name|locale
+operator|::
+name|_Impl
+expr_stmt|;
+name|friend
+name|class
+name|locale
+decl_stmt|;
+name|public
+label|:
+name|virtual
+operator|~
+name|__locale_cache_base
+argument_list|()
+block|{ }
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// This template doesn't really get used for anything except a
+end_comment
+
+begin_comment
+comment|// placeholder for specializations
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_Facet
+operator|>
+name|class
+name|__locale_cache
+operator|:
+name|public
+name|__locale_cache_base
+block|{
+comment|// ctor
+name|__locale_cache
+argument_list|(
+argument|const locale&
+argument_list|)
+block|{}
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|_CharT
+operator|>
+name|class
+name|__locale_cache
+operator|<
+name|numpunct
+operator|<
+name|_CharT
+operator|>
+expr|>
+operator|:
+name|public
+name|__locale_cache_base
+block|{
+comment|// Types:
+typedef|typedef
+name|_CharT
+name|char_type
+typedef|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|char_traits
+operator|<
+name|_CharT
+operator|>
+name|traits_type
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|basic_string
+operator|<
+name|_CharT
+operator|>
+name|string_type
+expr_stmt|;
+end_typedef
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_comment
+comment|// Data Members:
+end_comment
+
+begin_comment
+comment|// The sign used to separate decimal values: for standard US
+end_comment
+
+begin_comment
+comment|// locales, this would usually be: "."  Abstracted from
+end_comment
+
+begin_comment
+comment|// numpunct::decimal_point().
+end_comment
+
+begin_decl_stmt
+name|_CharT
+name|_M_decimal_point
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// The sign used to separate groups of digits into smaller
+end_comment
+
+begin_comment
+comment|// strings that the eye can parse with less difficulty: for
+end_comment
+
+begin_comment
+comment|// standard US locales, this would usually be: "," Abstracted
+end_comment
+
+begin_comment
+comment|// from numpunct::thousands_sep().
+end_comment
+
+begin_decl_stmt
+name|_CharT
+name|_M_thousands_sep
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// However the US's "false" and "true" are translated.  From
+end_comment
+
+begin_comment
+comment|// numpunct::truename() and numpunct::falsename(), respectively.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|_CharT
+modifier|*
+name|_M_truename
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|_CharT
+modifier|*
+name|_M_falsename
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// If we are checking groupings. This should be equivalent to
+end_comment
+
+begin_comment
+comment|// numpunct::groupings().size() != 0
+end_comment
+
+begin_decl_stmt
+name|bool
+name|_M_use_grouping
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// If we are using numpunct's groupings, this is the current
+end_comment
+
+begin_comment
+comment|// grouping string in effect (from numpunct::grouping()).
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|_M_grouping
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// A list of valid numeric literals: for the standard "C"
+end_comment
+
+begin_comment
+comment|// locale, this is "-+xX0123456789abcdef0123456789ABCDEF".  This
+end_comment
+
+begin_comment
+comment|// array contains the chars after having been passed through the
+end_comment
+
+begin_comment
+comment|// current locale's ctype<_CharT>.widen().
+end_comment
+
+begin_comment
+comment|// Copied here from __locale_cache<ctype> to save multiple cache
+end_comment
+
+begin_comment
+comment|// access in num_put functions.
+end_comment
+
+begin_decl_stmt
+name|_CharT
+name|_M_atoms_out
+index|[
+name|__num_base
+operator|::
+name|_S_end
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// ctor
+end_comment
+
+begin_expr_stmt
+name|__locale_cache
+argument_list|(
+specifier|const
+name|locale
+operator|&
+name|__loc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__locale_cache
+argument_list|(
+specifier|const
+name|locale
+operator|&
+name|__loc
+argument_list|,
+name|bool
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|~
+name|__locale_cache
+argument_list|()
+block|{
+name|delete
+index|[]
+name|_M_truename
+block|;
+name|delete
+index|[]
+name|_M_falsename
+block|;
+name|delete
+index|[]
+name|_M_grouping
+block|;       }
+end_expr_stmt
+
+begin_comment
+unit|}; }
 comment|// namespace std
 end_comment
 

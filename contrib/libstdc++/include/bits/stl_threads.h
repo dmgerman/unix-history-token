@@ -4,7 +4,7 @@ comment|// Threading support -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -339,17 +339,58 @@ return|;
 block|}
 endif|#
 directive|endif
+block|}
+end_decl_stmt
+
+begin_comment
+comment|//namespace std
+end_comment
+
+begin_comment
 comment|// Locking class.  Note that this class *does not have a
+end_comment
+
+begin_comment
 comment|// constructor*.  It must be initialized either statically, with
+end_comment
+
+begin_comment
 comment|// __STL_MUTEX_INITIALIZER, or dynamically, by explicitly calling
+end_comment
+
+begin_comment
 comment|// the _M_initialize member function.  (This is similar to the ways
+end_comment
+
+begin_comment
 comment|// that a pthreads mutex can be initialized.)  There are explicit
+end_comment
+
+begin_comment
 comment|// member functions for acquiring and releasing the lock.
+end_comment
+
+begin_comment
 comment|// There is no constructor because static initialization is
+end_comment
+
+begin_comment
 comment|// essential for some uses, and only a class aggregate (see section
+end_comment
+
+begin_comment
 comment|// 8.5.1 of the C++ standard) can be initialized that way.  That
+end_comment
+
+begin_comment
 comment|// means we must have no constructors, no base classes, no virtual
+end_comment
+
+begin_comment
 comment|// functions, and no private or protected members.
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -362,6 +403,12 @@ name|defined
 argument_list|(
 name|__GTHREAD_MUTEX_INIT_FUNCTION
 argument_list|)
+end_if
+
+begin_decl_stmt
+name|namespace
+name|__gnu_cxx
+block|{
 specifier|extern
 name|__gthread_mutex_t
 name|_GLIBCPP_mutex
@@ -389,8 +436,18 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+block|}
+end_decl_stmt
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_decl_stmt
+name|namespace
+name|std
+block|{
 struct|struct
 name|_STL_mutex_lock
 block|{
@@ -443,8 +500,12 @@ condition|(
 name|__gthread_once
 argument_list|(
 operator|&
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_once
 argument_list|,
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_mutex_init
 argument_list|)
 operator|!=
@@ -459,6 +520,8 @@ expr_stmt|;
 name|__gthread_mutex_lock
 argument_list|(
 operator|&
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_mutex
 argument_list|)
 expr_stmt|;
@@ -471,6 +534,8 @@ block|{
 comment|// Even though we have a global lock, we use __gthread_once to be
 comment|// absolutely certain the _M_lock mutex is only initialized once on
 comment|// multiprocessor systems.
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_mutex_address
 operator|=
 operator|&
@@ -483,6 +548,8 @@ argument_list|(
 operator|&
 name|_M_once
 argument_list|,
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_mutex_address_init
 argument_list|)
 operator|!=
@@ -502,6 +569,8 @@ block|}
 name|__gthread_mutex_unlock
 argument_list|(
 operator|&
+name|__gnu_cxx
+operator|::
 name|_GLIBCPP_mutex
 argument_list|)
 expr_stmt|;

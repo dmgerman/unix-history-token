@@ -4,7 +4,7 @@ comment|// Allocators -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<bits/functexcept.h>
 end_include
 
@@ -233,7 +227,6 @@ argument_list|(
 name|size_t
 argument_list|)
 block|;
-comment|// _GLIBCPP_DEPRECATED
 specifier|static
 name|void
 operator|*
@@ -312,7 +305,6 @@ name|__p
 argument_list|)
 expr_stmt|;
 block|}
-comment|// _GLIBCPP_DEPRECATED
 specifier|static
 name|void
 modifier|*
@@ -498,13 +490,8 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-unit|}
-comment|// _GLIBCPP_DEPRECATED
-end_comment
-
 begin_expr_stmt
-unit|template
+unit|}    template
 operator|<
 name|int
 name|__inst
@@ -746,7 +733,7 @@ end_function
 
 begin_comment
 unit|};
-comment|/**    *  @if maint    *  An adaptor for an underlying allocator (_Alloc) to check the size    *  arguments for debugging.  Errors are reported using assert; these    *  checks can be disabled via NDEBUG, but the space penalty is still    *  paid, therefore it is far better to just use the underlying allocator    *  by itelf when no checking is desired.    *    *  "There is some evidence that this can confuse Purify." - SGI comment    *    *  This adaptor is "SGI" style.  The _Alloc parameter must also be "SGI".    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
+comment|/**    *  @if maint    *  An adaptor for an underlying allocator (_Alloc) to check the size    *  arguments for debugging.    *    *  "There is some evidence that this can confuse Purify." - SGI comment    *    *  This adaptor is "SGI" style.  The _Alloc parameter must also be "SGI".    *  @endif    *  (See @link Allocators allocators info @endlink for more.)    */
 end_comment
 
 begin_expr_stmt
@@ -841,18 +828,20 @@ name|int
 operator|)
 name|_S_extra
 block|;
-name|assert
-argument_list|(
+if|if
+condition|(
 operator|*
 operator|(
 name|size_t
 operator|*
 operator|)
 name|__real_p
-operator|==
+operator|!=
 name|__n
-argument_list|)
-block|;
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|_Alloc
 operator|::
 name|deallocate
@@ -866,24 +855,30 @@ name|int
 operator|)
 name|_S_extra
 argument_list|)
-block|;       }
-comment|// _GLIBCPP_DEPRECATED
-specifier|static
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+unit|}        static
 name|void
-operator|*
+modifier|*
 name|reallocate
-argument_list|(
-argument|void* __p
-argument_list|,
-argument|size_t __old_sz
-argument_list|,
-argument|size_t __new_sz
-argument_list|)
+parameter_list|(
+name|void
+modifier|*
+name|__p
+parameter_list|,
+name|size_t
+name|__old_sz
+parameter_list|,
+name|size_t
+name|__new_sz
+parameter_list|)
 block|{
 name|char
-operator|*
+modifier|*
 name|__real_p
-operator|=
+init|=
 operator|(
 name|char
 operator|*
@@ -894,23 +889,25 @@ operator|(
 name|int
 operator|)
 name|_S_extra
-block|;
-name|assert
-argument_list|(
+decl_stmt|;
+if|if
+condition|(
 operator|*
 operator|(
 name|size_t
 operator|*
 operator|)
 name|__real_p
-operator|==
+operator|!=
 name|__old_sz
-argument_list|)
-block|;
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|char
-operator|*
+modifier|*
 name|__result
-operator|=
+init|=
 operator|(
 name|char
 operator|*
@@ -935,7 +932,7 @@ name|int
 operator|)
 name|_S_extra
 argument_list|)
-block|;
+decl_stmt|;
 operator|*
 operator|(
 name|size_t
@@ -944,7 +941,7 @@ operator|)
 name|__result
 operator|=
 name|__new_sz
-block|;
+expr_stmt|;
 return|return
 name|__result
 operator|+
@@ -954,7 +951,7 @@ operator|)
 name|_S_extra
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_comment
 unit|};
@@ -1278,14 +1275,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// Trust but verify...
-name|assert
-argument_list|(
-name|_S_force_new
-operator|!=
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1487,10 +1476,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|// _GLIBCPP_DEPRECATED
-end_comment
 
 begin_function_decl
 specifier|static
@@ -1772,6 +1757,10 @@ operator|(
 name|_Obj
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|_S_start_free
 operator|)
 operator|->
@@ -1785,6 +1774,10 @@ name|__my_free_list
 operator|=
 operator|(
 name|_Obj
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 name|_S_start_free
@@ -2048,6 +2041,10 @@ operator|(
 name|_Obj
 operator|*
 operator|)
+operator|(
+name|void
+operator|*
+operator|)
 name|__chunk
 expr_stmt|;
 end_expr_stmt
@@ -2060,6 +2057,10 @@ name|__next_obj
 operator|=
 operator|(
 name|_Obj
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -2090,6 +2091,10 @@ name|__next_obj
 operator|=
 operator|(
 name|_Obj
+operator|*
+operator|)
+operator|(
+name|void
 operator|*
 operator|)
 operator|(
@@ -2135,13 +2140,8 @@ name|__result
 return|;
 end_return
 
-begin_comment
-unit|}
-comment|// _GLIBCPP_DEPRECATED
-end_comment
-
 begin_expr_stmt
-unit|template
+unit|}     template
 operator|<
 name|bool
 name|threads
@@ -4125,6 +4125,12 @@ begin_comment
 comment|// NB: This syntax is a GNU extension.
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_GLIBCPP_EXTERN_TEMPLATE
+end_if
+
 begin_extern
 extern|extern template class allocator<char>;
 end_extern
@@ -4138,6 +4144,11 @@ extern|extern template class __default_alloc_template<true
 operator|,
 extern|0>;
 end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 unit|}

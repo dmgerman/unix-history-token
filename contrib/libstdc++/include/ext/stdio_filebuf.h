@@ -189,6 +189,12 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|size_t
+name|size_t
+expr_stmt|;
 name|protected
 label|:
 comment|// Stack-based buffer for unbuffered input.
@@ -209,7 +215,7 @@ argument|std::ios_base::openmode __mode
 argument_list|,
 argument|bool __del
 argument_list|,
-argument|int_type __size
+argument|size_t __size
 argument_list|)
 empty_stmt|;
 comment|/**        *  @param  f  An open @c FILE*.        *  @param  mode  Same meaning as in a standard filebuf.        *  @param  size  Optimal or preferred size of internal buffer, in bytes.        *                Defaults to system's @c BUFSIZ.        *        *  This constructor associates a file stream buffer with an open        *  C @c FILE*.  The @c FILE* will not be automatically closed when the        *  stdio_filebuf is closed/destroyed.       */
@@ -219,7 +225,7 @@ argument|std::__c_file* __f
 argument_list|,
 argument|std::ios_base::openmode __mode
 argument_list|,
-argument|int_type __size = static_cast<int_type>(BUFSIZ)
+argument|size_t __size = static_cast<size_t>(BUFSIZ)
 argument_list|)
 empty_stmt|;
 comment|/**        *  Possibly closes the external data stream, in the case of the file        *  descriptor constructor and @c del @c == @c true.       */
@@ -290,7 +296,7 @@ argument|std::ios_base::openmode __mode
 argument_list|,
 argument|bool __del
 argument_list|,
-argument|int_type __size
+argument|size_t __size
 argument_list|)
 block|{
 name|_M_file
@@ -327,7 +333,7 @@ operator|<
 literal|4
 condition|)
 block|{
-comment|// Specify unbuffered.
+comment|// Specify not to use an allocated buffer.
 name|_M_buf
 operator|=
 name|_M_unbuf
@@ -385,7 +391,7 @@ argument|std::__c_file* __f
 argument_list|,
 argument|std::ios_base::openmode __mode
 argument_list|,
-argument|int_type __size
+argument|size_t __size
 argument_list|)
 block|{
 name|_M_file
@@ -420,7 +426,7 @@ operator|<
 literal|4
 condition|)
 block|{
-comment|// Specify unbuffered.
+comment|// Specify not to use an allocated buffer.
 name|_M_buf
 operator|=
 name|_M_unbuf

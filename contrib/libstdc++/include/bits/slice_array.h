@@ -4,7 +4,7 @@ comment|// The template and inlines for the -*- C++ -*- slice_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -127,6 +127,125 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+name|class
+name|slice
+block|{
+name|public
+label|:
+name|slice
+argument_list|()
+expr_stmt|;
+name|slice
+argument_list|(
+name|size_t
+argument_list|,
+name|size_t
+argument_list|,
+name|size_t
+argument_list|)
+expr_stmt|;
+name|size_t
+name|start
+argument_list|()
+specifier|const
+expr_stmt|;
+name|size_t
+name|size
+argument_list|()
+specifier|const
+expr_stmt|;
+name|size_t
+name|stride
+argument_list|()
+specifier|const
+expr_stmt|;
+name|private
+label|:
+name|size_t
+name|_M_off
+decl_stmt|;
+comment|// offset
+name|size_t
+name|_M_sz
+decl_stmt|;
+comment|// size
+name|size_t
+name|_M_st
+decl_stmt|;
+comment|// stride unit
+block|}
+empty_stmt|;
+comment|// The default constructor constructor is not required to initialize
+comment|// data members with any meaningful values, so we choose to do nothing.
+specifier|inline
+name|slice
+operator|::
+name|slice
+argument_list|()
+block|{}
+specifier|inline
+name|slice
+operator|::
+name|slice
+argument_list|(
+argument|size_t __o
+argument_list|,
+argument|size_t __d
+argument_list|,
+argument|size_t __s
+argument_list|)
+operator|:
+name|_M_off
+argument_list|(
+name|__o
+argument_list|)
+operator|,
+name|_M_sz
+argument_list|(
+name|__d
+argument_list|)
+operator|,
+name|_M_st
+argument_list|(
+argument|__s
+argument_list|)
+block|{}
+specifier|inline
+name|size_t
+name|slice
+operator|::
+name|start
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_off
+return|;
+block|}
+specifier|inline
+name|size_t
+name|slice
+operator|::
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_sz
+return|;
+block|}
+specifier|inline
+name|size_t
+name|slice
+operator|::
+name|stride
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_st
+return|;
+block|}
 name|template
 operator|<
 name|typename
@@ -311,6 +430,7 @@ specifier|const
 name|_Tp
 operator|&
 operator|)
+specifier|const
 decl_stmt|;
 comment|//        ~slice_array ();
 name|template
@@ -624,7 +744,7 @@ argument_list|)
 operator|,
 name|_M_array
 argument_list|(
-argument|__a.begin () + __s.start ()
+argument|__a.begin() + __s.start()
 argument_list|)
 block|{}
 name|template
@@ -745,6 +865,7 @@ name|_Tp
 operator|&
 name|__t
 operator|)
+specifier|const
 block|{
 name|__valarray_fill
 argument_list|(
@@ -849,71 +970,71 @@ define|#
 directive|define
 name|_DEFINE_VALARRAY_OPERATOR
 parameter_list|(
-name|op
+name|_Op
 parameter_list|,
-name|name
+name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>							\ inline void								\ slice_array<_Tp>::operator op##= (const valarray<_Tp>& __v) const	\ {									\   _Array_augmented_##name (_M_array, _M_sz, _M_stride, _Array<_Tp> (__v));\ }									\ 									\ template<typename _Tp> template<class _Dom>				\ inline void								\ slice_array<_Tp>::operator op##= (const _Expr<_Dom,_Tp>& __e) const	\ {									\     _Array_augmented_##name (_M_array, _M_stride, __e, _M_sz);		\ }
+value|template<typename _Tp>						\     inline void								\     slice_array<_Tp>::operator _Op##=(const valarray<_Tp>& __v) const	\     {									\       _Array_augmented_##_Name(_M_array, _M_sz, _M_stride, _Array<_Tp>(__v));\     }									\ 									\   template<typename _Tp>                                                \     template<class _Dom>				                \       inline void							\       slice_array<_Tp>::operator _Op##=(const _Expr<_Dom,_Tp>& __e) const\       {									\ 	  _Array_augmented_##_Name(_M_array, _M_stride, __e, _M_sz);	\       }
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|*
 argument_list|,
-argument|multiplies
+argument|__multiplies
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|/
 argument_list|,
-argument|divides
+argument|__divides
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|%
 argument_list|,
-argument|modulus
+argument|__modulus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|+
 argument_list|,
-argument|plus
+argument|__plus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|-
 argument_list|,
-argument|minus
+argument|__minus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|^
 argument_list|,
-argument|xor
+argument|__bitwise_xor
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|&
 argument_list|,
-argument|and
+argument|__bitwise_and
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument||
 argument_list|,
-argument|or
+argument|__bitwise_or
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|<<
 argument_list|,
-argument|shift_left
+argument|__shift_left
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|>>
 argument_list|,
-argument|shift_right
+argument|__shift_right
 argument_list|)
 end_expr_stmt
 

@@ -4,7 +4,7 @@ comment|// Wrapper for underlying C-language localization -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -111,6 +111,26 @@ begin_comment
 comment|// Written by Benjamin Kosnik<bkoz@redhat.com>
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_CPP_BITS_C_LOCALE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_CPP_BITS_C_LOCALE_H
+value|1
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|system_header
+end_pragma
+
 begin_include
 include|#
 directive|include
@@ -207,6 +227,10 @@ typedef|typedef
 name|__locale_t
 name|__c_locale
 typedef|;
+comment|// Convert numeric value of type _Tv to string and return length of
+comment|// string.  If snprintf is available use it, otherwise fall back to
+comment|// the unsafe sprintf which, in general, can be dangerous and should
+comment|// be avoided.
 name|template
 operator|<
 name|typename
@@ -442,6 +466,11 @@ return|;
 block|}
 end_decl_stmt
 
+begin_endif
 unit|}
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

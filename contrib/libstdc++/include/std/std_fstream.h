@@ -173,6 +173,8 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|// [27.8.1.1] template class basic_filebuf
+comment|/**    *  @brief  The actual work of input and output (for files).    *    *  This class associates both its input and output sequence with an    *  external disk file, and maintains a joint file position for both    *  sequences.  Many of its sematics are described in terms of similar    *  behavior in the Standard C Library's @c FILE streams.   */
 name|template
 operator|<
 name|typename
@@ -224,7 +226,8 @@ operator|::
 name|off_type
 name|off_type
 expr_stmt|;
-comment|// Non-standard Types:
+comment|//@{
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 typedef|typedef
 name|basic_streambuf
 operator|<
@@ -269,19 +272,13 @@ operator|>
 name|__codecvt_type
 expr_stmt|;
 typedef|typedef
-name|typename
-name|__codecvt_type
-operator|::
-name|result
-name|__res_type
-expr_stmt|;
-typedef|typedef
 name|ctype
 operator|<
 name|char_type
 operator|>
 name|__ctype_type
 expr_stmt|;
+comment|//@}
 name|friend
 name|class
 name|ios_base
@@ -291,14 +288,17 @@ name|protected
 label|:
 comment|// Data Members:
 comment|// MT lock inherited from libio or other low-level io library.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__c_lock
 name|_M_lock
 decl_stmt|;
 comment|// External buffer.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__file_type
 name|_M_file
 decl_stmt|;
 comment|// Current and beginning state type for codecvt.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|__state_type
 name|_M_state_cur
 decl_stmt|;
@@ -306,6 +306,7 @@ name|__state_type
 name|_M_state_beg
 decl_stmt|;
 comment|// Set iff _M_buf is allocated memory from _M_allocate_internal_buffer.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|bool
 name|_M_buf_allocated
 decl_stmt|;
@@ -315,6 +316,7 @@ name|_M_last_overflowed
 decl_stmt|;
 comment|// The position in the buffer corresponding to the external file
 comment|// pointer.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|char_type
 modifier|*
 name|_M_filepos
@@ -322,9 +324,11 @@ decl_stmt|;
 name|public
 label|:
 comment|// Constructors/destructor:
+comment|/**        *  @brief  Does not open any files.        *        *  The default constructor initializes the parent class using its        *  own default ctor.       */
 name|basic_filebuf
 argument_list|()
 expr_stmt|;
+comment|/**        *  @brief  The destructor closes the file first.       */
 name|virtual
 operator|~
 name|basic_filebuf
@@ -340,10 +344,13 @@ operator|=
 name|false
 block|;       }
 comment|// Members:
+comment|/**        *  @brief  Returns true if the external file is open.       */
 name|bool
 name|is_open
 argument_list|()
 specifier|const
+name|throw
+argument_list|()
 block|{
 return|return
 name|_M_file
@@ -352,6 +359,7 @@ name|is_open
 argument_list|()
 return|;
 block|}
+comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *  @return  @c this on success, NULL on failure        *        *  If a file is already open, this function immediately fails.        *  Otherwise it tries to open the file named @a s using the flags        *  given in @a mode.        *        *  [Table 92 gives the relation between openmode combinations and the        *  equivalent fopen() flags, but the table has not been copied yet.]       */
 name|__filebuf_type
 modifier|*
 name|open
@@ -367,22 +375,30 @@ name|openmode
 name|__mode
 argument_list|)
 decl_stmt|;
+comment|/**        *  @brief  Closes the currently associated file.        *  @return  @c this on success, NULL on failure        *        *  If no file is currently open, this function immediately fails.        *        *  If a "put buffer area" exists, @c overflow(eof) is called to flush        *  all the characters.  The file is then closed.        *        *  If any operations fail, this function also fails.       */
 name|__filebuf_type
 modifier|*
 name|close
 parameter_list|()
+function_decl|throw
+parameter_list|()
 function_decl|;
 name|protected
 label|:
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_allocate_internal_buffer
 parameter_list|()
 function_decl|;
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_destroy_internal_buffer
 parameter_list|()
+function_decl|throw
+parameter_list|()
 function_decl|;
-comment|// Overridden virtual functions:
+comment|// [27.8.1.4] overridden virtual functions
+comment|// [documentation is inherited]
 name|virtual
 name|streamsize
 name|showmanyc
@@ -398,6 +414,7 @@ comment|// case, this is important, as we need to unget the read character in
 comment|// the underflow() case in order to maintain synchronization.  So
 comment|// instead of calling underflow() from uflow(), we create a common
 comment|// subroutine to do the real work.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|int_type
 name|_M_underflow_common
 parameter_list|(
@@ -405,16 +422,19 @@ name|bool
 name|__bump
 parameter_list|)
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|underflow
 parameter_list|()
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|uflow
 parameter_list|()
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|pbackfail
@@ -436,6 +456,7 @@ comment|// equal to _M_buf when initializing, it seems essential to have
 comment|// this in actuality be a helper function that checks for the
 comment|// eccentricities of this implementation, and then call
 comment|// overflow() if indeed the buffer is full.
+comment|// [documentation is inherited]
 name|virtual
 name|int_type
 name|overflow
@@ -456,6 +477,7 @@ comment|// overflow(c) outputs the contents of the buffer plus the
 comment|// character c.
 comment|// 27.5.2.4.5
 comment|// Consume some sequence of the characters in the pending sequence.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|int_type
 name|_M_really_overflow
 parameter_list|(
@@ -470,6 +492,7 @@ parameter_list|)
 function_decl|;
 comment|// Convert internal byte sequence to external, char-based
 comment|// sequence via codecvt.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_convert_to_external
 parameter_list|(
@@ -485,6 +508,7 @@ name|streamsize
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/**        *  @brief  Manipulates the buffer.        *  @param  s  Pointer to a buffer area.        *  @param  n  Size of @a s.        *  @return  @c this        *        *  If no file has been opened, and both @a s and @a n are zero, then        *  the stream becomes unbuffered.  Otherwise, @c s is used as a        *  buffer; see        *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#2        *  for more.       */
 name|virtual
 name|__streambuf_type
 modifier|*
@@ -498,6 +522,7 @@ name|streamsize
 name|__n
 parameter_list|)
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|pos_type
 name|seekoff
@@ -524,6 +549,7 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+comment|// [documentation is inherited]
 name|virtual
 name|pos_type
 name|seekpos
@@ -545,11 +571,17 @@ operator|::
 name|out
 argument_list|)
 decl_stmt|;
+comment|// [documentation is inherited]
 name|virtual
 name|int
 name|sync
 parameter_list|()
 block|{
+name|int
+name|__ret
+init|=
+literal|0
+decl_stmt|;
 name|bool
 name|__testput
 init|=
@@ -574,10 +606,28 @@ name|_M_out_cur
 operator|-
 name|_M_out_end
 decl_stmt|;
+comment|// _M_file.sync() will be called within
+if|if
+condition|(
+name|traits_type
+operator|::
+name|eq_int_type
+argument_list|(
 name|_M_really_overflow
 argument_list|()
+argument_list|,
+name|traits_type
+operator|::
+name|eof
+argument_list|()
+argument_list|)
+condition|)
+name|__ret
+operator|=
+operator|-
+literal|1
 expr_stmt|;
-comment|// _M_file.sync() will be called within
+elseif|else
 if|if
 condition|(
 name|__off
@@ -605,9 +655,10 @@ operator|=
 name|false
 expr_stmt|;
 return|return
-literal|0
+name|__ret
 return|;
 block|}
+comment|// [documentation is inherited]
 name|virtual
 name|void
 name|imbue
@@ -618,6 +669,7 @@ modifier|&
 name|__loc
 parameter_list|)
 function_decl|;
+comment|// [documentation is inherited]
 name|virtual
 name|streamsize
 name|xsgetn
@@ -695,6 +747,7 @@ return|return
 name|__ret
 return|;
 block|}
+comment|// [documentation is inherited]
 name|virtual
 name|streamsize
 name|xsputn
@@ -722,6 +775,7 @@ name|__n
 argument_list|)
 return|;
 block|}
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_output_unshift
 parameter_list|()
@@ -733,6 +787,7 @@ comment|// unbuffered, and a myrid other obscure corner cases, the
 comment|// internal buffer does not truly reflect the contents of the
 comment|// external buffer. At this point, for whatever reason, it is in
 comment|// an indeterminate state.
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_set_indeterminate
 parameter_list|(
@@ -780,6 +835,7 @@ operator|=
 name|_M_buf
 expr_stmt|;
 block|}
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|void
 name|_M_set_determinate
 parameter_list|(
@@ -844,6 +900,7 @@ operator|+
 name|__off
 expr_stmt|;
 block|}
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
 name|bool
 name|_M_is_indeterminate
 parameter_list|(
@@ -910,7 +967,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// Explicit specializations.
+comment|// Explicit specialization declarations, defined in src/fstream.cc.
 end_comment
 
 begin_expr_stmt
@@ -981,6 +1038,7 @@ operator|,
 name|typename
 name|_Traits
 operator|>
+name|typename
 name|basic_filebuf
 operator|<
 name|_CharT
@@ -1017,6 +1075,7 @@ operator|,
 name|typename
 name|_Traits
 operator|>
+name|typename
 name|basic_filebuf
 operator|<
 name|_CharT
@@ -1045,11 +1104,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// 27.8.1.5  Template class basic_ifstream
+comment|// [27.8.1.5] Template class basic_ifstream
 end_comment
 
 begin_comment
-comment|/**    *  Derivation of general input streams, specific to files.   */
+comment|/**    *  @brief  Controlling input for files.    *    *  This class supports reading from named files, using the inherited    *  functions from std::basic_istream.  To control the associated    *  sequence, an instance of std::basic_filebuf is used, which this page    *  refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -1151,6 +1210,10 @@ name|private
 label|:
 end_label
 
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|__filebuf_type
 name|_M_filebuf
@@ -1167,7 +1230,7 @@ comment|// Constructors/Destructors:
 end_comment
 
 begin_comment
-comment|/** Default constructor.  Create an input file stream.  */
+comment|/**        *  @brief  Default constructor.        *        *  Initializes @c sb using its default constructor, and passes        *  @c&sb to the base class initializer.  Does not open any files        *  (you haven't given it a filename to open).       */
 end_comment
 
 begin_expr_stmt
@@ -1190,7 +1253,7 @@ operator|&
 name|_M_filebuf
 argument_list|)
 block|; }
-comment|/**        *  @brief Create an input file stream.        *  @param  s  Null terminated string specifying filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+comment|/**        *  @brief  Create an input file stream.        *  @param  s  Null terminated string specifying the filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  @c ios_base::in is automatically included in @a mode.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 name|explicit
 name|basic_ifstream
 argument_list|(
@@ -1224,12 +1287,13 @@ argument_list|,
 name|__mode
 argument_list|)
 block|;       }
+comment|/**        *  @brief  The destructor does nothing.        *        *  The file is closed by the filebuf object, not the formatting        *  stream.       */
 operator|~
 name|basic_ifstream
 argument_list|()
 block|{ }
 comment|// Members:
-comment|/**        *  @brief  Get a pointer to the file stream's buffer.        *  @return Pointer to basic_filebuf.       */
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_filebuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__filebuf_type
 operator|*
 name|rdbuf
@@ -1250,6 +1314,10 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**        *  @brief  Wrapper to test for an open file.        *  @return  @c rdbuf()->is_open()       */
+end_comment
+
 begin_function
 name|bool
 name|is_open
@@ -1263,6 +1331,10 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode|in).  If that function        *  fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+end_comment
 
 begin_decl_stmt
 name|void
@@ -1312,7 +1384,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/** Close the file.  */
+comment|/**        *  @brief  Close the file.        *        *  Calls @c std::basic_filebuf::close().  If that function        *  fails, @c failbit is set in the stream's error state.       */
 end_comment
 
 begin_function
@@ -1342,11 +1414,11 @@ end_function
 
 begin_comment
 unit|};
-comment|// 27.8.1.8  Template class basic_ofstream
+comment|// [27.8.1.8] Template class basic_ofstream
 end_comment
 
 begin_comment
-comment|/**    *  Derivation of general output streams, specific to files.   */
+comment|/**    *  @brief  Controlling output for files.    *    *  This class supports reading from named files, using the inherited    *  functions from std::basic_ostream.  To control the associated    *  sequence, an instance of std::basic_filebuf is used, which this page    *  refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -1448,6 +1520,10 @@ name|private
 label|:
 end_label
 
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|__filebuf_type
 name|_M_filebuf
@@ -1464,7 +1540,7 @@ comment|// Constructors:
 end_comment
 
 begin_comment
-comment|/** Default constructor for output file_stream.  */
+comment|/**        *  @brief  Default constructor.        *        *  Initializes @c sb using its default constructor, and passes        *  @c&sb to the base class initializer.  Does not open any files        *  (you haven't given it a filename to open).       */
 end_comment
 
 begin_expr_stmt
@@ -1487,7 +1563,7 @@ operator|&
 name|_M_filebuf
 argument_list|)
 block|; }
-comment|/**        *  @brief  Create an output stream.        *  @param  s  Null terminated string specifying filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+comment|/**        *  @brief  Create an output file stream.        *  @param  s  Null terminated string specifying the filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  @c ios_base::out|ios_base::trunc is automatically included in        *  @a mode.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 name|explicit
 name|basic_ofstream
 argument_list|(
@@ -1521,12 +1597,13 @@ argument_list|,
 name|__mode
 argument_list|)
 block|;       }
+comment|/**        *  @brief  The destructor does nothing.        *        *  The file is closed by the filebuf object, not the formatting        *  stream.       */
 operator|~
 name|basic_ofstream
 argument_list|()
 block|{ }
 comment|// Members:
-comment|/**        *  @brief  Get a pointer to the file stream's buffer.        *  @return Pointer to basic_filebuf.       */
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_filebuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__filebuf_type
 operator|*
 name|rdbuf
@@ -1548,7 +1625,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief Query to see if file stream is open.        *  @return True if stream is open.       */
+comment|/**        *  @brief  Wrapper to test for an open file.        *  @return  @c rdbuf()->is_open()       */
 end_comment
 
 begin_function
@@ -1566,7 +1643,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief Specify a file to open for output.        *  @param  s  Null terminated string specifying filename.        *  @param  mode  Mode in which to open file (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode|out|trunc).  If that        *  function fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 end_comment
 
 begin_decl_stmt
@@ -1621,7 +1698,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/** Close the file stream.  */
+comment|/**        *  @brief  Close the file.        *        *  Calls @c std::basic_filebuf::close().  If that function        *  fails, @c failbit is set in the stream's error state.       */
 end_comment
 
 begin_function
@@ -1651,11 +1728,11 @@ end_function
 
 begin_comment
 unit|};
-comment|// 27.8.1.11  Template class basic_fstream
+comment|// [27.8.1.11] Template class basic_fstream
 end_comment
 
 begin_comment
-comment|/**    *  Derivation of general input/output streams, specific to files.   */
+comment|/**    *  @brief  Controlling intput and output for files.    *    *  This class supports reading from and writing to named files, using    *  the inherited functions from std::basic_iostream.  To control the    *  associated sequence, an instance of std::basic_filebuf is used, which    *  this page refers to as @c sb.   */
 end_comment
 
 begin_expr_stmt
@@ -1769,6 +1846,10 @@ name|private
 label|:
 end_label
 
+begin_comment
+comment|/**        *  @if maint        *  @doctodo        *  @endif       */
+end_comment
+
 begin_decl_stmt
 name|__filebuf_type
 name|_M_filebuf
@@ -1785,7 +1866,7 @@ comment|// Constructors/destructor:
 end_comment
 
 begin_comment
-comment|/** Default constructor.  Create a file stream.  */
+comment|/**        *  @brief  Default constructor.        *        *  Initializes @c sb using its default constructor, and passes        *  @c&sb to the base class initializer.  Does not open any files        *  (you haven't given it a filename to open).       */
 end_comment
 
 begin_expr_stmt
@@ -1808,7 +1889,7 @@ operator|&
 name|_M_filebuf
 argument_list|)
 block|; }
-comment|/**        *  @brief Create an input/output stream.        *  @param  s  Null terminated string specifying filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+comment|/**        *  @brief  Create an input/output file stream.        *  @param  s  Null terminated string specifying the filename.        *  @param  mode  Open file in specified mode (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 name|explicit
 name|basic_fstream
 argument_list|(
@@ -1842,12 +1923,13 @@ argument_list|,
 name|__mode
 argument_list|)
 block|;       }
+comment|/**        *  @brief  The destructor does nothing.        *        *  The file is closed by the filebuf object, not the formatting        *  stream.       */
 operator|~
 name|basic_fstream
 argument_list|()
 block|{ }
 comment|// Members:
-comment|/**        *  @brief  Get a pointer to the file stream's buffer.        *  @return Pointer to basic_filebuf.       */
+comment|/**        *  @brief  Accessing the underlying buffer.        *  @return  The current basic_filebuf buffer.        *        *  This hides both signatures of std::basic_ios::rdbuf().       */
 name|__filebuf_type
 operator|*
 name|rdbuf
@@ -1869,7 +1951,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**        *  @brief Query to see if file stream is open.        *  @return True if stream is open.       */
+comment|/**        *  @brief  Wrapper to test for an open file.        *  @return  @c rdbuf()->is_open()       */
 end_comment
 
 begin_function
@@ -1887,7 +1969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**        *  @brief Specify a file to open for input and/or output.        *  @param  s  Null terminated string specifying filename.        *  @param  mode  Mode in which to open file (see std::ios_base).        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
+comment|/**        *  @brief  Opens an external file.        *  @param  s  The name of the file.        *  @param  mode  The open mode flags.        *        *  Calls @c std::basic_filebuf::open(s,mode).  If that        *  function fails, @c failbit is set in the stream's error state.        *        *  Tip:  When using std::string to hold the filename, you must use        *  .c_str() before passing it to this constructor.       */
 end_comment
 
 begin_decl_stmt
@@ -1936,7 +2018,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/** Close the file stream.  */
+comment|/**        *  @brief  Close the file.        *        *  Calls @c std::basic_filebuf::close().  If that function        *  fails, @c failbit is set in the stream's error state.       */
 end_comment
 
 begin_function

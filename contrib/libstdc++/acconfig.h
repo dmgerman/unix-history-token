@@ -488,6 +488,36 @@ name|HAVE___BUILTIN_SQRTL
 end_undef
 
 begin_comment
+comment|// Define if poll is available in<poll.h>.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_POLL
+end_undef
+
+begin_comment
+comment|// Define if S_ISREG (Posix) is available in<sys/stat.h>.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_S_ISREG
+end_undef
+
+begin_comment
+comment|// Define if S_IFREG is available in<sys/stat.h>.
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_S_IFREG
+end_undef
+
+begin_comment
 comment|// Define if LC_MESSAGES is available in<locale.h>.
 end_comment
 

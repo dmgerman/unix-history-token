@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- indirect_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+end_comment
+
+begin_comment
+comment|//  Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -303,6 +307,7 @@ specifier|const
 name|_Tp
 operator|&
 operator|)
+specifier|const
 decl_stmt|;
 comment|//    ~indirect_array();
 name|template
@@ -742,6 +747,7 @@ name|_Tp
 operator|&
 name|__t
 operator|)
+specifier|const
 block|{
 name|__valarray_fill
 argument_list|(
@@ -846,71 +852,71 @@ define|#
 directive|define
 name|_DEFINE_VALARRAY_OPERATOR
 parameter_list|(
-name|op
+name|_Op
 parameter_list|,
-name|name
+name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>							\ inline void								\ indirect_array<_Tp>::operator op##= (const valarray<_Tp>& __v) const	\ {									\   _Array_augmented_##name (_M_array, _M_index, _Array<_Tp> (__v), _M_sz); \ }									\ 									\ template<typename _Tp> template<class _Dom>				\ inline void								\ indirect_array<_Tp>::operator op##= (const _Expr<_Dom,_Tp>& __e) const \ {									\   _Array_augmented_##name (_M_array, _M_index, __e, _M_sz);		\ }
+value|template<typename _Tp>						\     inline void								\     indirect_array<_Tp>::operator _Op##=(const valarray<_Tp>& __v) const\     {									\       _Array_augmented_##_Name(_M_array, _M_index, _Array<_Tp>(__v), _M_sz); \     }									\ 									\   template<typename _Tp>                                                \     template<class _Dom>				                \       inline void							\       indirect_array<_Tp>::operator _Op##=(const _Expr<_Dom,_Tp>& __e) const\       {									\ 	_Array_augmented_##_Name(_M_array, _M_index, __e, _M_sz);	\       }
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|*
 argument_list|,
-argument|multiplies
+argument|__multiplies
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|/
 argument_list|,
-argument|divides
+argument|__divides
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|%
 argument_list|,
-argument|modulus
+argument|__modulus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|+
 argument_list|,
-argument|plus
+argument|__plus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|-
 argument_list|,
-argument|minus
+argument|__minus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|^
 argument_list|,
-argument|xor
+argument|__bitwise_xor
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|&
 argument_list|,
-argument|and
+argument|__bitwise_and
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument||
 argument_list|,
-argument|or
+argument|__bitwise_or
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|<<
 argument_list|,
-argument|shift_left
+argument|__shift_left
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|>>
 argument_list|,
-argument|shift_right
+argument|__shift_right
 argument_list|)
 end_expr_stmt
 

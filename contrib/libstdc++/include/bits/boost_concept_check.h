@@ -602,7 +602,10 @@ comment|// const required for argument to assignment
 block|}
 name|_Tp
 name|__a
-block|;   }
+block|;
+comment|// possibly should be "Tp* a;" and then dereference "a" in constraint
+comment|// functions?  present way would require a default ctor, i think...
+block|}
 block|;
 name|template
 operator|<

@@ -4,7 +4,7 @@ comment|// Multimap implementation -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -128,13 +128,13 @@ block|{
 comment|// Forward declaration of operators< and ==, needed for friend declaration.
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|=
 name|less
@@ -142,7 +142,7 @@ operator|<
 name|_Key
 operator|>
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|=
 name|allocator
@@ -161,16 +161,16 @@ name|multimap
 expr_stmt|;
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -209,16 +209,16 @@ operator|)
 expr_stmt|;
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -255,19 +255,19 @@ operator|&
 name|__y
 operator|)
 expr_stmt|;
-comment|/**  *  @brief A standard container made up of pairs (see std::pair in<utility>)  *         which can be retrieved based on a key.  *  *  This is an associative container.  Values contained within it can be  *  quickly retrieved through a key element. In contrast with a map a  *  multimap can have multiple duplicate keys. */
+comment|/**    *  @brief A standard container made up of (key,value) pairs, which can be    *  retrieved based on a key, in logarithmic time.    *    *  @ingroup Containers    *  @ingroup Assoc_containers    *    *  Meets the requirements of a<a href="tables.html#65">container</a>, a    *<a href="tables.html#66">reversible container</a>, and an    *<a href="tables.html#69">associative container</a> (using equivalent    *  keys).  For a @c multimap<Key,T> the key_type is Key, the mapped_type    *  is T, and the value_type is std::pair<const Key,T>.    *    *  Multimaps support bidirectional iterators.    *    *  @if maint    *  The private tree data is declared exactly the same way for map and    *  multimap; the distinction is made entirely in how the tree functions are    *  called (*_unique versus *_equal, same as the standard).    *  @endif   */
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 name|class
@@ -282,27 +282,21 @@ argument|_SGIAssignableConcept
 argument_list|)
 name|__glibcpp_class_requires4
 argument_list|(
-name|_Compare
+argument|_Compare
 argument_list|,
-name|bool
+argument|bool
 argument_list|,
-name|_Key
+argument|_Key
 argument_list|,
-name|_Key
+argument|_Key
 argument_list|,
-name|_BinaryFunctionConcept
+argument|_BinaryFunctionConcept
 argument_list|)
-block|;
 name|public
 operator|:
-comment|// typedefs:
 typedef|typedef
 name|_Key
 name|key_type
-typedef|;
-typedef|typedef
-name|_Tp
-name|data_type
 typedef|;
 typedef|typedef
 name|_Tp
@@ -398,6 +392,7 @@ block|}
 empty_stmt|;
 name|private
 label|:
+comment|/// @if maint  This turns a red-black tree into a [multi]map.  @endif
 typedef|typedef
 name|_Rb_tree
 operator|<
@@ -416,25 +411,20 @@ name|_Alloc
 operator|>
 name|_Rep_type
 expr_stmt|;
+comment|/// @if maint  The actual tree structure.  @endif
 name|_Rep_type
 name|_M_t
 decl_stmt|;
-comment|// red-black tree representing multimap
 name|public
 label|:
+comment|// many of these are specified differently in ISO, but the following are
+comment|// "functionally equivalent"
 typedef|typedef
 name|typename
 name|_Rep_type
 operator|::
-name|pointer
-name|pointer
-expr_stmt|;
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|const_pointer
-name|const_pointer
+name|allocator_type
+name|allocator_type
 expr_stmt|;
 typedef|typedef
 name|typename
@@ -468,20 +458,6 @@ typedef|typedef
 name|typename
 name|_Rep_type
 operator|::
-name|reverse_iterator
-name|reverse_iterator
-expr_stmt|;
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
-name|const_reverse_iterator
-name|const_reverse_iterator
-expr_stmt|;
-typedef|typedef
-name|typename
-name|_Rep_type
-operator|::
 name|size_type
 name|size_type
 expr_stmt|;
@@ -496,10 +472,33 @@ typedef|typedef
 name|typename
 name|_Rep_type
 operator|::
-name|allocator_type
-name|allocator_type
+name|pointer
+name|pointer
 expr_stmt|;
-comment|// allocation/deallocation
+typedef|typedef
+name|typename
+name|_Rep_type
+operator|::
+name|const_pointer
+name|const_pointer
+expr_stmt|;
+typedef|typedef
+name|typename
+name|_Rep_type
+operator|::
+name|reverse_iterator
+name|reverse_iterator
+expr_stmt|;
+typedef|typedef
+name|typename
+name|_Rep_type
+operator|::
+name|const_reverse_iterator
+name|const_reverse_iterator
+expr_stmt|;
+comment|// [23.3.2] construct/copy/destroy
+comment|// (get_allocator() is also listed in this section)
+comment|/**      *  @brief  Default constructor creates no elements.     */
 name|multimap
 argument_list|()
 operator|:
@@ -510,6 +509,8 @@ argument_list|,
 argument|allocator_type()
 argument_list|)
 block|{ }
+comment|// for some reason this was made a separate function
+comment|/**      *  @brief  Default constructor creates no elements.     */
 name|explicit
 name|multimap
 argument_list|(
@@ -534,9 +535,24 @@ argument_list|,
 argument|__a
 argument_list|)
 block|{ }
+comment|/**      *  @brief  %Multimap copy constructor.      *  @param  x  A %multimap of identical element and allocator types.      *      *  The newly-created %multimap uses a copy of the allocation object used      *  by @a x.     */
+name|multimap
+argument_list|(
+specifier|const
+name|multimap
+operator|&
+name|__x
+argument_list|)
+operator|:
+name|_M_t
+argument_list|(
+argument|__x._M_t
+argument_list|)
+block|{ }
+comment|/**      *  @brief  Builds a %multimap from a range.      *  @param  first  An input iterator.      *  @param  last  An input iterator.      *      *  Create a %multimap consisting of copies of the elements from      *  [first,last).  This is linear in N if the range is already sorted,      *  and NlogN otherwise (where N is distance(first,last)).     */
 name|template
 operator|<
-name|class
+name|typename
 name|_InputIterator
 operator|>
 name|multimap
@@ -562,9 +578,10 @@ argument_list|,
 name|__last
 argument_list|)
 block|; }
+comment|/**      *  @brief  Builds a %multimap from a range.      *  @param  first  An input iterator.      *  @param  last  An input iterator.      *  @param  comp  A comparison functor.      *  @param  a  An allocator object.      *      *  Create a %multimap consisting of copies of the elements from      *  [first,last).  This is linear in N if the range is already sorted,      *  and NlogN otherwise (where N is distance(first,last)).     */
 name|template
 operator|<
-name|class
+name|typename
 name|_InputIterator
 operator|>
 name|multimap
@@ -594,53 +611,18 @@ argument_list|,
 name|__last
 argument_list|)
 block|; }
+comment|// FIXME There is no dtor declared, but we should have something generated
+comment|// by Doxygen.  I don't know what tags to add to this paragraph to make
+comment|// that happen:
+comment|/**      *  The dtor only erases the elements, and note that if the elements      *  themselves are pointers, the pointed-to memory is not touched in any      *  way.  Managing the pointer is the user's responsibilty.     */
+comment|/**      *  @brief  %Multimap assignment operator.      *  @param  x  A %multimap of identical element and allocator types.      *      *  All the elements of @a x are copied, but unlike the copy constructor,      *  the allocator object is not copied.     */
 name|multimap
-argument_list|(
-specifier|const
-name|multimap
-operator|<
-name|_Key
-argument_list|,
-name|_Tp
-argument_list|,
-name|_Compare
-argument_list|,
-name|_Alloc
-operator|>
-operator|&
-name|__x
-argument_list|)
-operator|:
-name|_M_t
-argument_list|(
-argument|__x._M_t
-argument_list|)
-block|{ }
-name|multimap
-operator|<
-name|_Key
-operator|,
-name|_Tp
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
 operator|&
 name|operator
 operator|=
 operator|(
 specifier|const
 name|multimap
-operator|<
-name|_Key
-operator|,
-name|_Tp
-operator|,
-name|_Compare
-operator|,
-name|_Alloc
-operator|>
 operator|&
 name|__x
 operator|)
@@ -656,34 +638,7 @@ operator|*
 name|this
 return|;
 block|}
-comment|// accessors:
-name|key_compare
-name|key_comp
-argument_list|()
-specifier|const
-block|{
-return|return
-name|_M_t
-operator|.
-name|key_comp
-argument_list|()
-return|;
-block|}
-name|value_compare
-name|value_comp
-argument_list|()
-specifier|const
-block|{
-return|return
-name|value_compare
-argument_list|(
-name|_M_t
-operator|.
-name|key_comp
-argument_list|()
-argument_list|)
-return|;
-block|}
+comment|/// Get a copy of the memory allocation object.
 name|allocator_type
 name|get_allocator
 argument_list|()
@@ -696,7 +651,8 @@ name|get_allocator
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read/write iterator that points to the first pair in the    *  multimap.  Iteration is done in ascending order according to the keys.   */
+comment|// iterators
+comment|/**      *  Returns a read/write iterator that points to the first pair in the      *  %multimap.  Iteration is done in ascending order according to the keys.     */
 name|iterator
 name|begin
 parameter_list|()
@@ -708,7 +664,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read-only (constant) iterator that points to the first pair    *  in the multimap.  Iteration is done in ascending order according to the    *  keys.   */
+comment|/**      *  Returns a read-only (constant) iterator that points to the first pair      *  in the %multimap.  Iteration is done in ascending order according to the      *  keys.     */
 name|const_iterator
 name|begin
 argument_list|()
@@ -721,7 +677,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read/write iterator that points one past the last pair in the    *  multimap.  Iteration is done in ascending order according to the keys.   */
+comment|/**      *  Returns a read/write iterator that points one past the last pair in the      *  %multimap.  Iteration is done in ascending order according to the keys.     */
 name|iterator
 name|end
 parameter_list|()
@@ -733,7 +689,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read-only (constant) iterator that points one past the last    *  pair in the multimap.  Iteration is done in ascending order according    *  to the keys.   */
+comment|/**      *  Returns a read-only (constant) iterator that points one past the last      *  pair in the %multimap.  Iteration is done in ascending order according      *  to the keys.     */
 name|const_iterator
 name|end
 argument_list|()
@@ -746,7 +702,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read/write reverse iterator that points to the last pair in    *  the multimap.  Iteration is done in descending order according to the    *  keys.   */
+comment|/**      *  Returns a read/write reverse iterator that points to the last pair in      *  the %multimap.  Iteration is done in descending order according to the      *  keys.     */
 name|reverse_iterator
 name|rbegin
 parameter_list|()
@@ -758,7 +714,7 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read-only (constant) reverse iterator that points to the last    *  pair in the multimap.  Iteration is done in descending order according    *  to the keys.   */
+comment|/**      *  Returns a read-only (constant) reverse iterator that points to the last      *  pair in the %multimap.  Iteration is done in descending order according      *  to the keys.     */
 name|const_reverse_iterator
 name|rbegin
 argument_list|()
@@ -771,7 +727,7 @@ name|rbegin
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read/write reverse iterator that points to one before the    *  first pair in the multimap.  Iteration is done in descending order    *  according to the keys.   */
+comment|/**      *  Returns a read/write reverse iterator that points to one before the      *  first pair in the %multimap.  Iteration is done in descending order      *  according to the keys.     */
 name|reverse_iterator
 name|rend
 parameter_list|()
@@ -783,7 +739,7 @@ name|rend
 argument_list|()
 return|;
 block|}
-comment|/**    *  Returns a read-only (constant) reverse iterator that points to one    *  before the first pair in the multimap.  Iteration is done in descending    *  order according to the keys.   */
+comment|/**      *  Returns a read-only (constant) reverse iterator that points to one      *  before the first pair in the %multimap.  Iteration is done in descending      *  order according to the keys.     */
 name|const_reverse_iterator
 name|rend
 argument_list|()
@@ -796,7 +752,8 @@ name|rend
 argument_list|()
 return|;
 block|}
-comment|/** Returns true if the map is empty.  (Thus begin() would equal end().)  */
+comment|// capacity
+comment|/** Returns true if the %multimap is empty.  */
 name|bool
 name|empty
 argument_list|()
@@ -809,7 +766,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/** Returns the size of the map.  */
+comment|/** Returns the size of the %multimap.  */
 name|size_type
 name|size
 argument_list|()
@@ -822,7 +779,7 @@ name|size
 argument_list|()
 return|;
 block|}
-comment|/** Returns the maximum size of the map.  */
+comment|/** Returns the maximum size of the %multimap.  */
 name|size_type
 name|max_size
 argument_list|()
@@ -835,35 +792,8 @@ name|max_size
 argument_list|()
 return|;
 block|}
-name|void
-name|swap
-argument_list|(
-name|multimap
-operator|<
-name|_Key
-argument_list|,
-name|_Tp
-argument_list|,
-name|_Compare
-argument_list|,
-name|_Alloc
-operator|>
-operator|&
-name|__x
-argument_list|)
-block|{
-name|_M_t
-operator|.
-name|swap
-argument_list|(
-name|__x
-operator|.
-name|_M_t
-argument_list|)
-expr_stmt|;
-block|}
-comment|// insert/erase
-comment|/**    *  @brief Inserts a std::pair into the multimap.    *  @param  x  Pair to be inserted (see std::make_pair for easy creation of    *             pairs).    *  @return An iterator that points to the inserted (key,value) pair.    *    *  This function inserts a (key, value) pair into the multimap.  Contrary    *  to a std::map the multimap does not rely on unique keys and thus a    *  multiple pairs with the same key can be inserted.   */
+comment|// modifiers
+comment|/**      *  @brief Inserts a std::pair into the %multimap.      *  @param  x  Pair to be inserted (see std::make_pair for easy creation of      *             pairs).      *  @return An iterator that points to the inserted (key,value) pair.      *      *  This function inserts a (key, value) pair into the %multimap.  Contrary      *  to a std::map the %multimap does not rely on unique keys and thus      *  multiple pairs with the same key can be inserted.      *      *  Insertion requires logarithmic time.     */
 name|iterator
 name|insert
 parameter_list|(
@@ -882,7 +812,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Inserts a std::pair into the multimap.    *  @param  position  An iterator that serves as a hint as to where the    *                    pair should be inserted.    *  @param  x  Pair to be inserted (see std::make_pair for easy creation of    *             pairs).    *  @return An iterator that points to the inserted (key,value) pair.    *    *  This function inserts a (key, value) pair into the multimap.  Contrary    *  to a std::map the multimap does not rely on unique keys and thus a    *  multiple pairs with the same key can be inserted.    *  Note that the first parameter is only a hint and can potentially    *  improve the performance of the insertion process.  A bad hint would    *  cause no gains in efficiency.   */
+comment|/**      *  @brief Inserts a std::pair into the %multimap.      *  @param  position  An iterator that serves as a hint as to where the      *                    pair should be inserted.      *  @param  x  Pair to be inserted (see std::make_pair for easy creation of      *             pairs).      *  @return An iterator that points to the inserted (key,value) pair.      *      *  This function inserts a (key, value) pair into the %multimap.  Contrary      *  to a std::map the %multimap does not rely on unique keys and thus      *  multiple pairs with the same key can be inserted.      *  Note that the first parameter is only a hint and can potentially      *  improve the performance of the insertion process.  A bad hint would      *  cause no gains in efficiency.      *      *  See http://gcc.gnu.org/onlinedocs/libstdc++/23_containers/howto.html#4      *  for more on "hinting".      *      *  Insertion requires logarithmic time (if the hint is not taken).     */
 name|iterator
 name|insert
 parameter_list|(
@@ -906,10 +836,10 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief A template function that attemps to insert elements from    *         another range (possibly another multimap or standard container).    *  @param  first  Iterator pointing to the start of the range to be    *                 inserted.    *  @param  last  Iterator pointing to the end of the range to be inserted.   */
+comment|/**      *  @brief A template function that attemps to insert a range of elements.      *  @param  first  Iterator pointing to the start of the range to be      *                 inserted.      *  @param  last  Iterator pointing to the end of the range.      *      *  Complexity similar to that of the range constructor.     */
 name|template
 operator|<
-name|class
+name|typename
 name|_InputIterator
 operator|>
 name|void
@@ -928,8 +858,8 @@ name|__first
 argument_list|,
 name|__last
 argument_list|)
-block|;   }
-comment|/**    *  @brief Erases an element from a multimap.    *  @param  position  An iterator pointing to the element to be erased.    *    *  This function erases an element, pointed to by the given iterator, from    *  a mutlimap.  Note that this function only erases the element, and that    *  if the element is itself a pointer, the pointed-to memory is not    *  touched in any way.  Managing the pointer is the user's responsibilty.   */
+block|; }
+comment|/**      *  @brief Erases an element from a %multimap.      *  @param  position  An iterator pointing to the element to be erased.      *      *  This function erases an element, pointed to by the given iterator, from      *  a %multimap.  Note that this function only erases the element, and that      *  if the element is itself a pointer, the pointed-to memory is not      *  touched in any way.  Managing the pointer is the user's responsibilty.     */
 name|void
 name|erase
 argument_list|(
@@ -943,7 +873,7 @@ argument_list|(
 name|__position
 argument_list|)
 block|; }
-comment|/**    *  @brief Erases an element according to the provided key.    *  @param  x  Key of element to be erased.    *  @return  Doc me! (Number of elements erased?)    *    *  This function erases all elements, located by the given key, from a    *  multimap.    *  Note that this function only erases the element, and that if    *  the element is itself a pointer, the pointed-to memory is not touched    *  in any way.  Managing the pointer is the user's responsibilty.   */
+comment|/**      *  @brief Erases elements according to the provided key.      *  @param  x  Key of element to be erased.      *  @return  The number of elements erased.      *      *  This function erases all elements located by the given key from a      *  %multimap.      *  Note that this function only erases the element, and that if      *  the element is itself a pointer, the pointed-to memory is not touched      *  in any way.  Managing the pointer is the user's responsibilty.     */
 name|size_type
 name|erase
 argument_list|(
@@ -959,7 +889,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Erases a [first,last) range of elements from a multimap.    *  @param  first  Iterator pointing to the start of the range to be erased.    *  @param  last  Iterator pointing to the end of the range to be erased.    *    *  This function erases a sequence of elements from a multimap.    *  Note that this function only erases the elements, and that if    *  the elements themselves are pointers, the pointed-to memory is not    *  touched in any way.  Managing the pointer is the user's responsibilty.   */
+comment|/**      *  @brief Erases a [first,last) range of elements from a %multimap.      *  @param  first  Iterator pointing to the start of the range to be erased.      *  @param  last  Iterator pointing to the end of the range to be erased.      *      *  This function erases a sequence of elements from a %multimap.      *  Note that this function only erases the elements, and that if      *  the elements themselves are pointers, the pointed-to memory is not      *  touched in any way.  Managing the pointer is the user's responsibilty.     */
 name|void
 name|erase
 parameter_list|(
@@ -980,7 +910,26 @@ name|__last
 argument_list|)
 expr_stmt|;
 block|}
-comment|/** Erases all elements in a multimap.  Note that this function only erases    *  the elements, and that if the elements themselves are pointers, the    *  pointed-to memory is not touched in any way.  Managing the pointer is    *  the user's responsibilty.   */
+comment|/**      *  @brief  Swaps data with another %multimap.      *  @param  x  A %multimap of the same element and allocator types.      *      *  This exchanges the elements between two multimaps in constant time.      *  (It is only swapping a pointer, an integer, and an instance of      *  the @c Compare type (which itself is often stateless and empty), so it      *  should be quite fast.)      *  Note that the global std::swap() function is specialized such that      *  std::swap(m1,m2) will feed to this function.     */
+name|void
+name|swap
+parameter_list|(
+name|multimap
+modifier|&
+name|__x
+parameter_list|)
+block|{
+name|_M_t
+operator|.
+name|swap
+argument_list|(
+name|__x
+operator|.
+name|_M_t
+argument_list|)
+expr_stmt|;
+block|}
+comment|/**      *  Erases all elements in a %multimap.  Note that this function only erases      *  the elements, and that if the elements themselves are pointers, the      *  pointed-to memory is not touched in any way.  Managing the pointer is      *  the user's responsibilty.     */
 name|void
 name|clear
 parameter_list|()
@@ -991,8 +940,38 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-comment|// multimap operations:
-comment|/**    *  @brief Tries to locate an element in a multimap.    *  @param  x  Key of (key, value) pair to be located.    *  @return  Iterator pointing to sought-after (first matching?) element,    *           or end() if not found.    *    *  This function takes a key and tries to locate the element with which    *  the key matches.  If successful the function returns an iterator    *  pointing to the sought after pair. If unsuccessful it returns the    *  one past the end ( end() ) iterator.   */
+comment|// observers
+comment|/**      *  Returns the key comparison object out of which the %multimap      *  was constructed.     */
+name|key_compare
+name|key_comp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|_M_t
+operator|.
+name|key_comp
+argument_list|()
+return|;
+block|}
+comment|/**      *  Returns a value comparison object, built from the key comparison      *  object out of which the %multimap was constructed.     */
+name|value_compare
+name|value_comp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|value_compare
+argument_list|(
+name|_M_t
+operator|.
+name|key_comp
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|// multimap operations
+comment|/**      *  @brief Tries to locate an element in a %multimap.      *  @param  x  Key of (key, value) pair to be located.      *  @return  Iterator pointing to sought-after element,      *           or end() if not found.      *      *  This function takes a key and tries to locate the element with which      *  the key matches.  If successful the function returns an iterator      *  pointing to the sought after %pair.  If unsuccessful it returns the      *  past-the-end ( @c end() ) iterator.     */
 name|iterator
 name|find
 parameter_list|(
@@ -1011,7 +990,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Tries to locate an element in a multimap.    *  @param  x  Key of (key, value) pair to be located.    *  @return  Read-only (constant) iterator pointing to sought-after (first    *           matching?) element, or end() if not found.    *    *  This function takes a key and tries to locate the element with which    *  the key matches.  If successful the function returns a constant iterator    *  pointing to the sought after pair. If unsuccessful it returns the    *  one past the end ( end() ) iterator.   */
+comment|/**      *  @brief Tries to locate an element in a %multimap.      *  @param  x  Key of (key, value) pair to be located.      *  @return  Read-only (constant) iterator pointing to sought-after      *           element, or end() if not found.      *      *  This function takes a key and tries to locate the element with which      *  the key matches.  If successful the function returns a constant iterator      *  pointing to the sought after %pair.  If unsuccessful it returns the      *  past-the-end ( @c end() ) iterator.     */
 name|const_iterator
 name|find
 argument_list|(
@@ -1031,7 +1010,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds the number of elements with given key.    *  @param  x  Key of (key, value) pairs to be located.    *  @return Number of elements with specified key.   */
+comment|/**      *  @brief Finds the number of elements with given key.      *  @param  x  Key of (key, value) pairs to be located.      *  @return Number of elements with specified key.     */
 name|size_type
 name|count
 argument_list|(
@@ -1051,7 +1030,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds the beginning of a subsequence matching given key.    *  @param  x  Key of (key, value) pair to be located.    *  @return  Iterator pointing to first element matching given key, or    *           end() if not found.    *    *  This function returns the first element of a subsequence of elements    *  that matches the given key.  If unsuccessful it returns an iterator    *  pointing to the first element that has a greater value than given key    *  or end() if no such element exists.   */
+comment|/**      *  @brief Finds the beginning of a subsequence matching given key.      *  @param  x  Key of (key, value) pair to be located.      *  @return  Iterator pointing to first element matching given key, or      *           end() if not found.      *      *  This function returns the first element of a subsequence of elements      *  that matches the given key.  If unsuccessful it returns an iterator      *  pointing to the first element that has a greater value than given key      *  or end() if no such element exists.     */
 name|iterator
 name|lower_bound
 parameter_list|(
@@ -1070,7 +1049,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds the beginning of a subsequence matching given key.    *  @param  x  Key of (key, value) pair to be located.    *  @return  Read-only (constant) iterator pointing to first element    *           matching given key, or end() if not found.    *    *  This function returns the first element of a subsequence of elements    *  that matches the given key.  If unsuccessful the iterator will point    *  to the next greatest element or, if no such greater element exists, to    *  end().   */
+comment|/**      *  @brief Finds the beginning of a subsequence matching given key.      *  @param  x  Key of (key, value) pair to be located.      *  @return  Read-only (constant) iterator pointing to first element      *           matching given key, or end() if not found.      *      *  This function returns the first element of a subsequence of elements      *  that matches the given key.  If unsuccessful the iterator will point      *  to the next greatest element or, if no such greater element exists, to      *  end().     */
 name|const_iterator
 name|lower_bound
 argument_list|(
@@ -1090,7 +1069,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds the end of a subsequence matching given key.    *  @param  x  Key of (key, value) pair to be located.    *  @return Iterator pointing to last element matching given key.   */
+comment|/**      *  @brief Finds the end of a subsequence matching given key.      *  @param  x  Key of (key, value) pair to be located.      *  @return Iterator pointing to last element matching given key.     */
 name|iterator
 name|upper_bound
 parameter_list|(
@@ -1109,7 +1088,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds the end of a subsequence matching given key.    *  @param  x  Key of (key, value) pair to be located.    *  @return  Read-only (constant) iterator pointing to last element matching    *           given key.   */
+comment|/**      *  @brief Finds the end of a subsequence matching given key.      *  @param  x  Key of (key, value) pair to be located.      *  @return  Read-only (constant) iterator pointing to last element matching      *           given key.     */
 name|const_iterator
 name|upper_bound
 argument_list|(
@@ -1129,7 +1108,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds a subsequence matching given key.    *  @param  x  Key of (key, value) pairs to be located.    *  @return  Pair of iterators that possibly points to the subsequence    *           matching given key.    *    *  This function improves on lower_bound() and upper_bound() by giving a more    *  elegant and efficient solution.  It returns a pair of which the first    *  element possibly points to the first element matching the given key    *  and the second element possibly points to the last element matching the    *  given key.  If unsuccessful the first element of the returned pair will    *  contain an iterator pointing to the next greatest element or, if no such    *  greater element exists, to end().   */
+comment|/**      *  @brief Finds a subsequence matching given key.      *  @param  x  Key of (key, value) pairs to be located.      *  @return  Pair of iterators that possibly points to the subsequence      *           matching given key.      *      *  This function returns a pair of which the first      *  element possibly points to the first element matching the given key      *  and the second element possibly points to the last element matching the      *  given key.  If unsuccessful the first element of the returned pair will      *  contain an iterator pointing to the next greatest element or, if no such      *  greater element exists, to end().     */
 name|pair
 operator|<
 name|iterator
@@ -1150,7 +1129,7 @@ name|__x
 argument_list|)
 return|;
 block|}
-comment|/**    *  @brief Finds a subsequence matching given key.    *  @param  x  Key of (key, value) pairs to be located.    *  @return  Pair of read-only (constant) iterators that possibly points to    *           the subsequence matching given key.    *    *  This function improves on lower_bound() and upper_bound() by giving a more    *  elegant and efficient solution.  It returns a pair of which the first    *  element possibly points to the first element matching the given key    *  and the second element possibly points to the last element matching the    *  given key.  If unsuccessful the first element of the returned pair will    *  contain an iterator pointing to the next greatest element or, if no such    *  a greater element exists, to end().   */
+comment|/**      *  @brief Finds a subsequence matching given key.      *  @param  x  Key of (key, value) pairs to be located.      *  @return  Pair of read-only (constant) iterators that possibly points to      *           the subsequence matching given key.      *      *  This function returns a pair of which the first      *  element possibly points to the first element matching the given key      *  and the second element possibly points to the last element matching the      *  given key.  If unsuccessful the first element of the returned pair will      *  contain an iterator pointing to the next greatest element or, if no such      *  a greater element exists, to end().     */
 name|pair
 operator|<
 name|const_iterator
@@ -1174,16 +1153,16 @@ return|;
 block|}
 name|template
 operator|<
-name|class
+name|typename
 name|_K1
 operator|,
-name|class
+name|typename
 name|_T1
 operator|,
-name|class
+name|typename
 name|_C1
 operator|,
-name|class
+name|typename
 name|_A1
 operator|>
 name|friend
@@ -1220,16 +1199,16 @@ operator|)
 expr_stmt|;
 name|template
 operator|<
-name|class
+name|typename
 name|_K1
 operator|,
-name|class
+name|typename
 name|_T1
 operator|,
-name|class
+name|typename
 name|_C1
 operator|,
-name|class
+name|typename
 name|_A1
 operator|>
 name|friend
@@ -1271,19 +1250,23 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/**    *  @brief  Multimap equality comparison.    *  @param  x  A %multimap.    *  @param  y  A %multimap of the same type as @a x.    *  @return  True iff the size and elements of the maps are equal.    *    *  This is an equivalence relation.  It is linear in the size of the    *  multimaps.  Multimaps are considered equivalent if their sizes are equal,    *  and if corresponding elements compare equal.   */
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1332,19 +1315,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/**    *  @brief  Multimap ordering relation.    *  @param  x  A %multimap.    *  @param  y  A %multimap of the same type as @a x.    *  @return  True iff @a x is lexographically less than @a y.    *    *  This is a total ordering relation.  It is linear in the size of the    *  multimaps.  The elements must be comparable with @c<.    *    *  See std::lexographical_compare() for how the determination is made.   */
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1393,19 +1380,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Based on operator==
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1453,19 +1444,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Based on operator<
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1510,19 +1505,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Based on operator<
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1570,19 +1569,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Based on operator<
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1630,19 +1633,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// See std::multimap::swap().
+end_comment
+
 begin_expr_stmt
 name|template
 operator|<
-name|class
+name|typename
 name|_Key
 operator|,
-name|class
+name|typename
 name|_Tp
 operator|,
-name|class
+name|typename
 name|_Compare
 operator|,
-name|class
+name|typename
 name|_Alloc
 operator|>
 specifier|inline
@@ -1687,18 +1694,6 @@ end_endif
 
 begin_comment
 comment|/* __GLIBCPP_INTERNAL_MULTIMAP_H */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

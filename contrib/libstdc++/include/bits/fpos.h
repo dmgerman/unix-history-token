@@ -152,7 +152,8 @@ name|namespace
 name|std
 block|{
 comment|// 27.4.1  Types
-comment|// 27.4.3  Template class fpos
+comment|// [27.4.3] template class fpos
+comment|/**    *  @doctodo   */
 name|template
 operator|<
 name|typename
@@ -390,7 +391,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// 27.2, paragraph 10 about fpos/char_traits circularity
+comment|/// 27.2, paragraph 10 about fpos/char_traits circularity
 end_comment
 
 begin_typedef
@@ -408,6 +409,10 @@ ifdef|#
 directive|ifdef
 name|_GLIBCPP_USE_WCHAR_T
 end_ifdef
+
+begin_comment
+comment|/// 27.2, paragraph 10 about fpos/char_traits circularity
+end_comment
 
 begin_typedef
 typedef|typedef

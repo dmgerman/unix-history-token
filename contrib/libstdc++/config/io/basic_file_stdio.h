@@ -299,6 +299,10 @@ block|;
 name|int
 name|sync
 argument_list|()
+block|;
+name|streamsize
+name|showmanyc_helper
+argument_list|()
 block|;     }
 expr_stmt|;
 block|}

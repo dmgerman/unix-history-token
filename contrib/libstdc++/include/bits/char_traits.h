@@ -159,9 +159,8 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
-comment|/// 21.1.2 Basis for explicit _Traits specialization
-comment|/// NB: That for any given actual character type this definition is
-comment|/// probably wrong.
+comment|// 21.1
+comment|/**    *  @brief  Basis for explicit traits specializations.    *    *  @note  For any given actual character type, this definition is    *  probably wrong.    *    *  See http://gcc.gnu.org/onlinedocs/libstdc++/21_strings/howto.html#5    *  for advice on how to make use of this class for "unusual" character    *  types.   */
 name|template
 operator|<
 name|class
@@ -394,7 +393,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// 21.1.4  char_traits specializations
+comment|/// 21.1.3.1  char_traits specializations
 end_comment
 
 begin_expr_stmt
@@ -855,6 +854,10 @@ ifdef|#
 directive|ifdef
 name|_GLIBCPP_USE_WCHAR_T
 end_ifdef
+
+begin_comment
+comment|/// 21.1.3.2  char_traits specializations
+end_comment
 
 begin_expr_stmt
 name|template

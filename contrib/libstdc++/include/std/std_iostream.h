@@ -153,22 +153,28 @@ begin_decl_stmt
 name|namespace
 name|std
 block|{
+comment|/**    *  @name Standard Stream Objects    *    *  The&lt;iostream&gt; header declares the eight<em>standard stream    *  objects</em>.  For other declarations, see    *  http://gcc.gnu.org/onlinedocs/libstdc++/27_io/howto.html#10 and the    *  @link s27_2_iosfwd I/O forward declarations @endlink    *    *  They are required by default to cooperate with the global C library's    *  @c FILE streams, and to be available during program startup and    *  termination.  For more information, see the HOWTO linked to above.   */
+comment|//@{
 specifier|extern
 name|istream
 name|cin
 decl_stmt|;
+comment|///< Linked to standard input
 specifier|extern
 name|ostream
 name|cout
 decl_stmt|;
+comment|///< Linked to standard output
 specifier|extern
 name|ostream
 name|cerr
 decl_stmt|;
+comment|///< Linked to standard error (unbuffered)
 specifier|extern
 name|ostream
 name|clog
 decl_stmt|;
+comment|///< Linked to standard error (buffered)
 ifdef|#
 directive|ifdef
 name|_GLIBCPP_USE_WCHAR_T
@@ -176,20 +182,25 @@ specifier|extern
 name|wistream
 name|wcin
 decl_stmt|;
+comment|///< Linked to standard input
 specifier|extern
 name|wostream
 name|wcout
 decl_stmt|;
+comment|///< Linked to standard output
 specifier|extern
 name|wostream
 name|wcerr
 decl_stmt|;
+comment|///< Linked to standard error (unbuffered)
 specifier|extern
 name|wostream
 name|wclog
 decl_stmt|;
+comment|///< Linked to standard error (buffered)
 endif|#
 directive|endif
+comment|//@}
 comment|// For construction of filebuffers for cout, cin, cerr, clog et. al.
 specifier|static
 name|ios_base

@@ -163,23 +163,11 @@ directive|include
 file|<bits/stl_raw_storage_iter.h>
 end_include
 
-begin_comment
-comment|// Since this entire file is within namespace std, there's no reason to
-end_comment
-
-begin_comment
-comment|// waste two spaces along the left column.  Thus the leading indentation is
-end_comment
-
-begin_comment
-comment|// slightly violated from here on.
-end_comment
-
 begin_decl_stmt
 name|namespace
 name|std
 block|{
-comment|/**  *  @if maint  *  This is a helper function.  The unused second parameter exists to  *  permit the real get_temporary_buffer to use template parameter deduction.  *  *  XXX This should perhaps use the pool.  *  @endif */
+comment|/**    *  @if maint    *  This is a helper function.  The unused second parameter exists to    *  permit the real get_temporary_buffer to use template parameter deduction.    *    *  XXX This should perhaps use the pool.    *  @endif    */
 name|template
 operator|<
 name|typename
@@ -301,7 +289,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**  *  @brief This is a mostly-useless wrapper around malloc().  *  @param  len  The number of objects of type Tp.  *  @return   See full description.  *  *  Reinventing the wheel, but this time with prettier spokes!  *  *  This function tries to obtain storage for @c len adjacent Tp objects.  *  The objects themselves are not constructed, of course.  A pair<> is  *  returned containing "the buffer s address and capacity (in the units of  *  sizeof(Tp)), or a pair of 0 values if no storage can be obtained."  *  Note that the capacity obtained may be less than that requested if the  *  memory is unavailable; you should compare len with the .second return  *  value. */
+comment|/**    *  @brief This is a mostly-useless wrapper around malloc().    *  @param  len  The number of objects of type Tp.    *  @return   See full description.    *    *  Reinventing the wheel, but this time with prettier spokes!    *    *  This function tries to obtain storage for @c len adjacent Tp objects.    *  The objects themselves are not constructed, of course.  A pair<> is    *  returned containing "the buffer s address and capacity (in the units of    *  sizeof(Tp)), or a pair of 0 values if no storage can be obtained."    *  Note that the capacity obtained may be less than that requested if the    *  memory is unavailable; you should compare len with the .second return    *  value.    */
 end_comment
 
 begin_expr_stmt
@@ -339,7 +327,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**  *  @brief The companion to get_temporary_buffer().  *  @param  p  A buffer previously allocated by get_temporary_buffer.  *  @return   None.  *  *  Frees the memory pointed to by p.  */
+comment|/**    *  @brief The companion to get_temporary_buffer().    *  @param  p  A buffer previously allocated by get_temporary_buffer.    *  @return   None.    *    *  Frees the memory pointed to by p.    */
 end_comment
 
 begin_expr_stmt
@@ -360,8 +348,8 @@ name|free
 argument_list|(
 name|__p
 argument_list|)
-block|;   }
-comment|/**  *  A wrapper class to provide auto_ptr with reference semantics.  For  *  example, an auto_ptr can be assigned (or constructed from) the result of  *  a function which returns an auto_ptr by value.  *  *  All the auto_ptr_ref stuff should happen behind the scenes. */
+block|; }
+comment|/**    *  A wrapper class to provide auto_ptr with reference semantics.  For    *  example, an auto_ptr can be assigned (or constructed from) the result of    *  a function which returns an auto_ptr by value.    *    *  All the auto_ptr_ref stuff should happen behind the scenes.    */
 name|template
 operator|<
 name|typename
@@ -386,13 +374,13 @@ name|_M_ptr
 argument_list|(
 argument|__p
 argument_list|)
-block|{}
+block|{ }
 block|}
 expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/**  *  @brief  A simple smart pointer providing strict ownership semantics.  *  *  The Standard says:  *<pre>  *  An @c auto_ptr owns the object it holds a pointer to.  Copying an  *  @c auto_ptr copies the pointer and transfers ownership to the destination.  *  If more than one @c auto_ptr owns the same object at the same time the  *  behavior of the program is undefined.  *  *  The uses of @c auto_ptr include providing temporary exception-safety for  *  dynamically allocated memory, passing ownership of dynamically allocated  *  memory to a function, and returning dynamically allocated memory from a  *  function.  @c auto_ptr does not meet the CopyConstructible and Assignable  *  requirements for Standard Library<a href="tables.html#65">container</a>  *  elements and thus instantiating a Standard Library container with an  *  @c auto_ptr results in undefined behavior.  *</pre>  *  Quoted from [20.4.5]/3.  *  *  Good examples of what can and cannot be done with auto_ptr can be found  *  in the libstdc++ testsuite.  *  *  @if maint  *  _GLIBCPP_RESOLVE_LIB_DEFECTS  *  127.  auto_ptr<> conversion issues  *  These resolutions have all been incorporated.  *  @endif */
+comment|/**    *  @brief  A simple smart pointer providing strict ownership semantics.    *    *  The Standard says:    *<pre>    *  An @c auto_ptr owns the object it holds a pointer to.  Copying an    *  @c auto_ptr copies the pointer and transfers ownership to the destination.    *  If more than one @c auto_ptr owns the same object at the same time the    *  behavior of the program is undefined.    *    *  The uses of @c auto_ptr include providing temporary exception-safety for    *  dynamically allocated memory, passing ownership of dynamically allocated    *  memory to a function, and returning dynamically allocated memory from a    *  function.  @c auto_ptr does not meet the CopyConstructible and Assignable    *  requirements for Standard Library<a href="tables.html#65">container</a>    *  elements and thus instantiating a Standard Library container with an    *  @c auto_ptr results in undefined behavior.    *</pre>    *  Quoted from [20.4.5]/3.    *    *  Good examples of what can and cannot be done with auto_ptr can be found    *  in the libstdc++ testsuite.    *    *  @if maint    *  _GLIBCPP_RESOLVE_LIB_DEFECTS    *  127.  auto_ptr<> conversion issues    *  These resolutions have all been incorporated.    *  @endif    */
 end_comment
 
 begin_expr_stmt
@@ -417,7 +405,7 @@ typedef|typedef
 name|_Tp
 name|element_type
 typedef|;
-comment|/**    *  @brief  An %auto_ptr is usually constructed from a raw pointer.    *  @param  p  A pointer (defaults to NULL).    *    *  This object now @e owns the object pointed to by @a p.   */
+comment|/**        *  @brief  An %auto_ptr is usually constructed from a raw pointer.        *  @param  p  A pointer (defaults to NULL).        *        *  This object now @e owns the object pointed to by @a p.        */
 name|explicit
 name|auto_ptr
 argument_list|(
@@ -432,7 +420,7 @@ argument_list|(
 argument|__p
 argument_list|)
 block|{ }
-comment|/**    *  @brief  An %auto_ptr can be constructed from another %auto_ptr.    *  @param  a  Another %auto_ptr of the same type.    *    *  This object now @e owns the object previously owned by @a a, which has    *  given up ownsership.   */
+comment|/**        *  @brief  An %auto_ptr can be constructed from another %auto_ptr.        *  @param  a  Another %auto_ptr of the same type.        *        *  This object now @e owns the object previously owned by @a a,        *  which has given up ownsership.        */
 name|auto_ptr
 argument_list|(
 argument|auto_ptr& __a
@@ -445,7 +433,7 @@ argument_list|(
 argument|__a.release()
 argument_list|)
 block|{ }
-comment|/**    *  @brief  An %auto_ptr can be constructed from another %auto_ptr.    *  @param  a  Another %auto_ptr of a different but related type.    *    *  A pointer-to-Tp1 must be convertible to a pointer-to-Tp/element_type.    *    *  This object now @e owns the object previously owned by @a a, which has    *  given up ownsership.   */
+comment|/**        *  @brief  An %auto_ptr can be constructed from another %auto_ptr.        *  @param  a  Another %auto_ptr of a different but related type.        *        *  A pointer-to-Tp1 must be convertible to a pointer-to-Tp/element_type.        *        *  This object now @e owns the object previously owned by @a a,        *  which has given up ownsership.        */
 name|template
 operator|<
 name|typename
@@ -463,7 +451,7 @@ argument_list|(
 argument|__a.release()
 argument_list|)
 block|{ }
-comment|/**    *  @brief  %auto_ptr assignment operator.    *  @param  a  Another %auto_ptr of the same type.    *    *  This object now @e owns the object previously owned by @a a, which has    *  given up ownsership.  The object that this one @e used to own and    *  track has been deleted.   */
+comment|/**        *  @brief  %auto_ptr assignment operator.        *  @param  a  Another %auto_ptr of the same type.        *        *  This object now @e owns the object previously owned by @a a,        *  which has given up ownsership.  The object that this one @e        *  used to own and track has been deleted.        */
 name|auto_ptr
 operator|&
 name|operator
@@ -492,7 +480,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  %auto_ptr assignment operator.    *  @param  a  Another %auto_ptr of a different but related type.    *    *  A pointer-to-Tp1 must be convertible to a pointer-to-Tp/element_type.    *    *  This object now @e owns the object previously owned by @a a, which has    *  given up ownsership.  The object that this one @e used to own and    *  track has been deleted.   */
+comment|/**        *  @brief  %auto_ptr assignment operator.        *  @param  a  Another %auto_ptr of a different but related type.        *        *  A pointer-to-Tp1 must be convertible to a pointer-to-Tp/element_type.        *        *  This object now @e owns the object previously owned by @a a,        *  which has given up ownsership.  The object that this one @e        *  used to own and track has been deleted.        */
 end_comment
 
 begin_expr_stmt
@@ -532,7 +520,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  When the %auto_ptr goes out of scope, the object it owns is deleted.    *  If it no longer owns anything (i.e., @c get() is @c NULL), then this    *  has no effect.    *    *  @if maint    *  The C++ standard says there is supposed to be an empty throw    *  specification here, but omitting it is standard conforming.  Its    *  presence can be detected only if _Tp::~_Tp() throws, but this is    *  prohibited.  [17.4.3.6]/2    *  @end maint   */
+comment|/**        *  When the %auto_ptr goes out of scope, the object it owns is deleted.        *  If it no longer owns anything (i.e., @c get() is @c NULL), then this        *  has no effect.        *        *  @if maint        *  The C++ standard says there is supposed to be an empty throw        *  specification here, but omitting it is standard conforming.  Its        *  presence can be detected only if _Tp::~_Tp() throws, but this is        *  prohibited.  [17.4.3.6]/2        *  @end maint        */
 end_comment
 
 begin_expr_stmt
@@ -543,7 +531,7 @@ block|{
 name|delete
 name|_M_ptr
 block|; }
-comment|/**    *  @brief  Smart pointer dereferencing.    *    *  If this %auto_ptr no longer owns anything, then this operation will    *  crash.  (For a smart pointer, "no longer owns anything" is the same as    *  being a null pointer, and you know what happens when you dereference    *  one of those...)   */
+comment|/**        *  @brief  Smart pointer dereferencing.        *        *  If this %auto_ptr no longer owns anything, then this        *  operation will crash.  (For a smart pointer, "no longer owns        *  anything" is the same as being a null pointer, and you know        *  what happens when you dereference one of those...)        */
 name|element_type
 operator|&
 name|operator
@@ -562,7 +550,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Smart pointer dereferencing.    *    *  This returns the pointer itself, which the language then will    *  automatically cause to be dereferenced.   */
+comment|/**        *  @brief  Smart pointer dereferencing.        *        *  This returns the pointer itself, which the language then will        *  automatically cause to be dereferenced.        */
 end_comment
 
 begin_expr_stmt
@@ -586,7 +574,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Bypassing the smart pointer.    *  @return  The raw pointer being managed.    *    *  You can get a copy of the pointer that this object owns, for    *  situations such as passing to a function which only accepts a raw    *  pointer.    *    *  @note  This %auto_ptr still owns the memory.   */
+comment|/**        *  @brief  Bypassing the smart pointer.        *  @return  The raw pointer being managed.        *        *  You can get a copy of the pointer that this object owns, for        *  situations such as passing to a function which only accepts a raw        *  pointer.        *        *  @note  This %auto_ptr still owns the memory.        */
 end_comment
 
 begin_expr_stmt
@@ -605,7 +593,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/**    *  @brief  Bypassing the smart pointer.    *  @return  The raw pointer being managed.    *    *  You can get a copy of the pointer that this object owns, for    *  situations such as passing to a function which only accepts a raw    *  pointer.    *    *  @note  This %auto_ptr no longer owns the memory.  When this object    *  goes out of scope, nothing will happen.   */
+comment|/**        *  @brief  Bypassing the smart pointer.        *  @return  The raw pointer being managed.        *        *  You can get a copy of the pointer that this object owns, for        *  situations such as passing to a function which only accepts a raw        *  pointer.        *        *  @note  This %auto_ptr no longer owns the memory.  When this object        *  goes out of scope, nothing will happen.        */
 end_comment
 
 begin_function
@@ -633,7 +621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**    *  @brief  Forcibly deletes the managed object.    *  @param  p  A pointer (defaults to NULL).    *    *  This object now @e owns the object pointed to by @a p.  The previous    *  object has been deleted.   */
+comment|/**        *  @brief  Forcibly deletes the managed object.        *  @param  p  A pointer (defaults to NULL).        *        *  This object now @e owns the object pointed to by @a p.  The previous        *  object has been deleted.        */
 end_comment
 
 begin_function
@@ -668,7 +656,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** @{    *  @brief  Automatic conversions    *    *  These operations convert an %auto_ptr into and from an auto_ptr_ref    *  automatically as needed.  This allows constructs such as    *  @code    *    auto_ptr<Derived>  func_returning_auto_ptr(.....);    *    ...    *    auto_ptr<Base> ptr = func_returning_auto_ptr(.....);    *  @endcode   */
+comment|/** @{        *  @brief  Automatic conversions        *        *  These operations convert an %auto_ptr into and from an auto_ptr_ref        *  automatically as needed.  This allows constructs such as        *  @code        *    auto_ptr<Derived>  func_returning_auto_ptr(.....);        *    ...        *    auto_ptr<Base> ptr = func_returning_auto_ptr(.....);        *  @endcode        */
 end_comment
 
 begin_macro
@@ -686,7 +674,7 @@ name|_M_ptr
 argument_list|(
 argument|__ref._M_ptr
 argument_list|)
-block|{}
+block|{ }
 name|auto_ptr
 operator|&
 name|operator
@@ -733,7 +721,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}    template
+unit|}              template
 operator|<
 name|typename
 name|_Tp1
@@ -799,7 +787,7 @@ comment|/** @}  */
 end_comment
 
 begin_comment
-unit|};  }
+unit|}; }
 comment|// namespace std
 end_comment
 
@@ -807,10 +795,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* _CPP_MEMORY */
-end_comment
 
 end_unit
 

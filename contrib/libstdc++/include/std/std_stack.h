@@ -159,6 +159,23 @@ directive|include
 file|<bits/stl_stack.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_NO_TEMPLATE_EXPORT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<bits/deque.tcc>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -166,18 +183,6 @@ end_endif
 
 begin_comment
 comment|/* _CPP_STACK */
-end_comment
-
-begin_comment
-comment|// Local Variables:
-end_comment
-
-begin_comment
-comment|// mode:C++
-end_comment
-
-begin_comment
-comment|// End:
 end_comment
 
 end_unit

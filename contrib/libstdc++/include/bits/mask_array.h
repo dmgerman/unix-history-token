@@ -4,7 +4,11 @@ comment|// The template and inlines for the -*- C++ -*- mask_array class.
 end_comment
 
 begin_comment
-comment|// Copyright (C) 1997-2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
+end_comment
+
+begin_comment
+comment|//  Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -292,6 +296,7 @@ specifier|const
 name|_Tp
 operator|&
 operator|)
+specifier|const
 decl_stmt|;
 comment|//        ~mask_array ();
 name|template
@@ -661,8 +666,6 @@ argument_list|(
 argument|__a
 argument_list|)
 block|{}
-comment|//    template<typename _Tp>
-comment|//    inline mask_array<_Tp>::~mask_array () {}
 name|template
 operator|<
 name|typename
@@ -683,6 +686,7 @@ name|_Tp
 operator|&
 name|__t
 operator|)
+specifier|const
 block|{
 name|__valarray_fill
 argument_list|(
@@ -748,7 +752,7 @@ operator|>
 name|template
 operator|<
 name|class
-name|E
+name|_Ex
 operator|>
 specifier|inline
 name|void
@@ -763,7 +767,7 @@ operator|(
 specifier|const
 name|_Expr
 operator|<
-name|E
+name|_Ex
 operator|,
 name|_Tp
 operator|>
@@ -793,71 +797,71 @@ define|#
 directive|define
 name|_DEFINE_VALARRAY_OPERATOR
 parameter_list|(
-name|op
+name|_Op
 parameter_list|,
-name|name
+name|_Name
 parameter_list|)
 define|\
-value|template<typename _Tp>							\ inline void								\ mask_array<_Tp>::operator op##= (const valarray<_Tp>& __v) const	\ {									\   _Array_augmented_##name (_M_array, _M_mask, 				\                            _Array<_Tp> (__v), __v.size ());		\ }									\ 									\ template<typename _Tp> template<class E>				\ inline void								\ mask_array<_Tp>::operator op##= (const _Expr<E, _Tp>& __e) const	\ {									\   _Array_augmented_##name (_M_array, _M_mask, __e, __e.size ());	\ }
+value|template<typename _Tp>						\     inline void								\     mask_array<_Tp>::operator _Op##=(const valarray<_Tp>& __v) const	\     {									\       _Array_augmented_##_Name(_M_array, _M_mask,			\ 			       _Array<_Tp>(__v), __v.size());		\     }									\ 									\   template<typename _Tp>                                                \     template<class _Dom>			                        \       inline void							\       mask_array<_Tp>::operator _Op##=(const _Expr<_Dom, _Tp>& __e) const\       {									\ 	_Array_augmented_##_Name(_M_array, _M_mask, __e, __e.size());   \       }
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|*
 argument_list|,
-argument|multiplies
+argument|__multiplies
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|/
 argument_list|,
-argument|divides
+argument|__divides
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|%
 argument_list|,
-argument|modulus
+argument|__modulus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|+
 argument_list|,
-argument|plus
+argument|__plus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|-
 argument_list|,
-argument|minus
+argument|__minus
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|^
 argument_list|,
-argument|xor
+argument|__bitwise_xor
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|&
 argument_list|,
-argument|and
+argument|__bitwise_and
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument||
 argument_list|,
-argument|or
+argument|__bitwise_or
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|<<
 argument_list|,
-argument|shift_left
+argument|__shift_left
 argument_list|)
 name|_DEFINE_VALARRAY_OPERATOR
 argument_list|(
 argument|>>
 argument_list|,
-argument|shift_right
+argument|__shift_right
 argument_list|)
 end_expr_stmt
 

@@ -222,8 +222,7 @@ name|char
 modifier|*
 name|languageSpecificData
 decl_stmt|;
-name|void
-modifier|*
+name|_Unwind_Ptr
 name|catchTemp
 decl_stmt|;
 name|void
