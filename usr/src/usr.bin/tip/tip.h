@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.5	81/11/20	*/
+comment|/*	tip.h	4.6	81/12/16	*/
 end_comment
 
 begin_comment
@@ -35,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_comment
@@ -455,36 +461,6 @@ end_define
 begin_comment
 comment|/* A nice function to string compare */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|islower
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>='a'&&(c)<='z')
-end_define
-
-begin_define
-define|#
-directive|define
-name|toupper
-parameter_list|(
-name|c
-parameter_list|)
-value|(c)-=('a'-'A')
-end_define
-
-begin_define
-define|#
-directive|define
-name|isnum
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>='0'&&(c)<= '9')
-end_define
 
 begin_define
 define|#
