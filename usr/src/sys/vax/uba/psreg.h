@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)psreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)psreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|PSIOAUTOREFRESH
-value|_IO(p, 0)
+value|_IO('p', 0)
 end_define
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|PSIOSINGLEREFRESH
-value|_IO(p, 1)
+value|_IO('p', 1)
 end_define
 
 begin_comment
@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|PSIOAUTOMAP
-value|_IO(p, 2)
+value|_IO('p', 2)
 end_define
 
 begin_comment
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|PSIOSINGLEMAP
-value|_IO(p, 3)
+value|_IO('p', 3)
 end_define
 
 begin_comment
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|PSIODOUBLEBUFFER
-value|_IO(p, 4)
+value|_IO('p', 4)
 end_define
 
 begin_comment
@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|PSIOSINGLEBUFFER
-value|_IO(p, 5)
+value|_IO('p', 5)
 end_define
 
 begin_comment
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|PSIOWAITREFRESH
-value|_IO(p, 6)
+value|_IO('p', 6)
 end_define
 
 begin_comment
@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|PSIOWAITMAP
-value|_IO(p, 7)
+value|_IO('p', 7)
 end_define
 
 begin_comment
@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|PSIOWAITHIT
-value|_IO(p, 8)
+value|_IO('p', 8)
 end_define
 
 begin_comment
@@ -147,7 +147,7 @@ begin_define
 define|#
 directive|define
 name|PSIOSTOPREFRESH
-value|_IO(p, 9)
+value|_IO('p', 9)
 end_define
 
 begin_comment
@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|PSIOSTOPMAP
-value|_IO(p,10)
+value|_IO('p',10)
 end_define
 
 begin_comment
@@ -169,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|PSIOGETADDR
-value|_IOR(p,11, int)
+value|_IOR('p',11, int)
 end_define
 
 begin_comment
@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|PSIOTIMEREFRESH
-value|_IO(p,12)
+value|_IO('p',12)
 end_define
 
 begin_comment
