@@ -250,7 +250,7 @@ argument_list|(
 name|dest
 argument_list|)
 argument_list|,
-name|chunk
+name|got
 argument_list|)
 expr_stmt|;
 block|}
