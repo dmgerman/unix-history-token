@@ -1758,7 +1758,7 @@ name|IS_LOCKING_VFS
 parameter_list|(
 name|vp
 parameter_list|)
-value|((vp)->v_tag == VT_UFS			\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS)
+value|((vp)->v_tag == VT_UFS			\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS)
 end_define
 
 begin_define
