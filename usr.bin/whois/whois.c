@@ -218,6 +218,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BNICHOST
+value|"whois.registro.br"
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_PORT
 value|"whois"
 end_define
@@ -264,6 +271,8 @@ block|{
 name|RNICHOST
 block|,
 name|PNICHOST
+block|,
+name|BNICHOST
 block|,
 name|NULL
 block|}
