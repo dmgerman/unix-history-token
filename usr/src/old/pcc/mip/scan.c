@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.11 (Berkeley) %G%"
+literal|"@(#)scan.c	2.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -820,6 +820,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|ONEPASS
+operator|(
+name|void
+operator|)
 name|p2init
 argument_list|(
 name|argc
@@ -975,6 +978,9 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|yyparse
 argument_list|()
 expr_stmt|;
@@ -3425,13 +3431,13 @@ define|#
 directive|define
 name|NSAVETAB
 value|4096
-argument|char	*savetab; int	saveleft;  char * savestr(cp) 	register char *cp; { 	register int len;  	len = strlen(cp) +
+argument|char	*savetab; unsigned saveleft; char	*malloc(); char	*calloc(); char	*strncpy();  char * savestr(cp) 	register char *cp; { 	register int len;  	len = strlen(cp) +
 literal|1
-argument|; 	if (len> saveleft) { 		saveleft = NSAVETAB; 		if (len> saveleft) 			saveleft = len; 		savetab = (char *)malloc(saveleft); 		if (savetab ==
+argument|; 	if (len> saveleft) { 		saveleft = NSAVETAB; 		if (len> saveleft) 			saveleft = len; 		savetab = malloc(saveleft); 		if (savetab ==
 literal|0
 argument|) 			cerror(
 literal|"Ran out of memory (savestr)"
-argument|); 	} 	strncpy(savetab, cp, len); 	cp = savetab; 	savetab += len; 	saveleft -= len; 	return (cp); }
+argument|); 	} 	(void) strncpy(savetab, cp, len); 	cp = savetab; 	savetab += len; 	saveleft -= len; 	return (cp); }
 comment|/*  * The definition for the segmented hash tables.  */
 define|#
 directive|define
@@ -3473,7 +3479,9 @@ argument|) 				return (*h); 			h += i; 			i +=
 literal|2
 argument|; 			if (h>= htp->ht_high) 				h -= HASHINC; 		} while (i< HASHINC); 	} 	cerror(
 literal|"ran out of hash tables"
-argument|); }
+argument|);
+comment|/*NOTREACHED*/
+argument|}
 end_block
 
 begin_endif
