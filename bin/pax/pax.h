@@ -493,7 +493,7 @@ name|char
 modifier|*
 name|org_name
 decl_stmt|;
-comment|/* orig name in filesystem */
+comment|/* orig name in file system */
 name|PATTERN
 modifier|*
 name|pat

@@ -1212,7 +1212,7 @@ break|break;
 case|case
 literal|'t'
 case|:
-comment|/* 			 * preserve access time on filesystem nodes we read 			 */
+comment|/* 			 * preserve access time on file system nodes we read 			 */
 name|tflag
 operator|=
 literal|1
@@ -1635,7 +1635,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* 			 * do not pass over mount points in the filesystem 			 */
+comment|/* 			 * do not pass over mount points in the file system 			 */
 name|Xflag
 operator|=
 literal|1
@@ -2410,7 +2410,7 @@ break|break;
 case|case
 literal|'X'
 case|:
-comment|/* 			 * do not pass over mount points in the filesystem 			 */
+comment|/* 			 * do not pass over mount points in the file system 			 */
 name|Xflag
 operator|=
 literal|1

@@ -78,7 +78,7 @@ comment|/* max number of chars for hash */
 end_comment
 
 begin_comment
-comment|/*  * file hard link structure (hashed by dev/ino and chained) used to find the  * hard links in a filesystem or with some archive formats (cpio)  */
+comment|/*  * file hard link structure (hashed by dev/ino and chained) used to find the  * hard links in a file system or with some archive formats (cpio)  */
 end_comment
 
 begin_typedef

@@ -1425,7 +1425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Make a pass over the filesystem info in ``mntbuf'' filtering out  * filesystem types not in vfslist and possibly re-stating to get  * current (not cached) info.  Returns the new count of valid statfs bufs.  */
+comment|/*  * Make a pass over the file system info in ``mntbuf'' filtering out  * file system types not in vfslist and possibly re-stating to get  * current (not cached) info.  Returns the new count of valid statfs bufs.  */
 end_comment
 
 begin_function
@@ -1798,7 +1798,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert statfs returned filesystem size into BLOCKSIZE units.  * Attempts to avoid overflow for large filesystems.  */
+comment|/*  * Convert statfs returned file system size into BLOCKSIZE units.  * Attempts to avoid overflow for large file systems.  */
 end_comment
 
 begin_define
@@ -1817,7 +1817,7 @@ value|(((fsbs) != 0&& (fsbs)< (bs)) ? \ 		(num) / ((bs) / (fsbs)) : (num) * ((fs
 end_define
 
 begin_comment
-comment|/*  * Print out status about a filesystem.  */
+comment|/*  * Print out status about a file system.  */
 end_comment
 
 begin_function
@@ -2288,7 +2288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the maximum field-width information in `mwp' based on  * the filesystem specified by `sfsp'.  */
+comment|/*  * Update the maximum field-width information in `mwp' based on  * the file system specified by `sfsp'.  */
 end_comment
 
 begin_function
@@ -2550,7 +2550,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-b | -H | -h | -k | -m | -P] [-ailn] [-t type] [file | filesystem ...]\n"
+literal|"usage: df [-b | -H | -h | -k | -m | -P] [-ailn] [-t type] [file | file system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

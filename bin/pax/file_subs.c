@@ -1011,7 +1011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * node_creat()  *	create an entry in the filesystem (other than a file or hard link).  *	If successful, sets uid/gid modes and times as required.  * Return:  *	0 if ok, -1 otherwise  */
+comment|/*  * node_creat()  *	create an entry in the file system (other than a file or hard link).  *	If successful, sets uid/gid modes and times as required.  * Return:  *	0 if ok, -1 otherwise  */
 end_comment
 
 begin_function
@@ -1634,7 +1634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * unlnk_exist()  *	Remove node from filesystem with the specified name. We pass the type  *	of the node that is going to replace it. When we try to create a  *	directory and find that it already exists, we allow processing to  *	continue as proper modes etc will always be set for it later on.  * Return:  *	0 is ok to proceed, no file with the specified name exists  *	-1 we were unable to remove the node, or we should not remove it (-k)  *	1 we found a directory and we were going to create a directory.  */
+comment|/*  * unlnk_exist()  *	Remove node from file system with the specified name. We pass the type  *	of the node that is going to replace it. When we try to create a  *	directory and find that it already exists, we allow processing to  *	continue as proper modes etc will always be set for it later on.  * Return:  *	0 is ok to proceed, no file with the specified name exists  *	-1 we were unable to remove the node, or we should not remove it (-k)  *	1 we found a directory and we were going to create a directory.  */
 end_comment
 
 begin_function
@@ -1775,7 +1775,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * chk_path()  *	We were trying to create some kind of node in the filesystem and it  *	failed. chk_path() makes sure the path up to the node exists and is  *	writeable. When we have to create a directory that is missing along the  *	path somewhere, the directory we create will be set to the same  *	uid/gid as the file has (when uid and gid are being preserved).  *	NOTE: this routine is a real performance loss. It is only used as a  *	last resort when trying to create entries in the filesystem.  * Return:  *	-1 when it could find nothing it is allowed to fix.  *	0 otherwise  */
+comment|/*  * chk_path()  *	We were trying to create some kind of node in the file system and it  *	failed. chk_path() makes sure the path up to the node exists and is  *	writeable. When we have to create a directory that is missing along the  *	path somewhere, the directory we create will be set to the same  *	uid/gid as the file has (when uid and gid are being preserved).  *	NOTE: this routine is a real performance loss. It is only used as a  *	last resort when trying to create entries in the file system.  * Return:  *	-1 when it could find nothing it is allowed to fix.  *	0 otherwise  */
 end_comment
 
 begin_function
@@ -1848,7 +1848,7 @@ name|spt
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 		 * if it exists we assume it is a directory, it is not within 		 * the spec (at least it seems to read that way) to alter the 		 * filesystem for nodes NOT EXPLICITLY stored on the archive. 		 * If that assumption is changed, you would test the node here 		 * and figure out how to get rid of it (probably like some 		 * recursive unlink()) or fix up the directory permissions if 		 * required (do an access()). 		 */
+comment|/* 		 * if it exists we assume it is a directory, it is not within 		 * the spec (at least it seems to read that way) to alter the 		 * file system for nodes NOT EXPLICITLY stored on the archive. 		 * If that assumption is changed, you would test the node here 		 * and figure out how to get rid of it (probably like some 		 * recursive unlink()) or fix up the directory permissions if 		 * required (do an access()). 		 */
 if|if
 condition|(
 name|lstat
@@ -2171,7 +2171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set_ids()  *	set the uid and gid of a filesystem node  * Return:  *	0 when set, -1 on failure  */
+comment|/*  * set_ids()  *	set the uid and gid of a file system node  * Return:  *	0 when set, -1 on failure  */
 end_comment
 
 begin_function
@@ -2253,7 +2253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set_lids()  *	set the uid and gid of a filesystem node  * Return:  *	0 when set, -1 on failure  */
+comment|/*  * set_lids()  *	set the uid and gid of a file system node  * Return:  *	0 when set, -1 on failure  */
 end_comment
 
 begin_function
@@ -2381,7 +2381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_write()  *	Write/copy a file (during copy or archive extract). This routine knows  *	how to copy files with lseek holes in it. (Which are read as file  *	blocks containing all 0's but do not have any file blocks associated  *	with the data). Typical examples of these are files created by dbm  *	variants (.pag files). While the file size of these files are huge, the  *	actual storage is quite small (the files are sparse). The problem is  *	the holes read as all zeros so are probably stored on the archive that  *	way (there is no way to determine if the file block is really a hole,  *	we only know that a file block of all zero's can be a hole).  *	At this writing, no major archive format knows how to archive files  *	with holes. However, on extraction (or during copy, -rw) we have to  *	deal with these files. Without detecting the holes, the files can  *	consume a lot of file space if just written to disk. This replacement  *	for write when passed the basic allocation size of a filesystem block,  *	uses lseek whenever it detects the input data is all 0 within that  *	file block. In more detail, the strategy is as follows:  *	While the input is all zero keep doing an lseek. Keep track of when we  *	pass over file block boundries. Only write when we hit a non zero  *	input. once we have written a file block, we continue to write it to  *	the end (we stop looking at the input). When we reach the start of the  *	next file block, start checking for zero blocks again. Working on file  *	block boundries significantly reduces the overhead when copying files  *	that are NOT very sparse. This overhead (when compared to a write) is  *	almost below the measurement resolution on many systems. Without it,  *	files with holes cannot be safely copied. It does has a side effect as  *	it can put holes into files that did not have them before, but that is  *	not a problem since the file contents are unchanged (in fact it saves  *	file space). (Except on paging files for diskless clients. But since we  *	cannot determine one of those file from here, we ignore them). If this  *	ever ends up on a system where CTG files are supported and the holes  *	are not desired, just do a conditional test in those routines that  *	call file_write() and have it call write() instead. BEFORE CLOSING THE  *	FILE, make sure to call file_flush() when the last write finishes with  *	an empty block. A lot of filesystems will not create an lseek hole at  *	the end. In this case we drop a single 0 at the end to force the  *	trailing 0's in the file.  *	---Parameters---  *	rem: how many bytes left in this filesystem block  *	isempt: have we written to the file block yet (is it empty)  *	sz: basic file block allocation size  *	cnt: number of bytes on this write  *	str: buffer to write  * Return:  *	number of bytes written, -1 on write (or lseek) error.  */
+comment|/*  * file_write()  *	Write/copy a file (during copy or archive extract). This routine knows  *	how to copy files with lseek holes in it. (Which are read as file  *	blocks containing all 0's but do not have any file blocks associated  *	with the data). Typical examples of these are files created by dbm  *	variants (.pag files). While the file size of these files are huge, the  *	actual storage is quite small (the files are sparse). The problem is  *	the holes read as all zeros so are probably stored on the archive that  *	way (there is no way to determine if the file block is really a hole,  *	we only know that a file block of all zero's can be a hole).  *	At this writing, no major archive format knows how to archive files  *	with holes. However, on extraction (or during copy, -rw) we have to  *	deal with these files. Without detecting the holes, the files can  *	consume a lot of file space if just written to disk. This replacement  *	for write when passed the basic allocation size of a file system block,  *	uses lseek whenever it detects the input data is all 0 within that  *	file block. In more detail, the strategy is as follows:  *	While the input is all zero keep doing an lseek. Keep track of when we  *	pass over file block boundries. Only write when we hit a non zero  *	input. once we have written a file block, we continue to write it to  *	the end (we stop looking at the input). When we reach the start of the  *	next file block, start checking for zero blocks again. Working on file  *	block boundries significantly reduces the overhead when copying files  *	that are NOT very sparse. This overhead (when compared to a write) is  *	almost below the measurement resolution on many systems. Without it,  *	files with holes cannot be safely copied. It does has a side effect as  *	it can put holes into files that did not have them before, but that is  *	not a problem since the file contents are unchanged (in fact it saves  *	file space). (Except on paging files for diskless clients. But since we  *	cannot determine one of those file from here, we ignore them). If this  *	ever ends up on a system where CTG files are supported and the holes  *	are not desired, just do a conditional test in those routines that  *	call file_write() and have it call write() instead. BEFORE CLOSING THE  *	FILE, make sure to call file_flush() when the last write finishes with  *	an empty block. A lot of file systems will not create an lseek hole at  *	the end. In this case we drop a single 0 at the end to force the  *	trailing 0's in the file.  *	---Parameters---  *	rem: how many bytes left in this file system block  *	isempt: have we written to the file block yet (is it empty)  *	sz: basic file block allocation size  *	cnt: number of bytes on this write  *	str: buffer to write  * Return:  *	number of bytes written, -1 on write (or lseek) error.  */
 end_comment
 
 begin_function
@@ -2444,7 +2444,7 @@ operator|*
 name|rem
 condition|)
 block|{
-comment|/* 			 * We are now at the start of filesystem block again 			 * (or what we think one is...). start looking for 			 * empty blocks again 			 */
+comment|/* 			 * We are now at the start of file system block again 			 * (or what we think one is...). start looking for 			 * empty blocks again 			 */
 operator|*
 name|isempt
 operator|=
@@ -2568,7 +2568,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 		 * have non-zero data in this filesystem block, have to write 		 */
+comment|/* 		 * have non-zero data in this file system block, have to write 		 */
 if|if
 condition|(
 name|write
@@ -2617,7 +2617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_flush()  *	when the last file block in a file is zero, many filesystems will not  *	let us create a hole at the end. To get the last block with zeros, we  *	write the last BYTE with a zero (back up one byte and write a zero).  */
+comment|/*  * file_flush()  *	when the last file block in a file is zero, many file systems will not  *	let us create a hole at the end. To get the last block with zeros, we  *	write the last BYTE with a zero (back up one byte and write a zero).  */
 end_comment
 
 begin_function
