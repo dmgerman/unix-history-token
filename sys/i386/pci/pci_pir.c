@@ -64,13 +64,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pci/pcivar.h>
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pci/pcireg.h>
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
@@ -414,7 +414,7 @@ literal|128
 condition|)
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 return|return
@@ -433,7 +433,9 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|usebios
+operator|)
 return|;
 block|}
 end_function
@@ -450,10 +452,12 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|pcireg_cfgopen
 argument_list|()
 operator|!=
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -616,12 +620,10 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
 name|usebios
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -630,21 +632,17 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-block|{
 name|usebios
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
-comment|/*      * Look for the interrupt routing table.      *      * We use PCI BIOS's PIR table if it's available $PIR is the      * standard way to do this.  Sadly, some machines are not      * standards conforming and have _PIR instead.  We shrug and cope      * by looking for both.      */
+comment|/* 	 * Look for the interrupt routing table. 	 * 	 * We use PCI BIOS's PIR table if it's available $PIR is the 	 * standard way to do this.  Sadly, some machines are not 	 * standards conforming and have _PIR instead.  We shrug and cope 	 * by looking for both. 	 */
 if|if
 condition|(
 name|pcibios_get_version
@@ -893,13 +891,14 @@ parameter_list|)
 block|{
 name|uint32_t
 name|line
-decl_stmt|,
-name|pin
 decl_stmt|;
 ifdef|#
 directive|ifdef
 name|APIC_IO
-comment|/*      * If we are using the APIC, the contents of the intline register will probably      * be wrong (since they are set up for use with the PIC.      * Rather than rewrite these registers (maybe that would be smarter) we trap      * attempts to read them and translate to our private vector numbers.      */
+name|uint32_t
+name|pin
+decl_stmt|;
+comment|/* 	 * If we are using the APIC, the contents of the intline 	 * register will probably be wrong (since they are set up for 	 * use with the PIC.  Rather than rewrite these registers 	 * (maybe that would be smarter) we trap attempts to read them 	 * and translate to our private vector numbers. 	 */
 if|if
 condition|(
 operator|(
@@ -993,7 +992,7 @@ return|;
 block|}
 else|else
 block|{
-comment|/*  		 * PCI interrupts might be redirected to the 		 * ISA bus according to some MP tables. Use the 		 * same methods as used by the ISA devices 		 * devices to find the proper IOAPIC int pin. 		 */
+comment|/*  				 * PCI interrupts might be redirected 				 * to the ISA bus according to some MP 				 * tables. Use the same methods as 				 * used by the ISA devices devices to 				 * find the proper IOAPIC int pin. 				 */
 name|airq
 operator|=
 name|isa_apic_irq
@@ -1038,7 +1037,7 @@ return|;
 block|}
 else|#
 directive|else
-comment|/*      * Some BIOS writers seem to want to ignore the spec and put      * 0 in the intline rather than 255 to indicate none.  The rest of      * the code uses 255 as an invalid IRQ.      */
+comment|/* 	 * Some BIOS writers seem to want to ignore the spec and put 	 * 0 in the intline rather than 255 to indicate none.  The rest of 	 * the code uses 255 as an invalid IRQ. 	 */
 if|if
 condition|(
 name|reg
@@ -1061,21 +1060,6 @@ argument_list|,
 name|func
 argument_list|,
 name|PCIR_INTLINE
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|pin
-operator|=
-name|pci_do_cfgregread
-argument_list|(
-name|bus
-argument_list|,
-name|slot
-argument_list|,
-name|func
-argument_list|,
-name|PCIR_INTPIN
 argument_list|,
 literal|1
 argument_list|)
@@ -1247,7 +1231,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
@@ -1291,10 +1275,10 @@ operator|)
 condition|)
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
-comment|/*      * Scan the entry table for a contender      */
+comment|/* 	 * Scan the entry table for a contender 	 */
 for|for
 control|(
 name|i
@@ -1354,7 +1338,7 @@ if|if
 condition|(
 name|irq
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 name|irq
 operator|=
@@ -1369,7 +1353,7 @@ if|if
 condition|(
 name|irq
 operator|!=
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 name|already
 operator|=
@@ -1379,7 +1363,7 @@ if|if
 condition|(
 name|irq
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 name|irq
 operator|=
@@ -1394,10 +1378,10 @@ if|if
 condition|(
 name|irq
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 break|break;
-comment|/* 	 * Ask the BIOS to route the interrupt 	 */
+comment|/* 		 * Ask the BIOS to route the interrupt 		 */
 name|args
 operator|.
 name|eax
@@ -1420,6 +1404,7 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
+comment|/* pin value is 0xa - 0xd */
 name|args
 operator|.
 name|ecx
@@ -1438,7 +1423,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* pin value is 0xa - 0xd */
 if|if
 condition|(
 operator|!
@@ -1462,7 +1446,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* 	     * XXX if it fails, we should try to smack the router 	     * hardware directly. 	     * XXX Also, there may be other choices that we can try that 	     * will work. 	     */
+comment|/* 			 * XXX if it fails, we should try to smack the router 			 * hardware directly. 			 * XXX Also, there may be other choices that we can 			 * try that will work. 			 */
 name|PRVERB
 argument_list|(
 operator|(
@@ -1472,7 +1456,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
@@ -1518,7 +1502,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
@@ -1599,7 +1583,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
@@ -1640,7 +1624,7 @@ name|j
 decl_stmt|,
 name|irq
 decl_stmt|;
-comment|/*      * Scan table slots.      */
+comment|/* 	 * Scan table slots. 	 */
 for|for
 control|(
 name|i
@@ -1696,7 +1680,7 @@ name|pi
 operator|++
 control|)
 block|{
-comment|/* don't look at the entry we're trying to match with */
+comment|/* don't look at the entry we're trying to match */
 if|if
 condition|(
 operator|(
@@ -1782,10 +1766,7 @@ name|irq
 operator|)
 return|;
 block|}
-comment|/* look for the real PCI device that matches this table entry */
-if|if
-condition|(
-operator|(
+comment|/*  			 * look for the real PCI device that matches this  			 * table entry  			 */
 name|irq
 operator|=
 name|pci_cfgintr_search
@@ -1804,9 +1785,12 @@ name|j
 argument_list|,
 name|pin
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|irq
 operator|!=
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 return|return
 operator|(
@@ -1817,7 +1801,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
@@ -1881,7 +1865,7 @@ name|j
 decl_stmt|,
 name|irq
 decl_stmt|;
-comment|/*      * Find all the PCI busses.      */
+comment|/* 	 * Find all the PCI busses. 	 */
 name|pci_count
 operator|=
 literal|0
@@ -1910,10 +1894,10 @@ operator|&
 name|pci_count
 argument_list|)
 expr_stmt|;
-comment|/*      * Scan all the PCI busses/devices looking for this one.      */
+comment|/* 	 * Scan all the PCI busses/devices looking for this one. 	 */
 name|irq
 operator|=
-literal|255
+name|PCI_INVALID_IRQ
 expr_stmt|;
 for|for
 control|(
@@ -1934,7 +1918,7 @@ operator|&&
 operator|(
 name|irq
 operator|==
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 condition|;
 name|i
@@ -2029,7 +2013,7 @@ if|if
 condition|(
 name|irq
 operator|!=
-literal|255
+name|PCI_INVALID_IRQ
 condition|)
 name|PRVERB
 argument_list|(
@@ -2130,7 +2114,7 @@ name|irq
 decl_stmt|,
 name|ibit
 decl_stmt|;
-comment|/* first scan the set of PCI-only interrupts and see if any of these are routable */
+comment|/* 	 * first scan the set of PCI-only interrupts and see if any of these  	 * are routable 	 */
 for|for
 control|(
 name|irq
@@ -2255,7 +2239,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|255
+name|PCI_INVALID_IRQ
 operator|)
 return|;
 block|}
