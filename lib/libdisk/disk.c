@@ -792,6 +792,7 @@ modifier|*
 name|b
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str1
@@ -800,10 +801,12 @@ operator|*
 operator|(
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|a
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|str2
@@ -812,6 +815,7 @@ operator|*
 operator|(
 name|char
 operator|*
+specifier|const
 operator|*
 operator|)
 name|b

@@ -543,6 +543,7 @@ argument_list|,
 literal|"-"
 argument_list|)
 condition|)
+block|{
 name|DPRINT
 argument_list|(
 operator|(
@@ -550,6 +551,7 @@ literal|"Failed to add 'whole' chunk"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -1186,6 +1188,7 @@ argument_list|,
 literal|"-"
 argument_list|)
 condition|)
+block|{
 name|DPRINT
 argument_list|(
 operator|(
@@ -1193,6 +1196,7 @@ literal|"Failed to add 'freebsd' chunk"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1244,6 +1248,7 @@ argument_list|,
 literal|"-"
 argument_list|)
 condition|)
+block|{
 name|DPRINT
 argument_list|(
 operator|(
@@ -1251,6 +1256,7 @@ literal|"Failed to add 'freebsd' chunk"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1752,6 +1758,7 @@ argument_list|,
 literal|"-"
 argument_list|)
 condition|)
+block|{
 name|DPRINT
 argument_list|(
 operator|(
@@ -1759,6 +1766,7 @@ literal|"Failed to add 'freebsd' chunk"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* PLATFORM POLICY END --------------------------------------- */
 return|return

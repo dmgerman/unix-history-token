@@ -369,7 +369,7 @@ name|Cfg_Boot_Mgr
 parameter_list|(
 name|u_char
 modifier|*
-name|mbr
+name|mbrblk
 parameter_list|,
 name|int
 name|edd
@@ -377,14 +377,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|mbr
+name|mbrblk
 index|[
 literal|0x1b0
 index|]
 operator|==
 literal|0x66
 operator|&&
-name|mbr
+name|mbrblk
 index|[
 literal|0x1b1
 index|]
@@ -396,7 +396,7 @@ if|if
 condition|(
 name|edd
 condition|)
-name|mbr
+name|mbrblk
 index|[
 literal|0x1bb
 index|]
@@ -405,7 +405,7 @@ literal|0x80
 expr_stmt|;
 comment|/* Packet mode on */
 else|else
-name|mbr
+name|mbrblk
 index|[
 literal|0x1bb
 index|]
@@ -454,7 +454,7 @@ index|]
 decl_stmt|;
 name|u_char
 modifier|*
-name|mbr
+name|mbrblk
 decl_stmt|;
 name|struct
 name|dos_partition
@@ -522,7 +522,7 @@ sizeof|sizeof
 name|s
 argument_list|)
 expr_stmt|;
-name|mbr
+name|mbrblk
 operator|=
 name|read_block
 argument_list|(
@@ -543,7 +543,7 @@ name|dos_partition
 operator|*
 operator|)
 operator|(
-name|mbr
+name|mbrblk
 operator|+
 name|DOSPARTOFF
 operator|)
@@ -564,7 +564,7 @@ name|work
 expr_stmt|;
 name|free
 argument_list|(
-name|mbr
+name|mbrblk
 argument_list|)
 expr_stmt|;
 for|for
@@ -1134,7 +1134,7 @@ name|dp_flag
 operator|=
 literal|0x80
 expr_stmt|;
-name|mbr
+name|mbrblk
 operator|=
 name|read_block
 argument_list|(
@@ -1156,7 +1156,7 @@ condition|)
 block|{
 name|memcpy
 argument_list|(
-name|mbr
+name|mbrblk
 argument_list|,
 name|d1
 operator|->
@@ -1167,7 +1167,7 @@ argument_list|)
 expr_stmt|;
 name|Cfg_Boot_Mgr
 argument_list|(
-name|mbr
+name|mbrblk
 argument_list|,
 name|need_edd
 argument_list|)
@@ -1175,7 +1175,7 @@ expr_stmt|;
 block|}
 name|memcpy
 argument_list|(
-name|mbr
+name|mbrblk
 operator|+
 name|DOSPARTOFF
 argument_list|,
@@ -1188,7 +1188,7 @@ operator|*
 name|NDOSPART
 argument_list|)
 expr_stmt|;
-name|mbr
+name|mbrblk
 index|[
 literal|512
 operator|-
@@ -1197,7 +1197,7 @@ index|]
 operator|=
 literal|0x55
 expr_stmt|;
-name|mbr
+name|mbrblk
 index|[
 literal|512
 operator|-
@@ -1212,7 +1212,7 @@ name|fd
 argument_list|,
 literal|0
 argument_list|,
-name|mbr
+name|mbrblk
 argument_list|,
 name|d1
 operator|->

@@ -430,27 +430,28 @@ begin_comment
 comment|/*  *  Rule#0:  *	Chunks of type 'whole' can have max NDOSPART children.  *	Only one of them can have the "active" flag  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|Rule_000
-parameter_list|(
+argument_list|(
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|disk
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|chunk
-modifier|*
+operator|*
 name|c
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
+argument_list|)
 block|{
 ifdef|#
 directive|ifdef
@@ -580,7 +581,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * Rule#1:  *	All children of 'whole' and 'extended'  must be track-aligned.  *	Exception: the end can be unaligned if it matches the end of 'whole'  */
@@ -802,27 +803,28 @@ begin_comment
 comment|/*  * Rule#2:  *	Max one 'fat' as child of 'whole'  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|Rule_002
-parameter_list|(
+argument_list|(
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|disk
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|chunk
-modifier|*
+operator|*
 name|c
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
+argument_list|)
 block|{
 name|int
 name|i
@@ -896,33 +898,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * Rule#3:  *	Max one extended as child of 'whole'  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|Rule_003
-parameter_list|(
+argument_list|(
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|disk
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|chunk
-modifier|*
+operator|*
 name|c
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
+argument_list|)
 block|{
 name|int
 name|i
@@ -996,33 +999,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * Rule#4:  *	Max seven 'part' as children of 'freebsd'  *	Max one CHUNK_IS_ROOT child per 'freebsd'  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|Rule_004
-parameter_list|(
+argument_list|(
+name|__unused
 specifier|const
-name|struct
+expr|struct
 name|disk
-modifier|*
+operator|*
 name|d
-parameter_list|,
+argument_list|,
 specifier|const
-name|struct
+expr|struct
 name|chunk
-modifier|*
+operator|*
 name|c
-parameter_list|,
+argument_list|,
 name|char
-modifier|*
+operator|*
 name|msg
-parameter_list|)
+argument_list|)
 block|{
 name|int
 name|i
@@ -1129,7 +1133,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
