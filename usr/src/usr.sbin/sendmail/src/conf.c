@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"sendmail.h"
 end_include
 
@@ -25,7 +31,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -1005,7 +1011,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETLA -- get the current load average ** **	Parameters: **		none. ** **	Returns: **		The current load average as an integer. ** **	Side Effects: **		none. */
+comment|/* **  GETLA -- get the current load average ** **	This code stolen from la.c. ** **	Parameters: **		none. ** **	Returns: **		The current load average as an integer. ** **	Side Effects: **		none. */
 end_comment
 
 begin_ifdef
@@ -1090,6 +1096,18 @@ operator|-
 literal|1
 operator|)
 return|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|kmem
+argument_list|,
+name|FIOCLEX
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|nlist
 argument_list|(
 literal|"/vmunix"
