@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.21 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,13 +195,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|KEEPOPEN
-value|(RES_USEVC|RES_STAYOPEN)
-end_define
-
 begin_macro
 name|res_send
 argument_list|(
@@ -248,7 +241,7 @@ name|int
 name|n
 decl_stmt|;
 name|int
-name|retry
+name|try
 decl_stmt|,
 name|v_circuit
 decl_stmt|,
@@ -395,18 +388,18 @@ expr_stmt|;
 comment|/* 	 * Send request, RETRY times, or until successful 	 */
 for|for
 control|(
-name|retry
+name|try
 operator|=
+literal|0
+init|;
+name|try
+operator|<
 name|_res
 operator|.
 name|retry
-init|;
-name|retry
-operator|>
-literal|0
 condition|;
-name|retry
-operator|--
+name|try
+operator|++
 control|)
 block|{
 for|for
@@ -460,6 +453,8 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+name|usevc
+label|:
 if|if
 condition|(
 name|v_circuit
@@ -470,7 +465,13 @@ name|truncated
 init|=
 literal|0
 decl_stmt|;
-comment|/* 			 * Use virtual circuit. 			 */
+comment|/* 			 * Use virtual circuit; 			 * at most one attempt per server. 			 */
+name|try
+operator|=
+name|_res
+operator|.
+name|retry
+expr_stmt|;
 if|if
 condition|(
 name|s
@@ -1027,6 +1028,7 @@ directive|if
 name|BSD
 operator|>=
 literal|43
+comment|/* 			 * I'm tired of answering this question, so: 			 * On a 4.3BSD+ machine (client and server, 			 * actually), sending to a nameserver datagram 			 * port with no nameserver will cause an 			 * ICMP port unreachable message to be returned. 			 * If our datagram socket is "connected" to the 			 * server, we get an ECONNREFUSED error on the next 			 * socket operation, and select returns if the 			 * error message is received.  We can thus detect 			 * the absence of a nameserver without timing out. 			 * If we have sent queries to at least two servers, 			 * however, we don't want to remain connected, 			 * as we wish to receive answers from the first 			 * server to respond. 			 */
 if|if
 condition|(
 name|_res
@@ -1035,11 +1037,15 @@ name|nscount
 operator|==
 literal|1
 operator|||
-name|retry
+operator|(
+name|try
 operator|==
-name|_res
-operator|.
-name|retry
+literal|0
+operator|&&
+name|ns
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 				 * Don't use connect if we might 				 * still receive a response 				 * from another server. 				 */
@@ -1239,15 +1245,19 @@ name|_res
 operator|.
 name|retrans
 operator|<<
-operator|(
-name|_res
+name|try
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|try
+operator|>
+literal|0
+condition|)
+name|timeout
 operator|.
-name|retry
-operator|-
-name|retry
-operator|)
-operator|)
-operator|/
+name|tv_sec
+operator|/=
 name|_res
 operator|.
 name|nscount
@@ -1370,10 +1380,17 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
 name|gotsomewhere
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 block|}
 if|if
@@ -1477,7 +1494,7 @@ operator|->
 name|tc
 condition|)
 block|{
-comment|/* 				 * get rest of answer 				 */
+comment|/* 				 * get rest of answer; 				 * use TCP with same server. 				 */
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1510,20 +1527,13 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 				 * retry decremented on continue 				 * to desired starting value 				 */
-name|retry
-operator|=
-name|_res
-operator|.
-name|retry
-operator|+
-literal|1
-expr_stmt|;
 name|v_circuit
 operator|=
 literal|1
 expr_stmt|;
-continue|continue;
+goto|goto
+name|usevc
+goto|;
 block|}
 block|}
 ifdef|#
@@ -1552,21 +1562,37 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
-comment|/* 		 * We are going to assume that the first server is preferred 		 * over the rest (i.e. it is on the local machine) and only 		 * keep that one open. 		 */
+comment|/* 		 * If using virtual circuits, we assume that the first server 		 * is preferred * over the rest (i.e. it is on the local 		 * machine) and only keep that one open. 		 * If we have temporarily opened a virtual circuit, 		 * or if we haven't been asked to keep a socket open, 		 * close the socket. 		 */
 if|if
 condition|(
+operator|(
+name|v_circuit
+operator|&&
+operator|(
 operator|(
 name|_res
 operator|.
 name|options
 operator|&
-name|KEEPOPEN
+name|RES_USEVC
 operator|)
 operator|==
 literal|0
 operator|||
 name|ns
 operator|!=
+literal|0
+operator|)
+operator|)
+operator|||
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_STAYOPEN
+operator|)
+operator|==
 literal|0
 condition|)
 block|{
@@ -1628,11 +1654,13 @@ name|errno
 operator|=
 name|ECONNREFUSED
 expr_stmt|;
+comment|/* no nameservers found */
 else|else
 name|errno
 operator|=
 name|ETIMEDOUT
 expr_stmt|;
+comment|/* no answer obtained */
 else|else
 name|errno
 operator|=
