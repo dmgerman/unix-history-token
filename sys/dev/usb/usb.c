@@ -903,18 +903,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-name|device_printf
-argument_list|(
-name|self
-argument_list|,
-literal|"make_dev(usb_cdevsw, %d,_,_,_,'usb%%d',_)\n"
-argument_list|,
-name|device_get_unit
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|make_dev
 argument_list|(
 operator|&
