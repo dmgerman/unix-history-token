@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.9 (Berkeley) %G%"
+literal|"@(#)curses.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,18 +48,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* If stty indicates ECHO. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|__endwin
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* If endwin has been called. */
 end_comment
 
 begin_decl_stmt
