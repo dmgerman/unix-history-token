@@ -535,7 +535,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|strchr
+name|strrchr
 argument_list|(
 name|masterpasswd
 argument_list|,
