@@ -663,11 +663,7 @@ name|i
 operator|==
 name|_LC_LAST
 condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+break|break;
 comment|/* Too many slashes... */
 name|len
 operator|=
