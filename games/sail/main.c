@@ -88,14 +88,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|srand
-argument_list|(
-name|getpid
+name|srandomdev
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|issetuid
 operator|=

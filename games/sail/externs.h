@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machdep.h"
 end_include
 
@@ -133,7 +139,7 @@ define|#
 directive|define
 name|die
 parameter_list|()
-value|((rand()>> 3) % 6 + 1)
+value|(random() % 6 + 1)
 end_define
 
 begin_define

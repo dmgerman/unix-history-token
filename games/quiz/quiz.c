@@ -1038,13 +1038,8 @@ index|[
 name|LINE_SZ
 index|]
 decl_stmt|;
-name|srandom
-argument_list|(
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 name|guesses
 operator|=

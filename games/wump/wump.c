@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -2009,25 +2015,9 @@ decl_stmt|,
 name|int_compare
 argument_list|()
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 comment|/* 	 * This does most of the interesting work in this program actually! 	 * In this routine we'll initialize the Wumpus cave to have all rooms 	 * linking to all others by stepping through our data structure once, 	 * recording all forward links and backwards links too.  The parallel 	 * "linkcount" data structure ensures that no room ends up with more 	 * than three links, regardless of the quality of the random number 	 * generator that we're using. 	 */
-name|srandom
-argument_list|(
-operator|(
-name|int
-operator|)
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
 comment|/* initialize the cave first off. */
 for|for
