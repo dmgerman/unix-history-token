@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)comm.c	5.7 (Berkeley) 11/1/90";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.7 (Berkeley) 11/1/90"
+literal|"$Id: comm.c,v 1.4 1993/10/13 18:33:45 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +59,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -67,7 +83,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -93,7 +115,54 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|FILE
+modifier|*
+name|file
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|show
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -105,8 +174,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -147,10 +216,6 @@ name|fp1
 decl_stmt|,
 modifier|*
 name|fp2
-decl_stmt|,
-modifier|*
-name|file
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -167,10 +232,13 @@ index|[
 name|MAXLINELEN
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|flag1
 operator|=
 name|flag2
@@ -190,26 +258,18 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-123"
+literal|"123"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'-'
-case|:
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 case|case
 literal|'1'
 case|:
@@ -242,8 +302,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|done
-label|:
 name|argc
 operator|-=
 name|optind
@@ -421,7 +479,7 @@ operator|!
 operator|(
 name|comp
 operator|=
-name|strcmp
+name|strcoll
 argument_list|(
 name|line1
 argument_list|,
@@ -523,33 +581,28 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|show
-argument_list|(
-argument|fp
-argument_list|,
-argument|offset
-argument_list|,
-argument|buf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|,
+name|offset
+parameter_list|,
+name|buf
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|offset
 decl_stmt|,
-modifier|*
+decl|*
 name|buf
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -590,6 +643,7 @@ name|file
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -655,12 +709,10 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -669,7 +721,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: comm [-123] [ - ] file1 file2\n"
+literal|"usage: comm [-123] file1 file2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -678,7 +730,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
