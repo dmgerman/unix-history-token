@@ -88,7 +88,7 @@ modifier|*
 name|so_proto
 decl_stmt|;
 comment|/* protocol handle */
-comment|/*  * Variables for connection queuing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_q0 queues partially completed connections,  * while so_q is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_q0 or so_q.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
+comment|/*  * Variables for connection queuing.  * Socket where accepts occur is so_head in all subsidiary sockets.  * If so_head is 0, socket is not related to an accept.  * For head socket so_incomp queues partially completed connections,  * while so_comp is a queue of connections ready to be accepted.  * If a connection is aborted and it has so_head set, then  * it has to be pulled out of either so_incomp or so_comp.  * We allow connections to queue up based on current queue lengths  * and limit on number of queued connections for this socket.  */
 name|struct
 name|socket
 modifier|*
