@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.9 (Berkeley) %G%"
+literal|"@(#)map.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1459,6 +1459,9 @@ specifier|auto
 name|int
 name|vsize
 decl_stmt|;
+name|int
+name|buflen
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1515,6 +1518,27 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|buflen
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MF_INCLNULL
+argument_list|,
+name|map
+operator|->
+name|map_flags
+argument_list|)
+condition|)
+name|buflen
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|yp_match
@@ -1529,12 +1553,7 @@ name|map_file
 argument_list|,
 name|buf
 argument_list|,
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
+name|buflen
 argument_list|,
 operator|&
 name|vp
