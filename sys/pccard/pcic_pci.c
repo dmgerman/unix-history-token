@@ -1125,68 +1125,6 @@ argument_list|,
 name|CB_SOCKET_STATE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"State is %x\n"
-argument_list|,
-name|stat
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-operator|&
-name|CB_SS_5VCARD
-condition|)
-name|device_printf
-argument_list|(
-name|sp
-operator|->
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"5V card\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-operator|&
-name|CB_SS_3VCARD
-condition|)
-name|device_printf
-argument_list|(
-name|sp
-operator|->
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"3V card\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stat
-operator|&
-name|CB_SS_CD
-condition|)
-name|device_printf
-argument_list|(
-name|sp
-operator|->
-name|sc
-operator|->
-name|dev
-argument_list|,
-literal|"CD %x"
-argument_list|,
-name|stat
-operator|&
-name|CB_SS_CD
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1206,7 +1144,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Cardbus card inserted.  NOT SUPPORTED\n"
+literal|"Unsupported card type inserted\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1508,7 +1446,40 @@ argument_list|,
 name|desc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 */
+comment|/* 	 * Take us out of power down mode. 	 */
+if|if
+condition|(
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+operator|!=
+name|PCI_POWERSTATE_D0
+condition|)
+block|{
+comment|/* Reset the power state. */
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"chip is in D%d power mode "
+literal|"-- setting to D0\n"
+argument_list|,
+name|pci_get_powerstate
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pci_set_powerstate
+argument_list|(
+name|dev
+argument_list|,
+name|PCI_POWERSTATE_D0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Allocated/deallocate interrupt.  This forces the PCI BIOS or 	 * other MD method to route the interrupts to this card. 	 * This so we get the interrupt number in the probe message. 	 */
 name|rid
 operator|=
 literal|0
