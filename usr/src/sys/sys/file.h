@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.17	83/06/09	*/
+comment|/*	file.h	4.18	83/06/12	*/
 end_comment
 
 begin_ifdef
@@ -54,13 +54,6 @@ name|int
 function_decl|(
 modifier|*
 name|fo_select
-function_decl|)
-parameter_list|()
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|fo_stat
 function_decl|)
 parameter_list|()
 function_decl|;
