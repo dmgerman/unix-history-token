@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.2 (Berkeley) %G%"
+literal|"@(#)trace.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -420,6 +420,36 @@ operator|>
 literal|0
 condition|)
 block|{
+name|router
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|router
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|router
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|hp
 operator|=
 name|gethostbyname
@@ -443,7 +473,11 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 name|bcopy
 argument_list|(
@@ -461,6 +495,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sendto

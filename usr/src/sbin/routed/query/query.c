@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	5.2 (Berkeley) %G%"
+literal|"@(#)query.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,12 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -167,9 +173,11 @@ operator|<
 literal|2
 condition|)
 block|{
+name|usage
+label|:
 name|printf
 argument_list|(
-literal|"usage: query hosts...\n"
+literal|"usage: query [ -n ] hosts...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -213,6 +221,45 @@ operator|,
 name|argc
 operator|--
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|argv
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+switch|switch
+condition|(
+operator|*
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|++
+expr_stmt|;
+break|break;
+default|default:
+goto|goto
+name|usage
+goto|;
+block|}
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+block|}
 name|count
 operator|=
 name|argc
@@ -433,6 +480,35 @@ name|router
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|router
+operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|router
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|inet_addr
+argument_list|(
+name|host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|router
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 name|hp
 operator|=
 name|gethostbyname
@@ -476,12 +552,7 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-name|router
-operator|.
-name|sin_family
-operator|=
-name|AF_INET
-expr_stmt|;
+block|}
 name|sp
 operator|=
 name|getservbyname
@@ -671,6 +742,29 @@ operator|!=
 name|RIPCMD_RESPONSE
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"%d bytes from "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|from
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|hp
 operator|=
 name|gethostbyaddr
@@ -703,9 +797,7 @@ name|h_name
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d bytes from %s(%s):\n"
-argument_list|,
-name|size
+literal|"%s(%s):\n"
 argument_list|,
 name|name
 argument_list|,
@@ -717,6 +809,7 @@ name|sin_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|size
 operator|-=
 sizeof|sizeof
@@ -833,6 +926,12 @@ name|name
 operator|=
 literal|"???"
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|nflag
+condition|)
+block|{
 if|if
 condition|(
 name|lna
@@ -987,6 +1086,24 @@ argument_list|(
 literal|"\t%s(%s), metric %d\n"
 argument_list|,
 name|name
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|,
+name|n
+operator|->
+name|rip_metric
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"\t%s, metric %d\n"
 argument_list|,
 name|inet_ntoa
 argument_list|(
