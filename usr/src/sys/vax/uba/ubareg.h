@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubareg.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Size of unibus memory address space in pages  * (also number of map registers).  * QBAPAGES should be 8192, but we don't need nearly  * that much address space; choose pragmatically.  */
+comment|/*  * Size of unibus memory address space in pages  * (also number of map registers).  * QBAPAGES should be 8192, but we don't need nearly that much  * address space, and the return from the allocation routine  * can accommodate at most 2047 (ubavar.h: UBA_MAXMR);  * QBAPAGES must be at least UBAPAGES.  Choose pragmatically.  */
 end_comment
 
 begin_define
@@ -147,11 +147,20 @@ name|NUBMREG
 value|496
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|GATEWAY
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|QNIVERT
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -159,10 +168,6 @@ directive|define
 name|QBAPAGES
 value|1024
 end_define
-
-begin_comment
-comment|/* tunable: min UBAPAGES, max 8192 */
-end_comment
 
 begin_else
 else|#
@@ -175,10 +180,6 @@ directive|define
 name|QBAPAGES
 value|UBAPAGES
 end_define
-
-begin_comment
-comment|/* tunable: min UBAPAGES, max 8192 */
-end_comment
 
 begin_endif
 endif|#

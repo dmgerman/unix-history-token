@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ubavar.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ name|map
 modifier|*
 name|uh_map
 decl_stmt|;
-comment|/* buffered data path regs free */
+comment|/* register free map */
 block|}
 struct|;
 end_struct
@@ -447,8 +447,67 @@ comment|/* use bdp specified in high bits */
 end_comment
 
 begin_comment
-comment|/*  * Macros to bust return word from map allocation routines.  */
+comment|/*  * Macros to bust return word from map allocation routines.  * SHOULD USE STRUCTURE TO STORE UBA RESOURCE ALLOCATION:  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_struct
+struct|struct
+name|ubinfo
+block|{
+name|long
+name|ub_addr
+decl_stmt|;
+comment|/* unibus address: mr + boff */
+name|int
+name|ub_nmr
+decl_stmt|;
+comment|/* number of registers, 0 if empty */
+name|int
+name|ub_bdp
+decl_stmt|;
+comment|/* bdp number, 0 if none */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|UBAI_MR
+parameter_list|(
+name|i
+parameter_list|)
+value|(((i)>> 9)& 0x7ff)
+end_define
+
+begin_comment
+comment|/* starting map register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBAI_BOFF
+parameter_list|(
+name|i
+parameter_list|)
+value|((i)&0x1ff)
+end_define
+
+begin_comment
+comment|/* page offset */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -457,7 +516,14 @@ name|UBAI_BDP
 parameter_list|(
 name|i
 parameter_list|)
-value|((int)(((unsigned)(i))>>28))
+value|((int)(((unsigned)(i))>> 28))
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDPMASK
+value|0xf0000000
 end_define
 
 begin_define
@@ -467,7 +533,18 @@ name|UBAI_NMR
 parameter_list|(
 name|i
 parameter_list|)
-value|((int)((i)>>18)&0x3ff)
+value|((int)((i)>> 20)& 0xff)
+end_define
+
+begin_comment
+comment|/* max 255 (=127.5K) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBA_MAXNMR
+value|255
 end_define
 
 begin_define
@@ -477,7 +554,18 @@ name|UBAI_MR
 parameter_list|(
 name|i
 parameter_list|)
-value|((int)((i)>>9)&0x1ff)
+value|((int)((i)>> 9)& 0x7ff)
+end_define
+
+begin_comment
+comment|/* max 2047 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UBA_MAXMR
+value|2047
 end_define
 
 begin_define
@@ -487,7 +575,7 @@ name|UBAI_BOFF
 parameter_list|(
 name|i
 parameter_list|)
-value|((int)((i)&0x1ff))
+value|((int)((i)& 0x1ff))
 end_define
 
 begin_define
@@ -497,12 +585,34 @@ name|UBAI_ADDR
 parameter_list|(
 name|i
 parameter_list|)
-value|((int)((i)&0x3ffff))
+value|((int)((i)& 0xfffff))
 end_define
 
 begin_comment
 comment|/* uba addr (boff+mr) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|UBAI_INFO
+parameter_list|(
+name|off
+parameter_list|,
+name|mr
+parameter_list|,
+name|nmr
+parameter_list|,
+name|bdp
+parameter_list|)
+define|\
+value|(((bdp)<< 28) | ((nmr)<< 20) | ((mr)<< 9) | (off))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
