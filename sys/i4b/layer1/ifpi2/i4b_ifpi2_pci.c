@@ -521,7 +521,7 @@ name|driver_t
 name|avma1pp2_pci_driver
 init|=
 block|{
-literal|"ifpi2"
+literal|"ifpi2-"
 block|,
 name|avma1pp2_pci_methods
 block|,
@@ -5487,7 +5487,7 @@ index|]
 operator|.
 name|set_linktab
 operator|=
-name|avma1pp2_set_linktab
+name|i4b_l1_set_linktab
 expr_stmt|;
 name|ctrl_types
 index|[
@@ -5496,7 +5496,7 @@ index|]
 operator|.
 name|get_linktab
 operator|=
-name|avma1pp2_ret_linktab
+name|i4b_l1_ret_linktab
 expr_stmt|;
 block|}
 comment|/* local setup */

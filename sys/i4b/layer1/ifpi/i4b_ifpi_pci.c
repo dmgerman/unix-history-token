@@ -5852,7 +5852,7 @@ index|]
 operator|.
 name|set_linktab
 operator|=
-name|avma1pp_set_linktab
+name|i4b_l1_set_linktab
 expr_stmt|;
 name|ctrl_types
 index|[
@@ -5861,7 +5861,7 @@ index|]
 operator|.
 name|get_linktab
 operator|=
-name|avma1pp_ret_linktab
+name|i4b_l1_ret_linktab
 expr_stmt|;
 block|}
 comment|/* local setup */
