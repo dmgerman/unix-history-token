@@ -5507,7 +5507,7 @@ name|sc
 argument_list|,
 name|TI_MISC_LOCAL_CTL
 argument_list|,
-name|TI_MLC_SRAM_BANK_256K
+name|TI_MLC_SRAM_BANK_512K
 argument_list|)
 expr_stmt|;
 name|TI_SETBIT
