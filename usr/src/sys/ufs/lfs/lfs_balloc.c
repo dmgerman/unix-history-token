@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -589,18 +589,6 @@ name|ENOSPC
 operator|)
 return|;
 block|}
-name|ip
-operator|->
-name|i_blocks
-operator|+=
-name|bb
-expr_stmt|;
-name|fs
-operator|->
-name|lfs_bfree
-operator|-=
-name|bb
-expr_stmt|;
 name|daddr
 operator|=
 name|bp
@@ -628,6 +616,18 @@ operator|(
 name|error
 operator|)
 return|;
+name|ip
+operator|->
+name|i_blocks
+operator|+=
+name|bb
+expr_stmt|;
+name|fs
+operator|->
+name|lfs_bfree
+operator|-=
+name|bb
+expr_stmt|;
 name|bp
 operator|=
 name|NULL
@@ -1236,6 +1236,7 @@ name|bb
 argument_list|)
 condition|)
 block|{
+comment|/* Pretend we never allocated the buffer */
 name|bp
 operator|->
 name|b_flags
