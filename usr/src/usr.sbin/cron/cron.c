@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cron.c	4.1 (Berkeley) %G%"
+literal|"@(#)cron.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,35 +56,35 @@ begin_define
 define|#
 directive|define
 name|EXACT
-value|0
+value|100
 end_define
 
 begin_define
 define|#
 directive|define
 name|ANY
-value|1
+value|101
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIST
-value|2
+value|102
 end_define
 
 begin_define
 define|#
 directive|define
 name|RANGE
-value|3
+value|103
 end_define
 
 begin_define
 define|#
 directive|define
 name|EOS
-value|4
+value|104
 end_define
 
 begin_decl_stmt
