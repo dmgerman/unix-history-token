@@ -434,6 +434,20 @@ name|line
 operator|)
 argument_list|)
 expr_stmt|;
+name|WITNESS_CHECKORDER
+argument_list|(
+operator|&
+name|sx
+operator|->
+name|sx_object
+argument_list|,
+name|LOP_NEWORDER
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Loop in case we lose the race for lock acquisition. 	 */
 while|while
 condition|(
@@ -684,6 +698,22 @@ name|file
 operator|,
 name|line
 operator|)
+argument_list|)
+expr_stmt|;
+name|WITNESS_CHECKORDER
+argument_list|(
+operator|&
+name|sx
+operator|->
+name|sx_object
+argument_list|,
+name|LOP_NEWORDER
+operator||
+name|LOP_EXCLUSIVE
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 comment|/* Loop in case we lose the race for lock acquisition. */
