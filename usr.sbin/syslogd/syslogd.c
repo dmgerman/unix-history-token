@@ -5332,6 +5332,7 @@ condition|(
 name|msg
 condition|)
 block|{
+comment|/* XXX should check for NULL return */
 name|wmsg
 operator|=
 name|strdup
@@ -6746,6 +6747,7 @@ name|ip
 operator|)
 return|;
 block|}
+comment|/* XXX Not quite correct, but close enough for government work. */
 if|if
 condition|(
 operator|(
@@ -7441,6 +7443,7 @@ argument_list|,
 name|ConfFile
 argument_list|)
 expr_stmt|;
+comment|/* XXX should check for NULL return */
 operator|*
 name|nextp
 operator|=
@@ -7472,6 +7475,7 @@ argument_list|,
 literal|"*"
 argument_list|)
 expr_stmt|;
+comment|/* XXX should check for NULL return */
 operator|(
 operator|*
 name|nextp
@@ -7643,8 +7647,8 @@ literal|0
 index|]
 operator|=
 operator|*
-operator|++
 name|p
+operator|++
 expr_stmt|;
 while|while
 condition|(
@@ -7883,6 +7887,7 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* XXX should check for NULL return */
 name|f
 operator|=
 operator|(
@@ -8374,6 +8379,13 @@ if|if
 condition|(
 name|host
 condition|)
+block|{
+name|int
+name|hl
+decl_stmt|,
+name|dl
+decl_stmt|;
+comment|/* XXX should check for NULL return */
 name|f
 operator|->
 name|f_host
@@ -8383,6 +8395,76 @@ argument_list|(
 name|host
 argument_list|)
 expr_stmt|;
+name|hl
+operator|=
+name|strlen
+argument_list|(
+name|f
+operator|->
+name|f_host
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|f
+operator|->
+name|f_host
+index|[
+name|hl
+operator|-
+literal|1
+index|]
+operator|==
+literal|'.'
+condition|)
+name|f
+operator|->
+name|f_host
+index|[
+operator|--
+name|hl
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|dl
+operator|=
+name|strlen
+argument_list|(
+name|LocalDomain
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|hl
+operator|>
+name|dl
+operator|&&
+name|f
+operator|->
+name|f_host
+index|[
+name|hl
+operator|-
+name|dl
+index|]
+operator|==
+literal|'.'
+condition|)
+name|f
+operator|->
+name|f_host
+index|[
+name|hl
+operator|-
+name|dl
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 comment|/* save program name if any */
 if|if
 condition|(
@@ -8401,6 +8483,7 @@ if|if
 condition|(
 name|prog
 condition|)
+comment|/* XXX should check for NULL return */
 name|f
 operator|->
 name|f_program
@@ -10973,6 +11056,7 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* XXX should use err()... consistency! */
 name|fprintf
 argument_list|(
 name|stderr
@@ -11883,6 +11967,7 @@ return|;
 case|case
 literal|0
 case|:
+comment|/* XXX should check for NULL return */
 name|argv
 index|[
 literal|0
@@ -12201,13 +12286,14 @@ if|if
 condition|(
 name|p
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|errno
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX why?  isn't ENOMEM good enough? */
 name|logerror
 argument_list|(
 literal|"panic: out of virtual memory!"
@@ -12574,8 +12660,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|socks
+operator|==
+name|NULL
 condition|)
 block|{
 name|logerror
