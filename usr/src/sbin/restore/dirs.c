@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.17 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dir.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
