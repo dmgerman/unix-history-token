@@ -524,7 +524,7 @@ literal|0x9005
 block|,
 literal|0x0285
 block|,
-literal|0x9005
+literal|0x1028
 block|,
 literal|0x0287
 block|,
@@ -532,7 +532,7 @@ name|AAC_HWIF_I960RX
 block|,
 literal|0
 block|,
-literal|"Adaptec SCSI RAID 2200S"
+literal|"Dell PERC 320/DC"
 block|}
 block|,
 block|{
