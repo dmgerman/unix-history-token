@@ -715,6 +715,18 @@ literal|"Digital camera"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ASAHIOPTICAL
+block|,
+name|USB_PRODUCT_ASAHIOPTICAL_OPTIO330
+block|,
+literal|0
+block|,
+literal|"Asahi Optical"
+block|,
+literal|"Digital camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ASIX
 block|,
 name|USB_PRODUCT_ASIX_AX88172
@@ -939,7 +951,19 @@ literal|0
 block|,
 literal|"Canon"
 block|,
-literal|"CANOSCAN N656U"
+literal|"CanoScan N656U"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CANON
+block|,
+name|USB_PRODUCT_CANON_N1240U
+block|,
+literal|0
+block|,
+literal|"Canon"
+block|,
+literal|"CanoScan N1240U"
 block|, 	}
 block|,
 block|{
@@ -964,6 +988,18 @@ block|,
 literal|"Canon"
 block|,
 literal|"PowerShot S100"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_CANON
+block|,
+name|USB_PRODUCT_CANON_S200
+block|,
+literal|0
+block|,
+literal|"Canon"
+block|,
+literal|"PowerShot S200"
 block|, 	}
 block|,
 block|{
@@ -1749,18 +1785,6 @@ block|,
 block|{
 name|USB_VENDOR_EPSON
 block|,
-name|USB_PRODUCT_EPSON_1250
-block|,
-literal|0
-block|,
-literal|"Seiko Epson"
-block|,
-literal|"Perfection 1250U / 1250Photo scanner"
-block|, 	}
-block|,
-block|{
-name|USB_VENDOR_EPSON
-block|,
 name|USB_PRODUCT_EPSON_640U
 block|,
 literal|0
@@ -1768,6 +1792,18 @@ block|,
 literal|"Seiko Epson"
 block|,
 literal|"Perfection 640U scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_1250
+block|,
+literal|0
+block|,
+literal|"Seiko Epson"
+block|,
+literal|"Perfection 1250U / 1250Photo scanner"
 block|, 	}
 block|,
 block|{
@@ -1792,6 +1828,18 @@ block|,
 literal|"Seiko Epson"
 block|,
 literal|"GT-9700F scanner"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_GT9300UF
+block|,
+literal|0
+block|,
+literal|"Seiko Epson"
+block|,
+literal|"GT-9300UF scanner"
 block|, 	}
 block|,
 block|{
@@ -1951,6 +1999,18 @@ literal|"AH-F401U Air H device"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_GENERALINSTMNTS
+block|,
+name|USB_PRODUCT_GENERALINSTMNTS_SB5100
+block|,
+literal|0
+block|,
+literal|"General Instruments (Motorola)"
+block|,
+literal|"SURFboard SB5100 Cable modem"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_GENESYS
 block|,
 name|USB_PRODUCT_GENESYS_GL650
@@ -2044,6 +2104,18 @@ block|,
 literal|"Hauppauge Computer Works"
 block|,
 literal|"WinTV USB FM"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_HITACHI
+block|,
+name|USB_PRODUCT_HITACHI_DVDCAM_USB
+block|,
+literal|0
+block|,
+literal|"Hitachi, Ltd."
+block|,
+literal|"DVDCAM USB HS Interface"
 block|, 	}
 block|,
 block|{
@@ -3297,6 +3369,18 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
+name|USB_PRODUCT_LOGITECH_MX700
+block|,
+literal|0
+block|,
+literal|"Logitech"
+block|,
+literal|"Cordless optical mouse"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_LOGITECH
+block|,
 name|USB_PRODUCT_LOGITECH_QUICKCAMPRO2
 block|,
 literal|0
@@ -3525,6 +3609,18 @@ block|,
 block|{
 name|USB_VENDOR_MICROSOFT
 block|,
+name|USB_PRODUCT_MICROSOFT_INETPRO
+block|,
+literal|0
+block|,
+literal|"Microsoft"
+block|,
+literal|"Internet Keyboard Pro"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MICROSOFT
+block|,
 name|USB_PRODUCT_MICROSOFT_INTELLIEYE
 block|,
 literal|0
@@ -3537,7 +3633,7 @@ block|,
 block|{
 name|USB_VENDOR_MICROSOFT
 block|,
-name|USB_PRODUCT_MICROSOFT_INETPRO
+name|USB_PRODUCT_MICROSOFT_INETPRO2
 block|,
 literal|0
 block|,
@@ -4903,6 +4999,18 @@ literal|"CD-RW Device"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_SHUTTLE
+block|,
+name|USB_PRODUCT_SHUTTLE_EUSBORCA
+block|,
+literal|0
+block|,
+literal|"Shuttle Technology"
+block|,
+literal|"eUSB ORCA Quad Reader"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_SIEMENS
 block|,
 name|USB_PRODUCT_SIEMENS_SPEEDSTREAM
@@ -5647,6 +5755,18 @@ literal|"Intuos A5"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_WACOM
+block|,
+name|USB_PRODUCT_WACOM_GD0912U
+block|,
+literal|0
+block|,
+literal|"WACOM"
+block|,
+literal|"Intuos 9x12 Graphics Tablet"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_XIRLINK
 block|,
 name|USB_PRODUCT_XIRLINK_PCCAM
@@ -6290,6 +6410,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Compaq Computers"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_HITACHI
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Hitachi, Ltd."
 block|,
 name|NULL
 block|, 	}
@@ -8102,6 +8234,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Microtech"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_GENERALINSTMNTS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"General Instruments (Motorola)"
 block|,
 name|NULL
 block|, 	}

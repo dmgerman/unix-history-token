@@ -480,6 +480,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_HITACHI
+value|0x04a4
+end_define
+
+begin_comment
+comment|/* Hitachi, Ltd. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACERP
 value|0x04a5
 end_define
@@ -2136,6 +2147,17 @@ end_define
 
 begin_comment
 comment|/* Microtech */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_GENERALINSTMNTS
+value|0x07b2
+end_define
+
+begin_comment
+comment|/* General Instruments (Motorola) */
 end_comment
 
 begin_define
@@ -3849,6 +3871,17 @@ begin_comment
 comment|/* Digital camera */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ASAHIOPTICAL_OPTIO330
+value|0x0006
+end_define
+
+begin_comment
+comment|/* Digital camera */
+end_comment
+
 begin_comment
 comment|/* ASIX Electronics products */
 end_comment
@@ -4095,7 +4128,18 @@ value|0x2206
 end_define
 
 begin_comment
-comment|/* CANOSCAN N656U */
+comment|/* CanoScan N656U */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CANON_N1240U
+value|0x220e
+end_define
+
+begin_comment
+comment|/* CanoScan N1240U */
 end_comment
 
 begin_define
@@ -4118,6 +4162,17 @@ end_define
 
 begin_comment
 comment|/* PowerShot S100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_CANON_S200
+value|0x3065
+end_define
+
+begin_comment
+comment|/* PowerShot S200 */
 end_comment
 
 begin_comment
@@ -4934,23 +4989,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_EPSON_1250
-value|0x010f
-end_define
-
-begin_comment
-comment|/* Perfection 1250U / 1250Photo scanner */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|USB_PRODUCT_EPSON_640U
 value|0x010c
 end_define
 
 begin_comment
 comment|/* Perfection 640U scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EPSON_1250
+value|0x010f
+end_define
+
+begin_comment
+comment|/* Perfection 1250U / 1250Photo scanner */
 end_comment
 
 begin_define
@@ -4973,6 +5028,17 @@ end_define
 
 begin_comment
 comment|/* GT-9700F scanner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EPSON_GT9300UF
+value|0x011b
+end_define
+
+begin_comment
+comment|/* GT-9300UF scanner */
 end_comment
 
 begin_define
@@ -5159,6 +5225,21 @@ comment|/* AH-F401U Air H device */
 end_comment
 
 begin_comment
+comment|/* General Instruments (Motorola) products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_GENERALINSTMNTS_SB5100
+value|0x5100
+end_define
+
+begin_comment
+comment|/* SURFboard SB5100 Cable modem */
+end_comment
+
+begin_comment
 comment|/* Genesys Logic products */
 end_comment
 
@@ -5260,6 +5341,21 @@ end_define
 
 begin_comment
 comment|/* WinTV USB FM */
+end_comment
+
+begin_comment
+comment|/* Hitachi, Ltd. products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_HITACHI_DVDCAM_USB
+value|0x001e
+end_define
+
+begin_comment
+comment|/* DVDCAM USB HS Interface */
 end_comment
 
 begin_comment
@@ -6505,6 +6601,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_LOGITECH_MX700
+value|0xc506
+end_define
+
+begin_comment
+comment|/* Cordless optical mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_LOGITECH_QUICKCAMPRO2
 value|0xd001
 end_define
@@ -6742,6 +6849,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PRODUCT_MICROSOFT_INETPRO
+value|0x001c
+end_define
+
+begin_comment
+comment|/* Internet Keyboard Pro */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PRODUCT_MICROSOFT_INTELLIEYE
 value|0x0025
 end_define
@@ -6753,7 +6871,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_MICROSOFT_INETPRO
+name|USB_PRODUCT_MICROSOFT_INETPRO2
 value|0x002b
 end_define
 
@@ -8156,6 +8274,17 @@ begin_comment
 comment|/* CD-RW Device */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_SHUTTLE_EUSBORCA
+value|0x0325
+end_define
+
+begin_comment
+comment|/* eUSB ORCA Quad Reader */
+end_comment
+
 begin_comment
 comment|/* Siemens products */
 end_comment
@@ -8948,6 +9077,17 @@ end_define
 
 begin_comment
 comment|/* Intuos A5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_WACOM_GD0912U
+value|0x0022
+end_define
+
+begin_comment
+comment|/* Intuos 9x12 Graphics Tablet */
 end_comment
 
 begin_comment
