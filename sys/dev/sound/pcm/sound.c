@@ -46,6 +46,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|snd_pcm
+argument_list|,
+name|PCM_MODVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|d_open_t

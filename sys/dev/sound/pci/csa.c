@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pcm/sound.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/chip.h>
 end_include
 
@@ -2979,7 +2985,7 @@ operator|(
 name|EAGAIN
 operator|)
 return|;
-comment|/* 	 * Read the data returned from the AC97 register. 	 * ACSDA = Status Data Register = 474h  	 */
+comment|/* 	 * Read the data returned from the AC97 register. 	 * ACSDA = Status Data Register = 474h 	 */
 operator|*
 name|data
 operator|=
@@ -3463,7 +3469,7 @@ end_comment
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|csa
+name|snd_csa
 argument_list|,
 name|pci
 argument_list|,
@@ -3474,6 +3480,32 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_csa
+argument_list|,
+name|snd_pcm
+argument_list|,
+name|PCM_MINVER
+argument_list|,
+name|PCM_PREFVER
+argument_list|,
+name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|snd_csa
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
