@@ -3739,9 +3739,6 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
@@ -3769,11 +3766,6 @@ name|mount
 modifier|*
 name|vnmp
 decl_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
