@@ -87,7 +87,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.3 1996/01/10 16:07:39 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.2 1995/12/23 21:35:35 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2053,6 +2053,10 @@ operator|(
 name|NULL
 operator|)
 return|;
+comment|/* Re-read the securenets database for the hell of it. */
+name|load_securenets
+argument_list|()
+expr_stmt|;
 name|result
 operator|=
 operator|&
