@@ -2921,6 +2921,17 @@ decl_stmt|;
 name|int
 name|maxnoparentcnt
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+specifier|const
+name|char
+modifier|*
+name|type
+decl_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 name|maxexitcnt
 operator|=
 literal|0
