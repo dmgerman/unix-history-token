@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.111 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.112 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7322,6 +7322,14 @@ literal|"giveresponse: stat=%d, e->e_message=%s\n"
 argument_list|,
 name|stat
 argument_list|,
+name|e
+operator|->
+name|e_message
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
 name|e
 operator|->
 name|e_message
