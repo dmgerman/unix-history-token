@@ -145,10 +145,9 @@ name|void
 modifier|*
 name|uaddr
 parameter_list|,
-name|struct
-name|timespec
+name|void
 modifier|*
-name|abstime
+name|uaddr2
 parameter_list|)
 function_decl|;
 end_function_decl

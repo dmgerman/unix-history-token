@@ -3804,7 +3804,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|abstime
+name|uaddr2
 operator|==
 name|NULL
 condition|)
@@ -3820,7 +3820,7 @@ name|copyin
 argument_list|(
 name|uap
 operator|->
-name|abstime
+name|uaddr2
 argument_list|,
 operator|&
 name|abstime
@@ -3908,7 +3908,7 @@ if|if
 condition|(
 name|uap
 operator|->
-name|abstime
+name|uaddr2
 operator|==
 name|NULL
 condition|)
@@ -3924,7 +3924,7 @@ name|copyin
 argument_list|(
 name|uap
 operator|->
-name|abstime
+name|uaddr2
 argument_list|,
 operator|&
 name|abstime
