@@ -502,6 +502,10 @@ name|MAXUSERS
 operator|)
 operator|==
 literal|0
+operator|||
+name|maxusers
+operator|==
+literal|8
 condition|)
 block|{
 name|maxusers
