@@ -144,6 +144,10 @@ name|char
 modifier|*
 name|tmpdir
 decl_stmt|;
+name|tmpdir
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|issetugid
