@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -237,7 +237,7 @@ name|so
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
+value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if ((ti)->ti_flags& TH_PUSH) \ 			tp->t_flags |= TF_ACKNOW; \ 		else \ 			tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
 
 begin_ifndef
@@ -2141,6 +2141,21 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ti
+operator|->
+name|ti_flags
+operator|&
+name|TH_PUSH
+condition|)
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
+else|else
 name|tp
 operator|->
 name|t_flags
