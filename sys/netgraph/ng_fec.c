@@ -207,6 +207,10 @@ directive|include
 file|<netgraph/ng_fec.h>
 end_include
 
+begin_comment
+comment|/*  * We need a way to stash a pointer to our netgraph node in the  * ifnet structure so that receive handling works. As far as I can  * tell, although there is an AF_NETGRAPH address family, it's only  * used to identify sockaddr_ng structures: there is no netgraph address  * family domain. This means the AF_NETGRAPH entry in ifp->if_afdata[]  * should be unused, so we can (ab)use it to hold our node context.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -214,7 +218,7 @@ name|IFP2NG
 parameter_list|(
 name|ifp
 parameter_list|)
-value|((struct ng_node *)((struct arpcom *)(ifp))->ac_netgraph)
+value|(struct ng_node *)(ifp->if_afdata[AF_NETGRAPH])
 end_define
 
 begin_define
@@ -1390,13 +1394,26 @@ operator|*
 operator|)
 name|bifp
 expr_stmt|;
-name|ac
+name|IF_AFDATA_LOCK
+argument_list|(
+name|bifp
+argument_list|)
+expr_stmt|;
+name|bifp
 operator|->
-name|ac_netgraph
+name|if_afdata
+index|[
+name|AF_NETGRAPH
+index|]
 operator|=
 name|priv
 operator|->
 name|node
+expr_stmt|;
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|bifp
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If this is the first interface added to the bundle, 	 * use its MAC address for the virtual interface (and, 	 * by extension, all the other ports in the bundle). 	 */
 if|if
@@ -1856,6 +1873,26 @@ operator|=
 name|p
 operator|->
 name|fec_if_input
+expr_stmt|;
+comment|/* Remove our node context pointer. */
+name|IF_AFDATA_LOCK
+argument_list|(
+name|bifp
+argument_list|)
+expr_stmt|;
+name|bifp
+operator|->
+name|if_afdata
+index|[
+name|AF_NETGRAPH
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|IF_AFDATA_UNLOCK
+argument_list|(
+name|bifp
+argument_list|)
 expr_stmt|;
 comment|/* Delete port */
 name|TAILQ_REMOVE
