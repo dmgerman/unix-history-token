@@ -739,6 +739,16 @@ parameter_list|)
 value|mtx_destroy(&(rnh)->rnh_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|RADIX_NODE_HEAD_LOCK_ASSERT
+parameter_list|(
+name|rnh
+parameter_list|)
+value|mtx_assert(&(rnh)->rnh_mtx, MA_OWNED)
+end_define
+
 begin_endif
 endif|#
 directive|endif
