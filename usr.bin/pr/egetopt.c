@@ -250,7 +250,8 @@ name|emsg
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -292,7 +293,8 @@ name|emsg
 expr_stmt|;
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -338,7 +340,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means EOF when by itself. 		 */
+comment|/* 		 * if the user didn't specify '-' as an option, 		 * assume it means -1 when by itself. 		 */
 if|if
 condition|(
 operator|(
@@ -356,7 +358,8 @@ name|place
 condition|)
 return|return
 operator|(
-name|EOF
+operator|-
+literal|1
 operator|)
 return|;
 if|if
