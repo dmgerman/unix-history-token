@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cfgets.c	5.2 (Berkeley) %G%"
+literal|"@(#)cfgets.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,10 @@ directive|define
 name|EOS
 value|'\0'
 end_define
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_function
 name|char
