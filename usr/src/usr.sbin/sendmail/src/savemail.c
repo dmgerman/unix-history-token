@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -110,10 +110,6 @@ operator|<=
 name|PRI_JUNK
 condition|)
 block|{
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
@@ -123,7 +119,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* ForceMail = TRUE; */
+name|ForceMail
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	**  In the unhappy event we don't know who to return the mail 	**  to, make someone up. 	*/
 if|if
 condition|(
@@ -504,13 +503,26 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
+name|bool
+name|oldverb
+init|=
+name|Verbose
+decl_stmt|;
 comment|/* we have a home directory; open dead.letter */
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
 literal|"Saving message in dead.letter"
 argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|oldverb
 expr_stmt|;
 name|define
 argument_list|(

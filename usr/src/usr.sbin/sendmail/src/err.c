@@ -33,7 +33,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -442,6 +442,17 @@ if|if
 condition|(
 operator|!
 name|HoldErrs
+operator|&&
+operator|(
+name|Verbose
+operator|||
+name|errbuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|)
 condition|)
 block|{
 if|if

@@ -39,7 +39,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -67,7 +67,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -256,10 +256,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
@@ -551,10 +547,6 @@ name|init
 operator|=
 name|TRUE
 expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
@@ -565,12 +557,25 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|bool
+name|oldverb
+init|=
+name|Verbose
+decl_stmt|;
+name|Verbose
+operator|=
+name|TRUE
+expr_stmt|;
 name|message
 argument_list|(
 name|Arpa_Info
 argument_list|,
 literal|"Warning: alias database out of date"
 argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|oldverb
 expr_stmt|;
 block|}
 block|}
@@ -1468,10 +1473,6 @@ name|e_to
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info

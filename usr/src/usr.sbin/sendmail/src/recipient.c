@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -1013,10 +1013,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
@@ -1641,10 +1637,6 @@ name|name
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
@@ -2036,10 +2028,6 @@ name|e_to
 operator|=
 name|oldto
 expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info

@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.18
+literal|3.19
 operator|%
 name|G
 operator|%
@@ -1283,12 +1283,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|syserr
-argument_list|(
-literal|"orderq: cannot open %s"
-argument_list|,
-name|cbuf
-argument_list|)
+comment|/* this may be some random person sending hir msgs */
+comment|/* syserr("orderq: cannot open %s", cbuf); */
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 continue|continue;
 block|}
@@ -1970,10 +1969,6 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	**  Read and process the file. 	*/
-if|if
-condition|(
-name|Verbose
-condition|)
 name|message
 argument_list|(
 name|Arpa_Info
