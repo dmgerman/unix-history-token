@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.5 1993/10/28 06:11:38 rgrimes Exp $  */
+comment|/*  *  Copyright (C) 1992, 1993, 1994 Søren Schmidt  *  *  This program is free software; you may redistribute it and/or   *  modify it, provided that it retain the above copyright notice   *  and the following disclaimer.  *  *  This program is distributed in the hope that it will be useful,  *  but WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   *  *	Søren Schmidt 		Email:	sos@login.dkuug.dk  *	Tritonvej 36		UUCP:	...uunet!dkuug!login!sos  *	DK9210 Aalborg SO	Phone:  +45 9814 8076  *  *	from:@(#)console.h	1.1 940105  *	$Id: console.h,v 1.6 1994/02/01 06:18:43 nate Exp $  */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,20 @@ define|#
 directive|define
 name|CONS_BLANKTIME
 value|_IOW('c', 4, long)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_SSAVER
+value|_IOW('c', 5, ssaver_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONS_GSAVER
+value|_IOWR('c', 6, ssaver_t)
 end_define
 
 begin_define
@@ -810,6 +824,33 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MAXSSAVER
+value|16
+end_define
+
+begin_struct
+struct|struct
+name|ssaver
+block|{
+name|char
+name|name
+index|[
+name|MAXSSAVER
+index|]
+decl_stmt|;
+name|int
+name|num
+decl_stmt|;
+name|long
+name|time
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -913,6 +954,14 @@ index|]
 decl_stmt|;
 block|}
 name|fnt16_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|ssaver
+name|ssaver_t
 typedef|;
 end_typedef
 
