@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.17 1999/01/10 13:29:52 peter Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.18 1999/01/11 11:36:03 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -1846,6 +1846,14 @@ name|VTOP
 argument_list|(
 name|fname
 argument_list|)
+expr_stmt|;
+name|bootinfo
+operator|.
+name|bi_bios_dev
+operator|=
+name|dsk
+operator|.
+name|drive
 expr_stmt|;
 name|__exec
 argument_list|(
