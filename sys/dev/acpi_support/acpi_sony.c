@@ -548,11 +548,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|return_VALUE
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
