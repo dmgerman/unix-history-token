@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.16 1997/06/03 08:27:45 kato Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.17 1997/07/07 13:01:18 kato Exp $  */
 end_comment
 
 begin_include
@@ -2970,17 +2970,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DETECT_XT_KEYBOARD */
-comment|/* reset keyboard hardware */
 if|if
 condition|(
-operator|!
-name|reset_kbd
+name|dev
+operator|->
+name|id_flags
+operator|&
+name|KBD_NORESET
+condition|)
+block|{
+name|write_kbd_command
+argument_list|(
+name|sc_kbdc
+argument_list|,
+name|KBDC_ECHO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|read_kbd_data
 argument_list|(
 name|sc_kbdc
 argument_list|)
+operator|!=
+name|KBD_ECHO
 condition|)
 block|{
-comment|/* KEYBOARD ERROR 	 * Keyboard reset may fail either because the keyboard doen't exist,          * or because the keyboard doesn't pass the self-test, or the keyboard           * controller on the motherboard and the keyboard somehow fail to           * shake hands. It is just possible, particularly in the last case,          * that the keyoard controller may be left in a hung state.           * test_controller() and test_kbd_port() appear to bring the keyboard          * controller back (I don't know why and how, though.) 	 */
 name|empty_both_buffers
 argument_list|(
 name|sc_kbdc
@@ -2998,7 +3013,55 @@ argument_list|(
 name|sc_kbdc
 argument_list|)
 expr_stmt|;
-comment|/* We could disable the keyboard port and interrupt... but,  	 * the keyboard may still exist (see above).  	 */
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"sc%d: failed to get response from the keyboard.\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+block|}
+else|else
+block|{
+comment|/* reset keyboard hardware */
+if|if
+condition|(
+operator|!
+name|reset_kbd
+argument_list|(
+name|sc_kbdc
+argument_list|)
+condition|)
+block|{
+comment|/* KEYBOARD ERROR              * Keyboard reset may fail either because the keyboard doen't              * exist, or because the keyboard doesn't pass the self-test,              * or the keyboard controller on the motherboard and the keyboard              * somehow fail to shake hands. It is just possible, particularly              * in the last case, that the keyoard controller may be left               * in a hung state. test_controller() and test_kbd_port() appear              * to bring the keyboard controller back (I don't know why and              * how, though.)              */
+name|empty_both_buffers
+argument_list|(
+name|sc_kbdc
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|test_controller
+argument_list|(
+name|sc_kbdc
+argument_list|)
+expr_stmt|;
+name|test_kbd_port
+argument_list|(
+name|sc_kbdc
+argument_list|)
+expr_stmt|;
+comment|/* We could disable the keyboard port and interrupt... but,               * the keyboard may still exist (see above).               */
 if|if
 condition|(
 name|bootverbose
@@ -3015,6 +3078,7 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 block|}
 comment|/*      * Allow us to set the XT_KEYBD flag in UserConfig so that keyboards      * such as those on the IBM ThinkPad laptop computers can be used      * with the standard console driver.      */
 if|if
@@ -4414,6 +4478,14 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|scp
+operator|->
+name|his_atr
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|scp
@@ -4425,6 +4497,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|scp
+operator|->
+name|history
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|scp
@@ -5361,6 +5441,25 @@ operator|*
 name|data
 condition|)
 block|{
+if|if
+condition|(
+name|cur_console
+operator|->
+name|status
+operator|&
+name|BUFFER_SAVED
+condition|)
+return|return
+name|EBUSY
+return|;
+if|if
+condition|(
+name|scp
+operator|->
+name|history
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|scp
@@ -5373,6 +5472,14 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
+if|if
+condition|(
+name|scp
+operator|->
+name|his_atr
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|scp
