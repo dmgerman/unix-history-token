@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	5.3 (Berkeley) %G%"
+literal|"@(#)passwd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,32 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+else|#
+directive|else
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|""
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+endif|#
+directive|endif
 default|default:
 case|case
 literal|'?'
@@ -166,8 +192,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-endif|#
-directive|endif
 name|uname
 operator|=
 name|getlogin
@@ -263,14 +287,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_macro
 name|usage
 argument_list|()
-end_macro
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -300,7 +318,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 end_unit
 
