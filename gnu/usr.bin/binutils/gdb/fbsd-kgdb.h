@@ -29,6 +29,14 @@ name|kernel_writablecore
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|target_so_ops
+name|kgdb_so_ops
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
