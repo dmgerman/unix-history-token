@@ -1671,8 +1671,6 @@ condition|)
 name|ARC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 return|return
@@ -1852,6 +1850,28 @@ goto|goto
 name|errexit
 goto|;
 block|}
+name|hc
+operator|->
+name|bt
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|hc
+operator|->
+name|res_ioport
+argument_list|)
+expr_stmt|;
+name|hc
+operator|->
+name|bh
+operator|=
+name|rman_get_bushandle
+argument_list|(
+name|hc
+operator|->
+name|res_ioport
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2413,12 +2433,10 @@ expr_stmt|;
 else|else
 name|arisr
 operator|=
-name|inb
+name|ar_inb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_ISTAT
 argument_list|)
 expr_stmt|;
@@ -2494,8 +2512,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)
@@ -2619,12 +2635,10 @@ expr_stmt|;
 else|else
 name|arisr
 operator|=
-name|inb
+name|ar_inb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_ISTAT
 argument_list|)
 expr_stmt|;
@@ -2641,8 +2655,6 @@ condition|)
 name|ARC_SET_OFF
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 block|}
@@ -2725,8 +2737,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -2846,8 +2856,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 block|}
@@ -3045,8 +3053,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -3441,8 +3447,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3708,8 +3712,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -3914,8 +3916,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -4012,14 +4012,12 @@ name|scano
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|sc
 operator|->
 name|hc
@@ -4097,14 +4095,12 @@ name|bustype
 operator|==
 name|AR_BUS_ISA
 condition|)
-name|inb
+name|ar_inb
 argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_ID_5
 argument_list|)
 expr_stmt|;
@@ -4130,8 +4126,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4246,8 +4240,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -4270,14 +4262,12 @@ name|bustype
 operator|==
 name|AR_BUS_ISA
 condition|)
-name|inb
+name|ar_inb
 argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_ID_5
 argument_list|)
 expr_stmt|;
@@ -4374,14 +4364,12 @@ name|scano
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|sc
 operator|->
 name|hc
@@ -4462,8 +4450,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|)
 expr_stmt|;
 block|}
@@ -4966,6 +4952,9 @@ name|isr
 decl_stmt|,
 name|mar
 decl_stmt|;
+name|u_long
+name|memst
+decl_stmt|;
 name|MALLOC
 argument_list|(
 name|sc
@@ -5103,12 +5092,10 @@ literal|0
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_TXC_DTR0
 argument_list|,
 operator|~
@@ -5152,12 +5139,10 @@ literal|0
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_TXC_DTR0
 argument_list|,
 name|hc
@@ -5178,14 +5163,18 @@ name|AR_BUS_ISA
 condition|)
 block|{
 comment|/* 		 * Configure the card. 		 * Mem address, irq,  		 */
-name|mar
+name|memst
 operator|=
-name|kvtop
+name|rman_get_start
 argument_list|(
 name|hc
 operator|->
-name|mem_start
+name|res_memory
 argument_list|)
+expr_stmt|;
+name|mar
+operator|=
+name|memst
 operator|>>
 literal|16
 expr_stmt|;
@@ -5225,12 +5214,7 @@ name|isr
 operator||
 operator|(
 operator|(
-name|kvtop
-argument_list|(
-name|hc
-operator|->
-name|mem_start
-argument_list|)
+name|memst
 operator|&
 literal|0xc000
 operator|)
@@ -5268,23 +5252,19 @@ name|hc
 operator|->
 name|mem_start
 expr_stmt|;
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_MEM_SEL
 argument_list|,
 name|mar
 argument_list|)
 expr_stmt|;
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_INT_SEL
 argument_list|,
 name|isr
@@ -5470,12 +5450,10 @@ literal|0
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_TXC_DTR0
 argument_list|,
 name|hc
@@ -5520,12 +5498,10 @@ literal|1
 index|]
 expr_stmt|;
 else|else
-name|outb
+name|ar_outb
 argument_list|(
 name|hc
-operator|->
-name|iobase
-operator|+
+argument_list|,
 name|AR_TXC_DTR2
 argument_list|,
 name|hc
@@ -5929,8 +5905,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)
@@ -6107,8 +6081,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -6362,8 +6334,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -6596,8 +6566,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -6781,8 +6749,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7050,8 +7016,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7164,8 +7128,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7243,8 +7205,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7545,8 +7505,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|rxdata
 argument_list|)
@@ -7604,8 +7562,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7726,8 +7682,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -7806,8 +7760,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -8007,8 +7959,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -8393,8 +8343,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -8551,8 +8499,6 @@ argument_list|(
 name|sc
 operator|->
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|sc
 operator|->
@@ -8756,8 +8702,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)
@@ -9002,8 +8946,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)
@@ -9070,7 +9012,7 @@ directive|endif
 comment|/* NETGRAPH */
 name|TRC
 argument_list|(
-argument|if(tt == IPACKETS) { 					sca_descriptor *rxdesc; 					int i;  					if(hc->bustype == AR_BUS_ISA) 						ARC_SET_SCA(hc->iobase, scano); 					printf(
+argument|if(tt == IPACKETS) { 					sca_descriptor *rxdesc; 					int i;  					if(hc->bustype == AR_BUS_ISA) 						ARC_SET_SCA(hc, scano); 					printf(
 literal|"AR: RXINTR isr1 %x, dsr %x, "
 literal|"no data %d pkts, orxhind %d.\n"
 argument|, 					       dotxstart, 					       dsr, 					       tt, 					       ind); 					printf(
@@ -9079,7 +9021,7 @@ literal|"rxend %x, rxhind %d, "
 literal|"rxmax %d.\n"
 argument|, 					       sc->rxdesc, 					       sc->rxstart, 					       sc->rxend, 					       sc->rxhind, 					       sc->rxmax); 					printf(
 literal|"AR: cda %x, eda %x.\n"
-argument|, 					       dmac->cda, 					       dmac->eda);  					if(sc->hc->bustype == AR_BUS_ISA) 						ARC_SET_MEM(sc->hc->iobase, 						    sc->rxdesc); 					rxdesc = (sca_descriptor *) 						 (sc->hc->mem_start + 						  (sc->rxdesc& sc->hc->winmsk)); 					rxdesc =&rxdesc[sc->rxhind]; 					for(i=
+argument|, 					       dmac->cda, 					       dmac->eda);  					if(sc->hc->bustype == AR_BUS_ISA) 						ARC_SET_MEM(sc->hc, 						    sc->rxdesc); 					rxdesc = (sca_descriptor *) 						 (sc->hc->mem_start + 						  (sc->rxdesc& sc->hc->winmsk)); 					rxdesc =&rxdesc[sc->rxhind]; 					for(i=
 literal|0
 argument|;i<
 literal|3
@@ -9166,8 +9108,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)
@@ -9263,8 +9203,6 @@ condition|)
 name|ARC_SET_SCA
 argument_list|(
 name|hc
-operator|->
-name|iobase
 argument_list|,
 name|scano
 argument_list|)

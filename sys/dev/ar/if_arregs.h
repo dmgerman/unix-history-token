@@ -899,11 +899,11 @@ define|#
 directive|define
 name|ARC_SET_MEM
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|,
 name|win
 parameter_list|)
-value|outb(iobase+AR_MSCA_EN, AR_ENA_MEM | \ 				ARC_GET_WIN(win))
+value|ar_outb(hc, AR_MSCA_EN, AR_ENA_MEM | \ 				ARC_GET_WIN(win))
 end_define
 
 begin_define
@@ -911,11 +911,11 @@ define|#
 directive|define
 name|ARC_SET_SCA
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|,
 name|ch
 parameter_list|)
-value|outb(iobase+AR_MSCA_EN, AR_ENA_MEM | \ 				AR_ENA_SCA | (ch ? AR_SEL_SCA_1:AR_SEL_SCA_0))
+value|ar_outb(hc, AR_MSCA_EN, AR_ENA_MEM | \ 				AR_ENA_SCA | (ch ? AR_SEL_SCA_1:AR_SEL_SCA_0))
 end_define
 
 begin_define
@@ -923,9 +923,9 @@ define|#
 directive|define
 name|ARC_SET_OFF
 parameter_list|(
-name|iobase
+name|hc
 parameter_list|)
-value|outb(iobase+AR_MSCA_EN, 0)
+value|ar_outb(hc, AR_MSCA_EN, 0)
 end_define
 
 begin_struct
@@ -940,9 +940,6 @@ name|ar_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_short
-name|iobase
-decl_stmt|;
 name|int
 name|isa_irq
 decl_stmt|;
@@ -954,9 +951,6 @@ name|mem_start
 decl_stmt|;
 name|caddr_t
 name|mem_end
-decl_stmt|;
-name|caddr_t
-name|plx_mem
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1174,6 +1168,34 @@ name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ar_inb
+parameter_list|(
+name|hc
+parameter_list|,
+name|port
+parameter_list|)
+define|\
+value|bus_space_read_1((hc)->bt, (hc)->bh, (port))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ar_outb
+parameter_list|(
+name|hc
+parameter_list|,
+name|port
+parameter_list|,
+name|value
+parameter_list|)
+define|\
+value|bus_space_write_1((hc)->bt, (hc)->bh, (port), (value))
+end_define
 
 begin_endif
 endif|#
