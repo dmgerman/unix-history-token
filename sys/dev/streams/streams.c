@@ -321,6 +321,7 @@ enum|;
 end_enum
 
 begin_decl_stmt
+specifier|static
 name|dev_t
 name|dt_ptm
 decl_stmt|,
