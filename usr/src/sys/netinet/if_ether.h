@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -63,6 +63,17 @@ begin_comment
 comment|/* Addr. resolution protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_REVARP
+value|0x8035
+end_define
+
+begin_comment
+comment|/* reverse Addr. resolution protocol */
+end_comment
+
 begin_comment
 comment|/*  * The ETHERTYPE_NTRAILER packet types starting at ETHERTYPE_TRAIL have  * (type-ETHERTYPE_TRAIL)*512 bytes of data followed  * by an ETHER type (as given above) and then the (variable-length) header.  */
 end_comment
@@ -98,6 +109,38 @@ directive|define
 name|ETHERMIN
 value|(60-14)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Macro to map an IP multicast address to an Ethernet multicast address.  * The high-order 25 bits of the Ethernet address are statically assigned,  * and the low-order 23 bits are taken from the low end of the IP address.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_MAP_IP_MULTICAST
+parameter_list|(
+name|ipaddr
+parameter_list|,
+name|enaddr
+parameter_list|)
+define|\
+comment|/* struct in_addr *ipaddr; */
+define|\
+comment|/* u_char enaddr[6];	   */
+define|\
+value|{ \ 	(enaddr)[0] = 0x01; \ 	(enaddr)[1] = 0x00; \ 	(enaddr)[2] = 0x5e; \ 	(enaddr)[3] = ((u_char *)ipaddr)[1]& 0x7f; \ 	(enaddr)[4] = ((u_char *)ipaddr)[2]; \ 	(enaddr)[5] = ((u_char *)ipaddr)[3]; \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Ethernet Address Resolution Protocol.  *  * See RFC 826 for protocol description.  Structure below is adapted  * to resolving internet addresses.  Field names used correspond to   * RFC 826.  */
@@ -204,6 +247,16 @@ name|in_addr
 name|ac_ipaddr
 decl_stmt|;
 comment|/* copy of ip address- XXX */
+name|struct
+name|ether_multi
+modifier|*
+name|ac_multiaddrs
+decl_stmt|;
+comment|/* list of ether multicast addrs */
+name|int
+name|ac_multicnt
+decl_stmt|;
+comment|/* length of ac_multiaddrs list */
 block|}
 struct|;
 end_struct
@@ -245,6 +298,10 @@ comment|/* last packet until resolved/timeout */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* XXX: only used to define SIOCGARP, which is no longer supported */
+end_comment
 
 begin_struct
 struct|struct
@@ -319,6 +376,32 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * IP and ethernet specific routing flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_USETRAILERS
+value|RTF_PROTO1
+end_define
+
+begin_comment
+comment|/* use trailers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_ANNOUNCE
+value|RTF_PROTO2
+end_define
+
+begin_comment
+comment|/* announce new arp entry */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -333,6 +416,62 @@ literal|6
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISO
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MULTICAST
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MULTICAST
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
+begin_decl_stmt
+name|u_char
+name|ether_ipmulticast_min
+index|[
+literal|6
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
+name|ether_ipmulticast_max
+index|[
+literal|6
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -424,7 +563,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|arp_rtrequest
 name|__P
 argument_list|(
@@ -485,6 +624,158 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
+begin_comment
+comment|/*  * Ethernet multicast address structure.  There is one of these for each  * multicast address or range of multicast addresses that we are supposed  * to listen to on a particular interface.  They are kept in a linked list,  * rooted in the interface's arpcom structure.  (This really has nothing to  * do with ARP, or with the Internet address family, but this appears to be  * the minimally-disrupting place to put it.)  */
+end_comment
+
+begin_struct
+struct|struct
+name|ether_multi
+block|{
+name|u_char
+name|enm_addrlo
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* low  or only address of range */
+name|u_char
+name|enm_addrhi
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* high or only address of range */
+name|struct
+name|arpcom
+modifier|*
+name|enm_ac
+decl_stmt|;
+comment|/* back pointer to arpcom */
+name|u_int
+name|enm_refcount
+decl_stmt|;
+comment|/* no. claims to this addr/range */
+name|struct
+name|ether_multi
+modifier|*
+name|enm_next
+decl_stmt|;
+comment|/* ptr to next ether_multi */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Structure used by macros below to remember position when stepping through  * all of the ether_multi records.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ether_multistep
+block|{
+name|struct
+name|ether_multi
+modifier|*
+name|e_enm
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Macro for looking up the ether_multi record for a given range of Ethernet  * multicast addresses connected to a given arpcom structure.  If no matching  * record is found, "enm" returns NULL.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_LOOKUP_MULTI
+parameter_list|(
+name|addrlo
+parameter_list|,
+name|addrhi
+parameter_list|,
+name|ac
+parameter_list|,
+name|enm
+parameter_list|)
+define|\
+comment|/* u_char addrlo[6]; */
+define|\
+comment|/* u_char addrhi[6]; */
+define|\
+comment|/* struct arpcom *ac; */
+define|\
+comment|/* struct ether_multi *enm; */
+define|\
+value|{ \ 	for ((enm) = (ac)->ac_multiaddrs; \ 	    (enm) != NULL&& \ 	    (bcmp((enm)->enm_addrlo, (addrlo), 6) != 0 || \ 	     bcmp((enm)->enm_addrhi, (addrhi), 6) != 0); \ 		(enm) = (enm)->enm_next); \ }
+end_define
+
+begin_comment
+comment|/*  * Macro to step through all of the ether_multi records, one at a time.  * The current position is remembered in "step", which the caller must  * provide.  ETHER_FIRST_MULTI(), below, must be called to initialize "step"  * and get the first record.  Both macros return a NULL "enm" when there  * are no remaining records.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ETHER_NEXT_MULTI
+parameter_list|(
+name|step
+parameter_list|,
+name|enm
+parameter_list|)
+define|\
+comment|/* struct ether_multistep step; */
+define|\
+comment|/* struct ether_multi *enm; */
+define|\
+value|{ \ 	if (((enm) = (step).e_enm) != NULL) \ 		(step).e_enm = (enm)->enm_next; \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|ETHER_FIRST_MULTI
+parameter_list|(
+name|step
+parameter_list|,
+name|ac
+parameter_list|,
+name|enm
+parameter_list|)
+define|\
+comment|/* struct ether_multistep step; */
+define|\
+comment|/* struct arpcom *ac; */
+define|\
+comment|/* struct ether_multi *enm; */
+define|\
+value|{ \ 	(step).e_enm = (ac)->ac_multiaddrs; \ 	ETHER_NEXT_MULTI((step), (enm)); \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

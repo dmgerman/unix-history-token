@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -74,6 +74,12 @@ modifier|*
 name|inp_options
 decl_stmt|;
 comment|/* IP options */
+name|struct
+name|ip_moptions
+modifier|*
+name|inp_moptions
+decl_stmt|;
+comment|/* IP multicast options */
 block|}
 struct|;
 end_struct
@@ -122,63 +128,16 @@ name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sotorawcb
-end_ifdef
-
-begin_comment
-comment|/*  * Common structure pcb for raw internet protocol access.  * Here are internet specific extensions to the raw control block,  * and space is allocated to the necessary sockaddrs.  */
-end_comment
-
-begin_struct
-struct|struct
-name|raw_inpcb
-block|{
-name|struct
-name|rawcb
-name|rinp_rcb
-decl_stmt|;
-comment|/* common control block prefix */
-name|struct
-name|mbuf
-modifier|*
-name|rinp_options
-decl_stmt|;
-comment|/* IP options */
-name|int
-name|rinp_flags
-decl_stmt|;
-comment|/* flags, e.g. raw sockopts */
+begin_define
 define|#
 directive|define
-name|RINPF_HDRINCL
-value|0x1
-comment|/* user supplies entire IP header */
-name|struct
-name|sockaddr_in
-name|rinp_faddr
-decl_stmt|;
-comment|/* foreign address */
-name|struct
-name|sockaddr_in
-name|rinp_laddr
-decl_stmt|;
-comment|/* local address */
-name|struct
-name|route
-name|rinp_route
-decl_stmt|;
-comment|/* placeholder for routing entry */
-block|}
-struct|;
-end_struct
+name|INP_HDRINCL
+value|0x08
+end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* user supplies entire IP header */
+end_comment
 
 begin_define
 define|#
@@ -202,16 +161,6 @@ parameter_list|(
 name|so
 parameter_list|)
 value|((struct inpcb *)(so)->so_pcb)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sotorawinpcb
-parameter_list|(
-name|so
-parameter_list|)
-value|((struct raw_inpcb *)(so)->so_pcb)
 end_define
 
 begin_ifdef

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_var.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -196,6 +196,44 @@ name|MAX_IPOPTLEN
 index|]
 decl_stmt|;
 comment|/* options proper */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure attached to inpcb.ip_moptions and  * passed to ip_output when IP multicast options are in use.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_moptions
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|imo_multicast_ifp
+decl_stmt|;
+comment|/* ifp for outgoing multicasts */
+name|u_char
+name|imo_multicast_ttl
+decl_stmt|;
+comment|/* TTL for outgoing multicasts */
+name|u_char
+name|imo_multicast_loop
+decl_stmt|;
+comment|/* 1 => hear sends if a member */
+name|u_short
+name|imo_num_memberships
+decl_stmt|;
+comment|/* no. memberships this socket */
+name|struct
+name|in_multi
+modifier|*
+name|imo_membership
+index|[
+name|IP_MAX_MEMBERSHIPS
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_proto.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_proto.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,6 +79,30 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MULTICAST
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|igmp_init
+argument_list|()
+decl_stmt|,
+name|igmp_input
+argument_list|()
+decl_stmt|,
+name|igmp_fasttimo
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|udp_input
@@ -141,6 +165,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|rip_init
+argument_list|()
+decl_stmt|,
 name|rip_input
 argument_list|()
 decl_stmt|,
@@ -515,6 +542,42 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|MULTICAST
+block|{
+name|SOCK_RAW
+block|,
+operator|&
+name|inetdomain
+block|,
+name|IPPROTO_IGMP
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+name|igmp_input
+block|,
+name|rip_output
+block|,
+literal|0
+block|,
+name|rip_ctloutput
+block|,
+name|rip_usrreq
+block|,
+name|igmp_init
+block|,
+name|igmp_fasttimo
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|NSIP
 block|{
 name|SOCK_RAW
@@ -572,7 +635,7 @@ name|rip_ctloutput
 block|,
 name|rip_usrreq
 block|,
-literal|0
+name|rip_init
 block|,
 literal|0
 block|,

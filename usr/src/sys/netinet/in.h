@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,6 +31,17 @@ end_define
 
 begin_comment
 comment|/* control message protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IGMP
+value|2
+end_define
+
+begin_comment
+comment|/* group mgmt protocol */
 end_comment
 
 begin_define
@@ -296,6 +307,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|IN_CLASSD_NET
+value|0xf0000000
+end_define
+
+begin_comment
+comment|/* These ones aren't really */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSD_NSHIFT
+value|28
+end_define
+
+begin_comment
+comment|/* net and host fields, but */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN_CLASSD_HOST
+value|0x0fffffff
+end_define
+
+begin_comment
+comment|/* routing needn't know.    */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN_MULTICAST
 parameter_list|(
 name|i
@@ -362,6 +406,39 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|INADDR_UNSPEC_GROUP
+value|(u_long)0xe0000000
+end_define
+
+begin_comment
+comment|/* 224.0.0.0   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_ALLHOSTS_GROUP
+value|(u_long)0xe0000001
+end_define
+
+begin_comment
+comment|/* 224.0.0.1   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_MAX_LOCAL_GROUP
+value|(u_long)0xe00000ff
+end_define
+
+begin_comment
+comment|/* 224.0.0.255 */
+end_comment
 
 begin_define
 define|#
@@ -447,8 +524,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_HDRINCL
+name|IP_MULTICAST_IF
 value|2
+end_define
+
+begin_comment
+comment|/* set/get IP multicast interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MULTICAST_TTL
+value|3
+end_define
+
+begin_comment
+comment|/* set/get IP multicast timetolive */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MULTICAST_LOOP
+value|4
+end_define
+
+begin_comment
+comment|/* set/get IP multicast loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_ADD_MEMBERSHIP
+value|5
+end_define
+
+begin_comment
+comment|/* add	an IP group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DROP_MEMBERSHIP
+value|6
+end_define
+
+begin_comment
+comment|/* drop an IP group membership */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_HDRINCL
+value|7
 end_define
 
 begin_comment
@@ -459,7 +591,7 @@ begin_define
 define|#
 directive|define
 name|IP_TOS
-value|3
+value|8
 end_define
 
 begin_comment
@@ -470,7 +602,7 @@ begin_define
 define|#
 directive|define
 name|IP_TTL
-value|4
+value|9
 end_define
 
 begin_comment
@@ -481,7 +613,7 @@ begin_define
 define|#
 directive|define
 name|IP_RECVOPTS
-value|5
+value|10
 end_define
 
 begin_comment
@@ -492,7 +624,7 @@ begin_define
 define|#
 directive|define
 name|IP_RECVRETOPTS
-value|6
+value|11
 end_define
 
 begin_comment
@@ -503,7 +635,7 @@ begin_define
 define|#
 directive|define
 name|IP_RECVDSTADDR
-value|7
+value|12
 end_define
 
 begin_comment
@@ -514,12 +646,67 @@ begin_define
 define|#
 directive|define
 name|IP_RETOPTS
-value|8
+value|13
 end_define
 
 begin_comment
 comment|/* ip_opts; set/get IP per-packet options */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DEFAULT_MULTICAST_TTL
+value|1
+end_define
+
+begin_comment
+comment|/* normally limit m'casts to 1 hop */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_DEFAULT_MULTICAST_LOOP
+value|1
+end_define
+
+begin_comment
+comment|/* normally hear sends if a member */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_MAX_MEMBERSHIPS
+value|20
+end_define
+
+begin_comment
+comment|/* per socket */
+end_comment
+
+begin_comment
+comment|/*  * Argument structure for IP_ADD_MEMBERSHIP and IP_DROP_MEMBERSHIP.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_mreq
+block|{
+name|struct
+name|in_addr
+name|imr_multiaddr
+decl_stmt|;
+comment|/* IP multicast address of group */
+name|struct
+name|in_addr
+name|imr_interface
+decl_stmt|;
+comment|/* local IP address of interface */
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#

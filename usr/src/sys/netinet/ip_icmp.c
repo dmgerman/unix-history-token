@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_icmp.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -331,6 +331,27 @@ goto|goto
 name|freeit
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|MULTICAST
+comment|/* Don't send error in response to a multicast or broadcast packet */
+if|if
+condition|(
+name|n
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_MCAST
+operator||
+name|M_BCAST
+operator|)
+condition|)
+goto|goto
+name|freeit
+goto|;
+endif|#
+directive|endif
 comment|/* 	 * First, formulate icmp message 	 */
 name|m
 operator|=
@@ -1352,6 +1373,13 @@ name|icmplen
 operator|<
 name|ICMP_MASKLEN
 operator|||
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_BCAST
+operator|||
+comment|/* Don't reply to broadcasts */
 operator|(
 name|ia
 operator|=
@@ -1747,47 +1775,9 @@ break|break;
 block|}
 name|raw
 label|:
-name|icmpsrc
-operator|.
-name|sin_addr
-operator|=
-name|ip
-operator|->
-name|ip_src
-expr_stmt|;
-name|icmpdst
-operator|.
-name|sin_addr
-operator|=
-name|ip
-operator|->
-name|ip_dst
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|raw_input
+name|rip_input
 argument_list|(
 name|m
-argument_list|,
-operator|&
-name|icmproto
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|icmpsrc
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-operator|&
-name|icmpdst
 argument_list|)
 expr_stmt|;
 return|return;
