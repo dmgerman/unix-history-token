@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.14 1995/02/14 23:33:38 se Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 1.15 1995/02/22 14:17:15 se Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCI_PATCHLEVEL
-value|"pl2 95/02/21"
+value|"pl3 95/02/25"
 end_define
 
 begin_include
@@ -376,7 +376,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*--------------------------------------------------------- ** **	pci_configure () ** **	Probe all devices on pci bus and attach them. ** **	May be called more than once. **	Any device is attached only once. **	(Attached devices are remembered in pci_seen.) ** **--------------------------------------------------------- */
+comment|/*--------------------------------------------------------- ** **	pci_configure () ** **	Probe all devices on pci bus and attach them. ** **	May be called more than once. **	Any device is attached only once. **	(Attached devices are remembered in pci_seen.) **	Has to take care of mirrored devices, which are **	entailed by incomplete decoding of pci address lines. ** **--------------------------------------------------------- */
 end_comment
 
 begin_function_decl
@@ -673,6 +673,85 @@ name|dvp
 operator|=
 name|NULL
 expr_stmt|;
+block|}
+empty_stmt|;
+comment|/* 		**	check for mirrored devices. 		*/
+if|if
+condition|(
+name|device
+operator|>=
+literal|8
+condition|)
+block|{
+name|pcici_t
+name|tag0
+decl_stmt|;
+name|pcidi_t
+name|type0
+decl_stmt|;
+name|tag0
+operator|=
+name|pcibus
+operator|.
+name|pb_tag
+argument_list|(
+name|bus
+argument_list|,
+name|device
+operator|&
+literal|0x07
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|type0
+operator|=
+name|pcibus
+operator|.
+name|pb_read
+argument_list|(
+name|tag0
+argument_list|,
+name|PCI_ID_REG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|type0
+condition|)
+block|{
+ifndef|#
+directive|ifndef
+name|PCI_QUIET
+if|if
+condition|(
+name|dvp
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"%s?<%s> mirrored on pci%d:%d\n"
+argument_list|,
+name|dvp
+operator|->
+name|pd_name
+argument_list|,
+name|name
+argument_list|,
+name|bus
+argument_list|,
+name|device
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+continue|continue;
+block|}
+empty_stmt|;
 block|}
 empty_stmt|;
 if|if
