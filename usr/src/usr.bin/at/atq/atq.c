@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.4 (Berkeley) %G%"
+literal|"@(#)atq.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1342,7 +1342,7 @@ comment|/* convert a day of year to a 						   month and day of month */
 name|char
 name|date
 index|[
-literal|18
+literal|19
 index|]
 decl_stmt|;
 comment|/* reformatted execution date */
