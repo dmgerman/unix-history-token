@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dir.h	4.3	82/04/19	*/
+comment|/*	dir.h	4.4	82/10/09	*/
 end_comment
 
 begin_comment
-comment|/* @(#)ndir.h 4.4 3/30/82 */
-end_comment
-
-begin_comment
-comment|/*  * This sets the "page size" for directories.  * Requirements are DEV_BSIZE<= DIRBLKSIZ<= MINBSIZE with  * DIRBLKSIZ a power of two.  * Dennis Ritchie feels that directory pages should be atomic  * operations to the disk, so we use DEV_BSIZE.  */
+comment|/*  * A directory consists of some number of blocks of DIRBLKSIZ  * bytes, where DIRBLKSIZ is chosen such that it can be transferred  * to disk in a single atomic operation (e.g. 512 bytes on most machines).  *  * Each DIRBLKSIZ byte block contains some number of directory entry  * structures, which are of variable length.  Each directory entry has  * a struct direct at the front of it, containing its inode number,  * the length of the entry, and the length of the name contained in  * the entry.  These are followed by the name padded to a 4 byte boundary  * with null bytes.  All names are guaranteed null terminated.  * The maximum length of a name in a directory is MAXNAMLEN.  *  * The macro DIRSIZ(dp) gives the amount of space required to represent  * a directory entry.  Free space in a directory is represented by  * entries which have dp->d_reclen> DIRSIZ(dp).  All DIRBLKSIZ bytes  * in a directory block are claimed by the directory entries.  This  * usually results in the last entry in a directory having a large  * dp->d_reclen.  When entries are deleted from a directory, the  * space is returned to the previous entry in the same directory  * block by increasing its dp->d_reclen.  If the first entry of  * a directory block is free, then its dp->d_ino is set to 0.  * Entries other than the first in a directory do not normally have  * dp->d_ino set to 0.  */
 end_comment
 
 begin_define
@@ -17,10 +13,6 @@ directive|define
 name|DIRBLKSIZ
 value|DEV_BSIZE
 end_define
-
-begin_comment
-comment|/*  * This limits the directory name length. Its main constraint  * is that it appears twice in the user structure. (u. area)  */
-end_comment
 
 begin_define
 define|#
@@ -36,12 +28,15 @@ block|{
 name|u_long
 name|d_ino
 decl_stmt|;
-name|short
+comment|/* inode number of entry */
+name|u_short
 name|d_reclen
 decl_stmt|;
-name|short
+comment|/* length of this record */
+name|u_short
 name|d_namlen
 decl_stmt|;
+comment|/* length of string in d_name */
 name|char
 name|d_name
 index|[
@@ -50,12 +45,44 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-comment|/* typically shorter */
+comment|/* name must be no longer than this */
 block|}
 struct|;
 end_struct
 
-begin_struct
+begin_comment
+comment|/*  * The DIRSIZ macro gives the minimum record length which will hold  * the directory entry.  This requires the amount of space in struct direct  * without the d_name field, plus enough space for the name with a terminating  * null byte (dp->d_namlen+1), rounded up to a 4 byte boundary.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DIRSIZ
+end_undef
+
+begin_define
+define|#
+directive|define
+name|DIRSIZ
+parameter_list|(
+name|dp
+parameter_list|)
+define|\
+value|((sizeof (struct direct) - (MAXNAMLEN+1)) + (((dp)->d_namlen+1 + 3)&~ 3))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
+
+begin_comment
+comment|/*  * Definitions for library routines operating on directories.  */
+end_comment
+
+begin_typedef
+typedef|typedef
 struct|struct
 name|_dirdesc
 block|{
@@ -75,59 +102,9 @@ name|DIRBLKSIZ
 index|]
 decl_stmt|;
 block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * useful macros.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DIRSIZ
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DIRSIZ
-parameter_list|(
-name|dp
-parameter_list|)
-define|\
-value|((sizeof(struct direct) - MAXNAMLEN + (dp)->d_namlen + sizeof(ino_t) - 1)&\     ~(sizeof(ino_t) - 1))
-end_define
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_dirdesc
 name|DIR
 typedef|;
 end_typedef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * functions defined on directories  */
-end_comment
 
 begin_function_decl
 specifier|extern
@@ -171,7 +148,7 @@ name|rewinddir
 parameter_list|(
 name|dirp
 parameter_list|)
-value|seekdir((dirp), 0)
+value|seekdir((dirp), (long)0)
 end_define
 
 begin_function_decl
@@ -181,6 +158,12 @@ name|closedir
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+endif|KERNEL
+end_endif
 
 end_unit
 
