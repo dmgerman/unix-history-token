@@ -120,6 +120,13 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|int
+name|force
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|slice
 decl_stmt|;
 end_decl_stmt
@@ -136,7 +143,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-s] device\n"
+literal|"usage: %s [-fs] device\n"
 argument_list|,
 name|getprogname
 argument_list|()
@@ -1428,6 +1435,12 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
+if|if
+condition|(
+operator|!
+name|force
+condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"%s: error: unknown partition type (%d)"
@@ -1445,6 +1458,7 @@ name|part_typ
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 block|}
 name|ent
@@ -1833,7 +1847,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"s"
+literal|"fs"
 argument_list|)
 operator|)
 operator|!=
@@ -1846,6 +1860,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'s'
 case|:
