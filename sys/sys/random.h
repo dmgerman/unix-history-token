@@ -137,6 +137,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|add_true_randomness
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
