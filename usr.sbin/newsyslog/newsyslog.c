@@ -8934,14 +8934,6 @@ argument_list|,
 name|tempfile
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 comment|/* 	 * Note that if the real logfile still exists, and if the call 	 * to rename() fails, then "neither the old file nor the new 	 * file shall be changed or created" (to quote the standard). 	 * If the call succeeds, then the file will be replaced without 	 * any window where some other process might find that the file 	 * did not exist. 	 * XXX - ? It may be that for some error conditions, we could 	 *	retry by first removing the realfile and then renaming. 	 */
