@@ -12456,7 +12456,10 @@ block|,
 literal|"System Security Options Menu"
 block|,
 literal|"This menu allows you to configure aspects of the operating systme\n"
-literal|"policy.\n"
+literal|"policy.  If configured improperly, these settings may result in\n"
+literal|"substantially impaired system operation.  Please read the system\n"
+literal|"documentation carefully before modifying these settings.  Many\n"
+literal|"settings will take affect only following a system reboot."
 block|,
 literal|"Configure system security options"
 block|,
@@ -12505,6 +12508,20 @@ block|,
 name|NULL
 block|,
 literal|"lomac_enable=YES"
+block|}
+block|,
+block|{
+literal|" NFS port"
+block|,
+literal|"Require that the NFS clients used reserved ports"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"nfs_reserved_port_only=YES"
 block|}
 block|,
 block|{

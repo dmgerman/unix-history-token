@@ -2483,15 +2483,6 @@ argument_list|()
 decl_stmt|;
 name|variable_set2
 argument_list|(
-literal|"nfs_reserved_port_only"
-argument_list|,
-literal|"YES"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|variable_set2
-argument_list|(
 literal|"sendmail_enable"
 argument_list|,
 literal|"YES"
