@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.7 1996/09/06 23:06:56 phk Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.7.2.1 1998/05/06 18:58:47 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -84,6 +84,13 @@ define|#
 directive|define
 name|EISA_DEVICE_ID_AMI_4801
 value|0x05a94801
+end_define
+
+begin_define
+define|#
+directive|define
+name|EISA_DEVICE_ID_BUS4781
+value|0x0ab34781
 end_define
 
 begin_define
@@ -517,6 +524,15 @@ case|:
 return|return
 operator|(
 literal|"AMI Series 48 SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|EISA_DEVICE_ID_BUS4781
+case|:
+return|return
+operator|(
+literal|"Storage Dimensions SDC3222F SCSI host adapter"
 operator|)
 return|;
 break|break;
