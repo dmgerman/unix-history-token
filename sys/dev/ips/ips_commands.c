@@ -2608,7 +2608,7 @@ name|command_struct
 operator|->
 name|reset_type
 operator|=
-literal|0x80
+literal|0x0
 expr_stmt|;
 name|ips_ffdc_settime
 argument_list|(
