@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.9	%G%	*/
+comment|/*	machdep.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.9) 81/02/08 00:50:15 \n"
+literal|"VM/UNIX (Berkeley Version 4.10) 81/02/08 01:02:22 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1457,7 +1457,7 @@ begin_define
 define|#
 directive|define
 name|M750_ERLOG
-value|(MUNCORR|MCORERR)
+value|(M750_UNCORR|M750_CORERR)
 end_define
 
 begin_macro
@@ -1538,7 +1538,7 @@ index|]
 operator|=
 name|M780_ERLOG
 operator||
-name|M780_MHIERR
+name|M780_HIERR
 expr_stmt|;
 else|#
 directive|else
