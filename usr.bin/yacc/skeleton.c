@@ -112,12 +112,6 @@ literal|"#define yyerrok (yyerrflag=0)"
 block|,
 literal|"#define YYRECOVERING() (yyerrflag!=0)"
 block|,
-if|#
-directive|if
-literal|0
-block|"extern int yylex();",     "extern int yyparse();",
-endif|#
-directive|endif
 literal|"static int yygrowstack();"
 block|,
 literal|0
@@ -302,17 +296,31 @@ literal|"#define YYERROR goto yyerrlab"
 block|,
 literal|""
 block|,
-literal|"int"
+literal|"#ifndef YYPARSE_PARAM"
 block|,
-literal|"#if defined(__cplusplus) || __STDC__"
+literal|"#define YYPARSE_PARAM"
 block|,
-literal|"yyparse(void)"
+literal|"#define YYPARSE_PARAM_DECL"
 block|,
 literal|"#else"
 block|,
-literal|"yyparse()"
+literal|"#ifndef YYPARSE_PARAM_TYPE"
+block|,
+literal|"#define YYPARSE_PARAM_TYPE void *"
 block|,
 literal|"#endif"
+block|,
+literal|"#define YYPARSE_PARAM_DECL YYPARSE_PARAM_TYPE YYPARSE_PARAM;"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"int"
+block|,
+literal|"yyparse (YYPARSE_PARAM)"
+block|,
+literal|"    YYPARSE_PARAM_DECL"
 block|,
 literal|"{"
 block|,
