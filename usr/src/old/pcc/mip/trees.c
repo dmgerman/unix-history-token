@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.21 (Berkeley) %G%"
+literal|"@(#)trees.c	4.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2446,11 +2446,7 @@ argument|return(p); 	}  NODE * makety( p, t, d, s ) register NODE *p; TWORD t; {
 comment|/* make p into type t by inserting a conversion */
 argument|if( p->in.type == ENUMTY&& p->in.op == ICON ) econvert(p); 	if( t == p->in.type ){ 		p->fn.cdim = d; 		p->fn.csiz = s; 		return( p ); 		}  	if( t& TMASK ){
 comment|/* non-simple type */
-argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if (t == DOUBLE) { 			p->in.op = DCON; 			if (ISUNSIGNED(p->in.type)) 				p->dpn.dval =
-comment|/* (unsigned CONSZ) */
-argument|p->tn.lval; 			else 				p->dpn.dval = p->tn.lval; 			p->in.type = p->fn.csiz = t; 			return (clocal(p)); 		} 		if (t == FLOAT) { 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.fval =
-comment|/* (unsigned CONSZ) */
-argument|p->tn.lval; 				} 			else { 				p->fpn.fval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		} 	else if (p->in.op == FCON&& t == DOUBLE) { 		double db;  		p->in.op = DCON; 		db = p->fpn.fval; 		p->dpn.dval = db; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	} else if (p->in.op == DCON&& t == FLOAT) { 		float fl;  		p->in.op = FCON; 		fl = p->dpn.dval;
+argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if (t == DOUBLE) { 			p->in.op = DCON; 			if (ISUNSIGNED(p->in.type)) 				p->dpn.dval = (unsigned CONSZ) p->tn.lval; 			else 				p->dpn.dval = p->tn.lval; 			p->in.type = p->fn.csiz = t; 			return (clocal(p)); 		} 		if (t == FLOAT) { 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.fval = (unsigned CONSZ) p->tn.lval; 				} 			else { 				p->fpn.fval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		} 	else if (p->in.op == FCON&& t == DOUBLE) { 		double db;  		p->in.op = DCON; 		db = p->fpn.fval; 		p->dpn.dval = db; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	} else if (p->in.op == DCON&& t == FLOAT) { 		float fl;  		p->in.op = FCON; 		fl = p->dpn.dval;
 ifdef|#
 directive|ifdef
 name|notdef
