@@ -1991,6 +1991,7 @@ name|tohandle
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|eventhandler_tag
@@ -8624,13 +8625,12 @@ index|]
 operator|=
 name|NODEV
 expr_stmt|;
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|fd
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 name|device_get_name
 argument_list|(
 name|dev
@@ -8697,7 +8697,6 @@ argument_list|)
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|fd
 operator|->
 name|device_stats
@@ -10619,7 +10618,6 @@ expr_stmt|;
 comment|/* a good idea */
 name|devstat_start_transaction
 argument_list|(
-operator|&
 name|fd
 operator|->
 name|device_stats
@@ -14099,7 +14097,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|fd
 operator|->
 name|device_stats
@@ -14917,7 +14914,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|fdc
 operator|->
 name|fd

@@ -753,6 +753,7 @@ name|queue_count
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|struct
@@ -5509,7 +5510,6 @@ name|softc
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -6042,13 +6042,12 @@ operator|=
 name|SA_QUIRK_NONE
 expr_stmt|;
 comment|/*  	 * The SA driver supports a blocksize, but we don't know the 	 * blocksize until we media is inserted.  So, set a flag to 	 * indicate that the blocksize is unavailable right now. 	 */
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"sa"
 argument_list|,
 name|periph
@@ -7036,7 +7035,6 @@ expr_stmt|;
 block|}
 name|devstat_start_transaction
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -7640,7 +7638,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -7781,7 +7778,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -7836,7 +7832,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -7956,7 +7951,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -8065,7 +8059,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -8114,7 +8107,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -8251,7 +8243,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -8296,7 +8287,6 @@ name|SF_NO_PRINT
 operator||
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -8371,7 +8361,6 @@ name|SF_NO_PRINT
 operator||
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -10828,7 +10817,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -11032,7 +11020,6 @@ literal|0
 argument_list|,
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12137,7 +12124,6 @@ literal|0
 argument_list|,
 name|sense_flags
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12367,7 +12353,6 @@ literal|0
 argument_list|,
 name|sense_flags
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12606,7 +12591,6 @@ literal|0
 argument_list|,
 name|sf
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12736,7 +12720,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12932,7 +12915,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -13280,7 +13262,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -13549,7 +13530,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -13734,7 +13714,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -13894,7 +13873,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -14076,7 +14054,6 @@ name|SF_RETRY_UA
 operator||
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -14217,7 +14194,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -14376,7 +14352,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats

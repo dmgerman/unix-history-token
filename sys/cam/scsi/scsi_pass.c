@@ -192,6 +192,7 @@ name|saved_ccb
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|dev_t
@@ -686,7 +687,6 @@ name|softc
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -1052,13 +1052,12 @@ operator|)
 operator|==
 literal|0
 expr_stmt|;
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"pass"
 argument_list|,
 name|periph
@@ -2259,7 +2258,6 @@ argument_list|,
 comment|/* sense_flags */
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats

@@ -393,6 +393,7 @@ name|quirks
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|STAILQ_ENTRY
@@ -2233,7 +2234,6 @@ expr_stmt|;
 block|}
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -3078,13 +3078,12 @@ literal|"Minimum CDB size"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We need to register the statistics structure for this device, 	 * but we don't have the blocksize yet for it.  So, we register 	 * the structure and indicate that we don't have the blocksize 	 * yet.  Unlike other SCSI peripheral drivers, we explicitly set 	 * the device type here to be CDROM, rather than just ORing in 	 * the device type.  This is because this driver can attach to either 	 * CDROM or WORM devices, and we want this peripheral driver to 	 * show up in the devstat list as a CD peripheral driver, not a 	 * WORM peripheral driver.  WORM drives will also have the WORM 	 * driver attached to them. 	 */
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"cd"
 argument_list|,
 name|periph
@@ -4307,7 +4306,7 @@ comment|/* 	 * Since we're closing this CD, mark the blocksize as unavailable. 	
 name|softc
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|flags
 operator||=
 name|DEVSTAT_BS_UNAVAILABLE
@@ -4405,7 +4404,7 @@ operator|->
 name|cur_device
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|busy_count
 operator|==
 literal|0
@@ -4758,7 +4757,7 @@ operator|->
 name|cur_device
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|busy_count
 operator|>
 literal|0
@@ -4783,7 +4782,7 @@ operator|->
 name|cur_device
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|busy_count
 expr_stmt|;
 if|if
@@ -5151,7 +5150,7 @@ operator|(
 name|softc
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|busy_count
 operator|==
 literal|0
@@ -5381,7 +5380,6 @@ name|cam_flags
 argument_list|,
 name|sense_flags
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -6017,7 +6015,6 @@ argument_list|)
 expr_stmt|;
 name|devstat_start_transaction
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -6669,7 +6666,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -12179,7 +12175,7 @@ operator|(
 name|softc
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|flags
 operator|&
 name|DEVSTAT_BS_UNAVAILABLE
@@ -12190,7 +12186,7 @@ condition|)
 name|softc
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|flags
 operator|&=
 operator|~
@@ -12199,7 +12195,7 @@ expr_stmt|;
 name|softc
 operator|->
 name|device_stats
-operator|.
+operator|->
 name|block_size
 operator|=
 name|softc

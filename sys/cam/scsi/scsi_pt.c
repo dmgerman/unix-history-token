@@ -207,6 +207,7 @@ name|bio_queue
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|LIST_HEAD
@@ -1273,13 +1274,12 @@ name|softc
 operator|=
 name|softc
 expr_stmt|;
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"pt"
 argument_list|,
 name|periph
@@ -1613,7 +1613,6 @@ name|softc
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -2020,7 +2019,6 @@ argument_list|)
 expr_stmt|;
 name|devstat_start_transaction
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -2538,7 +2536,6 @@ name|biofinish
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats

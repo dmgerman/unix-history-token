@@ -321,6 +321,7 @@ name|saved_ccb
 decl_stmt|;
 name|struct
 name|devstat
+modifier|*
 name|device_stats
 decl_stmt|;
 name|dev_t
@@ -953,7 +954,6 @@ name|softc
 expr_stmt|;
 name|devstat_remove_entry
 argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -1280,13 +1280,12 @@ operator|=
 name|CH_Q_NONE
 expr_stmt|;
 comment|/* 	 * Changers don't have a blocksize, and obviously don't support 	 * tagged queueing. 	 */
-name|devstat_add_entry
-argument_list|(
-operator|&
 name|softc
 operator|->
 name|device_stats
-argument_list|,
+operator|=
+name|devstat_new_entry
+argument_list|(
 literal|"ch"
 argument_list|,
 name|periph
@@ -3339,7 +3338,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -3692,7 +3690,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -3880,7 +3877,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -4573,7 +4569,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -4731,7 +4726,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -5062,7 +5056,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -5426,7 +5419,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -5643,7 +5635,6 @@ name|SF_RETRY_UA
 operator||
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -5700,7 +5691,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -5951,7 +5941,6 @@ name|SF_RETRY_UA
 operator||
 name|SF_NO_PRINT
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
@@ -6008,7 +5997,6 @@ argument_list|,
 comment|/*sense_flags*/
 name|SF_RETRY_UA
 argument_list|,
-operator|&
 name|softc
 operator|->
 name|device_stats
