@@ -2900,6 +2900,7 @@ block|{
 name|grumble
 operator|=
 literal|"Boot manager not needed."
+expr_stmt|;
 break|break;
 block|}
 block|}
