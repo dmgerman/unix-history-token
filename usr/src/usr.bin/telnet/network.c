@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)network.c	5.1 (Berkeley) %G%"
+literal|"@(#)network.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|netobuf
 index|[
@@ -110,12 +111,10 @@ begin_comment
 comment|/*  * Initialize internal network data structures.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|init_network
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -166,7 +165,7 @@ operator|=
 name|stdout
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if any out-of-band data exists on a socket (for  * Telnet "synch" processing).  */
@@ -329,6 +328,26 @@ name|n
 decl_stmt|,
 name|n1
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPT
+argument_list|)
+if|if
+condition|(
+name|encrypt_output
+condition|)
+name|ring_encrypt
+argument_list|(
+operator|&
+name|netoring
+argument_list|,
+name|encrypt_output
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(

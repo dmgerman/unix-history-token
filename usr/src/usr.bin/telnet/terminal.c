@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	5.1 (Berkeley) %G%"
+literal|"@(#)terminal.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|ttyobuf
 index|[
@@ -294,12 +295,10 @@ begin_comment
 comment|/*  * initialize the terminal data structures.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|init_terminal
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -351,7 +350,7 @@ name|TerminalAutoFlush
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *		Send as much data as possible to the terminal.  *  *		Return value:  *			-1: No useful work done, data waiting to go out.  *			 0: No data was waiting, so nothing was done.  *			 1: All waiting data was written out.  *			 n: All data - n was written out.  */
@@ -697,9 +696,27 @@ name|setconnmode
 parameter_list|(
 name|force
 parameter_list|)
+name|int
+name|force
+decl_stmt|;
 block|{
-name|TerminalNewMode
-argument_list|(
+ifdef|#
+directive|ifdef
+name|ENCRYPT
+specifier|static
+name|int
+name|enc_passwd
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
+specifier|register
+name|int
+name|newmode
+decl_stmt|;
+name|newmode
+operator|=
 name|getconnmode
 argument_list|()
 operator||
@@ -710,8 +727,74 @@ name|MODE_FORCE
 else|:
 literal|0
 operator|)
+expr_stmt|;
+name|TerminalNewMode
+argument_list|(
+name|newmode
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENCRYPT
+if|if
+condition|(
+operator|(
+name|newmode
+operator|&
+operator|(
+name|MODE_ECHO
+operator||
+name|MODE_EDIT
+operator|)
+operator|)
+operator|==
+name|MODE_EDIT
+condition|)
+block|{
+if|if
+condition|(
+name|my_want_state_is_will
+argument_list|(
+name|TELOPT_ENCRYPT
+argument_list|)
+operator|&&
+operator|(
+name|enc_passwd
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|!
+name|encrypt_output
+condition|)
+block|{
+name|encrypt_request_start
+argument_list|()
+expr_stmt|;
+name|enc_passwd
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|enc_passwd
+condition|)
+block|{
+name|encrypt_request_end
+argument_list|()
+expr_stmt|;
+name|enc_passwd
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 

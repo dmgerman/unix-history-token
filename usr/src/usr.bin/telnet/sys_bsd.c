@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	5.1 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -317,7 +317,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|ioctl(f, TCGETS, t)
+value|ioctl(f, TCGETS, (char *)t)
 end_define
 
 begin_else
@@ -354,7 +354,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|ioctl(f, TCGETA, t)
+value|ioctl(f, TCGETA, (char *)t)
 end_define
 
 begin_else
@@ -385,7 +385,7 @@ name|f
 parameter_list|,
 name|t
 parameter_list|)
-value|ioctl(f, TIOCGETA, t)
+value|ioctl(f, TIOCGETA, (char *)t)
 end_define
 
 begin_endif
@@ -409,7 +409,7 @@ name|a
 parameter_list|,
 name|t
 parameter_list|)
-value|ioctl(f, a, t)
+value|ioctl(f, a, (char *)t)
 end_define
 
 begin_define
@@ -487,12 +487,10 @@ name|xbits
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|init_sys
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|tout
 operator|=
@@ -531,31 +529,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|TerminalWrite
-argument_list|(
-argument|buf
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|write
@@ -568,31 +558,23 @@ name|n
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|TerminalRead
-argument_list|(
-argument|buf
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 name|read
@@ -605,7 +587,7 @@ name|n
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  */
@@ -1521,6 +1503,9 @@ decl_stmt|;
 name|int
 name|old
 decl_stmt|;
+name|cc_t
+name|esc
+decl_stmt|;
 name|globalmode
 operator|=
 name|f
@@ -1563,10 +1548,6 @@ name|tcgetattr
 argument_list|(
 name|tin
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|tmp_tc
 argument_list|)
@@ -1586,10 +1567,6 @@ name|tin
 argument_list|,
 name|TCSADRAIN
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|tmp_tc
 argument_list|)
@@ -1687,17 +1664,16 @@ name|c_oflag
 operator||=
 name|ONLCR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
+if|if
+condition|(
+name|crlf
+condition|)
 name|tmp_tc
 operator|.
 name|c_iflag
 operator||=
 name|ICRNL
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
@@ -1732,6 +1708,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
+if|if
+condition|(
+name|crlf
+condition|)
 name|tmp_tc
 operator|.
 name|c_iflag
@@ -2130,12 +2110,10 @@ block|{
 ifndef|#
 directive|ifndef
 name|USE_TERMIO
-name|sb
-operator|.
-name|sg_flags
+name|lmode
 operator|&=
 operator|~
-name|CTLECH
+name|LCTLECH
 expr_stmt|;
 else|#
 directive|else
@@ -2159,11 +2137,9 @@ block|{
 ifndef|#
 directive|ifndef
 name|USE_TERMIO
-name|sb
-operator|.
-name|sg_flags
+name|lmode
 operator||=
-name|CTLECH
+name|LCTLECH
 expr_stmt|;
 else|#
 directive|else
@@ -2444,6 +2420,18 @@ ifdef|#
 directive|ifdef
 name|USE_TERMIO
 comment|/* 	 * If the VEOL character is already set, then use VEOL2, 	 * otherwise use VEOL. 	 */
+name|esc
+operator|=
+operator|(
+name|rlogin
+operator|!=
+name|_POSIX_VDISABLE
+operator|)
+condition|?
+name|rlogin
+else|:
+name|escape
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2454,7 +2442,7 @@ index|[
 name|VEOL
 index|]
 operator|!=
-name|escape
+name|esc
 operator|)
 ifdef|#
 directive|ifdef
@@ -2468,7 +2456,7 @@ index|[
 name|VEOL2
 index|]
 operator|!=
-name|escape
+name|esc
 operator|)
 endif|#
 directive|endif
@@ -2497,7 +2485,7 @@ index|[
 name|VEOL
 index|]
 operator|=
-name|escape
+name|esc
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2526,7 +2514,7 @@ index|[
 name|VEOL2
 index|]
 operator|=
-name|escape
+name|esc
 expr_stmt|;
 endif|#
 directive|endif
@@ -2550,7 +2538,7 @@ name|tc
 operator|.
 name|t_brkc
 operator|=
-name|escape
+name|esc
 expr_stmt|;
 endif|#
 directive|endif
@@ -3009,6 +2997,14 @@ name|in
 decl_stmt|,
 name|out
 decl_stmt|;
+name|out
+operator|=
+name|cfgetospeed
+argument_list|(
+operator|&
+name|old_tc
+argument_list|)
+expr_stmt|;
 name|in
 operator|=
 name|cfgetispeed
@@ -3017,13 +3013,15 @@ operator|&
 name|old_tc
 argument_list|)
 expr_stmt|;
-name|out
+if|if
+condition|(
+name|in
+operator|==
+literal|0
+condition|)
+name|in
 operator|=
-name|cfgetospeed
-argument_list|(
-operator|&
-name|old_tc
-argument_list|)
+name|out
 expr_stmt|;
 name|tp
 operator|=
@@ -3198,7 +3196,8 @@ name|onoff
 parameter_list|)
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+name|int
 name|onoff
 decl_stmt|;
 block|{
@@ -3238,7 +3237,8 @@ name|onoff
 parameter_list|)
 name|int
 name|fd
-decl_stmt|,
+decl_stmt|;
+name|int
 name|onoff
 decl_stmt|;
 block|{
@@ -3436,6 +3436,18 @@ name|int
 name|sig
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|(
+name|rlogin
+operator|!=
+name|_POSIX_VDISABLE
+operator|)
+operator|&&
+name|rlogin_susp
+argument_list|()
+condition|)
+return|return;
 if|if
 condition|(
 name|localchars
