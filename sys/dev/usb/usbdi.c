@@ -5145,6 +5145,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|1
+return|return
+literal|0
+return|;
+else|#
+directive|else
 name|devclass_t
 name|usb_devclass
 init|=
@@ -5171,17 +5179,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-switch|switch
+if|if
 condition|(
 name|what
+operator|==
+name|MOD_LOAD
+operator|||
+name|what
+operator|==
+name|MOD_UNLOAD
 condition|)
 block|{
-case|case
-name|MOD_LOAD
-case|:
-case|case
-name|MOD_UNLOAD
-case|:
 if|if
 condition|(
 operator|!
@@ -5191,6 +5199,7 @@ return|return
 literal|0
 return|;
 comment|/* just ignore call */
+comment|/* Detach all the generic devices and do a reconfigure 		 * of the bus. This should attach the new driver to anything 		 * that is already connected and it can handle. 		 * XXX For the moment disabled. The detach does not remove 		 * the device from the list of devices attached to the hub. 		 * Legacy of converting from NetBSD to FreeBSD. 		 */
 if|if
 condition|(
 name|ugen_devclass
@@ -5238,7 +5247,15 @@ name|devcount
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devlist
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 block|}
+comment|/* Reconfigure the busses, possibly attaching something to the 		 * new driver */
 name|error
 operator|=
 name|devclass_get_devices
@@ -5287,14 +5304,13 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 return|return
 literal|0
 return|;
-comment|/* nothing to do by us */
+comment|/* nothing to do */
+endif|#
+directive|endif
 block|}
 end_function
 
