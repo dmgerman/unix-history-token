@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.152
+literal|3.153
 operator|%
 name|G
 operator|%
@@ -1546,6 +1546,9 @@ operator|==
 name|MD_PRINT
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
 name|dropenvelope
 argument_list|(
 name|CurEnv
@@ -1559,6 +1562,20 @@ argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|QUEUE
+name|usrerr
+argument_list|(
+literal|"No queue to print"
+argument_list|)
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
 block|}
 end_if
 
