@@ -207,42 +207,36 @@ begin_comment
 comment|/* Define if the X Window System is missing or not being used.  */
 end_comment
 
-begin_comment
-comment|/* #undef X_DISPLAY_MISSING */
-end_comment
+begin_define
+define|#
+directive|define
+name|X_DISPLAY_MISSING
+value|1
+end_define
 
 begin_comment
 comment|/* Define if you have the XauFileName function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUFILENAME
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUFILENAME */
+end_comment
 
 begin_comment
 comment|/* Define if you have the XauReadAuth function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUREADAUTH
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUREADAUTH */
+end_comment
 
 begin_comment
 comment|/* Define if you have the XauWriteAuth function.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_XAUWRITEAUTH
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_XAUWRITEAUTH */
+end_comment
 
 begin_comment
 comment|/* Define if you have the _getpty function.  */
@@ -310,6 +304,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the cap_set_proc function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CAP_SET_PROC */
+end_comment
+
+begin_comment
+comment|/* Define if you have the cgetent function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_CGETENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the chown function.  */
 end_comment
 
@@ -330,6 +343,14 @@ directive|define
 name|HAVE_CHROOT
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the copyhostent function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_COPYHOSTENT */
+end_comment
 
 begin_comment
 comment|/* Define if you have the crypt function.  */
@@ -480,6 +501,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the freehostent function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FREEHOSTENT
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the frevoke function.  */
 end_comment
 
@@ -569,6 +601,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETHOSTNAME
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getipnodebyaddr function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETIPNODEBYADDR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the getipnodebyname function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETIPNODEBYNAME
 value|1
 end_define
 
@@ -674,14 +728,6 @@ comment|/* #undef HAVE_GETSPNAM */
 end_comment
 
 begin_comment
-comment|/* Define if you have the getspuid function.  */
-end_comment
-
-begin_comment
-comment|/* #undef HAVE_GETSPUID */
-end_comment
-
-begin_comment
 comment|/* Define if you have the gettimeofday function.  */
 end_comment
 
@@ -757,6 +803,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_INET_ATON
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the inet_ntop function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INET_NTOP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the inet_pton function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_INET_PTON
 value|1
 end_define
 
@@ -958,6 +1026,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the recvmsg function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_RECVMSG
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the res_search function.  */
 end_comment
 
@@ -976,6 +1055,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_REVOKE
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sa_family_t function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SA_FAMILY_T
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sendmsg function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SENDMSG
 value|1
 end_define
 
@@ -1226,6 +1327,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the strlcat function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCAT
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strlcpy function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRLCPY
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strlwr function.  */
 end_comment
 
@@ -1261,6 +1384,17 @@ comment|/* #undef HAVE_STRNLEN */
 end_comment
 
 begin_comment
+comment|/* Define if you have the strptime function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRPTIME
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strsep function.  */
 end_comment
 
@@ -1279,6 +1413,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRTOK_R
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the struct_sockaddr_storage function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_SOCKADDR_STORAGE
 value|1
 end_define
 
@@ -2529,12 +2674,9 @@ begin_comment
 comment|/* Define if you have the Xau library (-lXau).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_LIBXAU
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_LIBXAU */
+end_comment
 
 begin_comment
 comment|/* Define if you have the c_r library (-lc_r).  */
@@ -2698,7 +2840,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.10pre3"
+value|"1.0"
 end_define
 
 begin_comment
@@ -2761,23 +2903,17 @@ begin_comment
 comment|/* Define to enable new master key code. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RANDOM_MKEY
-value|1
-end_define
+begin_comment
+comment|/* #undef RANDOM_MKEY */
+end_comment
 
 begin_comment
 comment|/* Define this to the location of the master key. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MKEYFILE
-value|"file"
-end_define
+begin_comment
+comment|/* #undef MKEYFILE */
+end_comment
 
 begin_comment
 comment|/* Define to enable basic OSF C2 support. */
@@ -2799,12 +2935,9 @@ begin_comment
 comment|/* Define if you don't wan't support for AFS. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NO_AFS
-value|1
-end_define
+begin_comment
+comment|/* #undef NO_AFS */
+end_comment
 
 begin_comment
 comment|/* Set this to the type of des-quad-cheksum to use. */
@@ -3148,33 +3281,45 @@ begin_comment
 comment|/* define if your system declares optarg */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_OPTARG_DECLARATION */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_OPTARG_DECLARATION
+value|1
+end_define
 
 begin_comment
 comment|/* define if your system declares optind */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_OPTIND_DECLARATION */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_OPTIND_DECLARATION
+value|1
+end_define
 
 begin_comment
 comment|/* define if your system declares opterr */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_OPTERR_DECLARATION */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_OPTERR_DECLARATION
+value|1
+end_define
 
 begin_comment
 comment|/* define if your system declares optopt */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_OPTOPT_DECLARATION */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_OPTOPT_DECLARATION
+value|1
+end_define
 
 begin_comment
 comment|/* define if your system declares environ */
@@ -3261,6 +3406,50 @@ end_comment
 begin_comment
 comment|/* #undef HAVE_STRUCT_UTMPX_UT_SYSLEN */
 end_comment
+
+begin_comment
+comment|/* Define if struct tm has field tm_gmtoff. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TM_TM_GMTOFF
+value|1
+end_define
+
+begin_comment
+comment|/* Define if struct tm has field tm_zone. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_TM_TM_ZONE
+value|1
+end_define
+
+begin_comment
+comment|/* define if you have timezone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIMEZONE
+value|1
+end_define
+
+begin_comment
+comment|/* define if your system declares timezone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_TIMEZONE_DECLARATION
+value|1
+end_define
 
 begin_comment
 comment|/* define if you have struct spwd */
@@ -3469,6 +3658,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_KRB_GET_OUR_IP_FOR_REALM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|RCSID
 parameter_list|(
 name|msg
@@ -3489,6 +3685,45 @@ directive|define
 name|ORGANIZATION
 value|"FreeBSD Inc."
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|BINDIR
+value|"/usr/bin"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBDIR
+value|"/usr/lib"
+end_define
+
+begin_define
+define|#
+directive|define
+name|LIBEXECDIR
+value|"/usr/libexec"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBINDIR
+value|"/usr/sbin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -3603,6 +3838,167 @@ directive|define
 name|MaxPathLen
 value|(1024+4)
 end_define
+
+begin_comment
+comment|/* ftp stuff -------------------------------------------------- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERBEROS
+end_define
+
+begin_comment
+comment|/* telnet stuff ----------------------------------------------- */
+end_comment
+
+begin_comment
+comment|/* define this for OTP support */
+end_comment
+
+begin_comment
+comment|/* #undef OTP */
+end_comment
+
+begin_comment
+comment|/* define this if you have kerberos 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KRB4
+value|1
+end_define
+
+begin_comment
+comment|/* define this if you want encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENCRYPTION
+value|1
+end_define
+
+begin_comment
+comment|/* define this if you want authentication */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AUTHENTICATION
+value|1
+end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ENCRYPTION
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|AUTHENTICATION
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|AUTHENTICATION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Set this if you want des encryption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DES_ENCRYPTION
+value|1
+end_define
+
+begin_comment
+comment|/* Set this to the default system lead string for telnetd   * can contain %-escapes: %s=sysname, %m=machine, %r=os-release  * %v=os-version, %t=tty, %h=hostname, %d=date and time  */
+end_comment
+
+begin_comment
+comment|/* #undef USE_IM */
+end_comment
+
+begin_comment
+comment|/* define this if you want diagnostics in telnetd */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIAGNOSTICS
+value|1
+end_define
+
+begin_comment
+comment|/* define this if you want support for broken ENV_{VALUE,VAR} systems  */
+end_comment
+
+begin_comment
+comment|/* #undef ENV_HACK */
+end_comment
+
+begin_comment
+comment|/*  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OLD_ENVIRON
+value|1
+end_define
+
+begin_comment
+comment|/* Used with login -p */
+end_comment
+
+begin_comment
+comment|/* #undef LOGIN_ARGS */
+end_comment
+
+begin_comment
+comment|/* set this to a sensible login */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOGIN_PATH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LOGIN_PATH
+value|BINDIR "/login"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ------------------------------------------------------------ */

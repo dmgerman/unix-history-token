@@ -8,7 +8,7 @@ name|char
 modifier|*
 name|krb4_long_version
 init|=
-literal|"@(#)$Version: krb4-0.10pre3 by root on greenpeace.grondar.za (i386-unknown-freebsd4.0) Wed Aug 18 19:04:21 SAST 1999 $"
+literal|"@(#)$Version: krb4-1.0 by root on greenpeace.grondar.za (i386-unknown-freebsd4.0) Sat Jan  8 19:34:57 SAST 2000 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,7 +17,25 @@ name|char
 modifier|*
 name|krb4_version
 init|=
-literal|"krb4-0.10pre3"
+literal|"krb4-1.0"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|heimdal_long_version
+init|=
+literal|"@(#)$Version: heimdal-0.1l by root on greenpeace.grondar.za (i386-unknown-freebsd4.0) Sat Jan  8 20:56:02 SAST 2000 $"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|heimdal_version
+init|=
+literal|"heimdal-0.1l"
 decl_stmt|;
 end_decl_stmt
 
