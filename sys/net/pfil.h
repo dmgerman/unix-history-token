@@ -274,7 +274,7 @@ end_endif
 begin_if
 if|#
 directive|if
-name|NIPFILTER
+name|IPFILTER
 operator|>
 literal|0
 end_if
@@ -308,7 +308,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* NIPFILTER */
+comment|/* IPFILTER */
 end_comment
 
 begin_endif
