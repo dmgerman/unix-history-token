@@ -2136,6 +2136,40 @@ goto|goto
 name|vopunlock_exit
 goto|;
 block|}
+comment|/* valid for the current inode generation? */
+if|if
+condition|(
+name|ueh
+operator|.
+name|ueh_i_gen
+operator|!=
+name|ip
+operator|->
+name|i_gen
+condition|)
+block|{
+comment|/* 		 * The inode itself has a different generation number 		 * than the attribute data.  For now, the best solution 		 * is to coerce this to undefined, and let it get cleaned 		 * up by the next write or extattrctl clean. 		 */
+name|printf
+argument_list|(
+literal|"ufs_extattr: inode number inconsistency (%d, %d)\n"
+argument_list|,
+name|ueh
+operator|.
+name|ueh_i_gen
+argument_list|,
+name|ip
+operator|->
+name|i_gen
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|vopunlock_exit
+goto|;
+block|}
 comment|/* local size consistency check */
 if|if
 condition|(
@@ -2659,6 +2693,14 @@ name|ueh_flags
 operator|=
 name|UFS_EXTATTR_ATTR_FLAG_INUSE
 expr_stmt|;
+name|ueh
+operator|.
+name|ueh_i_gen
+operator|=
+name|ip
+operator|->
+name|i_gen
+expr_stmt|;
 name|local_aiov
 operator|.
 name|iov_base
@@ -2831,7 +2873,7 @@ name|uele_backing_vnode
 argument_list|,
 name|uio
 argument_list|,
-literal|0
+name|IO_SYNC
 argument_list|,
 name|ump
 operator|->

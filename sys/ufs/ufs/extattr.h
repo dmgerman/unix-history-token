@@ -161,6 +161,10 @@ name|u_int
 name|ueh_len
 decl_stmt|;
 comment|/* local defined length;<= uef_size */
+name|u_int32_t
+name|ueh_i_gen
+decl_stmt|;
+comment|/* generation number for sanity */
 comment|/* data follows the header */
 block|}
 struct|;
