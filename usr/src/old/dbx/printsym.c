@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printsym.c	5.3 (Berkeley) %G%"
+literal|"@(#)printsym.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"main.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_ifndef
@@ -2736,6 +2742,8 @@ argument_list|(
 literal|"\\0%o"
 argument_list|,
 name|c
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
@@ -3027,6 +3035,14 @@ specifier|register
 name|boolean
 name|endofstring
 decl_stmt|;
+specifier|register
+name|int
+name|unprintables
+decl_stmt|;
+define|#
+directive|define
+name|MAXGARBAGE
+value|4
 union|union
 block|{
 name|char
@@ -3076,6 +3092,10 @@ block|}
 name|a
 operator|=
 name|addr
+expr_stmt|;
+name|unprintables
+operator|=
+literal|0
 expr_stmt|;
 name|endofstring
 operator|=
@@ -3135,6 +3155,30 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+argument|u.ch[i]
+argument_list|)
+name|and
+operator|++
+name|unprintables
+operator|>
+name|MAXGARBAGE
+condition|)
+block|{
+name|endofstring
+operator|=
+name|true
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"..."
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 operator|++
 name|i
