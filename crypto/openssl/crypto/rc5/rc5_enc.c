@@ -29,6 +29,7 @@ begin_function
 name|void
 name|RC5_32_cbc_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

@@ -143,7 +143,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|1
 argument_list|)
@@ -740,7 +740,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|len
 argument_list|)
@@ -885,7 +885,7 @@ if|if
 condition|(
 name|p
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 argument_list|)

@@ -49,7 +49,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Must 'Free' the returned data */
+comment|/* Must 'OPENSSL_free' the returned data */
 end_comment
 
 begin_function
@@ -88,7 +88,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|a
 operator|->
@@ -272,7 +272,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Must 'Free' the returned data */
+comment|/* Must 'OPENSSL_free' the returned data */
 end_comment
 
 begin_function
@@ -349,7 +349,7 @@ operator|(
 name|BN_ULONG
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|num
@@ -371,7 +371,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 operator|+
@@ -557,7 +557,7 @@ name|bn_data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|bn_data
 argument_list|)

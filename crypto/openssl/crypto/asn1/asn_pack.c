@@ -63,7 +63,10 @@ function_decl|(
 modifier|*
 name|free_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 block|{
 name|STACK
@@ -118,7 +121,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Turn a STACK structures into an ASN1 encoded SEQUENCE OF structure in a  * Malloc'ed buffer  */
+comment|/* Turn a STACK structures into an ASN1 encoded SEQUENCE OF structure in a  * OPENSSL_malloc'ed buffer  */
 end_comment
 
 begin_function
@@ -200,7 +203,7 @@ operator|!
 operator|(
 name|safe
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|safelen
 argument_list|)
@@ -448,7 +451,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|octmp
 operator|->

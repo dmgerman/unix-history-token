@@ -4245,6 +4245,7 @@ argument_list|,
 name|BF_ENCRYPT
 argument_list|)
 expr_stmt|;
+comment|/* mips-sgi-irix6.5-gcc  vv  -mabi=64 bug workaround */
 if|if
 condition|(
 name|memcmp
@@ -4255,6 +4256,8 @@ operator|&
 operator|(
 name|key_out
 index|[
+name|i
+operator|=
 name|n
 operator|-
 literal|1

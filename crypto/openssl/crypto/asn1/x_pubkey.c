@@ -291,7 +291,7 @@ operator|->
 name|pkey
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -525,7 +525,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
@@ -583,7 +583,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 argument_list|)
@@ -632,7 +632,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 operator|+
@@ -696,7 +696,7 @@ name|flags
 operator||=
 name|ASN1_STRING_FLAG_BITS_LEFT
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)

@@ -16,7 +16,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|NO_APR1
+name|NO_MD5CRYPT_1
 end_define
 
 begin_endif
@@ -36,7 +36,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|NO_APR1
+name|NO_MD5CRYPT_1
 argument_list|)
 end_if
 
@@ -102,7 +102,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 end_ifndef
 
 begin_include
@@ -314,13 +314,16 @@ name|int
 name|usecrypt
 parameter_list|,
 name|int
+name|use1
+parameter_list|,
+name|int
 name|useapr1
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* -crypt        - standard Unix password algorithm (default, only choice)  * -apr1         - MD5-based password algorithm  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
+comment|/* -crypt        - standard Unix password algorithm (default)  * -1            - MD5-based password algorithm  * -apr1         - MD5-based password algorithm, Apache variant  * -salt string  - salt  * -in file      - read passwords from file  * -stdin        - read passwords from stdin  * -quiet        - no warnings  * -table        - format output as table  * -reverse      - switch table columns  */
 end_comment
 
 begin_function_decl
@@ -393,6 +396,11 @@ name|passwd_malloc
 init|=
 name|NULL
 decl_stmt|;
+name|size_t
+name|passwd_malloc_size
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|pw_source_defined
 init|=
@@ -435,6 +443,10 @@ literal|0
 decl_stmt|;
 name|int
 name|usecrypt
+init|=
+literal|0
+decl_stmt|,
+name|use1
 init|=
 literal|0
 decl_stmt|,
@@ -509,6 +521,32 @@ operator||
 name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|out
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|badopt
 operator|=
 literal|0
@@ -553,6 +591,25 @@ operator|==
 literal|0
 condition|)
 name|usecrypt
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-1"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|use1
 operator|=
 literal|1
 expr_stmt|;
@@ -830,6 +887,9 @@ operator|!
 name|usecrypt
 operator|&&
 operator|!
+name|use1
+operator|&&
+operator|!
 name|useapr1
 condition|)
 comment|/* use default */
@@ -840,6 +900,8 @@ expr_stmt|;
 if|if
 condition|(
 name|usecrypt
+operator|+
+name|use1
 operator|+
 name|useapr1
 operator|>
@@ -866,9 +928,11 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 if|if
 condition|(
+name|use1
+operator|||
 name|useapr1
 condition|)
 name|badopt
@@ -910,12 +974,19 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-apr1              MD5-based password algorithm\n"
+literal|"-1                 MD5-based password algorithm\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-apr1              MD5-based password algorithm, Apache variant\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1052,6 +1123,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|use1
+operator|||
 name|useapr1
 condition|)
 name|pw_maxlen
@@ -1067,15 +1140,20 @@ name|NULL
 condition|)
 block|{
 comment|/* no passwords on the command line */
+name|passwd_malloc_size
+operator|=
+name|pw_maxlen
+operator|+
+literal|2
+expr_stmt|;
+comment|/* longer than necessary so that we can warn about truncation */
 name|passwd
 operator|=
 name|passwd_malloc
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
-name|pw_maxlen
-operator|+
-literal|1
+name|passwd_malloc_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -1134,9 +1212,7 @@ name|EVP_read_pw_string
 argument_list|(
 name|passwd_malloc
 argument_list|,
-name|pw_maxlen
-operator|+
-literal|1
+name|passwd_malloc_size
 argument_list|,
 literal|"Password: "
 argument_list|,
@@ -1213,6 +1289,8 @@ argument_list|,
 name|pw_maxlen
 argument_list|,
 name|usecrypt
+argument_list|,
+name|use1
 argument_list|,
 name|useapr1
 argument_list|)
@@ -1360,6 +1438,8 @@ name|pw_maxlen
 argument_list|,
 name|usecrypt
 argument_list|,
+name|use1
+argument_list|,
 name|useapr1
 argument_list|)
 condition|)
@@ -1394,7 +1474,7 @@ if|if
 condition|(
 name|salt_malloc
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|salt_malloc
 argument_list|)
@@ -1403,7 +1483,7 @@ if|if
 condition|(
 name|passwd_malloc
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|passwd_malloc
 argument_list|)
@@ -1421,7 +1501,7 @@ if|if
 condition|(
 name|out
 condition|)
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -1437,23 +1517,28 @@ end_function
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 end_ifndef
 
 begin_comment
-comment|/* MD5-based password algorithm compatible to the one found in Apache  * (should probably be available as a library function;  * then the static buffer would not be acceptable) */
+comment|/* MD5-based password algorithm (should probably be available as a library  * function; then the static buffer would not be acceptable).  * For magic string "1", this should be compatible to the MD5-based BSD  * password algorithm.  * For 'magic' string "apr1", this is compatible to the MD5-based Apache  * password algorithm.  * (Apparently, the Apache password algorithm is identical except that the  * 'magic' string was changed -- the laziest application of the NIH principle  * I've ever encountered.)  */
 end_comment
 
 begin_function
 specifier|static
 name|char
 modifier|*
-name|apr1_crypt
+name|md5crypt
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|passwd
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|magic
 parameter_list|,
 specifier|const
 name|char
@@ -1506,11 +1591,47 @@ argument_list|(
 name|passwd
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|out_buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'$'
+expr_stmt|;
+name|out_buf
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|assert
+argument_list|(
+name|strlen
+argument_list|(
+name|magic
+argument_list|)
+operator|<=
+literal|4
+argument_list|)
+expr_stmt|;
+comment|/* "1" or "apr1" */
+name|strncat
 argument_list|(
 name|out_buf
 argument_list|,
-literal|"$apr1$"
+name|magic
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|strncat
+argument_list|(
+name|out_buf
+argument_list|,
+literal|"$"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|strncat
@@ -1576,9 +1697,32 @@ argument_list|(
 operator|&
 name|md
 argument_list|,
-literal|"$apr1$"
+literal|"$"
 argument_list|,
-literal|6
+literal|1
+argument_list|)
+expr_stmt|;
+name|MD5_Update
+argument_list|(
+operator|&
+name|md
+argument_list|,
+name|magic
+argument_list|,
+name|strlen
+argument_list|(
+name|magic
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|MD5_Update
+argument_list|(
+operator|&
+name|md
+argument_list|,
+literal|"$"
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|MD5_Update
@@ -2177,6 +2321,9 @@ name|int
 name|usecrypt
 parameter_list|,
 name|int
+name|use1
+parameter_list|,
+name|int
 name|useapr1
 parameter_list|)
 block|{
@@ -2229,7 +2376,7 @@ operator|=
 operator|*
 name|salt_malloc_p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|3
 argument_list|)
@@ -2342,9 +2489,11 @@ directive|endif
 comment|/* !NO_DES */
 ifndef|#
 directive|ifndef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 if|if
 condition|(
+name|use1
+operator|||
 name|useapr1
 condition|)
 block|{
@@ -2365,7 +2514,7 @@ operator|=
 operator|*
 name|salt_malloc_p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|9
 argument_list|)
@@ -2449,7 +2598,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* !NO_APR1 */
+comment|/* !NO_MD5CRYPT_1 */
 block|}
 name|assert
 argument_list|(
@@ -2526,16 +2675,26 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|NO_APR1
+name|NO_MD5CRYPT_1
 if|if
 condition|(
+name|use1
+operator|||
 name|useapr1
 condition|)
 name|hash
 operator|=
-name|apr1_crypt
+name|md5crypt
 argument_list|(
 name|passwd
+argument_list|,
+operator|(
+name|use1
+condition|?
+literal|"1"
+else|:
+literal|"apr1"
+operator|)
 argument_list|,
 operator|*
 name|salt_p

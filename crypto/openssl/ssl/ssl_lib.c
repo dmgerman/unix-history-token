@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -646,7 +652,7 @@ operator|(
 name|SSL
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -941,7 +947,7 @@ name|ctx
 argument_list|)
 expr_stmt|;
 comment|/* decrement reference count */
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)
@@ -1585,7 +1591,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)
@@ -4067,10 +4073,12 @@ begin_function
 name|int
 name|ssl_cipher_id_cmp
 parameter_list|(
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|SSL_CIPHER
 modifier|*
 name|b
@@ -4122,13 +4130,17 @@ begin_function
 name|int
 name|ssl_cipher_ptr_id_cmp
 parameter_list|(
+specifier|const
 name|SSL_CIPHER
 modifier|*
+specifier|const
 modifier|*
 name|ap
 parameter_list|,
+specifier|const
 name|SSL_CIPHER
 modifier|*
+specifier|const
 modifier|*
 name|bp
 parameter_list|)
@@ -4966,10 +4978,8 @@ operator|)
 condition|)
 name|sk
 operator|=
-name|sk_SSL_CIPHER_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_SSL_CIPHER_new_null
+argument_list|()
 expr_stmt|;
 comment|/* change perhaps later */
 else|else
@@ -5318,7 +5328,7 @@ operator|(
 name|SSL_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -5783,7 +5793,7 @@ modifier|*
 name|comp
 parameter_list|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|comp
 argument_list|)
@@ -6019,7 +6029,7 @@ argument_list|,
 name|SSL_COMP_free
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -8570,7 +8580,7 @@ operator|->
 name|enc_read_ctx
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -8600,7 +8610,7 @@ operator|->
 name|enc_write_ctx
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -8972,10 +8982,6 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|BIO
-modifier|*
-name|under
-decl_stmt|;
 if|if
 condition|(
 name|s
@@ -8997,7 +9003,9 @@ name|wbio
 condition|)
 block|{
 comment|/* remove buffering */
-name|under
+name|s
+operator|->
+name|wbio
 operator|=
 name|BIO_pop
 argument_list|(
@@ -9006,23 +9014,21 @@ operator|->
 name|wbio
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|under
-operator|!=
-name|NULL
-condition|)
+ifdef|#
+directive|ifdef
+name|REF_CHECK
+comment|/* not the usual REF_CHECK, but this avoids adding one more preprocessor symbol */
+name|assert
+argument_list|(
 name|s
 operator|->
 name|wbio
-operator|=
-name|under
+operator|!=
+name|NULL
+argument_list|)
 expr_stmt|;
-else|else
-name|abort
-argument_list|()
-expr_stmt|;
-comment|/* ok */
+endif|#
+directive|endif
 block|}
 name|BIO_free
 argument_list|(

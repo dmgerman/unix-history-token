@@ -210,6 +210,10 @@ condition|(
 name|point
 operator|->
 name|distpoint
+operator|&&
+name|point
+operator|->
+name|distpoint
 operator|->
 name|fullname
 condition|)
@@ -273,6 +277,10 @@ end_if
 begin_if
 if|if
 condition|(
+name|point
+operator|->
+name|distpoint
+operator|&&
 name|point
 operator|->
 name|distpoint
@@ -350,10 +358,8 @@ operator|!
 operator|(
 name|crld
 operator|=
-name|sk_DIST_POINT_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_DIST_POINT_new_null
+argument_list|()
 operator|)
 condition|)
 goto|goto
@@ -963,7 +969,7 @@ argument_list|,
 name|GENERAL_NAME_free
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -1163,7 +1169,7 @@ argument_list|,
 name|GENERAL_NAME_free
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

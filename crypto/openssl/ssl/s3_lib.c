@@ -1527,7 +1527,7 @@ condition|(
 operator|(
 name|s3
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -1614,7 +1614,7 @@ name|buf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -1637,7 +1637,7 @@ name|buf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -1660,7 +1660,7 @@ name|comp
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -1739,7 +1739,7 @@ operator|->
 name|s3
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -1815,7 +1815,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
@@ -3359,35 +3359,15 @@ operator|*
 operator|)
 name|OBJ_bsearch
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|cp
+argument|(char *)&cp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|sorted
+argument|(char *)sorted
 argument_list|,
-name|SSL3_NUM_CIPHERS
+argument|SSL3_NUM_CIPHERS
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|SSL_CIPHER
-operator|*
-argument_list|)
+argument|sizeof(SSL_CIPHER *)
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|ssl_cipher_ptr_id_cmp
+argument|FP_ICC ssl_cipher_ptr_id_cmp
 argument_list|)
 expr_stmt|;
 if|if

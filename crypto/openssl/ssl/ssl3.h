@@ -19,6 +19,23 @@ directive|define
 name|HEADER_SSL3_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_COMP
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/comp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -837,9 +854,9 @@ name|EVP_MD
 modifier|*
 name|new_hash
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HEADER_COMP_H
+ifndef|#
+directive|ifndef
+name|NO_COMP
 specifier|const
 name|SSL_COMP
 modifier|*

@@ -356,15 +356,18 @@ begin_comment
 comment|/* Turn a stack of SAFEBAGS into a PKCS#7 data Contentinfo */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|PKCS7
 modifier|*
 name|PKCS12_pack_p7data
-parameter_list|(
-name|STACK
-modifier|*
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|PKCS12_SAFEBAG
+argument_list|)
+operator|*
 name|sk
-parameter_list|)
+argument_list|)
 block|{
 name|PKCS7
 modifier|*
@@ -430,7 +433,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|ASN1_seq_pack
+name|ASN1_seq_pack_PKCS12_SAFEBAG
 argument_list|(
 name|sk
 argument_list|,
@@ -471,43 +474,46 @@ return|return
 name|p7
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* Turn a stack of SAFEBAGS into a PKCS#7 encrypted data ContentInfo */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|PKCS7
 modifier|*
 name|PKCS12_pack_p7encdata
-parameter_list|(
+argument_list|(
 name|int
 name|pbe_nid
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|pass
-parameter_list|,
+argument_list|,
 name|int
 name|passlen
-parameter_list|,
+argument_list|,
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|salt
-parameter_list|,
+argument_list|,
 name|int
 name|saltlen
-parameter_list|,
+argument_list|,
 name|int
 name|iter
-parameter_list|,
-name|STACK
-modifier|*
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|PKCS12_SAFEBAG
+argument_list|)
+operator|*
 name|bags
-parameter_list|)
+argument_list|)
 block|{
 name|PKCS7
 modifier|*
@@ -679,7 +685,7 @@ return|return
 name|p7
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|X509_SIG

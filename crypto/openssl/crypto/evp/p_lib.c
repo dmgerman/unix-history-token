@@ -730,7 +730,7 @@ operator|(
 name|EVP_PKEY
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1352,7 +1352,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|x
 argument_list|)

@@ -64,6 +64,19 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|CRYPTO_F_CRYPTO_GET_NEW_DYNLOCKID
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"CRYPTO_get_new_dynlockid"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|CRYPTO_F_CRYPTO_GET_NEW_LOCKID
 argument_list|,
 literal|0
@@ -101,6 +114,12 @@ name|CRYPTO_str_reasons
 index|[]
 init|=
 block|{
+block|{
+name|CRYPTO_R_NO_DYNLOCK_CREATE_CALLBACK
+block|,
+literal|"no dynlock create callback"
+block|}
+block|,
 block|{
 literal|0
 block|,

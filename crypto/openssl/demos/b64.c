@@ -690,7 +690,7 @@ expr_stmt|;
 block|}
 name|strbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SIZE
 argument_list|)
@@ -702,7 +702,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|EVP_ENCODE_LENGTH
 argument_list|(
@@ -729,7 +729,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"OPENSSL_malloc failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1067,7 +1067,7 @@ name|strbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|strbuf
 argument_list|)
@@ -1078,7 +1078,7 @@ name|buff
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buff
 argument_list|)

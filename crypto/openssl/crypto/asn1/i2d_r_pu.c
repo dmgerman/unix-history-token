@@ -265,7 +265,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|max
 operator|+
@@ -335,7 +335,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|bs
 operator|.

@@ -7,14 +7,34 @@ begin_comment
 comment|/*  * This header only exists to break a circular dependency between pem and err  * Ben 30 Jan 1999.  */
 end_comment
 
-begin_function_decl
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|void
 name|ERR_load_PEM_strings
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

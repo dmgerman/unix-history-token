@@ -30,6 +30,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*

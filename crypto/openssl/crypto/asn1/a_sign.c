@@ -312,7 +312,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -337,7 +337,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -461,7 +461,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|signature
 operator|->
@@ -541,7 +541,7 @@ operator|)
 name|inl
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf_in
 argument_list|)
@@ -567,7 +567,7 @@ argument_list|,
 name|outll
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf_out
 argument_list|)

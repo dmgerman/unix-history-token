@@ -2530,6 +2530,12 @@ literal|"record too large"
 block|}
 block|,
 block|{
+name|SSL_R_RECORD_TOO_SMALL
+block|,
+literal|"record too small"
+block|}
+block|,
+block|{
 name|SSL_R_REQUIRED_CIPHER_MISSING
 block|,
 literal|"required cipher missing"

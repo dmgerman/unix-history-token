@@ -108,6 +108,7 @@ define|#
 directive|define
 name|TLS1_AD_NO_RENEGOTIATION
 value|100
+comment|/* Additional TLS ciphersuites from draft-ietf-tls-56-bit-ciphersuites-00.txt  * (available if TLS1_ALLOW_EXPERIMENTAL_CIPHERSUITES is defined, see  * s3_lib.c).  We actually treat them like SSL 3.0 ciphers, which we probably  * shouldn't. */
 define|#
 directive|define
 name|TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5
@@ -136,6 +137,7 @@ define|#
 directive|define
 name|TLS1_CK_DHE_DSS_WITH_RC4_128_SHA
 value|0x03000066
+comment|/* XXX  * Inconsistency alert:  * The OpenSSL names of ciphers with ephemeral DH here include the string  * "DHE", while elsewhere it has always been "EDH".  * (The alias for the list of all such ciphers also is "EDH".)  * The specifications speak of "EDH"; maybe we should allow both forms  * for everything. */
 define|#
 directive|define
 name|TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5

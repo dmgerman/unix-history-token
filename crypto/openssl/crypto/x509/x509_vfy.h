@@ -40,6 +40,35 @@ directive|define
 name|HEADER_X509_VFY_H
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_LHASH
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<openssl/lhash.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/crypto.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -52,12 +81,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/bio.h>
-include|#
-directive|include
-file|<openssl/crypto.h>
 comment|/* Outer object */
 typedef|typedef
 struct|struct
@@ -167,6 +190,10 @@ typedef|;
 name|DECLARE_STACK_OF
 argument_list|(
 argument|X509_LOOKUP
+argument_list|)
+name|DECLARE_STACK_OF
+argument_list|(
+argument|X509_OBJECT
 argument_list|)
 comment|/* This is a static that defines the function interface */
 typedef|typedef
@@ -353,7 +380,7 @@ name|X509_LOOKUP_METHOD
 typedef|;
 typedef|typedef
 name|struct
-name|x509_store_state_st
+name|x509_store_ctx_st
 name|X509_STORE_CTX
 typedef|;
 comment|/* This is used to hold everything.  It is used for all certificate  * validation.  Once we have a certificate chain, the 'verify'  * function is then called to actually check the cert chain. */
@@ -366,22 +393,14 @@ name|int
 name|cache
 decl_stmt|;
 comment|/* if true, stash any hits */
-ifdef|#
-directive|ifdef
-name|HEADER_LHASH_H
-name|LHASH
-modifier|*
-name|certs
-decl_stmt|;
-comment|/* cached certs; */
-else|#
-directive|else
-name|char
-modifier|*
-name|certs
-decl_stmt|;
-endif|#
-directive|endif
+name|STACK_OF
+argument_list|(
+name|X509_OBJECT
+argument_list|)
+operator|*
+name|objs
+expr_stmt|;
+comment|/* Cache of all objects */
 comment|/* These are external lookup methods */
 name|STACK_OF
 argument_list|(
@@ -486,9 +505,9 @@ decl_stmt|;
 comment|/* who owns us */
 block|}
 struct|;
-comment|/* This is a temporary used when processing cert chains.  Since the  * gathering of the cert chain can take some time (and have to be  * 'retried', this needs to be kept and passed around. */
+comment|/* This is a used when verifying cert chains.  Since the  * gathering of the cert chain can take some time (and have to be  * 'retried', this needs to be kept and passed around. */
 struct|struct
-name|x509_store_state_st
+name|x509_store_ctx_st
 comment|/* X509_STORE_CTX */
 block|{
 name|X509_STORE
@@ -521,6 +540,100 @@ name|int
 name|trust
 decl_stmt|;
 comment|/* trust setting to check */
+name|time_t
+name|check_time
+decl_stmt|;
+comment|/* time to make verify at */
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+comment|/* Various verify flags */
+name|void
+modifier|*
+name|other_ctx
+decl_stmt|;
+comment|/* Other info for use with get_issuer() */
+comment|/* Callbacks for various operations */
+name|int
+function_decl|(
+modifier|*
+name|verify
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* called to verify a certificate */
+name|int
+function_decl|(
+modifier|*
+name|verify_cb
+function_decl|)
+parameter_list|(
+name|int
+name|ok
+parameter_list|,
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+comment|/* error callback */
+name|int
+function_decl|(
+modifier|*
+name|get_issuer
+function_decl|)
+parameter_list|(
+name|X509
+modifier|*
+modifier|*
+name|issuer
+parameter_list|,
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
+comment|/* get issuers cert from ctx */
+name|int
+function_decl|(
+modifier|*
+name|check_issued
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|,
+name|X509
+modifier|*
+name|issuer
+parameter_list|)
+function_decl|;
+comment|/* check issued */
+name|int
+function_decl|(
+modifier|*
+name|cleanup
+function_decl|)
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
 comment|/* The following is built up */
 name|int
 name|depth
@@ -553,6 +666,11 @@ name|X509
 modifier|*
 name|current_cert
 decl_stmt|;
+name|X509
+modifier|*
+name|current_issuer
+decl_stmt|;
+comment|/* cert currently being tested as valid issuer */
 name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
@@ -730,11 +848,39 @@ define|#
 directive|define
 name|X509_V_ERR_CERT_REJECTED
 value|28
+comment|/* These are 'informational' when looking for issuer cert */
+define|#
+directive|define
+name|X509_V_ERR_SUBJECT_ISSUER_MISMATCH
+value|29
+define|#
+directive|define
+name|X509_V_ERR_AKID_SKID_MISMATCH
+value|30
+define|#
+directive|define
+name|X509_V_ERR_AKID_ISSUER_SERIAL_MISMATCH
+value|31
+define|#
+directive|define
+name|X509_V_ERR_KEYUSAGE_NO_CERTSIGN
+value|32
 comment|/* The application is not happy */
 define|#
 directive|define
 name|X509_V_ERR_APPLICATION_VERIFICATION
 value|50
+comment|/* Certificate verify flags */
+define|#
+directive|define
+name|X509_V_FLAG_CB_ISSUER_CHECK
+value|0x1
+comment|/* Send issuer+subject checks to verify_cb */
+define|#
+directive|define
+name|X509_V_FLAG_USE_CHECK_TIME
+value|0x2
+comment|/* Use check time instead of current time */
 comment|/* These functions are being redefined in another directory, 		     and clash when the linker is case-insensitive, so let's 		     hide them a little, by giving them an extra 'o' at the 		     beginning of the name... */
 ifdef|#
 directive|ifdef
@@ -769,27 +915,59 @@ name|X509v3_add_standard_extensions
 value|oX509v3_add_standard_extensions
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|HEADER_LHASH_H
+name|int
+name|X509_OBJECT_idx_by_subject
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|X509_OBJECT
+argument_list|)
+operator|*
+name|h
+argument_list|,
+name|int
+name|type
+argument_list|,
+name|X509_NAME
+operator|*
+name|name
+argument_list|)
+decl_stmt|;
 name|X509_OBJECT
 modifier|*
 name|X509_OBJECT_retrieve_by_subject
-parameter_list|(
-name|LHASH
-modifier|*
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|X509_OBJECT
+argument_list|)
+operator|*
 name|h
-parameter_list|,
+argument_list|,
 name|int
 name|type
-parameter_list|,
+argument_list|,
 name|X509_NAME
-modifier|*
+operator|*
 name|name
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
+argument_list|)
+decl_stmt|;
+name|X509_OBJECT
+modifier|*
+name|X509_OBJECT_retrieve_match
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|X509_OBJECT
+argument_list|)
+operator|*
+name|h
+argument_list|,
+name|X509_OBJECT
+operator|*
+name|x
+argument_list|)
+decl_stmt|;
 name|void
 name|X509_OBJECT_up_ref_count
 parameter_list|(
@@ -828,6 +1006,23 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+name|int
+name|X509_STORE_CTX_get1_issuer
+parameter_list|(
+name|X509
+modifier|*
+modifier|*
+name|issuer
+parameter_list|,
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|X509
+modifier|*
+name|x
+parameter_list|)
+function_decl|;
 name|void
 name|X509_STORE_CTX_free
 parameter_list|(
@@ -857,6 +1052,21 @@ name|X509
 argument_list|)
 operator|*
 name|chain
+argument_list|)
+decl_stmt|;
+name|void
+name|X509_STORE_CTX_trusted_stack
+argument_list|(
+name|X509_STORE_CTX
+operator|*
+name|ctx
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|X509
+argument_list|)
+operator|*
+name|sk
 argument_list|)
 decl_stmt|;
 name|void
@@ -1339,6 +1549,31 @@ name|purpose
 parameter_list|,
 name|int
 name|trust
+parameter_list|)
+function_decl|;
+name|void
+name|X509_STORE_CTX_set_flags
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|long
+name|flags
+parameter_list|)
+function_decl|;
+name|void
+name|X509_STORE_CTX_set_time
+parameter_list|(
+name|X509_STORE_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|long
+name|flags
+parameter_list|,
+name|time_t
+name|t
 parameter_list|)
 function_decl|;
 ifdef|#

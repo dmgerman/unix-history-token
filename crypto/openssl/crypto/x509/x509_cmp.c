@@ -47,10 +47,12 @@ begin_function
 name|int
 name|X509_issuer_and_serial_cmp
 parameter_list|(
+specifier|const
 name|X509
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509
 modifier|*
 name|b
@@ -314,10 +316,12 @@ begin_function
 name|int
 name|X509_issuer_name_cmp
 parameter_list|(
+specifier|const
 name|X509
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509
 modifier|*
 name|b
@@ -348,10 +352,12 @@ begin_function
 name|int
 name|X509_subject_name_cmp
 parameter_list|(
+specifier|const
 name|X509
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509
 modifier|*
 name|b
@@ -382,10 +388,12 @@ begin_function
 name|int
 name|X509_CRL_cmp
 parameter_list|(
+specifier|const
 name|X509_CRL
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509_CRL
 modifier|*
 name|b
@@ -535,17 +543,19 @@ name|NO_SHA
 end_ifndef
 
 begin_comment
-comment|/* Compare two certificates: they must be identical for  * this to work.  */
+comment|/* Compare two certificates: they must be identical for  * this to work. NB: Although "cmp" operations are generally  * prototyped to take "const" arguments (eg. for use in  * STACKs), the way X509 handling is - these operations may  * involve ensuring the hashes are up-to-date and ensuring  * certain cert information is cached. So this is the point  * where the "depth-first" constification tree has to halt  * with an evil cast.  */
 end_comment
 
 begin_function
 name|int
 name|X509_cmp
 parameter_list|(
+specifier|const
 name|X509
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509
 modifier|*
 name|b
@@ -554,6 +564,10 @@ block|{
 comment|/* ensure hash is valid */
 name|X509_check_purpose
 argument_list|(
+operator|(
+name|X509
+operator|*
+operator|)
 name|a
 argument_list|,
 operator|-
@@ -564,6 +578,10 @@ argument_list|)
 expr_stmt|;
 name|X509_check_purpose
 argument_list|(
+operator|(
+name|X509
+operator|*
+operator|)
 name|b
 argument_list|,
 operator|-
@@ -598,10 +616,12 @@ begin_function
 name|int
 name|X509_NAME_cmp
 parameter_list|(
+specifier|const
 name|X509_NAME
 modifier|*
 name|a
 parameter_list|,
+specifier|const
 name|X509_NAME
 modifier|*
 name|b
@@ -912,7 +932,7 @@ argument_list|)
 condition|)
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
@@ -960,7 +980,7 @@ name|p
 operator|!=
 name|str
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|p
 argument_list|)

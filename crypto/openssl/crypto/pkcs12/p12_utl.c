@@ -82,7 +82,7 @@ operator|!
 operator|(
 name|unitmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|ulen
 argument_list|)
@@ -203,7 +203,7 @@ operator|!
 operator|(
 name|asctmp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|asclen
 argument_list|)

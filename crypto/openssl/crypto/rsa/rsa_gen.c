@@ -273,7 +273,7 @@ condition|(
 name|e_value
 operator|&
 operator|(
-literal|1
+literal|1UL
 operator|<<
 name|i
 operator|)

@@ -384,7 +384,7 @@ operator|(
 name|MS_TM
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -454,7 +454,7 @@ name|a
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

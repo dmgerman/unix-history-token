@@ -139,6 +139,10 @@ decl_stmt|,
 name|badops
 init|=
 literal|0
+decl_stmt|,
+name|sgckey
+init|=
+literal|0
 decl_stmt|;
 specifier|const
 name|EVP_CIPHER
@@ -502,6 +506,23 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-sgckey"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|sgckey
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-pubin"
 argument_list|)
 operator|==
@@ -685,6 +706,13 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -in arg         input file\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|" -sgckey         Use IIS SGC key format\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -1078,7 +1106,7 @@ name|data
 expr_stmt|;
 name|rsa
 operator|=
-name|d2i_Netscape_RSA
+name|d2i_RSA_NET
 argument_list|(
 name|NULL
 argument_list|,
@@ -1091,6 +1119,8 @@ operator|)
 name|size
 argument_list|,
 name|NULL
+argument_list|,
+name|sgckey
 argument_list|)
 expr_stmt|;
 name|BUF_MEM_free
@@ -1183,6 +1213,7 @@ name|outfile
 operator|==
 name|NULL
 condition|)
+block|{
 name|BIO_set_fp
 argument_list|(
 name|out
@@ -1192,6 +1223,33 @@ argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|out
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 if|if
@@ -1469,13 +1527,15 @@ literal|1
 expr_stmt|;
 name|size
 operator|=
-name|i2d_Netscape_RSA
+name|i2d_RSA_NET
 argument_list|(
 name|rsa
 argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|sgckey
 argument_list|)
 expr_stmt|;
 if|if
@@ -1488,7 +1548,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|size
 argument_list|)
@@ -1501,7 +1561,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1512,7 +1572,7 @@ name|pp
 operator|=
 name|p
 expr_stmt|;
-name|i2d_Netscape_RSA
+name|i2d_RSA_NET
 argument_list|(
 name|rsa
 argument_list|,
@@ -1520,6 +1580,8 @@ operator|&
 name|p
 argument_list|,
 name|NULL
+argument_list|,
+name|sgckey
 argument_list|)
 expr_stmt|;
 name|BIO_write
@@ -1535,7 +1597,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pp
 argument_list|)
@@ -1643,7 +1705,7 @@ name|out
 operator|!=
 name|NULL
 condition|)
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -1663,7 +1725,7 @@ if|if
 condition|(
 name|passin
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|passin
 argument_list|)
@@ -1672,7 +1734,7 @@ if|if
 condition|(
 name|passout
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|passout
 argument_list|)

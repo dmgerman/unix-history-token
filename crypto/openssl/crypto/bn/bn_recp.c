@@ -90,7 +90,7 @@ operator|(
 name|BN_RECP_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -169,7 +169,7 @@ name|flags
 operator|&
 name|BN_FLG_MALLOCED
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|recp
 argument_list|)

@@ -68,7 +68,7 @@ operator|(
 name|BN_BLINDING
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -245,7 +245,7 @@ operator|->
 name|Ai
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 argument_list|)

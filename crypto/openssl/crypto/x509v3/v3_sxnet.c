@@ -402,7 +402,7 @@ argument_list|,
 name|SXNETID_free
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -623,7 +623,7 @@ operator|->
 name|user
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -746,7 +746,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)

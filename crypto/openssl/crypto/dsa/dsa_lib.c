@@ -221,7 +221,7 @@ operator|(
 name|DSA
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -251,16 +251,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|default_DSA_method
-condition|)
-name|default_DSA_method
-operator|=
-name|DSA_OpenSSL
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|meth
 condition|)
 name|ret
@@ -274,7 +264,8 @@ name|ret
 operator|->
 name|meth
 operator|=
-name|default_DSA_method
+name|DSA_get_default_method
+argument_list|()
 expr_stmt|;
 name|ret
 operator|->
@@ -381,7 +372,7 @@ name|ret
 argument_list|)
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
@@ -622,7 +613,7 @@ operator|->
 name|r
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 argument_list|)

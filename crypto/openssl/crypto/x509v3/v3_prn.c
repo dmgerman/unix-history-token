@@ -581,7 +581,7 @@ if|if
 condition|(
 name|value
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|value
 argument_list|)

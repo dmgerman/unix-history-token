@@ -1766,7 +1766,7 @@ expr_stmt|;
 block|}
 name|strbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SIZE
 argument_list|)
@@ -1778,7 +1778,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|EVP_ENCODE_LENGTH
 argument_list|(
@@ -1805,7 +1805,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure %ld\n"
+literal|"OPENSSL_malloc failure %ld\n"
 argument_list|,
 operator|(
 name|long
@@ -2112,6 +2112,7 @@ name|outf
 operator|==
 name|NULL
 condition|)
+block|{
 name|BIO_set_fp
 argument_list|(
 name|out
@@ -2121,6 +2122,33 @@ argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|out
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 if|if
@@ -2903,7 +2931,7 @@ name|strbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|strbuf
 argument_list|)
@@ -2914,7 +2942,7 @@ name|buff
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buff
 argument_list|)
@@ -2936,7 +2964,7 @@ name|out
 operator|!=
 name|NULL
 condition|)
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -2967,7 +2995,7 @@ if|if
 condition|(
 name|pass
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pass
 argument_list|)

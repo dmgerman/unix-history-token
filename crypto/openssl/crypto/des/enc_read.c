@@ -141,7 +141,7 @@ condition|)
 block|{
 name|tmpbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BSIZE
 argument_list|)
@@ -168,7 +168,7 @@ condition|)
 block|{
 name|net
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BSIZE
 argument_list|)
@@ -195,7 +195,7 @@ condition|)
 block|{
 name|unnet
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BSIZE
 argument_list|)

@@ -524,14 +524,14 @@ operator|->
 name|key_free
 operator|)
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|x
 operator|->
 name|key_data
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|x
 argument_list|)

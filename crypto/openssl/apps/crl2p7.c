@@ -483,10 +483,8 @@ name|certflst
 condition|)
 name|certflst
 operator|=
-name|sk_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_new_null
+argument_list|()
 expr_stmt|;
 name|sk_push
 argument_list|(
@@ -839,10 +837,8 @@ condition|(
 operator|(
 name|crl_stack
 operator|=
-name|sk_X509_CRL_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_X509_CRL_new_null
+argument_list|()
 operator|)
 operator|==
 name|NULL
@@ -874,17 +870,15 @@ name|crl
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* now part of p7 for Freeing */
+comment|/* now part of p7 for OPENSSL_freeing */
 block|}
 if|if
 condition|(
 operator|(
 name|cert_stack
 operator|=
-name|sk_X509_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_X509_new_null
+argument_list|()
 operator|)
 operator|==
 name|NULL
@@ -968,6 +962,7 @@ name|outfile
 operator|==
 name|NULL
 condition|)
+block|{
 name|BIO_set_fp
 argument_list|(
 name|out
@@ -977,6 +972,33 @@ argument_list|,
 name|BIO_NOCLOSE
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|out
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 else|else
 block|{
 if|if
@@ -1090,7 +1112,7 @@ name|out
 operator|!=
 name|NULL
 condition|)
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -1339,7 +1361,7 @@ name|count
 expr_stmt|;
 name|end
 label|:
-comment|/* never need to Free x */
+comment|/* never need to OPENSSL_free x */
 if|if
 condition|(
 name|in

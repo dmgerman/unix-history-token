@@ -178,6 +178,16 @@ name|keylen
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|pass
+condition|)
+name|passlen
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|passlen
 operator|==
 operator|-

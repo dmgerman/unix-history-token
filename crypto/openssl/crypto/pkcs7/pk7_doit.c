@@ -735,7 +735,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|max
 argument_list|)
@@ -822,7 +822,7 @@ argument_list|,
 name|ERR_R_EVP_LIB
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)
@@ -843,7 +843,7 @@ name|jj
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)
@@ -1163,23 +1163,6 @@ name|ri
 init|=
 name|NULL
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NO_RC2
-name|char
-name|is_rc2
-init|=
-literal|0
-decl_stmt|;
-endif|#
-directive|endif
-comment|/*	EVP_PKEY *pkey; */
-if|#
-directive|if
-literal|0
-block|X509_STORE_CTX s_ctx;
-endif|#
-directive|endif
 name|i
 operator|=
 name|OBJ_obj2nid
@@ -1415,38 +1398,6 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
-block|}
-if|if
-condition|(
-name|EVP_CIPHER_nid
-argument_list|(
-name|evp_cipher
-argument_list|)
-operator|==
-name|NID_rc2_cbc
-condition|)
-block|{
-ifndef|#
-directive|ifndef
-name|NO_RC2
-name|is_rc2
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
-name|PKCS7err
-argument_list|(
-name|PKCS7_F_PKCS7_DATADECODE
-argument_list|,
-name|PKCS7_R_UNSUPPORTED_CIPHER_TYPE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err
-goto|;
-endif|#
-directive|endif
 block|}
 comment|/* We will be checking the signature */
 if|if
@@ -1720,7 +1671,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|jj
 operator|+
@@ -1839,40 +1790,17 @@ name|evp_ctx
 argument_list|)
 condition|)
 block|{
-comment|/* HACK: some S/MIME clients don't use the same key 			 * and effective key length. The key length is 			 * determined by the size of the decrypted RSA key. 			 * So we hack things to manually set the RC2 key 			 * because we currently can't do this with the EVP 			 * interface. 			 */
-ifndef|#
-directive|ifndef
-name|NO_RC2
+comment|/* Some S/MIME clients don't use the same key 			 * and effective key length. The key length is 			 * determined by the size of the decrypted RSA key. 			 */
 if|if
 condition|(
-name|is_rc2
-condition|)
-name|RC2_set_key
+operator|!
+name|EVP_CIPHER_CTX_set_key_length
 argument_list|(
-operator|&
-operator|(
 name|evp_ctx
-operator|->
-name|c
-operator|.
-name|rc2_ks
-operator|)
 argument_list|,
 name|jj
-argument_list|,
-name|tmp
-argument_list|,
-name|EVP_CIPHER_CTX_key_length
-argument_list|(
-name|evp_ctx
 argument_list|)
-operator|*
-literal|8
-argument_list|)
-expr_stmt|;
-else|else
-endif|#
-directive|endif
+condition|)
 block|{
 name|PKCS7err
 argument_list|(
@@ -1886,7 +1814,6 @@ name|err
 goto|;
 block|}
 block|}
-else|else
 name|EVP_CipherInit
 argument_list|(
 name|evp_ctx
@@ -2080,7 +2007,7 @@ name|tmp
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)
@@ -2460,9 +2387,10 @@ break|break;
 else|else
 name|btmp
 operator|=
+name|BIO_next
+argument_list|(
 name|btmp
-operator|->
-name|next_bio
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* We now have the EVP_MD_CTX, lets do the 			 * signing. */
@@ -2654,7 +2582,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|x
 argument_list|)
@@ -2689,7 +2617,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pp
 argument_list|)
@@ -2889,7 +2817,7 @@ name|pp
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pp
 argument_list|)
@@ -3321,9 +3249,10 @@ condition|)
 break|break;
 name|btmp
 operator|=
+name|BIO_next
+argument_list|(
 name|btmp
-operator|->
-name|next_bio
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* mdc is the digest ctx that we want, unless there are attributes, 	 * in which case the digest is the signed attributes */
@@ -3494,7 +3423,7 @@ argument_list|)
 expr_stmt|;
 name|pp
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
@@ -3529,7 +3458,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pp
 argument_list|)
@@ -4281,10 +4210,8 @@ block|{
 operator|*
 name|sk
 operator|=
-name|sk_X509_ATTRIBUTE_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_X509_ATTRIBUTE_new_null
+argument_list|()
 expr_stmt|;
 name|new_attrib
 label|:

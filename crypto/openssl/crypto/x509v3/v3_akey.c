@@ -420,7 +420,7 @@ operator|->
 name|serial
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -482,7 +482,7 @@ operator|&
 name|extlist
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)
@@ -547,7 +547,7 @@ operator|&
 name|extlist
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|tmp
 argument_list|)
@@ -967,10 +967,8 @@ operator|!
 operator|(
 name|gens
 operator|=
-name|sk_GENERAL_NAME_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_GENERAL_NAME_new_null
+argument_list|()
 operator|)
 operator|||
 operator|!

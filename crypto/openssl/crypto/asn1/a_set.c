@@ -357,7 +357,7 @@ operator|(
 name|MYBLOB
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|sk_num
 argument_list|(
@@ -461,7 +461,7 @@ argument_list|)
 expr_stmt|;
 name|pTempMem
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|totSize
 argument_list|)
@@ -527,12 +527,12 @@ argument_list|,
 name|totSize
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pTempMem
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|rgSetBlob
 argument_list|)
@@ -577,7 +577,10 @@ function_decl|(
 modifier|*
 name|free_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|,
 name|int
 name|ex_tag
@@ -618,10 +621,8 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|sk_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_new_null
+argument_list|()
 operator|)
 operator|==
 name|NULL

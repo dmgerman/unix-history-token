@@ -647,7 +647,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -668,7 +668,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Realloc
+name|OPENSSL_realloc
 argument_list|(
 name|s
 argument_list|,
@@ -703,7 +703,7 @@ name|s
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)
