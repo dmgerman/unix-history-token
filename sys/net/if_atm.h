@@ -505,6 +505,12 @@ name|ATM_RATE_2_4G
 value|5651320
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_comment
 comment|/*  * Common fields for all ATM interfaces. Each driver's softc must start with  * this structure.  */
 end_comment
@@ -536,6 +542,11 @@ comment|/* netgraph link */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Keep structures in sync with ng_atm.h  *  * These are used by netgraph/harp to call the driver  * NATM uses the atm_pseudoioctl instead.  */
