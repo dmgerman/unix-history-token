@@ -1123,7 +1123,7 @@ name|wc
 parameter_list|,
 name|fp
 parameter_list|)
-value|fputwc(x, fp)
+value|fputwc(wc, fp)
 end_define
 
 begin_define
