@@ -54,18 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/acpi/acpireg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/acpi/acpivar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pcib_if.h"
 end_include
 

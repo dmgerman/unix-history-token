@@ -81,6 +81,23 @@ directive|include
 file|<dev/acpi/acpivar.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_NO_OSDFUNC_INLINE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/acpica_osd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|struct
 name|ACPIrsdp

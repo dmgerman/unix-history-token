@@ -1346,6 +1346,26 @@ begin_comment
 comment|/*  * ACPICA Osd family functions  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DIAGNOSTIC
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_OSDFUNC_INLINE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -47,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<dev/acpi/acpireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpivar.h>
 end_include
 
 begin_include
