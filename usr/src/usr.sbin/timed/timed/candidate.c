@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)candidate.c	1.1 (Berkeley) %G%"
+literal|"@(#)candidate.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,20 +36,6 @@ include|#
 directive|include
 file|<protocols/timed.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|MASTER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SLAVE
-value|0
-end_define
 
 begin_define
 define|#
@@ -171,9 +157,9 @@ parameter_list|()
 function_decl|;
 name|syslog
 argument_list|(
-name|LOG_ERR
+name|LOG_INFO
 argument_list|,
-literal|"timed: THIS MACHINE IS A CANDIDATE\n"
+literal|"THIS MACHINE IS A CANDIDATE"
 argument_list|)
 expr_stmt|;
 if|if
@@ -377,7 +363,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"timed: error in election\n"
+literal|"error in election"
 argument_list|)
 expr_stmt|;
 block|}
