@@ -98,6 +98,26 @@ name|CPP_FBSD_PREDEFINES
 value|" -Dunix -D__FreeBSD__=4 -D__FreeBSD_cc_version=400003 -Asystem(unix) -Asystem(FreeBSD) "
 end_define
 
+begin_define
+define|#
+directive|define
+name|FBSD_CPP_SPEC
+value|"\   %(cpp_cpu) \   %{!maout: -D__ELF__} \   %{munderscores: -D__UNDERSCORES__} \   %{maout: %{!mno-underscores: -D__UNDERSCORES__}} \   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} \   %{posix:-D_POSIX_SOURCE}"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|FBSD_CPP_SPEC
+end_define
+
 begin_comment
 comment|/* Provide a LIB_SPEC appropriate for FreeBSD.  Just select the appropriate    libc, depending on whether we're doing profiling.     (like the default, except no -lg, and no -p).  */
 end_comment

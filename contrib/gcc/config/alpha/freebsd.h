@@ -55,23 +55,6 @@ value|0
 end_define
 
 begin_comment
-comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  Current we just deal with    the GCC option `-posix'.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"%{posix:-D_POSIX_SOURCE}"
-end_define
-
-begin_comment
 comment|/* Provide an ASM_SPEC appropriate for a FreeBSD/Alpha target.  This differs    from the generic FreeBSD ASM_SPEC in that no special handling of PIC is    necessary on the Alpha.  */
 end_comment
 
@@ -178,7 +161,7 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 define|\
-value|"-D__alpha__ -D__alpha -D__ELF__ -Acpu(alpha) -Amachine(alpha)"	\   CPP_FBSD_PREDEFINES
+value|"-D__alpha__ -D__alpha -Acpu(alpha) -Amachine(alpha)"			\   CPP_FBSD_PREDEFINES
 end_define
 
 begin_undef

@@ -899,19 +899,6 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_SPEC
-value|"\ %{!maout: -D__ELF__} \ %{munderscores: -D__UNDERSCORES__} \ %{maout: %{!mno-underscores: -D__UNDERSCORES__}} \ %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|CC1_SPEC
 end_undef
 
