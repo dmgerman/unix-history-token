@@ -420,11 +420,29 @@ name|lport
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|lport
+operator|!=
+operator|(
+name|lport
+operator|&
+literal|0xff
+operator|)
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* must be 8 bits */
 name|aport
 operator|=
 name|lport
 expr_stmt|;
 comment|/* a char is a char */
+block|}
 comment|/* 	 *  really only a worry for byte size ports 	 */
 if|if
 condition|(
