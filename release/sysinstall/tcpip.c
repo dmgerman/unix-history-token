@@ -2964,6 +2964,10 @@ name|Device
 modifier|*
 name|tmp
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|save
+decl_stmt|;
 name|variable_set
 argument_list|(
 literal|"NETWORK_CONFIGURED=NO"
@@ -2980,6 +2984,11 @@ name|variable_unset
 argument_list|(
 literal|"NETWORK_CONFIGURED"
 argument_list|)
+expr_stmt|;
+name|save
+operator|=
+name|savescr
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3029,6 +3038,11 @@ argument_list|,
 name|tmp
 operator|->
 name|name
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|save
 argument_list|)
 expr_stmt|;
 return|return
