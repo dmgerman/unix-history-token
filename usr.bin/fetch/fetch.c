@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1851,6 +1857,15 @@ argument_list|(
 literal|"transfer interrupted"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sigalrm
+operator|&&
+operator|!
+name|sigint
+condition|)
+block|{
 comment|/* check the status of our files */
 if|if
 condition|(
@@ -1895,6 +1910,7 @@ condition|)
 goto|goto
 name|failure
 goto|;
+block|}
 comment|/* did the transfer complete normally? */
 if|if
 condition|(
@@ -2084,6 +2100,10 @@ block|{
 name|struct
 name|stat
 name|sb
+decl_stmt|;
+name|struct
+name|sigaction
+name|sa
 decl_stmt|;
 name|char
 modifier|*
@@ -2581,14 +2601,7 @@ name|ENOMEM
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* timeout handling */
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|sig_handler
-argument_list|)
-expr_stmt|;
+comment|/* timeouts */
 if|if
 condition|(
 operator|(
@@ -2667,12 +2680,51 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* interrupt handling */
-name|signal
+comment|/* signal handling */
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|sig_handler
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
+argument_list|(
+name|SIGALRM
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sigaction
 argument_list|(
 name|SIGINT
 argument_list|,
-name|sig_handler
+operator|&
+name|sa
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* output file */
