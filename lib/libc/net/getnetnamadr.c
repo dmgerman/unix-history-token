@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetnamadr.c,v 1.1 1994/09/25 02:12:29 pst Exp $"
+literal|"@(#)$Id: getnetnamadr.c,v 1.2 1994/09/26 22:45:10 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 1.1 1994/09/25 02:12:29 pst Exp $"
+literal|"$Id: getnetnamadr.c,v 1.2 1994/09/26 22:45:10 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -430,6 +430,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
 name|buf
 index|[
 name|BUFSIZ
@@ -511,20 +514,43 @@ operator|==
 literal|'#'
 condition|)
 continue|continue;
+name|p
+operator|=
+name|buf
+expr_stmt|;
+while|while
+condition|(
+operator|(
 name|cp
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-name|buf
+operator|&
+name|p
 argument_list|,
 literal|"\n \t,:;"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+empty_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+continue|continue;
 do|do
 block|{
 if|if
 condition|(
-operator|!
 name|isalpha
 argument_list|(
 name|cp
@@ -533,7 +559,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-continue|continue;
+block|{
 name|service_order
 index|[
 name|cc
@@ -541,7 +567,7 @@ index|]
 operator|=
 name|get_service_name
 argument_list|(
-name|buf
+name|cp
 argument_list|)
 expr_stmt|;
 if|if
@@ -557,28 +583,38 @@ name|cc
 operator|++
 expr_stmt|;
 block|}
-do|while
+while|while
 condition|(
 operator|(
 name|cp
 operator|=
-name|strtok
+name|strsep
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+operator|&
+name|p
 argument_list|,
 literal|"\n \t,:;"
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 operator|&&
-operator|(
+operator|*
+name|cp
+operator|==
+literal|'\0'
+condition|)
+empty_stmt|;
+block|}
+do|while
+condition|(
+name|cp
+operator|!=
+name|NULL
+operator|&&
 name|cc
 operator|<
 name|SERVICE_MAX
-operator|)
 condition|)
 do|;
 block|}
