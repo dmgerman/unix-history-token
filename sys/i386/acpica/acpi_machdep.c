@@ -326,6 +326,38 @@ operator|=
 literal|3
 expr_stmt|;
 comment|/* charging */
+comment|/* If still unknown, determine it based on the battery capacity. */
+if|if
+condition|(
+name|state
+operator|==
+literal|0xff
+condition|)
+block|{
+if|if
+condition|(
+name|battp
+operator|->
+name|cap
+operator|>=
+literal|50
+condition|)
+block|{
+name|state
+operator|=
+literal|0
+expr_stmt|;
+comment|/* high */
+block|}
+else|else
+block|{
+name|state
+operator|=
+literal|1
+expr_stmt|;
+comment|/* low */
+block|}
+block|}
 return|return
 operator|(
 name|state
