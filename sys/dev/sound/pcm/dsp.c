@@ -3834,7 +3834,6 @@ break|break;
 case|case
 name|SNDCTL_DSP_GETISPACE
 case|:
-comment|/* XXX Space for reading? Makes no sense... */
 comment|/* return the size of data available in the input queue */
 block|{
 name|audio_buf_info
@@ -3866,16 +3865,11 @@ argument_list|(
 name|rdch
 argument_list|)
 expr_stmt|;
-name|chn_rdupdate
-argument_list|(
-name|rdch
-argument_list|)
-expr_stmt|;
 name|a
 operator|->
 name|bytes
 operator|=
-name|sndbuf_getfree
+name|sndbuf_getready
 argument_list|(
 name|bs
 argument_list|)
