@@ -783,14 +783,12 @@ name|PLAN
 modifier|*
 name|find_create
 parameter_list|(
-name|argvp
-parameter_list|)
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|argvp
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTION
 modifier|*
@@ -869,13 +867,11 @@ name|OPTION
 modifier|*
 name|lookup_option
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|OPTION
 name|tmp
@@ -925,21 +921,16 @@ begin_function
 name|int
 name|typecompare
 parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 specifier|const
 name|void
 modifier|*
 name|a
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
 name|b
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -970,7 +961,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

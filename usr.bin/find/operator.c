@@ -110,14 +110,11 @@ name|PLAN
 modifier|*
 name|yanknode
 parameter_list|(
-name|planp
-parameter_list|)
 name|PLAN
 modifier|*
 modifier|*
 name|planp
-decl_stmt|;
-comment|/* pointer to top of plan (modified) */
+parameter_list|)
 block|{
 name|PLAN
 modifier|*
@@ -178,14 +175,11 @@ name|PLAN
 modifier|*
 name|yankexpr
 parameter_list|(
-name|planp
-parameter_list|)
 name|PLAN
 modifier|*
 modifier|*
 name|planp
-decl_stmt|;
-comment|/* pointer to top of plan (modified) */
+parameter_list|)
 block|{
 name|PLAN
 modifier|*
@@ -358,13 +352,10 @@ name|PLAN
 modifier|*
 name|paren_squish
 parameter_list|(
-name|plan
-parameter_list|)
 name|PLAN
 modifier|*
 name|plan
-decl_stmt|;
-comment|/* plan with ( ) nodes */
+parameter_list|)
 block|{
 name|PLAN
 modifier|*
@@ -469,13 +460,10 @@ name|PLAN
 modifier|*
 name|not_squish
 parameter_list|(
-name|plan
-parameter_list|)
 name|PLAN
 modifier|*
 name|plan
-decl_stmt|;
-comment|/* plan to process */
+parameter_list|)
 block|{
 name|PLAN
 modifier|*
@@ -717,13 +705,10 @@ name|PLAN
 modifier|*
 name|or_squish
 parameter_list|(
-name|plan
-parameter_list|)
 name|PLAN
 modifier|*
 name|plan
-decl_stmt|;
-comment|/* plan with ors to be squished */
+parameter_list|)
 block|{
 name|PLAN
 modifier|*

@@ -94,13 +94,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -135,30 +135,25 @@ begin_comment
 comment|/*  * find_compare --  *	tell fts_open() how to order the traversal of the hierarchy.   *	This variant gives lexicographical order, i.e., alphabetical  *	order within each directory.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|find_compare
-argument_list|(
-name|s1
-argument_list|,
-name|s2
-argument_list|)
-decl|const
+parameter_list|(
+specifier|const
 name|FTSENT
 modifier|*
-decl|const
+specifier|const
 modifier|*
 name|s1
-decl_stmt|,
+parameter_list|,
+specifier|const
+name|FTSENT
 modifier|*
-decl_stmt|const
+specifier|const
 modifier|*
 name|s2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -181,7 +176,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * find_formplan --  *	process the command line and create a "plan" corresponding to the  *	command arguments.  */
@@ -192,13 +187,11 @@ name|PLAN
 modifier|*
 name|find_formplan
 parameter_list|(
-name|argv
-parameter_list|)
 name|char
 modifier|*
-modifier|*
 name|argv
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|PLAN
 modifier|*
@@ -466,21 +459,15 @@ begin_function
 name|int
 name|find_execute
 parameter_list|(
-name|plan
-parameter_list|,
-name|paths
-parameter_list|)
 name|PLAN
 modifier|*
 name|plan
-decl_stmt|;
-comment|/* search plan */
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|paths
-decl_stmt|;
-comment|/* array of pathnames to traverse */
+index|[]
+parameter_list|)
 block|{
 name|FTSENT
 modifier|*

@@ -59,12 +59,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -84,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
 end_include
 
 begin_include
@@ -157,28 +157,19 @@ begin_function
 name|void
 name|printlong
 parameter_list|(
-name|name
-parameter_list|,
-name|accpath
-parameter_list|,
-name|sb
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
-comment|/* filename to print */
+parameter_list|,
 name|char
 modifier|*
 name|accpath
-decl_stmt|;
-comment|/* current valid path to filename */
+parameter_list|,
 name|struct
 name|stat
 modifier|*
 name|sb
-decl_stmt|;
-comment|/* stat buffer */
+parameter_list|)
 block|{
 name|char
 name|modep
@@ -359,11 +350,9 @@ specifier|static
 name|void
 name|printtime
 parameter_list|(
-name|ftime
-parameter_list|)
 name|time_t
 name|ftime
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|longstring
@@ -373,7 +362,7 @@ index|]
 decl_stmt|;
 specifier|static
 name|time_t
-name|now
+name|lnow
 decl_stmt|;
 specifier|const
 name|char
@@ -407,11 +396,11 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|now
+name|lnow
 operator|==
 literal|0
 condition|)
-name|now
+name|lnow
 operator|=
 name|time
 argument_list|(
@@ -428,11 +417,11 @@ name|ftime
 operator|+
 name|SIXMONTHS
 operator|>
-name|now
+name|lnow
 operator|&&
 name|ftime
 operator|<
-name|now
+name|lnow
 operator|+
 name|SIXMONTHS
 condition|)
@@ -488,12 +477,10 @@ specifier|static
 name|void
 name|printlink
 parameter_list|(
-name|name
-parameter_list|)
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|lnklen

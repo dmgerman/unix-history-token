@@ -556,5 +556,27 @@ name|regexp_flags
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|time_t
+name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dotfd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FTS
+modifier|*
+name|tree
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
