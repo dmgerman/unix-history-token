@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.4	%G% */
+comment|/* **  POSTBOX.H -- Global definitions for postbox. ** **	Most of these are actually allocated in globals.c ** **	@(#)sendmail.h	3.5	%G% */
 end_comment
 
 begin_include
@@ -542,6 +542,12 @@ name|short
 name|hi_flags
 decl_stmt|;
 comment|/* status bits, see below */
+name|char
+modifier|*
+modifier|*
+name|hi_pptr
+decl_stmt|;
+comment|/*&ptr to point to this value */
 block|}
 struct|;
 end_struct
@@ -562,12 +568,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|H_CONCAT
+name|H_EOH
 value|00001
 end_define
 
 begin_comment
-comment|/* comma-concat multiple fields */
+comment|/* this field terminates header */
 end_comment
 
 begin_define

@@ -18,7 +18,7 @@ file|"postbox.h"
 end_include
 
 begin_comment
-comment|/* **  CONF.C -- Postbox Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		HASARPA -- set if this machine has a connection to **			the Arpanet. **		HASUUCP -- set if this machine has a connection to **			the UUCP network. **		NETV6MAIL -- set if you want to use "v6mail" that **			comes with the Berkeley network.  Normally **			/bin/mail will work fine, but around Berkeley **			we use v6mail because it is a "fixed target". **			Also, only v6mail has the "/dev/mail" stuff **			in it (for biff(1)). **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. **		DUMBMAIL -- set if your /bin/mail doesn't have the **			-d flag. ** **	Configuration Variables: **		ArpaHost -- the arpanet name of the host through **			which arpanet mail will be sent. **		MyLocName -- the name of the host on a local network. **			This is used to disambiguate the contents of **			ArpaHost among many hosts who may be sharing **			a gateway. **		DaemonName -- the name of this agent for use in **			error messages, typically "~MAILER~DAEMON~" **			at this host on the local net. **		ArpaLocal -- a list of local names for this host on **			the arpanet.  Only functional if HASARPA set. **		UucpLocal -- ditto for the Arpanet. **		BerkLocal -- ditto for the Berknet. **		Mailer -- a table of mailers known to the system. **			The fields are: **			- the pathname of the mailer. **			- a list of flags describing the properties **			  of this mailer: **			   M_FOPT -- if set, the mailer has a picky "-f" **				option.  In this mode, the mailer will **				only accept the "-f" option if the **				sender is actually "root", "network", **				and possibly (but not necessarily) if **				the -f argument matches the real sender. **				The effect is that if the "-f" option **				is given to postbox then it will be **				passed through (as arguments 1& 2) to **				the mailer. **			   M_ROPT -- identical to M_FOPT, except uses **				-r instead. **			   M_QUIET -- if set, don't print a message if **				the mailer returns bad status. **			   M_RESTR -- if set, this mailer is restricted **				to use by "daemon"; otherwise, we do a **				setuid(getuid()) before calling the **				mailer. **			   M_HDR -- if set, the mailer wants us to **				insert a UNIX "From" line before **				outputing. **			   M_FHDR -- if set, the header that we **				generate will be used literally, so **				we must force it to be correct.  The **				effect is that we generate a header **				even if one exists. **			   M_NOHOST -- if set, this mailer doesn't care **				about the host part (e.g., the local **				mailer). **			   M_STRIPQ -- if set, strip quote (`"') **				characters out of parameters as you **				transliterate them into the argument **				vector.  For example, the local mailer **				is called directly, so these should be **				stripped, but the program-mailer (i.e., **				csh) should leave them in. **			   M_NEEDDATE -- this mailer requires a Date: **				field in the message. **			   M_NEEDFROM -- this mailer requires a From: **				field in the message. **			   M_MSGID -- this mailer requires a Message-Id **				field in the message. **			   M_COMMAS -- this mailer wants comma- **				seperated To: and Cc: fields. **			   M_ARPAFMT == M_NEEDDATE|M_NEEDFROM|M_MSGID| **				M_COMMAS. **			- an exit status to use as the code for the **			  error message print if the mailer returns **			  something we don't understand. **			- A list of names that are to be considered **			  "local" (and hence are stripped off) for **			  this mailer. **			- An argument vector to be passed to the **			  mailer with the following substitutions: **			   $f - the from person name. **			   $u - the target user name. **			   $h - the target user host. **			   $c - the hop count. **>>>>>>>>>> Entry zero must be for the local **>> NOTE>> mailer and entry one must be for **>>>>>>>>>> the shell. **		ParseTab -- a table driving the parsing process.  Each **			entry contains: **			- a character that will trigger this entry. **			- an index into the Mailer table. **			- a word of flags, described in postbox.h. **			- an argument.  If we have P_MAP, it is the **			  character to turn the trigger character into. **			  If we have P_MOVE, it is the site to send it **			  to, using the mailer specified above. **			This table will almost certainly have to be **			changed on your site if you have anything more **			than the UUCP net. **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which can be: **			H_CONCAT -- if there is more than one field **				of this name, turn it into a comma- **				seperated list. **			H_DELETE -- delete this field. */
+comment|/* **  CONF.C -- Postbox Configuration Tables. ** **	Defines the configuration of this installation. ** **	Compilation Flags: **		HASARPA -- set if this machine has a connection to **			the Arpanet. **		HASUUCP -- set if this machine has a connection to **			the UUCP network. **		NETV6MAIL -- set if you want to use "v6mail" that **			comes with the Berkeley network.  Normally **			/bin/mail will work fine, but around Berkeley **			we use v6mail because it is a "fixed target". **			Also, only v6mail has the "/dev/mail" stuff **			in it (for biff(1)). **		V6 -- running on a version 6 system.  This determines **			whether to define certain routines between **			the two systems.  If you are running a funny **			system, e.g., V6 with long tty names, this **			should be checked carefully. **		DUMBMAIL -- set if your /bin/mail doesn't have the **			-d flag. ** **	Configuration Variables: **		ArpaHost -- the arpanet name of the host through **			which arpanet mail will be sent. **		MyLocName -- the name of the host on a local network. **			This is used to disambiguate the contents of **			ArpaHost among many hosts who may be sharing **			a gateway. **		DaemonName -- the name of this agent for use in **			error messages, typically "~MAILER~DAEMON~" **			at this host on the local net. **		ArpaLocal -- a list of local names for this host on **			the arpanet.  Only functional if HASARPA set. **		UucpLocal -- ditto for the Arpanet. **		BerkLocal -- ditto for the Berknet. **		Mailer -- a table of mailers known to the system. **			The fields are: **			- the pathname of the mailer. **			- a list of flags describing the properties **			  of this mailer: **			   M_FOPT -- if set, the mailer has a picky "-f" **				option.  In this mode, the mailer will **				only accept the "-f" option if the **				sender is actually "root", "network", **				and possibly (but not necessarily) if **				the -f argument matches the real sender. **				The effect is that if the "-f" option **				is given to postbox then it will be **				passed through (as arguments 1& 2) to **				the mailer. **			   M_ROPT -- identical to M_FOPT, except uses **				-r instead. **			   M_QUIET -- if set, don't print a message if **				the mailer returns bad status. **			   M_RESTR -- if set, this mailer is restricted **				to use by "daemon"; otherwise, we do a **				setuid(getuid()) before calling the **				mailer. **			   M_HDR -- if set, the mailer wants us to **				insert a UNIX "From" line before **				outputing. **			   M_FHDR -- if set, the header that we **				generate will be used literally, so **				we must force it to be correct.  The **				effect is that we generate a header **				even if one exists. **			   M_NOHOST -- if set, this mailer doesn't care **				about the host part (e.g., the local **				mailer). **			   M_STRIPQ -- if set, strip quote (`"') **				characters out of parameters as you **				transliterate them into the argument **				vector.  For example, the local mailer **				is called directly, so these should be **				stripped, but the program-mailer (i.e., **				csh) should leave them in. **			   M_NEEDDATE -- this mailer requires a Date: **				field in the message. **			   M_NEEDFROM -- this mailer requires a From: **				field in the message. **			   M_MSGID -- this mailer requires a Message-Id **				field in the message. **			   M_COMMAS -- this mailer wants comma- **				seperated To: and Cc: fields. **			   M_ARPAFMT == M_NEEDDATE|M_NEEDFROM|M_MSGID| **				M_COMMAS. **			- an exit status to use as the code for the **			  error message print if the mailer returns **			  something we don't understand. **			- A list of names that are to be considered **			  "local" (and hence are stripped off) for **			  this mailer. **			- An argument vector to be passed to the **			  mailer with the following substitutions: **			   $f - the from person name. **			   $u - the target user name. **			   $h - the target user host. **			   $c - the hop count. **>>>>>>>>>> Entry zero must be for the local **>> NOTE>> mailer and entry one must be for **>>>>>>>>>> the shell. **		ParseTab -- a table driving the parsing process.  Each **			entry contains: **			- a character that will trigger this entry. **			- an index into the Mailer table. **			- a word of flags, described in postbox.h. **			- an argument.  If we have P_MAP, it is the **			  character to turn the trigger character into. **			  If we have P_MOVE, it is the site to send it **			  to, using the mailer specified above. **			This table will almost certainly have to be **			changed on your site if you have anything more **			than the UUCP net. **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which can be: **			- H_EOH -- this field is equivalent to a blank **			  line; i.e., it signifies end of header. **			- H_DELETE -- delete this field. **			There is also a field pointing to a pointer **			that should be set to point to this header. */
 end_comment
 
 begin_decl_stmt
@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	3.4	%G%"
+literal|"@(#)conf.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,7 +1230,7 @@ endif|BERKELEY
 end_endif
 
 begin_comment
-comment|/* **  Header info table */
+comment|/* **  Header info table **	Final (null) entry contains the flags used for any other field. */
 end_comment
 
 begin_decl_stmt
@@ -1244,30 +1244,51 @@ literal|"date"
 block|,
 literal|0
 block|,
+name|NULL
+block|,
 literal|"from"
-block|,
-literal|0
-block|,
-literal|"to"
-block|,
-name|H_CONCAT
-block|,
-literal|"cc"
-block|,
-name|H_CONCAT
-block|,
-literal|"subject"
-block|,
-literal|0
-block|,
-literal|"message-id"
 block|,
 literal|0
 block|,
 name|NULL
 block|,
+literal|"to"
+block|,
 literal|0
-block|}
+block|,
+name|NULL
+block|,
+literal|"cc"
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|"subject"
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+literal|"message-id"
+block|,
+literal|0
+block|,
+operator|&
+name|MsgId
+block|,
+literal|"message"
+block|,
+name|H_EOH
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 

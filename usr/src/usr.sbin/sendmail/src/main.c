@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.3	%G%"
+literal|"@(#)main.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -415,6 +415,12 @@ modifier|*
 name|strcat
 argument_list|()
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|makemsgid
+parameter_list|()
+function_decl|;
 name|bool
 name|canrename
 decl_stmt|;
