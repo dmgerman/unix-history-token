@@ -730,6 +730,8 @@ name|err
 decl_stmt|;
 name|int
 name|rid
+decl_stmt|,
+name|s
 decl_stmt|;
 if|#
 directive|if
@@ -1108,6 +1110,11 @@ literal|0
 block|DELAY(100);
 endif|#
 directive|endif
+name|s
+operator|=
+name|splfw
+argument_list|()
+expr_stmt|;
 name|fwohci_intr
 argument_list|(
 operator|(
@@ -1115,6 +1122,11 @@ name|void
 operator|*
 operator|)
 name|sc
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
