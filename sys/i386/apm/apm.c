@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.82 1999/05/07 10:10:17 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.83 1999/05/08 21:59:13 dfr Exp $  */
 end_comment
 
 begin_include
@@ -3244,7 +3244,7 @@ name|APMINI_CANTFIND
 case|:
 comment|/* silent */
 return|return
-literal|0
+name|ENXIO
 return|;
 case|case
 name|APMINI_NOT32BIT
@@ -3255,7 +3255,7 @@ literal|"apm: 32bit connection is not supported.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ENXIO
 return|;
 case|case
 name|APMINI_CONNECTERR
@@ -3266,7 +3266,7 @@ literal|"apm: 32-bit connection error.\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ENXIO
 return|;
 block|}
 if|if
