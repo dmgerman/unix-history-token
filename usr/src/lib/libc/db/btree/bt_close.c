@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_close.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,11 +393,11 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|bcopy
+name|memmove
 argument_list|(
-name|h
-argument_list|,
 name|p
+argument_list|,
+name|h
 argument_list|,
 name|t
 operator|->
@@ -500,11 +500,11 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 name|h
+argument_list|,
+name|p
 argument_list|,
 name|t
 operator|->
@@ -696,12 +696,12 @@ name|m_flags
 argument_list|)
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|&
 name|m
-argument_list|,
-name|p
 argument_list|,
 sizeof|sizeof
 argument_list|(

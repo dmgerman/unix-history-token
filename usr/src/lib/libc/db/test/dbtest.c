@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.9 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3267,11 +3267,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|text
-argument_list|,
 name|p
+argument_list|,
+name|text
 argument_list|,
 name|len
 argument_list|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_put.c	5.9 (Berkeley) %G%"
+literal|"@(#)rec_put.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -820,14 +820,8 @@ name|h
 argument_list|)
 operator|)
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|h
-operator|->
-name|linp
-operator|+
-name|index
-argument_list|,
 name|h
 operator|->
 name|linp
@@ -835,6 +829,12 @@ operator|+
 name|index
 operator|+
 literal|1
+argument_list|,
+name|h
+operator|->
+name|linp
+operator|+
+name|index
 argument_list|,
 operator|(
 name|nxtindex

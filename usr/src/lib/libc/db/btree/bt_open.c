@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.25 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1495,9 +1495,11 @@ name|flags
 operator|=
 name|P_BLEAF
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|meta
+argument_list|,
+literal|0
 argument_list|,
 name|t
 operator|->

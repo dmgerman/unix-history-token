@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.12 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -895,14 +895,8 @@ name|h
 argument_list|)
 operator|)
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
-name|h
-operator|->
-name|linp
-operator|+
-name|skip
-argument_list|,
 name|h
 operator|->
 name|linp
@@ -910,6 +904,12 @@ operator|+
 name|skip
 operator|+
 literal|1
+argument_list|,
+name|h
+operator|->
+name|linp
+operator|+
+name|skip
 argument_list|,
 operator|(
 name|nxtindex
@@ -978,11 +978,11 @@ index|[
 name|skip
 index|]
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|bi
-argument_list|,
 name|dest
+argument_list|,
+name|bi
 argument_list|,
 name|nbytes
 argument_list|)
@@ -1056,13 +1056,13 @@ operator|&
 name|P_BIGKEY
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|dest
+argument_list|,
 name|bl
 operator|->
 name|bytes
-argument_list|,
-name|dest
 argument_list|,
 name|nksize
 condition|?
@@ -1877,11 +1877,11 @@ name|ilen
 argument_list|)
 expr_stmt|;
 comment|/* Move the new left page onto the old left page. */
-name|bcopy
+name|memmove
 argument_list|(
-name|l
-argument_list|,
 name|h
+argument_list|,
+name|l
 argument_list|,
 name|t
 operator|->
@@ -2508,13 +2508,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|dest
+argument_list|,
 name|bl
 operator|->
 name|bytes
-argument_list|,
-name|dest
 argument_list|,
 name|bl
 operator|->
@@ -2598,11 +2598,11 @@ name|h
 operator|->
 name|upper
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|bi
-argument_list|,
 name|dest
+argument_list|,
+name|bi
 argument_list|,
 name|nbytes
 argument_list|)
@@ -3009,10 +3009,8 @@ name|upper
 operator|-=
 name|nbytes
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|src
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -3022,6 +3020,8 @@ operator|+
 name|l
 operator|->
 name|upper
+argument_list|,
+name|src
 argument_list|,
 name|nbytes
 argument_list|)
@@ -3311,10 +3311,8 @@ name|upper
 operator|-=
 name|nbytes
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|src
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -3324,6 +3322,8 @@ operator|+
 name|r
 operator|->
 name|upper
+argument_list|,
+name|src
 argument_list|,
 name|nbytes
 argument_list|)

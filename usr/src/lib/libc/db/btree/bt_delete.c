@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_delete.c	5.9 (Berkeley) %G%"
+literal|"@(#)bt_delete.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1088,13 +1088,13 @@ name|h
 operator|->
 name|upper
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|from
-argument_list|,
 name|from
 operator|+
 name|nbytes
+argument_list|,
+name|from
 argument_list|,
 operator|(
 name|char

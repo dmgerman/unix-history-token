@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_utils.c	5.6 (Berkeley) %G%"
+literal|"@(#)rec_utils.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,15 +245,15 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-name|rl
-operator|->
-name|bytes
-argument_list|,
 name|t
 operator|->
 name|bt_dbuf
+argument_list|,
+name|rl
+operator|->
+name|bytes
 argument_list|,
 name|rl
 operator|->
@@ -343,14 +343,14 @@ name|recno_t
 argument_list|)
 expr_stmt|;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
-operator|&
-name|nrec
-argument_list|,
 name|t
 operator|->
 name|bt_kbuf
+argument_list|,
+operator|&
+name|nrec
 argument_list|,
 sizeof|sizeof
 argument_list|(

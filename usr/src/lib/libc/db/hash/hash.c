@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.31 (Berkeley) %G%"
+literal|"@(#)hash.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1421,11 +1421,13 @@ name|hash
 operator|=
 name|__default_hash
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hashp
 operator|->
 name|SPARES
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1435,11 +1437,13 @@ name|SPARES
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hashp
 operator|->
 name|BITMAPS
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2972,7 +2976,7 @@ operator|-
 operator|*
 name|bp
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|kp
 argument_list|,
@@ -4362,22 +4366,24 @@ name|newsize
 argument_list|)
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|*
 name|p_ptr
-argument_list|,
-name|p
 argument_list|,
 name|oldsize
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|*
 name|p_ptr
 operator|+
 name|oldsize
+argument_list|,
+literal|0
 argument_list|,
 name|newsize
 operator|-

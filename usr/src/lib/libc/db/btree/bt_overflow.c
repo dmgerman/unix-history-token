@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_overflow.c	5.7 (Berkeley) %G%"
+literal|"@(#)bt_overflow.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,12 +131,12 @@ name|plen
 decl_stmt|,
 name|sz
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 operator|&
 name|pg
+argument_list|,
+name|p
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -144,8 +144,11 @@ name|pgno_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+operator|&
+name|sz
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -156,9 +159,6 @@ sizeof|sizeof
 argument_list|(
 name|pgno_t
 argument_list|)
-argument_list|,
-operator|&
-name|sz
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -293,8 +293,10 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -302,8 +304,6 @@ operator|)
 name|h
 operator|+
 name|BTDATAOFF
-argument_list|,
-name|p
 argument_list|,
 name|nb
 argument_list|)
@@ -493,10 +493,8 @@ argument_list|,
 name|plen
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -504,6 +502,8 @@ operator|)
 name|h
 operator|+
 name|BTDATAOFF
+argument_list|,
+name|p
 argument_list|,
 name|nb
 argument_list|)
@@ -607,12 +607,12 @@ name|plen
 decl_stmt|,
 name|sz
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 operator|&
 name|pg
+argument_list|,
+name|p
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -620,8 +620,11 @@ name|pgno_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+operator|&
+name|sz
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -632,9 +635,6 @@ sizeof|sizeof
 argument_list|(
 name|pgno_t
 argument_list|)
-argument_list|,
-operator|&
-name|sz
 argument_list|,
 sizeof|sizeof
 argument_list|(
