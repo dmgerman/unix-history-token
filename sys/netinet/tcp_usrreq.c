@@ -3278,6 +3278,9 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
 name|tp
 operator|->
 name|iss
@@ -3290,6 +3293,19 @@ name|TCP_ISSINCR
 operator|/
 literal|2
 expr_stmt|;
+else|#
+directive|else
+comment|/* TCP_COMPAT_42 */
+name|tp
+operator|->
+name|iss
+operator|=
+name|tcp_rndiss_next
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* !TCP_COMPAT_42 */
 name|tcp_sendseqinit
 argument_list|(
 name|tp
@@ -3771,6 +3787,9 @@ argument_list|,
 name|tp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TCP_COMPAT_42
 name|tp
 operator|->
 name|iss
@@ -3783,6 +3802,18 @@ name|TCP_ISSINCR
 operator|/
 literal|2
 expr_stmt|;
+else|#
+directive|else
+name|tp
+operator|->
+name|iss
+operator|=
+name|tcp_rndiss_next
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* TCP_COMPAT_42 */
 name|tcp_sendseqinit
 argument_list|(
 name|tp
