@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dm.c	5.16 (Berkeley) %G%"
+literal|"@(#)dm.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,13 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -97,13 +91,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include
@@ -159,11 +177,8 @@ begin_comment
 comment|/* from tty? */
 end_comment
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -175,26 +190,14 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
-name|ttyname
-argument_list|()
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|nogamefile
 argument_list|()
 expr_stmt|;
@@ -295,14 +298,6 @@ name|pbuf
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 operator|(
 name|void
@@ -808,11 +803,6 @@ name|char
 modifier|*
 name|p_tty
 decl_stmt|;
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|first
@@ -1388,10 +1378,6 @@ name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|,
-modifier|*
-name|getpwuid
-argument_list|()
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1403,11 +1389,6 @@ decl_stmt|;
 name|int
 name|lock_cnt
 decl_stmt|;
-name|char
-modifier|*
-name|ctime
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|lp

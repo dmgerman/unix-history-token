@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arithmetic.c	5.5 (Berkeley) %G%"
+literal|"@(#)arithmetic.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,10 +190,6 @@ name|ch
 decl_stmt|,
 name|cnt
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|void
 name|intr
 parameter_list|()
