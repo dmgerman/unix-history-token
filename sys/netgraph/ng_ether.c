@@ -1080,6 +1080,12 @@ name|flags
 operator||=
 name|NG_INVALID
 expr_stmt|;
+name|ng_unname
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+comment|/* free name (and its reference) */
 name|IFP2NG
 argument_list|(
 name|ifp
