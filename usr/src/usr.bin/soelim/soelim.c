@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)soelim.c	4.3 (Berkeley) %G%"
+literal|"@(#)soelim.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,8 +200,8 @@ expr_stmt|;
 if|if
 condition|(
 name|c
-operator|<
-literal|0
+operator|==
+name|EOF
 condition|)
 break|break;
 if|if
@@ -352,7 +352,6 @@ goto|;
 block|}
 operator|*
 name|cp
-operator|++
 operator|=
 literal|0
 expr_stmt|;
@@ -391,6 +390,24 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|'\n'
+condition|)
+block|{
+name|c
+operator|=
+name|getc
+argument_list|(
+name|soee
+argument_list|)
+expr_stmt|;
+goto|goto
+name|simple
+goto|;
+block|}
 block|}
 if|if
 condition|(
