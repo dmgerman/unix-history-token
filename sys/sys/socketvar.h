@@ -2078,6 +2078,7 @@ name|sockopt
 operator|*
 name|sopt
 operator|,
+specifier|const
 name|void
 operator|*
 name|buf
