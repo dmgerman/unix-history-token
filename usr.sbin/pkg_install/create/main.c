@@ -271,7 +271,6 @@ decl_stmt|,
 modifier|*
 name|tmp
 decl_stmt|;
-comment|/*{int barrier = 1; while (barrier); }*/
 name|pkgs
 operator|=
 name|start
