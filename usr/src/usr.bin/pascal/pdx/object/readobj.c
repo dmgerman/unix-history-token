@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readobj.c 1.5 %G%"
+literal|"@(#)readobj.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,7 +81,7 @@ begin_define
 define|#
 directive|define
 name|MAXSYMNO
-value|2000
+value|6000
 end_define
 
 begin_decl_stmt
@@ -835,7 +835,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"symbol number too large"
+literal|"symbol number too large (%d)"
+argument_list|,
+name|symno
 argument_list|)
 expr_stmt|;
 block|}

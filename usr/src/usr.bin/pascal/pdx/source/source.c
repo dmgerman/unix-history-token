@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.2 %G%"
+literal|"@(#)source.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|NSLOTS
-value|20
+value|40
 end_define
 
 begin_define
