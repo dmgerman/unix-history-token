@@ -598,12 +598,11 @@ operator|==
 name|OBJT_SWAP
 operator|)
 condition|)
-name|vm_object_set_flag
-argument_list|(
 name|object
-argument_list|,
+operator|->
+name|flags
+operator|=
 name|OBJ_ONEMAPPING
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
