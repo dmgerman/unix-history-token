@@ -336,7 +336,7 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Tell all consumers the bad news. 	 * Don't get surprised if they self-destruct. 	 */
+comment|/* 	 * Tell all consumers the bad news. 	 * Don't be surprised if they self-destruct. 	 */
 name|cp
 operator|=
 name|LIST_FIRST
