@@ -2219,7 +2219,8 @@ operator|(
 name|void
 operator|*
 operator|,
-name|caddr_t
+name|void
+operator|*
 operator|,
 name|unsigned
 name|int

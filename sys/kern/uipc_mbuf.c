@@ -3720,10 +3720,10 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 parameter_list|)
 parameter_list|,
 name|void
@@ -3731,8 +3731,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|u_int
 name|count
 decl_stmt|;
 name|int
@@ -3918,7 +3917,7 @@ operator|>=
 literal|0
 condition|)
 block|{
-comment|/* Normal end of search */
+comment|/* Normal end of search. */
 if|if
 condition|(
 name|m
@@ -3963,7 +3962,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Point at the end of valid data */
+comment|/* Point at the end of valid data. */
 operator|*
 name|off
 operator|=
@@ -3977,14 +3976,12 @@ name|m
 operator|)
 return|;
 block|}
-else|else
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-else|else
 name|m
 operator|=
 name|m
