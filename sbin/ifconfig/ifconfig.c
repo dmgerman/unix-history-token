@@ -2689,6 +2689,7 @@ name|argc
 operator|>
 literal|0
 operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|argv
@@ -2700,6 +2701,19 @@ literal|"create"
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"plumb"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|clone_create
