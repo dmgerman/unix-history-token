@@ -399,6 +399,10 @@ argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
+else|else
+name|_init_tls
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GCRT

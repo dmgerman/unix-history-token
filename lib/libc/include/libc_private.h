@@ -218,6 +218,34 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Initialise TLS for static programs  */
+end_comment
+
+begin_function_decl
+name|void
+name|_init_tls
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set the TLS thread pointer  */
+end_comment
+
+begin_function_decl
+name|void
+name|_set_tp
+parameter_list|(
+name|void
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * This is a pointer in the C run-time startup code. It is used  * by getprogname() and setprogname().  */
 end_comment
 
