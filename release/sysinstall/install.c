@@ -1225,6 +1225,11 @@ name|file_readable
 argument_list|(
 literal|"/usr/libexec/ld.so"
 argument_list|)
+operator|&&
+name|file_readable
+argument_list|(
+literal|"/mnt2/usr/libexec/ld.so"
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2241,10 +2246,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|msgYesNo
 argument_list|(
-literal|"Will this machine be an IP gateway (e.g. will it forward packets\n"
+literal|"Will this machine be a leaf node (e.g. will not forward packets)\n"
 literal|"between interfaces)?"
 argument_list|)
 condition|)
@@ -2262,7 +2266,8 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Do you want to allow anonymous FTP connections to this machine?"
+literal|"Do you want to grant only normal users FTP access to this\n"
+literal|"host (e.g. no anonymous FTP connections)?"
 argument_list|)
 condition|)
 name|configAnonFTP
