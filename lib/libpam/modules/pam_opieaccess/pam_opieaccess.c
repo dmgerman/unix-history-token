@@ -200,7 +200,7 @@ name|NULL
 condition|)
 name|PAM_RETURN
 argument_list|(
-name|PAM_USER_UNKNOWN
+name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 if|if
