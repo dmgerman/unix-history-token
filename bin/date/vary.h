@@ -4,9 +4,6 @@ struct|struct
 name|vary
 block|{
 name|char
-name|flag
-decl_stmt|;
-name|char
 modifier|*
 name|arg
 decl_stmt|;
@@ -30,9 +27,6 @@ name|struct
 name|vary
 modifier|*
 name|v
-parameter_list|,
-name|char
-name|flag
 parameter_list|,
 name|char
 modifier|*
