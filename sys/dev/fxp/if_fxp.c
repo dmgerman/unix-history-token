@@ -5385,7 +5385,7 @@ name|sc
 operator|->
 name|sc_if
 decl_stmt|;
-comment|/* 		 * Free any finished transmit mbuf chains. 		 * 		 * Handle the CNA event likt a CXTNO event. It used to 		 * be that this event (control unit not ready) was not 		 * encountered, but it is now with the SMPng modifications. 		 * The exact sequence of events that occur when the interface 		 * is brought up are different now, and if this event 		 * goes unhandled, the configuration/rxfilter setup sequence 		 * can stall for several seconds. The result is that no 		 * packets go out onto the wire for about 5 to 10 seconds 		 * after the interface is ifconfig'ed for the first time. 		 */
+comment|/* 	 * Free any finished transmit mbuf chains. 	 * 	 * Handle the CNA event likt a CXTNO event. It used to 	 * be that this event (control unit not ready) was not 	 * encountered, but it is now with the SMPng modifications. 	 * The exact sequence of events that occur when the interface 	 * is brought up are different now, and if this event 	 * goes unhandled, the configuration/rxfilter setup sequence 	 * can stall for several seconds. The result is that no 	 * packets go out onto the wire for about 5 to 10 seconds 	 * after the interface is ifconfig'ed for the first time. 	 */
 if|if
 condition|(
 name|statack
@@ -5500,7 +5500,7 @@ name|if_timer
 operator|=
 literal|5
 expr_stmt|;
-comment|/* 			 * Try to start more packets transmitting. 			 */
+comment|/* 		 * Try to start more packets transmitting. 		 */
 if|if
 condition|(
 name|ifp
@@ -5517,7 +5517,7 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Process receiver interrupts. If a no-resource (RNR) 		 * condition exists, get whatever packets we can and 		 * re-start the receiver. 		 */
+comment|/* 	 * Process receiver interrupts. If a no-resource (RNR) 	 * condition exists, get whatever packets we can and 	 * re-start the receiver. 	 */
 if|if
 condition|(
 name|statack
@@ -5590,7 +5590,7 @@ operator|&
 name|FXP_RFA_STATUS_C
 condition|)
 block|{
-comment|/* 				 * Remove first packet from the chain. 				 */
+comment|/* 			 * Remove first packet from the chain. 			 */
 name|sc
 operator|->
 name|rfa_headm
@@ -5605,7 +5605,7 @@ name|m_next
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 				 * Add a new buffer to the receive chain. 				 * If this fails, the old buffer is recycled 				 * instead. 				 */
+comment|/* 			 * Add a new buffer to the receive chain. 			 * If this fails, the old buffer is recycled 			 * instead. 			 */
 if|if
 condition|(
 name|fxp_add_rfabuf
@@ -5658,7 +5658,7 @@ goto|goto
 name|rcvloop
 goto|;
 block|}
-comment|/* 					 * Drop the packet if it has CRC 					 * errors.  This test is only needed 					 * when doing 802.1q VLAN on the 82557 					 * chip. 					 */
+comment|/* 				 * Drop the packet if it has CRC 				 * errors.  This test is only needed 				 * when doing 802.1q VLAN on the 82557 				 * chip. 				 */
 if|if
 condition|(
 name|rfa
