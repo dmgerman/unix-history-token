@@ -1380,7 +1380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Look up a file or directory  *  * XXX NOTE!  pfs_lookup() has been hooked into vop_lookup_desc!  This  * will result in a lookup operation for a vnode which may already be  * cached, therefore we have to be careful to purge the VFS cache when  * reusing a vnode.  *  * This code will work, but is not really correct.  Normally we would hook  * vfs_cache_lookup() into vop_lookup_desc and hook pfs_lookup() into  * vop_cachedlookup_desc.  */
+comment|/*  * Look up a file or directory  */
 end_comment
 
 begin_function
@@ -1389,7 +1389,7 @@ name|int
 name|pfs_lookup
 parameter_list|(
 name|struct
-name|vop_lookup_args
+name|vop_cachedlookup_args
 modifier|*
 name|va
 parameter_list|)
@@ -1517,9 +1517,44 @@ argument_list|(
 name|ENOTDIR
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vn
+argument_list|,
+name|VEXEC
+argument_list|,
+name|cnp
+operator|->
+name|cn_cred
+argument_list|,
+name|cnp
+operator|->
+name|cn_thread
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|PFS_RETURN
+argument_list|(
+name|error
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Don't support DELETE or RENAME.  CREATE is supported so 	 * that O_CREAT will work, but the lookup will still fail if 	 * the file does not exist. 	 */
 if|if
 condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|&&
+operator|(
 name|cnp
 operator|->
 name|cn_nameiop
@@ -1531,6 +1566,7 @@ operator|->
 name|cn_nameiop
 operator|==
 name|RENAME
+operator|)
 condition|)
 name|PFS_RETURN
 argument_list|(
@@ -1610,8 +1646,10 @@ name|namelen
 operator|==
 literal|1
 operator|&&
-operator|*
 name|pname
+index|[
+literal|0
+index|]
 operator|==
 literal|'.'
 condition|)
@@ -1989,7 +2027,6 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX See comment at top of the routine. 	 */
 if|if
 condition|(
 name|cnp
@@ -4073,6 +4110,11 @@ operator|=
 name|pfs_access
 block|,
 operator|.
+name|vop_cachedlookup
+operator|=
+name|pfs_lookup
+block|,
+operator|.
 name|vop_close
 operator|=
 name|pfs_close
@@ -4105,7 +4147,7 @@ block|,
 operator|.
 name|vop_lookup
 operator|=
-name|pfs_lookup
+name|vfs_cache_lookup
 block|,
 operator|.
 name|vop_mkdir
