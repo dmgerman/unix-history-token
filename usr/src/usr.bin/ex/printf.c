@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	7.5 (Berkeley) %G%"
+literal|"@(#)printf.c	7.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,11 +57,33 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<varargs.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * This version of printf is compatible with the Version 7 C  * printf. The differences are only minor except that this  * printf assumes it is to print through putchar. Version 7  * printf is more general (and is much larger) and includes  * provisions for floating point.  */
@@ -134,26 +156,60 @@ begin_comment
 comment|/* VARARGS */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
+
 begin_macro
 name|ex_printf
 argument_list|(
+argument|const char *fmt0
+argument_list|,
+argument|...
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|ex_printf
+argument_list|(
+argument|fmt0
+argument_list|,
 argument|va_alist
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fmt0
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|va_dcl
 end_macro
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_block
 block|{
-name|va_list
-name|ap
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+name|va_list
+name|ap
 decl_stmt|;
 name|char
 name|fcode
@@ -191,20 +247,32 @@ index|[
 literal|134
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|va_start
 argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|fmt
 operator|=
-name|va_arg
-argument_list|(
-name|ap
-argument_list|,
+operator|(
 name|char
 operator|*
-argument_list|)
+operator|)
+name|fmt0
 expr_stmt|;
 for|for
 control|(
