@@ -67,11 +67,9 @@ operator|(
 name|c
 operator|)
 argument_list|,
-operator|(
 name|_A
 operator||
 name|_D
-operator|)
 argument_list|)
 operator|)
 return|;
@@ -552,7 +550,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|__istype
+name|__maskrune
 argument_list|(
 operator|(
 name|c
