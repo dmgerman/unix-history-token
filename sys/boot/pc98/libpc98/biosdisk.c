@@ -4938,15 +4938,16 @@ ifdef|#
 directive|ifdef
 name|PC98
 name|int
-name|unit
-init|=
-literal|0x80
-decl_stmt|;
-name|int
 name|hds
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|unit
+init|=
+literal|0x80
+decl_stmt|;
+comment|/* IDE HDD */
 name|u_int
 name|addr
 init|=
@@ -4972,19 +4973,19 @@ name|addr
 argument_list|)
 operator|&
 operator|(
-operator|(
 literal|1
 operator|<<
+operator|(
 name|unit
-operator|)
 operator|&
-literal|0xf
+literal|0x0f
+operator|)
 operator|)
 condition|)
 if|if
 condition|(
-operator|++
 name|hds
+operator|++
 operator|==
 name|bunit
 condition|)
@@ -5001,6 +5002,7 @@ name|unit
 operator|=
 literal|0xa0
 expr_stmt|;
+comment|/* SCSI HDD */
 name|addr
 operator|=
 literal|0xA1482
