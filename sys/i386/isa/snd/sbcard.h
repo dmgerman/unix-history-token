@@ -28,8 +28,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DSP_RESET
-value|(io_base + 0x6)
+name|SBDSP_RST
+value|0x6
 end_define
 
 begin_define
@@ -49,15 +49,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DSP_COMMAND
-value|(io_base + 0xC)
+name|SBDSP_CMD
+value|0xC
 end_define
 
 begin_define
 define|#
 directive|define
-name|DSP_STATUS
-value|(io_base + 0xC)
+name|SBDSP_STATUS
+value|0xC
 end_define
 
 begin_define
@@ -73,6 +73,12 @@ directive|define
 name|DSP_DATA_AVL16
 value|(io_base + 0xF)
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -108,6 +114,11 @@ directive|define
 name|OPL3_BOTH
 value|(io_base + 0x8)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * DSP Commands. There are many, and in many cases they are used explicitly  */

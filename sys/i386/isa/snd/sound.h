@@ -473,7 +473,7 @@ name|SND_CB_INIT
 value|0x05
 comment|/* init board parameters */
 comment|/* init can only be called with int enabled and 	 * no pending DMA activity. 	 */
-comment|/*      * whereas from here, parameters are set at runtime.      */
+comment|/*      * whereas from here, parameters are set at runtime.      * io_base == 0 means that the board is not configured.      */
 name|int
 name|io_base
 decl_stmt|;
@@ -494,10 +494,6 @@ name|int
 name|midi_base
 decl_stmt|;
 comment|/* base for the midi */
-name|int
-name|synth_base
-decl_stmt|;
-comment|/* base for the synth */
 name|int
 name|irq
 decl_stmt|;
@@ -544,6 +540,10 @@ define|#
 directive|define
 name|SND_F_BUSY_ANY
 value|0x70000000
+define|#
+directive|define
+name|SND_F_BUSY_SYNTH
+value|0x80000000
 comment|/*      * the next two are used to allow only one pending operation of      * each type.      */
 define|#
 directive|define
@@ -691,6 +691,14 @@ parameter_list|(
 name|unit
 parameter_list|)
 value|( 0xa4d10de0 + unit )
+name|int
+name|synth_base
+decl_stmt|;
+comment|/* base for the synth */
+name|int
+name|synth_type
+decl_stmt|;
+comment|/* type of synth */
 name|void
 modifier|*
 name|device_data
@@ -714,189 +722,6 @@ end_define
 begin_comment
 comment|/* Number of supported devices */
 end_comment
-
-begin_comment
-comment|/*  * Supported card ID numbers (were in soundcard.h...)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_ADLIB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PAS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MPU401
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16MIDI
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_UART6850
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS16
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MSS
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MPU
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MSS
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE_MSS
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_SB
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_MPU
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16_MPU
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232_MPU
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAUI
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSEUDO_MSS
-value|24
-end_define
-
-begin_comment
-comment|/* MSS without WSS regs.*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_AWE32
-value|25
-end_define
 
 begin_comment
 comment|/*  * values used in bd_id for the mss boards  */
@@ -997,33 +822,11 @@ begin_comment
 comment|/*  * TODO: add some card classes rather than specific types.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<i386/isa/snd/soundcard.h>
+file|<machine/soundcard.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|</sys/i386/isa/snd/soundcard.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * many variables should be reduced to a range. Here define a macro  */
@@ -1433,6 +1236,10 @@ parameter_list|)
 value|MIX_ENT(name, 0,0,0,0, 0,0,0,0)
 end_define
 
+begin_comment
+comment|/*  * some macros for debugging purposes  * DDB/DEB to enable/disable debugging stuff  * BVDDB   to enable debugging when bootverbose  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1447,36 +1254,26 @@ begin_comment
 comment|/* XXX */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DEB
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|DEB
+name|BVDDB
 parameter_list|(
 name|x
 parameter_list|)
+value|if (bootverbose) x
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|DDB
+name|DEB
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|DDB
+name|DEB
 parameter_list|(
 name|x
 parameter_list|)

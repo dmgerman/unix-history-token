@@ -579,6 +579,16 @@ operator|->
 name|id_flags
 operator|&
 name|DV_F_DUAL_DMA
+operator|&&
+operator|(
+name|dev
+operator|->
+name|id_flags
+operator|&
+name|DV_F_DRQ_MASK
+operator|)
+operator|!=
+literal|4
 condition|)
 comment|/* enable dma2 */
 name|d
@@ -772,7 +782,7 @@ name|id_unit
 argument_list|)
 expr_stmt|;
 comment|/* debugging... */
-comment|/*      * and finally, call the device attach routine      */
+comment|/*      * and finally, call the device attach routine      * XXX I should probably use d->attach(dev)      */
 name|stat
 operator|=
 name|snddev_last_probed
@@ -782,6 +792,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/*      * XXX hooks for synt support. Try probe and attach...      */
+block|if (d->synth_base&& opl3_probe(dev) ) { 	opl3_attach(dev);     }
+endif|#
+directive|endif
 name|snddev_last_probed
 operator|=
 name|NULL
@@ -914,44 +931,13 @@ argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|midi_info
-index|[
-name|unit
-index|]
-operator|.
-name|isr
-condition|)
-name|midi_info
-index|[
-name|unit
-index|]
-operator|.
-name|isr
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|synth_info
-index|[
-name|unit
-index|]
-operator|.
-name|isr
-condition|)
-name|synth_info
-index|[
-name|unit
-index|]
-operator|.
-name|isr
-argument_list|(
-name|unit
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* these do not exist at the moment. */
+block|if (midi_info[unit].isr) 	midi_info[unit].isr(unit);     if (synth_info[unit].isr) 	synth_info[unit].isr(unit);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1118,12 +1104,80 @@ expr_stmt|;
 if|if
 condition|(
 name|u
-operator|>
+operator|>=
+name|NPCM_MAX
+operator|||
+operator|(
+name|pcm_info
+index|[
+name|u
+index|]
+operator|.
+name|io_base
+operator|==
+literal|0
+operator|&&
+operator|(
+name|dev
+operator|&
+literal|0x0f
+operator|)
+operator|!=
+name|SND_DEV_STATUS
+operator|)
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NPCM_MAX
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|pcm_info
+index|[
+name|i
+index|]
+operator|.
+name|io_base
+condition|)
+break|break ;
+if|if
+condition|(
+name|i
+operator|!=
 name|NPCM_MAX
 condition|)
+name|printf
+argument_list|(
+literal|"pcm%d: unit not configured, perhaps you want pcm%d ?\n"
+argument_list|,
+name|u
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"no pcm units configured\b"
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
 switch|switch
 condition|(
 name|dev
@@ -1152,6 +1206,10 @@ case|:
 case|case
 name|SND_DEV_AUDIO
 case|:
+case|case
+name|SND_DEV_SEQ
+case|:
+comment|/* XXX when enabled... */
 name|d
 operator|=
 operator|&
@@ -1162,33 +1220,21 @@ index|]
 expr_stmt|;
 break|break ;
 case|case
-name|SND_DEV_SEQ
-case|:
-case|case
 name|SND_DEV_SEQ2
 case|:
-name|d
-operator|=
-operator|&
-name|synth_info
-index|[
-name|u
-index|]
-expr_stmt|;
-break|break ;
 case|case
 name|SND_DEV_MIDIN
 case|:
-name|d
-operator|=
-operator|&
-name|midi_info
-index|[
-name|u
-index|]
-expr_stmt|;
-break|break ;
 default|default:
+name|printf
+argument_list|(
+literal|"unsupported subdevice %d\n"
+argument_list|,
+name|dev
+operator|&
+literal|0xf
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;
@@ -1273,28 +1319,11 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"open: unit %d dev %d not configured, perhaps you want unit %d ?\n"
-argument_list|,
-name|unit
-argument_list|,
-name|dev
-operator|&
-literal|0xf
-argument_list|,
-name|unit
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|dev
@@ -1302,6 +1331,20 @@ operator|&
 literal|0x0f
 condition|)
 block|{
+case|case
+name|SND_DEV_SEQ
+case|:
+comment|/* sequencer. Hack... */
+if|#
+directive|if
+literal|0
+comment|/* XXX hook for opl3 support */
+block|if (d->synth_base) 	    return opl3_open(i_dev, flags, mode, p); 	else
+endif|#
+directive|endif
+return|return
+name|ENXIO
+return|;
 case|case
 name|SND_DEV_CTL
 case|:
@@ -1447,32 +1490,32 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"close: unit %d dev %d not configured\n"
-argument_list|,
-name|unit
-argument_list|,
-name|dev
-operator|&
-literal|0xf
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|dev
 operator|&
-literal|0x0f
+literal|0xf
 condition|)
 block|{
 comment|/* only those for which close makes sense */
+case|case
+name|SND_DEV_SEQ
+case|:
+if|#
+directive|if
+literal|0
+comment|/* XXX hook for opl3 support */
+block|if (d->synth_base) 		return opl3_close(i_dev, flags, mode, p); 	else
+endif|#
+directive|endif
+return|return
+name|ENXIO
+return|;
 case|case
 name|SND_DEV_AUDIO
 case|:
@@ -1481,15 +1524,6 @@ name|SND_DEV_DSP
 case|:
 case|case
 name|SND_DEV_DSP16
-case|:
-case|case
-name|SND_DEV_SEQ
-case|:
-case|case
-name|SND_DEV_SEQ2
-case|:
-case|case
-name|SND_DEV_MIDIN
 case|:
 if|if
 condition|(
@@ -1588,18 +1622,9 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"read: unit %d not configured\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
-block|}
 if|if
 condition|(
 operator|(
@@ -1679,8 +1704,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+return|return
 name|uiomove
 argument_list|(
 name|p
@@ -1689,18 +1713,6 @@ name|l
 argument_list|,
 name|buf
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-name|printf
-argument_list|(
-literal|"pcm-stat: bad copyout\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 if|if
@@ -1751,6 +1763,22 @@ literal|"read denied, another reader is in\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * sleep for a while to avoid killing the machine. 	 */
+name|tsleep
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|s
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"sndar"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
@@ -1786,6 +1814,21 @@ name|printf
 argument_list|(
 literal|"read denied, half duplex and a writer is in\n"
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|s
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"sndaw"
+argument_list|,
+name|hz
 argument_list|)
 expr_stmt|;
 return|return
@@ -1960,20 +2003,11 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"write: unit %d not configured\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 switch|switch
 condition|(
 name|dev
@@ -2055,6 +2089,21 @@ literal|"write denied, another writer is in\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|tsleep
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|s
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"sndaw"
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 return|return
 name|EBUSY
 return|;
@@ -2078,6 +2127,12 @@ operator|&
 name|SND_F_READING
 condition|)
 block|{
+comment|/* another reader is in, deny request */
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|DDB
 argument_list|(
 name|printf
@@ -2086,10 +2141,19 @@ literal|"write denied, half duplex and a reader is in\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* another reader is in, deny request */
-name|splx
+name|tsleep
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|s
+argument_list|,
+name|PZERO
+argument_list|,
+literal|"sndar"
+argument_list|,
+name|hz
 argument_list|)
 expr_stmt|;
 return|return
@@ -2260,18 +2324,31 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ioctl: unit %d not configured\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|dev
+operator|&
+literal|0x0f
+operator|)
+operator|==
+name|SND_DEV_SEQ
+condition|)
+block|{
+comment|/* sequencer. Hack... */
+if|#
+directive|if
+literal|0
+block|if (d->synth_base) 	    return opl3_ioctl(i_dev, cmd, arg, mode, p) ; 	else
+endif|#
+directive|endif
+return|return
+name|ENXIO
 return|;
 block|}
 if|if
@@ -2612,7 +2689,7 @@ name|p
 operator|->
 name|play_rate
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX one speed allowed */
 if|if
 condition|(
 name|p
@@ -2909,7 +2986,7 @@ name|AIOSYNC
 case|:
 name|printf
 argument_list|(
-literal|"AIOSYNC chan 0x%03lx pos %ld unimplemented\n"
+literal|"AIOSYNC chan 0x%03lx pos %d unimplemented\n"
 argument_list|,
 operator|(
 operator|(
@@ -3224,40 +3301,6 @@ operator|*
 operator|)
 name|arg
 operator|==
-operator|-
-literal|1
-condition|)
-block|{
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg
-operator|=
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SND_F_STEREO
-operator|)
-condition|?
-literal|1
-else|:
-literal|0
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg
-operator|==
 literal|0
 condition|)
 name|d
@@ -3483,10 +3526,30 @@ case|case
 name|SNDCTL_DSP_SETFMT
 case|:
 comment|/* sets _one_ format */
+comment|/* 	 * when some card (SB16) is opened RDONLY or WRONLY, 	 * only one of the fields is set, the other becomes 0. 	 * This makes it possible to select DMA channels at runtime. 	 */
+if|if
+condition|(
+name|d
+operator|->
+name|play_fmt
+condition|)
 name|d
 operator|->
 name|play_fmt
 operator|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|->
+name|rec_fmt
+condition|)
 name|d
 operator|->
 name|rec_fmt
@@ -3526,11 +3589,12 @@ case|case
 name|SNDCTL_DSP_SUBDIVIDE
 case|:
 comment|/* XXX watch out, this is RW! */
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"SNDCTL_DSP_SUBDIVIDE yet unimplemented\n"
+argument|);
 argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SNDCTL_DSP_SETFRAGMENT
@@ -3586,22 +3650,51 @@ expr_stmt|;
 if|if
 condition|(
 name|bytes
-operator|<
-literal|7
-condition|)
-name|bytes
-operator|=
-literal|7
-expr_stmt|;
-if|if
-condition|(
-name|bytes
 operator|>
 literal|15
 condition|)
 name|bytes
 operator|=
 literal|15
+expr_stmt|;
+name|bytes
+operator|=
+literal|1
+operator|<<
+name|bytes
+expr_stmt|;
+if|if
+condition|(
+name|bytes
+operator|<=
+literal|1
+condition|)
+block|{
+comment|/* means no blocks */
+name|d
+operator|->
+name|flags
+operator|&=
+operator|~
+name|SND_F_HAS_SIZE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|RANGE
+argument_list|(
+name|bytes
+argument_list|,
+literal|40
+argument_list|,
+name|d
+operator|->
+name|dbuf_out
+operator|.
+name|bufsize
+operator|/
+literal|4
+argument_list|)
 expr_stmt|;
 name|d
 operator|->
@@ -3611,45 +3704,34 @@ name|d
 operator|->
 name|rec_blocksize
 operator|=
-name|min
-argument_list|(
-literal|1
-operator|<<
 name|bytes
-argument_list|,
+operator|&
+operator|~
+literal|3
+expr_stmt|;
+comment|/* align to multiple of 4 */
 name|d
 operator|->
-name|dbuf_in
-operator|.
-name|bufsize
+name|flags
+operator||=
+name|SND_F_HAS_SIZE
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-name|d
-operator|->
-name|dbuf_in
-operator|.
-name|bufsize
-operator|/
-name|d
-operator|->
-name|play_blocksize
-expr_stmt|;
-name|bytes
-operator|=
-name|ffs
+name|ask_init
 argument_list|(
 name|d
-operator|->
-name|play_blocksize
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
 if|#
 directive|if
 literal|0
+comment|/* XXX todo: set the buffer size to the # of fragments */
+block|count = d->dbuf_in.bufsize / d->play_blocksize ; 	    bytes = ffs(d->play_blocksize) - 1;
 comment|/* 	     * don't change arg, since it's fake anyways and some 	     * programs might fail if we do. 	     */
 block|*(int *)arg = (count<< 16) | bytes ;
 endif|#
@@ -3949,12 +4031,7 @@ operator|-
 name|b
 operator|->
 name|prev_total
-operator|+
-name|d
-operator|->
-name|play_blocksize
-operator|-
-literal|1
+comment|/* +d->play_blocksize -1*/
 operator|)
 operator|/
 name|d
@@ -3979,7 +4056,7 @@ operator|->
 name|total
 expr_stmt|;
 block|}
-break|break ;
+break|break;
 case|case
 name|SNDCTL_DSP_GETCAPS
 case|:
@@ -4055,6 +4132,9 @@ case|case
 name|SOUND_MIXER_READ_DEVMASK
 case|:
 case|case
+name|SOUND_MIXER_READ_CAPS
+case|:
+case|case
 name|SOUND_MIXER_READ_STEREODEVS
 case|:
 operator|*
@@ -4097,20 +4177,6 @@ operator|=
 name|d
 operator|->
 name|mix_recsrc
-expr_stmt|;
-break|break;
-case|case
-name|SOUND_MIXER_READ_CAPS
-case|:
-comment|/* 	 * XXX - This needs to be fixed when the sound driver actually 	 * supports multiple inputs. 	 */
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg
-operator|=
-name|SOUND_CAP_EXCL_INPUT
 expr_stmt|;
 break|break;
 default|default:
@@ -4219,20 +4285,12 @@ name|d
 operator|==
 name|NULL
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"sndselect: unit %d not configured\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
+comment|/* should not happen! */
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|d
@@ -4269,19 +4327,12 @@ return|;
 else|else
 block|{
 comment|/* handle it here with the generic code */
-name|int
-name|lim
-decl_stmt|;
-name|int
-name|revents
-init|=
-literal|0
-decl_stmt|;
 comment|/* 	 * if the user selected a block size, then we want to use the 	 * device as a block device, and select will return ready when 	 * we have a full block. 	 * In all other cases, select will return when 1 byte is ready. 	 */
+name|int
 name|lim
-operator|=
+init|=
 literal|1
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|rw
@@ -4854,7 +4905,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-comment|/*      * Write the status information to the status_buf and update      * status_len. There is a limit of SNDSTAT_BUF_SIZE bytes for the data.      * put_status handles this and returns 0 in case of failure. Since      * it never oveflows the buffer, we do not care to check.      */
+comment|/*      * Write the status information to the status_buf and update      * status_len. There is a limit of SNDSTAT_BUF_SIZE bytes for the data.      */
 name|int
 name|i
 decl_stmt|;
@@ -4870,7 +4921,7 @@ name|sprintf
 argument_list|(
 name|status_buf
 argument_list|,
-literal|"FreeBSD Audio Driver (971117) "
+literal|"FreeBSD Audio Driver (980215) "
 name|__DATE__
 literal|" "
 name|__TIME__
@@ -5018,13 +5069,55 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|synth_info
+name|pcm_info
 index|[
 name|i
 index|]
 operator|.
-name|open
+name|synth_base
 condition|)
+block|{
+name|char
+modifier|*
+name|s
+init|=
+literal|"???"
+decl_stmt|;
+switch|switch
+condition|(
+name|pcm_info
+index|[
+name|i
+index|]
+operator|.
+name|synth_type
+condition|)
+block|{
+case|case
+literal|2
+case|:
+name|s
+operator|=
+literal|"OPL2"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|s
+operator|=
+literal|"OPL3"
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|s
+operator|=
+literal|"OPL4"
+expr_stmt|;
+break|break;
+block|}
 name|sprintf
 argument_list|(
 name|status_buf
@@ -5034,50 +5127,21 @@ argument_list|(
 name|status_buf
 argument_list|)
 argument_list|,
-literal|"synth%d:<%s> at 0x%x irq %d dma %d:%d\n"
+literal|"sequencer%d:<%s> at 0x%x (not functional)\n"
 argument_list|,
 name|i
 argument_list|,
-name|synth_info
+name|s
+argument_list|,
+name|pcm_info
 index|[
 name|i
 index|]
 operator|.
-name|name
-argument_list|,
-name|synth_info
-index|[
-name|i
-index|]
-operator|.
-name|io_base
-argument_list|,
-name|synth_info
-index|[
-name|i
-index|]
-operator|.
-name|irq
-argument_list|,
-name|synth_info
-index|[
-name|i
-index|]
-operator|.
-name|dbuf_out
-operator|.
-name|chan
-argument_list|,
-name|synth_info
-index|[
-name|i
-index|]
-operator|.
-name|dbuf_in
-operator|.
-name|chan
+name|synth_base
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|status_len
 operator|=
@@ -5227,15 +5291,12 @@ name|synth_base
 operator|)
 condition|)
 block|{
-name|printf
+name|BVDDB
 argument_list|(
+argument|printf(
 literal|"device at 0x%x already attached as unit %d\n"
-argument_list|,
-name|io_base
-argument_list|,
-name|i
+argument|,                 io_base, i);
 argument_list|)
-expr_stmt|;
 return|return
 literal|1
 return|;
