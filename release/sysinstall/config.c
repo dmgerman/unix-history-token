@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.48 1996/10/02 10:32:28 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.49 1996/10/02 10:44:24 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1785,43 +1785,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
-name|variable_get
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|mediaDevice
-operator|&&
-operator|(
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_NFS
-operator|||
-name|mediaDevice
-operator|->
-name|type
-operator|==
-name|DEVICE_TYPE_FTP
-operator|)
-condition|)
-name|msgConfirm
-argument_list|(
-literal|"Warning:  Missing name server value - network operations\n"
-literal|"may fail as a result!"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|skip
-goto|;
-block|}
-if|if
-condition|(
 name|Mkdir
 argument_list|(
 literal|"/etc"
@@ -1835,6 +1798,34 @@ literal|"files will therefore not be written!"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_NAMESERVER
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cp
+operator|||
+operator|!
+operator|*
+name|cp
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Warning:  Missing name server value - be sure to refer\n"
+literal|"to other hosts in any network operation by IP address\n"
+literal|"rather than name (or go back and fill in a name server)."
+argument_list|)
+expr_stmt|;
+goto|goto
+name|skip
+goto|;
 block|}
 name|fp
 operator|=
@@ -1883,10 +1874,7 @@ name|fp
 argument_list|,
 literal|"nameserver\t%s\n"
 argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_NAMESERVER
-argument_list|)
+name|cp
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1907,45 +1895,6 @@ expr_stmt|;
 name|skip
 label|:
 comment|/* Tack ourselves into /etc/hosts */
-name|cp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_IPADDR
-argument_list|)
-expr_stmt|;
-name|dp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_DOMAINNAME
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|&&
-operator|*
-name|cp
-operator|!=
-literal|'0'
-operator|&&
-operator|(
-name|hp
-operator|=
-name|variable_get
-argument_list|(
-name|VAR_HOSTNAME
-argument_list|)
-operator|)
-condition|)
-block|{
-name|char
-name|cp2
-index|[
-literal|255
-index|]
-decl_stmt|;
 name|fp
 operator|=
 name|fopen
@@ -1955,6 +1904,62 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
+comment|/* Add an entry for localhost */
+name|dp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_DOMAINNAME
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
+argument_list|,
+name|dp
+condition|?
+name|dp
+else|:
+literal|"my.domain"
+argument_list|)
+expr_stmt|;
+comment|/* Now the host entries, if applicable */
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_IPADDR
+argument_list|)
+expr_stmt|;
+name|hp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_HOSTNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|&&
+name|cp
+index|[
+literal|0
+index|]
+operator|!=
+literal|'0'
+operator|&&
+name|hp
+condition|)
+block|{
+name|char
+name|cp2
+index|[
+literal|255
+index|]
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1998,19 +2003,6 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"127.0.0.1\t\tlocalhost.%s localhost\n"
-argument_list|,
-name|dp
-condition|?
-name|dp
-else|:
-literal|"my.domain"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
 literal|"%s\t\t%s %s\n"
 argument_list|,
 name|cp
@@ -2031,6 +2023,7 @@ argument_list|,
 name|hp
 argument_list|)
 expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|fp
@@ -2048,7 +2041,6 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id$  */
+comment|/***************************************************  * file: userconfig/uc_main.c  *  * Copyright (c) 1996 Eric L. Hernes (erich@rrnet.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  * library functions for userconfig library  *  * $Id: uc_main.c,v 1.1 1996/10/03 06:01:41 jkh Exp $  */
 end_comment
 
 begin_include
@@ -68,6 +68,30 @@ include|#
 directive|include
 file|"uc_main.h"
 end_include
+
+begin_function_decl
+specifier|extern
+name|int
+name|isDebug
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|msgDebug
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -237,6 +261,20 @@ literal|79
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+name|msgDebug
+argument_list|(
+literal|"Kernel name is %s, incore = %d\n"
+argument_list|,
+name|kname
+argument_list|,
+name|incore
+argument_list|)
+expr_stmt|;
 name|kern
 operator|=
 operator|(
@@ -329,6 +367,11 @@ operator|)
 operator|-
 literal|3
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"uc_open: Unable to open /dev/kmem.\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kern
@@ -387,6 +430,13 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"uc_open: Unable to stat %s.\n"
+argument_list|,
+name|kname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kern
@@ -434,6 +484,13 @@ operator|)
 operator|-
 literal|2
 expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"uc_open: Unable to chflags %s.\n"
+argument_list|,
+name|kname
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|kern
@@ -472,6 +529,13 @@ operator|*
 operator|)
 operator|-
 literal|3
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"uc_open: Unable to open %s.\n"
+argument_list|,
+name|kname
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -544,6 +608,13 @@ operator|*
 operator|)
 operator|-
 literal|4
+expr_stmt|;
+name|msgDebug
+argument_list|(
+literal|"uc_open: Unable to mmap from %s.\n"
+argument_list|,
+name|kname
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
