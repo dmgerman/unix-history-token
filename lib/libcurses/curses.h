@@ -205,12 +205,27 @@ begin_comment
 comment|/* For sgttyb and related */
 end_comment
 
+begin_comment
+comment|/* XSI and SVr4 specify that curses implements 'bool'.  However, C++ may also  * implement it.  If so, we must use the C++ compiler's type to avoid conflict  * with other interfaces.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|bool
 value|char
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
