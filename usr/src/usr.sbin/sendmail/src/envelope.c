@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.34.1.1 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2398,7 +2398,6 @@ name|e_xfp
 operator|==
 name|NULL
 condition|)
-block|{
 name|syserr
 argument_list|(
 literal|"!Can't create transcript stream %s"
@@ -2406,7 +2405,33 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-block|}
+ifdef|#
+directive|ifdef
+name|HASSETVBUF
+name|setvbuf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|setlinebuf
+argument_list|(
+name|e
+operator|->
+name|e_xfp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|tTd
