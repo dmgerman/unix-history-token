@@ -3963,6 +3963,11 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
