@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nextaddr.c 1.2 %G%"
+literal|"@(#)nextaddr.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1517,7 +1517,53 @@ name|addr
 operator|+=
 name|size
 expr_stmt|;
-comment|/*  * It is very slow to go through the loop again and again.  * So for the time being, we just skip to the end.  *     if ((incr> 0&& i< limit) || (incr< 0&& i> limit)) { 	iread(&offset, addr, sizeof(offset)); 	return(addr + offset);     } else {  */
+comment|/*  * It is very slow to go through the loop again and again.  * If it is desired to just skip to the end, the next 4 lines  * should be skipped.  */
+if|if
+condition|(
+operator|(
+name|incr
+operator|>
+literal|0
+operator|&&
+name|i
+operator|<
+name|limit
+operator|)
+operator|||
+operator|(
+name|incr
+operator|<
+literal|0
+operator|&&
+name|i
+operator|>
+name|limit
+operator|)
+condition|)
+block|{
+name|iread
+argument_list|(
+operator|&
+name|offset
+argument_list|,
+name|addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|offset
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|addr
+operator|+
+name|offset
+operator|)
+return|;
+block|}
+else|else
+block|{
 return|return
 operator|(
 name|addr
@@ -1528,7 +1574,7 @@ name|short
 argument_list|)
 operator|)
 return|;
-comment|/*     }  */
+block|}
 block|}
 end_function
 
