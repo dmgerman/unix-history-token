@@ -108,22 +108,11 @@ directive|include
 file|"rtld.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WITH_LIBMAP
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"libmap.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1901,9 +1890,6 @@ name|st_shndx
 operator|=
 name|SHN_UNDEF
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WITH_LIBMAP
 if|if
 condition|(
 operator|!
@@ -1917,8 +1903,6 @@ operator|)
 name|lm_init
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|dbg
 argument_list|(
 literal|"loading LD_PRELOAD libraries"
@@ -4034,9 +4018,6 @@ name|xname
 argument_list|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|WITH_LIBMAP
 if|if
 condition|(
 name|libmap_disable
@@ -4062,8 +4043,6 @@ operator|)
 operator|==
 name|NULL
 condition|)
-endif|#
-directive|endif
 name|name
 operator|=
 operator|(
@@ -6721,9 +6700,6 @@ name|list_fini
 argument_list|)
 expr_stmt|;
 comment|/* No need to remove the items from the list, since we are exiting. */
-ifdef|#
-directive|ifdef
-name|WITH_LIBMAP
 if|if
 condition|(
 operator|!
@@ -6732,8 +6708,6 @@ condition|)
 name|lm_fini
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
