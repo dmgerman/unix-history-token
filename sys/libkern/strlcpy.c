@@ -65,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/libkern.h>
 end_include
 
 begin_comment
