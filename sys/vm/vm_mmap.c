@@ -264,7 +264,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Set the maximum number of vm_map_entry structures per process.  Roughly  * speaking vm_map_entry structures are tiny, so allowing them to eat 1/100  * of our KVM malloc space still results in generous limits.  We want a   * default that is good enough to prevent the kernel running out of resources  * if attacked from compromised user account but generous enough such that  * multi-threaded processes are not unduly inconvenienced.  */
+comment|/*  * Set the maximum number of vm_map_entry structures per process.  Roughly  * speaking vm_map_entry structures are tiny, so allowing them to eat 1/100  * of our KVM malloc space still results in generous limits.  We want a  * default that is good enough to prevent the kernel running out of resources  * if attacked from compromised user account but generous enough such that  * multi-threaded processes are not unduly inconvenienced.  */
 end_comment
 
 begin_function_decl
@@ -507,7 +507,7 @@ comment|/* COMPAT_43 || COMPAT_SUNOS */
 end_comment
 
 begin_comment
-comment|/*   * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  *  * Generally speaking, only character devices which are themselves  * memory-based, such as a video framebuffer, can be mmap'd.  Otherwise  * there would be no cache coherency between a descriptor and a VM mapping  * both to the same character device.  *  * Block devices can be mmap'd no matter what they represent.  Cache coherency  * is maintained as long as you do not write directly to the underlying  * character device.  */
+comment|/*  * Memory Map (mmap) system call.  Note that the file offset  * and address are allowed to be NOT page aligned, though if  * the MAP_FIXED flag it set, both must have the same remainder  * modulo the PAGE_SIZE (POSIX 1003.1b).  If the address is not  * page-aligned, the actual mapping starts at trunc_page(addr)  * and the return value is adjusted up by the page offset.  *  * Generally speaking, only character devices which are themselves  * memory-based, such as a video framebuffer, can be mmap'd.  Otherwise  * there would be no cache coherency between a descriptor and a VM mapping  * both to the same character device.  *  * Block devices can be mmap'd no matter what they represent.  Cache coherency  * is maintained as long as you do not write directly to the underlying  * character device.  */
 end_comment
 
 begin_ifndef
