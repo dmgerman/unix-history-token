@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nm.c	5.2 (Berkeley) %G%"
+literal|"@(#)nm.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,13 @@ include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -675,10 +682,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|struct
 name|ar_hdr
 name|ar_head

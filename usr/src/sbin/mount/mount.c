@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.24 (Berkeley) %G%"
+literal|"@(#)mount.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3048,6 +3048,10 @@ modifier|*
 name|spec
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 specifier|register
 name|CLIENT
 modifier|*

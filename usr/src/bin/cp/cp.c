@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cp.c	5.14 (Berkeley) %G%"
+literal|"@(#)cp.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +166,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|uid_t
 name|myuid
 decl_stmt|;
@@ -240,8 +247,6 @@ block|{
 specifier|extern
 name|int
 name|optind
-decl_stmt|,
-name|errno
 decl_stmt|;
 name|struct
 name|stat
@@ -2335,10 +2340,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 specifier|register
 name|int
 name|cnt
@@ -2455,10 +2456,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|exit_val
 operator|=
 literal|1
