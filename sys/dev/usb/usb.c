@@ -139,6 +139,12 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|USBCORE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -772,16 +778,6 @@ name|device_shutdown
 argument_list|,
 name|bus_generic_shutdown
 argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_VERSION
-argument_list|(
-name|usb
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
