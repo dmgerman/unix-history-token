@@ -6669,22 +6669,9 @@ expr_stmt|;
 comment|/* ========== set hi_prtcl ========== */
 name|val
 operator|=
-literal|0
-expr_stmt|;
-comment|/* Monitor DCD etc. if a modem */
-if|if
-condition|(
-operator|!
-operator|(
-name|cflag
-operator|&
-name|CLOCAL
-operator|)
-condition|)
-name|val
-operator||=
 name|SP_DCEN
 expr_stmt|;
+comment|/* Monitor DCD always, or TIOCMGET misses it */
 if|if
 condition|(
 name|iflag
