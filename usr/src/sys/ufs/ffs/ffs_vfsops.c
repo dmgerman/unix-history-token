@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.59 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.60 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1268,7 +1268,7 @@ name|fs
 operator|->
 name|fs_sbsize
 argument_list|,
-name|M_SUPERBLK
+name|M_UFSMNT
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1557,7 +1557,7 @@ name|fs
 operator|->
 name|fs_cssize
 argument_list|,
-name|M_SUPERBLK
+name|M_UFSMNT
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -1674,7 +1674,7 @@ name|free
 argument_list|(
 name|base
 argument_list|,
-name|M_SUPERBLK
+name|M_UFSMNT
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1984,7 +1984,7 @@ name|ump
 operator|->
 name|um_fs
 argument_list|,
-name|M_SUPERBLK
+name|M_UFSMNT
 argument_list|)
 expr_stmt|;
 name|free
