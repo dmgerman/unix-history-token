@@ -202,6 +202,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
 name|lno
 operator|=
 name|vp
@@ -422,6 +426,24 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* line number start with 1, lno zero is illegal */
+if|if
+condition|(
+name|vp
+operator|->
+name|m_final
+operator|.
+name|lno
+operator|>
+literal|1
+condition|)
+operator|--
+name|vp
+operator|->
+name|m_final
+operator|.
+name|lno
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -431,7 +453,6 @@ name|sp
 argument_list|,
 name|ep
 argument_list|,
-operator|--
 name|vp
 operator|->
 name|m_final
