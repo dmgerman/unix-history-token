@@ -73,7 +73,7 @@ value|ACPI_EC
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"EC"
 argument_list|)
@@ -311,6 +311,9 @@ name|int
 name|ec_locked
 decl_stmt|;
 name|int
+name|ec_lockhandle
+decl_stmt|;
+name|int
 name|ec_pendquery
 decl_stmt|;
 name|int
@@ -346,16 +349,23 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
+comment|/* XXX WAIT_FOREVER is probably a bad idea, what is a better time? */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|status
 operator|=
 name|AcpiAcquireGlobalLock
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|==
-name|AE_OK
+argument_list|(
+name|WAIT_FOREVER
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|ec_lockhandle
+argument_list|)
+argument_list|)
 condition|)
 operator|(
 name|sc
@@ -394,7 +404,11 @@ operator|=
 literal|0
 expr_stmt|;
 name|AcpiReleaseGlobalLock
-argument_list|()
+argument_list|(
+name|sc
+operator|->
+name|ec_lockhandle
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -731,7 +745,7 @@ name|device_t
 name|bus
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -824,7 +838,7 @@ name|errval
 init|=
 literal|0
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -1030,7 +1044,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|acpi_EvaluateInteger
@@ -1046,9 +1061,7 @@ name|sc
 operator|->
 name|ec_gpebit
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -1074,7 +1087,8 @@ block|}
 comment|/*      * Install a handler for this EC's GPE bit.  Note that EC SCIs are       * treated as both edge- and level-triggered interrupts; in other words      * we clear the status bit immediately after getting an EC-SCI, then      * again after we're done processing the event.  This guarantees that      * events we cause while performing a transaction (e.g. IBE/OBF) get       * cleared before re-enabling the GPE.      */
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|AcpiInstallGpeHandler
@@ -1091,9 +1105,7 @@ name|EcGpeHandler
 argument_list|,
 name|sc
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -1135,7 +1147,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|AcpiInstallAddressSpaceHandler
@@ -1152,9 +1165,7 @@ name|EcSpaceSetup
 argument_list|,
 name|sc
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -1293,7 +1304,7 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -1332,9 +1343,10 @@ expr_stmt|;
 comment|/* 	 * If we failed to get anything from the EC, give up 	 */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -1393,9 +1405,10 @@ expr_stmt|;
 comment|/* 	 * Ignore spurious query requests. 	 */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
-operator|!=
-name|AE_OK
+argument_list|)
 operator|&&
 operator|(
 name|Data
@@ -1436,6 +1449,8 @@ block|}
 comment|/* I know I request Level trigger cleanup */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiClearEvent
 argument_list|(
 name|sc
@@ -1444,8 +1459,7 @@ name|ec_gpebit
 argument_list|,
 name|ACPI_EVENT_GPE
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -1454,6 +1468,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiEnableEvent
 argument_list|(
 name|sc
@@ -1464,8 +1480,7 @@ name|ACPI_EVENT_GPE
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -1570,6 +1585,8 @@ block|{
 comment|/* Queue GpeQuery Handler */
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -1578,8 +1595,7 @@ name|EcGpeQueryHandler
 argument_list|,
 name|Context
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -1614,7 +1630,7 @@ modifier|*
 name|RegionContext
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -1683,7 +1699,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|__func__
 argument_list|,
@@ -1835,7 +1851,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcTransaction
@@ -1845,9 +1862,7 @@ argument_list|,
 operator|&
 name|EcRequest
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 break|break;
 operator|(
@@ -1911,7 +1926,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|__func__
 argument_list|,
@@ -2230,16 +2245,15 @@ name|Status
 decl_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcLock
 argument_list|(
 name|sc
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2253,6 +2267,10 @@ argument_list|,
 name|EC_COMMAND_QUERY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEvent
@@ -2261,12 +2279,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_OUTPUT_BUFFER_FULL
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_OK
+argument_list|)
 condition|)
 operator|*
 name|Data
@@ -2283,9 +2296,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|ACPI_VPRINT
 argument_list|(
@@ -2332,16 +2346,15 @@ decl_stmt|;
 comment|/*      * Lock the EC      */
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcLock
 argument_list|(
 name|sc
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 return|return
 operator|(
@@ -2423,6 +2436,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiOsQueueForExecution
 argument_list|(
 name|OSD_PRIORITY_HIGH
@@ -2431,8 +2446,7 @@ name|EcGpeQueryHandler
 argument_list|,
 name|sc
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|printf
 argument_list|(
@@ -2448,6 +2462,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiClearEvent
 argument_list|(
 name|sc
@@ -2456,8 +2472,7 @@ name|ec_gpebit
 argument_list|,
 name|ACPI_EVENT_GPE
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|ACPI_VPRINT
 argument_list|(
@@ -2477,6 +2492,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_FAILURE
+argument_list|(
 name|AcpiEnableEvent
 argument_list|(
 name|sc
@@ -2487,8 +2504,7 @@ name|ACPI_EVENT_GPE
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 name|ACPI_VPRINT
 argument_list|(
@@ -2569,7 +2585,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2578,9 +2595,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -2614,7 +2629,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2623,9 +2639,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_OUTPUT_BUFFER_FULL
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -2724,7 +2738,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2733,9 +2748,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -2769,7 +2782,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2778,9 +2792,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
@@ -2815,7 +2827,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|ACPI_FAILURE
+argument_list|(
 name|Status
 operator|=
 name|EcWaitEventIntr
@@ -2824,9 +2837,7 @@ name|sc
 argument_list|,
 name|EC_EVENT_INPUT_BUFFER_EMPTY
 argument_list|)
-operator|)
-operator|!=
-name|AE_OK
+argument_list|)
 condition|)
 block|{
 name|ACPI_VPRINT
