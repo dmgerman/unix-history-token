@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.79 1999/01/21 08:29:07 dillon Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)spec_vnops.c	8.14 (Berkeley) 5/21/95  * $Id: spec_vnops.c,v 1.80 1999/01/27 22:42:07 dillon Exp $  */
 end_comment
 
 begin_include
@@ -1553,15 +1553,20 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|bsize
-operator|=
-name|BLKDEV_IOSIZE
-expr_stmt|;
 name|dev
 operator|=
 name|vp
 operator|->
 name|v_rdev
+expr_stmt|;
+comment|/* 		 * Calculate block size for block device.  The block size must 		 * be larger then the physical minimum. 		 */
+name|bsize
+operator|=
+name|vp
+operator|->
+name|v_specinfo
+operator|->
+name|si_bsize_best
 expr_stmt|;
 if|if
 condition|(
@@ -2062,9 +2067,14 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 		 * Calculate block size for block device.  The block size must 		 * be larger then the physical minimum. 		 */
 name|bsize
 operator|=
-name|BLKDEV_IOSIZE
+name|vp
+operator|->
+name|v_specinfo
+operator|->
+name|si_bsize_best
 expr_stmt|;
 if|if
 condition|(
@@ -3660,7 +3670,7 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * Calculate the offset of the transfer. 	 */
+comment|/* 	 * Calculate the offset of the transfer and do sanity check. 	 * FreeBSD currently only supports an 8 TB range due to b_blkno 	 * being in DEV_BSIZE ( usually 512 ) byte chunks on call to 	 * VOP_STRATEGY.  XXX 	 */
 name|offset
 operator|=
 name|IDX_TO_OFF
@@ -3679,12 +3689,10 @@ name|ap
 operator|->
 name|a_offset
 expr_stmt|;
-comment|/* XXX sanity check before we go into details. */
-comment|/* XXX limits should be defined elsewhere. */
 define|#
 directive|define
 name|DADDR_T_BIT
-value|32
+value|(sizeof(daddr_t)*8)
 define|#
 directive|define
 name|OFFSET_MAX
@@ -3740,56 +3748,23 @@ argument_list|(
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Round up physical size for real devices, use the 	 * fundamental blocksize of the fs if possible. 	 */
-if|if
-condition|(
-name|vp
-operator|&&
-name|vp
-operator|->
-name|v_mount
-condition|)
-block|{
+comment|/* 	 * Round up physical size for real devices.  We cannot round using 	 * v_mount's block size data because v_mount has nothing to do with 	 * the device.  i.e. it's usually '/dev'.  We need the physical block 	 * size for the device itself. 	 * 	 * We can't use v_specmountpoint because it only exists when the 	 * block device is mounted.  However, we can use v_specinfo. 	 */
 if|if
 condition|(
 name|vp
 operator|->
 name|v_type
-operator|!=
+operator|==
 name|VBLK
 condition|)
-block|{
-name|vprint
-argument_list|(
-literal|"Non VBLK"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-block|}
 name|blksiz
 operator|=
 name|vp
 operator|->
-name|v_mount
+name|v_specinfo
 operator|->
-name|mnt_stat
-operator|.
-name|f_bsize
+name|si_bsize_phys
 expr_stmt|;
-if|if
-condition|(
-name|blksiz
-operator|<
-name|DEV_BSIZE
-condition|)
-block|{
-name|blksiz
-operator|=
-name|DEV_BSIZE
-expr_stmt|;
-block|}
-block|}
 else|else
 name|blksiz
 operator|=
@@ -4313,9 +4288,15 @@ directive|ifndef
 name|MAX_PERF
 name|printf
 argument_list|(
-literal|"spec_getpages: I/O read failure: (error code=%d)\n"
+literal|"spec_getpages: I/O read failure: (error code=%d) bp %p vp %p\n"
 argument_list|,
 name|error
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|b_vp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4446,12 +4427,33 @@ name|v_type
 operator|==
 name|VBLK
 condition|)
+block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_specinfo
+condition|)
+name|vap
+operator|->
+name|va_blocksize
+operator|=
+name|vp
+operator|->
+name|v_specmountpoint
+operator|->
+name|mnt_stat
+operator|.
+name|f_iosize
+expr_stmt|;
+else|else
 name|vap
 operator|->
 name|va_blocksize
 operator|=
 name|BLKDEV_IOSIZE
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4461,12 +4463,14 @@ name|v_type
 operator|==
 name|VCHR
 condition|)
+block|{
 name|vap
 operator|->
 name|va_blocksize
 operator|=
 name|MAXBSIZE
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
