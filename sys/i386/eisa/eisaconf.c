@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND    * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: eisaconf.c,v 1.48 1999/07/29 01:02:51 mdodd Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND    * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: eisaconf.c,v 1.49 1999/07/30 13:54:00 mdodd Exp $  */
 end_comment
 
 begin_include
@@ -137,6 +137,9 @@ name|irq_node
 block|{
 name|int
 name|irq_no
+decl_stmt|;
+name|int
+name|irq_trigger
 decl_stmt|;
 name|void
 modifier|*
@@ -276,7 +279,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|struct
+name|irq_node
+modifier|*
 name|eisa_find_irq
 parameter_list|(
 name|struct
@@ -1395,8 +1400,7 @@ operator|++
 argument_list|)
 operator|)
 operator|!=
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
 name|snprintf
@@ -1408,9 +1412,21 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"irq %d"
+literal|"irq %d (%s)"
 argument_list|,
 name|irq
+operator|->
+name|irq_no
+argument_list|,
+operator|(
+name|irq
+operator|->
+name|irq_trigger
+condition|?
+literal|"level"
+else|:
+literal|"edge"
+operator|)
 argument_list|)
 expr_stmt|;
 name|eisa_reg_print
@@ -1481,7 +1497,9 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|struct
+name|irq_node
+modifier|*
 name|eisa_find_irq
 parameter_list|(
 name|struct
@@ -1543,14 +1561,15 @@ condition|(
 name|irq
 condition|)
 return|return
+operator|(
 name|irq
-operator|->
-name|irq_no
+operator|)
 return|;
 else|else
 return|return
-operator|-
-literal|1
+operator|(
+name|NULL
+operator|)
 return|;
 block|}
 end_function
@@ -1718,6 +1737,11 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
+name|struct
+name|irq_node
+modifier|*
+name|irq
+decl_stmt|;
 switch|switch
 condition|(
 name|which
@@ -1751,8 +1775,10 @@ case|case
 name|EISA_IVAR_IRQ
 case|:
 comment|/* XXX only first irq */
-operator|*
-name|result
+if|if
+condition|(
+operator|(
+name|irq
 operator|=
 name|eisa_find_irq
 argument_list|(
@@ -1760,7 +1786,28 @@ name|e_dev
 argument_list|,
 literal|0
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|*
+name|result
+operator|=
+name|irq
+operator|->
+name|irq_no
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|result
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 break|break;
 default|default:
 return|return
@@ -1897,7 +1944,9 @@ condition|(
 name|isdefault
 condition|)
 block|{
-name|int
+name|struct
+name|irq_node
+modifier|*
 name|irq
 init|=
 name|eisa_find_irq
@@ -1912,8 +1961,7 @@ if|if
 condition|(
 name|irq
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 return|return
 literal|0
@@ -1923,11 +1971,35 @@ operator|=
 name|end
 operator|=
 name|irq
+operator|->
+name|irq_no
 expr_stmt|;
 name|count
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|irq
+operator|->
+name|irq_trigger
+operator|==
+name|EISA_TRIGGER_LEVEL
+condition|)
+block|{
+name|flags
+operator||=
+name|RF_SHAREABLE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|flags
+operator|&=
+operator|~
+name|RF_SHAREABLE
+expr_stmt|;
+block|}
 block|}
 break|break;
 case|case
@@ -2166,8 +2238,7 @@ argument_list|,
 name|rid
 argument_list|)
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 return|return
 name|EINVAL
@@ -2275,6 +2346,9 @@ name|dev
 parameter_list|,
 name|int
 name|irq
+parameter_list|,
+name|int
+name|trigger
 parameter_list|)
 block|{
 name|struct
@@ -2328,6 +2402,12 @@ operator|->
 name|irq_no
 operator|=
 name|irq
+expr_stmt|;
+name|irq_info
+operator|->
+name|irq_trigger
+operator|=
+name|trigger
 expr_stmt|;
 name|irq_info
 operator|->

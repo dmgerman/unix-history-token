@@ -8,7 +8,7 @@ comment|/* Credits:  Based on and part of the DPT driver for FreeBSD written and
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.h,v 1.1 1998/03/11 00:30:14 julian Exp $  */
+comment|/*  * $Id: dpt_eisa.h,v 1.2 1998/09/15 08:33:35 gibbs Exp $  */
 end_comment
 
 begin_define
@@ -23,6 +23,13 @@ define|#
 directive|define
 name|DPT_EISA_IOSIZE
 value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_CFENABLE
+value|0x8f
 end_define
 
 begin_define

@@ -8,7 +8,7 @@ comment|/*  * Credits:  Based on and part of the DPT driver for FreeBSD written 
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.c,v 1.5 1999/04/18 15:50:33 peter Exp $  */
+comment|/*  * $Id: dpt_eisa.c,v 1.6 1999/05/08 21:59:19 dfr Exp $  */
 end_comment
 
 begin_include
@@ -190,6 +190,9 @@ decl_stmt|;
 name|u_int
 name|irq
 decl_stmt|;
+name|int
+name|shared
+decl_stmt|;
 name|desc
 operator|=
 name|dpt_eisa_match
@@ -241,6 +244,17 @@ argument_list|,
 name|RESVADDR_NONE
 argument_list|)
 expr_stmt|;
+name|outb
+argument_list|(
+operator|(
+name|DPT_EISA_CFENABLE
+operator|+
+name|io_base
+operator|)
+argument_list|,
+literal|0xf8
+argument_list|)
+expr_stmt|;
 name|intdef
 operator|=
 name|inb
@@ -255,6 +269,18 @@ operator|=
 name|intdef
 operator|&
 name|DPT_EISA_INT_NUM_MASK
+expr_stmt|;
+name|shared
+operator|=
+operator|(
+name|intdef
+operator|&
+name|DPT_EISA_INT_LEVEL
+operator|)
+condition|?
+name|EISA_TRIGGER_LEVEL
+else|:
+name|EISA_TRIGGER_EDGE
 expr_stmt|;
 switch|switch
 condition|(
@@ -286,8 +312,10 @@ literal|14
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"dpt at slot %d: illegal irq setting %d\n"
 argument_list|,
 name|eisa_get_slot
@@ -311,13 +339,17 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|eisa_add_intr
 argument_list|(
 name|dev
 argument_list|,
 name|irq
+argument_list|,
+name|shared
 argument_list|)
 expr_stmt|;
 return|return
@@ -360,9 +392,6 @@ name|device_get_unit
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|int
-name|shared
 decl_stmt|;
 name|int
 name|s
@@ -416,26 +445,6 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|shared
-operator|=
-operator|(
-name|inb
-argument_list|(
-name|DPT_EISA_INTDEF
-operator|+
-name|rman_get_start
-argument_list|(
-name|io
-argument_list|)
-argument_list|)
-operator|&
-name|DPT_EISA_INT_LEVEL
-operator|)
-condition|?
-name|RF_SHAREABLE
-else|:
-literal|0
-expr_stmt|;
 name|dpt
 operator|=
 name|dpt_alloc
@@ -543,8 +552,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|shared
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;

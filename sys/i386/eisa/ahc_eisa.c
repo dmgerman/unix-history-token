@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_eisa.c,v 1.9 1999/05/17 21:51:41 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_eisa.c,v 1.10 1999/05/17 21:56:00 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -295,6 +295,9 @@ decl_stmt|;
 name|u_int8_t
 name|hcntrl
 decl_stmt|;
+name|int
+name|shared
+decl_stmt|;
 name|desc
 operator|=
 name|aic7770_match
@@ -378,6 +381,18 @@ operator|+
 name|iobase
 argument_list|)
 expr_stmt|;
+name|shared
+operator|=
+operator|(
+name|intdef
+operator|&
+literal|0x80
+operator|)
+condition|?
+name|EISA_TRIGGER_EDGE
+else|:
+name|EISA_TRIGGER_LEVEL
+expr_stmt|;
 name|irq
 operator|=
 name|intdef
@@ -442,6 +457,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|irq
+argument_list|,
+name|shared
 argument_list|)
 expr_stmt|;
 return|return
@@ -479,9 +496,6 @@ name|int
 name|error
 decl_stmt|,
 name|rid
-decl_stmt|;
-name|int
-name|shared
 decl_stmt|;
 name|rid
 operator|=
@@ -700,20 +714,6 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * The IRQMS bit enables level sensitive interrupts. Only allow 	 * IRQ sharing if it's set. 	 */
-name|shared
-operator|=
-operator|(
-name|ahc
-operator|->
-name|pause
-operator|&
-name|IRQMS
-operator|)
-condition|?
-name|RF_SHAREABLE
-else|:
-literal|0
-expr_stmt|;
 name|rid
 operator|=
 literal|0
@@ -738,8 +738,6 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-name|shared
-operator||
 name|RF_ACTIVE
 argument_list|)
 expr_stmt|;

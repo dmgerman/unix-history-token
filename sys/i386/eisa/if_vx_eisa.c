@@ -326,6 +326,8 @@ name|VX_RESOURCE_CONFIG
 argument_list|)
 operator|>>
 literal|12
+argument_list|,
+name|EISA_TRIGGER_EDGE
 argument_list|)
 expr_stmt|;
 return|return
@@ -378,9 +380,6 @@ modifier|*
 name|irq
 init|=
 literal|0
-decl_stmt|;
-name|u_char
-name|level_intr
 decl_stmt|;
 name|int
 name|rid
@@ -498,10 +497,6 @@ name|rman_get_start
 argument_list|(
 name|io
 argument_list|)
-expr_stmt|;
-name|level_intr
-operator|=
-name|FALSE
 expr_stmt|;
 name|rid
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995, 1998, 1999 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_eisa.c,v 1.6 1999/04/24 06:46:10 peter Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995, 1998, 1999 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bt_eisa.c,v 1.7 1999/05/08 21:59:18 dfr Exp $  */
 end_comment
 
 begin_include
@@ -775,6 +775,9 @@ decl_stmt|;
 name|int
 name|result
 decl_stmt|;
+name|int
+name|shared
+decl_stmt|;
 name|desc
 operator|=
 name|bt_match
@@ -919,6 +922,23 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|shared
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|AMI_EISA_IOCONF1
+argument_list|)
+operator|&
+name|AMI_IRQ_LEVEL
+operator|)
+condition|?
+name|EISA_TRIGGER_LEVEL
+else|:
+name|EISA_TRIGGER_EDGE
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1015,6 +1035,23 @@ name|ENXIO
 operator|)
 return|;
 block|}
+name|shared
+operator|=
+operator|(
+name|inb
+argument_list|(
+name|iobase
+operator|+
+name|EISA_IRQ_TYPE
+argument_list|)
+operator|&
+name|LEVEL
+operator|)
+condition|?
+name|EISA_TRIGGER_LEVEL
+else|:
+name|EISA_TRIGGER_EDGE
+expr_stmt|;
 block|}
 name|bt_mark_probed_iop
 argument_list|(
@@ -1088,6 +1125,8 @@ argument_list|,
 name|info
 operator|.
 name|irq
+argument_list|,
+name|shared
 argument_list|)
 expr_stmt|;
 name|result
