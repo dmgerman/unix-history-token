@@ -1268,6 +1268,8 @@ expr_stmt|;
 if|if
 condition|(
 name|needuser
+operator|||
+name|needcomm
 condition|)
 name|saveuser
 argument_list|(
