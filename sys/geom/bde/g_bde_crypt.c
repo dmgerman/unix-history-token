@@ -1440,7 +1440,7 @@ operator|->
 name|sectorN
 argument_list|,
 operator|(
-literal|"wp->so (%qd) + wp->length (%qd)> EOM (%qd), offset = %qd"
+literal|"wp->so (%jd) + wp->length (%jd)> EOM (%jd), offset = %jd"
 operator|,
 operator|(
 name|intmax_t
@@ -1487,7 +1487,7 @@ operator|->
 name|sectorN
 argument_list|,
 operator|(
-literal|"wp->kso (%qd) + kp->sectorsize> EOM (%qd), offset = %qd"
+literal|"wp->kso (%jd) + kp->sectorsize> EOM (%jd), offset = %jd"
 operator|,
 operator|(
 name|intmax_t
@@ -1523,7 +1523,7 @@ operator|->
 name|sector0
 argument_list|,
 operator|(
-literal|"wp->so (%qd)< BOM (%qd), offset = %qd"
+literal|"wp->so (%jd)< BOM (%jd), offset = %jd"
 operator|,
 operator|(
 name|intmax_t
@@ -1559,7 +1559,7 @@ operator|->
 name|sector0
 argument_list|,
 operator|(
-literal|"wp->kso (%qd)<BOM (%qd), offset = %qd"
+literal|"wp->kso (%jd)<BOM (%jd), offset = %jd"
 operator|,
 operator|(
 name|intmax_t
