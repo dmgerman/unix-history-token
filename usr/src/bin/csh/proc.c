@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	5.6 (Berkeley) %G%"
+literal|"@(#)proc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,7 +117,11 @@ operator|&
 name|w
 argument_list|,
 operator|(
+operator|(
 name|setintr
+operator|&&
+name|intty
+operator|)
 condition|?
 name|WNOHANG
 operator||
