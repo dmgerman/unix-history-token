@@ -6783,37 +6783,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * If the Biba label is to be changed, authorize as appropriate. 	 */
-if|if
-condition|(
-name|new
-operator|->
-name|mb_flags
-operator|&
-name|MAC_BIBA_FLAGS_BOTH
-condition|)
-block|{
-comment|/* 		 * Rely on the traditional superuser status for the Biba 		 * interface relabel requirements.  XXXMAC: This will go 		 * away. 		 */
-name|error
-operator|=
-name|suser_cred
-argument_list|(
-name|cred
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|EPERM
-operator|)
-return|;
-comment|/* 		 * XXXMAC: Additional consistency tests regarding the single 		 * and the range of the new label might be performed here. 		 */
-block|}
 return|return
 operator|(
 literal|0
