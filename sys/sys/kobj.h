@@ -139,7 +139,7 @@ define|#
 directive|define
 name|KOBJ_FIELDS
 define|\
-value|kobj_ops_t	ops;
+value|kobj_ops_t	ops
 end_define
 
 begin_struct
