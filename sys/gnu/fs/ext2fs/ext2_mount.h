@@ -136,12 +136,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|netexport
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|ufs_extattr_per_mount
 struct_decl|;
 end_struct_decl
@@ -256,11 +250,6 @@ name|MAXQUOTAS
 index|]
 decl_stmt|;
 comment|/* quota specific flags */
-name|struct
-name|netexport
-name|um_export
-decl_stmt|;
-comment|/* export information */
 name|int64_t
 name|um_savedmaxfilesize
 decl_stmt|;

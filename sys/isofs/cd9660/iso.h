@@ -1798,10 +1798,6 @@ decl_stmt|;
 name|int
 name|volume_space_size
 decl_stmt|;
-name|struct
-name|netexport
-name|im_export
-decl_stmt|;
 name|char
 name|root
 index|[

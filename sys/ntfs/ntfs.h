@@ -962,11 +962,20 @@ decl_stmt|;
 name|int
 name|ntm_adnum
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 name|struct
 name|netexport
 name|ntm_export
 decl_stmt|;
 comment|/* export information */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

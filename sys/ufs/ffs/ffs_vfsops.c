@@ -272,7 +272,7 @@ name|ffs_vget
 block|,
 name|ffs_fhtovp
 block|,
-name|ufs_check_export
+name|vfs_stdcheckexp
 block|,
 name|ffs_vptofh
 block|,
@@ -1063,11 +1063,6 @@ operator|(
 name|vfs_export
 argument_list|(
 name|mp
-argument_list|,
-operator|&
-name|ump
-operator|->
-name|um_export
 argument_list|,
 operator|&
 name|args

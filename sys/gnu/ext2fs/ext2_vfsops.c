@@ -450,7 +450,7 @@ name|ext2_vget
 block|,
 name|ext2_fhtovp
 block|,
-name|ufs_check_export
+name|vfs_stdcheckexp
 block|,
 name|ext2_vptofh
 block|,
@@ -1415,11 +1415,6 @@ operator|(
 name|vfs_export
 argument_list|(
 name|mp
-argument_list|,
-operator|&
-name|ump
-operator|->
-name|um_export
 argument_list|,
 operator|&
 name|args

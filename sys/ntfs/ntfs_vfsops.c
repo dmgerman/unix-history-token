@@ -581,33 +581,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|ntfs_checkexp
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|,
-expr|struct
-name|sockaddr
-operator|*
-operator|,
-name|int
-operator|*
-operator|,
-expr|struct
-name|ucred
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_elif
 elif|#
 directive|elif
@@ -740,6 +713,16 @@ begin_comment
 comment|/*  * Verify a remote client has export rights and return these rights via.  * exflagsp and credanonp.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -753,36 +736,6 @@ name|exflagsp
 parameter_list|,
 name|credanonp
 parameter_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-specifier|register
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
-name|sockaddr
-modifier|*
-name|nam
-decl_stmt|;
-name|int
-modifier|*
-name|exflagsp
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-modifier|*
-name|credanonp
-decl_stmt|;
-else|#
-directive|else
-comment|/* defined(__NetBSD__) */
 specifier|register
 name|struct
 name|mount
@@ -804,8 +757,6 @@ modifier|*
 modifier|*
 name|credanonp
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 specifier|register
 name|struct
@@ -872,6 +823,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -1419,6 +1375,27 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * Process export requests.  Jumping to "success" 			 * will return the vfs_export() error code. 			 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|err
+operator|=
+name|vfs_export
+argument_list|(
+name|mp
+argument_list|,
+operator|&
+name|args
+operator|.
+name|export
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* defined(__NetBSD__) */
 name|struct
 name|ntfsmount
 modifier|*
@@ -1446,6 +1423,8 @@ operator|.
 name|export
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|success
 goto|;
@@ -4779,7 +4758,7 @@ name|ntfs_vget
 block|,
 name|ntfs_fhtovp
 block|,
-name|ntfs_checkexp
+name|vfs_stdcheckexp
 block|,
 name|ntfs_vptofh
 block|,

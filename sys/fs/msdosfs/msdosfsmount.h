@@ -190,11 +190,6 @@ name|u_int
 name|pm_flags
 decl_stmt|;
 comment|/* see below */
-name|struct
-name|netexport
-name|pm_export
-decl_stmt|;
-comment|/* export information */
 name|u_int16_t
 name|pm_u2w
 index|[

@@ -44,6 +44,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_struct_decl
+struct_decl|struct
+name|netcred
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|netexport
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -371,6 +383,12 @@ name|u_int
 name|mnt_iosize_max
 decl_stmt|;
 comment|/* max IO request size */
+name|struct
+name|netexport
+modifier|*
+name|mnt_export
+decl_stmt|;
+comment|/* export list */
 block|}
 struct|;
 end_struct
@@ -1799,77 +1817,6 @@ define|\
 value|static struct vfsconf fsname ## _vfsconf = {		\&vfsops,					\ 		#fsname,					\ 		-1,						\ 		0,						\ 		flags						\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
 
-begin_include
-include|#
-directive|include
-file|<net/radix.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|AF_MAX
-value|35
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_comment
-comment|/*  * Network address lookup element  */
-end_comment
-
-begin_struct
-struct|struct
-name|netcred
-block|{
-name|struct
-name|radix_node
-name|netc_rnodes
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|int
-name|netc_exflags
-decl_stmt|;
-name|struct
-name|ucred
-name|netc_anon
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Network export information  */
-end_comment
-
-begin_struct
-struct|struct
-name|netexport
-block|{
-name|struct
-name|netcred
-name|ne_defexported
-decl_stmt|;
-comment|/* Default export */
-name|struct
-name|radix_node_head
-modifier|*
-name|ne_rtable
-index|[
-name|AF_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
-comment|/* Individual exports */
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -2043,10 +1990,6 @@ name|mount
 operator|*
 operator|,
 expr|struct
-name|netexport
-operator|*
-operator|,
-expr|struct
 name|export_args
 operator|*
 operator|)
@@ -2065,10 +2008,6 @@ argument_list|(
 operator|(
 expr|struct
 name|mount
-operator|*
-operator|,
-expr|struct
-name|netexport
 operator|*
 operator|,
 expr|struct
