@@ -1063,7 +1063,7 @@ block|,
 literal|"Avance Logic ALS100+"
 block|}
 block|,
-comment|/* @@@0001 */
+comment|/* @@@0001 - ViBRA16X clone */
 block|{
 literal|0x01100000
 block|,
@@ -1077,7 +1077,7 @@ block|,
 literal|"Avance Logic ALS120"
 block|}
 block|,
-comment|/* @@@2001 */
+comment|/* @@@2001 - ViBRA16X clone */
 block|{
 literal|0x02017316
 block|,
@@ -1555,6 +1555,24 @@ name|f
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|logical_id
+operator|==
+literal|0x01200000
+operator|&&
+name|scp
+operator|->
+name|bd_ver
+operator|<
+literal|0x0400
+condition|)
+name|scp
+operator|->
+name|bd_ver
+operator|=
+literal|0x0499
+expr_stmt|;
 switch|switch
 condition|(
 operator|(
@@ -1908,6 +1926,12 @@ case|case
 literal|0x43008c0e
 case|:
 comment|/* CTL0043 */
+case|case
+literal|0x01200000
+case|:
+case|case
+literal|0x01000000
+case|:
 name|f
 operator||=
 name|BD_F_SB16X

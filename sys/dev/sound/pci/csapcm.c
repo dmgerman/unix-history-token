@@ -3442,6 +3442,8 @@ name|dev
 argument_list|,
 name|csa
 argument_list|,
+name|NULL
+argument_list|,
 name|csa_rdcd
 argument_list|,
 name|csa_wrcd
@@ -3458,6 +3460,8 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
 name|mixer_init
 argument_list|(
 name|devinfo
@@ -3467,7 +3471,15 @@ name|ac97_mixer
 argument_list|,
 name|codec
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|snprintf
 argument_list|(
 name|status

@@ -3824,6 +3824,8 @@ name|dev
 argument_list|,
 name|au
 argument_list|,
+name|NULL
+argument_list|,
 name|au_rdcd
 argument_list|,
 name|au_wrcd
@@ -3838,6 +3840,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
+if|if
+condition|(
 name|mixer_init
 argument_list|(
 name|d
@@ -3847,7 +3851,13 @@ name|ac97_mixer
 argument_list|,
 name|codec
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
 if|if
 condition|(
 name|bus_dma_tag_create
