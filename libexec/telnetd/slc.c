@@ -725,7 +725,7 @@ name|slcptr
 operator|-
 name|slcbuf
 expr_stmt|;
-name|writenet
+name|output_datalen
 argument_list|(
 name|slcbuf
 argument_list|,
