@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	fancy.c	4.1	82/05/11	"
+literal|"	fancy.c	4.2	82/11/22	"
 decl_stmt|;
 end_decl_stmt
 
@@ -4455,7 +4455,10 @@ name|LI
 operator|+
 literal|1
 argument_list|,
-literal|2
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
