@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_compare.c	5.1 (Berkeley) %G%"
+literal|"@(#)proc_compare.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,8 +29,26 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Returns 1 if p2 is more active than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	2) Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just short-term sleepers (p_pri<= PZERO).  *	   Further ties are broken by picking the highest  *	   pid.  *  *	TODO - consider whether to use pctcpu  *  */
+comment|/*  * Returns 1 if p2 is more active than p1  *  * The algorithm for picking the "more active" process is thus:  *  *	1) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	2) Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just short-term sleepers (p_pri<= PZERO).  *	   Further ties are broken by picking the highest  *	   pid.  *  *	NOTE - if you change this, be sure to consider making  *	   the change in the kernel too (^T in kern/tty.c).  *  *	TODO - consider whether pctcpu should be used  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
 
 begin_define
 define|#
