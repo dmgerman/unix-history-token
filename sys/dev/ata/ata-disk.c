@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -1896,6 +1902,13 @@ condition|)
 return|return
 name|ENXIO
 return|;
+name|ata_reinit
+argument_list|(
+name|adp
+operator|->
+name|controller
+argument_list|)
+expr_stmt|;
 name|adp
 operator|->
 name|flags
@@ -2012,6 +2025,17 @@ operator|&
 name|request
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|.
+name|flags
+operator|&
+name|AR_F_ERROR
+condition|)
+return|return
+name|EIO
+return|;
 name|request
 operator|.
 name|donecount
@@ -2097,6 +2121,17 @@ name|addr
 operator|+=
 name|PAGE_SIZE
 expr_stmt|;
+if|if
+condition|(
+name|cncheckc
+argument_list|()
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return
+name|EINTR
+return|;
 block|}
 if|if
 condition|(
@@ -2119,7 +2154,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"ad_dump: timeout waiting for final ready\n"
+literal|"addump: timeout waiting for final ready\n"
 argument_list|)
 expr_stmt|;
 return|return
