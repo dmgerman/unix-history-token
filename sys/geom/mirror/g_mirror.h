@@ -1738,23 +1738,6 @@ name|md
 operator|->
 name|md_dflags
 operator|&
-name|G_MIRROR_DISK_FLAG_HARDCODED
-operator|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|" HARDCODED"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|md
-operator|->
-name|md_dflags
-operator|&
 name|G_MIRROR_DISK_FLAG_SYNCHRONIZING
 operator|)
 operator|!=
