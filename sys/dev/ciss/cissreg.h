@@ -1528,6 +1528,30 @@ comment|/* number of entries in a BIG_MAP */
 end_comment
 
 begin_comment
+comment|/*  * In the device address of a logical volume, the bus number  * is encoded into the logical lun volume number starting  * at the second byte, with the first byte defining the  * logical drive number.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CISS_LUN_TO_BUS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 16)& 0xFF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CISS_LUN_TO_TARGET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xFF)
+end_define
+
+begin_comment
 comment|/*  * BMIC CDB  *  * Note that the phys_drive/res1 field is nominally the 32-bit  * "block number" field, but the only BMIC command(s) of interest  * implemented overload the MSB (note big-endian format here)  * to be the physical drive ID, so we define accordingly.  */
 end_comment
 
