@@ -906,7 +906,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%-32s "
+literal|"%-40s "
 argument_list|,
 literal|"file and line"
 argument_list|)
