@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)miscbltin.c	8.1 (Berkeley) %G%"
+literal|"@(#)miscbltin.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +210,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|*
 operator|(
 name|ap
 operator|=
