@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	5.1 (Berkeley) %G%"
+literal|"@(#)sysctl.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -695,6 +701,40 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|USER_STREAM_MAX
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|oldp
+operator|=
+name|FOPEN_MAX
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
+name|USER_TZNAME_MAX
+case|:
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|oldp
+operator|=
+literal|1024
+expr_stmt|;
 return|return
 operator|(
 literal|0
