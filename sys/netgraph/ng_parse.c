@@ -45,9 +45,11 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_comment
-comment|/* #include<sys/ctype.h>*/
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/ctype.h>
+end_include
 
 begin_include
 include|#
@@ -2087,11 +2089,17 @@ if|if
 condition|(
 name|val
 operator|<
+operator|(
+name|long
+operator|)
 operator|-
 literal|0x80000000
 operator|||
 name|val
 operator|>
+operator|(
+name|u_long
+operator|)
 literal|0xffffffff
 operator|||
 name|eptr

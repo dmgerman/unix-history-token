@@ -243,7 +243,8 @@ specifier|const
 name|char
 modifier|*
 name|value
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|vtp
 decl_stmt|;
