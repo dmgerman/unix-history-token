@@ -1364,7 +1364,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccard_get_function
+name|pccard_get_function_num
 parameter_list|(
 name|device_t
 name|bus
@@ -1622,7 +1622,7 @@ name|DEVMETHOD
 argument_list|(
 name|card_get_function
 argument_list|,
-name|pccard_get_function
+name|pccard_get_function_num
 argument_list|)
 block|,
 name|DEVMETHOD
