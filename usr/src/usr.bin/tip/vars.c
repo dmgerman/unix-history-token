@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vars.c	5.1 (Berkeley) %G%"
+literal|"@(#)vars.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +271,7 @@ operator|*
 operator|)
 name|CTRL
 argument_list|(
-argument|p
+literal|'p'
 argument_list|)
 block|}
 block|,
@@ -433,7 +433,7 @@ operator|*
 operator|)
 name|CTRL
 argument_list|(
-argument|a
+literal|'a'
 argument_list|)
 block|}
 block|,

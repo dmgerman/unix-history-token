@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.3 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,7 +205,7 @@ block|,
 block|{
 name|CTRL
 argument_list|(
-name|d
+literal|'d'
 argument_list|)
 block|,
 name|NORM
@@ -218,7 +218,7 @@ block|,
 block|{
 name|CTRL
 argument_list|(
-name|y
+literal|'y'
 argument_list|)
 block|,
 name|NORM
@@ -231,7 +231,7 @@ block|,
 block|{
 name|CTRL
 argument_list|(
-name|z
+literal|'z'
 argument_list|)
 block|,
 name|NORM

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyboard.c	5.1 (Berkeley) %G%"
+literal|"@(#)keyboard.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|l
+literal|'l'
 argument_list|)
 condition|)
 block|{
@@ -175,7 +175,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 condition|)
 block|{
@@ -257,7 +257,7 @@ name|ch
 operator|==
 name|CTRL
 argument_list|(
-name|w
+literal|'w'
 argument_list|)
 operator|&&
 name|col

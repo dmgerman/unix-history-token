@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.5 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4016,7 +4016,7 @@ name|c
 operator|==
 name|CTRL
 argument_list|(
-name|y
+literal|'y'
 argument_list|)
 condition|?
 name|getpid
