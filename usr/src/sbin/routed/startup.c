@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	4.6 (Berkeley) %G%"
+literal|"@(#)startup.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_decl_stmt
@@ -806,6 +812,26 @@ operator|&
 name|net
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ifp
+operator|->
+name|int_transitions
+operator|++
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"re-installing interface %s"
+argument_list|,
+name|ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
 name|rt
 operator|=
 name|rtlookup

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	4.9 (Berkeley) %G%"
+literal|"@(#)tables.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<syslog.h>
 end_include
 
 begin_ifndef
@@ -917,6 +923,19 @@ name|rt_metric
 operator|=
 name|metric
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
+operator|&&
+name|metric
+condition|)
+block|{
 name|rt
 operator|->
 name|rt_state
@@ -924,6 +943,20 @@ operator|&=
 operator|~
 name|RTS_INTERFACE
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"deleting route to interface %s (timed out)"
+argument_list|,
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|metric
@@ -1024,6 +1057,27 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"deleting route to interface %s (timed out)"
+argument_list|,
+name|rt
+operator|->
+name|rt_ifp
+operator|->
+name|int_name
+argument_list|)
+expr_stmt|;
 name|TRACE_ACTION
 argument_list|(
 name|DELETE
