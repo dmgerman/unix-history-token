@@ -1012,7 +1012,7 @@ parameter_list|,
 name|sp
 parameter_list|)
 define|\
-value|bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
+value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID,	\ 	bcopy(sp->req_sense_data,&(xs)->sense_data,	\ 	    imin(XS_SNSLEN(xs), sp->req_sense_len))
 end_define
 
 begin_define
@@ -1677,10 +1677,7 @@ literal|"Interrupting Mailbox Command (0x%x) Timeout"
 argument_list|,
 name|isp
 operator|->
-name|isp_mboxtmp
-index|[
-literal|0
-index|]
+name|isp_lastmbxcmd
 argument_list|)
 expr_stmt|;
 name|isp
@@ -1767,10 +1764,7 @@ literal|"Polled Mailbox Command (0x%x) Timeout"
 argument_list|,
 name|isp
 operator|->
-name|isp_mboxtmp
-index|[
-literal|0
-index|]
+name|isp_lastmbxcmd
 argument_list|)
 expr_stmt|;
 block|}
