@@ -4622,22 +4622,45 @@ name|ifa6
 operator|->
 name|ia6_lifetime
 expr_stmt|;
+if|if
+condition|(
+name|lt6_tmp
+operator|.
+name|ia6t_vltime
+operator|==
+name|ND6_INFINITE_LIFETIME
+condition|)
 name|storedlifetime
 operator|=
+name|ND6_INFINITE_LIFETIME
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|IFA6_IS_INVALID
 argument_list|(
 name|ifa6
 argument_list|)
-condition|?
+condition|)
+name|storedlifetime
+operator|=
 literal|0
-else|:
-operator|(
+expr_stmt|;
+else|else
+name|storedlifetime
+operator|=
 name|lt6_tmp
 operator|.
 name|ia6t_expire
 operator|-
 name|time_second
-operator|)
+expr_stmt|;
+comment|/* when not updating, keep the current stored lifetime. */
+name|lt6_tmp
+operator|.
+name|ia6t_vltime
+operator|=
+name|storedlifetime
 expr_stmt|;
 if|if
 condition|(
@@ -7734,7 +7757,6 @@ modifier|*
 name|lt6
 parameter_list|)
 block|{
-comment|/* Valid lifetime must not be updated unless explicitly specified. */
 comment|/* init ia6t_expire */
 if|if
 condition|(
