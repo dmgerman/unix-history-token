@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.67 1998/03/26 20:52:58 phk Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.68 1998/05/07 04:58:42 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -4671,8 +4671,6 @@ argument_list|(
 name|fvp
 argument_list|,
 name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|,
 name|p
 argument_list|)
