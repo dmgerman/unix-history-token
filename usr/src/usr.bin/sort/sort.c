@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sort.c	4.9 (Berkeley) %G%"
+literal|"@(#)sort.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3344,6 +3344,9 @@ name|char
 modifier|*
 name|f
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -3519,14 +3522,34 @@ condition|)
 block|{
 name|diag
 argument_list|(
-literal|"line too long: "
+literal|"line too long (skipped): "
 argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-name|term
-argument_list|()
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getc
+argument_list|(
+name|is
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+operator|&&
+name|c
+operator|!=
+literal|'\n'
+condition|)
+comment|/* throw it away */
+empty_stmt|;
+operator|--
+name|lp
 expr_stmt|;
+continue|continue;
 block|}
 name|cp
 operator|+=
