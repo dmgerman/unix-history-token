@@ -27,12 +27,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|MALLOC_INSTANTIATE
-end_define
-
 begin_include
 include|#
 directive|include
@@ -92,6 +86,42 @@ include|#
 directive|include
 file|<vm/vm_map.h>
 end_include
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_CACHE
+argument_list|,
+literal|"namecache"
+argument_list|,
+literal|"Dynamically allocated cache entries"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_DEVBUF
+argument_list|,
+literal|"devbuf"
+argument_list|,
+literal|"device driver memory"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_TEMP
+argument_list|,
+literal|"temp"
+argument_list|,
+literal|"misc temporary data buffers"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static

@@ -197,84 +197,26 @@ define|\
 value|extern struct malloc_type type[1]
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_INSTANTIATE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|MALLOC_MAKE_TYPE
-parameter_list|(
-name|type
-parameter_list|,
-name|shortdesc
-parameter_list|,
-name|longdesc
-parameter_list|)
-define|\
-value|MALLOC_DEFINE(type, shortdesc, longdesc)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MALLOC_MAKE_TYPE
-parameter_list|(
-name|type
-parameter_list|,
-name|shortdesc
-parameter_list|,
-name|longdesc
-parameter_list|)
-define|\
-value|MALLOC_DECLARE(type)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
-name|MALLOC_MAKE_TYPE
+name|MALLOC_DECLARE
 argument_list|(
 name|M_CACHE
-argument_list|,
-literal|"namecache"
-argument_list|,
-literal|"Dynamically allocated cache entries"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_MAKE_TYPE
+name|MALLOC_DECLARE
 argument_list|(
 name|M_DEVBUF
-argument_list|,
-literal|"devbuf"
-argument_list|,
-literal|"device driver memory"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_MAKE_TYPE
+name|MALLOC_DECLARE
 argument_list|(
 name|M_TEMP
-argument_list|,
-literal|"temp"
-argument_list|,
-literal|"misc temporary data buffers"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
