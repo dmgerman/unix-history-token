@@ -1280,11 +1280,20 @@ argument_list|,
 name|char
 operator|*
 argument_list|)
+comment|/* shared memory flags */
 expr|enum
 block|{
+name|PCCARD_A_MEM_COM
+block|,
+comment|/* common */
 name|PCCARD_A_MEM_ATTR
-operator|=
-literal|0x1
+block|,
+comment|/* attribute */
+name|PCCARD_A_MEM_8BIT
+block|,
+comment|/* 8 bit */
+name|PCCARD_A_MEM_16BIT
+comment|/* 16 bit */
 block|}
 expr_stmt|;
 end_expr_stmt
