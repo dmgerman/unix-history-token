@@ -25,6 +25,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|com_thr
+value|com_data
+end_define
+
+begin_comment
+comment|/* transmitter holding register (W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_rhr
+value|com_data
+end_define
+
+begin_comment
+comment|/* receiver holding register (R) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|com_ier
 value|1
 end_define
@@ -70,6 +92,17 @@ end_define
 
 begin_comment
 comment|/* interrupt identification register (R) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_isr
+value|com_iir
+end_define
+
+begin_comment
+comment|/* interrupt status register (R) */
 end_comment
 
 begin_define
@@ -135,7 +168,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_lctl
+name|com_lcr
 value|3
 end_define
 
@@ -146,8 +179,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|com_lctl
+value|com_lcr
+end_define
+
+begin_define
+define|#
+directive|define
 name|com_cfcr
-value|3
+value|com_lcr
 end_define
 
 begin_comment
@@ -157,8 +197,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CFCR_DLAB
+name|LCR_DLAB
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFCR_DLAB
+value|LCR_DLAB
+end_define
+
+begin_define
+define|#
+directive|define
+name|LCR_EFR_ENABLE
+value|0xbf
+end_define
+
+begin_comment
+comment|/* magic to enable EFR on 16650 up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CFCR_EFR_ENABLE
+value|LCR_EFR_ENABLE
 end_define
 
 begin_define
@@ -237,17 +302,6 @@ directive|define
 name|CFCR_5BITS
 value|0x00
 end_define
-
-begin_define
-define|#
-directive|define
-name|CFCR_EFR_ENABLE
-value|0xbf
-end_define
-
-begin_comment
-comment|/* magic to enable EFR on 16650 up */
-end_comment
 
 begin_define
 define|#
@@ -454,24 +508,38 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_dlbl
+name|com_dll
 value|0
 end_define
 
 begin_comment
-comment|/* divisor latch low (W) */
+comment|/* divisor latch low (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_dlbl
+value|com_dll
+end_define
+
+begin_define
+define|#
+directive|define
+name|com_dlm
+value|1
+end_define
+
+begin_comment
+comment|/* divisor latch high (R/W) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|com_dlbh
-value|1
+value|com_dlm
 end_define
-
-begin_comment
-comment|/* divisor latch high (W) */
-end_comment
 
 begin_comment
 comment|/* 16450 register #7.  Not multiplexed. */
@@ -495,13 +563,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|com_fifo
+name|com_fcr
 value|2
 end_define
 
 begin_comment
 comment|/* FIFO control register (W) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|com_fifo
+value|com_fcr
+end_define
 
 begin_define
 define|#
@@ -567,11 +642,11 @@ begin_define
 define|#
 directive|define
 name|com_efr
-value|com_fifo
+value|2
 end_define
 
 begin_comment
-comment|/* enhanced feature register (R/W) */
+comment|/* enhanced features register (R/W) */
 end_comment
 
 begin_define
