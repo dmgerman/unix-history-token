@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.40 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,7 +372,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|OLDSUN
 end_ifdef
 
 begin_struct
@@ -675,7 +675,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|OLDSUN
 end_ifdef
 
 begin_decl_stmt
@@ -2955,6 +2955,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 switch|switch
 condition|(
 name|errno
@@ -3031,6 +3032,7 @@ block|}
 continue|continue;
 default|default:
 return|return;
+block|}
 block|}
 if|if
 condition|(
@@ -3371,35 +3373,9 @@ name|int
 name|omask
 decl_stmt|;
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|||
-name|BSD
-operator|<
-literal|43
 name|int
 name|pid
-init|=
-operator|-
-name|getpid
-argument_list|()
-decl_stmt|;
-else|#
-directive|else
-name|int
-name|pid
-init|=
-name|getpid
-argument_list|()
-decl_stmt|;
-endif|#
-directive|endif
-name|int
+decl_stmt|,
 name|n
 decl_stmt|,
 name|remaining
@@ -3407,9 +3383,34 @@ decl_stmt|;
 name|char
 modifier|*
 name|bufp
-init|=
-name|rcvbuf
 decl_stmt|;
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|43
+operator|||
+name|defined
+argument_list|(
+name|SUNOS4
+argument_list|)
+name|pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+comment|/* modern systems use positives for pid */
+else|#
+directive|else
+name|pid
+operator|=
+operator|-
+name|getpid
+argument_list|()
+expr_stmt|;
+comment|/* old broken systems use negatives */
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -3462,6 +3463,10 @@ name|sigsetmask
 argument_list|(
 name|omask
 argument_list|)
+expr_stmt|;
+name|bufp
+operator|=
+name|rcvbuf
 expr_stmt|;
 for|for
 control|(
@@ -4111,13 +4116,13 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/*  * The following routine provides compatibility (such as it is) between 4.2BSD  * Suns and others.  Suns have only a `ttysize', so we convert it to a winsize.  */
+comment|/*  * The following routine provides compatibility (such as it is) between older  * Suns and others.  Suns have only a `ttysize', so we convert it to a winsize.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SUNOS4
+name|OLDSUN
 end_ifdef
 
 begin_macro
