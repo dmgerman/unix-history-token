@@ -3581,7 +3581,7 @@ name|rc_flags
 operator||=
 name|RC_OSBUSY
 expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -3698,7 +3698,7 @@ name|MSVR_RTS
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 if|if
@@ -3808,7 +3808,7 @@ operator|->
 name|rc_obuf
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|rc
@@ -3829,7 +3829,7 @@ name|rc_optr
 operator|+
 name|ocnt
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 if|if
@@ -4037,7 +4037,7 @@ operator|&
 name|RC_WAS_BUFOVFL
 condition|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|rc
@@ -4052,7 +4052,7 @@ operator|->
 name|sc_scheduled_event
 operator|--
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|device_printf
@@ -4076,7 +4076,7 @@ operator|&
 name|RC_WAS_SILOVFL
 condition|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|rc
@@ -4091,7 +4091,7 @@ operator|->
 name|sc_scheduled_event
 operator|--
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|device_printf
@@ -4115,7 +4115,7 @@ operator|&
 name|RC_MODCHG
 condition|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|rc
@@ -4131,7 +4131,7 @@ name|sc_scheduled_event
 operator|-=
 name|LOTS_OF_EVENTS
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 operator|(
@@ -4169,7 +4169,7 @@ operator|&
 name|RC_DORXFER
 condition|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|rc
@@ -4391,7 +4391,7 @@ operator|-=
 name|icnt
 expr_stmt|;
 block|}
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 if|if
@@ -4636,7 +4636,7 @@ operator|&
 name|RC_DOXXFER
 condition|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 name|sc
@@ -4661,7 +4661,7 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 operator|(
@@ -4796,7 +4796,7 @@ argument_list|(
 name|rc
 argument_list|)
 expr_stmt|;
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -4907,7 +4907,7 @@ operator|&=
 operator|~
 name|RC_OSUSP
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
@@ -8922,7 +8922,7 @@ modifier|*
 name|rc
 parameter_list|)
 block|{
-name|disable_intr
+name|critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -8967,7 +8967,7 @@ operator|&=
 operator|~
 name|TS_BUSY
 expr_stmt|;
-name|enable_intr
+name|critical_exit
 argument_list|()
 expr_stmt|;
 name|ttwwakeup
