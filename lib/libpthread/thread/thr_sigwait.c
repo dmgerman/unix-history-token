@@ -411,9 +411,14 @@ operator|->
 name|kseg
 argument_list|)
 expr_stmt|;
-name|_kse_critical_leave
+name|KSE_LOCK_ACQUIRE
 argument_list|(
-name|crit
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_signal_lock
 argument_list|)
 expr_stmt|;
 name|ret
