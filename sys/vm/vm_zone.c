@@ -1990,11 +1990,9 @@ operator|&
 name|zone_mtx
 argument_list|)
 expr_stmt|;
-name|offset
-operator|--
-expr_stmt|;
 operator|*
 name|offset
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
