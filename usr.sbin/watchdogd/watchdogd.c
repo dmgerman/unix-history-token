@@ -217,7 +217,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 name|reset_miblen
 init|=
 literal|3
@@ -635,7 +635,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|len
