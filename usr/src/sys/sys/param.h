@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.9	81/02/27	*/
+comment|/*	param.h	4.10	81/03/08	*/
 end_comment
 
 begin_comment
@@ -872,165 +872,33 @@ parameter_list|)
 value|((((unsigned)(x)+511)>>9))
 end_define
 
-begin_comment
-comment|/* major part of a device */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNEL
+end_ifndef
 
-begin_define
-define|#
-directive|define
-name|major
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)(((unsigned)(x)>>8)&0377))
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
-begin_comment
-comment|/* minor part of a device */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
-begin_define
-define|#
-directive|define
-name|minor
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)((x)&0377))
-end_define
+begin_include
+include|#
+directive|include
+file|"../h/types.h"
+end_include
 
-begin_comment
-comment|/* make a device number */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|makedev
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|((dev_t)(((x)<<8) | (y)))
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|int
-name|r
-index|[
-literal|1
-index|]
-decl_stmt|;
-block|}
-typedef|*
-name|physadr
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|daddr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-name|caddr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|ino_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|swblk_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|size_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|time_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|label_t
-index|[
-literal|14
-index|]
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|short
-name|dev_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|off_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|u_char
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|u_short
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|u_int
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|u_long
-typedef|;
-end_typedef
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Machine-dependent bits and macros  */
@@ -1065,6 +933,20 @@ parameter_list|(
 name|ps
 parameter_list|)
 value|(((ps)& PSL_IPL) != 0)
+end_define
+
+begin_comment
+comment|/*  * Provide about n microseconds of delay  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|n
+parameter_list|)
+value|{ register int N = (n); while (--N> 0); }
 end_define
 
 end_unit
