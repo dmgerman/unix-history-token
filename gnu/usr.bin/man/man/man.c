@@ -92,11 +92,11 @@ directive|include
 file|"version.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|POSIX
-end_ifndef
+end_ifdef
 
 begin_include
 include|#
