@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.6 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)sii.c	7.7 (Berkeley) %G%  *  * from: $Header: /sprite/src/kernel/dev/ds3100.md/RCS/devSII.c,  *	v 9.2 89/09/14 13:37:41 jhh Exp $ SPRITE (DECWRL)";  */
 end_comment
 
 begin_include
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<pmax/dev/siireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pmax/pmax/kn01.h>
 end_include
 
 begin_function_decl
@@ -412,11 +418,11 @@ begin_define
 define|#
 directive|define
 name|SII_BUF_ADDR
-value|(MACH_SCSI_BUFFER_ADDR + SII_MAX_DMA_XFER_LENGTH * 14)
+value|(MACH_PHYS_TO_UNCACHED(KN01_SYS_SII_B_START) \ 		+ SII_MAX_DMA_XFER_LENGTH * 14)
 end_define
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_Reset
 parameter_list|()
@@ -424,7 +430,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_StartCmd
 parameter_list|()
@@ -432,7 +438,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_CmdDone
 parameter_list|()
@@ -440,7 +446,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_DoIntr
 parameter_list|()
@@ -448,7 +454,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_StateChg
 parameter_list|()
@@ -456,7 +462,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_DoSync
 parameter_list|()
@@ -464,9 +470,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
 name|sii_StartDMA
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|sii_GetByte
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -582,7 +596,10 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|MACH_SCSI_BUFFER_ADDR
+name|MACH_PHYS_TO_UNCACHED
+argument_list|(
+name|KN01_SYS_SII_B_START
+argument_list|)
 operator|+
 literal|2
 operator|*

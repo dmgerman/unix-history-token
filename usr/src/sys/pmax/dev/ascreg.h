@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)ascreg.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell and Rick Macklem.  *  * %sccs.include.redist.c%  *  *	@(#)ascreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -217,7 +217,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|(ptr)->asc_tc_lsb = (val);			\ 	(ptr)->asc_tc_msb = (val)>> 8;			\ 	(ptr)->asc_cmd = ASC_CMD_NOP;
+value|(ptr)->asc_tc_lsb = (val);			\ 	(ptr)->asc_tc_msb = (val)>> 8;			\ 	(ptr)->asc_cmd = ASC_CMD_NOP | ASC_CMD_DMA;
 end_define
 
 begin_comment
@@ -645,12 +645,13 @@ begin_define
 define|#
 directive|define
 name|ASC_TIMEOUT_250
-value|0x99
+parameter_list|(
+name|clk
+parameter_list|,
+name|ccf
+parameter_list|)
+value|(((clk) * 31) / (ccf))
 end_define
-
-begin_comment
-comment|/* 250 msecs at 25 Mhz */
-end_comment
 
 begin_comment
 comment|/*  * Sequence Step register  */
@@ -806,29 +807,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASC_CCF_10MHz
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASC_CCF_15MHz
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASC_CCF_20MHz
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASC_CCF_25MHz
-value|0x5
+name|ASC_CCF
+parameter_list|(
+name|clk
+parameter_list|)
+value|((((clk) - 1) / 5) + 1)
 end_define
 
 begin_comment
