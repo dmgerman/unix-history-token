@@ -1229,8 +1229,6 @@ argument_list|(
 name|m
 argument_list|,
 name|off
-argument_list|,
-name|proto
 argument_list|)
 expr_stmt|;
 return|return;
