@@ -259,25 +259,6 @@ file|<netinet6/ip6protosw.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ip6protosw
-name|inet6sw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|ip6_protox
-index|[
-name|IPPROTO_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|route_in6
 name|ip6_forward_rt

@@ -324,15 +324,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|ip6protosw
-name|inet6sw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_char
 name|ip6_protox
 index|[

@@ -445,25 +445,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ip6protosw
-name|inet6sw
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_char
-name|ip6_protox
-index|[
-name|IPPROTO_MAX
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * IP6 output. The packet in mbuf chain m contains a skeletal IP6  * header (with pri, len, nxt, hlim, src, dst).  * This function may modify ver and hlim only.  * The mbuf chain containing the packet will be freed.  * The mbuf opt, if present, will not be freed.  *  * type of "mtu": rt_rmx.rmx_mtu is u_long, ifnet.ifr_mtu is int, and  * nd_ifinfo.linkmtu is u_int32_t.  so we use u_long to hold largest one,  * which is rt_rmx.rmx_mtu.  */
 end_comment
