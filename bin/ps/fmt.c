@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: fmt.c,v 1.11 1998/05/15 06:29:15 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -144,6 +150,9 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|long
+name|arg_max
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -157,14 +166,66 @@ name|src
 decl_stmt|;
 specifier|static
 name|char
+modifier|*
 name|buf
-index|[
+init|=
+name|NULL
+decl_stmt|;
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|arg_max
+operator|=
+name|sysconf
+argument_list|(
+name|_SC_ARG_MAX
+argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"sysconf _SC_ARG_MAX failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|buf
+operator|=
+name|malloc
+argument_list|(
+operator|(
 literal|4
 operator|*
-name|ARG_MAX
-index|]
-decl_stmt|;
-comment|/* XXX */
+name|arg_max
+operator|)
+operator|+
+literal|1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
