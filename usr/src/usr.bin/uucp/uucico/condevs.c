@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.14 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,24 @@ block|,
 endif|#
 directive|endif
 endif|SYTEK
+ifdef|#
+directive|ifdef
+name|ATT2224
+block|{
+literal|"ACU"
+block|,
+literal|"att"
+block|,
+name|Acuopn
+block|,
+name|attopn
+block|,
+name|attcls
+block|}
+block|,
+endif|#
+directive|endif
+endif|ATT2224
 comment|/* Insert new entries before this line */
 block|{
 name|NULL
