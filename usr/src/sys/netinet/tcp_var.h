@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_var.h	4.11	81/12/02	*/
+comment|/*	tcp_var.h	4.12	81/12/09	*/
 end_comment
 
 begin_comment
@@ -136,7 +136,7 @@ name|tcp_seq
 name|rcv_nxt
 decl_stmt|;
 comment|/* receive next */
-name|u_short
+name|short
 name|rcv_wnd
 decl_stmt|;
 comment|/* receive window */
