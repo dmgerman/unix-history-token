@@ -308,6 +308,13 @@ name|svalue
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|ch
+decl_stmt|,
+name|found_arg
+decl_stmt|,
+name|i
+decl_stmt|;
 name|char
 modifier|*
 name|Lvalue
@@ -345,13 +352,6 @@ name|struct
 name|statfs
 name|stfs
 decl_stmt|;
-name|int
-name|found_arg
-decl_stmt|,
-name|ch
-decl_stmt|,
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -365,7 +365,7 @@ name|found_arg
 operator|=
 literal|0
 expr_stmt|;
-comment|/* at least one arg is required */
+comment|/* At least one arg is required. */
 while|while
 condition|(
 operator|(
