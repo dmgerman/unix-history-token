@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)collect.c	5.3 (Berkeley) %G%"
+literal|"@(#)collect.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1756,9 +1756,6 @@ name|sbuf
 decl_stmt|;
 specifier|extern
 name|char
-name|tempMail
-index|[]
-decl_stmt|,
 name|tempEdit
 index|[]
 decl_stmt|;
@@ -2135,6 +2132,11 @@ name|cmd
 index|[]
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+name|tempEdit
+index|[]
+decl_stmt|;
 specifier|register
 name|FILE
 modifier|*

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.5 (Berkeley) %G%"
+literal|"@(#)lex.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2634,6 +2634,11 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|char
+modifier|*
+name|version
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"Version %s\n"

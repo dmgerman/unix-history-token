@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tty.c	5.3 (Berkeley) %G%"
+literal|"@(#)tty.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,10 +128,6 @@ name|struct
 name|sgttyb
 name|ttybuf
 decl_stmt|;
-name|int
-name|ttycont
-parameter_list|()
-function_decl|;
 ifndef|#
 directive|ifndef
 name|TIOCSTI
@@ -643,6 +639,10 @@ decl_stmt|,
 modifier|*
 name|cp2
 decl_stmt|;
+name|int
+name|ttycont
+parameter_list|()
+function_decl|;
 name|fputs
 argument_list|(
 name|pr
