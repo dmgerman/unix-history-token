@@ -892,9 +892,11 @@ expr_stmt|;
 comment|/* 		 * Scan the active and zombie procs to check whether this pid 		 * is in use.  Remember the lowest pid that's greater 		 * than nextpid, so we can avoid checking for a while. 		 */
 name|p2
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|allproc
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 name|again
 label|:
@@ -907,11 +909,12 @@ literal|0
 condition|;
 name|p2
 operator|=
+name|LIST_NEXT
+argument_list|(
 name|p2
-operator|->
+argument_list|,
 name|p_list
-operator|.
-name|le_next
+argument_list|)
 control|)
 block|{
 while|while
@@ -1037,9 +1040,11 @@ literal|1
 expr_stmt|;
 name|p2
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|zombproc
-operator|.
-name|lh_first
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again

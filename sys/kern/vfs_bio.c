@@ -4811,19 +4811,15 @@ argument_list|,
 name|blkno
 argument_list|)
 expr_stmt|;
-name|bp
-operator|=
-name|bh
-operator|->
-name|lh_first
-expr_stmt|;
 comment|/* Search hash chain */
-while|while
-condition|(
-name|bp
-operator|!=
-name|NULL
-condition|)
+name|LIST_FOREACH
+argument_list|(
+argument|bp
+argument_list|,
+argument|bh
+argument_list|,
+argument|b_hash
+argument_list|)
 block|{
 comment|/* hit */
 if|if
@@ -4853,14 +4849,6 @@ condition|)
 block|{
 break|break;
 block|}
-name|bp
-operator|=
-name|bp
-operator|->
-name|b_hash
-operator|.
-name|le_next
-expr_stmt|;
 block|}
 return|return
 operator|(

@@ -1651,9 +1651,11 @@ if|if
 condition|(
 name|VFS_ROOT
 argument_list|(
+name|CIRCLEQ_FIRST
+argument_list|(
+operator|&
 name|mountlist
-operator|.
-name|cqh_first
+argument_list|)
 argument_list|,
 operator|&
 name|rootvnode
