@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remake.c	5.1 (Berkeley) %G%"
+literal|"@(#)remake.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,10 @@ name|tmpfile
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 literal|"/tmp/pdxXXXX"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|setout
