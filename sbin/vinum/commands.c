@@ -393,6 +393,21 @@ literal|0
 condition|)
 block|{
 comment|/* error in config */
+if|if
+condition|(
+operator|!
+name|verbose
+condition|)
+comment|/* print this line anyway */
+name|printf
+argument_list|(
+literal|"%4d: %s"
+argument_list|,
+name|file_line
+argument_list|,
+name|buffer
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stdout
