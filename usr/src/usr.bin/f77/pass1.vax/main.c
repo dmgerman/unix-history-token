@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * main.c  *  * Main routine for the f77 compiler, pass 1, 4.2 BSD.  *  * University of Utah CS Dept modification history:  *  * $Log:	main.c,v $  * Revision 5.2  85/08/10  04:57:16  donn  * Jerry Berkman's changes to ifdef 66 code and add -r8/double flag..  *   * Revision 5.1  85/08/10  03:48:26  donn  * 4.3 alpha  *   * Revision 3.2  85/01/14  04:21:31  donn  * Added changes to implement Jerry's '-q' option.  *   * Revision 3.1  84/10/29  05:47:03  donn  * Added Jerry Berkman's change to line buffer stderr.  *   */
@@ -54,7 +60,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|xxxvers
-index|[]
 init|=
 literal|"\n@(#) FORTRAN 77 PASS 1, VERSION 2.10,  16 AUGUST 1980\n"
 decl_stmt|;
