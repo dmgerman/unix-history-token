@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, Henrik Vestergaard Draboel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by (name).  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1994, Henrik Vestergaard Draboel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by (name).  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rtprio.h,v 1.1 1994/09/01 05:12:53 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -19,49 +19,99 @@ begin_comment
 comment|/*  * Process realtime-priority specifications to rtprio.  */
 end_comment
 
+begin_comment
+comment|/* priority types */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|RTPRIO_MIN
+name|RTP_PRIO_REALTIME
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTP_PRIO_NORMAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTP_PRIO_IDLE
+value|2
+end_define
+
+begin_comment
+comment|/* priority range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTP_PRIO_MIN
 value|0
 end_define
 
 begin_comment
-comment|/* relativ-FASTEST */
+comment|/* Highest priority */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RTPRIO_MAX
+name|RTP_PRIO_MAX
 value|31
 end_define
 
 begin_comment
-comment|/* relativ-SLOWEST */
+comment|/* Lowest priority */
+end_comment
+
+begin_comment
+comment|/*  * rtprio() syscall functions  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RTPRIO_NOCHG
-value|100
+name|RTP_LOOKUP
+value|0
 end_define
-
-begin_comment
-comment|/* look only */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|RTPRIO_RTOFF
-value|101
+name|RTP_SET
+value|1
 end_define
 
-begin_comment
-comment|/* NON-realtime */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_struct
+struct|struct
+name|rtprio
+block|{
+name|u_short
+name|type
+decl_stmt|;
+name|u_short
+name|prio
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -84,7 +134,11 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
+name|pid_t
+operator|,
+expr|struct
+name|rtprio
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
