@@ -329,8 +329,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_UMA
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* UMA slab allocator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_CALLOUT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Callouts and timeouts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x00ffffff
+value|0x02ffffff
 end_define
 
 begin_comment
