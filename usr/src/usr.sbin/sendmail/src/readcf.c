@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.24 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2712,6 +2712,20 @@ operator|->
 name|m_linelimit
 operator|=
 name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+comment|/* working directory */
+name|m
+operator|->
+name|m_execdir
+operator|=
+name|newstr
 argument_list|(
 name|p
 argument_list|)
