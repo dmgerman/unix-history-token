@@ -684,6 +684,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATAPI_SEND_KEY
+value|0xa3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATAPI_REPORT_KEY
+value|0xa4
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATAPI_PLAY_BIG
 value|0xa5
 end_define
@@ -702,6 +716,13 @@ end_define
 begin_comment
 comment|/* changer control command */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ATAPI_READ_STRUCTURE
+value|0xad
+end_define
 
 begin_define
 define|#

@@ -113,6 +113,17 @@ begin_comment
 comment|/* get d_flags type part */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FIOGETLBA
+value|_IOR('f', 121, int)
+end_define
+
+begin_comment
+comment|/* get start blk # */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -1195,7 +1195,6 @@ operator|->
 name|lun
 argument_list|)
 expr_stmt|;
-comment|/* build disklabel and initilize slice tables */
 name|label
 operator|=
 operator|&
@@ -1262,13 +1261,13 @@ name|fdp
 operator|->
 name|cap
 operator|.
-name|heads
+name|sectors
 operator|*
 name|fdp
 operator|->
 name|cap
 operator|.
-name|sectors
+name|heads
 expr_stmt|;
 name|label
 operator|->
