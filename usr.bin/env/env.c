@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)env.c	5.3 (Berkeley) 6/1/90";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)env.c	5.3 (Berkeley) 6/1/90"
+literal|"$Id: env.c,v 1.6 1993/11/19 20:06:41 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,13 +65,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_function_decl
@@ -79,6 +107,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -125,6 +154,13 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -140,7 +176,8 @@ literal|"-i"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -222,9 +259,6 @@ name|argv
 condition|)
 block|{
 comment|/* return 127 if the command to be run could not be found; 126 		   if the command was was found but could not be invoked */
-name|int
-name|status
-decl_stmt|;
 name|execvp
 argument_list|(
 operator|*
@@ -233,8 +267,8 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|status
-operator|=
+name|err
+argument_list|(
 operator|(
 name|errno
 operator|==
@@ -244,30 +278,14 @@ condition|?
 literal|127
 else|:
 literal|126
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
 argument_list|,
-literal|"env: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|status
-argument_list|)
-expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 for|for
 control|(

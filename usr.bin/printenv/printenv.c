@@ -33,13 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/*static char sccsid[] = "from: @(#)printenv.c	5.4 (Berkeley) 6/1/90";*/
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)printenv.c	5.4 (Berkeley) 6/1/90"
+literal|"$Id: printenv.c,v 1.3 1993/08/27 22:30:40 jtc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,11 +56,24 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/*  * printenv  *  * Bill Joy, UCB  * February, 1979  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
