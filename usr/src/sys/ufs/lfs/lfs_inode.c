@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.75 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.76 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -420,7 +420,7 @@ define|#
 directive|define
 name|UPDATE_SEGUSE
 define|\
-value|if (lastseg != -1) { \ 		LFS_SEGENTRY(sup, fs, lastseg, sup_bp); \ 		sup->su_nbytes -= num<< fs->lfs_bshift; \ 		LFS_UBWRITE(sup_bp); \ 		blocksreleased += num; \ 	}
+value|if (lastseg != -1) { \ 		LFS_SEGENTRY(sup, fs, lastseg, sup_bp); \ 		if ((num<< fs->lfs_bshift)> sup->su_nbytes) \ 			panic("lfs_truncate: negative bytes in segment %d\n", \ 			    lastseg); \ 		sup->su_nbytes -= num<< fs->lfs_bshift; \ 		LFS_UBWRITE(sup_bp); \ 		blocksreleased += num; \ 	}
 end_define
 
 begin_define
@@ -679,38 +679,6 @@ name|ip
 operator|->
 name|i_lfs
 expr_stmt|;
-comment|/* If truncating the file to 0, update the version number. */
-if|if
-condition|(
-name|length
-operator|==
-literal|0
-condition|)
-block|{
-name|LFS_IENTRY
-argument_list|(
-name|ifp
-argument_list|,
-name|fs
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-operator|++
-name|ifp
-operator|->
-name|if_version
-expr_stmt|;
-name|LFS_UBWRITE
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If length is larger than the file, just update the times. */
 if|if
 condition|(
@@ -1311,6 +1279,38 @@ block|}
 block|}
 name|UPDATE_SEGUSE
 expr_stmt|;
+comment|/* If truncating the file to 0, update the version number. */
+if|if
+condition|(
+name|length
+operator|==
+literal|0
+condition|)
+block|{
+name|LFS_IENTRY
+argument_list|(
+name|ifp
+argument_list|,
+name|fs
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+operator|++
+name|ifp
+operator|->
+name|if_version
+expr_stmt|;
+name|LFS_UBWRITE
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 name|ip
 operator|->
 name|i_blocks
