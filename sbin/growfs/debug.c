@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ufs/dinode.h>
 end_include
 
@@ -4200,7 +4206,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"atime      ufs_time_t     %10u\n"
+literal|"atime      ufs_time_t     %10jd\n"
 argument_list|,
 name|ino
 operator|->
@@ -4211,7 +4217,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"mtime      ufs_time_t     %10u\n"
+literal|"mtime      ufs_time_t     %10jd\n"
 argument_list|,
 name|ino
 operator|->
@@ -4222,7 +4228,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ctime      ufs_time_t     %10u\n"
+literal|"ctime      ufs_time_t     %10jd\n"
 argument_list|,
 name|ino
 operator|->
@@ -4233,7 +4239,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"birthtime  ufs_time_t     %10u\n"
+literal|"birthtime  ufs_time_t     %10jd\n"
 argument_list|,
 name|ino
 operator|->
@@ -4366,7 +4372,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"db         ufs2_daddr_t[%x] 0x%16x\n"
+literal|"db         ufs2_daddr_t[%x] 0x%16jx\n"
 argument_list|,
 name|ictr
 argument_list|,
@@ -4394,7 +4400,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ib         ufs2_daddr_t[0] 0x%16x\n"
+literal|"ib         ufs2_daddr_t[0] 0x%16jx\n"
 argument_list|,
 name|ino
 operator|->
@@ -4430,7 +4436,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ib         ufs2_daddr_t[1] 0x%16x\n"
+literal|"ib         ufs2_daddr_t[1] 0x%16jx\n"
 argument_list|,
 name|ino
 operator|->
@@ -4479,7 +4485,7 @@ name|fprintf
 argument_list|(
 name|dbg_log
 argument_list|,
-literal|"ib         ufs2_daddr_t[2] 0x%16x\n"
+literal|"ib         ufs2_daddr_t[2] 0x%16jx\n"
 argument_list|,
 name|ino
 operator|->
@@ -4538,8 +4544,7 @@ name|unsigned
 name|int
 modifier|*
 name|mem
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|,
 name|j

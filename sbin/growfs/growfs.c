@@ -134,6 +134,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -354,7 +360,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(dp)->dp1.field : (dp)->dp2.field)
+value|((sblock.fs_magic == FS_UFS1_MAGIC) ? \ 	(uint32_t)(dp)->dp1.field : (dp)->dp2.field)
 end_define
 
 begin_decl_stmt
@@ -383,8 +389,7 @@ comment|/* inode block */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
+name|ino_t
 name|maxino
 decl_stmt|;
 end_decl_stmt
@@ -1663,8 +1668,6 @@ name|caddr_t
 name|iobuf
 decl_stmt|;
 name|long
-name|i
-decl_stmt|,
 name|d
 decl_stmt|,
 name|dlower
@@ -1676,6 +1679,8 @@ decl_stmt|,
 name|start
 decl_stmt|;
 name|ufs2_daddr_t
+name|i
+decl_stmt|,
 name|cbase
 decl_stmt|,
 name|dmax
@@ -3184,12 +3189,18 @@ operator|++
 expr_stmt|;
 name|DBG_PRINT3
 argument_list|(
-literal|"scg (%d->%d)[%d] reference updated\n"
+literal|"scg (%jd->%jd)[%d] reference updated\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|f
 operator|->
 name|old
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|f
 operator|->
 name|new
@@ -3640,6 +3651,9 @@ operator|.
 name|fs_ncg
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FS_DEBUG
 if|if
 condition|(
 name|sblock
@@ -3661,6 +3675,8 @@ operator|.
 name|fs_old_cpg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|DBG_PRINT0
 argument_list|(
 literal|"\n"
@@ -4681,8 +4697,11 @@ operator|--
 expr_stmt|;
 name|DBG_PRINT1
 argument_list|(
-literal|"d=%d\n"
+literal|"d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -4733,8 +4752,11 @@ control|)
 block|{
 name|DBG_PRINT1
 argument_list|(
-literal|"d=%d\n"
+literal|"d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -4812,8 +4834,11 @@ condition|)
 block|{
 name|DBG_PRINT1
 argument_list|(
-literal|"d=%d\n"
+literal|"d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -4929,8 +4954,11 @@ expr_stmt|;
 block|}
 name|DBG_PRINT1
 argument_list|(
-literal|"d=%d\n"
+literal|"d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -4964,8 +4992,11 @@ name|DBG_TRC
 expr_stmt|;
 name|DBG_PRINT1
 argument_list|(
-literal|"d=%d\n"
+literal|"d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -5756,8 +5787,11 @@ control|)
 block|{
 name|DBG_PRINT1
 argument_list|(
-literal|"scg first frag check loop d=%d\n"
+literal|"scg first frag check loop d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -5890,8 +5924,11 @@ control|)
 block|{
 name|DBG_PRINT1
 argument_list|(
-literal|"scg block check loop d=%d\n"
+literal|"scg block check loop d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -6346,8 +6383,11 @@ control|)
 block|{
 name|DBG_PRINT1
 argument_list|(
-literal|"scg second frag check loop d=%d\n"
+literal|"scg second frag check loop d=%jd\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|d
 argument_list|)
 expr_stmt|;
@@ -6945,8 +6985,11 @@ argument_list|)
 expr_stmt|;
 name|DBG_PRINT2
 argument_list|(
-literal|"scg (%d->%d) block relocated\n"
+literal|"scg (%jd->%jd) block relocated\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 index|[
 name|i
@@ -6954,6 +6997,9 @@ index|]
 operator|.
 name|old
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 index|[
 name|i
@@ -7066,8 +7112,11 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"error: %d refs found for block %d."
+literal|"error: %jd refs found for block %jd."
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 index|[
 name|i
@@ -7075,6 +7124,9 @@ index|]
 operator|.
 name|found
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|bp
 index|[
 name|i
@@ -7211,10 +7263,10 @@ name|err
 argument_list|(
 literal|33
 argument_list|,
-literal|"rdfs: seek error: %ld"
+literal|"rdfs: seek error: %jd"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|bno
 argument_list|)
@@ -7245,10 +7297,10 @@ name|err
 argument_list|(
 literal|34
 argument_list|,
-literal|"rdfs: read error: %ld"
+literal|"rdfs: read error: %jd"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|bno
 argument_list|)
@@ -9348,6 +9400,10 @@ argument_list|(
 name|fsi
 argument_list|)
 expr_stmt|;
+name|pp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|lp
@@ -9533,6 +9589,9 @@ name|osblock
 operator|.
 name|fs_bsize
 operator|>=
+operator|(
+name|int32_t
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -9674,12 +9733,18 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"we are not growing (%d->%d)"
+literal|"we are not growing (%jd->%jd)"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|osblock
 operator|.
 name|fs_size
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sblock
 operator|.
 name|fs_size
@@ -9806,8 +9871,11 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"new file systemsize is: %d frags\n"
+literal|"new file systemsize is: %jd frags\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sblock
 operator|.
 name|fs_size
@@ -9975,8 +10043,11 @@ name|fs_old_cpg
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Warning: %d sector(s) cannot be allocated.\n"
+literal|"Warning: %jd sector(s) cannot be allocated.\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fsbtodb
 argument_list|(
 operator|&
@@ -10683,6 +10754,9 @@ argument_list|,
 name|di_size
 argument_list|)
 operator|<
+operator|(
+name|u_int64_t
+operator|)
 name|sblock
 operator|.
 name|fs_maxsymlinklen
