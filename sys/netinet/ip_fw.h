@@ -7,6 +7,18 @@ begin_comment
 comment|/*  * Format of an IP firewall descriptor  *  * src, dst, src_mask, dst_mask are always stored in network byte order.  * flags and num_*_ports are stored in host byte order (of course).  * Port numbers are stored in HOST byte order.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IP_FW_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_IP_FW_H
+end_define
+
 begin_struct
 struct|struct
 name|ip_firewall
@@ -77,8 +89,13 @@ value|16
 comment|/* The first two dst ports are a min  					 * and max range (stored in host byte  					 * order).  					 * (ports[0]<= port<= ports[1])  					 */
 define|#
 directive|define
+name|IP_FIREWALL_PRINT
+value|32
+comment|/* In verbos mode print this firewall */
+define|#
+directive|define
 name|IP_FIREWALL_FLAG_BITS
-value|0x1f
+value|0x2f
 comment|/* All possible flag bits */
 name|u_short
 name|num_src_ports
@@ -196,31 +213,6 @@ name|int
 name|ip_fw_policy
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_VERBOSE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ip_firewall_check
-value|ip_firewall_check_print
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ip_firewall_check
-value|ip_firewall_check_noprint
-end_define
 
 begin_endif
 endif|#
