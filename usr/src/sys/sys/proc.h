@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.1	%G%	*/
+comment|/*	proc.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -619,6 +619,17 @@ end_define
 
 begin_comment
 comment|/* using new signal mechanism */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOWEUPC
+value|0x200000
+end_define
+
+begin_comment
+comment|/* owe process an addupc() call at next ast */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.h	4.1	%G%	*/
+comment|/*	trap.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -87,12 +87,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESCHED
+name|ASTFLT
 value|7
 end_define
 
 begin_comment
-comment|/* software level 1 trap 					   (reschedule trap) */
+comment|/* software level 2 trap (ast deliv) */
 end_comment
 
 begin_define

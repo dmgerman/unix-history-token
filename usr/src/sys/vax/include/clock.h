@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.2	%G%	*/
+comment|/*	clock.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -131,6 +131,18 @@ directive|define
 name|clkwrap
 parameter_list|()
 value|(((unsigned)mfpr(TODR) - TODRZERO)/100> SECYR+SECDAY)
+end_define
+
+begin_comment
+comment|/*  * Software clock is software interrupt level 8  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setsoftclock
+parameter_list|()
+value|mtpr(SIRR, 0x8)
 end_define
 
 end_unit

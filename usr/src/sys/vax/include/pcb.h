@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pcb.h	4.1	%G%	*/
+comment|/*	pcb.h	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -118,6 +118,67 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AST_NONE
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* ast level */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AST_USER
+value|0x03000000
+end_define
+
+begin_comment
+comment|/* ast for user mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASTLVL_NONE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASTLVL_USER
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AST_CLR
+value|0x07000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|aston
+parameter_list|()
+define|\
+value|{ \ 		u.u_pcb.pcb_p0lr = (u.u_pcb.pcb_p0lr&~ AST_CLR) | AST_USER; \ 		mtpr(ASTLVL, ASTLVL_USER); \ 	}
+end_define
+
+begin_define
+define|#
+directive|define
+name|astoff
+parameter_list|()
+define|\
+value|{ \ 		u.u_pcb.pcb_p0lr = (u.u_pcb.pcb_p0lr&~ AST_CLR) | AST_NONE; \ 		mtpr(ASTLVL, ASTLVL_NONE); \ 	}
+end_define
 
 end_unit
 
