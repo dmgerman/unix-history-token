@@ -14,11 +14,6 @@ literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-literal|"$FreeBSD$"
-expr_stmt|;
-end_expr_stmt
-
 begin_include
 include|#
 directive|include
