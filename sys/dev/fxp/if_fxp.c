@@ -560,6 +560,15 @@ literal|"Intel 82801BA (D865) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
+literal|0x1051
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82562ET (ICH5/ICH5R) Pro/100 VE Ethernet"
+block|}
+block|,
+block|{
 literal|0x1059
 block|,
 operator|-
