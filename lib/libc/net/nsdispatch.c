@@ -2671,6 +2671,11 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|is_dynamic
+argument_list|()
+condition|)
 name|nss_log
 argument_list|(
 name|LOG_DEBUG
