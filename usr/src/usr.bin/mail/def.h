@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)def.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)def.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -207,18 +207,18 @@ name|m_flag
 decl_stmt|;
 comment|/* flags, see below */
 name|short
-name|m_block
-decl_stmt|;
-comment|/* block number of this message */
-name|short
 name|m_offset
 decl_stmt|;
 comment|/* offset in block of message */
 name|long
+name|m_block
+decl_stmt|;
+comment|/* block number of this message */
+name|long
 name|m_size
 decl_stmt|;
 comment|/* Bytes in the message */
-name|short
+name|long
 name|m_lines
 decl_stmt|;
 comment|/* Lines in the message */
