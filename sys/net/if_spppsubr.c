@@ -2122,6 +2122,8 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+name|nosupport
+label|:
 default|default:
 name|m_freem
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.h	8.3 (Berkeley) 4/19/94  * $Id: route.h,v 1.4 1994/08/21 05:11:46 paul Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.h	8.3 (Berkeley) 4/19/94  * $Id: route.h,v 1.5 1994/11/03 01:04:32 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,14 @@ name|u_long
 name|rmx_pksent
 decl_stmt|;
 comment|/* packets sent using this route */
+name|u_long
+name|rmx_ttcp_cc
+decl_stmt|;
+comment|/* cached last T/TCP CC option rcvd */
+name|u_long
+name|rmx_ttcp_ccsent
+decl_stmt|;
+comment|/* cached last T/TCP CC option sent */
 block|}
 struct|;
 end_struct
@@ -172,7 +180,7 @@ decl_stmt|;
 comment|/* value */
 comment|/* XXX - rt_flags should be unified with rt_prflags */
 name|short
-name|rt_flags
+name|rt_filler
 decl_stmt|;
 comment|/* up/down?, host/net */
 name|short
@@ -180,7 +188,7 @@ name|rt_refcnt
 decl_stmt|;
 comment|/* # held references */
 name|u_long
-name|rt_prflags
+name|rt_flags
 decl_stmt|;
 comment|/* protocol-specific flags */
 name|struct
@@ -216,6 +224,17 @@ modifier|*
 name|rt_gwroute
 decl_stmt|;
 comment|/* implied entry for gatewayed routes */
+name|int
+argument_list|(
+argument|*rt_output
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* output routine for this (rt,if) */
 block|}
 struct|;
 end_struct
@@ -439,12 +458,38 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTPRF_WASCLONED
-value|0x1
+name|RTF_PRCLONING
+value|0x10000
+end_define
+
+begin_comment
+comment|/* protocol requires cloning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_WASCLONED
+value|0x20000
 end_define
 
 begin_comment
 comment|/* route generated through cloning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_PROTO3
+value|0x40000
+end_define
+
+begin_comment
+comment|/* protocol specific routing flag */
+end_comment
+
+begin_comment
+comment|/* 0x80000 and up unassigned */
 end_comment
 
 begin_comment
@@ -544,7 +589,7 @@ begin_define
 define|#
 directive|define
 name|RTM_VERSION
-value|3
+value|4
 end_define
 
 begin_comment
@@ -1278,6 +1323,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|rtalloc_ign
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|route
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*
@@ -1290,6 +1352,9 @@ name|sockaddr
 operator|*
 operator|,
 name|int
+operator|,
+name|unsigned
+name|long
 operator|)
 argument_list|)
 decl_stmt|;
