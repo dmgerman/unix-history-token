@@ -134,8 +134,8 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* socket-protocol interface. */
-name|ddp_usrreq
+comment|/* socket-protocol interface. deprecated */
+name|NULL
 block|,
 comment|/* utility routines. */
 name|ddp_init

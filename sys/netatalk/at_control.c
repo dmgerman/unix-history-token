@@ -277,6 +277,11 @@ begin_function
 name|int
 name|at_control
 parameter_list|(
+name|struct
+name|socket
+modifier|*
+name|so
+parameter_list|,
 name|int
 name|cmd
 parameter_list|,
