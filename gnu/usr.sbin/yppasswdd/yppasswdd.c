@@ -136,7 +136,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"yppsswdd "
+literal|"yppasswdd "
 name|VERSION
 decl_stmt|;
 end_decl_stmt
@@ -159,6 +159,13 @@ decl_stmt|,
 name|allow_chsh
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|domain
 decl_stmt|;
 end_decl_stmt
 
@@ -730,6 +737,30 @@ block|{
 name|perror
 argument_list|(
 literal|"fork"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|domain
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: NIS domain name not set -- aborting\n"
+argument_list|,
+name|program_name
 argument_list|)
 expr_stmt|;
 name|exit
