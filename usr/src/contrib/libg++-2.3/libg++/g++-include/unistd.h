@@ -531,8 +531,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|int
-operator|*
+name|gid_t
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
