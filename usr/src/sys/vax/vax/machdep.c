@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.84	83/07/09	*/
+comment|/*	machdep.c	4.85	83/07/09	*/
 end_comment
 
 begin_include
@@ -2168,6 +2168,8 @@ operator|)
 literal|0
 argument_list|,
 name|memintvl
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 block|}
@@ -2286,6 +2288,24 @@ name|mcr
 argument_list|)
 condition|)
 block|{
+name|struct
+name|mcr
+name|amcr
+decl_stmt|;
+name|amcr
+operator|.
+name|mc_reg
+index|[
+literal|0
+index|]
+operator|=
+name|mcr
+operator|->
+name|mc_reg
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"mcr%d: soft ecc addr %x syn %x\n"
@@ -2294,12 +2314,14 @@ name|m
 argument_list|,
 name|M750_ADDR
 argument_list|(
-name|mcr
+operator|&
+name|amcr
 argument_list|)
 argument_list|,
 name|M750_SYN
 argument_list|(
-name|mcr
+operator|&
+name|amcr
 argument_list|)
 argument_list|)
 expr_stmt|;
