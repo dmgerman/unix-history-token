@@ -3171,6 +3171,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* set to valid */
+comment|/* 	 * Only track access/modify for managed pages. 	 */
 if|if
 condition|(
 name|m
@@ -3216,30 +3217,13 @@ name|pv
 operator|->
 name|pv_pte
 operator|.
-name|pte_a
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX remove this after implementing trap */
-name|pv
-operator|->
-name|pv_pte
-operator|.
-name|pte_d
-operator|=
-literal|1
-expr_stmt|;
-name|pv
-operator|->
-name|pv_pte
-operator|.
 name|pte_pl
 operator|=
 name|prot
 operator|&
 literal|3
 expr_stmt|;
-comment|/* privilege level 0 */
+comment|/* privilege level */
 name|pv
 operator|->
 name|pv_pte
@@ -3250,7 +3234,7 @@ name|prot
 operator|>>
 literal|2
 expr_stmt|;
-comment|/* read/write/execute */
+comment|/* access rights */
 name|pv
 operator|->
 name|pv_pte
