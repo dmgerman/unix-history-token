@@ -958,7 +958,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DKTYPENAMES
+name|FSTYPENAMES
 end_ifdef
 
 begin_decl_stmt
