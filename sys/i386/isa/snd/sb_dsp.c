@@ -1179,23 +1179,6 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|PLAIN_SB16
-argument_list|(
-name|d
-operator|->
-name|bd_flags
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: wrintr but write DMA inactive!\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
@@ -1217,23 +1200,6 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|PLAIN_SB16
-argument_list|(
-name|d
-operator|->
-name|bd_flags
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: rdintr but read DMA inactive!\n"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
