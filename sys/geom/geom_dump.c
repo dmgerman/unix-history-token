@@ -639,12 +639,6 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"no DISK\n"
-argument_list|)
-expr_stmt|;
 name|sbuf_finish
 argument_list|(
 name|sb
