@@ -304,6 +304,39 @@ begin_comment
 comment|/* message has been modified */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MNEW
+value|128
+end_define
+
+begin_comment
+comment|/* message has never been seen */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MREAD
+value|256
+end_define
+
+begin_comment
+comment|/* message has been read sometime. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSTATUS
+value|512
+end_define
+
+begin_comment
+comment|/* message status has changed */
+end_comment
+
 begin_comment
 comment|/*  * Format of the command description table.  * The actual table is declared and initialized  * in lex.c  */
 end_comment
