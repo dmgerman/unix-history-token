@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.34 (Berkeley) %G%"
+literal|"@(#)conf.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3208,12 +3208,6 @@ end_escape
 begin_comment
 comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
 
 begin_function
 name|void

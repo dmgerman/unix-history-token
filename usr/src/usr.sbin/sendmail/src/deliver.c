@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.23 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,12 +46,6 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,27 +70,6 @@ name|int
 name|h_errno
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|WEXITSTATUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|WEXITSTATUS
-parameter_list|(
-name|st
-parameter_list|)
-value|(((st)>> 8)& 0377)
-end_define
 
 begin_endif
 endif|#
