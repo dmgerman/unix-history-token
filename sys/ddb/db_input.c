@@ -138,16 +138,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|isspace
-parameter_list|(
-name|c
-parameter_list|)
-value|((c) == ' ' || (c) == '\t')
-end_define
-
-begin_define
-define|#
-directive|define
 name|BLANK
 value|' '
 end_define
