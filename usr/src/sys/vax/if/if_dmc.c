@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.13	82/04/20	*/
+comment|/*	if_dmc.c	4.14	82/04/24	*/
 end_comment
 
 begin_include
@@ -656,7 +656,7 @@ name|if_addr
 expr_stmt|;
 name|sin
 operator|->
-name|sa_family
+name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
@@ -706,11 +706,12 @@ name|if_ubareset
 operator|=
 name|dmcreset
 expr_stmt|;
+comment|/* DON'T KNOW IF THIS WILL WORK WITH A BDP AT HIGH SPEEDS */
 name|sc
 operator|->
 name|sc_ifuba
 operator|.
-name|ifuba_flags
+name|ifu_flags
 operator|=
 name|UBA_NEEDBDP
 operator||
@@ -1227,7 +1228,7 @@ name|sc
 operator|->
 name|sc_ifuba
 operator|.
-name|ifuba_flags
+name|ifu_flags
 operator|&
 name|UBA_NEEDBDP
 condition|)
@@ -1527,12 +1528,6 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|int
-name|w0
-decl_stmt|,
-name|w1
-decl_stmt|;
-comment|/* DEBUG */
 name|COUNT
 argument_list|(
 name|DMCRINT
@@ -1569,25 +1564,21 @@ operator|&
 name|DMC_RDYI
 condition|)
 block|{
-name|w0
-operator|=
-name|getw
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_que
-argument_list|)
-expr_stmt|;
-comment|/* DEBUG */
 name|addr
 operator|->
 name|sel4
 operator|=
-name|w0
+name|getw
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_que
+argument_list|)
 expr_stmt|;
-comment|/* DEBUG */
-name|w1
+name|addr
+operator|->
+name|sel6
 operator|=
 name|getw
 argument_list|(
@@ -1597,15 +1588,6 @@ operator|->
 name|sc_que
 argument_list|)
 expr_stmt|;
-comment|/* DEBUG */
-name|addr
-operator|->
-name|sel6
-operator|=
-name|w1
-expr_stmt|;
-comment|/* DEBUG */
-comment|/* DEBUG 		addr->sel4 = getw(&sc->sc_que); 		addr->sel6 = getw(&sc->sc_que); 		DEBUG */
 name|addr
 operator|->
 name|bsel0
@@ -1616,15 +1598,6 @@ name|DMC_IEI
 operator||
 name|DMC_RQI
 operator|)
-expr_stmt|;
-name|printd
-argument_list|(
-literal|"  w0 0x%x, w1 0x%x\n"
-argument_list|,
-name|w0
-argument_list|,
-name|w1
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1826,7 +1799,7 @@ name|sc
 operator|->
 name|sc_ifuba
 operator|.
-name|ifuba_flags
+name|ifu_flags
 operator|&
 name|UBA_NEEDBDP
 condition|)
