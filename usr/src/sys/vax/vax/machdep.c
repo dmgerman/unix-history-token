@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.8	84/08/28	*/
+comment|/*	machdep.c	6.9	84/09/05	*/
 end_comment
 
 begin_include
@@ -1306,7 +1306,7 @@ argument|p
 argument_list|,
 argument|sig
 argument_list|,
-argument|sigmask
+argument|mask
 argument_list|)
 end_macro
 
@@ -1320,7 +1320,7 @@ argument_list|()
 decl_stmt|,
 name|sig
 decl_stmt|,
-name|sigmask
+name|mask
 decl_stmt|;
 end_decl_stmt
 
@@ -1399,13 +1399,6 @@ index|]
 operator|-
 literal|1
 expr_stmt|;
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<<((s)-1))
 if|if
 condition|(
 operator|!
@@ -1418,7 +1411,7 @@ name|u
 operator|.
 name|u_sigonstack
 operator|&
-name|mask
+name|sigmask
 argument_list|(
 name|sig
 argument_list|)
@@ -1646,7 +1639,7 @@ name|scp
 operator|->
 name|sc_mask
 operator|=
-name|sigmask
+name|mask
 expr_stmt|;
 comment|/* setup rei */
 name|scp
@@ -1731,7 +1724,7 @@ name|SIG_DFL
 expr_stmt|;
 name|sig
 operator|=
-name|mask
+name|sigmask
 argument_list|(
 name|SIGILL
 argument_list|)
@@ -1874,17 +1867,17 @@ name|sc_mask
 operator|&
 operator|~
 operator|(
-name|mask
+name|sigmask
 argument_list|(
 name|SIGKILL
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGCONT
 argument_list|)
 operator||
-name|mask
+name|sigmask
 argument_list|(
 name|SIGSTOP
 argument_list|)
@@ -1903,12 +1896,6 @@ name|sc_sp
 expr_stmt|;
 block|}
 end_block
-
-begin_undef
-undef|#
-directive|undef
-name|mask
-end_undef
 
 begin_ifdef
 ifdef|#
@@ -3302,16 +3289,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|spl1
-argument_list|()
-expr_stmt|;
-name|update
+name|splnet
 argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"syncing disks... "
 argument_list|)
+expr_stmt|;
+name|update
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
