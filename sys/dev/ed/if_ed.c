@@ -5584,7 +5584,7 @@ return|;
 block|}
 return|return
 operator|(
-name|ED_HPP_IO_PORTS
+literal|0
 operator|)
 return|;
 block|}
