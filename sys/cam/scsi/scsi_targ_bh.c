@@ -1060,7 +1060,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"targbhenlun - Enable Lun Rejected for status 0x%x\n"
+literal|"targbhenlun - Enable Lun Rejected with status 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
