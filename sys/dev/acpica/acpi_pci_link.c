@@ -4361,7 +4361,7 @@ condition|(
 name|entry
 operator|->
 name|pcidev
-operator|==
+operator|!=
 name|dev
 operator|||
 name|entry
