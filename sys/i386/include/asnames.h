@@ -399,13 +399,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_Xforward_irq
-value|Xforward_irq
-end_define
-
-begin_define
-define|#
-directive|define
 name|_Xfpu
 value|Xfpu
 end_define
@@ -1029,13 +1022,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_cpl_lock
-value|cpl_lock
-end_define
-
-begin_define
-define|#
-directive|define
 name|_cpu
 value|cpu
 end_define
@@ -1197,15 +1183,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|_fast_intr_lock
-value|fast_intr_lock
+name|_fastmove
+value|fastmove
 end_define
 
 begin_define
 define|#
 directive|define
-name|_fastmove
-value|fastmove
+name|_fork_exit
+value|fork_exit
 end_define
 
 begin_define
