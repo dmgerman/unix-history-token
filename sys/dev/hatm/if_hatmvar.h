@@ -726,6 +726,9 @@ decl_stmt|;
 name|uint16_t
 name|chunkno
 decl_stmt|;
+name|u_int
+name|ref_cnt
+decl_stmt|;
 block|}
 struct|;
 end_struct
