@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_glue.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -404,15 +404,23 @@ argument|i
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|i
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 operator|++
 name|kgdb_testval
 expr_stmt|;
 return|return
+operator|(
 name|i
 operator|+
 literal|1
+operator|)
 return|;
 block|}
 end_block
@@ -421,6 +429,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KGDB */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -504,6 +504,14 @@ argument|slave
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|,
+name|slave
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|short
@@ -576,6 +584,18 @@ name|unit
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|addr
+decl_stmt|,
+name|cnt
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -644,6 +664,18 @@ name|unit
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|addr
+decl_stmt|,
+name|cnt
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -705,6 +737,12 @@ name|int
 name|unit
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -828,6 +866,12 @@ name|unit
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -921,6 +965,12 @@ argument|unit
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -992,6 +1042,12 @@ argument|unit
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1047,6 +1103,20 @@ name|int
 name|unit
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|addr
+decl_stmt|,
+name|count
+decl_stmt|,
+name|rw
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

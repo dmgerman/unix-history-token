@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Van Jacobson of Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)scsi.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -3752,6 +3752,8 @@ decl_stmt|,
 name|slave
 decl_stmt|,
 name|unit
+decl_stmt|,
+name|rd
 decl_stmt|;
 name|struct
 name|scsi_fmt_cdb
@@ -3762,7 +3764,7 @@ name|u_char
 modifier|*
 name|buf
 decl_stmt|;
-name|unsigned
+name|u_int
 name|len
 decl_stmt|;
 block|{
@@ -5088,6 +5090,8 @@ condition|)
 name|printf
 argument_list|(
 literal|"scsi%d: done called!\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5519,6 +5523,8 @@ decl_stmt|,
 name|unit
 decl_stmt|,
 name|b_flags
+decl_stmt|,
+name|freedma
 decl_stmt|;
 name|u_char
 modifier|*

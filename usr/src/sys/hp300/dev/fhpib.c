@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fhpib.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -348,6 +348,12 @@ argument|unit
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -531,25 +537,40 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|fhpibsend
 argument_list|(
-name|unit
+argument|unit
 argument_list|,
-name|slave
+argument|slave
 argument_list|,
-name|sec
+argument|sec
 argument_list|,
-name|addr
+argument|addr
 argument_list|,
-name|origcnt
+argument|origcnt
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|,
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|origcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|char
-operator|*
+modifier|*
 name|addr
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -868,25 +889,40 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|fhpibrecv
 argument_list|(
-name|unit
+argument|unit
 argument_list|,
-name|slave
+argument|slave
 argument_list|,
-name|sec
+argument|sec
 argument_list|,
-name|addr
+argument|addr
 argument_list|,
-name|origcnt
+argument|origcnt
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|,
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|origcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|char
-operator|*
+modifier|*
 name|addr
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1220,6 +1256,18 @@ name|int
 name|unit
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|slave
+decl_stmt|,
+name|sec
+decl_stmt|,
+name|count
+decl_stmt|,
+name|rw
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1754,6 +1802,12 @@ argument_list|(
 argument|unit
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -2457,6 +2511,12 @@ argument|unit
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2580,6 +2640,12 @@ operator|*
 name|hd
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|x
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

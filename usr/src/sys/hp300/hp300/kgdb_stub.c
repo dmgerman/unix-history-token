@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)kgdb_stub.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -864,20 +864,30 @@ specifier|inline
 name|void
 name|kgdb_copy
 parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|nbytes
+parameter_list|)
 specifier|register
 name|u_char
 modifier|*
 name|src
-parameter_list|,
-specifier|register
-name|u_char
-modifier|*
+decl_stmt|,
+decl|*
 name|dst
-parameter_list|,
+decl_stmt|;
+end_function
+
+begin_decl_stmt
 specifier|register
 name|u_int
 name|nbytes
-parameter_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|u_char
@@ -903,7 +913,7 @@ name|src
 operator|++
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * There is a short pad word between SP (A7) and SR which keeps the  * kernel stack long word aligned (note that this is in addition to  * the stack adjust short that we treat as the upper half of a longword  * SR).  We must skip this when copying into and out of gdb.  */
@@ -915,15 +925,19 @@ specifier|inline
 name|void
 name|regs_to_gdb
 parameter_list|(
+name|fp
+parameter_list|,
+name|regs
+parameter_list|)
 name|struct
 name|frame
 modifier|*
 name|fp
-parameter_list|,
+decl_stmt|;
 name|u_long
 modifier|*
 name|regs
-parameter_list|)
+decl_stmt|;
 block|{
 name|kgdb_copy
 argument_list|(
@@ -981,15 +995,18 @@ specifier|inline
 name|void
 name|gdb_to_regs
 parameter_list|(
+name|fp
+parameter_list|,
+name|regs
+parameter_list|)
 name|struct
 name|frame
 modifier|*
 name|fp
-parameter_list|,
+decl_stmt|;
 name|u_long
-modifier|*
 name|regs
-parameter_list|)
+decl_stmt|;
 block|{
 name|kgdb_copy
 argument_list|(
@@ -1081,14 +1098,18 @@ begin_function
 name|int
 name|kgdb_trap
 parameter_list|(
-name|int
 name|type
 parameter_list|,
+name|frame
+parameter_list|)
+name|int
+name|type
+decl_stmt|;
 name|struct
 name|frame
 modifier|*
 name|frame
-parameter_list|)
+decl_stmt|;
 block|{
 specifier|register
 name|u_long
@@ -1916,6 +1937,14 @@ name|addr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|len
+decl_stmt|,
+name|rw
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|extern
@@ -1990,6 +2019,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KGDB */
+end_comment
 
 end_unit
 

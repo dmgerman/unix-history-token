@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dca.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1501,6 +1501,12 @@ name|uio
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|int
@@ -1605,6 +1611,12 @@ name|struct
 name|uio
 modifier|*
 name|uio
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -3282,6 +3294,12 @@ name|tp
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -3972,6 +3990,12 @@ argument_list|(
 argument|dev
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
