@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remote.c	4.2	81/06/16	*/
+comment|/*	remote.c	4.3	81/07/13	*/
 end_comment
 
 begin_include
@@ -313,6 +313,31 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * This effectively eliminates the "hw" attribute 	 *   from the description file 	 */
+if|if
+condition|(
+operator|!
+name|HW
+condition|)
+name|HW
+operator|=
+operator|(
+name|CU
+operator|==
+name|NOSTR
+operator|)
+operator|||
+operator|(
+name|DU
+operator|&&
+name|equal
+argument_list|(
+name|DV
+argument_list|,
+name|CU
+argument_list|)
+operator|)
+expr_stmt|;
 name|HO
 operator|=
 name|host
