@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.19
+literal|3.20
 operator|%
 name|G
 operator|%
@@ -1711,6 +1711,10 @@ name|MAXNAME
 index|]
 decl_stmt|;
 comment|/* 		**  CHILD 		**	Change the name of the control file to avoid 		**	duplicate deliveries.   Then run the file as 		**	though we had just read it. 		*/
+name|FatalErrors
+operator|=
+name|FALSE
+expr_stmt|;
 name|QueueRun
 operator|=
 name|TRUE
