@@ -254,15 +254,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-CdLPpx] [-b color] [-c appearance] [-f [size] file]"
 argument_list|,
 literal|"                  [-g geometry] [-h size] [-i adapter | mode] [-l screen_map]"
 argument_list|,
-literal|"                  [-m on | off] [-M char] [-r foreground background] [-s num]"
+literal|"                  [-M char] [-m on | off] [-r foreground background]"
 argument_list|,
-literal|"                  [-t N | off] [mode] [foreground [background]] [show]"
+literal|"                  [-S on | off] [-s number] [-t N | off] [mode]"
+argument_list|,
+literal|"                  [foreground [background]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2736,7 +2738,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"argument to -m must either on or off"
+literal|"argument to -m must be either on or off"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2749,6 +2751,79 @@ name|CONS_MOUSECTL
 argument_list|,
 operator|&
 name|mouse
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|set_lockswitch
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|int
+name|data
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"off"
+argument_list|)
+condition|)
+name|data
+operator|=
+literal|0x01
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"on"
+argument_list|)
+condition|)
+name|data
+operator|=
+literal|0x02
+expr_stmt|;
+else|else
+block|{
+name|warnx
+argument_list|(
+literal|"argument to -S must be either on or off"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_LOCKSWITCH
+argument_list|,
+operator|&
+name|data
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|warn
+argument_list|(
+literal|"ioctl(VT_LOCKSWITCH)"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3335,7 +3410,7 @@ else|else
 block|{
 name|warnx
 argument_list|(
-literal|"argument to -i must either adapter or mode"
+literal|"argument to -i must be either adapter or mode"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3958,7 +4033,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Cc:df:g:h:i:l:LM:m:pPr:s:t:x"
+literal|"b:Cc:df:g:h:i:l:LM:m:pPr:S:s:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -4163,6 +4238,15 @@ name|argv
 argument_list|,
 operator|&
 name|optind
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'S'
+case|:
+name|set_lockswitch
+argument_list|(
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
