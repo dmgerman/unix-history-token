@@ -565,7 +565,11 @@ name|error
 operator|=
 name|securelevel_gt
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
 argument_list|,
 literal|0
 argument_list|)
@@ -843,7 +847,9 @@ name|error
 operator|=
 name|securelevel_gt
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
