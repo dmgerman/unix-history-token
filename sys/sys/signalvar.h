@@ -608,18 +608,6 @@ end_function_decl
 
 begin_decl_stmt
 name|void
-name|check_sigacts
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|execsigs
 name|__P
 argument_list|(
