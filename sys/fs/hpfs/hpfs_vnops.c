@@ -3719,7 +3719,10 @@ name|BIO_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
+operator|&
 name|bp
+operator|->
+name|b_io
 argument_list|)
 expr_stmt|;
 return|return
@@ -3761,7 +3764,10 @@ condition|)
 block|{
 name|biodone
 argument_list|(
+operator|&
 name|bp
+operator|->
+name|b_io
 argument_list|)
 expr_stmt|;
 return|return
