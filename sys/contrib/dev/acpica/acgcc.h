@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 6 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acgcc.h - GCC specific defines, etc.  *       $Revision: 9 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -232,6 +232,7 @@ define|#
 directive|define
 name|wbinvd
 parameter_list|()
+value|__asm__ __volatile__ ("wbinvd":::"memory")
 end_define
 
 begin_endif

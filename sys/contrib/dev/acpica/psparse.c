@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 89 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,7 +83,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsPeekOpcode  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Get next AML opcode (without incrementing AML pointer)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsGetOpcodeSize  *  * PARAMETERS:  Opcode          - An AML opcode  *  * RETURN:      Size of the opcode, in bytes (1 or 2)  *  * DESCRIPTION: Get the size of the current opcode.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -316,14 +316,29 @@ name|NATIVE_CHAR
 modifier|*
 name|Path
 decl_stmt|;
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
+decl_stmt|;
 comment|/* We are only interested in opcodes that have an associated name */
-if|if
-condition|(
-operator|!
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
+operator|)
 condition|)
 block|{
 operator|*
@@ -423,10 +438,12 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|Next
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
 decl_stmt|;
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|ParentInfo
@@ -930,8 +947,7 @@ break|break;
 case|case
 name|AE_CTRL_PENDING
 case|:
-comment|/*              * Predicate of a WHILE was true and the loop just completed an              * execution.  Go back to the start of the loop and reevaluate the              * predicate.              */
-comment|/*            WalkState->ControlState->Common.State =                     CONTROL_PREDICATE_EXECUTING;*/
+comment|/*          * Predicate of a WHILE was true and the loop just completed an          * execution.  Go back to the start of the loop and reevaluate the          * predicate.          */
 comment|/* TBD: How to handle a break within a while. */
 comment|/* This code attempts it */
 name|ParserState
@@ -946,7 +962,7 @@ break|break;
 case|case
 name|AE_CTRL_TRUE
 case|:
-comment|/*              * Predicate of an IF was true, and we are at the matching ELSE.              * Just close out this package              *              * Note: ParserState->Aml is modified by the package length procedure              * TBD: [Investigate] perhaps it shouldn't, too much trouble              */
+comment|/*          * Predicate of an IF was true, and we are at the matching ELSE.          * Just close out this package          *          * Note: ParserState->Aml is modified by the package length procedure          * TBD: [Investigate] perhaps it shouldn't, too much trouble          */
 name|Start
 operator|=
 name|ParserState
@@ -1104,6 +1120,7 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* current op */
+specifier|const
 name|ACPI_OPCODE_INFO
 modifier|*
 name|OpInfo
@@ -1512,10 +1529,11 @@ block|}
 comment|/* Create Op structure and append to parent's argument list */
 if|if
 condition|(
-name|AcpiPsIsNamedOp
-argument_list|(
-name|Opcode
-argument_list|)
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
 condition|)
 block|{
 name|PreOp
@@ -1676,17 +1694,13 @@ condition|)
 block|{
 name|DeferredOp
 operator|=
-name|AcpiPsToExtendedOp
-argument_list|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
 name|Op
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DeferredOp
-condition|)
-block|{
-comment|/*                          * Defer final parsing of an OperationRegion body,                          * because we don't have enough info in the first pass                          * to parse it correctly (i.e., there may be method                          * calls within the TermArg elements of the body.                          *                          * However, we must continue parsing because                          * the opregion is not a standalone package --                          * we don't know where the end is at this point.                          *                          * (Length is unknown until parse of the body complete)                          */
+comment|/*                      * Defer final parsing of an OperationRegion body,                      * because we don't have enough info in the first pass                      * to parse it correctly (i.e., there may be method                      * calls within the TermArg elements of the body.                      *                      * However, we must continue parsing because                      * the opregion is not a standalone package --                      * we don't know where the end is at this point.                      *                      * (Length is unknown until parse of the body complete)                      */
 name|DeferredOp
 operator|->
 name|Data
@@ -1701,10 +1715,16 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
 block|{
 comment|/* Not a named opcode, just allocate Op and append to parent */
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Opcode
+argument_list|)
+expr_stmt|;
 name|Op
 operator|=
 name|AcpiPsAllocOp
@@ -1726,53 +1746,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BIT_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BYTE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_WORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_DWORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_QWORD_FIELD_OP
-operator|)
+name|Flags
+operator|&
+name|AML_CREATE
 condition|)
 block|{
 comment|/*                      * Backup to beginning of CreateXXXfield declaration                      * BodyLength is unknown until we parse the body                      */
@@ -2060,17 +2038,13 @@ condition|)
 block|{
 name|DeferredOp
 operator|=
-name|AcpiPsToExtendedOp
-argument_list|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
 name|Op
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DeferredOp
-condition|)
-block|{
-comment|/*                          * Skip parsing of control method or opregion body,                          * because we don't have enough info in the first pass                          * to parse them correctly.                          */
+comment|/*                      * Skip parsing of control method or opregion body,                      * because we don't have enough info in the first pass                      * to parse them correctly.                      */
 name|DeferredOp
 operator|->
 name|Data
@@ -2096,7 +2070,7 @@ operator|->
 name|Aml
 argument_list|)
 expr_stmt|;
-comment|/*                          * Skip body of method.  For OpRegions, we must continue                          * parsing because the opregion is not a standalone                          * package (We don't know where the end is).                          */
+comment|/*                      * Skip body of method.  For OpRegions, we must continue                      * parsing because the opregion is not a standalone                      * package (We don't know where the end is).                      */
 name|ParserState
 operator|->
 name|Aml
@@ -2110,7 +2084,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-block|}
 break|break;
 block|}
 block|}
@@ -2122,14 +2095,22 @@ name|ArgCount
 condition|)
 block|{
 comment|/* completed Op, prepare for next */
-if|if
-condition|(
-name|AcpiPsIsNamedOp
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
 argument_list|(
 name|Op
 operator|->
 name|Opcode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|OpInfo
+operator|->
+name|Flags
+operator|&
+name|AML_NAMED
 condition|)
 block|{
 if|if
@@ -2152,17 +2133,13 @@ condition|)
 block|{
 name|DeferredOp
 operator|=
-name|AcpiPsToExtendedOp
-argument_list|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
 name|Op
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DeferredOp
-condition|)
-block|{
-comment|/*                          * Skip parsing of control method or opregion body,                          * because we don't have enough info in the first pass                          * to parse them correctly.                          *                          * Completed parsing an OpRegion declaration, we now                          * know the length.                          */
+comment|/*                      * Skip parsing of control method or opregion body,                      * because we don't have enough info in the first pass                      * to parse them correctly.                      *                      * Completed parsing an OpRegion declaration, we now                      * know the length.                      */
 name|DeferredOp
 operator|->
 name|Length
@@ -2182,56 +2159,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 if|if
 condition|(
-operator|(
-name|Op
+name|OpInfo
 operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BIT_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_BYTE_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_WORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_DWORD_FIELD_OP
-operator|)
-operator|||
-operator|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_CREATE_QWORD_FIELD_OP
-operator|)
+name|Flags
+operator|&
+name|AML_CREATE
 condition|)
 block|{
 comment|/*                  * Backup to beginning of CreateXXXfield declaration (1 for                  * Opcode)                  *                  * BodyLength is unknown until we parse the body                  */
@@ -2759,7 +2693,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsParseAml  *  * PARAMETERS:  StartScope      - The starting point of the parse.  Becomes the  *                                root of the parsed op tree.  *              Aml             - Pointer to the raw AML code to parse  *              AmlSize         - Length of the AML to parse  *  * RETURN:      Status  *  * DESCRIPTION: Parse raw AML and return a tree of ops  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsParseAml  *  * PARAMETERS:  StartScope      - The starting point of the parse.  Becomes the  *                                root of the parsed op tree.  *              Aml             - Pointer to the raw AML code to parse  *              AmlSize         - Length of the AML to parse  *  *  * RETURN:      Status  *  * DESCRIPTION: Parse raw AML and return a tree of ops  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2814,12 +2748,6 @@ name|WalkState
 decl_stmt|;
 name|ACPI_WALK_LIST
 name|WalkList
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_WALK_LIST
 modifier|*
@@ -3052,7 +2980,9 @@ block|}
 else|else
 block|{
 comment|/* Setup the current scope */
-name|Node
+name|ParserState
+operator|->
+name|StartNode
 operator|=
 name|ParserState
 operator|->
@@ -3060,15 +2990,11 @@ name|StartOp
 operator|->
 name|Node
 expr_stmt|;
+if|if
+condition|(
 name|ParserState
 operator|->
 name|StartNode
-operator|=
-name|Node
-expr_stmt|;
-if|if
-condition|(
-name|Node
 condition|)
 block|{
 comment|/* Push start scope on scope stack and make it current  */
@@ -3076,9 +3002,13 @@ name|Status
 operator|=
 name|AcpiDsScopeStackPush
 argument_list|(
-name|Node
+name|ParserState
+operator|->
+name|StartNode
 argument_list|,
-name|Node
+name|ParserState
+operator|->
+name|StartNode
 operator|->
 name|Type
 argument_list|,
@@ -3099,10 +3029,6 @@ goto|;
 block|}
 block|}
 block|}
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
 comment|/*      * Execute the walk loop as long as there is a valid Walk State.  This      * handles nested control method invocations without recursion.      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -3114,6 +3040,10 @@ operator|,
 name|WalkState
 operator|)
 argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
 expr_stmt|;
 while|while
 condition|(

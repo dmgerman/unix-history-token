@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -228,7 +228,7 @@ operator|.
 name|AccessByteWidth
 condition|)
 block|{
-comment|/*               * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself.  For example, a region of length one              * byte, and a field with Dword access specified.              */
+comment|/*              * This is the case where the AccessType (AccWord, etc.) is wider              * than the region itself.  For example, a region of length one              * byte, and a field with Dword access specified.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -649,7 +649,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetBufferDatum  *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              ByteGranularity     - 1/2/4 Granularity of the field   *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *                * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetBufferDatum  *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              ByteGranularity     - 1/2/4 Granularity of the field  *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -672,6 +672,9 @@ name|UINT32
 name|Offset
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ByteGranularity
@@ -746,7 +749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetBufferDatum   *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              ByteGranularity     - 1/2/4 Granularity of the field   *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *                * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetBufferDatum  *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              ByteGranularity     - 1/2/4 Granularity of the field  *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -768,6 +771,9 @@ name|UINT32
 name|Offset
 parameter_list|)
 block|{
+name|FUNCTION_ENTRY
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|ByteGranularity
@@ -1197,7 +1203,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * Put together the appropriate bits of the two raw data to make a               * single complete field datum              *              * 1) Normalize the first datum down to bit 0               */
+comment|/*              * Put together the appropriate bits of the two raw data to make a              * single complete field datum              *              * 1) Normalize the first datum down to bit 0              */
 name|MergedDatum
 operator|=
 operator|(
@@ -1236,7 +1242,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/*                  * This is the last iteration of the loop.  We need to clear                  * any unused bits (bits that are not part of this field) that                   * came from the last raw datum before we store the final                   * merged datum into the caller buffer.                  */
+comment|/*                  * This is the last iteration of the loop.  We need to clear                  * any unused bits (bits that are not part of this field) that                  * came from the last raw datum before we store the final                  * merged datum into the caller buffer.                  */
 if|if
 condition|(
 name|ObjDesc
@@ -1276,7 +1282,7 @@ argument_list|,
 name|DatumOffset
 argument_list|)
 expr_stmt|;
-comment|/*          * Save the raw datum that was just acquired since it may contain bits           * of the *next* field datum.  Update offsets          */
+comment|/*          * Save the raw datum that was just acquired since it may contain bits          * of the *next* field datum.  Update offsets          */
 name|PreviousRawDatum
 operator|=
 name|ThisRawDatum
@@ -1680,7 +1686,7 @@ block|{
 case|case
 name|UPDATE_PRESERVE
 case|:
-comment|/*               * Check if update rule needs to be applied (not if mask is all               * ones)  The left shift drops the bits we want to ignore.               */
+comment|/*              * Check if update rule needs to be applied (not if mask is all              * ones)  The left shift drops the bits we want to ignore.              */
 if|if
 condition|(
 operator|(
@@ -1862,7 +1868,7 @@ argument_list|(
 literal|"ExInsertIntoField"
 argument_list|)
 expr_stmt|;
-comment|/*      * Incoming buffer must be at least as long as the field, we do not       * allow "partial" field writes.  We do not care if the buffer is      * larger than the field, this typically happens when an integer is      * written to a field that is actually smaller than an integer.      */
+comment|/*      * Incoming buffer must be at least as long as the field, we do not      * allow "partial" field writes.  We do not care if the buffer is      * larger than the field, this typically happens when an integer is      * written to a field that is actually smaller than an integer.      */
 name|ByteFieldLength
 operator|=
 name|ROUND_BITS_UP_TO_BYTES
@@ -2082,7 +2088,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Part2:      * Write the aligned data.      *      * We don't need to worry about the update rule for these data, because      * all of the bits in each datum are part of the field.      *      * The last datum must be special cased because it might contain bits       * that are not part of the field -- therefore the "update rule" must be       * applied in Part3 below.      */
+comment|/*      * Part2:      * Write the aligned data.      *      * We don't need to worry about the update rule for these data, because      * all of the bits in each datum are part of the field.      *      * The last datum must be special cased because it might contain bits      * that are not part of the field -- therefore the "update rule" must be      * applied in Part3 below.      */
 while|while
 condition|(
 name|DatumOffset
@@ -2101,7 +2107,7 @@ name|CommonField
 operator|.
 name|AccessByteWidth
 expr_stmt|;
-comment|/*           * Get the next raw buffer datum.  It may contain bits of the previous           * field datum          */
+comment|/*          * Get the next raw buffer datum.  It may contain bits of the previous          * field datum          */
 name|AcpiExGetBufferDatum
 argument_list|(
 operator|&
@@ -2130,7 +2136,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/*              * Put together appropriate bits of the two raw buffer data to make               * a single complete field datum              */
+comment|/*              * Put together appropriate bits of the two raw buffer data to make              * a single complete field datum              */
 name|MergedDatum
 operator|=
 operator|(
@@ -2178,7 +2184,7 @@ operator|.
 name|EndFieldValidBits
 condition|)
 block|{
-comment|/*               * Part3:               * This is the last datum and the field does not end on a datum boundary.              * Build the partial datum and write with the update rule.              */
+comment|/*              * Part3:              * This is the last datum and the field does not end on a datum boundary.              * Build the partial datum and write with the update rule.              */
 comment|/* Mask off the unused bits above (after) the end-of-field */
 name|Mask
 operator|=
@@ -2253,7 +2259,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Save the most recent datum since it may contain bits of the *next*           * field datum.  Update current byte offset.          */
+comment|/*          * Save the most recent datum since it may contain bits of the *next*          * field datum.  Update current byte offset.          */
 name|PreviousRawDatum
 operator|=
 name|ThisRawDatum
