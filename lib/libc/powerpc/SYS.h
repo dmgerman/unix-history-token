@@ -26,5 +26,16 @@ define|\
 value|.text ;								\ 	.align	2 ;							\ 2:	b	PIC_PLT(_C_LABEL(__cerror)) ;				\ ENTRY(__CONCAT(__sys_,x)) ;						\ 	li	0,(SYS_ ## x) ;						\ 	sc ;								\ 	bso	2b
 end_define
 
+begin_define
+define|#
+directive|define
+name|RSYSCALL
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|SYSCALL(x) ;							\ 	blr
+end_define
+
 end_unit
 
