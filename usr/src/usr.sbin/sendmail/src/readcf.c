@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.8 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1133,7 +1133,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
 name|FILE
 modifier|*
 name|f
@@ -1189,6 +1188,14 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SCANF
 name|char
 name|wordbuf
 index|[
@@ -1211,11 +1218,95 @@ operator|!=
 literal|1
 condition|)
 continue|continue;
+name|p
+operator|=
+name|wordbuf
+expr_stmt|;
+else|#
+directive|else
+else|SCANF
+name|p
+operator|=
+name|buf
+expr_stmt|;
+endif|#
+directive|endif
+endif|SCANF
+comment|/* 		**  Break up the match into words. 		*/
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
+comment|/* strip leading spaces */
+while|while
+condition|(
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+break|break;
+comment|/* find the end of the word */
+name|q
+operator|=
+name|p
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+operator|&&
+operator|!
+name|isspace
+argument_list|(
+operator|*
+name|p
+argument_list|)
+condition|)
+name|p
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* enter the word in the symbol table */
 name|s
 operator|=
 name|stab
 argument_list|(
-name|wordbuf
+name|q
 argument_list|,
 name|ST_CLASS
 argument_list|,
@@ -1231,6 +1322,7 @@ operator|->
 name|s_class
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
