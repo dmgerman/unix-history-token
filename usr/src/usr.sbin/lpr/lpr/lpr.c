@@ -13,7 +13,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	lpr.c	4.19	83/06/02	*/
+comment|/*	lpr.c	4.20	83/06/15	*/
 end_comment
 
 begin_comment
@@ -1248,7 +1248,7 @@ name|open
 argument_list|(
 name|arg
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -1331,7 +1331,7 @@ name|open
 argument_list|(
 name|tfname
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 operator|)
 operator|>=
@@ -2348,7 +2348,7 @@ name|open
 argument_list|(
 name|file
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 operator|)
 operator|<
@@ -2879,7 +2879,7 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|FEXLOCK
+name|LOCK_EX
 argument_list|)
 condition|)
 block|{

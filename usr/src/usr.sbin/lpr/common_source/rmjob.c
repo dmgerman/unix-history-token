@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rmjob.c	4.4	83/06/02	*/
+comment|/*	rmjob.c	4.5	83/06/15	*/
 end_comment
 
 begin_comment
@@ -552,9 +552,9 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|FSHLOCK
+name|LOCK_SH
 operator||
-name|FNBLOCK
+name|LOCK_NB
 argument_list|)
 operator|==
 literal|0

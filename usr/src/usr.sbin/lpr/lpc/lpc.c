@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	4.2 (Berkeley) %G%"
+literal|"@(#)lpc.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,7 +265,7 @@ if|if
 condition|(
 name|top
 condition|)
-name|sigset
+name|signal
 argument_list|(
 name|SIGINT
 argument_list|,

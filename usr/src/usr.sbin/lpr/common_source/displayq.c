@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	displayq.c	4.5	83/06/02	*/
+comment|/*	displayq.c	4.6	83/06/15	*/
 end_comment
 
 begin_comment
@@ -771,9 +771,9 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|FSHLOCK
+name|LOCK_SH
 operator||
-name|FNBLOCK
+name|LOCK_NB
 argument_list|)
 operator|==
 literal|0
@@ -914,24 +914,32 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|open
 argument_list|(
 name|ST
 argument_list|,
-name|FRDONLY
-operator||
-name|FSHLOCK
+name|O_RDONLY
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_SH
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(

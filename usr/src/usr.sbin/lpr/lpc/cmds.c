@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	4.3 (Berkeley) %G%"
+literal|"@(#)cmds.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,9 +369,9 @@ name|open
 argument_list|(
 name|line
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FCREATE
+name|O_CREAT
 argument_list|,
 literal|0760
 argument_list|)
@@ -455,9 +455,9 @@ argument_list|(
 name|fp
 argument_list|)
 argument_list|,
-name|FSHLOCK
+name|LOCK_SH
 operator||
-name|FNBLOCK
+name|LOCK_NB
 argument_list|)
 operator|==
 literal|0
@@ -1556,9 +1556,9 @@ name|open
 argument_list|(
 name|line
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FCREATE
+name|O_CREAT
 argument_list|,
 literal|0670
 argument_list|)
@@ -2628,7 +2628,7 @@ name|open
 argument_list|(
 name|line
 argument_list|,
-name|FRDONLY
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -2641,9 +2641,9 @@ name|flock
 argument_list|(
 name|fd
 argument_list|,
-name|FSHLOCK
+name|LOCK_SH
 operator||
-name|FNBLOCK
+name|LOCK_NB
 argument_list|)
 operator|==
 literal|0
@@ -2691,24 +2691,32 @@ argument_list|,
 name|ST
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|open
 argument_list|(
 name|line
 argument_list|,
-name|FRDONLY
-operator||
-name|FSHLOCK
+name|O_RDONLY
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
 operator|>=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|fd
+argument_list|,
+name|LOCK_SH
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3088,9 +3096,9 @@ name|open
 argument_list|(
 name|line
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FCREATE
+name|O_CREAT
 argument_list|,
 literal|0760
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	recvjob.c	4.3	83/06/02	*/
+comment|/*	recvjob.c	4.4	83/06/15	*/
 end_comment
 
 begin_comment
@@ -167,11 +167,9 @@ name|open
 argument_list|(
 name|LF
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FAPPEND
-argument_list|,
-literal|0
+name|O_APPEND
 argument_list|)
 expr_stmt|;
 if|if
@@ -603,9 +601,9 @@ name|open
 argument_list|(
 name|file
 argument_list|,
-name|FWRONLY
+name|O_WRONLY
 operator||
-name|FCREATE
+name|O_CREAT
 argument_list|,
 name|FILMOD
 argument_list|)
