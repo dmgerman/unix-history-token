@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -473,15 +473,14 @@ operator|)
 expr_stmt|;
 name|alreadyincore
 operator|=
-operator|(
-name|int
-operator|)
 name|incore
 argument_list|(
 name|vp
 argument_list|,
 name|ioblkno
 argument_list|)
+operator|!=
+name|NULL
 expr_stmt|;
 name|bp
 operator|=
