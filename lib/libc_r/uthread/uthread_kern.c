@@ -293,17 +293,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-literal|1
-comment|/* XXX - Save FP registers? */
-name|FP_SAVE_UC
-argument_list|(
-name|ucp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|called_from_handler
 operator|=
 literal|1
@@ -406,17 +395,6 @@ condition|)
 return|return;
 else|else
 block|{
-if|#
-directive|if
-literal|1
-comment|/* XXX - Restore FP registers? */
-name|FP_RESTORE_UC
-argument_list|(
-name|ucp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * Set the process signal mask in the context; it 			 * could have changed by the handler. 			 */
 name|ucp
 operator|->
