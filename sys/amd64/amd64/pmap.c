@@ -3005,7 +3005,7 @@ name|ptek
 decl_stmt|,
 name|oldpte
 decl_stmt|;
-comment|/* 	 * allocate object for the upages 	 */
+comment|/* 	 * allocate object for the upage 	 */
 name|upobj
 operator|=
 name|p
@@ -3107,7 +3107,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * Get a kernel stack page 		 */
+comment|/* 		 * Get a kernel page for the uarea 		 */
 name|m
 operator|=
 name|vm_page_grab
@@ -3132,22 +3132,18 @@ operator|.
 name|v_wire_count
 operator|++
 expr_stmt|;
+comment|/* 		 * Enter the page into the kernel address space. 		 */
 name|oldpte
 operator|=
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
+index|]
 expr_stmt|;
-comment|/* 		 * Enter the page into the kernel address space. 		 */
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
+index|]
 operator|=
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -3260,8 +3256,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|ptek
-decl_stmt|,
-name|oldpte
 decl_stmt|;
 name|upobj
 operator|=
@@ -3324,21 +3318,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|oldpte
-operator|=
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
-expr_stmt|;
-operator|*
-operator|(
-name|ptek
-operator|+
-name|i
-operator|)
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -4015,8 +3998,6 @@ decl_stmt|;
 name|pt_entry_t
 modifier|*
 name|ptek
-decl_stmt|,
-name|oldpte
 decl_stmt|;
 name|ksobj
 operator|=
@@ -4105,21 +4086,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|oldpte
-operator|=
-operator|*
-operator|(
 name|ptek
-operator|+
+index|[
 name|i
-operator|)
-expr_stmt|;
-operator|*
-operator|(
-name|ptek
-operator|+
-name|i
-operator|)
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -4197,13 +4167,6 @@ argument_list|(
 name|ksobj
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_kstack_obj
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* play it safe */
 block|}
 comment|/*  * Allow the Kernel stack for a thread to be prejudicially paged out.  */
 name|void
