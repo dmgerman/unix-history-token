@@ -3936,7 +3936,7 @@ name|GotIt
 operator|=
 name|Position
 argument_list|(
-literal|"/etc/map3270"
+literal|"/usr/share/misc/map3270"
 argument_list|,
 name|keybdPointer
 argument_list|)
@@ -3974,7 +3974,7 @@ name|GotIt
 operator|=
 name|Position
 argument_list|(
-literal|"/etc/map3270"
+literal|"/usr/share/misc/map3270"
 argument_list|,
 name|keybdPointer
 argument_list|)

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)api_bsd.c	8.2 (Berkeley) 1/7/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)api_bsd.c	8.2 (Berkeley) 1/7/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,7 +171,7 @@ function_decl|;
 name|char
 name|thehostname
 index|[
-literal|100
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|char
