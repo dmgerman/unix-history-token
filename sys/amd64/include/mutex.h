@@ -30,6 +30,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_comment
+comment|/* Needed for curproc. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -233,16 +243,6 @@ end_define
 
 begin_comment
 comment|/* Cookie for free mutex */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX */
 end_comment
 
 begin_comment
@@ -1783,7 +1783,7 @@ name|KTR_EXTEND
 end_ifdef
 
 begin_comment
-comment|/*  * KTR_EXTEND saves file name and line for all entries, so we don't need them  * here.  Theoretically we should also change the entries which refer to them  * (from CTR5 to CTR3), but since they're just passed to snprinf as the last  * parameters, it doesn't do any harm to leave them.  */
+comment|/*  * KTR_EXTEND saves file name and line for all entries, so we don't need them  * here.  Theoretically we should also change the entries which refer to them  * (from CTR5 to CTR3), but since they're just passed to snprintf as the last  * parameters, it doesn't do any harm to leave them.  */
 end_comment
 
 begin_decl_stmt

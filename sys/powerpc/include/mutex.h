@@ -30,6 +30,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_comment
+comment|/* Needed for curproc. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -239,16 +249,6 @@ end_define
 
 begin_comment
 comment|/* Cookie for free mutex */
-end_comment
-
-begin_struct_decl
-struct_decl|struct
-name|proc
-struct_decl|;
-end_struct_decl
-
-begin_comment
-comment|/* XXX */
 end_comment
 
 begin_comment
