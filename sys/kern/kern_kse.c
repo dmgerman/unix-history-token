@@ -1418,7 +1418,7 @@ name|uma_zalloc
 argument_list|(
 name|upcall_zone
 argument_list|,
-literal|0
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -4726,7 +4726,6 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE use XCHG instead */
 name|sticks
 operator|+=
 name|td
