@@ -3057,6 +3057,23 @@ condition|(
 name|len
 operator|--
 condition|)
+if|if
+condition|(
+name|decimal
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+operator|*
+name|p
+operator|++
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
