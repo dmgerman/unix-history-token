@@ -159,6 +159,8 @@ name|char
 name|psbuf
 index|[
 literal|256
+operator|+
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 comment|/* XXX - conservative */
