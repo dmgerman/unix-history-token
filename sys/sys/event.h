@@ -719,6 +719,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|timespec
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
