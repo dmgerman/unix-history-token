@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.22 (Berkeley) %G%"
+literal|"@(#)alias.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -282,6 +282,14 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: alias %s => %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id
