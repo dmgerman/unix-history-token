@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.27 1995/02/03 03:35:56 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.28 1995/02/18 02:55:09 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * bogus page -- for I/O to/from partially complete buffers  */
+comment|/*  * bogus page -- for I/O to/from partially complete buffers  * this is a temporary solution to the problem, but it is not  * really that bad.  it would be better to split the buffer  * for input in the case of buffers partially already in memory,  * but the code is intricate enough already.  */
 end_comment
 
 begin_decl_stmt
@@ -1847,6 +1847,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * VMIO buffer rundown.  It is not very necessary to keep a VMIO buffer 	 * constituted, so the B_INVAL flag is used to *invalidate* the buffer, 	 * but the VM object is kept around.  The B_NOCACHE flag is used to 	 * invalidate the pages in the VM object. 	 */
 if|if
 condition|(
 name|bp
@@ -2536,7 +2537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this routine implements clustered async writes for  * clearing out B_DELWRI buffers...  */
+comment|/*  * this routine implements clustered async writes for  * clearing out B_DELWRI buffers...  This is much better  * than the old way of writing only one buffer at a time.  */
 end_comment
 
 begin_function
@@ -3569,7 +3570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * returns true if no I/O is needed to access the  * associated VM object.  */
+comment|/*  * Returns true if no I/O is needed to access the  * associated VM object.  This is like incore except  * it also hunts around in the VM system for the data.  */
 end_comment
 
 begin_function
@@ -4301,7 +4302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Modify the length of a buffer's underlying buffer storage without  * destroying information (unless, of course the buffer is shrinking).  */
+comment|/*  * This code constitutes the buffer memory from either anonymous system  * memory (in the case of non-VMIO operations) or from an associated  * VM object (in the case of VMIO operations).  *  * Note that this code is tricky, and has many complications to resolve  * deadlock or inconsistant data situations.  Tread lightly!!!  *  * Modify the length of a buffer's underlying buffer storage without  * destroying information (unless, of course the buffer is shrinking).  */
 end_comment
 
 begin_function
@@ -4344,6 +4345,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * Just get anonymous memory from the kernel 		 */
 name|mbsize
 operator|=
 operator|(
@@ -4478,7 +4480,6 @@ name|b_bufsize
 operator|)
 expr_stmt|;
 block|}
-comment|/* 		 * adjust buffer cache's idea of memory allocated to buffer 		 * contents 		 */
 block|}
 else|else
 block|{
@@ -6249,6 +6250,7 @@ name|resid
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * when debugging new filesystems or buffer I/O methods, this 			 * is the most common error that pops up.  if you see this, you 			 * have not set the page busy flag correctly!!! 			 */
 if|if
 condition|(
 name|m
@@ -6348,7 +6350,23 @@ operator|->
 name|paging_in_progress
 operator|==
 literal|0
+operator|&&
+operator|(
+name|obj
+operator|->
+name|flags
+operator|&
+name|OBJ_PIPWNT
+operator|)
 condition|)
+block|{
+name|obj
+operator|->
+name|flags
+operator|&=
+operator|~
+name|OBJ_PIPWNT
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -6357,6 +6375,7 @@ operator|)
 name|obj
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * For asynchronous completions, release the buffer now. The brelse 	 * checks for B_WANTED and will do the wakeup there if necessary - so 	 * no need to do a wakeup here in the async case. 	 */
 if|if
@@ -6512,6 +6531,10 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * This routine is called in lieu of iodone in the case of  * incomplete I/O.  This keeps the busy status for pages  * consistant.  */
+end_comment
 
 begin_function
 name|void
@@ -6676,7 +6699,23 @@ operator|->
 name|paging_in_progress
 operator|==
 literal|0
+operator|&&
+operator|(
+name|obj
+operator|->
+name|flags
+operator|&
+name|OBJ_PIPWNT
+operator|)
 condition|)
+block|{
+name|obj
+operator|->
+name|flags
+operator|&=
+operator|~
+name|OBJ_PIPWNT
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -6687,7 +6726,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
+
+begin_comment
+comment|/*  * This routine is called before a device strategy routine.  * It is used to tell the VM system that paging I/O is in  * progress, and treat the pages associated with the buffer  * almost as being PG_BUSY.  Also the object paging_in_progress  * flag is handled to make sure that the object doesn't become  * inconsistant.  */
+end_comment
 
 begin_function
 name|void
@@ -6899,6 +6943,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Tell the VM system that the pages associated with this buffer  * are dirty.  This is in case of the unlikely circumstance that  * a buffer has to be destroyed before it is flushed.  */
+end_comment
+
 begin_function
 name|void
 name|vfs_dirty_pages
@@ -7039,7 +7087,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * these routines are not in the correct place (yet)  * also they work *ONLY* for kernel_pmap!!!  */
+comment|/*  * vm_hold_load_pages and vm_hold_unload pages get pages into  * a buffers address space.  The pages are anonymous and are  * not associated with a file object.  */
 end_comment
 
 begin_function
