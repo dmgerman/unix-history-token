@@ -79,16 +79,10 @@ directive|include
 file|<gnu/ext2fs/fs.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_ddb.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_function_decl
@@ -280,7 +274,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_function
@@ -477,7 +471,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* KDB */
 end_comment
 
 end_unit
