@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.4 %G%"
+literal|"@(#)collect.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3359,11 +3359,6 @@ end_macro
 
 begin_block
 block|{
-name|sigrelse
-argument_list|(
-name|SIGCONT
-argument_list|)
-expr_stmt|;
 name|puts
 argument_list|(
 literal|"@"
