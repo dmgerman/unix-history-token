@@ -21,6 +21,11 @@ comment|/* Scan code for this function */
 name|shiftstate
 decl_stmt|;
 comment|/* Shift state for this function */
+name|enum
+name|ctlrfcn
+name|function
+decl_stmt|;
+comment|/* Internal function identifier */
 name|char
 modifier|*
 name|name

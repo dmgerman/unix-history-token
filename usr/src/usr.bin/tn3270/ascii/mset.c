@@ -80,19 +80,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"state.h"
+file|"../ctlr/function.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|LETS_SEE_ASCII
-end_define
 
 begin_include
 include|#
 directive|include
-file|"m4.out"
+file|"state.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"astosc.h"
 end_include
 
 begin_include
@@ -1275,7 +1275,7 @@ name|head
 operator|->
 name|result
 operator|!=
-name|TC_GOTO
+name|STATE_GOTO
 condition|)
 block|{
 name|rptr
@@ -1295,16 +1295,14 @@ name|rptr
 operator|->
 name|result
 operator|=
-name|TC_Ascii
+name|astosc
 index|[
 name|head
 operator|->
 name|result
-operator|-
-name|TC_LOWEST
 index|]
 operator|.
-name|tc_name
+name|name
 expr_stmt|;
 name|rptr
 operator|=
@@ -1526,6 +1524,8 @@ argument_list|(
 name|keybdPointer
 argument_list|,
 name|picky
+argument_list|,
+name|ascii_to_index
 argument_list|)
 expr_stmt|;
 if|if

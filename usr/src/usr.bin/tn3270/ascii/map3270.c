@@ -115,18 +115,6 @@ parameter_list|)
 value|((isprint(c)&& !isspace(c)) || ((c) == ' '))
 end_define
 
-begin_define
-define|#
-directive|define
-name|LETS_SEE_ASCII
-end_define
-
-begin_include
-include|#
-directive|include
-file|"m4.out"
-end_include
-
 begin_include
 include|#
 directive|include
@@ -156,7 +144,7 @@ begin_define
 define|#
 directive|define
 name|LEX_CHAR
-value|TC_HIGHEST
+value|400
 end_define
 
 begin_comment
@@ -294,7 +282,7 @@ init|=
 block|{
 literal|0
 block|,
-name|TC_NULL
+name|STATE_NULL
 block|,
 literal|0
 block|,
@@ -349,6 +337,17 @@ begin_comment
 comment|/* DEBUG */
 end_comment
 
+begin_function_decl
+specifier|static
+name|int
+function_decl|(
+modifier|*
+name|GetTc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -372,7 +371,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* do we complain of unknown TC's? */
+comment|/* do we complain of unknown functions? */
 end_comment
 
 begin_decl_stmt
@@ -409,7 +408,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if non-zero, point to input 					 * string in core. 					 */
+comment|/* if non-zero, point to input 				 * string in core. 				 */
 end_comment
 
 begin_decl_stmt
@@ -2065,7 +2064,7 @@ name|pState
 operator|->
 name|result
 operator|=
-name|TC_NULL
+name|STATE_NULL
 expr_stmt|;
 name|pState
 operator|->
@@ -2212,7 +2211,7 @@ name|head
 operator|->
 name|result
 operator|!=
-name|TC_NULL
+name|STATE_NULL
 operator|)
 operator|&&
 operator|(
@@ -2220,7 +2219,7 @@ name|head
 operator|->
 name|result
 operator|!=
-name|TC_GOTO
+name|STATE_GOTO
 operator|)
 condition|)
 block|{
@@ -2283,14 +2282,14 @@ name|head
 operator|->
 name|result
 operator|==
-name|TC_NULL
+name|STATE_NULL
 condition|)
 block|{
 name|head
 operator|->
 name|result
 operator|=
-name|TC_GOTO
+name|STATE_GOTO
 expr_stmt|;
 name|head
 operator|->
@@ -2582,7 +2581,7 @@ name|head
 operator|->
 name|result
 operator|!=
-name|TC_NULL
+name|STATE_NULL
 operator|)
 operator|&&
 operator|(
@@ -2630,102 +2629,6 @@ end_block
 
 begin_escape
 end_escape
-
-begin_expr_stmt
-specifier|static
-name|GetTc
-argument_list|(
-argument|string
-argument_list|)
-name|char
-operator|*
-name|string
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
-specifier|register
-name|TC_Ascii_t
-modifier|*
-name|Tc
-decl_stmt|;
-for|for
-control|(
-name|Tc
-operator|=
-name|TC_Ascii
-init|;
-name|Tc
-operator|<
-name|TC_Ascii
-operator|+
-sizeof|sizeof
-name|TC_Ascii
-operator|/
-sizeof|sizeof
-argument_list|(
-name|TC_Ascii_t
-argument_list|)
-condition|;
-name|Tc
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|ustrcmp
-argument_list|(
-name|string
-argument_list|,
-name|Tc
-operator|->
-name|tc_name
-argument_list|)
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s = "
-argument_list|,
-name|Tc
-operator|->
-name|tc_name
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* DEBUG */
-return|return
-operator|(
-name|Tc
-operator|->
-name|tc_value
-operator|&
-literal|0xff
-operator|)
-return|;
-block|}
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
 
 begin_expr_stmt
 specifier|static
@@ -2784,7 +2687,10 @@ condition|(
 operator|(
 name|Tc
 operator|=
+call|(
+modifier|*
 name|GetTc
+call|)
 argument_list|(
 name|string
 operator|->
@@ -2792,7 +2698,7 @@ name|array
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|STATE_NULL
 condition|)
 block|{
 if|if
@@ -2814,41 +2720,17 @@ expr_stmt|;
 block|}
 name|Tc
 operator|=
-name|TC_NULL
+name|STATE_NULL
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Tc
-operator|<
-name|TC_LOWEST_USER
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s is not allowed to be specified by a user.\n"
-argument_list|,
-name|string
-operator|->
-name|array
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 block|}
 else|else
 block|{
 name|Tc
 operator|=
-name|TC_LOWEST_USER
+name|STATE_NULL
 expr_stmt|;
+comment|/* XXX ? */
 block|}
 end_if
 
@@ -3749,23 +3631,48 @@ begin_comment
 comment|/*  * InitControl - our interface to the outside.  What we should  *  do is figure out keyboard (or terminal) type, set up file pointer  *  (or string pointer), etc.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|state
 modifier|*
 name|InitControl
-parameter_list|(
+argument_list|(
 name|keybdPointer
-parameter_list|,
+argument_list|,
 name|pickyarg
-parameter_list|)
+argument_list|,
+name|translator
+argument_list|)
 name|char
 modifier|*
 name|keybdPointer
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|pickyarg
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Should we be picky? */
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|translator
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Translates ascii string to integer */
+end_comment
+
+begin_block
 block|{
 specifier|extern
 name|char
@@ -3779,6 +3686,10 @@ decl_stmt|;
 name|picky
 operator|=
 name|pickyarg
+expr_stmt|;
+name|GetTc
+operator|=
+name|translator
 expr_stmt|;
 if|if
 condition|(
@@ -4101,7 +4012,7 @@ name|address
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

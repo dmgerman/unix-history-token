@@ -16,6 +16,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STATE_NULL
+value|-1
+end_define
+
+begin_comment
+comment|/* Falls off edge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STATE_GOTO
+value|-2
+end_define
+
+begin_comment
+comment|/* GOTO internal state */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|state
 value|struct State
 end_define
