@@ -129,6 +129,13 @@ name|VM_AWAIT
 value|vm_await()
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_WAITPFAULT
+value|vm_waitpfault()
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -146,6 +153,19 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|vm_await
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vm_waitpfault
 name|__P
 argument_list|(
 operator|(

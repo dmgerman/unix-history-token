@@ -4137,14 +4137,6 @@ operator|||
 operator|(
 name|p
 operator|->
-name|p_lock
-operator|>
-literal|0
-operator|)
-operator|||
-operator|(
-name|p
-operator|->
 name|p_pid
 operator|==
 literal|1

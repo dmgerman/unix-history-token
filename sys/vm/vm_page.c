@@ -2503,7 +2503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_wait:	(also see VM_WAIT macro)  *  *	Block until free pages are available for allocation  */
+comment|/*  *	vm_wait:	(also see VM_WAIT macro)  *  *	Block until free pages are available for allocation  *	- Called in various places before memory allocations.  */
 end_comment
 
 begin_function
@@ -2577,6 +2577,64 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	vm_waitpfault:	(also see VM_WAITPFAULT macro)  *  *	Block until free pages are available for allocation  *	- Called only in vm_fault so that processes page faulting  *	  can be easily tracked.  */
+end_comment
+
+begin_function
+name|void
+name|vm_waitpfault
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vm_pages_needed
+condition|)
+block|{
+name|vm_pages_needed
+operator|=
+literal|1
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|&
+name|vm_pages_needed
+argument_list|)
+expr_stmt|;
+block|}
+name|tsleep
+argument_list|(
+operator|&
+name|cnt
+operator|.
+name|v_free_count
+argument_list|,
+name|PUSER
+argument_list|,
+literal|"pfault"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
