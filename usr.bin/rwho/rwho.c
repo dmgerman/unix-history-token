@@ -681,7 +681,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s:%s"
+literal|"%s:%-8.8s"
 argument_list|,
 name|mp
 operator|->
