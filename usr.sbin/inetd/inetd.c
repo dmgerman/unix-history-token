@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.34 1998/05/14 20:26:16 guido Exp $"
+literal|"$Id: inetd.c,v 1.35 1998/07/22 05:53:53 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2241,13 +2241,32 @@ name|EINTR
 condition|)
 name|syslog
 argument_list|(
-argument|LOG_WARNING
+name|LOG_WARNING
 argument_list|,
 literal|"accept (for %s): %m"
 argument_list|,
-argument|if (sep->se_accept&&                                           sep->se_socktype == SOCK_STREAM)                                               close(ctrl); 						sep->se_service
+name|sep
+operator|->
+name|se_service
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+if|if
+condition|(
+name|sep
+operator|->
+name|se_accept
+operator|&&
+name|sep
+operator|->
+name|se_socktype
+operator|==
+name|SOCK_STREAM
+condition|)
+name|close
+argument_list|(
+name|ctrl
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 if|if
