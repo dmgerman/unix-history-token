@@ -1025,6 +1025,24 @@ name|DA_Q_NO_SYNC_CACHE
 operator||
 name|DA_Q_NO_PREVENT
 block|}
+block|,
+block|{
+comment|/* 		 * The CISS RAID driver drives dont like the cache to be 		 * sync'd (esp since write cache is turned off). 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"COMPAQ"
+block|,
+literal|"RAID*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
