@@ -1389,9 +1389,11 @@ condition|)
 block|{
 name|fd2
 operator|=
-name|copyfd
+name|fcntl
 argument_list|(
 name|fd
+argument_list|,
+name|F_DUPFD
 argument_list|,
 literal|10
 argument_list|)

@@ -81,16 +81,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"redir.h"
-end_include
-
-begin_comment
-comment|/* defines copyfd() */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"syntax.h"
 end_include
 
