@@ -1,20 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	systm.h	6.1	83/07/29	*/
+comment|/*	systm.h	6.2	85/03/01	*/
 end_comment
 
 begin_comment
 comment|/*  * Random set of variables  * used by more than one  * routine.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|hand
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current index into coremap used by daemon */
 end_comment
 
 begin_decl_stmt
