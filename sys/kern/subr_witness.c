@@ -5805,6 +5805,8 @@ argument_list|)
 expr_stmt|;
 name|skip
 label|:
+empty_stmt|;
+comment|/* silence GCC 3.x */
 block|}
 block|}
 end_function
