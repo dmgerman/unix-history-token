@@ -115,8 +115,8 @@ literal|"usage:\n"
 literal|"  extattrctl start [path]\n"
 literal|"  extattrctl stop [path]\n"
 literal|"  extattrctl initattr [-f] [-p path] [attrsize] [attrfile]\n"
-literal|"  extattrctl enable [path] [namespace] [attrname] [attrfile]\n"
-literal|"  extattrctl disable [path] [namespace] [attrname]\n"
+literal|"  extattrctl enable [path] [attrnamespace] [attrname] [attrfile]\n"
+literal|"  extattrctl disable [path] [attrnamespace] [attrname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -626,7 +626,7 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|namespace
+name|attrnamespace
 decl_stmt|;
 if|if
 condition|(
@@ -800,7 +800,7 @@ literal|3
 index|]
 argument_list|,
 operator|&
-name|namespace
+name|attrnamespace
 argument_list|)
 expr_stmt|;
 if|if
@@ -836,7 +836,7 @@ index|[
 literal|5
 index|]
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|argv
 index|[
@@ -901,7 +901,7 @@ literal|3
 index|]
 argument_list|,
 operator|&
-name|namespace
+name|attrnamespace
 argument_list|)
 expr_stmt|;
 if|if
@@ -934,7 +934,7 @@ name|UFS_EXTATTR_CMD_DISABLE
 argument_list|,
 name|NULL
 argument_list|,
-name|namespace
+name|attrnamespace
 argument_list|,
 name|argv
 index|[
