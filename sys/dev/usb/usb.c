@@ -2448,7 +2448,7 @@ name|data
 condition|)
 if|#
 directive|if
-name|_FreeBSD_version
+name|__FreeBSD_version
 operator|>=
 literal|500000
 name|usb_async_proc
