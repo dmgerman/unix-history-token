@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	quiz.c	4.4	88/01/02	"
+literal|"	quiz.c	4.5	90/05/12	"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -1527,7 +1533,7 @@ end_decl_stmt
 begin_expr_stmt
 name|info
 operator|=
-literal|"/usr/games/lib/quiz.k/index"
+name|_PATH_INDEX
 expr_stmt|;
 end_expr_stmt
 
