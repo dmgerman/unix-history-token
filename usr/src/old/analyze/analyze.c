@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)analyze.c	4.1 (Berkeley) %G%"
+literal|"@(#)analyze.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,12 @@ name|sflg
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|uflg
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* use vprintf with care; it plays havoc with ``else's'' */
 end_comment
@@ -171,6 +177,12 @@ name|struct
 name|cmap
 modifier|*
 name|cmap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ecmx
 decl_stmt|;
 end_decl_stmt
 
@@ -466,7 +478,7 @@ directive|define
 name|X_PTMA
 value|2
 block|{
-literal|"_Usrptma"
+literal|"_Usrptmap"
 block|}
 block|,
 define|#
@@ -474,7 +486,7 @@ directive|define
 name|X_FIRSTFREE
 value|3
 block|{
-literal|"_firstfr"
+literal|"_firstfree"
 block|}
 block|,
 define|#
@@ -715,6 +727,13 @@ case|case
 literal|'d'
 case|:
 name|dflg
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflg
 operator|++
 expr_stmt|;
 break|break;
@@ -1115,6 +1134,16 @@ operator|.
 name|n_value
 argument_list|)
 operator|)
+expr_stmt|;
+name|ecmx
+operator|=
+name|i
+operator|/
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cmap
+argument_list|)
 expr_stmt|;
 name|cmap
 operator|=
@@ -3376,6 +3405,27 @@ name|errs
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|uflg
+operator|&&
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|SLOAD
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"pid %d u. pages:"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3399,6 +3449,24 @@ operator|&
 name|SLOAD
 condition|)
 block|{
+if|if
+condition|(
+name|uflg
+condition|)
+name|printf
+argument_list|(
+literal|" %x"
+argument_list|,
+name|p
+operator|->
+name|p_addr
+index|[
+name|i
+index|]
+operator|.
+name|pg_pfnum
+argument_list|)
+expr_stmt|;
 name|lseek
 argument_list|(
 name|fcore
@@ -3503,6 +3571,23 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|uflg
+operator|&&
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|SLOAD
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|errs
@@ -3931,7 +4016,8 @@ operator|<
 name|maxfree
 condition|;
 name|i
-operator|++
+operator|+=
+name|CLSIZE
 control|)
 block|{
 name|zp
@@ -4058,19 +4144,21 @@ name|cmap
 modifier|*
 name|c
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"%s page %x "
-argument_list|,
-name|cp
-argument_list|,
-name|pg
-argument_list|)
-expr_stmt|;
 name|cm
 operator|=
 name|pgtocm
 argument_list|(
+name|pg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cm %x %s page %x "
+argument_list|,
+name|cm
+argument_list|,
+name|cp
+argument_list|,
 name|pg
 argument_list|)
 expr_stmt|;
@@ -4298,6 +4386,43 @@ operator|->
 name|c_mdev
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|c_hlink
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" hlink %x page %x"
+argument_list|,
+name|c
+operator|->
+name|c_hlink
+argument_list|,
+name|cmtopg
+argument_list|(
+name|c
+operator|->
+name|c_hlink
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|c_hlink
+operator|>
+name|ecmx
+condition|)
+name|printf
+argument_list|(
+literal|"<<<"
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
