@@ -583,6 +583,11 @@ name|WCHAR_MAX
 value|INT32_MAX
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Limits of wint_t. */
 end_comment
@@ -600,11 +605,6 @@ directive|define
 name|WINT_MAX
 value|INT32_MAX
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
