@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.171 1998/10/26 19:07:39 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.172 1998/10/26 19:07:42 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -693,7 +693,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/10/26 19:07:39 $"
+literal|"$Date: 1998/10/26 19:07:42 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2335,6 +2335,12 @@ block|{
 name|int
 name|arg
 decl_stmt|;
+name|char
+name|pid
+index|[
+literal|12
+index|]
+decl_stmt|;
 name|nargv
 index|[
 literal|0
@@ -2346,6 +2352,19 @@ name|oargv
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|pid
+argument_list|,
+sizeof|sizeof
+name|pid
+argument_list|,
+literal|"%d"
+argument_list|,
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
 for|for
@@ -2602,6 +2621,23 @@ name|enddisc
 operator|.
 name|len
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|nargv
+index|[
+name|arg
+index|]
+operator|=
+name|subst
+argument_list|(
+name|nargv
+index|[
+name|arg
+index|]
+argument_list|,
+literal|"PROCESSID"
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 name|nargv
