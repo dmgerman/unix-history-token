@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.3 (Berkeley) %G%"
+literal|"@(#)server.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,9 +1283,13 @@ name|log
 argument_list|(
 name|lfp
 argument_list|,
-literal|"%s: no password entry for uid \n"
+literal|"%s: no password entry for uid %d \n"
 argument_list|,
 name|target
+argument_list|,
+name|stb
+operator|.
+name|st_uid
 argument_list|)
 expr_stmt|;
 name|pw
@@ -1341,6 +1345,10 @@ argument_list|,
 literal|"%s: no name for group %d\n"
 argument_list|,
 name|target
+argument_list|,
+name|stb
+operator|.
+name|st_gid
 argument_list|)
 expr_stmt|;
 name|gr
