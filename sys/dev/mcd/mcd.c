@@ -875,6 +875,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|mcd_size
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|d_open_t
@@ -893,13 +904,6 @@ begin_decl_stmt
 specifier|static
 name|d_ioctl_t
 name|mcdioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_psize_t
-name|mcdsize
 decl_stmt|;
 end_decl_stmt
 
@@ -1420,7 +1424,7 @@ return|;
 block|}
 if|if
 condition|(
-name|mcdsize
+name|mcd_size
 argument_list|(
 name|dev
 argument_list|)
@@ -2310,7 +2314,7 @@ operator|&
 name|MCDDSKIN
 operator|)
 operator|||
-name|mcdsize
+name|mcd_size
 argument_list|(
 name|dev
 argument_list|)
@@ -2586,7 +2590,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|mcdsize
+name|mcd_size
 parameter_list|(
 name|dev_t
 name|dev
