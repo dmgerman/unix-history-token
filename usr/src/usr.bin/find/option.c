@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	5.8 (Berkeley) %G%"
+literal|"@(#)option.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,6 +311,14 @@ block|,
 name|c_or
 block|,
 name|O_ZERO
+block|,
+literal|"-path"
+block|,
+name|N_PATH
+block|,
+name|c_path
+block|,
+name|O_ARGV
 block|,
 literal|"-perm"
 block|,
