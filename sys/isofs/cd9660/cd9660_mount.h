@@ -66,5 +66,16 @@ begin_comment
 comment|/* enable extended attributes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ISOFSMNT_NOJOLIET
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* disable Joliet Ext.*/
+end_comment
+
 end_unit
 

@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_cd9660.c,v 1.11 1997/03/29 03:32:35 imp Exp $"
+literal|"$Id: mount_cd9660.c,v 1.12 1997/04/29 15:56:40 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,16 @@ literal|1
 block|}
 block|,
 block|{
+literal|"joliet"
+block|,
+literal|1
+block|,
+name|ISOFSMNT_NOJOLIET
+block|,
+literal|1
+block|}
+block|,
+block|{
 name|NULL
 block|}
 block|}
@@ -276,7 +286,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ego:rs:v"
+literal|"egjo:rs:v"
 argument_list|)
 operator|)
 operator|!=
@@ -302,6 +312,14 @@ case|:
 name|opts
 operator||=
 name|ISOFSMNT_GENS
+expr_stmt|;
+break|break;
+case|case
+literal|'j'
+case|:
+name|opts
+operator||=
+name|ISOFSMNT_NOJOLIET
 expr_stmt|;
 break|break;
 case|case
