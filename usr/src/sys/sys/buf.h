@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.2	%G%	*/
+comment|/*	buf.h	4.3	%G%	*/
 end_comment
 
 begin_comment
@@ -109,6 +109,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BQUEUES
+value|4
+end_define
+
+begin_comment
+comment|/* number of free buffer queues */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -139,6 +150,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* swap I/O headers */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|buf
+name|bfreelist
+index|[
+name|BQUEUES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* heads of available lists */
 end_comment
 
 begin_decl_stmt
@@ -454,7 +480,29 @@ value|0x10000
 end_define
 
 begin_comment
-comment|/* buffer contains invalid data */
+comment|/* does not contain valid info (if not BUSY) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_LOCKED
+value|0x20000
+end_define
+
+begin_comment
+comment|/* this buffer locked in core (not reusable) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_HEAD
+value|0x40000
+end_define
+
+begin_comment
+comment|/* this is a buffer header, not a buffer */
 end_comment
 
 begin_comment
