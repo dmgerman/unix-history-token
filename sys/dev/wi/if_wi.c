@@ -4143,6 +4143,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|WI_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
