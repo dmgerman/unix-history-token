@@ -417,6 +417,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\nIt is safe to define HASSETREUID on this system\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.65.1.2 (Berkeley) 9/16/96 (with SMTP)"
+literal|"@(#)usersmtp.c	8.72 (Berkeley) 9/15/96 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.65.1.2 (Berkeley) 9/16/96 (without SMTP)"
+literal|"@(#)usersmtp.c	8.72 (Berkeley) 9/15/96 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,6 +207,34 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|reply
+name|__P
+argument_list|(
+operator|(
+name|MAILER
+operator|*
+operator|,
+name|MCI
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|,
+name|time_t
+operator|,
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_escape
 end_escape
 
@@ -224,8 +252,7 @@ name|mci
 parameter_list|,
 name|e
 parameter_list|)
-name|struct
-name|mailer
+name|MAILER
 modifier|*
 name|m
 decl_stmt|;
@@ -1114,8 +1141,7 @@ name|mci
 parameter_list|,
 name|e
 parameter_list|)
-name|struct
-name|mailer
+name|MAILER
 modifier|*
 name|m
 decl_stmt|;
@@ -1418,6 +1444,11 @@ argument_list|)
 condition|)
 block|{
 comment|/* cannot just send a 8-bit version */
+specifier|extern
+name|char
+name|MsgBuf
+index|[]
+decl_stmt|;
 name|usrerr
 argument_list|(
 literal|"%s does not support 8BITMIME"
@@ -1427,11 +1458,14 @@ operator|->
 name|mci_host
 argument_list|)
 expr_stmt|;
+name|mci_setstat
+argument_list|(
 name|mci
-operator|->
-name|mci_status
-operator|=
+argument_list|,
 literal|"5.6.3"
+argument_list|,
+name|MsgBuf
+argument_list|)
 expr_stmt|;
 return|return
 name|EX_DATAERR
@@ -1464,10 +1498,14 @@ operator|->
 name|e_envid
 argument_list|)
 operator|<
-operator|(
+call|(
 name|SIZE_T
-operator|)
+call|)
+argument_list|(
 name|l
+operator|-
+literal|7
+argument_list|)
 condition|)
 block|{
 name|strcat
@@ -1806,6 +1844,18 @@ operator|==
 literal|4
 condition|)
 block|{
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|smtptodsn
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 return|return
 name|EX_TEMPFAIL
 return|;
@@ -1834,11 +1884,14 @@ literal|501
 condition|)
 block|{
 comment|/* syntax error in arguments */
+name|mci_setstat
+argument_list|(
 name|mci
-operator|->
-name|mci_status
-operator|=
+argument_list|,
 literal|"5.5.2"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
 expr_stmt|;
 return|return
 name|EX_DATAERR
@@ -1853,11 +1906,14 @@ literal|553
 condition|)
 block|{
 comment|/* mailbox name not allowed */
+name|mci_setstat
+argument_list|(
 name|mci
-operator|->
-name|mci_status
-operator|=
+argument_list|,
 literal|"5.1.3"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
 expr_stmt|;
 return|return
 name|EX_DATAERR
@@ -1872,11 +1928,14 @@ literal|552
 condition|)
 block|{
 comment|/* exceeded storage allocation */
+name|mci_setstat
+argument_list|(
 name|mci
-operator|->
-name|mci_status
-operator|=
+argument_list|,
 literal|"5.2.2"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
 expr_stmt|;
 return|return
 name|EX_UNAVAILABLE
@@ -1894,6 +1953,15 @@ literal|5
 condition|)
 block|{
 comment|/* unknown error */
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+literal|"5.0.0"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 return|return
 name|EX_UNAVAILABLE
 return|;
@@ -1934,6 +2002,15 @@ block|}
 endif|#
 directive|endif
 comment|/* protocol error -- close up */
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+literal|"5.5.1"
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
+expr_stmt|;
 name|smtpquit
 argument_list|(
 name|m
@@ -1999,12 +2076,6 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|smtptodsn
-parameter_list|()
-function_decl|;
 name|strcpy
 argument_list|(
 name|optbuf
@@ -2342,18 +2413,54 @@ condition|(
 name|r
 operator|==
 literal|550
-operator|||
+condition|)
+block|{
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"5.1.1"
+expr_stmt|;
+return|return
+name|EX_NOUSER
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|r
 operator|==
 literal|551
-operator|||
+condition|)
+block|{
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"5.1.6"
+expr_stmt|;
+return|return
+name|EX_NOUSER
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|r
 operator|==
 literal|553
 condition|)
+block|{
+name|to
+operator|->
+name|q_status
+operator|=
+literal|"5.1.3"
+expr_stmt|;
 return|return
 name|EX_NOUSER
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -2364,9 +2471,11 @@ argument_list|)
 operator|==
 literal|5
 condition|)
+block|{
 return|return
 name|EX_UNAVAILABLE
 return|;
+block|}
 ifdef|#
 directive|ifdef
 name|LOG
@@ -2440,8 +2549,7 @@ name|mci
 parameter_list|,
 name|e
 parameter_list|)
-name|struct
-name|mailer
+name|MAILER
 modifier|*
 name|m
 decl_stmt|;
@@ -2906,6 +3014,18 @@ operator|->
 name|mci_state
 operator|=
 name|MCIS_OPEN
+expr_stmt|;
+name|mci_setstat
+argument_list|(
+name|mci
+argument_list|,
+name|smtptodsn
+argument_list|(
+name|r
+argument_list|)
+argument_list|,
+name|SmtpReplyBuffer
+argument_list|)
 expr_stmt|;
 name|e
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.14 (Berkeley) 11/5/95"
+literal|"@(#)makemap.c	8.17 (Berkeley) 9/25/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NOT_SENDMAIL
+end_define
 
 begin_include
 include|#
@@ -267,6 +273,9 @@ name|st
 decl_stmt|;
 name|int
 name|mode
+decl_stmt|;
+name|int
+name|putflags
 decl_stmt|;
 name|enum
 name|type
@@ -648,10 +657,39 @@ name|flags
 operator||=
 name|R_DUP
 expr_stmt|;
+if|if
+condition|(
+name|allowdups
+operator|||
+name|allowreplace
+condition|)
+name|putflags
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|putflags
+operator|=
+name|R_NOOVERWRITE
+expr_stmt|;
 break|break;
 case|case
 name|T_HASH
 case|:
+if|if
+condition|(
+name|allowreplace
+condition|)
+name|putflags
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|putflags
+operator|=
+name|R_NOOVERWRITE
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 ifdef|#
@@ -660,8 +698,6 @@ name|NDBM
 case|case
 name|T_DBM
 case|:
-endif|#
-directive|endif
 if|if
 condition|(
 name|allowdups
@@ -684,7 +720,22 @@ name|EX_UNAVAILABLE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|allowreplace
+condition|)
+name|putflags
+operator|=
+name|DBM_REPLACE
+expr_stmt|;
+else|else
+name|putflags
+operator|=
+name|DBM_INSERT
+expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 comment|/* 	**  Adjust file names. 	*/
 if|if
@@ -1411,11 +1462,7 @@ name|val
 operator|.
 name|dbm
 argument_list|,
-name|allowreplace
-condition|?
-name|DBM_REPLACE
-else|:
-name|DBM_INSERT
+name|putflags
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1455,11 +1502,7 @@ name|val
 operator|.
 name|db
 argument_list|,
-name|allowreplace
-condition|?
-literal|0
-else|:
-name|R_NOOVERWRITE
+name|putflags
 argument_list|)
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.220 (Berkeley) 11/29/95  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.267 (Berkeley) 10/17/96  */
 end_comment
 
 begin_comment
@@ -162,11 +162,11 @@ begin_define
 define|#
 directive|define
 name|MAXMXHOSTS
-value|20
+value|100
 end_define
 
 begin_comment
-comment|/* max # of MX records */
+comment|/* max # of MX records for one host */
 end_comment
 
 begin_define
@@ -719,32 +719,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_function_decl
-specifier|extern
-name|void
-name|hard_syslog
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|V4FS
 end_ifdef
 
@@ -851,10 +825,73 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|hard_syslog
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  IBM AIX 4.x */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_AIX3
+value|1
+end_define
+
+begin_comment
+comment|/* pull in AIX3 stuff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* setreuid(2) works */
+end_comment
 
 begin_endif
 endif|#
@@ -945,17 +982,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FORK
-value|fork
-end_define
-
-begin_comment
-comment|/* no vfork primitive available */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|GIDSET_T
 value|gid_t
 end_define
@@ -992,6 +1018,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FSHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
 name|LA_AVENRUN
 value|"avenrun"
 end_define
@@ -1002,7 +1035,290 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Silicon Graphics IRIX ** **	Compiles on 4.0.1. ** **	Use IRIX64 instead of IRIX for 64-bit IRIX (6.0). **	Use IRIX5 instead of IRIX for IRIX 5.x. ** **	IRIX64 changes from Mark R. Levinson<ml@cvdev.rochester.edu>. **	IRIX5 changes from Kari E. Hurtta<Kari.Hurtta@fmi.fi>. */
+comment|/* **  IBM AIX 2.2.1 -- actually tested for osupdate level 2706+1773 ** **	From Mark Whetzel<markw@wg.waii.com>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIX
+end_ifdef
+
+begin_comment
+comment|/* AIX/RT compiler pre-defines this */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* AIX/RT resource.h does NOT include this */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHMOD
+value|0
+end_define
+
+begin_comment
+comment|/* does not have fchmod(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* use setreuid(2) -lbsd system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* use setvbuf(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|0
+end_define
+
+begin_comment
+comment|/* does not have setrlimit call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|0
+end_define
+
+begin_comment
+comment|/* does not have flock call - use fcntl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASULIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* use ulimit instead of setrlimit call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* Do we need theirs or ours */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5SETPGRP
+value|1
+end_define
+
+begin_comment
+comment|/* don't have setpgid on AIX/RT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_SRCROUTE
+value|0
+end_define
+
+begin_comment
+comment|/* Something is broken with getsockopt() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_3
+value|1
+end_define
+
+begin_comment
+comment|/* NOT bsd 4.4 or posix signals */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATFS
+end_define
+
+begin_comment
+comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
+end_define
+
+begin_comment
+comment|/* pad process title with nulls */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_SUBR
+end_define
+
+begin_comment
+comment|/* use our ported loadavgd daemon */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_TZNAME
+end_define
+
+begin_comment
+comment|/* use tzname[] vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARBPTR_T
+value|int *
+end_define
+
+begin_define
+define|#
+directive|define
+name|void
+value|int
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* RTisms for BSD compatibility, specified in the Makefile   define BSD		1   define BSD_INCLUDES		1   define BSD_REMAP_SIGNAL_TO_SIGVEC     RTisms needed above */
+end_comment
+
+begin_comment
+comment|/* make this sendmail in a completely different place */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDORCF
+value|"/usr/local/newmail/sendmail.cf"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/usr/local/newmail/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Silicon Graphics IRIX ** **	Compiles on 4.0.1. ** **	Use IRIX64 instead of IRIX for 64-bit IRIX (6.0). **	Use IRIX5 instead of IRIX for IRIX 5.x. **  **	This version tries to be adaptive using _MIPS_SIM: **		_MIPS_SIM == _ABIO32 (= 1)    Abi: -32  on IRIX 6.2 **		_MIPS_SIM == _ABIN32 (= 2)    Abi: -n32 on IRIX 6.2 **		_MIPS_SIM == _ABI64  (= 3)    Abi: -64 on IRIX 6.2 ** **		_MIPS_SIM is 1 also on IRIX 5.3 ** **	IRIX64 changes from Mark R. Levinson<ml@cvdev.rochester.edu>. **	IRIX5 changes from Kari E. Hurtta<Kari.Hurtta@fmi.fi>. **	Adaptive changes from Kari E. Hurtta<Kari.Hurtta@fmi.fi>. */
 end_comment
 
 begin_if
@@ -1010,9 +1326,35 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|IRIX64
+name|__sgi
 argument_list|)
-operator|||
+end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IRIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IRIX
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|_MIPS_SIM
+operator|>
+literal|0
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|IRIX5
@@ -1022,8 +1364,52 @@ end_if
 begin_define
 define|#
 directive|define
-name|IRIX
+name|IRIX5
 end_define
+
+begin_comment
+comment|/* IRIX5 or IRIX6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|_MIPS_SIM
+operator|>
+literal|1
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IRIX6
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|IRIX64
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IRIX6
+end_define
+
+begin_comment
+comment|/* IRIX6 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1105,17 +1491,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FORK
-value|fork
-end_define
-
-begin_comment
-comment|/* no vfork primitive available */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|setpgid
 value|BSDsetpgrp
 end_define
@@ -1148,6 +1523,28 @@ end_define
 begin_comment
 comment|/* alternate field name */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IRIX6
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_IRIX6
+end_define
+
+begin_comment
+comment|/* figure out at run time */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -1194,6 +1591,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -1207,6 +1609,18 @@ argument_list|(
 name|IRIX5
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
@@ -1344,12 +1758,23 @@ begin_comment
 comment|/* can check IP source routing */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1361,11 +1786,59 @@ begin_define
 define|#
 directive|define
 name|SOLARIS
-value|203
+value|20300
 end_define
 
 begin_comment
-comment|/* for back compat only -- use -DSOLARIS=203 */
+comment|/* for back compat only -- use -DSOLARIS=20300 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|NOT_SENDMAIL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SOLARIS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|__svr4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__SVR4
+argument_list|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SOLARIS
+value|1
+end_define
+
+begin_comment
+comment|/* unknown Solaris version */
 end_comment
 
 begin_endif
@@ -1416,6 +1889,17 @@ directive|define
 name|GIDSET_T
 value|gid_t
 end_define
+
+begin_define
+define|#
+directive|define
+name|USE_SA_SIGACTION
+value|1
+end_define
+
+begin_comment
+comment|/* use sa_sigaction field */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1493,6 +1977,142 @@ end_define
 
 begin_comment
 comment|/* allow full size syslog buffer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|20300
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|203
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USESETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* seteuid works as of 2.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|20500
+operator|||
+operator|(
+name|SOLARIS
+operator|<
+literal|10000
+operator|&&
+name|SOLARIS
+operator|>=
+literal|205
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf starting in 2.5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* setreuid works as of 2.5 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|==
+literal|20500
+operator|||
+name|SOLARIS
+operator|==
+literal|205
+end_if
+
+begin_define
+define|#
+directive|define
+name|snprintf
+value|__snprintf
+end_define
+
+begin_comment
+comment|/* but names it oddly in 2.5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|vsnprintf
+value|__vsnprintf
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASGETUSERSHELL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* getusershell(3) causes core dumps */
 end_comment
 
 begin_endif
@@ -2131,24 +2751,6 @@ begin_comment
 comment|/* get OSF/1 defines below */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|FORK
-value|fork
-end_define
-
-begin_comment
-comment|/* no vfork primitive available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_VENDOR_CF
-value|"/var/adm/sendmail/sendmail.cf"
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2197,12 +2799,27 @@ begin_comment
 comment|/* get OSF/1 defines below */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TZ_TYPE
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|_PATH_VENDOR_CF
-value|"/var/adm/sendmail/sendmail.cf"
+name|TZ_TYPE
+value|TZ_TZNAME
 end_define
+
+begin_comment
+comment|/* use tzname[] vector */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2210,7 +2827,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  OSF/1 (tested on Alpha) */
+comment|/* **  OSF/1 (tested on Alpha) -- now known as Digital UNIX. ** **	Tested for 3.2 and 4.0. */
 end_comment
 
 begin_ifdef
@@ -2313,6 +2930,13 @@ end_define
 begin_comment
 comment|/* use<sys/mount.h> statfs() impl */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/var/adm/sendmail/sendmail.cf"
+end_define
 
 begin_ifndef
 ifndef|#
@@ -2422,6 +3046,17 @@ end_define
 
 begin_comment
 comment|/* compiler gripes on uid_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GID_T
+value|int
+end_define
+
+begin_comment
+comment|/* ditto for gid_t */
 end_comment
 
 begin_define
@@ -2545,6 +3180,12 @@ argument_list|(
 name|__bsdi__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
@@ -2673,7 +3314,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  BSD/386 (all versions) **	From Tony Sanders, BSDI */
+comment|/* **  BSD/OS (was BSD/386) (all versions) **	From Tony Sanders, BSDI */
 end_comment
 
 begin_ifdef
@@ -2681,6 +3322,12 @@ ifdef|#
 directive|ifdef
 name|__bsdi__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_define
 define|#
@@ -2925,6 +3572,12 @@ name|__NetBSD__
 argument_list|)
 end_if
 
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -3100,12 +3753,107 @@ begin_comment
 comment|/* setproctitle is in libc */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SPT_TYPE
+end_undef
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|==
+literal|2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
+begin_comment
+comment|/* and this works */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|199512
+end_if
+
+begin_comment
+comment|/* 2.2-current right now */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
 begin_define
 define|#
 directive|define
-name|setreuid
-value|__setreuid
+name|SPT_TYPE
+value|SPT_BUILTIN
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SPT_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_REUSEARGV
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPT_PADCHAR
+value|'\0'
+end_define
+
+begin_comment
+comment|/* pad process title with nulls */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3434,8 +4182,73 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  SCO Unix ** **	This includes two parts -- the first is for SCO Open Server 3.2v4 **	(contributed by Philippe Brand<phb@colombo.telesys-innov.fr>). **	The second is, I believe, for an older version. */
+comment|/* **  SCO Unix ** **	This includes three parts: ** **	The first is for SCO OpenServer 5. **	(Contributed by Keith Reynolds<keithr@sco.COM>). ** **		SCO OpenServer 5 has a compiler version number macro, **		which we can use to figure out what version we're on. **		This may have to change in future releases. ** **	The second is for SCO UNIX 3.2v4.2/Open Desktop 3.0. **	(Contributed by Philippe Brand<phb@colombo.telesys-innov.fr>). ** **	The third is for SCO UNIX 3.2v4.0/Open Desktop 2.0 and earlier. */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_SCO_DS
+operator|>=
+literal|1
+end_if
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|_SCO_unix_4_2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHMOD
+value|1
+end_define
+
+begin_comment
+comment|/* has fchmod() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* has setrlimit() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RLIMIT_NEEDS_SYS_TIME_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3459,38 +4272,6 @@ end_define
 begin_comment
 comment|/* has setreuid(2) call */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_UNIX
-value|"/unix"
-end_define
-
-begin_define
-define|#
-directive|define
-name|_PATH_VENDOR_CF
-value|"/usr/lib/sendmail.cf"
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILPID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILPID
-value|"/etc/sendmail.pid"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -3527,17 +4308,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SYS5SIGNALS
-value|1
-end_define
-
-begin_comment
-comment|/* SysV signal semantics -- reset on each sig */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASGETUSERSHELL
 value|0
 end_define
@@ -3545,35 +4315,6 @@ end_define
 begin_comment
 comment|/* does not have getusershell(3) call */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NOFTRUNCATE
-value|0
-end_define
-
-begin_comment
-comment|/* does not have ftruncate(3) call */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEEDFSYNC
-value|1
-end_define
-
-begin_comment
-comment|/* needs the fsync(2) call stub */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORK
-value|fork
-end_define
 
 begin_define
 define|#
@@ -3636,6 +4377,92 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_PATH_UNIX
+value|"/unix"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_VENDOR_CF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* stuff fixed in later releases */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SCO_unix_4_2
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SCO_DS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NOFTRUNCATE
+value|0
+end_define
+
+begin_comment
+comment|/* does not have ftruncate(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDFSYNC
+value|1
+end_define
+
+begin_comment
+comment|/* needs the fsync(2) call stub */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NETUNIX
 value|0
 end_define
@@ -3643,6 +4470,11 @@ end_define
 begin_comment
 comment|/* no unix domain socket support */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -3750,13 +4582,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FORK
-value|fork
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAXPATHLEN
 value|1024
 end_define
@@ -3828,14 +4653,26 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Altos System V. **	Contributed by Tim Rice<timr@crl.com>. */
+comment|/* **  Altos System V (5.3.1) **	Contributed by Tim Rice<tim@trr.metro.net>. */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALTOS_SYS_V
+name|ALTOS_SYSTEM_V
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stream.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
 
 begin_define
 define|#
@@ -3895,15 +4732,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FORK
-value|fork
+name|NEEDSTRSTR
+value|1
 end_define
+
+begin_comment
+comment|/* need emulation of the strstr(3) call */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXPATHLEN
-value|PATHSIZE
+value|PATH_MAX
 end_define
 
 begin_define
@@ -3939,11 +4780,11 @@ begin_define
 define|#
 directive|define
 name|TZ_TYPE
-value|TZ_TM_NAME
+value|TZ_TZNAME
 end_define
 
 begin_comment
-comment|/* use tm->tm_name */
+comment|/* use tzname[] vector */
 end_comment
 
 begin_define
@@ -4003,13 +4844,91 @@ name|pid_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* some stuff that should have been in the include files */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwent
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwnam
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwuid
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|group
+modifier|*
+name|getgrgid
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|group
+modifier|*
+name|getgrnam
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* **  ConvexOS 11.0 and later ** **	"Todd C. Miller"<millert@mroe.cs.colorado.edu> claims this **	works on 9.1 as well. */
+comment|/* **  ConvexOS 11.0 and later ** **	"Todd C. Miller"<millert@mroe.cs.colorado.edu> claims this **	works on 9.1 as well. ** **  ConvexOS 11.5 and later, should work on 11.0 as defined. **  For pre-ConvexOOS 11.0, define NEEDGETOPT, undef IDENTPROTO ** **	Eric Schnoebelen (eric@cirr.com) For CONVEX Computer Corp. **		(now the CONVEX Technologies Center of Hewlett Packard) */
 end_comment
 
 begin_ifdef
@@ -4021,12 +4940,23 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|BSD
+name|HASGETDTABLESIZE
 value|1
 end_define
 
 begin_comment
-comment|/* include all the BSD defines */
+comment|/* has getdtablesize(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) */
 end_comment
 
 begin_define
@@ -4054,8 +4984,74 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NEEDGETOPT
+name|HASUNSETENV
 value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* has flock(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* has setrlimit(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BROKEN_RES_SEARCH
+value|1
+end_define
+
+begin_comment
+comment|/* res_search(unknown) returns h_error=0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDPUTENV
+value|1
+end_define
+
+begin_comment
+comment|/* needs putenv (written in terms of setenv) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|0
 end_define
 
 begin_comment
@@ -4154,6 +5150,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|TZ_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TZ_TYPE
+value|TZ_TIMEZONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
 end_ifndef
 
@@ -4161,11 +5175,104 @@ begin_define
 define|#
 directive|define
 name|IDENTPROTO
-value|0
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SHARE_V1
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SHARE_V1
+value|1
 end_define
 
 begin_comment
-comment|/* TCP/IP implementation is broken */
+comment|/* version 1 of the fair share scheduler */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UID_T
+value|int
+end_define
+
+begin_comment
+comment|/* GNUC gets it right, ConvexC botches */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GID_T
+value|int
+end_define
+
+begin_comment
+comment|/* GNUC gets it right, ConvexC botches */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|SECUREWARE
+end_if
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|fork
+end_define
+
+begin_comment
+comment|/* SecureWare wants the real fork! */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FORK
+value|vfork
+end_define
+
+begin_comment
+comment|/* the rest of the OS versions don't care */
 end_comment
 
 begin_endif
@@ -4371,7 +5478,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[09/06/95 @ 10:20:58 AM (Wednesday)] **	sendmail 8.7-b14	named 4.9.3-beta17	db-1.85 **	gcc 2.7.0		libc-5.2.7		linux 1.2.13 */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[06/10/96 @ 09:21:40 PM (Monday)] **	sendmail 8.8-a4		named bind-4.9.4-T4B	db-1.85 **	gcc 2.7.2		libc-5.3.12		linux 2.0.0 ** **  NOTE: Override HASFLOCK as you will but, as of 1.99.6, mixed-style ** 	file locking is no longer allowed.  In particular, make sure **	your DBM library and sendmail are both using either flock(2) **	*or* fcntl(2) file locking, but not both. */
 end_comment
 
 begin_ifdef
@@ -4495,6 +5602,20 @@ directive|ifndef
 name|HASFLOCK
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<linux/version.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|LINUX_VERSION_CODE
+operator|<
+literal|66399
+end_if
+
 begin_define
 define|#
 directive|define
@@ -4505,6 +5626,27 @@ end_define
 begin_comment
 comment|/* flock(2) is broken after 0.99.13 */
 end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* flock(2) fixed after 1.3.95 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -4733,13 +5875,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|FORK
-value|fork
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4910,17 +6045,6 @@ end_define
 
 begin_comment
 comment|/* use System V setpgrp(2) syscall */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FORK
-value|fork
-end_define
-
-begin_comment
-comment|/* no vfork(2) primitive available */
 end_comment
 
 begin_define
@@ -5222,7 +6346,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Sequent DYNIX/ptx v2.0 (and higher) ** **	For DYNIX/ptx v1.x, undefine HASSETREUID. ** **	From Tim Wright<timw@sequent.com>. */
+comment|/* **  Sequent DYNIX/ptx v2.0 (and higher) ** **	For DYNIX/ptx v1.x, undefine HASSETREUID. ** **	From Tim Wright<timw@sequent.com>. **	Update from Jack Woolley<jwoolley@sctcorp.com>, 26 Dec 1995, **		for DYNIX/ptx 4.0.2. */
 end_comment
 
 begin_ifdef
@@ -5230,6 +6354,12 @@ ifdef|#
 directive|ifdef
 name|_SEQUENT_
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stream.h>
+end_include
 
 begin_define
 define|#
@@ -5611,6 +6741,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|RLIMIT_NEEDS_SYS_TIME_H
+value|1
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -5883,13 +7020,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  NCR 3000 Series (SysVr4) ** **	From Kevin Darcy<kevin@tech.mis.cfc.com>. */
+comment|/* **  NCR MP-RAS 2.x (SysVr4) with Wollongong TCP/IP ** **	From Kevin Darcy<kevin@tech.mis.cfc.com>. */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NCR3000
+name|NCR_MP_RAS2
 end_ifdef
 
 begin_include
@@ -5915,17 +7052,39 @@ begin_comment
 comment|/* Something is broken with getsockopt() */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|BSD
-end_undef
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
 
 begin_define
 define|#
 directive|define
-name|LA_AVENRUN
-value|"avenrun"
+name|SPT_TYPE
+value|SPT_NONE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  NCR MP-RAS 3.x (SysVr4) with STREAMware TCP/IP ** **	From Tom Moore<Tom.Moore@DaytonOH.NCR.COM> */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCR_MP_RAS3
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__svr4__
 end_define
 
 begin_define
@@ -5933,6 +7092,13 @@ define|#
 directive|define
 name|SYSLOG_BUFSIZE
 value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPT_TYPE
+value|SPT_NONE
 end_define
 
 begin_endif
@@ -7192,14 +8358,32 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Fujitsu/ICL UXP/DS (For the DS/90 Series) ** **	From Diego R. Lopez<drlopez@cica.es>. */
+comment|/* **  Fujitsu/ICL UXP/DS (For the DS/90 Series) ** **	From Diego R. Lopez<drlopez@cica.es>. **	Additional changes from Fumio Moriya and Toshiaki Nomura of the **		Fujitsu Fresoftware gruop<dsfrsoft@oai6.yk.fujitsu.co.jp>. */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UXPDS
+name|__uxp__
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mkdev.h>
+end_include
 
 begin_define
 define|#
@@ -7211,7 +8395,7 @@ begin_define
 define|#
 directive|define
 name|HASGETUSERSHELL
-value|1
+value|0
 end_define
 
 begin_define
@@ -7220,6 +8404,46 @@ directive|define
 name|HASFLOCK
 value|0
 end_define
+
+begin_if
+if|#
+directive|if
+name|UXPDS
+operator|==
+literal|10
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|0
+end_define
+
+begin_comment
+comment|/* no snprintf(3) or vsnprintf(3) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* has snprintf(3) and vsnprintf(3) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -7232,7 +8456,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_VENDOR_CF
-value|"/etc/mail/sendmail.cf"
+value|"/usr/ucblib/sendmail.cf"
 end_define
 
 begin_ifndef
@@ -7245,13 +8469,251 @@ begin_define
 define|#
 directive|define
 name|_PATH_SENDMAILPID
-value|"/etc/mail/sendmail.pid"
+value|"/usr/ucblib/sendmail.pid"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Pyramid DC/OSx ** **	From Earle Ake<akee@wpdis01.wpafb.af.mil>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DCOSx
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Concurrent Computer Corporation Maxion ** **	From Donald R. Laster Jr.<laster@access.digex.net>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MAXION__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/stream.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|__svr4__
+value|1
+end_define
+
+begin_comment
+comment|/* SVR4.2MP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* have setreuid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASLSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* have lstat(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRLIMIT
+value|1
+end_define
+
+begin_comment
+comment|/* have setrlimit(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* have getdtablesize(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSNPRINTF
+value|1
+end_define
+
+begin_comment
+comment|/* have snprintf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|1
+end_define
+
+begin_comment
+comment|/* have getusershell(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOFTRUNCATE
+value|1
+end_define
+
+begin_comment
+comment|/* do not have ftruncate(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLEEP_T
+value|unsigned
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_TYPE
+value|SFS_STATVFS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bavail
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|256
+end_define
+
+begin_comment
+comment|/* Use 256 bytes */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|WUNTRACED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFSIGNALED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFSTOPPED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WTERMSIG
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WSTOPSIG
+end_undef
 
 begin_endif
 endif|#
@@ -7502,6 +8964,28 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HASFCHMOD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASFCHMOD
+value|1
+end_define
+
+begin_comment
+comment|/* most (all?) SVr4s seem to have fchmod(2) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_PATH_UNIX
 end_ifndef
 
@@ -7588,6 +9072,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SVr4 uses different routines for setjmp/longjmp with signal support */
+end_comment
 
 begin_define
 define|#
@@ -7972,7 +9460,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ALTOS_SYS_V
+name|ALTOS_SYSTEM_V
 end_ifdef
 
 begin_undef
@@ -8256,6 +9744,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SECUREWARE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SECUREWARE
+value|0
+end_define
+
+begin_comment
+comment|/* assume no SecureWare C2 auditing hooks */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* heuristic setting of HASSETSIGMASK; can override above */
 end_comment
@@ -8344,6 +9854,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|GID_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GID_T
+value|gid_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SIZE_T
 end_ifndef
 
@@ -8402,6 +9930,27 @@ parameter_list|(
 name|foo
 parameter_list|)
 value|((foo& S_IFMT) == S_IFREG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|S_ISDIR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|S_ISDIR
+parameter_list|(
+name|foo
+parameter_list|)
+value|((foo& S_IFMT) == S_IFDIR)
 end_define
 
 begin_endif
@@ -8970,7 +10519,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|ALTOS_SYS_V
+name|ALTOS_SYSTEM_V
 argument_list|)
 end_if
 
@@ -9374,7 +10923,7 @@ begin_define
 define|#
 directive|define
 name|FORK
-value|vfork
+value|fork
 end_define
 
 begin_comment

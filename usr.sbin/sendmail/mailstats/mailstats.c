@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.4 (Berkeley) 8/14/94"
+literal|"@(#)mailstats.c	8.8 (Berkeley) 9/25/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NOT_SENDMAIL
+end_define
 
 begin_include
 include|#
@@ -251,7 +257,7 @@ name|usage
 label|:
 name|fputs
 argument_list|(
-literal|"usage: mailstats [-C cffile] [-f stfile]\n"
+literal|"usage: mailstats [-C cffile] [-f stfile] -o\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -730,6 +736,23 @@ argument_list|)
 operator|)
 operator|<
 literal|0
+operator|||
+operator|(
+name|i
+operator|=
+name|read
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|stat
+argument_list|,
+sizeof|sizeof
+name|stat
+argument_list|)
+operator|)
+operator|<
+literal|0
 condition|)
 block|{
 name|fputs
@@ -752,6 +775,18 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|i
+operator|=
 name|read
 argument_list|(
 name|fd
@@ -760,15 +795,48 @@ operator|&
 name|stat
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|stat
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+block|{
+name|bzero
+argument_list|(
+operator|(
+name|ARBPTR_T
+operator|)
+operator|&
+name|stat
+argument_list|,
+sizeof|sizeof
+name|stat
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|&
+name|stat
+operator|.
+name|stat_itime
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|i
 operator|!=
 sizeof|sizeof
-argument_list|(
 name|stat
-argument_list|)
 operator|||
 name|stat
 operator|.

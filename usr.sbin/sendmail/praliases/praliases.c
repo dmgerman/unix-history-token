@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	8.3 (Berkeley) 3/6/94"
+literal|"@(#)praliases.c	8.4 (Berkeley) 9/25/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,6 +58,12 @@ include|#
 directive|include
 file|<ndbm.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|NOT_SENDMAIL
+end_define
 
 begin_include
 include|#

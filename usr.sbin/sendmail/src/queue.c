@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.98.1.3 (Berkeley) 9/16/96 (with queueing)"
+literal|"@(#)queue.c	8.125 (Berkeley) 10/12/96 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.98.1.3 (Berkeley) 9/16/96 (without queueing)"
+literal|"@(#)queue.c	8.125 (Berkeley) 10/12/96 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|orderq
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -1068,6 +1081,57 @@ operator|++
 operator|=
 literal|'8'
 expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_DELETE_BCC
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'b'
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RET_PARAM
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'d'
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_NO_BODY_RETN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'n'
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -1367,6 +1431,24 @@ condition|)
 name|putc
 argument_list|(
 literal|'P'
+argument_list|,
+name|tfp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QHASNOTIFY
+argument_list|,
+name|q
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+name|putc
+argument_list|(
+literal|'N'
 argument_list|,
 name|tfp
 argument_list|)
@@ -2415,6 +2497,16 @@ specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
+specifier|extern
+name|void
+name|clrdaemon
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -2552,8 +2644,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|CurChildren
-operator|++
+name|proc_list_add
+argument_list|(
+name|pid
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -2619,6 +2713,10 @@ name|SIGHUP
 argument_list|,
 name|intsig
 argument_list|)
+expr_stmt|;
+name|Verbose
+operator|=
+name|FALSE
 expr_stmt|;
 block|}
 name|setproctitle
@@ -2701,6 +2799,25 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+comment|/* 	**  If we are running part of the queue, always ignore stored 	**  host status. 	*/
+if|if
+condition|(
+name|QueueLimitId
+operator|!=
+name|NULL
+operator|||
+name|QueueLimitSender
+operator|!=
+name|NULL
+operator|||
+name|QueueLimitRecipient
+operator|!=
+name|NULL
+condition|)
+name|HostStatDir
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
 comment|/* order the existing work requests */
 name|njobs
@@ -2730,6 +2847,12 @@ name|WorkQ
 operator|->
 name|w_next
 expr_stmt|;
+name|e
+operator|->
+name|e_to
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 		**  Ignore jobs that are too expensive for the moment. 		*/
 name|sequenceno
 operator|++
@@ -2752,9 +2875,15 @@ if|if
 condition|(
 name|Verbose
 condition|)
-name|printf
+block|{
+name|message
 argument_list|(
-literal|"\nSkipping %s (sequence %d of %d)\n"
+literal|""
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"Skipping %s (sequence %d of %d)"
 argument_list|,
 name|w
 operator|->
@@ -2767,6 +2896,7 @@ argument_list|,
 name|njobs
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2782,9 +2912,15 @@ if|if
 condition|(
 name|Verbose
 condition|)
-name|printf
+block|{
+name|message
 argument_list|(
-literal|"\nRunning %s (sequence %d of %d)\n"
+literal|""
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"Running %s (sequence %d of %d)"
 argument_list|,
 name|w
 operator|->
@@ -2797,6 +2933,7 @@ argument_list|,
 name|njobs
 argument_list|)
 expr_stmt|;
+block|}
 name|pid
 operator|=
 name|dowork
@@ -3619,6 +3756,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|qfver
+init|=
+literal|0
+decl_stmt|;
 specifier|extern
 name|bool
 name|strcontainedin
@@ -3632,6 +3774,21 @@ literal|0
 index|]
 condition|)
 block|{
+case|case
+literal|'V'
+case|:
+name|qfver
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'P'
 case|:
@@ -3722,16 +3879,66 @@ condition|(
 name|QueueLimitRecipient
 operator|==
 name|NULL
-operator|||
-name|strcontainedin
+condition|)
+block|{
+name|i
+operator|&=
+operator|~
+name|NEED_R
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|qfver
+operator|>
+literal|0
+condition|)
+block|{
+name|p
+operator|=
+name|strchr
 argument_list|(
-name|QueueLimitRecipient
-argument_list|,
 operator|&
 name|lbuf
 index|[
 literal|1
 index|]
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+name|p
+operator|=
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|strcontainedin
+argument_list|(
+name|QueueLimitRecipient
+argument_list|,
+name|p
 argument_list|)
 condition|)
 name|i
@@ -4123,6 +4330,44 @@ expr|*
 name|WorkList
 argument_list|,
 name|workcmpf2
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+unit|} 	else
+if|if
+condition|(
+name|QueueSortOrder
+operator|==
+name|QS_BYTIME
+condition|)
+block|{
+extern|extern workcmpf3(
+block|)
+empty_stmt|;
+end_if
+
+begin_comment
+comment|/* 		**  Simple sort based on submission time only. 		*/
+end_comment
+
+begin_expr_stmt
+name|qsort
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|WorkList
+argument_list|,
+name|wc
+argument_list|,
+sizeof|sizeof
+expr|*
+name|WorkList
+argument_list|,
+name|workcmpf3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4869,6 +5114,66 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  WORKCMPF3 -- simple submission-time-only compare function. ** **	Parameters: **		a -- the first argument. **		b -- the second argument. ** **	Returns: **		-1 if a< b **		 0 if a == b **		+1 if a> b ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|int
+name|workcmpf3
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+specifier|register
+name|WORK
+modifier|*
+name|a
+decl_stmt|;
+specifier|register
+name|WORK
+modifier|*
+name|b
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|a
+operator|->
+name|w_ctime
+operator|>
+name|b
+operator|->
+name|w_ctime
+condition|)
+return|return
+literal|1
+return|;
+elseif|else
+if|if
+condition|(
+name|a
+operator|->
+name|w_ctime
+operator|<
+name|b
+operator|->
+name|w_ctime
+condition|)
+return|return
+literal|1
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  DOWORK -- do a work request. ** **	Parameters: **		id -- the ID of the job to run. **		forkflag -- if set, run this in background. **		requeueflag -- if set, reinstantiate the queue quickly. **			This is used when expanding aliases in the queue. **			If forkflag is also set, it doesn't wait for the **			child. **		e - the envelope in which to run it. ** **	Returns: **		process id of process that is running the queue job. ** **	Side Effects: **		The work request is satisfied if possible. */
 end_comment
 
@@ -5173,6 +5478,8 @@ else|else
 name|dropenvelope
 argument_list|(
 name|e
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -5271,11 +5578,6 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-specifier|extern
-name|void
-name|loseqfile
-parameter_list|()
-function_decl|;
 comment|/* 	**  Read and process the file. 	*/
 name|strcpy
 argument_list|(
@@ -5469,12 +5771,19 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|st
 operator|.
 name|st_uid
 operator|!=
 name|geteuid
 argument_list|()
+operator|&&
+name|geteuid
+argument_list|()
+operator|!=
+name|RealUid
+operator|)
 operator|||
 name|bitset
 argument_list|(
@@ -5563,6 +5872,28 @@ literal|0
 condition|)
 block|{
 comment|/* must be a bogus file -- just remove it */
+name|qf
+index|[
+literal|0
+index|]
+operator|=
+literal|'d'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|qf
+argument_list|)
+expr_stmt|;
+name|qf
+index|[
+literal|0
+index|]
+operator|=
+literal|'q'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5685,6 +6016,14 @@ decl_stmt|;
 name|ADDRESS
 modifier|*
 name|q
+decl_stmt|;
+name|int
+name|mid
+decl_stmt|;
+specifier|auto
+name|char
+modifier|*
+name|ep
 decl_stmt|;
 if|if
 condition|(
@@ -5847,6 +6186,14 @@ name|p
 condition|)
 block|{
 case|case
+literal|'N'
+case|:
+name|qflags
+operator||=
+name|QHASNOTIFY
+expr_stmt|;
+break|break;
+case|case
 literal|'S'
 case|:
 name|qflags
@@ -5916,6 +6263,19 @@ operator|->
 name|q_alias
 operator|=
 name|ctladdr
+expr_stmt|;
+if|if
+condition|(
+name|qfver
+operator|>=
+literal|1
+condition|)
+name|q
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|Q_PINGFLAGS
 expr_stmt|;
 name|q
 operator|->
@@ -6056,28 +6416,7 @@ case|case
 literal|'I'
 case|:
 comment|/* data file's inode number */
-if|if
-condition|(
-name|e
-operator|->
-name|e_dfino
-operator|==
-operator|-
-literal|1
-condition|)
-name|e
-operator|->
-name|e_dfino
-operator|=
-name|atol
-argument_list|(
-operator|&
-name|buf
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
+comment|/* regenerated below */
 break|break;
 case|case
 literal|'K'
@@ -6235,6 +6574,39 @@ operator||=
 name|EF_HAS8BIT
 expr_stmt|;
 break|break;
+case|case
+literal|'b'
+case|:
+comment|/* delete Bcc: header */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_DELETE_BCC
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* envelope has DSN RET= */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_RET_PARAM
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* don't return body */
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NO_BODY_RETN
+expr_stmt|;
+break|break;
 block|}
 block|}
 break|break;
@@ -6260,20 +6632,27 @@ case|case
 literal|'$'
 case|:
 comment|/* define macro */
-name|define
+name|mid
+operator|=
+name|macid
 argument_list|(
+operator|&
 name|bp
 index|[
 literal|1
 index|]
 argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+name|mid
+argument_list|,
 name|newstr
 argument_list|(
-operator|&
-name|bp
-index|[
-literal|2
-index|]
+name|ep
 argument_list|)
 argument_list|,
 name|e
@@ -6298,7 +6677,12 @@ name|qf
 argument_list|,
 name|LineNumber
 argument_list|,
+name|shortenstring
+argument_list|(
 name|bp
+argument_list|,
+literal|203
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -6757,15 +7141,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MaxQueueRun
+operator|>
+literal|0
+operator|&&
 name|nrequests
 operator|>
-name|WorkListSize
+name|MaxQueueRun
 condition|)
 name|printf
 argument_list|(
 literal|", only %d printed"
 argument_list|,
-name|WorkListSize
+name|MaxQueueRun
 argument_list|)
 expr_stmt|;
 if|if
@@ -7143,7 +7531,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%8ld %10ld%c%.12s %.38s"
+literal|"%8ld %10ld%c%.12s %.78s"
 argument_list|,
 name|dfsize
 argument_list|,
@@ -7232,7 +7620,13 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"   (%.60s)"
+literal|"   (%.*s)"
+argument_list|,
+name|Verbose
+condition|?
+literal|100
+else|:
+literal|60
 argument_list|,
 name|statmsg
 argument_list|)
@@ -7249,7 +7643,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t      (---%.34s---)"
+literal|"\n\t\t\t\t      (---%.74s---)"
 argument_list|,
 operator|&
 name|buf
@@ -7304,7 +7698,7 @@ name|Verbose
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t\t  %.38s"
+literal|"\n\t\t\t\t\t  %.78s"
 argument_list|,
 name|p
 argument_list|)
@@ -7918,6 +8312,14 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 comment|/* if there is a lock file in the envelope, close it */
@@ -8401,6 +8803,9 @@ operator|->
 name|e_id
 argument_list|)
 operator|>
+operator|(
+name|SIZE_T
+operator|)
 sizeof|sizeof
 name|buf
 operator|-
