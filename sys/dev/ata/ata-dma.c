@@ -1077,6 +1077,10 @@ literal|0x24db8086
 case|:
 comment|/* Intel ICH5 */
 case|case
+literal|0x24d18086
+case|:
+comment|/* Intel ICH5 SATA */
+case|case
 literal|0x24cb8086
 case|:
 comment|/* Intel ICH4 */
