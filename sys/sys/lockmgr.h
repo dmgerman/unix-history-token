@@ -69,6 +69,12 @@ name|pid_t
 name|lk_lockholder
 decl_stmt|;
 comment|/* pid of exclusive lock holder */
+name|struct
+name|lock
+modifier|*
+name|lk_newlock
+decl_stmt|;
+comment|/* lock taking over this lock */
 ifdef|#
 directive|ifdef
 name|DEBUG_LOCKS
@@ -622,6 +628,21 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|transferlockers
+parameter_list|(
+name|struct
+name|lock
+modifier|*
+parameter_list|,
+name|struct
+name|lock
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
