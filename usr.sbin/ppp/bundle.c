@@ -161,12 +161,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|<sys/linker.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -10464,7 +10458,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Tweak our process arguments.... */
-name|ID0setproctitle
+name|SetTitle
 argument_list|(
 literal|"session owner"
 argument_list|)
