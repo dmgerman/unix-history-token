@@ -3326,6 +3326,9 @@ operator|!=
 name|AF_INET6
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|notyet
 if|if
 condition|(
 operator|!
@@ -3338,6 +3341,8 @@ name|IFA_ROUTE
 operator|)
 condition|)
 continue|continue;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
