@@ -16,7 +16,7 @@ name|_SYS_LINKER_SET_H_
 end_define
 
 begin_comment
-comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `struct linker_set' as defined below.  * For ELF, this is done by constructing a separate segment for each set.  * For a.out, it is done automatically by the linker.  */
+comment|/*  * The following macros are used to declare global sets of objects, which  * are collected by the linker into a `struct linker_set' as defined below.  * For ELF, this is done by constructing a separate segment for each set.  * For a.out, it is done automatically by the linker.  *  * In the MAKE_SET macros below, the lines:  *  *   static void const * const __set_##set##_sym_##sym =&sym;  *  * are present only to prevent the compiler from producing bogus  * warnings about unused symbols.  */
 end_comment
 
 begin_ifdef
