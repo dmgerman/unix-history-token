@@ -621,6 +621,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define HAVE_SIGSET_T you have the sigset_t type */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_SIGSET_T */
+end_comment
+
+begin_comment
+comment|/* Define HAVE_SIGEMPTYSET if you have the sigemptyset macro */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGEMPTYSET
+value|1
+end_define
+
+begin_comment
 comment|/* Define EDIT_PGM to your editor. */
 end_comment
 
@@ -661,6 +680,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_POPEN
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the sigprocmask function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SIGPROCMASK
 value|1
 end_define
 
