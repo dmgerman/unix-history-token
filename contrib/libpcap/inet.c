@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.24.2.1 2000/01/14 18:00:50 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/inet.c,v 1.26 2000/01/14 23:55:31 mcr Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,11 +746,6 @@ name|ifrp
 expr_stmt|;
 block|}
 block|}
-name|free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -774,6 +769,11 @@ argument_list|(
 name|errbuf
 argument_list|,
 literal|"no suitable device found"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
@@ -812,6 +812,11 @@ literal|1
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
