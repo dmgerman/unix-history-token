@@ -864,17 +864,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|ipatm_vcpool
+name|uma_zone_t
+name|ipatm_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|sp_info
-name|ipatm_nifpool
+name|uma_zone_t
+name|ipatm_nif_zone
 decl_stmt|;
 end_decl_stmt
 

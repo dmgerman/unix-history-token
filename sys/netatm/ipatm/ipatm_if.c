@@ -278,15 +278,11 @@ block|}
 comment|/* 		 * Get a new interface block 		 */
 name|inp
 operator|=
-operator|(
-expr|struct
-name|ip_nif
-operator|*
-operator|)
-name|atm_allocate
+name|uma_zalloc
 argument_list|(
-operator|&
-name|ipatm_nifpool
+name|ipatm_nif_zone
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -430,11 +426,10 @@ argument_list|,
 name|inf_next
 argument_list|)
 expr_stmt|;
-name|atm_free
+name|uma_zfree
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|ipatm_nif_zone
+argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;

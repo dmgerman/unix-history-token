@@ -168,6 +168,12 @@ directive|include
 file|<netatm/ipatm/ipatm_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -310,52 +316,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|ipatm_vcpool
-init|=
-block|{
-literal|"ipatm vcc pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ipvcc
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|10
-block|,
-comment|/* si_blkcnt */
-literal|100
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|ipatm_vc_zone
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|sp_info
-name|ipatm_nifpool
-init|=
-block|{
-literal|"ipatm nif pool"
-block|,
-comment|/* si_name */
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip_nif
-argument_list|)
-block|,
-comment|/* si_blksiz */
-literal|5
-block|,
-comment|/* si_blkcnt */
-literal|52
-comment|/* si_maxallow */
-block|}
+name|uma_zone_t
+name|ipatm_nif_zone
 decl_stmt|;
 end_decl_stmt
 
@@ -921,6 +889,96 @@ name|EINVAL
 operator|)
 return|;
 block|}
+name|ipatm_vc_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"ipatm vc"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ipvcc
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|M_ZERO
+operator||
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ipatm_vc_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"ipatm_start: unable to create ipatm_vc_zone"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|ipatm_vc_zone
+argument_list|,
+literal|100
+argument_list|)
+expr_stmt|;
+name|ipatm_nif_zone
+operator|=
+name|uma_zcreate
+argument_list|(
+literal|"ipatm nif"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip_nif
+argument_list|)
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|UMA_ALIGN_PTR
+argument_list|,
+name|M_ZERO
+operator||
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ipatm_nif_zone
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"ipatm_start: unable to create ipatm_nif_zone"
+argument_list|)
+expr_stmt|;
+name|uma_zone_set_max
+argument_list|(
+name|ipatm_nif_zone
+argument_list|,
+literal|52
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Register ourselves as a network convergence module 	 */
 name|err
 operator|=
@@ -1662,16 +1720,14 @@ name|ipatm_endpt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free up our storage pools 	 */
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|ipatm_vcpool
+name|ipatm_vc_zone
 argument_list|)
 expr_stmt|;
-name|atm_release_pool
+name|uma_zdestroy
 argument_list|(
-operator|&
-name|ipatm_nifpool
+name|ipatm_nif_zone
 argument_list|)
 expr_stmt|;
 name|done
