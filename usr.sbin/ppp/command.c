@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.22 1996/10/10 11:27:35 sos Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.23 1996/10/12 16:20:28 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -833,7 +833,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Can start an shell only in interactive mode\n"
+literal|"Can only start a shell in interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -862,7 +862,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can start an interactive shell only in interactive mode\n"
+literal|"Can only start an interactive shell in interactive mode\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -874,6 +874,40 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_SHELL_CMD_WITH_ANY_MODE */
+else|#
+directive|else
+if|if
+condition|(
+operator|(
+name|mode
+operator|&
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_INTER
+operator|)
+operator|)
+operator|==
+operator|(
+name|MODE_AUTO
+operator||
+name|MODE_INTER
+operator|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"Shell is not allowed interactively in auto mode\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 comment|/* SHELL_ONLY_INTERACTIVELY */
@@ -3008,6 +3042,11 @@ name|Cleanup
 argument_list|(
 name|EX_NORMAL
 argument_list|)
+expr_stmt|;
+name|mode
+operator|&=
+operator|~
+name|MODE_INTER
 expr_stmt|;
 block|}
 else|else
