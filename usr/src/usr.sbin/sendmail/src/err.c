@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.9 (Berkeley) %G%"
+literal|"@(#)err.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,18 +99,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_comment
+begin_function
+name|void
 comment|/*VARARGS1*/
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_function
-name|void
 name|syserr
 parameter_list|(
 name|char
@@ -313,14 +307,11 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_ifdef
+begin_function
+name|void
 ifdef|#
 directive|ifdef
 name|__STDC__
-end_ifdef
-
-begin_function
-name|void
 name|usrerr
 parameter_list|(
 name|char
