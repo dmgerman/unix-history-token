@@ -367,6 +367,14 @@ literal|"Linksys EG1032 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|VENDORID_DLINK
+block|,
+name|DEVICEID_DLINK_DGE530T
+block|,
+literal|"D-Link DGE-530T Gigabit Ethernet"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -2130,6 +2138,28 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Bail out quietly if the eeprom appears to be missing or empty. 	 */
+if|if
+condition|(
+name|res
+operator|.
+name|vr_id
+operator|==
+literal|0xff
+operator|&&
+name|res
+operator|.
+name|vr_len
+operator|==
+literal|0xff
+operator|&&
+name|res
+operator|.
+name|vr_pad
+operator|==
+literal|0xff
+condition|)
+return|return;
 if|if
 condition|(
 name|res
@@ -7232,6 +7262,9 @@ case|:
 case|case
 name|DEVICEID_LINKSYS_EG1032
 case|:
+case|case
+name|DEVICEID_DLINK_DGE530T
+case|:
 name|sc
 operator|->
 name|sk_type
@@ -7239,6 +7272,21 @@ operator|=
 name|SK_YUKON
 expr_stmt|;
 break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"skc%d: unknown device!\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* Reset the adapter. */
 name|sk_reset
@@ -7460,6 +7508,14 @@ name|fail
 goto|;
 block|}
 comment|/* Announce the product name. */
+if|if
+condition|(
+name|sc
+operator|->
+name|sk_vpd_prodname
+operator|!=
+name|NULL
+condition|)
 name|printf
 argument_list|(
 literal|"skc%d: %s\n"
