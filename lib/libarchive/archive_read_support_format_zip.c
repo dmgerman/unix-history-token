@@ -41,6 +41,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1834,7 +1840,7 @@ modifier|*
 name|zip
 decl_stmt|;
 name|ssize_t
-name|bytes_read
+name|bytes_avail
 decl_stmt|;
 name|zip
 operator|=
@@ -1877,7 +1883,8 @@ name|ARCHIVE_EOF
 operator|)
 return|;
 block|}
-name|bytes_read
+comment|/* 	 * Note: '1' here is a performance optimization. 	 * Recall that the decompression layer returns a count of 	 * available bytes; asking for more than that forces the 	 * decompressor to combine reads by copying data. 	 */
+name|bytes_avail
 operator|=
 call|(
 name|a
@@ -1889,14 +1896,12 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-name|zip
-operator|->
-name|entry_bytes_remaining
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|<=
 literal|0
 condition|)
@@ -1918,13 +1923,13 @@ return|;
 block|}
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|>
 name|zip
 operator|->
 name|entry_bytes_remaining
 condition|)
-name|bytes_read
+name|bytes_avail
 operator|=
 name|zip
 operator|->
@@ -1938,13 +1943,13 @@ call|)
 argument_list|(
 name|a
 argument_list|,
-name|bytes_read
+name|bytes_avail
 argument_list|)
 expr_stmt|;
 operator|*
 name|size
 operator|=
-name|bytes_read
+name|bytes_avail
 expr_stmt|;
 operator|*
 name|offset
@@ -2012,7 +2017,7 @@ modifier|*
 name|zip
 decl_stmt|;
 name|ssize_t
-name|bytes_read
+name|bytes_avail
 decl_stmt|;
 specifier|const
 name|void
@@ -2134,8 +2139,8 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* Read the next block of compressed data. */
-name|bytes_read
+comment|/* 	 * Note: '1' here is a performance optimization. 	 * Recall that the decompression layer returns a count of 	 * available bytes; asking for more than that forces the 	 * decompressor to combine reads by copying data. 	 */
+name|bytes_avail
 operator|=
 call|(
 name|a
@@ -2148,14 +2153,12 @@ argument_list|,
 operator|&
 name|compressed_buff
 argument_list|,
-name|zip
-operator|->
-name|entry_bytes_remaining
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|<=
 literal|0
 condition|)
@@ -2177,13 +2180,13 @@ return|;
 block|}
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|>
 name|zip
 operator|->
 name|entry_bytes_remaining
 condition|)
-name|bytes_read
+name|bytes_avail
 operator|=
 name|zip
 operator|->
@@ -2216,7 +2219,7 @@ name|stream
 operator|.
 name|avail_in
 operator|=
-name|bytes_read
+name|bytes_avail
 expr_stmt|;
 name|zip
 operator|->
@@ -2321,7 +2324,7 @@ operator|)
 return|;
 block|}
 comment|/* Consume as much as the compressor actually used. */
-name|bytes_read
+name|bytes_avail
 operator|=
 name|zip
 operator|->
@@ -2337,14 +2340,14 @@ call|)
 argument_list|(
 name|a
 argument_list|,
-name|bytes_read
+name|bytes_avail
 argument_list|)
 expr_stmt|;
 name|zip
 operator|->
 name|entry_bytes_remaining
 operator|-=
-name|bytes_read
+name|bytes_avail
 expr_stmt|;
 operator|*
 name|offset
@@ -2483,7 +2486,7 @@ modifier|*
 name|zip
 decl_stmt|;
 name|ssize_t
-name|bytes_read
+name|bytes_avail
 decl_stmt|;
 name|zip
 operator|=
@@ -2526,7 +2529,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|bytes_read
+name|bytes_avail
 operator|=
 call|(
 name|a
@@ -2538,14 +2541,12 @@ name|a
 argument_list|,
 name|buff
 argument_list|,
-name|zip
-operator|->
-name|entry_bytes_remaining
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|<=
 literal|0
 condition|)
@@ -2567,13 +2568,13 @@ return|;
 block|}
 if|if
 condition|(
-name|bytes_read
+name|bytes_avail
 operator|>
 name|zip
 operator|->
 name|entry_bytes_remaining
 condition|)
-name|bytes_read
+name|bytes_avail
 operator|=
 name|zip
 operator|->
@@ -2587,14 +2588,14 @@ call|)
 argument_list|(
 name|a
 argument_list|,
-name|bytes_read
+name|bytes_avail
 argument_list|)
 expr_stmt|;
 name|zip
 operator|->
 name|entry_bytes_remaining
 operator|-=
-name|bytes_read
+name|bytes_avail
 expr_stmt|;
 block|}
 return|return
