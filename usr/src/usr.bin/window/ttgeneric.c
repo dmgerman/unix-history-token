@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ttgeneric.c	3.20 84/01/11"
+literal|"@(#)ttgeneric.c	3.21 84/03/02"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,24 @@ include|#
 directive|include
 file|"tt.h"
 end_include
+
+begin_decl_stmt
+name|char
+name|PC
+decl_stmt|,
+modifier|*
+name|BC
+decl_stmt|,
+modifier|*
+name|UP
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|short
+name|ospeed
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|char
@@ -1697,21 +1715,6 @@ name|gen_BC
 operator|=
 literal|"\b"
 expr_stmt|;
-block|{
-specifier|extern
-name|char
-name|PC
-decl_stmt|,
-modifier|*
-name|BC
-decl_stmt|,
-modifier|*
-name|UP
-decl_stmt|;
-specifier|extern
-name|short
-name|ospeed
-decl_stmt|;
 name|PC
 operator|=
 name|gen_PC
@@ -1737,7 +1740,6 @@ name|ww_sgttyb
 operator|.
 name|sg_ospeed
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|gen_DC
