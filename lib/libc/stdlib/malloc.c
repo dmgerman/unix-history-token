@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.6 1995/10/22 14:47:00 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.7 1995/12/11 14:28:12 peter Exp $  *  */
 end_comment
 
 begin_comment
@@ -2279,6 +2279,21 @@ comment|/* Been here, done that */
 name|initialized
 operator|++
 expr_stmt|;
+comment|/*      * This is a nice hack from Kaleb Keithly (kaleb@x.org).      * We can sbrk(2) further back when we keep this on a low address.      */
+name|px
+operator|=
+operator|(
+expr|struct
+name|pgfree
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|px
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3929,7 +3944,7 @@ operator|==
 name|ptr
 condition|)
 block|{
-comment|/* Append to the previuos entry */
+comment|/* Append to the previous entry */
 name|pf
 operator|->
 name|end
