@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.25 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,16 +377,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|checkfd012
-argument_list|(
-literal|"dropenvelope 1"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* we must have an id to remove disk files */
 if|if
 condition|(
@@ -981,16 +971,6 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|checkfd012
-argument_list|(
-literal|"dropenvelope 2"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	**  Arrange to send warning messages to postmaster as requested. 	*/
 if|if
 condition|(
@@ -1202,16 +1182,6 @@ endif|#
 directive|endif
 comment|/* QUEUE */
 block|}
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|checkfd012
-argument_list|(
-literal|"dropenvelope 3"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* now unlock the job */
 name|closexscript
 argument_list|(
@@ -1264,16 +1234,6 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|checkfd012
-argument_list|(
-literal|"dropenvelope 4"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
