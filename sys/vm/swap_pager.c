@@ -5803,8 +5803,6 @@ name|daddr_t
 name|count
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -5995,8 +5993,6 @@ name|index
 init|=
 literal|0
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -7207,6 +7203,12 @@ name|done
 goto|;
 block|}
 comment|/* 	 * Prevent further allocations on this device. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|sw_dev_mtx
+argument_list|)
+expr_stmt|;
 name|sp
 operator|->
 name|sw_flags
@@ -7244,6 +7246,12 @@ name|dmmax
 argument_list|)
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sw_dev_mtx
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Page in the contents of the device and close it. 	 */
 ifndef|#
 directive|ifndef
