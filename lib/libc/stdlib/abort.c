@@ -84,6 +84,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|__cleanup
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|void
 name|abort
@@ -92,6 +102,17 @@ block|{
 name|sigset_t
 name|mask
 decl_stmt|;
+comment|/* 	 * POSIX requires we flush stdio buffers on abort 	 */
+if|if
+condition|(
+name|__cleanup
+condition|)
+call|(
+modifier|*
+name|__cleanup
+call|)
+argument_list|()
+expr_stmt|;
 name|sigfillset
 argument_list|(
 operator|&
