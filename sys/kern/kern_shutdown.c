@@ -2355,6 +2355,9 @@ argument_list|(
 literal|"panic"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RESTARTABLE_PANICS
 comment|/* See if the user aborted the panic, in which case we continue. */
 if|if
 condition|(
@@ -2378,6 +2381,8 @@ endif|#
 directive|endif
 return|return;
 block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|boot
