@@ -7231,6 +7231,8 @@ argument_list|,
 name|pa
 operator|+
 name|PAGE_SIZE
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|aszero
@@ -7304,6 +7306,8 @@ operator|+
 name|off
 operator|+
 name|size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|aszero
@@ -7369,6 +7373,8 @@ argument_list|,
 name|dst
 operator|+
 name|PAGE_SIZE
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|ascopy
