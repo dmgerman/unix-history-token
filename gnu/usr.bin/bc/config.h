@@ -129,20 +129,20 @@ begin_comment
 comment|/* Define to use the readline library. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|READLINE
-value|1
-end_define
+begin_comment
+comment|/* #define READLINE 1 */
+end_comment
 
 begin_comment
 comment|/* Define to use the BSD libedit library. */
 end_comment
 
-begin_comment
-comment|/* #undef LIBEDIT */
-end_comment
+begin_define
+define|#
+directive|define
+name|LIBEDIT
+value|1
+end_define
 
 begin_comment
 comment|/* Define to `size_t' if<sys/types.h> and<stddef.h> don't define.  */
