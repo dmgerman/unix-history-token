@@ -904,7 +904,9 @@ name|is_tsbsize
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"DVMA map: %#lx to %#lx\n"
+literal|"%s: DVMA map: %#lx to %#lx\n"
+argument_list|,
+name|name
 argument_list|,
 name|is
 operator|->
