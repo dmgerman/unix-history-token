@@ -327,12 +327,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -363,36 +357,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/sockio.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -404,12 +373,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -565,16 +528,6 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_elif
-
-begin_include
-include|#
-directive|include
-file|<machine/cpufunc.h>
-end_include
-
-begin_comment
-comment|/* for rdtsc proto for clock.h below */
-end_comment
 
 begin_include
 include|#

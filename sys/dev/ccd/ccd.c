@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ccd.c,v 1.22 1997/03/24 11:23:21 bde Exp $ */
+comment|/* $Id: ccd.c,v 1.23 1997/05/01 19:18:40 sos Exp $ */
 end_comment
 
 begin_comment
@@ -81,18 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkstat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -163,12 +151,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -176,12 +158,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dkbad.h>
 end_include
 
 begin_include
