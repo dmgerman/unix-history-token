@@ -3091,7 +3091,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Gate ftp: %s, server %s, port %d.\n"
+literal|"Gate ftp: %s, server %s, port %s.\n"
 argument_list|,
 name|onoff
 argument_list|(
@@ -3105,10 +3105,7 @@ name|gateserver
 else|:
 literal|"(none)"
 argument_list|,
-name|ntohs
-argument_list|(
 name|gateport
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4168,10 +4165,24 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
 name|gateport
-operator|=
-name|htons
+operator|!=
+name|NULL
+condition|)
+name|free
 argument_list|(
+name|gateport
+argument_list|)
+expr_stmt|;
+name|asprintf
+argument_list|(
+operator|&
+name|gateport
+argument_list|,
+literal|"%ld"
+argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
@@ -4245,7 +4256,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"Gate ftp: %s, server %s, port %d.\n"
+literal|"Gate ftp: %s, server %s, port %s.\n"
 argument_list|,
 name|onoff
 argument_list|(
@@ -4259,10 +4270,7 @@ name|gateserver
 else|:
 literal|"(none)"
 argument_list|,
-name|ntohs
-argument_list|(
 name|gateport
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

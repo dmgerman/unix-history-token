@@ -385,6 +385,10 @@ name|isftpurl
 operator|=
 literal|0
 expr_stmt|;
+name|res0
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__GNUC__
@@ -400,6 +404,12 @@ name|void
 operator|)
 operator|&
 name|proxy
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|res0
 expr_stmt|;
 endif|#
 directive|endif
