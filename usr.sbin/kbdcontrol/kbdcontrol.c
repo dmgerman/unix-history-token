@@ -1127,6 +1127,14 @@ operator||
 literal|0x100
 return|;
 case|case
+name|TPASTE
+case|:
+return|return
+name|PASTE
+operator||
+literal|0x100
+return|;
+case|case
 name|TACC
 case|:
 if|if
@@ -2207,6 +2215,19 @@ literal|" pdwn  "
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PASTE
+operator||
+literal|0x100
+case|:
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" paste "
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
@@ -3105,6 +3126,15 @@ case|:
 name|printf
 argument_list|(
 literal|" PDWN, "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PASTE
+case|:
+name|printf
+argument_list|(
+literal|"PASTE, "
 argument_list|)
 expr_stmt|;
 break|break;
