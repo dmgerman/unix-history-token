@@ -224,6 +224,21 @@ decl_stmt|;
 name|int
 name|newmode
 decl_stmt|;
+name|int
+argument_list|(
+argument|*change_mode
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|mode_t
+operator|)
+argument_list|)
+expr_stmt|;
 name|set
 operator|=
 name|NULL
@@ -259,7 +274,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRXfgorstuvwx"
+literal|"HLPRXfghorstuvwx"
 argument_list|)
 operator|)
 operator|!=
@@ -332,7 +347,7 @@ break|break;
 case|case
 literal|'h'
 case|:
-comment|/* 			 * In System V (and probably POSIX.2) the -h option 			 * causes chmod to change the mode of the symbolic 			 * link.  4.4BSD's symbolic links don't have modes, 			 * so it's an undocumented noop.  Do syntax checking, 			 * though. 			 */
+comment|/* 			 * In System V (and probably POSIX.2) the -h option 			 * causes chmod to change the mode of the symbolic 			 * link.  4.4BSD's symbolic links didn't have modes, 			 * so it was an undocumented noop.  In FreeBSD 3.0, 			 * lchmod(2) is introduced and this option does real 			 * work. 			 */
 name|hflag
 operator|=
 literal|1
@@ -489,6 +504,19 @@ name|FTS_LOGICAL
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|hflag
+condition|)
+name|change_mode
+operator|=
+name|lchmod
+expr_stmt|;
+else|else
+name|change_mode
+operator|=
+name|chmod
+expr_stmt|;
 name|mode
 operator|=
 operator|*
@@ -733,7 +761,14 @@ case|case
 name|FTS_SLNONE
 case|:
 comment|/* 			 * The only symlinks that end up here are ones that 			 * don't point to anything and ones that we found 			 * doing a physical walk. 			 */
+if|if
+condition|(
+operator|!
+name|hflag
+condition|)
 continue|continue;
+comment|/* else */
+comment|/* FALLTHROUGH */
 default|default:
 break|break;
 block|}
@@ -775,7 +810,10 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|chmod
+call|(
+modifier|*
+name|change_mode
+call|)
 argument_list|(
 name|p
 operator|->
@@ -858,7 +896,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chmod [-fv] [-R [-H | -L | -P]] mode file ...\n"
+literal|"usage: chmod [-fhv] [-R [-H | -L | -P]] mode file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
