@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -11,6 +15,12 @@ directive|define
 name|_AC97_CODEC_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -22,6 +32,11 @@ include|#
 directive|include
 file|<linux/soundcard.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* AC97 1.0 */
@@ -483,12 +498,23 @@ begin_comment
 comment|/* volume control bit defines */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AC97_MUTE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|AC97_MUTE
 value|0x8000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1477,6 +1503,12 @@ parameter_list|)
 value|((FOO>= 0)&& \                                     (FOO< SOUND_MIXER_NRDEVICES)&& \                                     (CODEC)->supported_mixers& (1<<FOO) )
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_struct
 struct|struct
 name|ac97_codec
@@ -1857,6 +1889,15 @@ name|codec
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__linux__*/
+end_comment
 
 begin_endif
 endif|#
