@@ -4185,7 +4185,7 @@ name|release
 goto|;
 block|}
 block|}
-comment|/* 	 * Calculate data length and get a mbuf 	 * for UDP and IP headers. 	 */
+comment|/* 	 * Calculate data length and get a mbuf for UDP, IP, and possible 	 * link-layer headers.  Immediate slide the data pointer back forward 	 * since we won't use that space at this layer. 	 */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -4195,6 +4195,8 @@ argument_list|(
 expr|struct
 name|udpiphdr
 argument_list|)
+operator|+
+name|max_linkhdr
 argument_list|,
 name|M_DONTWAIT
 argument_list|)
@@ -4203,7 +4205,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -4214,6 +4216,26 @@ goto|goto
 name|release
 goto|;
 block|}
+name|m
+operator|->
+name|m_data
+operator|+=
+name|max_linkhdr
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|-=
+name|max_linkhdr
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|-=
+name|max_linkhdr
+expr_stmt|;
 comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
 name|ui
 operator|=
