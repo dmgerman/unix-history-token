@@ -217,12 +217,23 @@ name|curproc
 value|(curthread->td_proc)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|curthread
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|curthread
 value|PCPU_GET(curthread)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * MI PCPU support functions  *  * PCPU_LAZY_INC() -	Lazily increment a per-cpu stats counter, without  *			guarenteeing atomicity or even necessarily consistency.  *  *			XXX we need to create MD primitives to support  *			this to guarentee at least some level of consistency,  *			i.e., to prevent us from totally corrupting the   *			counters due to preemption in a multi-instruction  *			increment sequence for architectures that do not  *			support single-instruction memory increments.  */
