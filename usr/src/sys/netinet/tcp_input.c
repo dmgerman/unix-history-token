@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_input.c 1.12 81/10/30 */
+comment|/* tcp_input.c 1.13 81/10/30 */
 end_comment
 
 begin_include
@@ -333,17 +333,25 @@ for|for
 control|(
 name|tp
 operator|=
-name|tcb_head
+name|tcb
+operator|.
+name|tcb_next
 init|;
 name|tp
 operator|!=
-literal|0
+operator|(
+expr|struct
+name|tcb
+operator|*
+operator|)
+operator|&
+name|tcb
 condition|;
 name|tp
 operator|=
 name|tp
 operator|->
-name|t_tcb_next
+name|tcb_next
 control|)
 if|if
 condition|(
@@ -382,17 +390,25 @@ for|for
 control|(
 name|tp
 operator|=
-name|tcb_head
+name|tcb
+operator|.
+name|tcb_next
 init|;
 name|tp
 operator|!=
-literal|0
+operator|(
+expr|struct
+name|tcb
+operator|*
+operator|)
+operator|&
+name|tcb
 condition|;
 name|tp
 operator|=
 name|tp
 operator|->
-name|t_tcb_next
+name|tcb_next
 control|)
 if|if
 condition|(
