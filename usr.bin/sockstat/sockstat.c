@@ -1020,6 +1020,15 @@ break|break;
 if|if
 condition|(
 name|errno
+operator|==
+name|ENOENT
+condition|)
+goto|goto
+name|out
+goto|;
+if|if
+condition|(
+name|errno
 operator|!=
 name|ENOMEM
 condition|)
