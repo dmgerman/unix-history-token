@@ -1944,7 +1944,7 @@ begin_define
 define|#
 directive|define
 name|cd9660_sysctl
-value|((int (*)(int *, u_int, void *, size_t *, void *, \                                     size_t, struct proc *))eopnotsupp)
+value|((int (*)(int *, u_int, void *, size_t *, void *, \ 				size_t, struct proc *))eopnotsupp)
 end_define
 
 begin_decl_stmt
