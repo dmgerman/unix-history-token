@@ -762,7 +762,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Hook from hardclock. Tries to schedule a netisr, but keeps track  * of lost ticks due to the previous handler taking too long.  * The first part of the code is just for debugging purposes, and tries  * to count how often hardclock ticks are shorter than they should,  * meaning either stray interrupts or delayed events.  */
+comment|/*  * Hook from hardclock. Tries to schedule a netisr, but keeps track  * of lost ticks due to the previous handler taking too long.  * Normally, this should not happen, because polling handler should  * run for a short time. However, in some cases (e.g. when there are  * changes in link status etc.) the drivers take a very long time  * (even in the order of milliseconds) to reset and reconfigure the  * device, causing apparent lost polls.  *  * The first part of the code is just for debugging purposes, and tries  * to count how often hardclock ticks are shorter than they should,  * meaning either stray interrupts or delayed events.  */
 end_comment
 
 begin_function
@@ -842,18 +842,9 @@ operator|>
 literal|100
 condition|)
 block|{
-comment|/* too much, assume it has stalled */
+comment|/* 		 * Too much, assume it has stalled (not always true 		 * see comment above). 		 */
 name|stalled
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"poll stalled [%d] in phase %d\n"
-argument_list|,
-name|stalled
-argument_list|,
-name|phase
-argument_list|)
 expr_stmt|;
 name|pending_polls
 operator|=
