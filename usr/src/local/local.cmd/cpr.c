@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)cpr.c	1.4		%G%"
+literal|"@(#)cpr.c	1.5		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,10 +159,10 @@ if|if
 condition|(
 operator|*
 name|p
-operator|==
+operator|!=
 literal|'-'
 condition|)
-block|{
+break|break;
 switch|switch
 condition|(
 operator|*
@@ -178,7 +178,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-block|}
 block|}
 block|}
 end_while
@@ -216,7 +215,7 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|2
+literal|1
 condition|)
 name|copyfile
 argument_list|()
@@ -225,19 +224,23 @@ else|else
 block|{
 while|while
 condition|(
-operator|--
 name|argc
+operator|--
 operator|>
 literal|0
 condition|)
 block|{
+name|p
+operator|=
+operator|*
+name|argv
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|freopen
 argument_list|(
-operator|*
-operator|++
-name|argv
+name|p
 argument_list|,
 literal|"r"
 argument_list|,
@@ -248,8 +251,7 @@ name|NULL
 condition|)
 name|perror
 argument_list|(
-operator|*
-name|argv
+name|p
 argument_list|)
 expr_stmt|;
 else|else
