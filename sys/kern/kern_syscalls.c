@@ -30,6 +30,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -352,6 +370,8 @@ name|data
 operator|->
 name|offset
 expr_stmt|;
+name|MOD_XLOCK
+expr_stmt|;
 name|module_setspecific
 argument_list|(
 name|mod
@@ -359,6 +379,8 @@ argument_list|,
 operator|&
 name|ms
 argument_list|)
+expr_stmt|;
+name|MOD_XUNLOCK
 expr_stmt|;
 if|if
 condition|(

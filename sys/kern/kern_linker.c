@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/module.h>
 end_include
 
@@ -1191,30 +1197,6 @@ name|filename
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|module_lookupbyname
-argument_list|(
-name|moddata
-operator|->
-name|name
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning: module %s already exists\n"
-argument_list|,
-name|moddata
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-continue|continue;
-comment|/* or return a error ? */
-block|}
 name|error
 operator|=
 name|module_register
@@ -1972,6 +1954,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Inform any modules associated with this file. 		 */
+name|MOD_XLOCK
+expr_stmt|;
 for|for
 control|(
 name|mod
@@ -1997,6 +1981,8 @@ name|module_getfnext
 argument_list|(
 name|mod
 argument_list|)
+expr_stmt|;
+name|MOD_XUNLOCK
 expr_stmt|;
 comment|/* 			 * Give the module a chance to veto the unload. 			 */
 if|if
@@ -2041,12 +2027,17 @@ goto|goto
 name|out
 goto|;
 block|}
+else|else
+name|MOD_XLOCK
+expr_stmt|;
 name|module_release
 argument_list|(
 name|mod
 argument_list|)
 expr_stmt|;
 block|}
+name|MOD_XUNLOCK
+expr_stmt|;
 block|}
 name|file
 operator|->
@@ -4205,6 +4196,8 @@ condition|(
 name|lf
 condition|)
 block|{
+name|MOD_SLOCK
+expr_stmt|;
 name|mp
 operator|=
 name|TAILQ_FIRST
@@ -4242,6 +4235,8 @@ literal|0
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|MOD_SUNLOCK
 expr_stmt|;
 block|}
 else|else

@@ -309,6 +309,56 @@ define|\
 value|static struct mod_version _##module##_version = {		\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|sx
+name|modules_sx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|MOD_XLOCK
+value|sx_xlock(&modules_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD_SLOCK
+value|sx_slock(&modules_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD_XUNLOCK
+value|sx_xunlock(&modules_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD_SUNLOCK
+value|sx_sunlock(&modules_sx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD_LOCK_ASSERT
+value|sx_assert(&modules_sx, SX_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MOD_XLOCK_ASSERT
+value|sx_assert(&modules_sx, SX_XLOCKED)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|linker_file
