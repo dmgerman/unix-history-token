@@ -1545,7 +1545,7 @@ comment|/* Make sure it is Allied-Telesis's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -1839,7 +1839,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -2464,7 +2464,7 @@ comment|/* Make sure it is Contec's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -2814,7 +2814,7 @@ comment|/* Make sure the Ethernet (MAC) station address is of Contec's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 operator|+
@@ -3083,7 +3083,7 @@ comment|/* Make sure the Ethernet (MAC) station address is of TDK/LANX's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|eeprom
 argument_list|,
@@ -3348,7 +3348,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -3369,7 +3369,7 @@ literal|"Generic MB86960 Ethernet"
 expr_stmt|;
 if|if
 condition|(
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -3605,7 +3605,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -4211,7 +4211,7 @@ comment|/* Make sure it is RATOC's.  */
 if|if
 condition|(
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->
@@ -4221,7 +4221,7 @@ literal|0x00C0D0
 argument_list|)
 operator|&&
 operator|!
-name|valid_Ether_p
+name|fe_valid_Ether_p
 argument_list|(
 name|sc
 operator|->

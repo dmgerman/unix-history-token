@@ -678,7 +678,7 @@ end_comment
 
 begin_function
 name|int
-name|valid_Ether_p
+name|fe_valid_Ether_p
 parameter_list|(
 name|u_char
 specifier|const
@@ -764,16 +764,10 @@ case|:
 comment|/* Same as above, but a local address is allowed in                    this context.  */
 if|if
 condition|(
-operator|(
+name|ETHER_IS_MULTICAST
+argument_list|(
 name|addr
-index|[
-literal|0
-index|]
-operator|&
-literal|0x01
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 return|return
 literal|0

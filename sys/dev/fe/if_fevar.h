@@ -492,7 +492,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|valid_Ether_p
+name|fe_valid_Ether_p
 parameter_list|(
 name|u_char
 specifier|const
