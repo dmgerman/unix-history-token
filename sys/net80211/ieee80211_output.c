@@ -4187,7 +4187,7 @@ block|{
 case|case
 name|IEEE80211_FC0_SUBTYPE_PROBE_REQ
 case|:
-comment|/* 		 * prreq frame format 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[tlv] WME (optional) 		 *	[tlv] user-specified ie's 		 */
+comment|/* 		 * prreq frame format 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] extended supported rates 		 *	[tlv] user-specified ie's 		 */
 name|m
 operator|=
 name|ieee80211_getmgtframe
@@ -4210,12 +4210,6 @@ name|IEEE80211_RATE_MAXSIZE
 operator|-
 name|IEEE80211_RATE_SIZE
 operator|)
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ieee80211_wme_param
-argument_list|)
 operator|+
 operator|(
 name|ic
@@ -4305,26 +4299,6 @@ if|if
 condition|(
 name|ic
 operator|->
-name|ic_flags
-operator|&
-name|IEEE80211_F_WME
-condition|)
-name|frm
-operator|=
-name|ieee80211_add_wme_param
-argument_list|(
-name|frm
-argument_list|,
-operator|&
-name|ic
-operator|->
-name|ic_wme
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ic
-operator|->
 name|ic_opt_ie
 operator|!=
 name|NULL
@@ -4393,7 +4367,7 @@ break|break;
 case|case
 name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
 case|:
-comment|/* 		 * probe response frame format 		 *	[8] time stamp 		 *	[2] beacon interval 		 *	[2] cabability information 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] parameter set (FH/DS) 		 *	[tlv] parameter set (IBSS) 		 *	[tlv] extended rate phy (ERP) 		 *	[tlv] extended supported rates 		 *	[tlv] WPA 		 */
+comment|/* 		 * probe response frame format 		 *	[8] time stamp 		 *	[2] beacon interval 		 *	[2] cabability information 		 *	[tlv] ssid 		 *	[tlv] supported rates 		 *	[tlv] parameter set (FH/DS) 		 *	[tlv] parameter set (IBSS) 		 *	[tlv] extended rate phy (ERP) 		 *	[tlv] extended supported rates 		 *	[tlv] WPA 		 *	[tlv] WME (optional) 		 */
 name|m
 operator|=
 name|ieee80211_getmgtframe
@@ -4454,6 +4428,12 @@ argument_list|)
 else|:
 literal|0
 operator|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ieee80211_wme_param
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4805,6 +4785,26 @@ operator|&
 name|ni
 operator|->
 name|ni_rates
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_WME
+condition|)
+name|frm
+operator|=
+name|ieee80211_add_wme_param
+argument_list|(
+name|frm
+argument_list|,
+operator|&
+name|ic
+operator|->
+name|ic_wme
 argument_list|)
 expr_stmt|;
 name|m
