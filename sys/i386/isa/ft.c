@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i386/isa/fdc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"i386/isa/icu.h"
 end_include
 
@@ -1313,12 +1319,6 @@ name|id_unit
 decl_stmt|;
 name|ft_p
 name|ft
-init|=
-operator|&
-name|ft_data
-index|[
-name|ftu
-index|]
 decl_stmt|;
 name|ftsu_t
 name|ftsu
@@ -1327,6 +1327,23 @@ name|fdup
 operator|->
 name|id_physid
 decl_stmt|;
+if|if
+condition|(
+name|ftu
+operator|>=
+name|NFT
+condition|)
+return|return
+literal|0
+return|;
+name|ft
+operator|=
+operator|&
+name|ft_data
+index|[
+name|ftu
+index|]
+expr_stmt|;
 comment|/* Probe for tape */
 name|ft
 operator|->
