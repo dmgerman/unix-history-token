@@ -2898,6 +2898,14 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|keyptr
+operator|->
+name|args
+operator|!=
+name|C_C_K_CUT
+condition|)
 name|count
 operator|=
 literal|0L
