@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.32 1995/04/12 20:47:38 wollman Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.33 1995/04/23 09:13:05 julian Exp $  */
 end_comment
 
 begin_comment
@@ -3800,18 +3800,7 @@ decl_stmt|;
 name|unsigned
 name|int
 name|opri
-init|=
-literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|opri
 operator|=
 name|splbio
@@ -3858,15 +3847,6 @@ name|bt_ccb_free
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|splx
 argument_list|(
 name|opri
@@ -3908,8 +3888,6 @@ index|]
 decl_stmt|;
 name|unsigned
 name|opri
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|bt_ccb
@@ -3930,15 +3908,6 @@ comment|/* Out Mail Box pointer */
 name|int
 name|hashnum
 decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|opri
 operator|=
 name|splbio
@@ -4094,7 +4063,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+continue|continue;
 block|}
+break|break;
 block|}
 block|}
 if|if
@@ -4120,15 +4091,6 @@ expr_stmt|;
 block|}
 name|gottit
 label|:
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|splx
 argument_list|(
 name|opri
@@ -4248,8 +4210,6 @@ index|]
 decl_stmt|;
 name|unsigned
 name|opri
-init|=
-literal|0
 decl_stmt|;
 name|BT_MBO
 modifier|*
@@ -4274,15 +4234,6 @@ name|bt
 operator|->
 name|bt_mbx
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|opri
 operator|=
 name|splbio
@@ -4470,15 +4421,6 @@ argument_list|,
 name|BT_START_SCSI
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|SCSI_NOMASK
-operator|)
-condition|)
 name|splx
 argument_list|(
 name|opri
@@ -6355,19 +6297,6 @@ name|xs
 operator|->
 name|flags
 expr_stmt|;
-if|if
-condition|(
-name|xs
-operator|->
-name|bp
-condition|)
-name|flags
-operator||=
-operator|(
-name|SCSI_NOSLEEP
-operator|)
-expr_stmt|;
-comment|/* just to be sure */
 if|if
 condition|(
 name|flags
