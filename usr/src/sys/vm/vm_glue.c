@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	7.9 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_glue.c	7.10 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_include
@@ -592,6 +592,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|i386
 comment|/* 	 * Allocate a wired-down (for now) pcb and kernel stack for the process 	 */
 name|addr
 operator|=
@@ -621,6 +624,23 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* XXX somehow, on 386, ocassionally pageout removes active, wired down kstack, and pagetables, WITHOUT going thru vm_page_unwire! Why this appears to work is not yet clear, yet it does... */
+name|addr
+operator|=
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|ctob
+argument_list|(
+name|UPAGES
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|up
 operator|=
 operator|(
@@ -768,29 +788,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vm_map_pageable
-argument_list|(
-name|vp
-argument_list|,
-name|addr
-argument_list|,
-literal|0xfe000000
-operator|-
-name|addr
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|vm_deallocate
 argument_list|(
 name|vp
 argument_list|,
 name|addr
 argument_list|,
-literal|0xfe000000
+name|UPT_MAX_ADDRESS
 operator|-
 name|addr
 argument_list|)
@@ -1747,6 +1751,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|i386
+comment|/* temporary measure till we find spontaineous unwire of kstack */
 name|vm_map_pageable
 argument_list|(
 name|kernel_map
@@ -1773,6 +1781,8 @@ name|vm_map
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)

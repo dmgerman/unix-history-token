@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.c	7.5 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_page.c	7.6 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -618,6 +618,23 @@ argument_list|)
 operator|+
 name|PAGE_MASK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|i386
+comment|/* XXX - waiting for pmap_bootstrap_malloc() (or somebody like him) */
+if|if
+condition|(
+name|first_phys_addr
+operator|>
+literal|0xa0000
+condition|)
+name|panic
+argument_list|(
+literal|"vm_page_startup: fell into the hole"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *	Validate these addresses. 	 */
 name|new_start
 operator|=
@@ -722,6 +739,19 @@ name|phys_addr
 operator|=
 name|pa
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|i386
+if|if
+condition|(
+name|pmap_isvalidphys
+argument_list|(
+name|m
+operator|->
+name|phys_addr
+argument_list|)
+condition|)
+block|{
 name|queue_enter
 argument_list|(
 operator|&
@@ -734,6 +764,46 @@ argument_list|,
 name|pageq
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* perhaps iomem needs it's own type, or dev pager? */
+name|m
+operator|->
+name|fictitious
+operator|=
+literal|1
+expr_stmt|;
+name|m
+operator|->
+name|busy
+operator|=
+name|TRUE
+expr_stmt|;
+name|vm_stat
+operator|.
+name|free_count
+operator|--
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* i386 */
+name|queue_enter
+argument_list|(
+operator|&
+name|vm_page_queue_free
+argument_list|,
+name|m
+argument_list|,
+name|vm_page_t
+argument_list|,
+name|pageq
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* i386 */
 name|m
 operator|++
 expr_stmt|;
