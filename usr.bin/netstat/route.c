@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.17 1996/07/23 01:18:17 julian Exp $"
+literal|"$Id: route.c,v 1.18 1996/07/23 22:00:12 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2059,7 +2059,7 @@ name|sa
 argument_list|,
 name|mask
 argument_list|,
-literal|11
+literal|9
 argument_list|)
 expr_stmt|;
 else|else
