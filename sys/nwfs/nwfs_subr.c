@@ -1968,13 +1968,11 @@ name|cred
 parameter_list|,
 name|procp
 parameter_list|)
-specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-specifier|register
 name|struct
 name|vattr
 modifier|*
