@@ -16366,7 +16366,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ap
 argument_list|,
@@ -16393,7 +16393,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ap
 argument_list|,
@@ -16519,7 +16519,7 @@ condition|(
 operator|(
 name|iflp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|iflp
 argument_list|,
