@@ -2242,6 +2242,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_ONESBCAST
+value|23
+end_define
+
+begin_comment
+comment|/* bool: send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_ADD
 value|50
 end_define

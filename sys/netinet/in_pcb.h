@@ -374,6 +374,11 @@ directive|define
 name|INP_TIMEWAIT
 value|0x8
 comment|/* .. probably doesn't go here */
+define|#
+directive|define
+name|INP_ONESBCAST
+value|0x10
+comment|/* send all-ones broadcast */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;

@@ -387,6 +387,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_SENDONES
+value|0x4
+end_define
+
+begin_comment
+comment|/* send all-ones broadcast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_ROUTETOIF
 value|SO_DONTROUTE
 end_define
