@@ -13,8 +13,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_VENDORID_NATSEMI
+value|0x100B
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_VENDORID_NEC
 value|0x1033
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_VENDORID_SIS
+value|0x1039
 end_define
 
 begin_define
@@ -57,6 +71,27 @@ define|#
 directive|define
 name|FW_VENDORID_LUCENT
 value|0x11c1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_VENDORID_INTEL
+value|0x8086
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_VENDORID_ADAPTEC
+value|0x9004
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_CS4210
+value|(0x000f<< 16)
 end_define
 
 begin_define
@@ -146,6 +181,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_TITSB43AB21
+value|(0x8026<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_TIPCI4410A
 value|(0x8017<< 16)
 end_define
@@ -209,8 +251,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|FW_DEVICE_AIC5800
+value|(0x5800<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|FW_DEVICE_FW322
 value|(0x5811<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_7007
+value|(0x7007<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_DEVICE_82372FB
+value|(0x7605<< 16)
 end_define
 
 begin_define
