@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.10 81/12/21 */
+comment|/* tcp_timer.c 4.11 82/01/13 */
 end_comment
 
 begin_include
@@ -701,8 +701,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_socket
+operator|->
+name|so_options
+operator|&
+name|SO_NOKEEPALIVE
+condition|)
+name|tp
+operator|->
+name|t_idle
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|tcp_respond
 argument_list|(
+name|tp
+argument_list|,
 name|tp
 operator|->
 name|t_template

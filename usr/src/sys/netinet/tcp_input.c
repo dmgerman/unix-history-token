@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.46	82/01/07	*/
+comment|/*	tcp_input.c	1.47	82/01/13	*/
 end_comment
 
 begin_include
@@ -216,6 +216,8 @@ name|struct
 name|tcpcb
 modifier|*
 name|tp
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
@@ -979,6 +981,14 @@ name|iss
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+condition|)
 name|so
 operator|->
 name|so_state
@@ -1580,6 +1590,14 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+condition|)
 name|so
 operator|->
 name|so_state
@@ -2035,7 +2053,7 @@ operator|->
 name|ti_seq
 operator|&&
 operator|(
-name|SEQ_LEQ
+name|SEQ_LT
 argument_list|(
 name|tp
 operator|->
@@ -2064,6 +2082,7 @@ name|snd_wnd
 operator|)
 condition|)
 block|{
+comment|/* printf("wl1 %x seq %x wl2 %x ack %x win %x wnd %x\n", tp->snd_wl1, ti->ti_seq, tp->snd_wl2, ti->ti_ack, ti->ti_win, tp->snd_wnd); */
 name|tp
 operator|->
 name|snd_wnd
@@ -2408,6 +2427,8 @@ name|drop
 goto|;
 name|tcp_respond
 argument_list|(
+name|tp
+argument_list|,
 name|ti
 argument_list|,
 name|tp
@@ -2442,6 +2463,8 @@ name|TH_ACK
 condition|)
 name|tcp_respond
 argument_list|(
+name|tp
+argument_list|,
 name|ti
 argument_list|,
 operator|(
@@ -2471,6 +2494,8 @@ operator|++
 expr_stmt|;
 name|tcp_respond
 argument_list|(
+name|tp
+argument_list|,
 name|ti
 argument_list|,
 name|ti

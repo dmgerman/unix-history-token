@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.h	4.4	81/12/21	*/
+comment|/*	tcp_timer.h	4.5	82/01/13	*/
 end_comment
 
 begin_comment
@@ -147,11 +147,22 @@ begin_define
 define|#
 directive|define
 name|TCPTV_MAX
-value|(120*PR_SLOWHZ)
+value|( 30*PR_SLOWHZ)
 end_define
 
 begin_comment
 comment|/* maximum allowable value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_LINGERTIME
+value|120
+end_define
+
+begin_comment
+comment|/* linger at most 2 minutes */
 end_comment
 
 begin_ifdef

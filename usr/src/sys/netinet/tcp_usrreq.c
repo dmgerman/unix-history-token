@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_usrreq.c 1.45 81/12/21 */
+comment|/* tcp_usrreq.c 1.46 82/01/13 */
 end_comment
 
 begin_include
@@ -326,6 +326,24 @@ condition|(
 name|error
 condition|)
 break|break;
+if|if
+condition|(
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTLINGER
+operator|)
+operator|==
+literal|0
+condition|)
+name|so
+operator|->
+name|so_linger
+operator|=
+name|TCP_LINGERTIME
+expr_stmt|;
 name|tp
 operator|=
 name|sototcpcb
@@ -884,13 +902,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
 name|so
 operator|->
-name|so_options
-operator|&
-name|SO_LETDATADRAIN
-operator|)
+name|so_linger
 operator|==
 literal|0
 condition|)
