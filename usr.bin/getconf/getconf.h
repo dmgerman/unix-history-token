@@ -20,20 +20,6 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|strtoimax
-parameter_list|(
-name|p
-parameter_list|,
-name|ep
-parameter_list|,
-name|radix
-parameter_list|)
-value|(strtoll((p), (ep), (radix)))
-end_define
-
-begin_define
-define|#
-directive|define
 name|PRIdMAX
 value|"lld"
 end_define
