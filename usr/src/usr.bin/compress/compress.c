@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.17 (Berkeley) %G%"
+literal|"@(#)compress.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<utime.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -2992,7 +2998,7 @@ literal|2
 expr_stmt|;
 return|return;
 block|}
-comment|/*****************************************************************  * TAG( output )  *  * Output the given code.  * Inputs:  * 	code:	A n_bits-bit integer.  If == -1, then EOF.  This assumes  *		that n_bits =< (long)wordsize - 1.  * Outputs:  * 	Outputs code to the file.  * Assumptions:  *	Chars are 8 bits long.  * Algorithm:  * 	Maintain a BITS character long buffer (so that 8 codes will  * fit in it exactly).  Use the VAX insv instruction to insert each  * code in turn.  When the buffer fills up empty it and start over.  */
+comment|/*-  * Output the given code.  * Inputs:  * 	code:	A n_bits-bit integer.  If == -1, then EOF.  This assumes  *		that n_bits =< (long)wordsize - 1.  * Outputs:  * 	Outputs code to the file.  * Assumptions:  *	Chars are 8 bits long.  * Algorithm:  * 	Maintain a BITS character long buffer (so that 8 codes will  * fit in it exactly).  Use the VAX insv instruction to insert each  * code in turn.  When the buffer fills up empty it and start over.  */
 specifier|static
 name|char
 name|buf
@@ -3140,17 +3146,25 @@ operator|>=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-comment|/* VAX DEPENDENT!! Implementation on other machines is below. 	 * 	 * Translation: Insert BITS bits from the argument starting at 	 * offset bits from the beginning of buf. 	 */
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+comment|/* 	 * VAX and PCC DEPENDENT!! Implementation on other machines is 	 * below. 	 * 	 * Translation: Insert BITS bits from the argument starting at 	 * offset bits from the beginning of buf. 	 */
 literal|0
 expr_stmt|;
 comment|/* Work around for pcc -O bug with asm and if stmt */
 asm|asm( "insv	4(ap),r11,r10,(r9)" );
 else|#
 directive|else
-comment|/* not a vax */
 comment|/*   * byte/bit numbering on the VAX is simulated by the following code  */
 comment|/* 	 * Get to the first byte. 	 */
 name|bp
@@ -3271,6 +3285,7 @@ operator|+=
 name|bits
 expr_stmt|;
 do|do
+block|{
 name|putchar
 argument_list|(
 operator|*
@@ -3278,6 +3293,17 @@ name|bp
 operator|++
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
+name|writeerr
+argument_list|()
+expr_stmt|;
+block|}
 do|while
 condition|(
 operator|--
@@ -3417,41 +3443,61 @@ name|offset
 operator|>
 literal|0
 condition|)
+block|{
+name|offset
+operator|=
+operator|(
+name|offset
+operator|+
+literal|7
+operator|)
+operator|/
+literal|8
+expr_stmt|;
+if|if
+condition|(
 name|fwrite
 argument_list|(
 name|buf
 argument_list|,
 literal|1
 argument_list|,
-operator|(
 name|offset
-operator|+
-literal|7
-operator|)
-operator|/
-literal|8
 argument_list|,
 name|stdout
 argument_list|)
+operator|!=
+name|offset
+condition|)
+name|writeerr
+argument_list|()
 expr_stmt|;
 name|bytes_out
 operator|+=
-operator|(
 name|offset
-operator|+
-literal|7
-operator|)
-operator|/
-literal|8
 expr_stmt|;
+block|}
 name|offset
 operator|=
 literal|0
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdout
+argument_list|)
+condition|)
+name|writeerr
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3469,17 +3515,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DEBUG */
-if|if
-condition|(
-name|ferror
-argument_list|(
-name|stdout
-argument_list|)
-condition|)
-name|writeerr
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 comment|/*  * Decompress stdin to stdout.  This routine adapts to the codes in the  * file building the "string" table on-the-fly; requiring no table to  * be stored in the compressed file.  The tables used herein are shared  * with those of the compress() routine.  See the definitions above.  */
@@ -3936,7 +3971,7 @@ literal|0
 condition|)
 do|;
 block|}
-comment|/*****************************************************************  * TAG( getcode )  *  * Read one code from the standard input.  If EOF, return -1.  * Inputs:  * 	stdin  * Outputs:  * 	code or -1 is returned.  */
+comment|/*-  * Read one code from the standard input.  If EOF, return -1.  * Inputs:  * 	stdin  * Outputs:  * 	code or -1 is returned.  */
 name|code_int
 name|getcode
 parameter_list|()
@@ -4984,11 +5019,26 @@ comment|/* DEBUG */
 name|writeerr
 argument_list|()
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"compress: %s: %s\n"
+argument_list|,
 name|ofname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|ofname
