@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.3	83/02/21	*/
+comment|/*	hpmaptype.c	4.4	83/02/22	*/
 end_comment
 
 begin_comment
@@ -665,7 +665,7 @@ name|SI9766
 case|:
 return|return
 operator|(
-literal|14
+literal|13
 operator|)
 return|;
 case|case
@@ -689,7 +689,7 @@ name|SI9751D
 case|:
 return|return
 operator|(
-literal|12
+literal|11
 operator|)
 return|;
 block|}
@@ -767,22 +767,10 @@ literal|48
 condition|)
 return|return
 operator|(
-literal|12
-operator|)
-return|;
-comment|/* 48 sector Eagle */
-if|if
-condition|(
-name|ntracks
-operator|==
-literal|43
-condition|)
-return|return
-operator|(
 literal|11
 operator|)
 return|;
-comment|/* 43 sector Eagle */
+comment|/* 48 sector Eagle */
 name|printf
 argument_list|(
 literal|"RM02 with %d sectors/track?\n"
