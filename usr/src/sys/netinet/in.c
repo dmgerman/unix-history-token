@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1928,11 +1928,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Add route for the network. 	 */
 if|if
 condition|(
@@ -2040,6 +2035,11 @@ name|ia_flags
 operator||=
 name|IFA_ROUTE
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2111,7 +2111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return 1 if the address is a local broadcast address.  */
+comment|/*  * Return 1 if the address might be a local broadcast address.  */
 end_comment
 
 begin_macro
@@ -2136,6 +2136,9 @@ name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
+name|u_long
+name|t
+decl_stmt|;
 comment|/* 	 * Look through the list of addresses for a match 	 * with a broadcast address. 	 */
 for|for
 control|(
@@ -2153,17 +2156,24 @@ name|ia_next
 control|)
 if|if
 condition|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
+name|ia
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+condition|)
+block|{
+if|if
+condition|(
+name|satosin
+argument_list|(
 operator|&
 name|ia
 operator|->
 name|ia_broadaddr
-operator|)
+argument_list|)
 operator|->
 name|sin_addr
 operator|.
@@ -2172,16 +2182,55 @@ operator|==
 name|in
 operator|.
 name|s_addr
-operator|&&
+condition|)
+return|return
 operator|(
+literal|1
+operator|)
+return|;
+comment|/* 		 * Check for old-style (host 0) broadcast. 		 */
+if|if
+condition|(
+operator|(
+name|t
+operator|=
+name|ntohl
+argument_list|(
+name|in
+operator|.
+name|s_addr
+argument_list|)
+operator|)
+operator|==
 name|ia
 operator|->
-name|ia_ifp
+name|ia_subnet
+operator|||
+name|t
+operator|==
+name|ia
 operator|->
-name|if_flags
-operator|&
-name|IFF_BROADCAST
+name|ia_net
+condition|)
+return|return
+operator|(
+literal|1
 operator|)
+return|;
+block|}
+if|if
+condition|(
+name|in
+operator|.
+name|s_addr
+operator|==
+name|INADDR_BROADCAST
+operator|||
+name|in
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
 condition|)
 return|return
 operator|(
