@@ -347,6 +347,15 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|2
+condition|)
+return|return
+name|NULL
+return|;
 name|DEBUG
 argument_list|(
 name|fprintf

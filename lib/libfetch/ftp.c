@@ -259,7 +259,7 @@ name|isftpreply
 parameter_list|(
 name|foo
 parameter_list|)
-value|(isdigit(foo[0])&& isdigit(foo[1]) \&& isdigit(foo[2])&& foo[3] == ' ')
+value|(isdigit(foo[0])&& isdigit(foo[1]) \&& isdigit(foo[2]) \&& (foo[3] == ' ' || foo[3] == '\0'))
 end_define
 
 begin_define
@@ -916,6 +916,9 @@ name|ln
 operator|+
 literal|3
 init|;
+operator|*
+name|p
+operator|&&
 operator|!
 name|isdigit
 argument_list|(
@@ -930,25 +933,23 @@ comment|/* nothing */
 empty_stmt|;
 for|for
 control|(
-name|p
-operator|--
-operator|,
 name|i
 operator|=
 literal|0
 init|;
+operator|*
+name|p
+operator|,
 name|i
 operator|<
 literal|6
 condition|;
 name|i
 operator|++
-control|)
-block|{
+operator|,
 name|p
 operator|++
-expr_stmt|;
-comment|/* skip the comma */
+control|)
 name|addr
 index|[
 name|i
@@ -964,6 +965,20 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|6
+condition|)
+block|{
+name|e
+operator|=
+literal|999
+expr_stmt|;
+goto|goto
+name|ouch
+goto|;
 block|}
 comment|/* seek to required offset */
 if|if
