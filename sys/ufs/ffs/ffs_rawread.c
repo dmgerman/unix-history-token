@@ -1186,14 +1186,12 @@ name|dp
 operator|->
 name|v_rdev
 expr_stmt|;
+if|if
+condition|(
 name|vmapbuf
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|vmapbuf
 operator|<
 literal|0
 condition|)
