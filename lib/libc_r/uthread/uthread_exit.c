@@ -580,27 +580,6 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-switch|switch
-condition|(
-name|pthread
-operator|->
-name|suspended
-condition|)
-block|{
-case|case
-name|SUSP_JOIN
-case|:
-comment|/* 			 * The joining thread is suspended.  Change the 			 * suspension state to make the thread runnable when it 			 * is resumed: 			 */
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NO
-expr_stmt|;
-break|break;
-case|case
-name|SUSP_NO
-case|:
 comment|/* Make the joining thread runnable: */
 name|PTHREAD_NEW_STATE
 argument_list|(
@@ -609,14 +588,6 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-name|PANIC
-argument_list|(
-literal|"Unreachable code reached"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Set the return value for the joining thread: */
 name|pthread
 operator|->

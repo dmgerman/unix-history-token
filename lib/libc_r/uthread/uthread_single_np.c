@@ -6,19 +6,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pthread.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pthread_private.h"
+file|<pthread_np.h>
 end_include
 
 begin_expr_stmt
@@ -36,19 +30,11 @@ name|int
 name|_pthread_single_np
 parameter_list|()
 block|{
-name|struct
-name|pthread
-modifier|*
-name|curthread
-init|=
-name|_get_curthread
-argument_list|()
-decl_stmt|;
 comment|/* Enter single-threaded (non-POSIX) scheduling mode: */
-name|_thread_single
-operator|=
-name|curthread
+name|pthread_suspend_all_np
+argument_list|()
 expr_stmt|;
+comment|/* 	 * XXX - Do we want to do this? 	 * __is_threaded = 0; 	 */
 return|return
 operator|(
 literal|0

@@ -1716,28 +1716,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Unless the thread is currently suspended, 				 * allow it to run.  If the thread is suspended, 				 * make a note that the thread isn't in a wait 				 * queue any more. 				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-condition|)
+comment|/* 				 * Wake up the signaled thread: 				 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
-expr_stmt|;
-else|else
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
 expr_stmt|;
 block|}
 comment|/* Check for no more waiters: */
@@ -1907,28 +1892,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 				 * Unless the thread is currently suspended, 				 * allow it to run.  If the thread is suspended, 				 * make a note that the thread isn't in a wait 				 * queue any more. 				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|state
-operator|!=
-name|PS_SUSPENDED
-condition|)
+comment|/* 				 * Wake up the signaled thread: 				 */
 name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
 name|PS_RUNNING
 argument_list|)
-expr_stmt|;
-else|else
-name|pthread
-operator|->
-name|suspended
-operator|=
-name|SUSP_NOWAIT
 expr_stmt|;
 block|}
 comment|/* There are no more waiting threads: */

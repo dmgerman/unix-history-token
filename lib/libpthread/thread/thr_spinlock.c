@@ -188,7 +188,7 @@ argument_list|)
 argument_list|,
 literal|"%s - Warning: Thread %p attempted to lock %p from %s (%d) was left locked from %s (%d)\n"
 argument_list|,
-name|_getprogname
+name|getprogname
 argument_list|()
 argument_list|,
 name|curthread

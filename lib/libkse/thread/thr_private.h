@@ -602,7 +602,7 @@ name|thrd
 parameter_list|,
 name|newstate
 parameter_list|)
-value|do {				\ 	if (_thread_kern_new_state != 0)				\ 		PANIC("Recursive PTHREAD_NEW_STATE");			\ 	_thread_kern_new_state = 1;					\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_PRIOQ_REMOVE(thrd);			\ 			PTHREAD_WAITQ_INSERT(thrd);			\ 		} else if (newstate == PS_RUNNING) { 			\ 			PTHREAD_WAITQ_REMOVE(thrd);			\ 			PTHREAD_PRIOQ_INSERT_TAIL(thrd);		\ 		}							\ 	}								\ 	_thread_kern_new_state = 0;					\ 	PTHREAD_SET_STATE(thrd, newstate);				\ } while (0)
+value|do {				\ 	if (_thread_kern_new_state != 0)				\ 		PANIC("Recursive PTHREAD_NEW_STATE");			\ 	_thread_kern_new_state = 1;					\ 	if ((thrd)->state != newstate) {				\ 		if ((thrd)->state == PS_RUNNING) {			\ 			PTHREAD_PRIOQ_REMOVE(thrd);			\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 			PTHREAD_WAITQ_INSERT(thrd);			\ 		} else if (newstate == PS_RUNNING) { 			\ 			PTHREAD_WAITQ_REMOVE(thrd);			\ 			PTHREAD_SET_STATE(thrd, newstate);		\ 			PTHREAD_PRIOQ_INSERT_TAIL(thrd);		\ 		}							\ 	}								\ 	_thread_kern_new_state = 0;					\ } while (0)
 end_define
 
 begin_else
@@ -1141,35 +1141,6 @@ directive|define
 name|PTHREAD_CREATE_SUSPENDED
 value|1
 end_define
-
-begin_comment
-comment|/*  * Additional state for a thread suspended with pthread_suspend_np().  */
-end_comment
-
-begin_enum
-enum|enum
-name|pthread_susp
-block|{
-name|SUSP_NO
-block|,
-comment|/* Not suspended. */
-name|SUSP_YES
-block|,
-comment|/* Suspended. */
-name|SUSP_JOIN
-block|,
-comment|/* Suspended, joining. */
-name|SUSP_NOWAIT
-block|,
-comment|/* Suspended, was in a mutex or condition queue. */
-name|SUSP_MUTEX_WAIT
-block|,
-comment|/* Suspended, still in a mutex queue. */
-name|SUSP_COND_WAIT
-comment|/* Suspended, still in a condition queue. */
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/*  * Miscellaneous definitions.  */
@@ -1841,10 +1812,6 @@ value|0x0010
 name|int
 name|cancelflags
 decl_stmt|;
-name|enum
-name|pthread_susp
-name|suspended
-decl_stmt|;
 name|thread_continuation_t
 name|continuation
 decl_stmt|;
@@ -1998,8 +1965,13 @@ value|0x0100
 comment|/* in mutex queue using sqe link */
 define|#
 directive|define
-name|PTHREAD_FLAGS_TRACE
+name|PTHREAD_FLAGS_SUSPENDED
 value|0x0200
+comment|/* thread is suspended */
+define|#
+directive|define
+name|PTHREAD_FLAGS_TRACE
+value|0x0400
 comment|/* for debugging purposes */
 define|#
 directive|define
@@ -2159,39 +2131,6 @@ name|GLOBAL_PTHREAD_PRIVATE
 init|=
 operator|&
 name|_thread_kern_thread
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Ptr to the thread running in single-threaded mode or NULL if  * running multi-threaded (default POSIX behaviour).  */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|pthread
-modifier|*
-specifier|volatile
-name|_thread_single
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 

@@ -183,7 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* #define DEBUG_SIGNAL */
+comment|/*#define DEBUG_SIGNAL*/
 end_comment
 
 begin_ifdef
@@ -1357,6 +1357,18 @@ name|sigmask
 argument_list|,
 name|sig
 argument_list|)
+operator|&&
+operator|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -2402,13 +2414,33 @@ argument_list|,
 name|PS_RUNNING
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The thread should be removed from all scheduling 		 * queues at this point.  Raise the priority and place 		 * the thread in the run queue. 		 */
+comment|/* 		 * The thread should be removed from all scheduling 		 * queues at this point.  Raise the priority and place 		 * the thread in the run queue.  It is also possible 		 * for a signal to be sent to a suspended thread, 		 * mostly via pthread_kill().  If a thread is suspended, 		 * don't insert it into the priority queue; just set 		 * its state to suspended and it will run the signal 		 * handler when it is resumed. 		 */
 name|pthread
 operator|->
 name|active_priority
 operator||=
 name|PTHREAD_SIGNAL_PRIORITY
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|thread_is_active

@@ -539,12 +539,41 @@ parameter_list|)
 block|{
 name|int
 name|prio
-init|=
+decl_stmt|;
+comment|/* 	 * Don't insert suspended threads into the priority queue. 	 * The caller is responsible for setting the threads state. 	 */
+if|if
+condition|(
+operator|(
 name|pthread
 operator|->
-name|active_priority
-decl_stmt|;
-comment|/* 	 * Make some assertions when debugging is enabled: 	 */
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Make sure the threads state is suspended. */
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|!=
+name|PS_SUSPENDED
+condition|)
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Make some assertions when debugging is enabled: 		 */
 name|_PQ_ASSERT_INACTIVE
 argument_list|(
 literal|"_pq_insert_head: pq_active"
@@ -564,6 +593,12 @@ name|_PQ_ASSERT_PROTECTED
 argument_list|(
 literal|"_pq_insert_head: prioq not protected!"
 argument_list|)
+expr_stmt|;
+name|prio
+operator|=
+name|pthread
+operator|->
+name|active_priority
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
@@ -614,6 +649,7 @@ name|_PQ_CLEAR_ACTIVE
 argument_list|()
 expr_stmt|;
 block|}
+block|}
 end_function
 
 begin_function
@@ -630,12 +666,41 @@ parameter_list|)
 block|{
 name|int
 name|prio
-init|=
+decl_stmt|;
+comment|/* 	 * Don't insert suspended threads into the priority queue. 	 * The caller is responsible for setting the threads state. 	 */
+if|if
+condition|(
+operator|(
 name|pthread
 operator|->
-name|active_priority
-decl_stmt|;
-comment|/* 	 * Make some assertions when debugging is enabled: 	 */
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Make sure the threads state is suspended. */
+if|if
+condition|(
+name|pthread
+operator|->
+name|state
+operator|!=
+name|PS_SUSPENDED
+condition|)
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Make some assertions when debugging is enabled: 		 */
 name|_PQ_ASSERT_INACTIVE
 argument_list|(
 literal|"_pq_insert_tail: pq_active"
@@ -655,6 +720,12 @@ name|_PQ_ASSERT_PROTECTED
 argument_list|(
 literal|"_pq_insert_tail: prioq not protected!"
 argument_list|)
+expr_stmt|;
+name|prio
+operator|=
+name|pthread
+operator|->
+name|active_priority
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
@@ -704,6 +775,7 @@ expr_stmt|;
 name|_PQ_CLEAR_ACTIVE
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -800,6 +872,53 @@ operator|->
 name|pl_queued
 operator|=
 literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_SUSPENDED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * This thread is suspended; remove it from the 			 * list and ensure its state is suspended. 			 */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|pql
+operator|->
+name|pl_head
+argument_list|,
+name|pthread
+argument_list|,
+name|pqe
+argument_list|)
+expr_stmt|;
+name|PTHREAD_SET_STATE
+argument_list|(
+name|pthread
+argument_list|,
+name|PS_SUSPENDED
+argument_list|)
+expr_stmt|;
+comment|/* This thread is now longer in the priority queue. */
+name|pthread
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PTHREAD_FLAGS_IN_PRIOQ
+expr_stmt|;
+name|pthread
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
