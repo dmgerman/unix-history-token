@@ -620,23 +620,11 @@ name|bus_dma_lock_op_t
 name|op
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|panic
 argument_list|(
 literal|"driver error: busdma dflt_lock called"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"DRIVER_ERROR: busdma dflt_lock called\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
