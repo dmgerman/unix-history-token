@@ -577,7 +577,6 @@ name|tty_list
 modifier|*
 name|tp
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|rcp
