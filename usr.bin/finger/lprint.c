@@ -487,6 +487,13 @@ else|:
 name|_PATH_BSHELL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|gflag
+condition|)
+goto|goto
+name|no_gecos
+goto|;
 comment|/* 	 * try and print office, office phone, and home phone on one line; 	 * if that fails, do line filling so it looks nice. 	 */
 define|#
 directive|define
@@ -706,6 +713,8 @@ argument_list|(
 literal|'\n'
 argument_list|)
 expr_stmt|;
+name|no_gecos
+label|:
 comment|/* 	 * long format con't: 	 * if logged in 	 *	terminal 	 *	idle time 	 *	if messages allowed 	 *	where logged in from 	 * if not logged in 	 *	when last logged in 	 */
 comment|/* find out longest device name for this user for formatting */
 for|for

@@ -196,8 +196,14 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|" TTY  Idle  Login  Time"
+literal|" TTY  Idle  Login  Time "
 argument_list|,
+operator|(
+name|gflag
+operator|)
+condition|?
+literal|""
+else|:
 name|oflag
 condition|?
 literal|"Office  Phone"
@@ -634,6 +640,13 @@ name|office
 label|:
 if|if
 condition|(
+name|gflag
+condition|)
+goto|goto
+name|no_gecos
+goto|;
+if|if
+condition|(
 name|oflag
 condition|)
 block|{
@@ -709,6 +722,8 @@ operator|->
 name|host
 argument_list|)
 expr_stmt|;
+name|no_gecos
+label|:
 name|putchar
 argument_list|(
 literal|'\n'

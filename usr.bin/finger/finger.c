@@ -163,6 +163,8 @@ begin_decl_stmt
 name|int
 name|entries
 decl_stmt|,
+name|gflag
+decl_stmt|,
 name|lflag
 decl_stmt|,
 name|mflag
@@ -280,7 +282,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lmpshoT"
+literal|"glmpshoT"
 argument_list|)
 operator|)
 operator|!=
@@ -292,6 +294,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'g'
+case|:
+name|gflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'l'
 case|:
