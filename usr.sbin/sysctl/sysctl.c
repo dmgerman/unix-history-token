@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.12 1997/02/22 16:13:58 peter Exp $"
+literal|"$Id: sysctl.c,v 1.13 1997/03/31 05:11:25 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -970,7 +970,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"{ hz = %d, tick = %d, profhz = %d, stathz = %d }"
+literal|"{ hz = %d, tick = %d, tickadj = %d, profhz = %d, stathz = %d }"
 argument_list|,
 name|ci
 operator|->
@@ -979,6 +979,10 @@ argument_list|,
 name|ci
 operator|->
 name|tick
+argument_list|,
+name|ci
+operator|->
+name|tickadj
 argument_list|,
 name|ci
 operator|->
