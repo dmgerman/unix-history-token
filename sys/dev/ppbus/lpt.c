@@ -1280,7 +1280,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|uintptr_t
+name|intptr_t
 name|irq
 decl_stmt|;
 name|sc
@@ -1427,6 +1427,9 @@ argument_list|(
 operator|(
 literal|"irq %x %x\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|irq
 operator|,
 name|sc
