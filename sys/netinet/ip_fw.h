@@ -43,11 +43,35 @@ decl_stmt|,
 name|fw_dmsk
 decl_stmt|;
 comment|/* Mask for src and dest IP addr */
+comment|/* 	 * This union keeps all "via" information. 	 * If ever fu_via_ip is 0,or IP_FW_F_IFNAME set and 	 * fu_via_name[0] is 0 - match any packet. 	 */
+union|union
+block|{
 name|struct
 name|in_addr
-name|fw_via
+name|fu_via_ip
 decl_stmt|;
-comment|/* IP addr of interface "via" */
+struct|struct
+block|{
+define|#
+directive|define
+name|FW_IFNLEN
+value|6
+comment|/* To keep structure on 2^x boundary */
+name|char
+name|fu_via_name
+index|[
+name|FW_IFNLEN
+index|]
+decl_stmt|;
+name|short
+name|fu_via_unit
+decl_stmt|;
+block|}
+name|fu_via_if
+struct|;
+block|}
+name|fu_via_un
+union|;
 name|u_short
 name|fw_flg
 decl_stmt|;
@@ -82,6 +106,31 @@ comment|/* Packet and byte counters */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Definitions to make expressions  * for "via" stuff shorter.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|fw_via_ip
+value|fu_via_un.fu_via_ip
+end_define
+
+begin_define
+define|#
+directive|define
+name|fw_via_name
+value|fu_via_un.fu_via_if.fu_via_name
+end_define
+
+begin_define
+define|#
+directive|define
+name|fw_via_unit
+value|fu_via_un.fu_via_if.fu_via_unit
+end_define
 
 begin_comment
 comment|/*  * Values for "flags" field .  */
@@ -222,8 +271,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_IFNAME
+value|0x200
+end_define
+
+begin_comment
+comment|/* Use interface name/unit (not IP)   */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0x1FF
+value|0x3FF
 end_define
 
 begin_comment
