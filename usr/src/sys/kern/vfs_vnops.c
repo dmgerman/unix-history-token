@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.10	81/05/12	*/
+comment|/*	vfs_vnops.c	4.11	81/05/15	*/
 end_comment
 
 begin_include
@@ -1100,6 +1100,12 @@ operator|->
 name|f_un
 operator|.
 name|f_offset
+operator|=
+literal|0
+expr_stmt|;
+name|fp
+operator|->
+name|f_inode
 operator|=
 literal|0
 expr_stmt|;
