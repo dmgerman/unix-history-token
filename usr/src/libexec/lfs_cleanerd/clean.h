@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clean.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -358,13 +358,6 @@ operator|*
 operator|,
 name|int
 operator|*
-operator|,
-name|INODE_INFO
-operator|*
-operator|*
-operator|,
-name|int
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -482,13 +475,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRINT_IINFO
+name|PRINT_INODE
 parameter_list|(
 name|b
 parameter_list|,
 name|iip
 parameter_list|)
-value|{ \ 	(void) printf("\t%s inode: %d daddr: 0x%lx create: %s\n", \ 	    b ? "KEEPING" : "TOSSING", (iip)->ii_inode, (iip)->ii_daddr, \ 	    ctime((time_t *)&(iip)->ii_segcreate)); \ 	fflush(stdout); \ }
+value|{ \ 	(void) printf("\t%s inode: %d daddr: 0x%lx create: %s\n", \ 	    b ? "KEEPING" : "TOSSING", (bip)->bi_inode, (bip)->bi_daddr, \ 	    ctime((time_t *)&(bip)->bi_segcreate)); \ 	fflush(stdout); \ }
 end_define
 
 begin_define
@@ -589,7 +582,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PRINT_IINFO
+name|PRINT_INODE
 parameter_list|(
 name|b
 parameter_list|,
