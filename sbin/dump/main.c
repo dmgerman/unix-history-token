@@ -2297,7 +2297,7 @@ name|pipeout
 condition|)
 name|msg
 argument_list|(
-literal|"%ld tape blocks\n"
+literal|"DUMP: %ld tape blocks\n"
 argument_list|,
 name|spcl
 operator|.
@@ -2307,7 +2307,7 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"%ld tape blocks on %d volumes(s)\n"
+literal|"DUMP: %ld tape blocks on %d volumes(s)\n"
 argument_list|,
 name|spcl
 operator|.
