@@ -7,7 +7,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.5 1994/10/02 17:40:38 phk Exp $  */
+comment|/*  * LP (Laptop Package)  *   * Copyright (c) 1994 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.6 1994/11/07 04:23:58 phk Exp $  */
 end_comment
 
 begin_include
@@ -329,9 +329,13 @@ name|gdt_segs
 operator|+
 name|GAPMCODE32_SEL
 argument_list|,
+operator|&
 name|gdt
-operator|+
+index|[
 name|GAPMCODE32_SEL
+index|]
+operator|.
+name|sd
 argument_list|)
 expr_stmt|;
 name|ssdtosd
@@ -340,9 +344,13 @@ name|gdt_segs
 operator|+
 name|GAPMCODE16_SEL
 argument_list|,
+operator|&
 name|gdt
-operator|+
+index|[
 name|GAPMCODE16_SEL
+index|]
+operator|.
+name|sd
 argument_list|)
 expr_stmt|;
 name|ssdtosd
@@ -351,9 +359,13 @@ name|gdt_segs
 operator|+
 name|GAPMDATA_SEL
 argument_list|,
+operator|&
 name|gdt
-operator|+
+index|[
 name|GAPMDATA_SEL
+index|]
+operator|.
+name|sd
 argument_list|)
 expr_stmt|;
 block|}
