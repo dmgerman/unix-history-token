@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.25.2.2 1995/06/10 09:04:13 jkh Exp $"
+literal|"$Id: perform.c,v 1.26 1995/06/11 19:32:48 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,7 +682,11 @@ name|bomb
 goto|;
 block|}
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|where_to
+condition|)
 name|where_to
 operator|=
 name|PlayPen
