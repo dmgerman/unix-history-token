@@ -1354,6 +1354,8 @@ name|nbn
 argument_list|,
 operator|&
 name|nra
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
