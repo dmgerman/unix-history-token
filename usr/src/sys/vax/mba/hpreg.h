@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.3	81/02/23	*/
+comment|/*	hpreg.h	4.4	81/02/25	*/
 end_comment
 
 begin_struct
@@ -498,6 +498,21 @@ begin_comment
 comment|/* offset mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HP_DREADY
+value|(HP_DPR|HP_DRY|HP_MOL|HP_VV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HPDS_BITS
+define|\
+value|"\10\20ATA\17ERR\16PIP\15MOL\14WRL\13LST\12PGM\11DPR\10DRY\7VV\1OM"
+end_define
+
 begin_comment
 comment|/* hper1 */
 end_comment
@@ -678,6 +693,14 @@ begin_comment
 comment|/* illegal function */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HPER1_BITS
+define|\
+value|"\10\20DCK\17UNS\16OPI\15DTE\14WLE\13IAE\12AOE\11HCRC\10HCE\ \7ECH\6WCF\5FER\4PAR\3RMR\2ILR\1ILF"
+end_define
+
 begin_comment
 comment|/* THIS NEEDS TO BE DOUBLE CHECKED... */
 end_comment
@@ -780,6 +803,14 @@ end_define
 begin_comment
 comment|/* data parity error */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HPER2_BITS
+define|\
+value|"\10\20BSE\17SKI\16OPE\15IVC\14LSC\13LBC\10DVC\4DPE"
+end_define
 
 begin_define
 define|#

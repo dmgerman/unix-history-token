@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtio.h	4.3	81/02/19	*/
+comment|/*	mtio.h	4.4	81/02/25	*/
 end_comment
 
 begin_comment
@@ -158,6 +158,32 @@ end_comment
 
 begin_comment
 comment|/* should be defined here but aren't */
+end_comment
+
+begin_comment
+comment|/* mag tape io control commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCTOP
+value|(('m'<<8)|1)
+end_define
+
+begin_comment
+comment|/* do a mag tape op (see<mtio.h>) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTIOCGET
+value|(('m'<<8)|2)
+end_define
+
+begin_comment
+comment|/* get mag tape status (see<mtio.h>*/
 end_comment
 
 end_unit

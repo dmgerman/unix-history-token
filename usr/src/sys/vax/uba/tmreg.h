@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tmreg.h	4.3	81/02/21	*/
+comment|/*	tmreg.h	4.4	81/02/25	*/
 end_comment
 
 begin_comment
@@ -167,6 +167,16 @@ begin_comment
 comment|/* sense (internal to driver) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|tmreverseop
+parameter_list|(
+name|cmd
+parameter_list|)
+value|((cmd)==TM_SREV || (cmd)==TM_REW)
+end_define
+
 begin_comment
 comment|/* TM_SNS is a pseudo-op used to get tape status */
 end_comment
@@ -272,6 +282,17 @@ end_define
 
 begin_comment
 comment|/* gap settling down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TM_CH7
+value|0000020
+end_define
+
+begin_comment
+comment|/* 7 channel tape */
 end_comment
 
 begin_define
@@ -394,6 +415,14 @@ end_define
 begin_comment
 comment|/* illegal command */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TMEREG_BITS
+define|\
+value|"\10\20ILC\17EOF\16CRE\15PAE\14BGL\13EOT\12RLE\11BTE\10NXM\ \7SELR\6BOT\5CH7\4SDWN\3WRL\2RWS\1TUR"
+end_define
 
 begin_define
 define|#

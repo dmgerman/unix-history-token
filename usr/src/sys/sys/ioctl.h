@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.5	81/02/23	*/
+comment|/*	ioctl.h	4.6	81/02/25	*/
 end_comment
 
 begin_comment
@@ -698,97 +698,6 @@ end_define
 begin_comment
 comment|/* get # bytes to read */
 end_comment
-
-begin_comment
-comment|/* mag tape io control commands */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCTOP
-value|(('m'<<8)|1)
-end_define
-
-begin_comment
-comment|/* do a mag tape op (see<mtio.h>) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MTIOCGET
-value|(('m'<<8)|2)
-end_define
-
-begin_comment
-comment|/* get mag tape status (see<mtio.h>*/
-end_comment
-
-begin_comment
-comment|/* mux io controls */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MXLSTN
-value|(('x'<<8)|1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MXNBLK
-value|(('x'<<8)|2)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/* varian ioctls, which are defined in sys/vcmd.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VGETSTATE
-value|(('v'<<8)|0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VSETSTATE
-value|(('v'<<8)|1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* printer ioctls, see<lpio.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LGETSTATE
-value|(('v'<<8)|2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|LSETSTATE
-value|(('v'<<8)|3)
-end_define
 
 begin_endif
 endif|#
