@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sys.386bsd/i386/i386/autoconf.c,v 1.3 1993/04/10 21:58:52 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/autoconf.c,v 1.1.1.1 1993/06/12 14:58:07 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,53 +574,6 @@ operator|==
 name|orootdev
 condition|)
 return|return;
-if|if
-condition|(
-name|devname
-index|[
-name|majdev
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|'f'
-operator|&&
-name|devname
-index|[
-name|majdev
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'d'
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"* insert the floppy you want to have mounted as\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"* root, and hit any key to continue booting:\n"
-argument_list|)
-expr_stmt|;
-name|cngetc
-argument_list|()
-expr_stmt|;
-name|printf
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"changing root device to %c%c%d%c\n"
