@@ -6921,15 +6921,11 @@ name|FD_1440
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|device_printf
 argument_list|(
-literal|"Warning: can't control 3mode I/F, "
-literal|"fallback to 2mode.\n"
-literal|"fd%d: "
+name|dev
 argument_list|,
-name|fd
-operator|->
-name|fdu
+literal|"Warning: can't control 3mode I/F, fallback to 2mode.\n"
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
