@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.36 (Berkeley) %G%"
+literal|"@(#)conf.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -381,6 +381,14 @@ expr_stmt|;
 name|EightBit
 operator|=
 name|FALSE
+expr_stmt|;
+name|MaxMciCache
+operator|=
+literal|1
+expr_stmt|;
+name|MciCacheTimeout
+operator|=
+literal|300
 expr_stmt|;
 name|setdefuser
 argument_list|()

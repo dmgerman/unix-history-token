@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.38 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3160,6 +3160,40 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'k'
+case|:
+comment|/* connection cache size */
+name|MaxMciCache
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MaxMciCache
+operator|<=
+literal|0
+condition|)
+name|MaxMciCache
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+comment|/* connection cache timeout */
+name|MciCacheTimeout
+operator|=
+name|convtime
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'L'
 case|:
 comment|/* log level */
@@ -3360,7 +3394,7 @@ argument_list|(
 name|val
 argument_list|)
 expr_stmt|;
-comment|/*FALLTHROUGH*/
+break|break;
 case|case
 literal|'t'
 case|:

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	5.1 (Berkeley) %G%"
+literal|"@(#)mci.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,6 +35,25 @@ file|"sendmail.h"
 end_include
 
 begin_comment
+comment|/* **  Mail Connection Information (MCI) Caching Module. ** **	There are actually two separate things cached.  The first is **	the set of all open connections -- these are stored in a **	(small) list.  The second is stored in the symbol table; it **	has the overall status for all hosts, whether or not there **	is a connection open currently. ** **	There should never be too many connections open (since this **	could flood the socket table), nor should a connection be **	allowed to sit idly for too long. ** **	MaxMciCache is the maximum number of open connections that **	will be supported. ** **	MciCacheTimeout is the time (in seconds) that a connection **	is permitted to survive without activity. ** **	We actually try any cached connections by sending a NOOP **	before we use them; if the NOOP fails we close down the **	connection and reopen it.  Note that this means that a **	server SMTP that doesn't support NOOP will hose the **	algorithm -- but that doesn't seem too likely. */
+end_comment
+
+begin_decl_stmt
+name|MCI
+modifier|*
+modifier|*
+name|MciCache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the open connection cache */
+end_comment
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  MCI_CACHE -- enter a connection structure into the open connection cache ** **	This may cause something else to be flushed. ** **	Parameters: **		mci -- the connection to cache. ** **	Returns: **		none. */
 end_comment
 
@@ -44,7 +63,7 @@ argument_list|(
 name|mci
 argument_list|)
 specifier|register
-name|MCONINFO
+name|MCI
 operator|*
 name|mci
 expr_stmt|;
@@ -53,13 +72,13 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|MCONINFO
+name|MCI
 modifier|*
 modifier|*
 name|mcislot
 decl_stmt|;
 specifier|extern
-name|MCONINFO
+name|MCI
 modifier|*
 modifier|*
 name|mci_scan
@@ -130,23 +149,15 @@ begin_comment
 comment|/* **  MCI_SCAN -- scan the cache, flush junk, and return best slot ** **	Parameters: **		savemci -- never flush this one.  Can be null. ** **	Returns: **		The LRU (or empty) slot. */
 end_comment
 
-begin_decl_stmt
-name|MCONINFO
-modifier|*
-modifier|*
-name|MciCache
-decl_stmt|;
-end_decl_stmt
-
 begin_function
-name|MCONINFO
+name|MCI
 modifier|*
 modifier|*
 name|mci_scan
 parameter_list|(
 name|savemci
 parameter_list|)
-name|MCONINFO
+name|MCI
 modifier|*
 name|savemci
 decl_stmt|;
@@ -155,13 +166,13 @@ name|time_t
 name|now
 decl_stmt|;
 specifier|register
-name|MCONINFO
+name|MCI
 modifier|*
 modifier|*
 name|bestmci
 decl_stmt|;
 specifier|register
-name|MCONINFO
+name|MCI
 modifier|*
 name|mci
 decl_stmt|;
@@ -180,7 +191,7 @@ comment|/* first call */
 name|MciCache
 operator|=
 operator|(
-name|MCONINFO
+name|MCI
 operator|*
 operator|*
 operator|)
@@ -340,7 +351,7 @@ argument_list|(
 name|mcislot
 argument_list|)
 specifier|register
-name|MCONINFO
+name|MCI
 operator|*
 operator|*
 name|mcislot
@@ -350,7 +361,7 @@ end_expr_stmt
 begin_block
 block|{
 specifier|register
-name|MCONINFO
+name|MCI
 modifier|*
 name|mci
 decl_stmt|;
@@ -465,7 +476,7 @@ comment|/* **  MCI_GET -- get information about a particular host */
 end_comment
 
 begin_function
-name|MCONINFO
+name|MCI
 modifier|*
 name|mci_get
 parameter_list|(
@@ -482,14 +493,20 @@ modifier|*
 name|m
 decl_stmt|;
 block|{
-return|return
+specifier|register
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+name|mci
+operator|=
 operator|&
 operator|(
 name|stab
 argument_list|(
 name|host
 argument_list|,
-name|ST_MCONINFO
+name|ST_MCI
 operator|+
 name|m
 operator|->
@@ -500,6 +517,65 @@ argument_list|)
 operator|)
 operator|->
 name|s_mci
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|42
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mci_get(%s %s): mci_state=%d, _flags=%x, _exitstat=%d, _errno=%d\n"
+argument_list|,
+name|host
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|,
+name|mci
+operator|->
+name|mci_state
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|,
+name|mci
+operator|->
+name|mci_exitstat
+argument_list|,
+name|mci
+operator|->
+name|mci_errno
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* try poking this to see if it is still usable */
+switch|switch
+condition|(
+name|mci
+operator|->
+name|mci_state
+condition|)
+block|{
+case|case
+name|MCIS_OPEN
+case|:
+name|smtpnoop
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+return|return
+name|mci
 return|;
 block|}
 end_function

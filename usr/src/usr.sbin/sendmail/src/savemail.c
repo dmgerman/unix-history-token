@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.16 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -995,6 +995,8 @@ argument_list|(
 name|fp
 argument_list|,
 name|ProgMailer
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 call|(

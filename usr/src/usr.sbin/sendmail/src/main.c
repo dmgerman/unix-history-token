@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.49 (Berkeley) %G%"
+literal|"@(#)main.c	5.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -1959,6 +1965,41 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|stat
+name|stbuf
+decl_stmt|;
+comment|/* check to see if we own the queue directory */
+if|if
+condition|(
+name|stat
+argument_list|(
+name|QueueDir
+argument_list|,
+operator|&
+name|stbuf
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"main: cannot stat %s"
+argument_list|,
+name|QueueDir
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stbuf
+operator|.
+name|st_uid
+operator|!=
+name|getuid
+argument_list|()
+condition|)
+block|{
+comment|/* nope, really a botch */
 name|usrerr
 argument_list|(
 literal|"Permission denied"
@@ -1966,9 +2007,10 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_USAGE
+name|EX_NOPERM
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void
@@ -3439,6 +3481,16 @@ name|dropenvelope
 argument_list|(
 name|CurEnv
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* flush any cached connections */
+end_comment
+
+begin_expr_stmt
+name|mci_flush
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

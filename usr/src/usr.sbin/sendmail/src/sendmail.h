@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.34 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.33		%G%"
+literal|"@(#)sendmail.h	5.34		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1645,12 +1645,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCONINFO
+name|MCI
 value|struct mailer_con_info
 end_define
 
 begin_macro
-name|MCONINFO
+name|MCI
 end_macro
 
 begin_block
@@ -1733,6 +1733,17 @@ begin_comment
 comment|/* don't cache this connection */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MCIF_CACHED
+value|00004
+end_define
+
+begin_comment
+comment|/* currently in open cache */
+end_comment
+
 begin_comment
 comment|/* states */
 end_comment
@@ -1784,8 +1795,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCIS_SSD
+name|MCIS_QUITING
 value|4
+end_define
+
+begin_comment
+comment|/* running quit protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIS_SSD
+value|5
 end_define
 
 begin_comment
@@ -1796,22 +1818,11 @@ begin_define
 define|#
 directive|define
 name|MCIS_ERROR
-value|5
-end_define
-
-begin_comment
-comment|/* error state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCIS_TEMPFAIL
 value|6
 end_define
 
 begin_comment
-comment|/* temporary failure */
+comment|/* I/O error on connection */
 end_comment
 
 begin_escape
@@ -1970,7 +1981,7 @@ name|MAP
 name|sv_map
 decl_stmt|;
 comment|/* mapping function */
-name|MCONINFO
+name|MCI
 name|sv_mci
 decl_stmt|;
 comment|/* mailer connection info */
@@ -2073,7 +2084,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ST_MCONINFO
+name|ST_MCI
 value|16
 end_define
 
@@ -3194,17 +3205,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|int
-name|Nmx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* number of MX RRs */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|char
 modifier|*
 name|PostMasterCopy
@@ -3213,23 +3213,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* address to get errs cc's */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|MxHosts
-index|[
-name|MAXMXHOSTS
-operator|+
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* for MX RRs */
 end_comment
 
 begin_decl_stmt
@@ -3343,6 +3326,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* look for user names in gecos field */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxMciCache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum entries in MCI cache */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|MciCacheTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum idle time on connections */
 end_comment
 
 begin_escape

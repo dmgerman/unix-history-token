@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.45 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.46 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.45 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.46 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -478,47 +478,33 @@ begin_comment
 comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		mci -- a pointer to the mail connection information **			structure to be filled in. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|makeconnection
-argument_list|(
-argument|host
-argument_list|,
-argument|port
-argument_list|,
-argument|mci
-argument_list|,
-argument|usesecureport
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|host
+parameter_list|,
+name|port
+parameter_list|,
+name|mci
+parameter_list|,
+name|usesecureport
+parameter_list|)
 name|char
 modifier|*
 name|host
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_short
 name|port
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
-name|MCONINFO
+name|MCI
 modifier|*
 name|mci
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|usesecureport
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -917,7 +903,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"makeconnection: %d\n"
+literal|"makeconnection: fd=%d\n"
 argument_list|,
 name|s
 argument_list|)
@@ -1248,7 +1234,7 @@ name|EX_OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_escape
 end_escape
