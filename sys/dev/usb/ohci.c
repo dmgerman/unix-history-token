@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  */
+comment|/* Also, already ported:  *	$NetBSD: ohci.c,v 1.127 2002/08/07 20:03:19 augustss Exp $  *	$NetBSD: ohci.c,v 1.138 2003/02/08 03:32:50 ichiro Exp $  *	$NetBSD: ohci.c,v 1.140 2003/05/13 04:42:00 gson Exp $  */
 end_comment
 
 begin_comment
@@ -7468,7 +7468,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"ohci_ctrl_done: xfer=%p\n"
+literal|"ohci_device_ctrl_done: xfer=%p\n"
 operator|,
 name|xfer
 operator|)
@@ -7491,7 +7491,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"ohci_ctrl_done: not a request"
+literal|"ohci_device_ctrl_done: not a request"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7564,7 +7564,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"ohci_intr_done: xfer=%p, actlen=%d\n"
+literal|"ohci_device_intr_done: xfer=%p, actlen=%d\n"
 operator|,
 name|xfer
 operator|,
@@ -7799,7 +7799,7 @@ argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"ohci_bulk_done: xfer=%p, actlen=%d\n"
+literal|"ohci_device_bulk_done: xfer=%p, actlen=%d\n"
 operator|,
 name|xfer
 operator|,

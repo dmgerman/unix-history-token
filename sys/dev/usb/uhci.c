@@ -8,7 +8,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.162 2002/07/11 21:14:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.163 2002/09/27 15:37:36 provos Exp $  *	$NetBSD: uhci.c,v 1.164 2002/09/29 21:13:01 augustss Exp $  *	$NetBSD: uhci.c,v 1.165 2002/12/31 02:04:49 dsainty Exp $  *	$NetBSD: uhci.c,v 1.166 2002/12/31 02:21:31 dsainty Exp $  *	$NetBSD: uhci.c,v 1.167 2003/01/01 16:25:59 augustss Exp $  *	$NetBSD: uhci.c,v 1.168 2003/02/08 03:32:51 ichiro Exp $  *	$NetBSD: uhci.c,v 1.169 2003/02/16 23:15:28 augustss Exp $  *	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  */
 end_comment
 
 begin_comment
@@ -13406,7 +13406,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"uhci_intr_done: length=%d\n"
+literal|"uhci_device_intr_done: length=%d\n"
 operator|,
 name|xfer
 operator|->
@@ -13776,7 +13776,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"uhci_ctrl_done: not a request"
+literal|"uhci_device_ctrl_done: not a request"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -13869,7 +13869,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"uhci_ctrl_done: length=%d\n"
+literal|"uhci_device_ctrl_done: length=%d\n"
 operator|,
 name|xfer
 operator|->
@@ -13931,7 +13931,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"uhci_device_ctrl_done: xfer=%p ii=%p sc=%p upipe=%p\n"
+literal|"uhci_device_bulk_done: xfer=%p ii=%p sc=%p upipe=%p\n"
 operator|,
 name|xfer
 operator|,
@@ -13987,7 +13987,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"uhci_bulk_done: length=%d\n"
+literal|"uhci_device_bulk_done: length=%d\n"
 operator|,
 name|xfer
 operator|->
@@ -14296,7 +14296,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"uhci_setintr: pipe=%p\n"
+literal|"uhci_device_setintr: pipe=%p\n"
 operator|,
 name|upipe
 operator|)
@@ -14347,7 +14347,7 @@ argument_list|(
 literal|2
 argument_list|,
 operator|(
-literal|"uhci_setintr: ival=%d npoll=%d\n"
+literal|"uhci_device_setintr: ival=%d npoll=%d\n"
 operator|,
 name|ival
 operator|,
@@ -14472,7 +14472,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"uhci_setintr: bw=%d offs=%d\n"
+literal|"uhci_device_setintr: bw=%d offs=%d\n"
 operator|,
 name|bestbw
 operator|,
@@ -14591,7 +14591,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"uhci_setintr: returns %p\n"
+literal|"uhci_device_setintr: returns %p\n"
 operator|,
 name|upipe
 operator|)
@@ -17634,7 +17634,7 @@ argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhci_root_intr_transfer: xfer=%p len=%d flags=%d\n"
+literal|"uhci_root_intr_start: xfer=%p len=%d flags=%d\n"
 operator|,
 name|xfer
 operator|,
