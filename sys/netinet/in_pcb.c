@@ -141,6 +141,18 @@ directive|include
 file|<netinet/ip_var.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/udp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/udp_var.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -339,14 +351,66 @@ comment|/* 65535 */
 end_comment
 
 begin_comment
-comment|/* Shall we allocate ephemeral ports in random order? */
+comment|/* Variables dealing with random ephemeral port allocation. */
 end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_randomized
 init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ipport_randomcps
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ipport_randomtime
+init|=
+literal|45
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* user controlled via sysctl */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ipport_stoprandom
+init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* toggled by ipport_tick */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ipport_tcpallocs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ipport_tcplastcount
 decl_stmt|;
 end_decl_stmt
 
@@ -675,6 +739,48 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_portrange
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|randomcps
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ipport_randomcps
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_ip_portrange
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|randomtime
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ipport_randomtime
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * in_pcb.c: manage the Protocol Control Blocks.  *  * NOTE: It is assumed that most of these functions will be called at  * splnet(). XXX - There are, unfortunately, a few exceptions to this  * rule that should be fixed.  */
 end_comment
@@ -971,6 +1077,9 @@ decl_stmt|,
 name|prison
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|dorandom
 decl_stmt|;
 if|if
 condition|(
@@ -1656,6 +1765,41 @@ operator|->
 name|lastport
 expr_stmt|;
 block|}
+comment|/* 		* For UDP, use random port allocation as long as the user 		* allows it.  For TCP (and as of yet unknown) connections, 		* use random port allocation only if the user allows it AND 		* ipport_tick allows it. 		*/
+if|if
+condition|(
+name|ipport_randomized
+operator|&&
+operator|(
+operator|!
+name|ipport_stoprandom
+operator|||
+name|pcbinfo
+operator|==
+operator|&
+name|udbinfo
+operator|)
+condition|)
+name|dorandom
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|dorandom
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Make sure to not include UDP packets in the count. */
+if|if
+condition|(
+name|pcbinfo
+operator|!=
+operator|&
+name|udbinfo
+condition|)
+name|ipport_tcpallocs
+operator|++
+expr_stmt|;
 comment|/* 		 * Simple check to ensure all ports are not used up causing 		 * a deadlock here. 		 * 		 * We split the two cases (up and down) so that the direction 		 * is not being tested on each round of the loop. 		 */
 if|if
 condition|(
@@ -1667,7 +1811,7 @@ block|{
 comment|/* 			 * counting down 			 */
 if|if
 condition|(
-name|ipport_randomized
+name|dorandom
 condition|)
 operator|*
 name|lastport
@@ -1768,7 +1912,7 @@ block|{
 comment|/* 			 * counting up 			 */
 if|if
 condition|(
-name|ipport_randomized
+name|dorandom
 condition|)
 operator|*
 name|lastport
@@ -5053,6 +5197,66 @@ operator|(
 literal|1
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * ipport_tick runs once per second, determining if random port  * allocation should be continued.  If more than ipport_randomcps  * ports have been allocated in the last second, then we return to  * sequential port allocation. We return to random allocation only  * once we drop below ipport_randomcps for at least 5 seconds.  */
+end_comment
+
+begin_function
+name|void
+name|ipport_tick
+parameter_list|(
+name|xtp
+parameter_list|)
+name|void
+modifier|*
+name|xtp
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|ipport_tcpallocs
+operator|>
+name|ipport_tcplastcount
+operator|+
+name|ipport_randomcps
+condition|)
+block|{
+name|ipport_stoprandom
+operator|=
+name|ipport_randomtime
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ipport_stoprandom
+operator|>
+literal|0
+condition|)
+name|ipport_stoprandom
+operator|--
+expr_stmt|;
+block|}
+name|ipport_tcplastcount
+operator|=
+name|ipport_tcpallocs
+expr_stmt|;
+name|callout_reset
+argument_list|(
+operator|&
+name|ipport_tick_callout
+argument_list|,
+name|hz
+argument_list|,
+name|ipport_tick
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
