@@ -12,7 +12,7 @@ comment|/* 06-Apr-92 Luke Brennan    Support for VMS */
 end_comment
 
 begin_comment
-comment|/*-  *	$Id: read_pwd.c,v 1.2 1994/07/19 19:22:05 g89r4222 Exp $  */
+comment|/*-  *	$Id: read_pwd.c,v 1.1.1.1 1994/09/30 14:49:51 csgr Exp $  */
 end_comment
 
 begin_include
@@ -638,7 +638,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nVerifying password"
+literal|"Verifying password\n"
 argument_list|)
 expr_stmt|;
 name|fflush
