@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<search.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -356,12 +362,6 @@ name|sap_entry
 modifier|*
 name|sap
 decl_stmt|;
-specifier|register
-name|struct
-name|sap_entry
-modifier|*
-name|csap
-decl_stmt|;
 name|struct
 name|sap_hash
 modifier|*
@@ -463,9 +463,6 @@ name|hops
 argument_list|)
 expr_stmt|;
 block|}
-name|next
-label|:
-empty_stmt|;
 block|}
 return|return
 name|best
@@ -1027,7 +1024,7 @@ name|fprintf
 argument_list|(
 name|ftrace
 argument_list|,
-literal|"CLONE ADD %04.4X %s.\n"
+literal|"CLONE ADD %4.4X %s.\n"
 argument_list|,
 name|ntohs
 argument_list|(

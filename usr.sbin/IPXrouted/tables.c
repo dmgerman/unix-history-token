@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -48,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<search.h>
 end_include
 
 begin_include

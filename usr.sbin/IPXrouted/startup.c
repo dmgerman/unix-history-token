@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -84,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<search.h>
 end_include
 
 begin_include
@@ -1185,11 +1192,13 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|ifp
 operator|->
 name|int_flags
 operator|&
 name|IFF_POINTOPOINT
+operator|)
 operator|==
 literal|0
 condition|)

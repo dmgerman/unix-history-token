@@ -2713,7 +2713,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lx"
+literal|"%u"
 argument_list|,
 name|ntohl
 argument_list|(
