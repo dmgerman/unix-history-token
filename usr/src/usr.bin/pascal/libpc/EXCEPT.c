@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)EXCEPT.c 1.2 %G%"
+literal|"@(#)EXCEPT.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -17,12 +17,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"whoami.h"
 end_include
 
 begin_comment
@@ -57,15 +51,19 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|VAX
+name|vax
 name|ERROR
 argument_list|(
 literal|"Overflow, underflow, or division by zero in arithmetic operation\n"
 argument_list|)
 expr_stmt|;
 return|return;
-else|#
-directive|else
+endif|#
+directive|endif
+endif|notvax
+ifdef|#
+directive|ifdef
+name|vax
 comment|/* 	 * The values for this switch statement come from page 12-5 of 	 * Volume 1 of the 1978 VAX 11/780 Architecture Handbook 	 */
 switch|switch
 condition|(
@@ -127,6 +125,7 @@ return|return;
 block|}
 endif|#
 directive|endif
+endif|vax
 block|}
 end_block
 
