@@ -692,7 +692,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"maxfdescs not specifid; %d assumed\n"
+literal|"maxfdescs not specified; %d assumed\n"
 argument_list|,
 name|DEF_MAXFDESCS
 argument_list|)
