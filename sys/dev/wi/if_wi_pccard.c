@@ -1007,11 +1007,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|struct
-name|wi_softc
-modifier|*
-name|sc
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1024,13 +1019,6 @@ decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|sc
-operator|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|wi_alloc
