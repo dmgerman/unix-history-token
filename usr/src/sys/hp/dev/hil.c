@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.38 92/01/21$  *  *	@(#)hil.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hil.c 1.38 92/01/21$  *  *	@(#)hil.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -758,9 +758,11 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_md
+operator|.
+name|md_flags
 operator|&
-name|SHPUX
+name|MDP_HPUX
 condition|)
 block|{
 if|if
@@ -1056,9 +1058,11 @@ operator|&&
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_md
+operator|.
+name|md_flags
 operator|&
-name|SHPUX
+name|MDP_HPUX
 operator|)
 operator|==
 literal|0
@@ -1809,9 +1813,11 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_md
+operator|.
+name|md_flags
 operator|&
-name|SHPUX
+name|MDP_HPUX
 condition|)
 return|return
 operator|(
@@ -1904,6 +1910,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|OHILIOCRRT
+case|:
 case|case
 name|HILIOCRRT
 case|:
