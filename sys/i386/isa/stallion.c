@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: stallion.c,v 1.32 1999/05/30 16:52:27 phk Exp $  */
+comment|/*  * stallion.c  -- stallion multiport serial driver.  *  * Copyright (c) 1995-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: stallion.c,v 1.33 1999/05/31 11:26:33 phk Exp $  */
 end_comment
 
 begin_comment
@@ -3680,13 +3680,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stlclose(dev=%lx,flag=%x,mode=%x,p=%p)\n"
+literal|"stlclose(dev=%s,flag=%x,mode=%x,p=%p)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|flag
 argument_list|,
@@ -3829,13 +3828,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stlread(dev=%lx,uiop=%p,flag=%x)\n"
+literal|"stlread(dev=%s,uiop=%p,flag=%x)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 operator|(
 name|void
@@ -4090,13 +4088,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stlwrite(dev=%lx,uiop=%p,flag=%x)\n"
+literal|"stlwrite(dev=%s,uiop=%p,flag=%x)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 operator|(
 name|void
@@ -4218,13 +4215,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stlioctl(dev=%lx,cmd=%lx,data=%p,flag=%x,p=%p)\n"
+literal|"stlioctl(dev=%s,cmd=%lx,data=%p,flag=%x,p=%p)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|,
@@ -15491,13 +15487,12 @@ directive|if
 name|DEBUG
 name|printf
 argument_list|(
-literal|"stl_memioctl(dev=%lx,cmd=%lx,data=%p,flag=%x)\n"
+literal|"stl_memioctl(dev=%s,cmd=%lx,data=%p,flag=%x)\n"
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
+name|devtoname
+argument_list|(
 name|dev
+argument_list|)
 argument_list|,
 name|cmd
 argument_list|,

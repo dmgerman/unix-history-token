@@ -270,14 +270,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%lx, bsize = %lu, size = %d, fs = %s\n"
+literal|"dev = %s, bsize = %lu, size = %d, fs = %s\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
+name|devtoname
+argument_list|(
 name|ip
 operator|->
 name|i_dev
+argument_list|)
 argument_list|,
 name|fs
 operator|->
