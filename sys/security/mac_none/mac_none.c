@@ -249,6 +249,32 @@ parameter_list|)
 block|{  }
 end_function
 
+begin_function
+specifier|static
+name|int
+name|mac_none_syscall
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|int
+name|call
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Label operations.  */
 end_comment
@@ -3353,6 +3379,15 @@ operator|(
 name|macop_t
 operator|)
 name|mac_none_init
+block|}
+block|,
+block|{
+name|MAC_SYSCALL
+block|,
+operator|(
+name|macop_t
+operator|)
+name|mac_none_syscall
 block|}
 block|,
 block|{
