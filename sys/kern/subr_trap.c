@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.100 1997/06/22 16:03:37 peter Exp $  */
+comment|/*-  * Copyright (C) 1994, David Greenman  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)trap.c	7.4 (Berkeley) 5/13/91  *	$Id: trap.c,v 1.101 1997/07/20 08:37:23 bde Exp $  */
 end_comment
 
 begin_comment
@@ -216,6 +216,25 @@ name|i386tss
 name|common_tss
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|int
+argument_list|(
+argument|*vm86_emulate
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vm86frame
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_macro
 name|int
@@ -675,6 +694,7 @@ name|tf_err
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ISPL
 argument_list|(
 name|frame
@@ -683,6 +703,15 @@ name|tf_cs
 argument_list|)
 operator|==
 name|SEL_UPL
+operator|)
+operator|||
+operator|(
+name|frame
+operator|.
+name|tf_eflags
+operator|&
+name|PSL_VM
+operator|)
 condition|)
 block|{
 comment|/* user trap */
@@ -805,18 +834,60 @@ block|}
 goto|goto
 name|out
 goto|;
+comment|/* 			 * The following two traps can happen in 			 * vm86 mode, and, if so, we want to handle 			 * them specially. 			 */
 case|case
 name|T_PROTFLT
 case|:
 comment|/* general protection fault */
 case|case
-name|T_SEGNPFLT
-case|:
-comment|/* segment not present fault */
-case|case
 name|T_STKFLT
 case|:
 comment|/* stack fault */
+if|if
+condition|(
+name|vm86_emulate
+operator|&&
+operator|(
+name|frame
+operator|.
+name|tf_eflags
+operator|&
+name|PSL_VM
+operator|)
+condition|)
+block|{
+name|i
+operator|=
+call|(
+modifier|*
+name|vm86_emulate
+call|)
+argument_list|(
+operator|(
+expr|struct
+name|vm86frame
+operator|*
+operator|)
+operator|&
+name|frame
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+break|break;
+block|}
+comment|/* FALL THROUGH */
+case|case
+name|T_SEGNPFLT
+case|:
+comment|/* segment not present fault */
 case|case
 name|T_TSSFLT
 case|:
@@ -2310,6 +2381,14 @@ index|[
 name|type
 index|]
 argument_list|,
+name|frame
+operator|->
+name|tf_eflags
+operator|&
+name|PSL_VM
+condition|?
+literal|"vm86"
+else|:
 name|ISPL
 argument_list|(
 name|frame
@@ -2397,6 +2476,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|ISPL
 argument_list|(
 name|frame
@@ -2405,6 +2485,15 @@ name|tf_cs
 argument_list|)
 operator|==
 name|SEL_UPL
+operator|)
+operator|||
+operator|(
+name|frame
+operator|->
+name|tf_eflags
+operator|&
+name|PSL_VM
+operator|)
 condition|)
 block|{
 name|ss
@@ -3448,11 +3537,22 @@ break|break;
 block|}
 if|if
 condition|(
+operator|(
 name|frame
 operator|.
 name|tf_eflags
 operator|&
 name|PSL_T
+operator|)
+operator|&&
+operator|!
+operator|(
+name|frame
+operator|.
+name|tf_eflags
+operator|&
+name|PSL_VM
+operator|)
 condition|)
 block|{
 comment|/* Traced syscall. */
