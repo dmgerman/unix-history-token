@@ -106,17 +106,21 @@ directive|include
 file|<sys/uio.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEST_LABELLING
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
 end_include
+
+begin_comment
+comment|/* YF - needed anyway for disksort() */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TEST_LABELLING
+end_ifdef
 
 begin_include
 include|#
@@ -660,7 +664,7 @@ name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"vnopen(%x, %x, %x, %x)\n"
+literal|"vnopen(0x%lx, 0x%x, 0x%x, %p)\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -1040,7 +1044,7 @@ name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"vnstrategy(%x): unit %d\n"
+literal|"vnstrategy(%p): unit %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -1266,6 +1270,7 @@ decl_stmt|;
 name|daddr_t
 name|nbn
 decl_stmt|;
+comment|/* YYY - bn was int !? */
 name|int
 name|off
 decl_stmt|,
@@ -1331,13 +1336,15 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
 name|off
 operator|=
 name|bn
 operator|%
 name|bsize
+expr_stmt|;
+if|if
+condition|(
+name|off
 condition|)
 name|sz
 operator|=
@@ -1377,7 +1384,7 @@ name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"vnstrategy: vp %x/%x bn %x/%x sz %x\n"
+literal|"vnstrategy: vp %p/%p bn 0x%x/0x%lx sz 0x%x\n"
 argument_list|,
 name|vn
 operator|->
@@ -1707,7 +1714,7 @@ name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"vnstart(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
+literal|"vnstart(%d): bp %p vp %p blkno 0x%lx addr %p cnt 0x%lx\n"
 argument_list|,
 literal|0
 argument_list|,
@@ -1820,7 +1827,7 @@ name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"vniodone(%d): bp %x vp %x blkno %x addr %x cnt %x\n"
+literal|"vniodone(%d): bp %p vp %p blkno 0x%lx addr %p cnt 0x%lx\n"
 argument_list|,
 literal|0
 argument_list|,
@@ -1863,7 +1870,7 @@ name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"vniodone: bp %x error %d\n"
+literal|"vniodone: bp %p error %d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -1923,7 +1930,7 @@ name|VDB_IO
 condition|)
 name|printf
 argument_list|(
-literal|"vniodone: pbp %x iodone\n"
+literal|"vniodone: pbp %p iodone\n"
 argument_list|,
 name|pbp
 argument_list|)
@@ -2032,7 +2039,7 @@ name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"vnioctl(%x, %x, %x, %x, %x): unit %d\n"
+literal|"vnioctl(0x%lx, 0x%lx, %p, 0x%x, %p): unit %d\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -2232,8 +2239,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|vn_open
@@ -2247,14 +2252,16 @@ name|FWRITE
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|VOP_GETATTR
@@ -2272,6 +2279,10 @@ name|p_ucred
 argument_list|,
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -2334,8 +2345,6 @@ name|va_size
 argument_list|)
 expr_stmt|;
 comment|/* note truncation */
-if|if
-condition|(
 name|error
 operator|=
 name|vnsetcred
@@ -2346,6 +2355,10 @@ name|p
 operator|->
 name|p_ucred
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 operator|(
@@ -2439,7 +2452,7 @@ name|VDB_INIT
 condition|)
 name|printf
 argument_list|(
-literal|"vnioctl: SET vp %x size %x\n"
+literal|"vnioctl: SET vp %p size %x\n"
 argument_list|,
 name|vn
 operator|->
@@ -2805,11 +2818,14 @@ name|VDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"vnclear(%x): vp %x\n"
+literal|"vnclear(%p): vp %p\n"
+argument_list|,
+name|vn
 argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* YF - added vn */
 endif|#
 directive|endif
 name|vn
