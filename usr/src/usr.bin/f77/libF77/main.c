@@ -8,7 +8,7 @@ name|char
 name|id_libF77
 index|[]
 init|=
-literal|"@(#)main.c	2.5	%G%"
+literal|"@(#)main.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,12 +340,15 @@ block|}
 block|,
 comment|/* SIGIOT  */
 block|{
-literal|"EMT trap"
+literal|"EMT Trap"
 block|,
 literal|1
 block|}
 block|,
 comment|/* SIGEMT  */
+ifdef|#
+directive|ifdef
+name|UCBVAX
 block|{
 literal|"Arithmetic Exception"
 block|,
@@ -353,6 +356,17 @@ literal|1
 block|}
 block|,
 comment|/* SIGFPE  */
+else|#
+directive|else
+block|{
+literal|"Floating Point Exception"
+block|,
+literal|1
+block|}
+block|,
+comment|/* SIGFPE  */
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
