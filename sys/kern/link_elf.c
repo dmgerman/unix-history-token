@@ -756,11 +756,6 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-literal|1
-condition|)
-block|{
 name|modname
 operator|=
 name|NULL
@@ -1053,7 +1048,6 @@ expr_stmt|;
 comment|/* say hello to gdb! */
 endif|#
 directive|endif
-block|}
 endif|#
 directive|endif
 block|}
