@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: look.c,v 1.9 2002/02/16 21:27:48 millert Exp $	*/
+comment|/*	$OpenBSD: look.c,v 1.10 2002/04/26 16:15:16 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -96,15 +96,14 @@ end_function_decl
 
 begin_function
 name|unsigned
+name|int
 name|hash
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -147,13 +146,11 @@ begin_function
 name|ndptr
 name|lookup
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|ndptr
 name|p
@@ -224,13 +221,11 @@ begin_function
 name|ndptr
 name|addent
 parameter_list|(
-name|name
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
@@ -306,11 +301,9 @@ specifier|static
 name|void
 name|freent
 parameter_list|(
-name|p
-parameter_list|)
 name|ndptr
 name|p
-decl_stmt|;
+parameter_list|)
 block|{
 name|free
 argument_list|(
@@ -362,18 +355,14 @@ begin_function
 name|void
 name|remhash
 parameter_list|(
-name|name
-parameter_list|,
-name|all
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|;
+parameter_list|,
 name|int
 name|all
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|int
