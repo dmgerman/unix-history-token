@@ -467,28 +467,6 @@ operator|)
 operator|<=
 literal|0
 condition|)
-if|if
-condition|(
-name|BN_num_bits
-argument_list|(
-name|key
-operator|->
-name|n
-argument_list|)
-operator|>
-literal|1024
-operator|&&
-name|RSA_libversion
-argument_list|()
-operator|==
-name|RSALIB_RSAREF
-condition|)
-name|fatal
-argument_list|(
-literal|"rsa_private_encrypt() failed: RSAREF cannot handle keys larger than 1024 bits."
-argument_list|)
-expr_stmt|;
-else|else
 name|fatal
 argument_list|(
 literal|"rsa_private_encrypt() failed."
@@ -624,28 +602,6 @@ operator|)
 operator|<=
 literal|0
 condition|)
-if|if
-condition|(
-name|BN_num_bits
-argument_list|(
-name|key
-operator|->
-name|n
-argument_list|)
-operator|>
-literal|1024
-operator|&&
-name|RSA_libversion
-argument_list|()
-operator|==
-name|RSALIB_RSAREF
-condition|)
-name|fatal
-argument_list|(
-literal|"rsa_private_decrypt() failed: RSAREF cannot handle keys larger than 1024 bits."
-argument_list|)
-expr_stmt|;
-else|else
 name|fatal
 argument_list|(
 literal|"rsa_private_decrypt() failed."
