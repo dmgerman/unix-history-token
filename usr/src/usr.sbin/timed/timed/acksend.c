@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acksend.c	2.1 (Berkeley) %G%"
+literal|"@(#)acksend.c	2.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +293,34 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|answer
+operator|->
+name|tsp_seq
+operator|!=
+name|sequence
+condition|)
+block|{
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|fd
+argument_list|,
+literal|"acksend: seq # %d != %d\n"
+argument_list|,
+name|answer
+operator|->
+name|tsp_seq
+argument_list|,
+name|sequence
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|flag
 operator|=
 name|RECEIVED
