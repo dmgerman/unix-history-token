@@ -125,6 +125,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPS_VENDOR_ID_ADAPTEC
+value|0x9005
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPS_MORPHEUS_DEVICE_ID
 value|0x01BD
 end_define
@@ -134,6 +141,13 @@ define|#
 directive|define
 name|IPS_COPPERHEAD_DEVICE_ID
 value|0x002E
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPS_MARCO_DEVICE_ID
+value|0x0950
 end_define
 
 begin_define
