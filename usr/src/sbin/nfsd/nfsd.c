@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.5 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -675,10 +675,7 @@ name|nfsdcnt
 operator|=
 name|atoi
 argument_list|(
-name|argv
-index|[
-name|optind
-index|]
+name|optarg
 argument_list|)
 expr_stmt|;
 if|if
@@ -805,7 +802,7 @@ name|atoi
 argument_list|(
 name|argv
 index|[
-name|optind
+literal|0
 index|]
 argument_list|)
 expr_stmt|;
