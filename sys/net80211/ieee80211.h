@@ -1410,11 +1410,22 @@ name|IEEE80211_CRC_LEN
 value|4
 end_define
 
+begin_comment
+comment|/*  * Maximum acceptable MTU is:  *	IEEE80211_MAX_LEN - WEP overhead - CRC -  *		QoS overhead - RSN/WPA overhead  * Min is arbitrarily chosen> IEEE80211_MIN_LEN.  The default  * mtu is Ethernet-compatible; it's set by ether_ifattach.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|IEEE80211_MTU
-value|1500
+name|IEEE80211_MTU_MAX
+value|2290
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MTU_MIN
+value|32
 end_define
 
 begin_define
