@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah.h,v 1.16 2001/09/04 08:43:19 itojun Exp $	*/
+comment|/*	$KAME: ah.h,v 1.20 2003/08/05 12:21:15 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -238,6 +238,13 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|AH_MAXSUMSIZE
+value|(512 / 8)
+end_define
 
 begin_define
 define|#
