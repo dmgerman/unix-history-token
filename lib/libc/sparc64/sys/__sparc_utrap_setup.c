@@ -47,21 +47,6 @@ directive|include
 file|"__sparc_utrap_private.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|sysarch
-parameter_list|(
-name|int
-name|op
-parameter_list|,
-name|char
-modifier|*
-name|parms
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -188,10 +173,6 @@ name|sysarch
 argument_list|(
 name|SPARC_UTRAP_INSTALL
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|uia
 argument_list|)

@@ -59,10 +59,22 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_expr_stmt
+begin_function_decl
 name|__BEGIN_DECLS
+name|int
+name|sysarch
+parameter_list|(
+name|int
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
 name|__END_DECLS
-end_expr_stmt
+end_macro
 
 begin_endif
 endif|#

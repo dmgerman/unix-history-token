@@ -77,16 +77,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|amd64_set_fsbase
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|amd64_get_gsbase
 parameter_list|(
 name|void
@@ -98,8 +88,30 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|amd64_set_fsbase
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|amd64_set_gsbase
 parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sysarch
+parameter_list|(
+name|int
+parameter_list|,
 name|void
 modifier|*
 parameter_list|)

@@ -35,21 +35,6 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|int
-name|sysarch
-parameter_list|(
-name|int
-name|op
-parameter_list|,
-name|char
-modifier|*
-name|parms
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|params
@@ -74,10 +59,6 @@ name|sysarch
 argument_list|(
 name|ALPHA_GET_FPMASK
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)

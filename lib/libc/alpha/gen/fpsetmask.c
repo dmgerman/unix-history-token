@@ -73,10 +73,6 @@ name|sysarch
 argument_list|(
 name|ALPHA_SET_FPMASK
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
