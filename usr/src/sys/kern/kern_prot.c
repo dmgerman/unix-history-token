@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991 Regents of the University  * of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1187,6 +1187,12 @@ name|p_svuid
 operator|=
 name|uid
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1317,6 +1323,12 @@ operator|->
 name|cr_uid
 operator|=
 name|euid
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1458,6 +1470,12 @@ operator|=
 name|gid
 expr_stmt|;
 comment|/* ??? */
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1590,6 +1608,12 @@ literal|0
 index|]
 operator|=
 name|egid
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -1803,6 +1827,12 @@ name|p_ruid
 operator|=
 name|ruid
 expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2008,6 +2038,12 @@ operator|->
 name|p_rgid
 operator|=
 name|rgid
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
 expr_stmt|;
 return|return
 operator|(
@@ -2224,6 +2260,12 @@ operator|=
 operator|*
 name|lp
 operator|++
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator||=
+name|SUGID
 expr_stmt|;
 return|return
 operator|(
