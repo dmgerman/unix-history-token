@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/random.h>
+file|<sys/random.h>
 end_include
 
 begin_include
