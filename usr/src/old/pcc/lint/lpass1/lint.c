@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.7	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.8	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1086,7 +1086,7 @@ comment|/* this is called to do local transformations on 	   an expression tree 
 comment|/* the major essential job is rewriting the 	   automatic variables and arguments in terms of 	   REG and OREG nodes */
 comment|/* conversion ops which are not necessary are also clobbered here */
 comment|/* in addition, any special features (such as rewriting 	   exclusive or) are easily handled here as well */
-argument|register o; 	register unsigned t, tl;  	switch( o = p->in.op ){  	case SCONV: 	case PCONV: 		if( p->in.left->in.type==ENUMTY ){ 			p->in.left = pconvert( p->in.left ); 			}
+argument|register o; 	register unsigned t, tl; 	int s;  	switch( o = p->in.op ){  	case SCONV: 	case PCONV: 		if( p->in.left->in.type==ENUMTY ){ 			p->in.left = pconvert( p->in.left ); 			}
 comment|/* assume conversion takes place; type is inherited */
 argument|t = p->in.type; 		tl = p->in.left->in.type; 		if( aflag&& (tl==LONG||tl==ULONG)&& (t!=LONG&&t!=ULONG) ){ 			werror(
 literal|"long assignment may lose accuracy"
@@ -1108,7 +1108,13 @@ argument|);  			case
 literal|2
 argument|: 				; 				} 			} 		p->in.left->in.type = p->in.type; 		p->in.left->fn.cdim = p->fn.cdim; 		p->in.left->fn.csiz = p->fn.csiz; 		p->in.op = FREE; 		return( p->in.left );  	case PVCONV: 	case PMCONV: 		if( p->in.right->in.op != ICON ) cerror(
 literal|"bad conversion"
-argument|); 		p->in.op = FREE; 		return( buildtree( o==PMCONV?MUL:DIV, p->in.left, p->in.right ) );  		}  	return(p); 	}  NODE * offcon( off, t, d, s ) OFFSZ off; TWORD t;{
+argument|); 		p->in.op = FREE; 		return( buildtree( o==PMCONV?MUL:DIV, p->in.left, p->in.right ) );  	case RS: 	case LS: 	case ASG RS: 	case ASG LS: 		if( p->in.right->in.op != ICON ) 			break; 		s = p->in.right->tn.lval; 		if( s<
+literal|0
+argument|) 			werror(
+literal|"negative shift"
+argument|); 		else 		if( s>= dimtab[ p->fn.csiz ] ) 			werror(
+literal|"shift greater than size of object"
+argument|); 		break;  		}  	return(p); 	}  NODE * offcon( off, t, d, s ) OFFSZ off; TWORD t;{
 comment|/* make a structure offset node */
 argument|register NODE *p; 	p = bcon(
 literal|0
