@@ -977,15 +977,6 @@ name|old
 operator|->
 name|td_pcb
 expr_stmt|;
-name|oldpcb
-operator|->
-name|pcb_current_pmap
-operator|=
-name|PCPU_GET
-argument_list|(
-name|current_pmap
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|IA32
@@ -1011,7 +1002,11 @@ name|new
 operator|->
 name|td_pcb
 expr_stmt|;
-name|pmap_install
+name|oldpcb
+operator|->
+name|pcb_current_pmap
+operator|=
+name|pmap_switch
 argument_list|(
 name|newpcb
 operator|->
@@ -1040,6 +1035,13 @@ argument_list|(
 name|newpcb
 argument_list|)
 expr_stmt|;
+comment|/* We should not get here. */
+name|panic
+argument_list|(
+literal|"cpu_switch: restorectx() returned"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 block|}
 end_function
@@ -1071,7 +1073,10 @@ name|new
 operator|->
 name|td_pcb
 expr_stmt|;
-name|pmap_install
+operator|(
+name|void
+operator|)
+name|pmap_switch
 argument_list|(
 name|newpcb
 operator|->

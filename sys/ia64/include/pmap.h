@@ -444,7 +444,7 @@ begin_function_decl
 name|struct
 name|pmap
 modifier|*
-name|pmap_install
+name|pmap_switch
 parameter_list|(
 name|struct
 name|pmap
