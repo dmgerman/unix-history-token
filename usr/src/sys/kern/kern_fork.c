@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_fork.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_fork.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -562,6 +562,8 @@ operator|||
 name|rpp
 operator|->
 name|p_pgrp
+operator|->
+name|pg_id
 operator|==
 name|mpid
 condition|)
@@ -604,6 +606,8 @@ condition|(
 name|rpp
 operator|->
 name|p_pgrp
+operator|->
+name|pg_id
 operator|>
 name|mpid
 operator|&&
@@ -612,12 +616,16 @@ operator|>
 name|rpp
 operator|->
 name|p_pgrp
+operator|->
+name|pg_id
 condition|)
 name|pidchecked
 operator|=
 name|rpp
 operator|->
 name|p_pgrp
+operator|->
+name|pg_id
 expr_stmt|;
 block|}
 if|if
@@ -818,6 +826,20 @@ operator|=
 name|rip
 operator|->
 name|p_pgrp
+expr_stmt|;
+name|rpp
+operator|->
+name|p_pgrpnxt
+operator|=
+name|rip
+operator|->
+name|p_pgrpnxt
+expr_stmt|;
+name|rip
+operator|->
+name|p_pgrpnxt
+operator|=
+name|rpp
 expr_stmt|;
 name|rpp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_log.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -97,10 +97,10 @@ modifier|*
 name|sc_selp
 decl_stmt|;
 comment|/* process waiting on select call */
-name|int
-name|sc_pgrp
+name|pid_t
+name|sc_pgid
 decl_stmt|;
-comment|/* process group for async I/O */
+comment|/* process group id for async I/O */
 block|}
 name|logsoftc
 struct|;
@@ -156,13 +156,15 @@ literal|0
 expr_stmt|;
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 operator|=
 name|u
 operator|.
 name|u_procp
 operator|->
 name|p_pgrp
+operator|->
+name|pg_id
 expr_stmt|;
 comment|/* 	 * Potential race here with putchar() but since putchar should be 	 * called by autoconf, msg_magic should be initialized by the time 	 * we get here. 	 */
 if|if
@@ -264,7 +266,7 @@ literal|0
 expr_stmt|;
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 operator|=
 literal|0
 expr_stmt|;
@@ -631,7 +633,7 @@ name|gsignal
 argument_list|(
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 argument_list|,
 name|SIGIO
 argument_list|)
@@ -800,9 +802,10 @@ break|break;
 case|case
 name|TIOCSPGRP
 case|:
+block|{
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 operator|=
 operator|*
 operator|(
@@ -812,6 +815,7 @@ operator|)
 name|data
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|TIOCGPGRP
 case|:
@@ -824,7 +828,7 @@ name|data
 operator|=
 name|logsoftc
 operator|.
-name|sc_pgrp
+name|sc_pgid
 expr_stmt|;
 break|break;
 default|default:
