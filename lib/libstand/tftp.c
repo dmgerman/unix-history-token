@@ -385,7 +385,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|8
+literal|4
 condition|)
 return|return
 operator|(
