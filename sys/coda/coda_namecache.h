@@ -438,7 +438,7 @@ specifier|extern
 name|void
 name|coda_nc_zapParentfid
 parameter_list|(
-name|ViceFid
+name|CodaFid
 modifier|*
 parameter_list|,
 name|enum
@@ -452,7 +452,7 @@ specifier|extern
 name|void
 name|coda_nc_zapfid
 parameter_list|(
-name|ViceFid
+name|CodaFid
 modifier|*
 parameter_list|,
 name|enum
@@ -466,7 +466,7 @@ specifier|extern
 name|void
 name|coda_nc_zapvnode
 parameter_list|(
-name|ViceFid
+name|CodaFid
 modifier|*
 parameter_list|,
 name|struct
@@ -502,7 +502,7 @@ specifier|extern
 name|void
 name|coda_nc_purge_user
 parameter_list|(
-name|vuid_t
+name|uid_t
 parameter_list|,
 name|enum
 name|dc_status

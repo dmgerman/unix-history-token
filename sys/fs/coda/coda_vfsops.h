@@ -17,7 +17,7 @@ decl_stmt|;
 name|u_short
 name|padding
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|cfid_fid
 decl_stmt|;
 block|}

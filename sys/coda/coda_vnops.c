@@ -2167,8 +2167,8 @@ argument_list|(
 argument|CODA_RDWR
 argument_list|,
 argument|myprintf((
-literal|"indirect rdwr: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|, 			      cp->c_fid.Volume, cp->c_fid.Vnode,  			      cp->c_fid.Unique, vrefcnt(CTOV(cp))));
+literal|"indirect rdwr: fid = %s, refcnt = %d\n"
+argument|, 			     coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount));
 argument_list|)
 if|if
 condition|(
@@ -2775,8 +2775,8 @@ argument_list|(
 argument|CODA_GETATTR
 argument_list|,
 argument|{ myprintf((
-literal|"attr cache hit: (%lx.%lx.%lx)\n"
-argument|, 				       cp->c_fid.Volume, 				       cp->c_fid.Vnode, 				       cp->c_fid.Unique));}
+literal|"attr cache hit: %s\n"
+argument|, 					coda_f2s(&cp->c_fid)));}
 argument_list|)
 empty_stmt|;
 name|CODADEBUG
@@ -2838,8 +2838,8 @@ argument_list|(
 argument|CODA_GETATTR
 argument_list|,
 argument|myprintf((
-literal|"getattr miss (%lx.%lx.%lx): result %d\n"
-argument|, 				     cp->c_fid.Volume, 				     cp->c_fid.Vnode, 				     cp->c_fid.Unique, 				     error));
+literal|"getattr miss %s: result %d\n"
+argument|, 				     coda_f2s(&cp->c_fid), error));
 argument_list|)
 name|CODADEBUG
 argument_list|(
@@ -3874,8 +3874,8 @@ argument_list|(
 argument|CODA_INACTIVE
 argument_list|,
 argument|myprintf((
-literal|"in inactive, %lx.%lx.%lx. vfsp %p\n"
-argument|, 				  cp->c_fid.Volume, cp->c_fid.Vnode,  				  cp->c_fid.Unique, vp->v_mount));
+literal|"in inactive, %s, vfsp %p\n"
+argument|, 				  coda_f2s(&cp->c_fid), vp->v_mount));
 argument_list|)
 comment|/* If an array has been allocated to hold the symlink, deallocate it */
 if|if
@@ -4209,7 +4209,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|VFid
 decl_stmt|;
 name|int
@@ -4230,8 +4230,8 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"lookup: %s in %lx.%lx.%lx\n"
-argument|, 				   nm, dcp->c_fid.Volume, 				   dcp->c_fid.Vnode, dcp->c_fid.Unique));
+literal|"lookup: %s in %s\n"
+argument|, 				   nm, coda_f2s(&dcp->c_fid)));
 argument_list|)
 empty_stmt|;
 comment|/* Check for lookup of control object. */
@@ -4286,8 +4286,8 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"name too long: lookup, %lx.%lx.%lx(%s)\n"
-argument|, 				    dcp->c_fid.Volume, dcp->c_fid.Vnode, 				    dcp->c_fid.Unique, nm));
+literal|"name too long: lookup, %s (%s)\n"
+argument|, 					 coda_f2s(&dcp->c_fid), nm));
 argument_list|)
 empty_stmt|;
 operator|*
@@ -4400,8 +4400,8 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"lookup error on %lx.%lx.%lx(%s)%d\n"
-argument|, 					dcp->c_fid.Volume, dcp->c_fid.Vnode, dcp->c_fid.Unique, nm, error));
+literal|"lookup error on %s (%s)%d\n"
+argument|, 					     coda_f2s(&dcp->c_fid), nm, error));
 argument_list|)
 operator|*
 name|vpp
@@ -4426,8 +4426,8 @@ argument_list|(
 argument|CODA_LOOKUP
 argument_list|,
 argument|myprintf((
-literal|"lookup: vol %lx vno %lx uni %lx type %o result %d\n"
-argument|, 			    VFid.Volume, VFid.Vnode, VFid.Unique, vtype, 			    error));
+literal|"lookup: %s type %o result %d\n"
+argument|, 			       coda_f2s(&VFid), vtype, error));
 argument_list|)
 name|cp
 operator|=
@@ -4866,7 +4866,7 @@ name|cnp
 operator|->
 name|cn_namelen
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|VFid
 decl_stmt|;
 name|struct
@@ -5078,8 +5078,8 @@ argument_list|(
 argument|CODA_CREATE
 argument_list|,
 argument|myprintf((
-literal|"create: (%lx.%lx.%lx), result %d\n"
-argument|, 			VFid.Volume, VFid.Vnode, VFid.Unique, error));
+literal|"create: %s, result %d\n"
+argument|, 			   coda_f2s(&VFid), error));
 argument_list|)
 block|}
 else|else
@@ -5271,8 +5271,8 @@ argument_list|(
 argument|CODA_REMOVE
 argument_list|,
 argument|myprintf((
-literal|"remove: %s in %lx.%lx.%lx\n"
-argument|, 				   nm, cp->c_fid.Volume, cp->c_fid.Vnode, 				   cp->c_fid.Unique));
+literal|"remove: %s in %s\n"
+argument|, 				     nm, coda_f2s(&cp->c_fid)));
 argument_list|)
 empty_stmt|;
 comment|/* Remove the file's entry from the CODA Name Cache */
@@ -5541,50 +5541,30 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"nb_link:   vp fid: (%lx.%lx.%lx)\n"
+literal|"nb_link:   vp fid: %s\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 name|myprintf
 argument_list|(
 operator|(
-literal|"nb_link: tdvp fid: (%lx.%lx.%lx)\n"
+literal|"nb_link: tdvp fid: %s)\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|tdcp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|tdcp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|tdcp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5602,50 +5582,30 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"link:   vp fid: (%lx.%lx.%lx)\n"
+literal|"link:   vp fid: %s\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
 name|myprintf
 argument_list|(
 operator|(
-literal|"link: tdvp fid: (%lx.%lx.%lx)\n"
+literal|"link: tdvp fid: %s\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|tdcp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|tdcp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|tdcp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6333,7 +6293,7 @@ name|cnode
 modifier|*
 name|cp
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|VFid
 decl_stmt|;
 name|struct
@@ -6594,8 +6554,8 @@ argument_list|(
 argument|CODA_MKDIR
 argument_list|,
 argument|myprintf((
-literal|"mkdir: (%lx.%lx.%lx) result %d\n"
-argument|, 				    VFid.Volume, VFid.Vnode, VFid.Unique, error));
+literal|"mkdir: %s result %d\n"
+argument|, 					 coda_f2s(&VFid), error));
 argument_list|)
 block|}
 else|else
@@ -7362,8 +7322,8 @@ argument_list|(
 argument|CODA_READDIR
 argument_list|,
 argument|myprintf((
-literal|"indirect readdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|,cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, vrefcnt(vp)));
+literal|"indirect readdir: fid = %s, refcnt = %d\n"
+argument|, coda_f2s(&cp->c_fid), vp->v_usecount));
 argument_list|)
 name|error
 operator|=
@@ -7830,25 +7790,15 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"Attempting lock on %lx.%lx.%lx\n"
+literal|"Attempting lock on %s\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7976,25 +7926,15 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"Attempting unlock on %lx.%lx.%lx\n"
+literal|"Attempting unlock on %s\n"
 operator|,
+name|coda_f2s
+argument_list|(
+operator|&
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|,
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8564,7 +8504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return a vnode for the given fid.  * If no cnode exists for this fid create one and put it  * in a table hashed by fid.Volume and fid.Vnode.  If the cnode for  * this fid is already in the table return it (ref count is  * incremented by coda_find.  The cnode will be flushed from the  * table when coda_inactive calls coda_unsave.  */
+comment|/*  * Return a vnode for the given fid.  * If no cnode exists for this fid create one and put it  * in a table hashed by coda_f2i().  If the cnode for  * this fid is already in the table return it (ref count is  * incremented by coda_find.  The cnode will be flushed from the  * table when coda_inactive calls coda_unsave.  */
 end_comment
 
 begin_function
@@ -8579,7 +8519,7 @@ name|vfsp
 parameter_list|,
 name|type
 parameter_list|)
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 decl_stmt|;

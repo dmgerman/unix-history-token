@@ -137,16 +137,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|coda_hash
-parameter_list|(
-name|fid
-parameter_list|)
-value|(((fid)->Volume + (fid)->Vnode)& (CODA_CACHESIZE-1))
-end_define
-
-begin_define
-define|#
-directive|define
 name|CNODE_NEXT
 parameter_list|(
 name|cp
@@ -154,15 +144,62 @@ parameter_list|)
 value|((cp)->c_next)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CODA_COMPAT_5
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|ODD
+name|coda_hash
 parameter_list|(
-name|vnode
+name|fid
 parameter_list|)
-value|((vnode)& 0x1)
+define|\
+value|(((fid)->Volume + (fid)->Vnode)& (CODA_CACHESIZE-1))
 end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DIR
+parameter_list|(
+name|cnode
+parameter_list|)
+value|(cnode.Vnode& 0x1)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|coda_hash
+parameter_list|(
+name|fid
+parameter_list|)
+value|(coda_f2i(fid)& (CODA_CACHESIZE-1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IS_DIR
+parameter_list|(
+name|cnode
+parameter_list|)
+value|(cnode.opaque[2]& 0x1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Allocate a cnode.  */
@@ -470,7 +507,7 @@ name|coda_find
 parameter_list|(
 name|fid
 parameter_list|)
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 decl_stmt|;
@@ -497,41 +534,17 @@ condition|)
 block|{
 if|if
 condition|(
+name|coda_fid_eq
+argument_list|(
+operator|&
 operator|(
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Vnode
-operator|==
-name|fid
-operator|->
-name|Vnode
 operator|)
-operator|&&
-operator|(
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Volume
-operator|==
+argument_list|,
 name|fid
-operator|->
-name|Volume
-operator|)
-operator|&&
-operator|(
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
-operator|==
-name|fid
-operator|->
-name|Unique
-operator|)
+argument_list|)
 operator|&&
 operator|(
 operator|!
@@ -680,8 +693,8 @@ argument_list|(
 argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
-literal|"Live cnode fid %lx.%lx.%lx flags %d count %d\n"
-argument|, 						   (cp->c_fid).Volume, 						   (cp->c_fid).Vnode, 						   (cp->c_fid).Unique,  						   cp->c_flags, 						   vrefcnt(CTOV(cp))));
+literal|"Live cnode fid %s flags %d count %d\n"
+argument|, 						    coda_f2s(&cp->c_fid), 						    cp->c_flags, 						    vrefcnt(CTOV(cp))));
 argument_list|)
 empty_stmt|;
 block|}
@@ -773,13 +786,11 @@ block|{
 if|if
 condition|(
 operator|!
-name|ODD
+name|IS_DIR
 argument_list|(
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Vnode
 argument_list|)
 condition|)
 comment|/* only files can be executed */
@@ -850,39 +861,22 @@ block|{
 name|myprintf
 argument_list|(
 operator|(
-literal|"Live cnode fid %lx.%lx.%lx count %d\n"
+literal|"Live cnode fid %s count %d\n"
 operator|,
-operator|(
-name|cp
-operator|->
-name|c_fid
-operator|)
-operator|.
-name|Volume
-operator|,
-operator|(
-name|cp
-operator|->
-name|c_fid
-operator|)
-operator|.
-name|Vnode
-operator|,
-operator|(
-name|cp
-operator|->
-name|c_fid
-operator|)
-operator|.
-name|Unique
-operator|,
-name|vrefcnt
+name|coda_f2s
 argument_list|(
+operator|&
+name|cp
+operator|->
+name|c_fid
+argument_list|)
+operator|,
 name|CTOV
 argument_list|(
 name|cp
 argument_list|)
-argument_list|)
+operator|->
+name|v_usecount
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1282,7 +1276,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * There are 6 cases where invalidations occur. The semantics of each  * is listed here.  *  * CODA_FLUSH     -- flush all entries from the name cache and the cnode cache.  * CODA_PURGEUSER -- flush all entries from the name cache for a specific user  *                  This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory.  * CODA_ZAPDIR    -- flush the attributes for the dir from its cnode.  *                  Zap all children of this directory from the namecache.  * CODA_ZAPFILE   -- flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file.  * CODA_PURGEFID  -- flush the attribute for the file  *                  If it is a dir (odd vnode), purge its   *                  children from the namecache  *                  remove the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones  * during reintegration.  *  * CODA_REPLACE -- replace one ViceFid with another throughout the name cache   */
+comment|/*  * There are 6 cases where invalidations occur. The semantics of each  * is listed here.  *  * CODA_FLUSH     -- flush all entries from the name cache and the cnode cache.  * CODA_PURGEUSER -- flush all entries from the name cache for a specific user  *                  This call is a result of token expiration.  *  * The next two are the result of callbacks on a file or directory.  * CODA_ZAPDIR    -- flush the attributes for the dir from its cnode.  *                  Zap all children of this directory from the namecache.  * CODA_ZAPFILE   -- flush the attributes for a file.  *  * The fifth is a result of Venus detecting an inconsistent file.  * CODA_PURGEFID  -- flush the attribute for the file  *                  If it is a dir (odd vnode), purge its   *                  children from the namecache  *                  remove the file from the namecache.  *  * The sixth allows Venus to replace local fids with global ones  * during reintegration.  *  * CODA_REPLACE -- replace one CodaFid with another throughout the name cache   */
 end_comment
 
 begin_function
@@ -1351,6 +1345,9 @@ index|]
 operator|++
 expr_stmt|;
 comment|/* XXX - need to prevent fsync's */
+ifdef|#
+directive|ifdef
+name|CODA_COMPAT_5
 name|coda_nc_purge_user
 argument_list|(
 name|out
@@ -1364,6 +1361,21 @@ argument_list|,
 name|IS_DOWNCALL
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|coda_nc_purge_user
+argument_list|(
+name|out
+operator|->
+name|coda_purgeuser
+operator|.
+name|uid
+argument_list|,
+name|IS_DOWNCALL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1405,7 +1417,7 @@ name|out
 operator|->
 name|coda_zapfile
 operator|.
-name|CodaFid
+name|Fid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1463,8 +1475,8 @@ argument_list|(
 argument|CODA_ZAPFILE
 argument_list|,
 argument|myprintf((
-literal|"zapfile: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
-argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  vrefcnt(CTOV(cp)) -
+literal|"zapfile: fid = %s, refcnt = %d, error = %d\n"
+argument|, 				  coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
 literal|1
 argument|, error));
 argument_list|)
@@ -1535,7 +1547,7 @@ name|out
 operator|->
 name|coda_zapdir
 operator|.
-name|CodaFid
+name|Fid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1567,7 +1579,7 @@ name|out
 operator|->
 name|coda_zapdir
 operator|.
-name|CodaFid
+name|Fid
 argument_list|,
 name|IS_DOWNCALL
 argument_list|)
@@ -1577,8 +1589,8 @@ argument_list|(
 argument|CODA_ZAPDIR
 argument_list|,
 argument|myprintf((
-literal|"zapdir: fid = (%lx.%lx.%lx), refcnt = %d\n"
-argument|, 		  cp->c_fid.Volume, cp->c_fid.Vnode, cp->c_fid.Unique, 		  vrefcnt(CTOV(cp)) -
+literal|"zapdir: fid = %s, refcnt = %d\n"
+argument|, 		  coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
 literal|1
 argument|));
 argument_list|)
@@ -1653,7 +1665,7 @@ name|out
 operator|->
 name|coda_purgefid
 operator|.
-name|CodaFid
+name|Fid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1673,15 +1685,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ODD
+name|IS_DIR
 argument_list|(
 name|out
 operator|->
 name|coda_purgefid
 operator|.
-name|CodaFid
-operator|.
-name|Vnode
+name|Fid
 argument_list|)
 condition|)
 block|{
@@ -1693,7 +1703,7 @@ name|out
 operator|->
 name|coda_purgefid
 operator|.
-name|CodaFid
+name|Fid
 argument_list|,
 name|IS_DOWNCALL
 argument_list|)
@@ -1713,7 +1723,7 @@ name|out
 operator|->
 name|coda_purgefid
 operator|.
-name|CodaFid
+name|Fid
 argument_list|,
 name|IS_DOWNCALL
 argument_list|)
@@ -1732,15 +1742,13 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ODD
+name|IS_DIR
 argument_list|(
 name|out
 operator|->
 name|coda_purgefid
 operator|.
-name|CodaFid
-operator|.
-name|Vnode
+name|Fid
 argument_list|)
 operator|)
 operator|&&
@@ -1769,8 +1777,8 @@ argument_list|(
 argument|CODA_PURGEFID
 argument_list|,
 argument|myprintf((
-literal|"purgefid: fid = (%lx.%lx.%lx), refcnt = %d, error = %d\n"
-argument|,                                             cp->c_fid.Volume, cp->c_fid.Vnode,                                             cp->c_fid.Unique,  					    vrefcnt(CTOV(cp)) -
+literal|"purgefid: fid = %s, refcnt = %d, error = %d\n"
+argument|, 			 coda_f2s(&cp->c_fid), CTOV(cp)->v_usecount -
 literal|1
 argument|, error));
 argument_list|)
@@ -1887,8 +1895,8 @@ argument_list|(
 argument|CODA_REPLACE
 argument_list|,
 argument|myprintf((
-literal|"replace: oldfid = (%lx.%lx.%lx), newfid = (%lx.%lx.%lx), cp = %p\n"
-argument|, 					   out->coda_replace.OldFid.Volume, 					   out->coda_replace.OldFid.Vnode, 					   out->coda_replace.OldFid.Unique, 					   cp->c_fid.Volume, cp->c_fid.Vnode,  					   cp->c_fid.Unique, cp));
+literal|"replace: oldfid = %s, newfid = %s, cp = %p\n"
+argument|, 			coda_f2s(&out->coda_replace.OldFid), 			coda_f2s(&cp->c_fid), cp));
 argument_list|)
 name|vrele
 argument_list|(

@@ -32,7 +32,7 @@ name|cnode
 modifier|*
 name|coda_find
 parameter_list|(
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|)

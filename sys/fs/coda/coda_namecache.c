@@ -1262,8 +1262,8 @@ argument_list|(
 argument|CODA_NC_REMOVE
 argument_list|,
 argument|myprintf((
-literal|"coda_nc_remove %s from parent %lx.%lx.%lx\n"
-argument|, 			   cncp->name, (cncp->dcp)->c_fid.Volume, 			   (cncp->dcp)->c_fid.Vnode, (cncp->dcp)->c_fid.Unique));
+literal|"coda_nc_remove %s from parent %s\n"
+argument|, 			      cncp->name, coda_f2s(&cncp->dcp->c_fid)));
 argument_list|)
 name|CODA_NC_HSHREM
 argument_list|(
@@ -1411,7 +1411,7 @@ name|fid
 parameter_list|,
 name|dcstat
 parameter_list|)
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 decl_stmt|;
@@ -1445,8 +1445,8 @@ argument_list|(
 argument|CODA_NC_ZAPPFID
 argument_list|,
 argument|myprintf((
-literal|"ZapParent: fid 0x%lx, 0x%lx, 0x%lx \n"
-argument|, 			fid->Volume, fid->Vnode, fid->Unique));
+literal|"ZapParent: fid %s\n"
+argument|, coda_f2s(fid)));
 argument_list|)
 name|coda_nc_stat
 operator|.
@@ -1505,47 +1505,19 @@ name|hash_next
 expr_stmt|;
 if|if
 condition|(
+name|coda_fid_eq
+argument_list|(
+operator|&
 operator|(
 name|cncp
 operator|->
 name|dcp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|==
-name|fid
-operator|->
-name|Volume
 operator|)
-operator|&&
-operator|(
-name|cncp
-operator|->
-name|dcp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|==
+argument_list|,
 name|fid
-operator|->
-name|Vnode
-operator|)
-operator|&&
-operator|(
-name|cncp
-operator|->
-name|dcp
-operator|->
-name|c_fid
-operator|.
-name|Unique
-operator|==
-name|fid
-operator|->
-name|Unique
-operator|)
+argument_list|)
 condition|)
 block|{
 name|coda_nc_hash
@@ -1582,7 +1554,7 @@ name|fid
 parameter_list|,
 name|dcstat
 parameter_list|)
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 decl_stmt|;
@@ -1616,8 +1588,8 @@ argument_list|(
 argument|CODA_NC_ZAPFID
 argument_list|,
 argument|myprintf((
-literal|"Zapfid: fid 0x%lx, 0x%lx, 0x%lx \n"
-argument|, 			fid->Volume, fid->Vnode, fid->Unique));
+literal|"Zapfid: fid %s\n"
+argument|, coda_f2s(fid)));
 argument_list|)
 name|coda_nc_stat
 operator|.
@@ -1675,47 +1647,17 @@ name|hash_next
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|coda_fid_eq
+argument_list|(
+operator|&
 name|cncp
 operator|->
 name|cp
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|==
+argument_list|,
 name|fid
-operator|->
-name|Volume
-operator|)
-operator|&&
-operator|(
-name|cncp
-operator|->
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Vnode
-operator|==
-name|fid
-operator|->
-name|Vnode
-operator|)
-operator|&&
-operator|(
-name|cncp
-operator|->
-name|cp
-operator|->
-name|c_fid
-operator|.
-name|Unique
-operator|==
-name|fid
-operator|->
-name|Unique
-operator|)
+argument_list|)
 condition|)
 block|{
 name|coda_nc_hash
@@ -1754,7 +1696,7 @@ name|cred
 parameter_list|,
 name|dcstat
 parameter_list|)
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 decl_stmt|;
@@ -1782,8 +1724,8 @@ argument_list|(
 argument|CODA_NC_ZAPVNODE
 argument_list|,
 argument|myprintf((
-literal|"Zapvnode: fid 0x%lx, 0x%lx, 0x%lx cred %p\n"
-argument|, 			  fid->Volume, fid->Vnode, fid->Unique, cred));
+literal|"Zapvnode: fid %s cred %p\n"
+argument|, 				coda_f2s(fid), cred));
 argument_list|)
 block|}
 end_function
@@ -1939,7 +1881,7 @@ name|uid
 parameter_list|,
 name|dcstat
 parameter_list|)
-name|vuid_t
+name|uid_t
 name|uid
 decl_stmt|;
 name|enum
@@ -2242,8 +2184,8 @@ argument_list|(
 argument|CODA_FLUSH
 argument_list|,
 argument|myprintf((
-literal|"coda_nc_flush: (%lx.%lx.%lx) busy\n"
-argument|, cncp->cp->c_fid.Volume, cncp->cp->c_fid.Vnode, cncp->cp->c_fid.Unique));
+literal|"coda_nc_flush: %s busy\n"
+argument|, 				 coda_f2s(&cncp->cp->c_fid)));
 argument_list|)
 block|}
 if|if

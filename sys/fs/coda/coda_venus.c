@@ -176,6 +176,12 @@ define|\
 value|bcopy(name, (char *)inp + (int)inp->struc, len); \     ((char*)inp + (int)inp->struc)[len++] = 0; \     Isize += len
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CODA_COMPAT_5
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -190,7 +196,47 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(in)->opcode = (op); \ 	  sx_slock(&proctree_lock); \ 	  (in)->pid = p ? p->p_pid : -1; \           (in)->pgid = p ? p->p_pgid : -1; \           (in)->sid = (p&& p->p_session&& p->p_session->s_leader) ? (p->p_session->s_leader->p_pid) : -1; \ 	  sx_sunlock(&proctree_lock); \           if (ident != NOCRED) {                              \ 	      (in)->cred.cr_uid = ident->cr_uid;              \ 	      (in)->cred.cr_groupid = ident->cr_gid;          \           } else {                                            \ 	      bzero(&((in)->cred),sizeof(struct coda_cred));  \ 	      (in)->cred.cr_uid = -1;                         \ 	      (in)->cred.cr_groupid = -1;                     \           }                                                   \  #define	CNV_OFLAG(to, from) 				\     do { 						\ 	  to = 0;					\ 	  if (from& FREAD)   to |= C_O_READ; 		\ 	  if (from& FWRITE)  to |= C_O_WRITE; 		\ 	  if (from& O_TRUNC) to |= C_O_TRUNC; 		\ 	  if (from& O_EXCL)  to |= C_O_EXCL; 		\ 	  if (from& O_CREAT) to |= C_O_CREAT;		\     } while (0)
+value|(in)->opcode = (op); \ 	  sx_slock(&proctree_lock); \ 	  (in)->pid = p ? p->p_pid : -1; \           (in)->pgid = p ? p->p_pgid : -1; \           (in)->sid = (p&& p->p_session&& p->p_session->s_leader) ? (p->p_session->s_leader->p_pid) : -1; \ 	  sx_sunlock(&proctree_lock); \           if (ident != NOCRED) {                              \ 	      (in)->cred.cr_uid = ident->cr_uid;              \ 	      (in)->cred.cr_groupid = ident->cr_gid;          \           } else {                                            \ 	      bzero(&((in)->cred),sizeof(struct coda_cred));  \ 	      (in)->cred.cr_uid = -1;                         \ 	      (in)->cred.cr_groupid = -1;                     \           }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INIT_IN
+parameter_list|(
+name|in
+parameter_list|,
+name|op
+parameter_list|,
+name|ident
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|(in)->opcode = (op);                          \ 	  (in)->pid = p ? p->p_pid : -1;                \           (in)->pgid = p ? p->p_pgid : -1;              \           if (ident != NOCRED) {                        \ 	      (in)->uid = ident->cr_uid;              	\           } else {                                      \ 	      (in)->uid = -1;                           \           }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CNV_OFLAG
+parameter_list|(
+name|to
+parameter_list|,
+name|from
+parameter_list|)
+define|\
+value|do { 						\ 	  to = 0;					\ 	  if (from& FREAD)   to |= C_O_READ; 		\ 	  if (from& FWRITE)  to |= C_O_WRITE; 		\ 	  if (from& O_TRUNC) to |= C_O_TRUNC; 		\ 	  if (from& O_EXCL)  to |= C_O_EXCL; 		\ 	  if (from& O_CREAT) to |= C_O_CREAT;		\     } while (0)
 end_define
 
 begin_define
@@ -246,7 +292,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|ViceFid
+name|CodaFid
 modifier|*
 name|VFid
 parameter_list|)
@@ -303,7 +349,7 @@ name|VFid
 operator|=
 name|outp
 operator|->
-name|VFid
+name|Fid
 expr_stmt|;
 name|CODA_FREE
 argument_list|(
@@ -326,7 +372,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -385,7 +431,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -469,7 +515,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -518,7 +564,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -601,7 +647,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -672,7 +718,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -916,7 +962,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -966,7 +1012,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1027,7 +1073,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1076,7 +1122,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1130,7 +1176,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1177,7 +1223,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1230,7 +1276,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1288,7 +1334,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1385,7 +1431,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1429,7 +1475,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1473,7 +1519,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1496,7 +1542,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|ViceFid
+name|CodaFid
 modifier|*
 name|VFid
 parameter_list|,
@@ -1540,7 +1586,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1598,7 +1644,7 @@ name|VFid
 operator|=
 name|outp
 operator|->
-name|VFid
+name|Fid
 expr_stmt|;
 operator|*
 name|vtype
@@ -1629,7 +1675,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1663,7 +1709,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|ViceFid
+name|CodaFid
 modifier|*
 name|VFid
 parameter_list|,
@@ -1708,7 +1754,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1784,7 +1830,7 @@ name|VFid
 operator|=
 name|outp
 operator|->
-name|VFid
+name|Fid
 expr_stmt|;
 name|CNV_VV2V_ATTR
 argument_list|(
@@ -1818,7 +1864,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -1876,7 +1922,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -1936,11 +1982,11 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|tfid
 parameter_list|,
@@ -2065,11 +2111,11 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|tfid
 parameter_list|,
@@ -2222,7 +2268,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -2250,7 +2296,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|ViceFid
+name|CodaFid
 modifier|*
 name|VFid
 parameter_list|,
@@ -2295,7 +2341,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -2355,7 +2401,7 @@ name|VFid
 operator|=
 name|outp
 operator|->
-name|VFid
+name|Fid
 expr_stmt|;
 name|CNV_VV2V_ATTR
 argument_list|(
@@ -2389,7 +2435,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -2447,7 +2493,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -2507,7 +2553,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -2582,7 +2628,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -2668,7 +2714,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -2731,7 +2777,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -2827,7 +2873,7 @@ name|void
 modifier|*
 name|mdp
 parameter_list|,
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,
@@ -2842,7 +2888,7 @@ modifier|*
 name|p
 parameter_list|,
 comment|/*out*/
-name|ViceFid
+name|CodaFid
 modifier|*
 name|VFid
 parameter_list|,
@@ -2880,7 +2926,7 @@ argument_list|)
 expr_stmt|;
 name|inp
 operator|->
-name|VFid
+name|Fid
 operator|=
 operator|*
 name|fid
@@ -2914,7 +2960,7 @@ name|VFid
 operator|=
 name|outp
 operator|->
-name|VFid
+name|Fid
 expr_stmt|;
 operator|*
 name|vtype

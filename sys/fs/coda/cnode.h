@@ -200,7 +200,7 @@ name|u_short
 name|c_flags
 decl_stmt|;
 comment|/* flags (see below) */
-name|ViceFid
+name|CodaFid
 name|c_fid
 decl_stmt|;
 comment|/* file handle */
@@ -692,7 +692,7 @@ name|cnode
 modifier|*
 name|make_coda_node
 parameter_list|(
-name|ViceFid
+name|CodaFid
 modifier|*
 name|fid
 parameter_list|,

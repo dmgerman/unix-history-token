@@ -410,11 +410,15 @@ name|vnode
 modifier|*
 name|rootvp
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|rootfid
+init|=
+name|INVAL_FID
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|ctlfid
+init|=
+name|CTL_FID
 decl_stmt|;
 name|int
 name|error
@@ -662,24 +666,6 @@ literal|0
 expr_stmt|;
 comment|/* XXX See coda_root() */
 comment|/*      * Make a root vnode to placate the Vnode interface, but don't      * actually make the CODA_ROOT call to venus until the first call      * to coda_root in case a server is down while venus is starting.      */
-name|rootfid
-operator|.
-name|Volume
-operator|=
-literal|0
-expr_stmt|;
-name|rootfid
-operator|.
-name|Vnode
-operator|=
-literal|0
-expr_stmt|;
-name|rootfid
-operator|.
-name|Unique
-operator|=
-literal|0
-expr_stmt|;
 name|cp
 operator|=
 name|make_coda_node
@@ -704,24 +690,6 @@ operator|->
 name|v_vflag
 operator||=
 name|VV_ROOT
-expr_stmt|;
-name|ctlfid
-operator|.
-name|Volume
-operator|=
-name|CTL_VOL
-expr_stmt|;
-name|ctlfid
-operator|.
-name|Vnode
-operator|=
-name|CTL_VNO
-expr_stmt|;
-name|ctlfid
-operator|.
-name|Unique
-operator|=
-name|CTL_UNI
 expr_stmt|;
 comment|/*  cp = make_coda_node(&ctlfid, vfsp, VCHR);     The above code seems to cause a loop in the cnode links.     I don't totally understand when it happens, it is caught     when closing down the system.  */
 name|cp
@@ -1091,8 +1059,15 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|VFid
+decl_stmt|;
+specifier|static
+specifier|const
+name|CodaFid
+name|invalfid
+init|=
+name|INVAL_FID
 decl_stmt|;
 name|ENTRY
 expr_stmt|;
@@ -1117,7 +1092,9 @@ block|{
 comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_mount() with all c_fid members zeroed. 	 * 	 * XXX In addition, if we are called between coda_mount() and 	 * coda_start(), we assume that the request is from vfs_mount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
 if|if
 condition|(
-operator|(
+name|memcmp
+argument_list|(
+operator|&
 name|VTOC
 argument_list|(
 name|mi
@@ -1126,41 +1103,17 @@ name|mi_rootvp
 argument_list|)
 operator|->
 name|c_fid
-operator|.
-name|Volume
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|VTOC
+argument_list|,
+operator|&
+name|invalfid
+argument_list|,
+sizeof|sizeof
 argument_list|(
-name|mi
-operator|->
-name|mi_rootvp
+name|CodaFid
 argument_list|)
-operator|->
-name|c_fid
-operator|.
-name|Vnode
+argument_list|)
 operator|!=
 literal|0
-operator|)
-operator|||
-operator|(
-name|VTOC
-argument_list|(
-name|mi
-operator|->
-name|mi_rootvp
-argument_list|)
-operator|->
-name|c_fid
-operator|.
-name|Unique
-operator|!=
-literal|0
-operator|)
 operator|||
 name|mi
 operator|->
@@ -1824,7 +1777,7 @@ name|td
 operator|->
 name|td_proc
 decl_stmt|;
-name|ViceFid
+name|CodaFid
 name|VFid
 decl_stmt|;
 name|int
@@ -1928,8 +1881,8 @@ argument_list|(
 argument|CODA_VGET
 argument_list|,
 argument|myprintf((
-literal|"vget: vol %lx vno %lx uni %lx type %d result %d\n"
-argument|, 			VFid.Volume, VFid.Vnode, VFid.Unique, vtype, error));
+literal|"vget: %s type %d result %d\n"
+argument|, 			coda_f2s(&VFid), vtype, error));
 argument_list|)
 name|cp
 operator|=
@@ -2007,7 +1960,7 @@ name|short
 operator|)
 sizeof|sizeof
 argument_list|(
-name|ViceFid
+name|CodaFid
 argument_list|)
 expr_stmt|;
 name|cfid
