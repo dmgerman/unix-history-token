@@ -3066,10 +3066,6 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|enum
-name|vtype
-name|type
-parameter_list|,
 name|struct
 name|vnode
 modifier|*

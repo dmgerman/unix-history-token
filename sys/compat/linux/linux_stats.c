@@ -1935,8 +1935,6 @@ name|vfinddev
 argument_list|(
 name|dev
 argument_list|,
-name|VCHR
-argument_list|,
 operator|&
 name|vp
 argument_list|)
