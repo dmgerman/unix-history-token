@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.14 1997/03/31 05:10:18 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.15 1997/05/13 20:46:45 brian Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -2224,7 +2224,7 @@ specifier|static
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 if|if
@@ -2322,18 +2322,42 @@ block|}
 block|}
 break|break;
 block|}
-name|strcat
+name|strncat
 argument_list|(
 name|buf
 argument_list|,
 literal|"/"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strncat
 argument_list|(
 name|buf
 argument_list|,
 name|file
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|file
