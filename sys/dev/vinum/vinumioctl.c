@@ -858,26 +858,13 @@ case|:
 if|if
 condition|(
 name|vinum_inactive
-argument_list|()
-operator|&&
-operator|(
-name|vinum_conf
-operator|.
-name|opencount
-operator|<
-literal|2
-operator|)
+argument_list|(
+literal|0
+argument_list|)
 condition|)
 block|{
-comment|/* if we're not active */
+comment|/* if the volumes are not active */
 comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow  		 */
-name|int
-name|oc
-init|=
-name|vinum_conf
-operator|.
-name|opencount
-decl_stmt|;
 name|free_vinum
 argument_list|(
 literal|1
@@ -890,12 +877,6 @@ name|LOG_NOTICE
 argument_list|,
 literal|"vinum: CONFIGURATION OBLITERATED\n"
 argument_list|)
-expr_stmt|;
-name|vinum_conf
-operator|.
-name|opencount
-operator|=
-name|oc
 expr_stmt|;
 name|ioctl_reply
 operator|=
