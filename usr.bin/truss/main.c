@@ -471,7 +471,7 @@ literal|0
 decl_stmt|;
 name|outfile
 operator|=
-name|stdout
+name|stderr
 expr_stmt|;
 while|while
 condition|(
