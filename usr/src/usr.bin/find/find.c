@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.13 (Berkeley) %G%"
+literal|"@(#)find.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7364,11 +7364,35 @@ operator|==
 literal|'l'
 condition|)
 block|{
+comment|/* 			 * Need to get the tail of the file name, since we have 			 * already chdir()ed into the directory of the file 			 */
+name|cp
+operator|=
+name|rindex
+argument_list|(
+name|file
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|cp
+operator|=
+name|file
+expr_stmt|;
+else|else
+name|cp
+operator|++
+expr_stmt|;
 name|who
 operator|=
 name|readlink
 argument_list|(
-name|file
+name|cp
 argument_list|,
 name|flink
 argument_list|,
@@ -7387,6 +7411,14 @@ condition|)
 name|flink
 index|[
 name|who
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+else|else
+name|flink
+index|[
+literal|0
 index|]
 operator|=
 literal|'\0'
