@@ -140,6 +140,8 @@ name|aflag
 decl_stmt|,
 name|bflag
 decl_stmt|,
+name|eflag
+decl_stmt|,
 name|Nflag
 decl_stmt|,
 name|nflag
@@ -239,9 +241,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sysctl [-bNnox] variable[=value] ..."
+literal|"usage: sysctl [-beNnox] variable[=value] ..."
 argument_list|,
-literal|"       sysctl [-bNnox] -a"
+literal|"       sysctl [-beNnox] -a"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -293,7 +295,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AabNnowxX"
+literal|"AabeNnowxX"
 argument_list|)
 operator|)
 operator|!=
@@ -329,6 +331,14 @@ case|case
 literal|'b'
 case|:
 name|bflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|eflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1783,6 +1793,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|fmt
+decl_stmt|,
+modifier|*
+name|sep
 decl_stmt|;
 name|int
 name|qoid
@@ -1910,6 +1923,19 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|eflag
+condition|)
+name|sep
+operator|=
+literal|"="
+expr_stmt|;
+else|else
+name|sep
+operator|=
+literal|": "
+expr_stmt|;
 comment|/* find an estimate of how much we need for this var */
 name|j
 operator|=
@@ -2099,9 +2125,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2126,9 +2154,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -2219,9 +2249,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 name|fmt
@@ -2312,9 +2344,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2425,9 +2459,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 return|return
@@ -2466,9 +2502,11 @@ name|nflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s: "
+literal|"%s%s"
 argument_list|,
 name|name
+argument_list|,
+name|sep
 argument_list|)
 expr_stmt|;
 name|printf
