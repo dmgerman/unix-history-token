@@ -262,6 +262,16 @@ block|,
 literal|"EET DST"
 block|,
 comment|/* Eastern European */
+operator|-
+literal|3
+operator|*
+literal|60
+block|,
+literal|"MSK"
+block|,
+literal|"MSD"
+block|,
+comment|/* Moscow */
 literal|4
 operator|*
 literal|60
