@@ -2585,10 +2585,6 @@ operator|+
 name|sp
 operator|->
 name|rx_overrun_errors
-operator|+
-name|sp
-operator|->
-name|rx_shortframes
 expr_stmt|;
 comment|/* 	 * If any transmit underruns occured, bump up the transmit 	 * threshold by another 512 bytes (64 * 8). 	 */
 if|if
@@ -2701,13 +2697,6 @@ name|rx_overrun_errors
 operator|=
 literal|0
 expr_stmt|;
-name|sp
-operator|->
-name|rx_shortframes
-operator|=
-literal|0
-expr_stmt|;
-empty_stmt|;
 block|}
 comment|/* 	 * Schedule another timeout one second from now. 	 */
 name|timeout
