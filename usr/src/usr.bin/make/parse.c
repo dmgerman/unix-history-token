@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.15 (Berkeley) %G%"
+literal|"@(#)parse.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4839,17 +4839,25 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|c
 operator|==
 literal|'\t'
-operator|)
-operator|||
-operator|(
+condition|)
+block|{
+name|ignComment
+operator|=
+name|ignDepOp
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
 name|c
 operator|==
 literal|'.'
-operator|)
 condition|)
 block|{
 name|ignComment
