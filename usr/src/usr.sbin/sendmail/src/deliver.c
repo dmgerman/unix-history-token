@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.146
+literal|3.147
 operator|%
 name|G
 operator|%
@@ -252,7 +252,7 @@ operator|&&
 operator|!
 name|QueueRun
 operator|&&
-name|bitset
+name|bitnset
 argument_list|(
 name|M_EXPENSIVE
 argument_list|,
@@ -425,23 +425,32 @@ expr_stmt|;
 comment|/* insert -f or -r flag as appropriate */
 if|if
 condition|(
-name|bitset
+name|FromFlag
+operator|&&
+operator|(
+name|bitnset
 argument_list|(
 name|M_FOPT
-operator||
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+operator|||
+name|bitnset
+argument_list|(
 name|M_ROPT
 argument_list|,
 name|m
 operator|->
 name|m_flags
 argument_list|)
-operator|&&
-name|FromFlag
+operator|)
 condition|)
 block|{
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_FOPT
 argument_list|,
@@ -686,7 +695,7 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|M_MUSER
 argument_list|,
@@ -842,7 +851,7 @@ block|}
 comment|/* 		**  Strip quote bits from names if the mailer is dumb 		**	about them. 		*/
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_STRIPQ
 argument_list|,
@@ -1896,7 +1905,7 @@ name|e_receiptto
 operator|!=
 name|NULL
 operator|&&
-name|bitset
+name|bitnset
 argument_list|(
 name|M_LOCAL
 argument_list|,
@@ -2676,7 +2685,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|M_RESTR
 argument_list|,
@@ -3312,7 +3321,7 @@ index|[]
 decl_stmt|;
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_NHDR
 argument_list|,
@@ -3327,7 +3336,7 @@ directive|ifdef
 name|UGLYUUCP
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_UGLYUUCP
 argument_list|,
@@ -4534,7 +4543,7 @@ comment|/* we can only have owners for local addresses */
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|M_LOCAL
 argument_list|,

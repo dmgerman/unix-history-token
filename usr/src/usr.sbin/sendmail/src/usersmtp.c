@@ -33,7 +33,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.40
+literal|3.41
 operator|%
 name|G
 operator|%
@@ -374,7 +374,7 @@ return|;
 comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_INTERNAL
 argument_list|,
@@ -468,7 +468,7 @@ operator|==
 name|LocalMailer
 operator|||
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|M_FROMPATH
 argument_list|,
@@ -1075,6 +1075,13 @@ argument_list|(
 argument|m
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

@@ -33,7 +33,7 @@ operator|)
 name|envelope
 operator|.
 name|c
-literal|3.6
+literal|3.7
 operator|%
 name|G
 operator|%
@@ -2576,7 +2576,7 @@ expr_stmt|;
 comment|/* save the domain spec if this mailer wants it */
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|M_CANONICAL
 argument_list|,
