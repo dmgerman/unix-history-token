@@ -15,16 +15,6 @@ directive|define
 name|_SYS_MOUNT_H_
 end_define
 
-begin_comment
-comment|/*  * XXX - compatability until lockmgr() goes away or all the #includes are  * updated.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lockmgr.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -42,6 +32,12 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/lockmgr.h>
+end_include
 
 begin_include
 include|#
@@ -65,24 +61,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_struct_decl
-struct_decl|struct
-name|iovec
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|netcred
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|netexport
-struct_decl|;
-end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -162,6 +140,14 @@ end_define
 
 begin_comment
 comment|/* size of on/from name bufs */
+end_comment
+
+begin_comment
+comment|/* XXX getfsstat.2 is out of date with write and read counter changes here. */
+end_comment
+
+begin_comment
+comment|/* XXX statfs.2 is out of date with read counter changes here. */
 end_comment
 
 begin_struct
@@ -261,6 +247,7 @@ name|short
 name|f_spares2
 decl_stmt|;
 comment|/* unused spare */
+comment|/* 	 * XXX on machines where longs are aligned to 8-byte boundaries, there 	 * is an unnamed int32_t here.  This spare was after the apparent end 	 * of the struct until we bit off the read counters from f_mntonname. 	 */
 name|long
 name|f_spare
 index|[
@@ -278,8 +265,15 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|MMAXOPTIONLEN
+value|65536
+end_define
+
 begin_comment
-comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * NOTE: mnt_nvnodelist and mnt_reservedvnlist.  At the moment vnodes  * are linked into mnt_nvnodelist.  At some point in the near future the  * vnode list will be split into a 'dirty' and 'clean' list. mnt_nvnodelist  * will become the dirty list and mnt_reservedvnlist will become the 'clean'  * list.  Filesystem kld's syncing code should remain compatible since  * they only need to scan the dirty vnode list (nvnodelist -> dirtyvnodelist).  */
+comment|/* maximum length of a mount option */
 end_comment
 
 begin_expr_stmt
@@ -291,17 +285,6 @@ name|vnode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|MMAXOPTIONLEN
-value|65536
-end_define
-
-begin_comment
-comment|/* maximum length of a mount option */
-end_comment
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -337,6 +320,10 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Structure per mounted filesystem.  Each mounted filesystem has an  * array of operations and an instance record.  The filesystems are  * put on a doubly linked list.  *  * NOTE: mnt_nvnodelist and mnt_reservedvnlist.  At the moment vnodes  * are linked into mnt_nvnodelist.  At some point in the near future the  * vnode list will be split into a 'dirty' and 'clean' list. mnt_nvnodelist  * will become the dirty list and mnt_reservedvnlist will become the 'clean'  * list.  Filesystem kld's syncing code should remain compatible since  * they only need to scan the dirty vnode list (nvnodelist -> dirtyvnodelist).  */
+end_comment
 
 begin_struct
 struct|struct
@@ -435,10 +422,10 @@ name|time_t
 name|mnt_time
 decl_stmt|;
 comment|/* last time written*/
-name|u_int
+name|int
 name|mnt_iosize_max
 decl_stmt|;
-comment|/* max IO request size */
+comment|/* max size for clusters, etc */
 name|struct
 name|netexport
 modifier|*
@@ -590,7 +577,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Jail friendly DEVFS behaviour */
+comment|/* jail-friendly DEVFS behaviour */
 end_comment
 
 begin_define
@@ -778,7 +765,7 @@ comment|/* do not show entry in df */
 end_comment
 
 begin_comment
-comment|/*  * Mask of flags that are visible to statfs()  * XXX I think that this could now become (~(MNT_CMDFLAGS))  * but the 'mount' program may need changing to handle this.  */
+comment|/*  * Mask of flags that are visible to statfs().  * XXX I think that this could now become (~(MNT_CMDFLAGS))  * but the 'mount' program may need changing to handle this.  */
 end_comment
 
 begin_define
@@ -789,7 +776,7 @@ value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_NODEV	|
 end_define
 
 begin_comment
-comment|/* Mask of flags that can be updated */
+comment|/* Mask of flags that can be updated. */
 end_comment
 
 begin_define
@@ -1046,12 +1033,12 @@ block|{
 name|fsid_t
 name|fh_fsid
 decl_stmt|;
-comment|/* File system id of mount point */
+comment|/* Filesystem id of mount point */
 name|struct
 name|fid
 name|fh_fid
 decl_stmt|;
-comment|/* File sys specific id */
+comment|/* Filesys specific id */
 block|}
 struct|;
 end_struct
@@ -1334,6 +1321,18 @@ begin_comment
 comment|/* stores file names as Unicode*/
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|uio
+struct_decl|;
+end_struct_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1398,34 +1397,17 @@ begin_comment
 comment|/*  * Operations supported on mounted filesystem.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
-begin_struct_decl
-struct_decl|struct
-name|nameidata
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
 begin_struct_decl
 struct_decl|struct
 name|mount_args
 struct_decl|;
 end_struct_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_struct_decl
+struct_decl|struct
+name|nameidata
+struct_decl|;
+end_struct_decl
 
 begin_typedef
 typedef|typedef
@@ -1830,7 +1812,7 @@ name|vfs_extattrctl_t
 modifier|*
 name|vfs_extattrctl
 decl_stmt|;
-comment|/* additions below are not binary compatible with 5.0 and below */
+comment|/* Additions below are not binary compatible with 5.0 and below. */
 name|vfs_nmount_t
 modifier|*
 name|vfs_nmount
@@ -2583,10 +2565,10 @@ end_comment
 
 begin_function_decl
 name|int
-name|softdep_process_worklist
+name|softdep_fsync
 parameter_list|(
 name|struct
-name|mount
+name|vnode
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2594,10 +2576,10 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|softdep_fsync
+name|softdep_process_worklist
 parameter_list|(
 name|struct
-name|vnode
+name|mount
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2729,22 +2711,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nmount
-parameter_list|(
-name|struct
-name|iovec
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|mount
 parameter_list|(
 specifier|const
@@ -2759,6 +2725,21 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|nmount
+parameter_list|(
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
