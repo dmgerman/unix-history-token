@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)addbib.c	4.1 (Berkeley) %G%"
+literal|"@(#)addbib.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,8 @@ operator|.
 name|prompt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|line
@@ -535,7 +537,17 @@ name|BUFSIZ
 argument_list|,
 name|stdin
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|line
@@ -829,6 +841,11 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|clearerr
+argument_list|(
+name|stdin
+argument_list|)
+expr_stmt|;
 block|}
 name|fflush
 argument_list|(
