@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_subs.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4351,6 +4351,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|np
+operator|->
+name|n_flag
+operator|&
+name|NMODIFIED
+operator|)
+operator|&&
 name|np
 operator|->
 name|n_size
@@ -4602,13 +4610,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vap
-operator|->
-name|va_size
-operator|>
+operator|(
 name|np
 operator|->
-name|n_size
+name|n_flag
+operator|&
+name|NMODIFIED
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|np
