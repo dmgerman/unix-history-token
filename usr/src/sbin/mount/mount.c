@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.14 (Berkeley) %G%"
+literal|"@(#)mount.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1147,11 +1147,6 @@ operator|&&
 name|pid
 operator|>
 literal|0
-operator|&&
-name|pid
-operator|!=
-operator|-
-literal|1
 operator|&&
 name|kill
 argument_list|(
