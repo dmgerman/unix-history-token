@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.11 %G%"
+literal|"@(#)cpp.c	1.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,22 +76,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|STDIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|STDOUT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|STDERR
-value|2
+name|FIRSTOPEN
+value|-2
 end_define
 
 begin_define
@@ -911,7 +897,7 @@ name|STATIC
 name|int
 name|fin
 init|=
-name|STDIN
+name|FIRSTOPEN
 decl_stmt|;
 end_decl_stmt
 
@@ -8912,7 +8898,7 @@ if|if
 condition|(
 name|fin
 operator|==
-name|STDIN
+name|FIRSTOPEN
 condition|)
 block|{
 if|if
