@@ -947,9 +947,12 @@ if|if
 condition|(
 name|IN_CLASSA
 argument_list|(
+name|ntohl
+argument_list|(
 name|myip
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 name|nmask
@@ -964,9 +967,12 @@ if|if
 condition|(
 name|IN_CLASSB
 argument_list|(
+name|ntohl
+argument_list|(
 name|myip
 operator|.
 name|s_addr
+argument_list|)
 argument_list|)
 condition|)
 name|nmask
