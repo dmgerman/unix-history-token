@@ -142,16 +142,7 @@ name|id
 decl_stmt|;
 name|id
 operator|=
-operator|(
-name|pci_get_vendor
-argument_list|(
-name|dev
-argument_list|)
-operator|<<
-literal|16
-operator|)
-operator||
-name|pci_get_device
+name|pci_get_devid
 argument_list|(
 name|dev
 argument_list|)

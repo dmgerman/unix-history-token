@@ -14,154 +14,154 @@ begin_define
 define|#
 directive|define
 name|FW_VENDORID_NEC
-value|(0x1033<< 16)
+value|0x1033
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_TI
-value|(0x104c<< 16)
+value|0x104c
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_SONY
-value|(0x104d<< 16)
+value|0x104d
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_VIA
-value|(0x1106<< 16)
+value|0x1106
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_RICOH
-value|(0x1180<< 16)
+value|0x1180
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_APPLE
-value|(0x106b<< 16)
+value|0x106b
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_VENDORID_LUCENT
-value|(0x11c1<< 16)
+value|0x11c1
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_UPD861
-value|0x0063
+value|(0x0063<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_UPD871
-value|0x00ce
+value|(0x00ce<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TITSB22
-value|0x8009
+value|(0x8009<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TITSB23
-value|0x8019
+value|(0x8019<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TITSB26
-value|0x8020
+value|(0x8020<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TITSB43
-value|0x8021
+value|(0x8021<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TITSB43A
-value|0x8023
+value|(0x8023<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TIPCI4450
-value|0x8011
+value|(0x8011<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_TIPCI4410A
-value|0x8017
+value|(0x8017<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_CX3022
-value|0x8039
+value|(0x8039<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_VT6306
-value|0x3044
+value|(0x3044<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_R5C552
-value|0x0552
+value|(0x0552<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_PANGEA
-value|0x0030
+value|(0x0030<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_UNINORTH
-value|0x0031
+value|(0x0031<< 16)
 end_define
 
 begin_define
 define|#
 directive|define
 name|FW_DEVICE_FW322
-value|0x5811
+value|(0x5811<< 16)
 end_define
 
 begin_define
