@@ -1,6 +1,67 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.16	82/10/21	*/
+comment|/*	proc.h	4.17	82/10/31	*/
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_comment
+comment|/* GROT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|QUOTA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|QUOTA
+end_define
+
+begin_comment
+comment|/* GROT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MUSH
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MUSH
+end_define
+
+begin_comment
+comment|/* GROT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GROT */
 end_comment
 
 begin_include
@@ -106,7 +167,7 @@ name|short
 name|p_ppid
 decl_stmt|;
 comment|/* process id of parent */
-name|short
+name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* Exit status for wait */
@@ -690,6 +751,17 @@ end_define
 
 begin_comment
 comment|/* a login process (legit child of init) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPTECHG
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* pte's for process have changed */
 end_comment
 
 end_unit
