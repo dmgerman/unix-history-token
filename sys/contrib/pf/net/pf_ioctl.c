@@ -11309,6 +11309,8 @@ expr_stmt|;
 if|if
 condition|(
 name|ifp
+operator|!=
+name|NULL
 condition|)
 name|psp
 operator|->
