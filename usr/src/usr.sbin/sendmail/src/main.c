@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.85 (Berkeley) %G%"
+literal|"@(#)main.c	8.55.1.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2836,6 +2836,11 @@ case|case
 literal|'X'
 case|:
 comment|/* traffic log file */
+name|setgid
+argument_list|(
+name|RealGid
+argument_list|)
+expr_stmt|;
 name|setuid
 argument_list|(
 name|RealUid
