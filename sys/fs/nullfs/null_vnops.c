@@ -151,7 +151,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
@@ -2346,7 +2345,6 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|vnode
 modifier|*
