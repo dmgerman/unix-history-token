@@ -113,7 +113,7 @@ name|pci_device
 name|pcic_pci_driver
 init|=
 block|{
-literal|"pcic"
+literal|"pcic-pci"
 block|,
 name|pcic_pci_probe
 block|,
