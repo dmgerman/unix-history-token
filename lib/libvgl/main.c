@@ -421,7 +421,11 @@ begin_function
 specifier|static
 name|void
 name|VGLAbort
-parameter_list|()
+parameter_list|(
+name|int
+name|arg
+name|__unused
+parameter_list|)
 block|{
 name|VGLAbortPending
 operator|=
@@ -469,7 +473,11 @@ begin_function
 specifier|static
 name|void
 name|VGLSwitch
-parameter_list|()
+parameter_list|(
+name|int
+name|arg
+name|__unused
+parameter_list|)
 block|{
 if|if
 condition|(
