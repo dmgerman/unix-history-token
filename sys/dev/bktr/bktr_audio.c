@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_audio : This deals with controlling the audio on TV cards,  *                controlling the Audio Multiplexer (audio source selector).  *                controlling any MSP34xx stereo audio decoders.  *                initialising TDA98xx audio devices.  *  */
+comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_audio : This deals with controlling the audio on TV cards,  *                controlling the Audio Multiplexer (audio source selector).  *                controlling any MSP34xx stereo audio decoders.  *                controlling any DPL35xx dolby surroud sound audio decoders.      *                initialising TDA98xx audio devices.  *  */
 end_comment
 
 begin_comment
@@ -170,9 +170,31 @@ name|card
 operator|.
 name|msp3400c
 condition|)
-name|msp_reset
+name|msp_dpl_reset
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
+argument_list|)
+expr_stmt|;
+comment|/* reset the DPL35xx dolby audio chip */
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+name|msp_dpl_reset
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1248,9 +1270,13 @@ literal|0
 decl_stmt|;
 name|rev1
 operator|=
-name|msp_read
+name|msp_dpl_read
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1259,9 +1285,13 @@ argument_list|)
 expr_stmt|;
 name|rev2
 operator|=
-name|msp_read
+name|msp_dpl_read
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1341,9 +1371,13 @@ literal|0
 condition|)
 block|{
 comment|/* For MSP3430G - countries with mono and DBX stereo */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x10
 argument_list|,
@@ -1353,9 +1387,13 @@ literal|0x2003
 argument_list|)
 expr_stmt|;
 comment|/* Enable Auto format detection */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x10
 argument_list|,
@@ -1365,9 +1403,13 @@ literal|0x0020
 argument_list|)
 expr_stmt|;
 comment|/* Standard Select Reg. = BTSC-Stereo*/
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1377,9 +1419,13 @@ literal|0x2403
 argument_list|)
 expr_stmt|;
 comment|/* darned if I know */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1390,9 +1436,13 @@ argument_list|)
 expr_stmt|;
 comment|/* Source select = (St or A) */
 comment|/*& Ch. Matrix = St */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1406,9 +1456,13 @@ block|}
 else|else
 block|{
 comment|/* For MSP3410 / 3415 - countries with mono, stereo using 2 FM channels        and NICAM */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x12
 argument_list|,
@@ -1418,9 +1472,13 @@ literal|0x7300
 argument_list|)
 expr_stmt|;
 comment|/* Set volume to 0db gain */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x10
 argument_list|,
@@ -1430,9 +1488,13 @@ literal|0x0001
 argument_list|)
 expr_stmt|;
 comment|/* Enable Auto format detection */
-name|msp_write
+name|msp_dpl_write
 argument_list|(
 name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|msp_addr
 argument_list|,
 literal|0x10
 argument_list|,
@@ -1445,7 +1507,234 @@ comment|/* Auto selection of NICAM/MONO mode */
 block|}
 comment|/* uncomment the following line to enable the MSP34xx 1Khz Tone Generator */
 comment|/* turn your speaker volume down low before trying this */
-comment|/* msp_write(bktr, 0x12, 0x0014, 0x7f40); */
+comment|/* msp_dpl_write(bktr, bktr->msp_addr, 0x12, 0x0014, 0x7f40); */
+block|}
+end_function
+
+begin_comment
+comment|/* Read the DPL version string */
+end_comment
+
+begin_function
+name|void
+name|dpl_read_id
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+block|{
+name|int
+name|rev1
+init|=
+literal|0
+decl_stmt|,
+name|rev2
+init|=
+literal|0
+decl_stmt|;
+name|rev1
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x001e
+argument_list|)
+expr_stmt|;
+name|rev2
+operator|=
+name|msp_dpl_read
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x001f
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|bktr
+operator|->
+name|dpl_version_string
+argument_list|,
+literal|"34%02d%c-%c%d"
+argument_list|,
+operator|(
+operator|(
+name|rev2
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|-
+literal|1
+argument_list|,
+operator|(
+name|rev1
+operator|&
+literal|0xff
+operator|)
+operator|+
+literal|'@'
+argument_list|,
+operator|(
+operator|(
+name|rev1
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0xff
+operator|)
+operator|+
+literal|'@'
+argument_list|,
+name|rev2
+operator|&
+literal|0x1f
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Configure the DPL chip to Auto-detect the audio format */
+end_comment
+
+begin_function
+name|void
+name|dpl_autodetect
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+block|{
+comment|/* The following are empiric values tried from the DPL35xx data sheet */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x000c
+argument_list|,
+literal|0x0320
+argument_list|)
+expr_stmt|;
+comment|/* quasi peak detector source dolby 								lr 0x03xx; quasi peak detector matrix 								stereo 0xXX20 */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0040
+argument_list|,
+literal|0x0060
+argument_list|)
+expr_stmt|;
+comment|/* Surround decoder mode; 								ADAPTIVE/3D-PANORAMA, that means two 								speakers and no center speaker, all 								channels L/R/C/S mixed to L and R */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0041
+argument_list|,
+literal|0x0620
+argument_list|)
+expr_stmt|;
+comment|/* surround source matrix;I2S2/STEREO*/
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0042
+argument_list|,
+literal|0x1F00
+argument_list|)
+expr_stmt|;
+comment|/* surround delay 31ms max */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0043
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
+comment|/* automatic surround input balance */
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0044
+argument_list|,
+literal|0x4000
+argument_list|)
+expr_stmt|;
+comment|/* surround spatial effect 50% 								recommended*/
+name|msp_dpl_write
+argument_list|(
+name|bktr
+argument_list|,
+name|bktr
+operator|->
+name|dpl_addr
+argument_list|,
+literal|0x12
+argument_list|,
+literal|0x0045
+argument_list|,
+literal|0x5400
+argument_list|)
+expr_stmt|;
+comment|/* surround panorama effect 66% 								recommended with PANORAMA mode 								in 0x0040 set to panorama */
 block|}
 end_function
 

@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_audio : This deals with controlling the audio on TV cards,  *                controlling the Audio Multiplexer (audio source selector).  *                controlling any MSP34xx stereo audio decoders.  *                initialising TDA98xx audio devices.  *  */
+comment|/*  * This is part of the Driver for Video Capture Cards (Frame grabbers)  * and TV Tuner cards using the Brooktree Bt848, Bt848A, Bt849A, Bt878, Bt879  * chipset.  * Copyright Roger Hardiman and Amancio Hasty.  *  * bktr_audio : This deals with controlling the audio on TV cards,  *                controlling the Audio Multiplexer (audio source selector).  *                controlling any MSP34xx stereo audio decoders.  *                controlling any DPL35xx dolby surroud sound audio decoders.  *                initialising TDA98xx audio devices.  *  */
 end_comment
 
 begin_comment
@@ -72,6 +72,30 @@ end_function_decl
 begin_function_decl
 name|void
 name|msp_read_id
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * DPL35xx Audio Chip functions.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dpl_autodetect
+parameter_list|(
+name|bktr_ptr_t
+name|bktr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dpl_read_id
 parameter_list|(
 name|bktr_ptr_t
 name|bktr

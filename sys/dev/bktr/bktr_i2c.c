@@ -497,6 +497,56 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|<
+literal|400000
+operator|)
+end_if
+
+begin_comment
+comment|/* FreeBSD 3.x needs DRIVER_TYPE_MISC */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|driver_t
+name|bti2c_driver
+init|=
+block|{
+literal|"bti2c"
+block|,
+name|bti2c_methods
+block|,
+name|DRIVER_TYPE_MISC
+block|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|bti2c_softc
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|400000
+operator|)
+end_if
+
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -515,6 +565,11 @@ argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Call this to pass the base address of the bktr device to the  * bti2c_i2c layer and initialize all the I2C bus architecture  */

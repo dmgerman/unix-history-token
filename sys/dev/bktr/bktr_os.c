@@ -4768,7 +4768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * bktr_mmap.  * Note: 2.2.5/2.2.6/2.2.7/3.0 users must manually  * edit the following line and change  "vm_offset_t" to "int""  */
+comment|/*  * bktr_mmap.  * Note: 2.2.5/2.2.6/2.2.7/3.0 users must manually  * edit the line below and change  "vm_offset_t" to "int"  */
 end_comment
 
 begin_function

@@ -1648,6 +1648,10 @@ name|msp3400c
 decl_stmt|;
 comment|/* Has msp3400c chip? */
 name|u_char
+name|dpl3518a
+decl_stmt|;
+comment|/* Has dpl3518a chip? */
+name|u_char
 name|eepromAddr
 decl_stmt|;
 name|u_char
@@ -2499,6 +2503,17 @@ name|int
 name|msp_addr
 decl_stmt|;
 comment|/* MSP i2c address */
+name|char
+name|dpl_version_string
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* DPL version string 35xxx-xx */
+name|int
+name|dpl_addr
+decl_stmt|;
+comment|/* DPL i2c address */
 block|}
 struct|;
 end_struct

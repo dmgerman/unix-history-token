@@ -166,6 +166,24 @@ value|0x81
 end_define
 
 begin_comment
+comment|/* address of DPL3518A chip */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPL3518A_WADDR
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPL3518A_RADDR
+value|0x85
+end_define
+
+begin_comment
 comment|/* EEProm (128 * 8) on an STB card */
 end_comment
 
@@ -270,6 +288,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm unknown */
 literal|0
 block|,
@@ -306,6 +326,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx unknown */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -347,6 +369,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -395,6 +419,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|X24C01_WADDR
@@ -448,6 +474,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 block|{
 literal|0
 block|,
@@ -481,6 +509,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -533,6 +563,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -540,17 +572,17 @@ comment|/* EEProm size */
 block|{
 literal|0x0c
 block|,
+literal|0x08
+block|,
+literal|0x04
+block|,
 literal|0x00
-block|,
-literal|0x0b
-block|,
-literal|0x0b
 block|,
 literal|1
 block|}
 block|,
 comment|/* audio MUX values */
-literal|0x0f
+literal|0x1f
 block|}
 block|,
 comment|/* GPIO mask */
@@ -570,6 +602,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 name|PFC8582_WADDR
@@ -622,6 +656,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -659,6 +695,8 @@ comment|/* the tuner i2c address */
 literal|0
 block|,
 comment|/* dbx is optional */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -703,6 +741,9 @@ comment|/* dbx is optional */
 literal|0
 block|,
 comment|/* msp34xx is optional */
+literal|0
+block|,
+comment|/* dpl3518a is optional */
 literal|0xac
 block|,
 comment|/* EEProm type */
@@ -754,6 +795,9 @@ block|,
 comment|/* msp34xx is optional */
 literal|0
 block|,
+comment|/* dpl3518a is optional */
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -796,6 +840,9 @@ block|,
 comment|/* msp34xx is optional */
 literal|0
 block|,
+comment|/* dpl3518a is optional */
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -827,6 +874,8 @@ comment|/* the 'name' */
 name|NULL
 block|,
 comment|/* the tuner */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -874,6 +923,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 comment|/* EEProm type */
 literal|0
 block|,
@@ -905,6 +956,8 @@ comment|/* the 'name' */
 name|NULL
 block|,
 comment|/* the tuner */
+literal|0
+block|,
 literal|0
 block|,
 literal|0
@@ -4087,6 +4140,45 @@ name|msp_addr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Check for Dolby Surround Sound DPL3518A sound chip */
+if|if
+condition|(
+name|i2cRead
+argument_list|(
+name|bktr
+argument_list|,
+name|DPL3518A_RADDR
+argument_list|)
+operator|!=
+name|ABSENT
+condition|)
+block|{
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+block|{
+name|bktr
+operator|->
+name|dpl_addr
+operator|=
+name|DPL3518A_WADDR
+expr_stmt|;
+comment|/*		dpl_read_id( bktr ); 		printf("bktr%d: Detected a DPL%s at 0x%x\n", unit, 				bktr->dpl_version_string, 				bktr->dpl_addr); */
+block|}
 comment|/* Start of Check Remote */
 comment|/* Check for the Hauppauge IR Remote Control */
 comment|/* If there is an external unit, the internal will be ignored */
@@ -4241,102 +4333,9 @@ name|BT848_USE_PLL
 expr_stmt|;
 comment|/* Most (perhaps all) Bt878 cards need to be switched to PLL mode */
 comment|/* as they only fit the NTSC crystal to their cards */
-comment|/* Enable PLL mode for PAL/SECAM users on Hauppauge 878 cards */
+comment|/* Default to enabling PLL mode for all Bt878/879 cards */
 if|if
 condition|(
-operator|(
-name|card
-operator|==
-name|CARD_HAUPPAUGE
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for PAL/SECAM users on FlyVideo 878 cards */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_FLYVIDEO
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for Askey Dynalink users */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_ASKEY_DYNALINK_MAGIC_TVIEW
-operator|)
-operator|&&
-operator|(
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_878
-operator|||
-name|bktr
-operator|->
-name|id
-operator|==
-name|BROOKTREE_879
-operator|)
-condition|)
-name|bktr
-operator|->
-name|xtal_pll_mode
-operator|=
-name|BT848_USE_PLL
-expr_stmt|;
-comment|/* Enable PLL mode for Leadtek users */
-if|if
-condition|(
-operator|(
-name|card
-operator|==
-name|CARD_LEADTEK
-operator|)
-operator|&&
 operator|(
 name|bktr
 operator|->
@@ -4436,6 +4435,19 @@ condition|)
 name|printf
 argument_list|(
 literal|", msp3400c stereo"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bktr
+operator|->
+name|card
+operator|.
+name|dpl3518a
+condition|)
+name|printf
+argument_list|(
+literal|", dpl3518a dolby"
 argument_list|)
 expr_stmt|;
 if|if
