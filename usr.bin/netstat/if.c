@@ -2350,6 +2350,7 @@ operator|.
 name|ifma_refcount
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 comment|/* INET6 */
@@ -2358,9 +2359,11 @@ name|AF_LINK
 case|:
 switch|switch
 condition|(
-name|ifnet
+name|msa
 operator|.
-name|if_type
+name|dl
+operator|.
+name|sdl_type
 condition|)
 block|{
 case|case
