@@ -89,6 +89,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_POSIX_SOURCE
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/_timespec.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
 end_ifdef
 
@@ -311,18 +328,6 @@ name|timespec
 name|st_createtimespec
 decl_stmt|;
 comment|/* time of file creation */
-else|#
-directive|else
-name|time_t
-name|st_createtime
-decl_stmt|;
-comment|/* time of file creation */
-name|long
-name|st_createtimensec
-decl_stmt|;
-comment|/* nsec of file creation */
-endif|#
-directive|endif
 comment|/* 	 * Explicitly pad st_createtimespec to 16 bytes so that the size of 	 * struct stat is backwards compatible.  We use bitfields instead 	 * of an array of chars so that this doesn't require a C99 compiler 	 * to compile if the size of the padding is 0.  We use 2 bitfields 	 * to cover up to 64 bits on 32-bit machines.  We assume that 	 * CHAR_BIT is 8... 	 */
 name|int
 label|:
@@ -366,6 +371,60 @@ name|timespec
 argument_list|)
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|time_t
+name|st_createtime
+decl_stmt|;
+comment|/* time of file creation */
+name|long
+name|st_createtimensec
+decl_stmt|;
+comment|/* nsec of file creation */
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|__timespec
+argument_list|)
+operator|)
+expr_stmt|;
+name|int
+label|:
+operator|(
+literal|8
+operator|/
+literal|2
+operator|)
+operator|*
+operator|(
+literal|16
+operator|-
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|__timespec
+argument_list|)
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
