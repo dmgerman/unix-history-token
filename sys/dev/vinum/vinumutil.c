@@ -608,7 +608,7 @@ comment|/* found it */
 return|return
 operator|(
 expr|enum
-name|volstate
+name|volumestate
 operator|)
 name|i
 return|;
