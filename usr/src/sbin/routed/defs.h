@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.11	82/11/02	*/
+comment|/*	defs.h	4.12	82/11/14	*/
 end_comment
 
 begin_comment
@@ -22,13 +22,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/in.h>
+file|<net/route.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/route.h>
+file|<netinet/in.h>
 end_include
 
 begin_include
