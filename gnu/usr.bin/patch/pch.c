@@ -349,7 +349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Open the patch file at the beginning of time. */
+comment|/*  * Open the patch file at the beginning of time.  */
 end_comment
 
 begin_function
@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Make sure our dynamically realloced tables are malloced to begin with. */
+comment|/*  * Make sure our dynamically realloced tables are malloced to begin with.  */
 end_comment
 
 begin_function
@@ -591,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Enlarge the arrays containing the current hunk of patch. */
+comment|/*  * Enlarge the arrays containing the current hunk of patch.  */
 end_comment
 
 begin_function
@@ -605,7 +605,7 @@ name|hunkmax
 operator|*=
 literal|2
 expr_stmt|;
-comment|/*      * Note that on most systems, only the p_line array ever gets fresh memory      * since p_len can move into p_line's old space, and p_Char can move into      * p_len's old space.  Not on PDP-11's however.  But it doesn't matter.      */
+comment|/* 	 * Note that on most systems, only the p_line array ever gets 	 * fresh memory since p_len can move into p_line's old space, 	 * and p_Char can move into p_len's old space.  Not on PDP-11's 	 * however.  But it doesn't matter. 	 */
 name|assert
 argument_list|(
 name|p_line
@@ -1748,8 +1748,7 @@ name|ok_to_create_file
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* if this is a new context diff the character just before */
-comment|/* the newline is a '*'. */
+comment|/* 			 * If this is a new context diff the character just 			 * before the newline is a '*'. 			 */
 while|while
 condition|(
 operator|*
@@ -2372,7 +2371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Make this a function for better debugging.  */
+comment|/*  * Make this a function for better debugging.  */
 end_comment
 
 begin_function
@@ -2473,7 +2472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* True if there is more of the current diff listing to process. */
+comment|/*  * True if there is more of the current diff listing to process.  */
 end_comment
 
 begin_function
@@ -4880,7 +4879,7 @@ name|ch
 operator|=
 literal|' '
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 literal|' '
 case|:
@@ -4986,7 +4985,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 literal|'+'
 case|:

@@ -120,7 +120,7 @@ comment|/* !HAVE_STRERROR */
 end_comment
 
 begin_comment
-comment|/* Rename a file, copying it if necessary. */
+comment|/*  * Rename a file, copying it if necessary.  */
 end_comment
 
 begin_function
@@ -394,7 +394,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-comment|/* Find a backup name that is not the same file. 	   Change the first lowercase char into uppercase; 	   if that isn't sufficient, chop off the first char and try again.  */
+comment|/* 		 * Find a backup name that is not the same file. 		 * Change the first lowercase char into uppercase; 		 * if that isn't sufficient, chop off the first char 		 * and try again. 		 */
 while|while
 condition|(
 name|stat
@@ -700,7 +700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy a file. */
+comment|/*  * Copy a file.  */
 end_comment
 
 begin_function
@@ -824,7 +824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Allocate a unique area for a string. */
+comment|/*  * Allocate a unique area for a string.  */
 end_comment
 
 begin_function
@@ -1045,7 +1045,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Vanilla terminal output (buffered). */
+comment|/*  * Vanilla terminal output (buffered).  */
 end_comment
 
 begin_function
@@ -1094,7 +1094,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Terminal output, pun intended. */
+comment|/*  * Terminal output, pun intended.  */
 end_comment
 
 begin_function
@@ -1151,7 +1151,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Say something from patch, something from the system, then silence . . . */
+comment|/*  * Say something from patch, something from the system, then silence...  */
 end_comment
 
 begin_function
@@ -1225,7 +1225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get a response from the user, somehow or other. */
+comment|/*  * Get a response from the user, somehow or other.  */
 end_comment
 
 begin_function
@@ -1533,7 +1533,7 @@ comment|/* lint */
 end_comment
 
 begin_comment
-comment|/* How to handle certain events when not in a critical region. */
+comment|/*  * How to handle certain events when not in a critical region.  */
 end_comment
 
 begin_function
@@ -1640,7 +1640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* How to handle certain events when in a critical region. */
+comment|/*  * How to handle certain events when in a critical region.  */
 end_comment
 
 begin_function
@@ -1673,7 +1673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Make sure we'll have the directories to create a file.    If `striplast' is TRUE, ignore the last element of `filename'.  */
+comment|/*  * Make sure we'll have the directories to create a file.  * If `striplast' is TRUE, ignore the last element of `filename'.  */
 end_comment
 
 begin_function
@@ -1725,7 +1725,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* Number of finished entries in dirv. */
-comment|/* Copy `filename' into `tmpbuf' with a NUL instead of a slash        between the directories.  */
+comment|/* 	 * Copy `filename' into `tmpbuf' with a NUL instead of a slash 	 * between the directories. 	 */
 while|while
 condition|(
 operator|*
@@ -1886,7 +1886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Make filenames more reasonable. */
+comment|/*  * Make filenames more reasonable.  */
 end_comment
 
 begin_function
@@ -1988,11 +1988,10 @@ operator|-
 literal|1
 argument_list|)
 condition|)
-comment|/* so files can be created by diffing */
+comment|/* So files can be created by diffing against /dev/null. */
 return|return
 name|Nullch
 return|;
-comment|/*   against /dev/null. */
 name|name
 operator|=
 name|fullname
@@ -2004,7 +2003,7 @@ argument_list|(
 name|at
 argument_list|)
 expr_stmt|;
-comment|/* Strip off up to `sleading' leading slashes and null terminate.  */
+comment|/* Strip off up to `sleading' leading slashes and null terminate. */
 for|for
 control|(
 init|;
@@ -2050,7 +2049,7 @@ name|t
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* If no -p option was given (957 is the default value!),        we were given a relative pathname,        and the leading directories that we just stripped off all exist,        put them back on.  */
+comment|/* 	 * If no -p option was given (957 is the default value!), 	 * we were given a relative pathname, 	 * and the leading directories that we just stripped off all exist, 	 * put them back on.  	 */
 if|if
 condition|(
 name|strip_leading
@@ -2151,7 +2150,7 @@ name|filebase
 operator|-
 name|name
 decl_stmt|;
-comment|/* Put any leading path into `tmpbuf'.  */
+comment|/* Put any leading path into `tmpbuf'. */
 name|strncpy
 argument_list|(
 name|tmpbuf
@@ -2171,6 +2170,7 @@ name|a1
 parameter_list|,
 name|a2
 parameter_list|)
+define|\
 value|(Sprintf(tmpbuf + pathlen, f, a1, a2), stat(tmpbuf,&filestat) == 0)
 if|if
 condition|(

@@ -40,7 +40,7 @@ file|"inp.h"
 end_include
 
 begin_comment
-comment|/* Input-file-with-indexable-lines abstract type */
+comment|/* Input-file-with-indexable-lines abstract type. */
 end_comment
 
 begin_decl_stmt
@@ -51,7 +51,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of the input file */
+comment|/* Size of the input file */
 end_comment
 
 begin_decl_stmt
@@ -63,7 +63,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* plan a buffer for entire file */
+comment|/* Plan a buffer for entire file */
 end_comment
 
 begin_decl_stmt
@@ -76,7 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* pointers to lines in i_womp */
+comment|/* Pointers to lines in i_womp */
 end_comment
 
 begin_decl_stmt
@@ -90,7 +90,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* plan b virtual string array */
+comment|/* Plan b virtual string array */
 end_comment
 
 begin_decl_stmt
@@ -105,7 +105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* plan b buffers */
+comment|/* Plan b buffers */
 end_comment
 
 begin_decl_stmt
@@ -138,7 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* how many lines per buffer */
+comment|/* How many lines per buffer */
 end_comment
 
 begin_decl_stmt
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* length of records in tmp file */
+comment|/* Length of records in tmp file */
 end_comment
 
 begin_comment
@@ -463,7 +463,7 @@ name|filename
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* For nonexistent or read-only files, look for RCS or SCCS versions.  */
+comment|/* 	 * For nonexistent or read-only files, look for RCS or SCCS 	 * versions. 	 */
 if|if
 condition|(
 name|statfailed
@@ -473,7 +473,7 @@ operator|!
 name|output_elsewhere
 operator|&&
 operator|(
-comment|/* No one can write to it.  */
+comment|/* No one can write to it. */
 operator|(
 name|filestat
 operator|.
@@ -483,8 +483,8 @@ literal|0222
 operator|)
 operator|==
 literal|0
-comment|/* I can't write to it.  */
 operator|||
+comment|/* I can't write to it. */
 operator|(
 operator|(
 name|filestat
@@ -536,7 +536,7 @@ name|filebase
 operator|-
 name|filename
 expr_stmt|;
-comment|/* Put any leading path into `s'. 	   Leave room in lbuf for the diff command.  */
+comment|/* 		 * Put any leading path into `s'. 		 * Leave room in lbuf for the diff command. 		 */
 name|s
 operator|=
 name|lbuf
@@ -594,7 +594,7 @@ name|RCSSUFFIX
 argument_list|)
 operator|)
 operator|&&
-comment|/* Check that RCS file is not working file. 	       Some hosts don't report file name length errors.  */
+comment|/* 		     * Check that RCS file is not working file. 		     * Some hosts don't report file name length errors. 		     */
 operator|(
 name|statfailed
 operator|||
@@ -712,7 +712,7 @@ argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
-comment|/* else we can't write to it but it's not under a version 	   control system, so just proceed.  */
+comment|/* 		 * else we can't write to it but it's not under a version 		 * control system, so just proceed. 		 */
 if|if
 condition|(
 name|cs
@@ -746,7 +746,7 @@ argument_list|,
 name|cs
 argument_list|)
 expr_stmt|;
-comment|/* It might be checked out unlocked.  See if it's safe to 		   check out the default version locked.  */
+comment|/* 				 * It might be checked out unlocked.  See if 				 * it's safe to check out the default version 				 * locked. 				 */
 if|if
 condition|(
 name|verbose
@@ -870,6 +870,7 @@ name|Nullch
 expr_stmt|;
 else|#
 directive|else
+comment|/* 	 * Lint says this may alloc less than i_size, 	 * but that's okay, I think. 	 */
 name|i_womp
 operator|=
 name|malloc
@@ -884,8 +885,6 @@ literal|2
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* lint says this may alloc less than */
-comment|/* i_size, but that's okay, I think. */
 endif|#
 directive|endif
 if|if
@@ -939,22 +938,20 @@ operator|!=
 name|i_size
 condition|)
 block|{
+comment|/* 		 * This probably means i_size> 15 or 16 bits worth.  At 		 * this point it doesn't matter if i_womp was undersized. 		 */
 name|Close
 argument_list|(
 name|ifd
 argument_list|)
 expr_stmt|;
-comment|/* probably means i_size> 15 or 16 bits worth */
 name|free
 argument_list|(
 name|i_womp
 argument_list|)
 expr_stmt|;
-comment|/* at this point it doesn't matter if i_womp was */
 return|return
 name|FALSE
 return|;
-comment|/*   undersized. */
 block|}
 endif|#
 directive|endif
@@ -991,7 +988,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* count the lines in the buffer so we know how many pointers we need */
+comment|/* 	 * Count the lines in the buffer so we know how many pointers we 	 * need. 	 */
 name|iline
 operator|=
 literal|0
@@ -1089,7 +1086,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* now scan the buffer and build pointer array */
+comment|/* Now scan the buffer and build pointer array. */
 name|iline
 operator|=
 literal|1
@@ -1121,6 +1118,8 @@ name|s
 operator|==
 literal|'\n'
 condition|)
+block|{
+comment|/* These are NOT null terminated. */
 name|i_ptr
 index|[
 operator|++
@@ -1131,7 +1130,7 @@ name|s
 operator|+
 literal|1
 expr_stmt|;
-comment|/* these are NOT null terminated */
+block|}
 block|}
 name|input_lines
 operator|=
@@ -1139,7 +1138,7 @@ name|iline
 operator|-
 literal|1
 expr_stmt|;
-comment|/* now check for revision, if any */
+comment|/* Now check for revision, if any. */
 if|if
 condition|(
 name|revision
@@ -1229,7 +1228,7 @@ block|}
 return|return
 name|TRUE
 return|;
-comment|/* plan a will work */
+comment|/* Plan a will work. */
 block|}
 end_function
 
@@ -1371,7 +1370,7 @@ name|maxlen
 operator|=
 name|i
 expr_stmt|;
-comment|/* find longest line */
+comment|/* Find longest line. */
 block|}
 if|if
 condition|(
@@ -1465,7 +1464,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* rewind file */
+comment|/* Rewind file. */
 name|lines_per_buf
 operator|=
 name|BUFFERSIZE
@@ -1544,7 +1543,7 @@ operator|%
 name|lines_per_buf
 operator|)
 condition|)
-comment|/* new block */
+comment|/* New block. */
 if|if
 condition|(
 name|write
