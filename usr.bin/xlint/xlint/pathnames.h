@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|PATH_LIBEXEC
-value|"/usr/libexec"
+value|PREFIX"/usr/libexec"
 end_define
 
 begin_endif
@@ -37,18 +37,7 @@ begin_define
 define|#
 directive|define
 name|PATH_USRBIN
-value|"/usr/bin"
-end_define
-
-begin_comment
-comment|/* directory where cc(1) resides */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PATH_USRBIN
-value|"/usr/bin"
+value|PREFIX"/usr/bin"
 end_define
 
 begin_comment
@@ -59,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|PATH_LINTLIB
-value|"/usr/libdata/lint"
+value|PREFIX"/usr/libdata/lint"
 end_define
 
 end_unit
