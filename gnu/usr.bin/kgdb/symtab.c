@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  * Modified 1990 by Van Jacobson at Lawrence Berkeley Laboratory.  *  * $Header: /home/cvs/386BSD/src/usr.bin/gdb/symtab.c,v 1.1.1.1 1993/06/12 14:52:20 rgrimes Exp $;  */
+comment|/*-  * This code is derived from software copyrighted by the Free Software  * Foundation.  *  * Modified 1991 by Donn Seeley at UUNET Technologies, Inc.  * Modified 1990 by Van Jacobson at Lawrence Berkeley Laboratory.  *  * $Header: /a/cvs/386BSD/src/gnu/gdb/symtab.c,v 1.1 1993/06/29 09:47:40 nate Exp $;  */
 end_comment
 
 begin_ifndef
@@ -47,13 +47,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"symtab.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"symtab.h"
 end_include
 
 begin_include

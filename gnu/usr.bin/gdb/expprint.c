@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"symtab.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|"symtab.h"
 end_include
 
 begin_include
