@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)saioctl.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)saioctl.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -76,8 +76,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SAIORETRIES
+name|SAIOECCUNL
 value|(('d'<<8)|7)
+end_define
+
+begin_comment
+comment|/* use standard ecc procedures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIORETRIES
+value|(('d'<<8)|8)
 end_define
 
 begin_comment
@@ -88,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|SAIODEVDATA
-value|(('d'<<8)|8)
+value|(('d'<<8)|9)
 end_define
 
 begin_comment
@@ -99,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|SAIOSSI
-value|(('d'<<8)|9)
+value|(('d'<<8)|10)
 end_define
 
 begin_comment
@@ -110,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|SAIONOSSI
-value|(('d'<<8)|10)
+value|(('d'<<8)|11)
 end_define
 
 begin_comment
@@ -121,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|SAIOSSDEV
-value|(('d'<<8)|11)
+value|(('d'<<8)|12)
 end_define
 
 begin_comment
@@ -132,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|SAIODEBUG
-value|(('d'<<8)|12)
+value|(('d'<<8)|13)
 end_define
 
 begin_comment
@@ -143,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|SAIOGBADINFO
-value|(('d'<<8)|13)
+value|(('d'<<8)|14)
 end_define
 
 begin_comment
