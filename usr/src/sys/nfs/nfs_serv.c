@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5029,6 +5029,11 @@ specifier|register
 name|long
 name|t1
 decl_stmt|;
+name|struct
+name|nfsv2_sattr
+modifier|*
+name|sp
+decl_stmt|;
 name|caddr_t
 name|bpos
 decl_stmt|;
@@ -5219,6 +5224,17 @@ argument_list|,
 name|len2
 argument_list|)
 expr_stmt|;
+name|nfsm_disect
+argument_list|(
+name|sp
+argument_list|,
+expr|struct
+name|nfsv2_sattr
+operator|*
+argument_list|,
+name|NFSX_SATTR
+argument_list|)
+expr_stmt|;
 operator|*
 operator|(
 name|pathcp
@@ -5289,7 +5305,14 @@ name|vap
 operator|->
 name|va_mode
 operator|=
-literal|0777
+name|fxdr_unsigned
+argument_list|(
+name|u_short
+argument_list|,
+name|sp
+operator|->
+name|sa_mode
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
