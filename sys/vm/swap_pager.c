@@ -6870,18 +6870,18 @@ argument_list|(
 name|nblks
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do not free the first block in order to avoid overwriting 	 * any bsd label at the front of the partition 	 */
+comment|/* 	 * Do not free the first two block in order to avoid overwriting 	 * any bsd label at the front of the partition 	 */
 name|blist_free
 argument_list|(
 name|sp
 operator|->
 name|sw_blist
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|nblks
 operator|-
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
