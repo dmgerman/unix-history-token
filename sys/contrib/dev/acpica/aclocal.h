@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 197 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 189 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -158,15 +158,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX_MUTEX
+name|MAX_MTX
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUM_MUTEX
-value|MAX_MUTEX+1
+name|NUM_MTX
+value|MAX_MTX+1
 end_define
 
 begin_if
@@ -317,14 +317,25 @@ begin_define
 define|#
 directive|define
 name|ACPI_FIRST_METHOD_ID
-value|0x0001
+value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_FIRST_TABLE_ID
-value|0xF000
+value|0x8000
+end_define
+
+begin_comment
+comment|/* TBD: [Restructure] get rid of the need for this! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TABLE_ID_DSDT
+value|(ACPI_OWNER_ID) 0x8000
 end_define
 
 begin_comment
@@ -441,7 +452,7 @@ name|acpi_namespace_node
 modifier|*
 name|Child
 decl_stmt|;
-comment|/* First child */
+comment|/* first child */
 name|struct
 name|acpi_namespace_node
 modifier|*
@@ -572,6 +583,9 @@ decl_stmt|;
 name|ACPI_SIZE
 name|Length
 decl_stmt|;
+name|UINT32
+name|Count
+decl_stmt|;
 name|ACPI_OWNER_ID
 name|TableId
 decl_stmt|;
@@ -586,24 +600,6 @@ name|LoadedIntoNamespace
 decl_stmt|;
 block|}
 name|ACPI_TABLE_DESC
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_table_list
-block|{
-name|struct
-name|acpi_table_desc
-modifier|*
-name|Next
-decl_stmt|;
-name|UINT32
-name|Count
-decl_stmt|;
-block|}
-name|ACPI_TABLE_LIST
 typedef|;
 end_typedef
 
@@ -777,7 +773,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Information about a GPE, one per each GPE in an array */
+comment|/* Information about each particular GPE level */
 end_comment
 
 begin_typedef
@@ -804,22 +800,20 @@ name|acpi_gpe_register_info
 modifier|*
 name|RegisterInfo
 decl_stmt|;
-comment|/* Backpointer to register info */
 name|UINT8
-name|Flags
+name|Type
 decl_stmt|;
 comment|/* Level or Edge */
 name|UINT8
 name|BitMask
 decl_stmt|;
-comment|/* This GPE within the register */
 block|}
 name|ACPI_GPE_EVENT_INFO
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Information about a GPE register pair, one per each status/enable pair in an array */
+comment|/* Information about a particular GPE register pair */
 end_comment
 
 begin_typedef
@@ -856,8 +850,22 @@ name|ACPI_GPE_REGISTER_INFO
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_LEVEL_TRIGGERED
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_EDGE_TRIGGERED
+value|2
+end_define
+
 begin_comment
-comment|/*  * Information about a GPE register block, one per each installed block --  * GPE0, GPE1, and one per each installed GPE Block Device.  */
+comment|/* Information about each GPE register block */
 end_comment
 
 begin_typedef
@@ -876,88 +884,30 @@ modifier|*
 name|Next
 decl_stmt|;
 name|struct
-name|acpi_gpe_xrupt_info
+name|acpi_gpe_block_info
 modifier|*
-name|XruptBlock
+name|NextOnInterrupt
 decl_stmt|;
-comment|/* Backpointer to interrupt block */
 name|ACPI_GPE_REGISTER_INFO
 modifier|*
 name|RegisterInfo
 decl_stmt|;
-comment|/* One per GPE register pair */
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|EventInfo
 decl_stmt|;
-comment|/* One for each GPE */
 name|ACPI_GENERIC_ADDRESS
 name|BlockAddress
 decl_stmt|;
-comment|/* Base address of the block */
 name|UINT32
 name|RegisterCount
 decl_stmt|;
-comment|/* Number of register pairs in block */
 name|UINT8
 name|BlockBaseNumber
 decl_stmt|;
-comment|/* Base GPE number for this block */
 block|}
 name|ACPI_GPE_BLOCK_INFO
 typedef|;
-end_typedef
-
-begin_comment
-comment|/* Information about GPE interrupt handlers, one per each interrupt level used for GPEs */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_gpe_xrupt_info
-block|{
-name|struct
-name|acpi_gpe_xrupt_info
-modifier|*
-name|Previous
-decl_stmt|;
-name|struct
-name|acpi_gpe_xrupt_info
-modifier|*
-name|Next
-decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlockListHead
-decl_stmt|;
-comment|/* List of GPE blocks for this xrupt */
-name|UINT32
-name|InterruptLevel
-decl_stmt|;
-comment|/* System interrupt level */
-block|}
-name|ACPI_GPE_XRUPT_INFO
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_GPE_CALLBACK
-function_decl|)
-parameter_list|(
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|GpeXruptInfo
-parameter_list|,
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-function_decl|;
 end_typedef
 
 begin_comment
@@ -1234,21 +1184,21 @@ name|acpi_parse_object
 modifier|*
 name|Op
 decl_stmt|;
-comment|/* Current op being parsed */
+comment|/* current op being parsed */
 name|UINT8
 modifier|*
 name|ArgEnd
 decl_stmt|;
-comment|/* Current argument end */
+comment|/* current argument end */
 name|UINT8
 modifier|*
 name|PkgEnd
 decl_stmt|;
-comment|/* Current package end */
+comment|/* current package end */
 name|UINT32
 name|ArgList
 decl_stmt|;
-comment|/* Next argument to parse */
+comment|/* next argument to parse */
 name|UINT32
 name|ArgCount
 decl_stmt|;
@@ -1513,11 +1463,23 @@ block|{
 name|ACPI_INTEGER
 name|Integer
 decl_stmt|;
-comment|/* Integer constant (Up to 64 bits) */
+comment|/* integer constant (Up to 64 bits) */
 name|UINT64_STRUCT
 name|Integer64
 decl_stmt|;
 comment|/* Structure overlay for 2 32-bit Dwords */
+name|UINT32
+name|Integer32
+decl_stmt|;
+comment|/* integer constant, 32 bits only */
+name|UINT16
+name|Integer16
+decl_stmt|;
+comment|/* integer constant, 16 bits only */
+name|UINT8
+name|Integer8
+decl_stmt|;
+comment|/* integer constant, 8 bits only */
 name|UINT32
 name|Size
 decl_stmt|;
@@ -1560,21 +1522,21 @@ comment|/* Type of Op */
 value|\     UINT16                      AmlOpcode;
 comment|/* AML opcode */
 value|\     UINT32                      AmlOffset;
-comment|/* Offset of declaration in AML */
+comment|/* offset of declaration in AML */
 value|\     union acpi_parse_object     *Parent;
-comment|/* Parent op */
+comment|/* parent op */
 value|\     union acpi_parse_object     *Next;
-comment|/* Next op */
+comment|/* next op */
 value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT8                       DisasmFlags;
 comment|/* Used during AML disassembly */
 value|\     UINT8                       DisasmOpcode;
 comment|/* Subtype used for disassembly */
 value|\     char                        AmlOpName[16])
-comment|/* Op name (debug only) */
+comment|/* op name (debug only) */
 value|\
 comment|/* NON-DEBUG members below: */
 value|\     ACPI_NAMESPACE_NODE         *Node;
-comment|/* For use by interpreter */
+comment|/* for use by interpreter */
 value|\     ACPI_PARSE_VALUE            Value;
 comment|/* Value or args associated with the opcode */
 value|\   #define ACPI_DASM_BUFFER        0x00
@@ -1797,12 +1759,12 @@ name|UINT8
 modifier|*
 name|AmlStart
 decl_stmt|;
-comment|/* First AML byte */
+comment|/* first AML byte */
 name|UINT8
 modifier|*
 name|Aml
 decl_stmt|;
-comment|/* Next AML byte */
+comment|/* next AML byte */
 name|UINT8
 modifier|*
 name|AmlEnd
@@ -1812,18 +1774,18 @@ name|UINT8
 modifier|*
 name|PkgStart
 decl_stmt|;
-comment|/* Current package begin */
+comment|/* current package begin */
 name|UINT8
 modifier|*
 name|PkgEnd
 decl_stmt|;
-comment|/* Current package end */
+comment|/* current package end */
 name|union
 name|acpi_parse_object
 modifier|*
 name|StartOp
 decl_stmt|;
-comment|/* Root of parse tree */
+comment|/* root of parse tree */
 name|struct
 name|acpi_namespace_node
 modifier|*
@@ -1834,7 +1796,7 @@ name|acpi_generic_state
 modifier|*
 name|Scope
 decl_stmt|;
-comment|/* Current scope */
+comment|/* current scope */
 name|union
 name|acpi_parse_object
 modifier|*
@@ -2471,6 +2433,33 @@ directive|define
 name|ACPI_RDESC_TYPE_QWORD_ADDRESS_SPACE
 value|0x8A
 end_define
+
+begin_comment
+comment|/* String version of device HIDs and UIDs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DEVICE_ID_LENGTH
+value|0x09
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_device_id
+block|{
+name|char
+name|Buffer
+index|[
+name|ACPI_DEVICE_ID_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|ACPI_DEVICE_ID
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*****************************************************************************  *  * Miscellaneous  *  ****************************************************************************/

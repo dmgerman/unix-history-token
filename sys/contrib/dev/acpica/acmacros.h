@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 145 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 137 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -396,7 +396,7 @@ name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
+value|ACPI_MOVE_UNALIGNED32_TO_32(d,s)
 end_define
 
 begin_define
@@ -456,232 +456,17 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_BIG_ENDIAN
+name|_HW_ALIGNMENT_SUPPORT
 end_ifdef
 
 begin_comment
-comment|/*  * Macros for big-endian machines  */
-end_comment
-
-begin_comment
-comment|/* This macro sets a buffer index, starting from the end of the buffer */
+comment|/* The hardware supports unaligned transfers, just do the move */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_BUFFER_INDEX
-parameter_list|(
-name|BufLen
-parameter_list|,
-name|BufOffset
-parameter_list|,
-name|ByteGran
-parameter_list|)
-value|((BufLen) - (((BufOffset)+1) * (ByteGran)))
-end_define
-
-begin_comment
-comment|/* These macros reverse the bytes during the move, converting little-endian to big endian */
-end_comment
-
-begin_comment
-comment|/* Big Endian<==        Little Endian */
-end_comment
-
-begin_comment
-comment|/*  Hi...Lo                     Lo...Hi     */
-end_comment
-
-begin_comment
-comment|/* 16-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[1];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{(*(UINT32 *)(void *)(d))=0;\                                            ((UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[1];\                                            ((UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{(*(UINT64 *)(void *)(d))=0;\                                            ((UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[1];\                                            ((UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_comment
-comment|/* 32-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[3];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[2];\                                          ((  UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[1];\                                          ((  UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{(*(UINT64 *)(void *)(d))=0;\                                            ((UINT8 *)(void *)(d))[4] = ((UINT8 *)(void *)(s))[3];\                                            ((UINT8 *)(void *)(d))[5] = ((UINT8 *)(void *)(s))[2];\                                            ((UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[1];\                                            ((UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_comment
-comment|/* 64-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[7];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[6];\                                          ((  UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[5];\                                          ((  UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[4];\                                          ((  UINT8 *)(void *)(d))[4] = ((UINT8 *)(void *)(s))[3];\                                          ((  UINT8 *)(void *)(d))[5] = ((UINT8 *)(void *)(s))[2];\                                          ((  UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[1];\                                          ((  UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[0];}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/*  * Macros for little-endian machines  */
-end_comment
-
-begin_comment
-comment|/* This macro sets a buffer index, starting from the beginning of the buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_BUFFER_INDEX
-parameter_list|(
-name|BufLen
-parameter_list|,
-name|BufOffset
-parameter_list|,
-name|ByteGran
-parameter_list|)
-value|(BufOffset)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ACPI_MISALIGNED_TRANSFERS
-end_ifdef
-
-begin_comment
-comment|/* The hardware supports unaligned transfers, just do the little-endian move */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|16
-end_if
-
-begin_comment
-comment|/* No 64-bit integers */
-end_comment
-
-begin_comment
-comment|/* 16-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 parameter_list|(
 name|d
 parameter_list|,
@@ -693,51 +478,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_16_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|*(UINT32 *)(void *)(d) = *(UINT16 *)(void *)(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* 32-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 parameter_list|(
 name|d
 parameter_list|,
@@ -749,88 +490,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_32_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* 64-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* 16-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|*(UINT16 *)(void *)(d) = *(UINT16 *)(void *)(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_16_TO_32
+name|ACPI_MOVE_UNALIGNED16_TO_32
 parameter_list|(
 name|d
 parameter_list|,
@@ -842,99 +502,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_16_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|*(UINT64 *)(void *)(d) = *(UINT16 *)(void *)(s)
-end_define
-
-begin_comment
-comment|/* 32-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|*(UINT32 *)(void *)(d) = *(UINT32 *)(void *)(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|*(UINT64 *)(void *)(d) = *(UINT32 *)(void *)(s)
-end_define
-
-begin_comment
-comment|/* 64-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 parameter_list|(
 name|d
 parameter_list|,
@@ -943,236 +511,62 @@ parameter_list|)
 value|*(UINT64 *)(void *)(d) = *(UINT64 *)(void *)(s)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/*  * The hardware does not support unaligned transfers.  We must move the  * data one byte at a time.  These macros work whether the source or  * the destination (or both) is/are unaligned.  (Little-endian move)  */
-end_comment
-
-begin_comment
-comment|/* 16-bit source, 16/32/64 destination */
+comment|/*  * The hardware does not support unaligned transfers.  We must move the  * data one byte at a time.  These macros work whether the source or  * the destination (or both) is/are unaligned.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_16_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{(*(UINT32 *)(void *)(d)) = 0; ACPI_MOVE_16_TO_16(d,s);}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                              ((UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                              ((UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_16_TO_64
+name|ACPI_MOVE_UNALIGNED16_TO_32
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{(*(UINT64 *)(void *)(d)) = 0; ACPI_MOVE_16_TO_16(d,s);}
-end_define
-
-begin_comment
-comment|/* 32-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_32_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                          ((  UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                          ((  UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];}
+value|{(*(UINT32*)(void *)(d)) = 0; ACPI_MOVE_UNALIGNED16_TO_16(d,s);}
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_MOVE_32_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 parameter_list|(
 name|d
 parameter_list|,
 name|s
 parameter_list|)
-value|{(*(UINT64 *)(void *)(d)) = 0; ACPI_MOVE_32_TO_32(d,s);}
+value|{((UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                              ((UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                              ((UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                              ((UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];\                                              ((UINT8 *)(void *)(d))[4] = ((UINT8 *)(void *)(s))[4];\                                              ((UINT8 *)(void *)(d))[5] = ((UINT8 *)(void *)(s))[5];\                                              ((UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[6];\                                              ((UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[7];}
 end_define
-
-begin_comment
-comment|/* 64-bit source, 16/32/64 destination */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_32
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_32(d,s)
-end_define
-
-begin_comment
-comment|/* Truncate to 32 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_64_TO_64
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|{((  UINT8 *)(void *)(d))[0] = ((UINT8 *)(void *)(s))[0];\                                          ((  UINT8 *)(void *)(d))[1] = ((UINT8 *)(void *)(s))[1];\                                          ((  UINT8 *)(void *)(d))[2] = ((UINT8 *)(void *)(s))[2];\                                          ((  UINT8 *)(void *)(d))[3] = ((UINT8 *)(void *)(s))[3];\                                          ((  UINT8 *)(void *)(d))[4] = ((UINT8 *)(void *)(s))[4];\                                          ((  UINT8 *)(void *)(d))[5] = ((UINT8 *)(void *)(s))[5];\                                          ((  UINT8 *)(void *)(d))[6] = ((UINT8 *)(void *)(s))[6];\                                          ((  UINT8 *)(void *)(d))[7] = ((UINT8 *)(void *)(s))[7];}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Macros based on machine integer width */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|16
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_SIZE_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_16_TO_16(d,s)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|32
-end_elif
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_SIZE_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_32_TO_16(d,s)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_elif
-
-begin_define
-define|#
-directive|define
-name|ACPI_MOVE_SIZE_TO_16
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|ACPI_MOVE_64_TO_16(d,s)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_error
-error|#
-directive|error
-error|unknown ACPI_MACHINE_WIDTH
-end_error
 
 begin_endif
 endif|#
@@ -1518,6 +912,35 @@ name|ACPI_MACHINE_WIDTH
 operator|!=
 literal|16
 end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_DEVICE_MASK
+value|(UINT64) 0x0000FFFF00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_FUNCTION_MASK
+value|(UINT64) 0x00000000FFFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_REGISTER_MASK
+value|(UINT64) 0x000000000000FFFF
+end_define
+
+begin_comment
+comment|/*  * Obsolete  */
+end_comment
+
+begin_comment
+comment|/* #define ACPI_PCI_FUNCTION(a)            (UINT16) ((((UINT64)((UINT64)(a)& ACPI_PCI_FUNCTION_MASK))>> 16)) #define ACPI_PCI_DEVICE(a)              (UINT16) ((((UINT64)((UINT64)(a)& ACPI_PCI_DEVICE_MASK))>> 32)) #define ACPI_PCI_REGISTER(a)            (UINT16) (((UINT64)((UINT64)(a)& ACPI_PCI_REGISTER_MASK))) */
+end_comment
 
 begin_define
 define|#
@@ -2056,6 +1479,44 @@ value|(List>>= ((UINT32) ARG_TYPE_WIDTH))
 end_define
 
 begin_comment
+comment|/*  * Build a GAS structure from earlier ACPI table entries (V1.0 and 0.71 extensions)  *  * 1) Address space  * 2) Length in bytes -- convert to length in bits  * 3) Bit offset is zero  * 4) Reserved field is zero  * 5) Expand address to 64 bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_BUILD_GAS_FROM_ENTRY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|do {a.AddressSpaceId = (UINT8) d;\                                                 a.RegisterBitWidth = (UINT8) ACPI_MUL_8 (b);\                                                 a.RegisterBitOffset = 0;\                                                 a.Reserved = 0;\                                                 ACPI_STORE_ADDRESS (a.Address,(ACPI_PHYSICAL_ADDRESS) c);} while (0)
+end_define
+
+begin_comment
+comment|/* ACPI V1.0 entries -- address space is always I/O */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASL_BUILD_GAS_FROM_V1_ENTRY
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|ASL_BUILD_GAS_FROM_ENTRY(a,b,c,ACPI_ADR_SPACE_SYSTEM_IO)
+end_define
+
+begin_comment
 comment|/*  * Reporting macros that are never compiled out  */
 end_comment
 
@@ -2288,7 +1749,7 @@ name|ACPI_FUNCTION_NAME
 parameter_list|(
 name|a
 parameter_list|)
-value|ACPI_DEBUG_PRINT_INFO _Dbg; \                                                 _Dbg.ComponentId = _COMPONENT; \                                                 _Dbg.ProcName    = a; \                                                 _Dbg.ModuleName  = _THIS_MODULE;
+value|ACPI_DEBUG_PRINT_INFO _Dbg;     \                                         _Dbg.ComponentId = _COMPONENT;  \                                         _Dbg.ProcName    = a;           \                                         _Dbg.ModuleName  = _THIS_MODULE;
 end_define
 
 begin_define
@@ -2298,7 +1759,7 @@ name|ACPI_FUNCTION_TRACE
 parameter_list|(
 name|a
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTrace(__LINE__,&_Dbg)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTrace(__LINE__,&_Dbg)
 end_define
 
 begin_define
@@ -2310,7 +1771,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTracePtr(__LINE__,&_Dbg,(void *)b)
 end_define
 
 begin_define
@@ -2322,7 +1783,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTraceU32(__LINE__,&_Dbg,(UINT32)b)
 end_define
 
 begin_define
@@ -2334,7 +1795,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|ACPI_FUNCTION_NAME(a) \                                                 AcpiUtTraceStr(__LINE__,&_Dbg,(char *)b)
+value|ACPI_FUNCTION_NAME(a)\                                             AcpiUtTraceStr(__LINE__,&_Dbg,(char *)b)
 end_define
 
 begin_define

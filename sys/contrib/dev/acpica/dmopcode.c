@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmopcode - AML disassembler, specific AML opcodes  *              $Revision: 84 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmopcode - AML disassembler, specific AML opcodes  *              $Revision: 81 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"acdisasm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdebug.h"
 end_include
 
 begin_ifdef
@@ -82,16 +88,13 @@ argument_list|)
 expr_stmt|;
 name|Flags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 name|Args
 operator|=
@@ -187,16 +190,13 @@ argument_list|)
 expr_stmt|;
 name|Flags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 comment|/* Mark the Op as completed */
 name|Op
@@ -352,16 +352,13 @@ argument_list|)
 expr_stmt|;
 name|AcpiDmAddressSpace
 argument_list|(
-operator|(
-name|UINT8
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 argument_list|)
 expr_stmt|;
 block|}
@@ -461,18 +458,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
-operator|(
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
-operator|)
+name|Integer32
 operator|>=
 name|ACPI_NUM_MATCH_OPS
 condition|)
@@ -495,16 +487,13 @@ operator|*
 operator|)
 name|AcpiGbl_MatchOps
 index|[
-operator|(
-name|ACPI_SIZE
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 index|]
 argument_list|)
 expr_stmt|;
@@ -580,7 +569,7 @@ return|return;
 default|default:
 break|break;
 block|}
-comment|/* The op and arguments */
+comment|/* op and arguments */
 switch|switch
 condition|(
 name|Op
@@ -642,7 +631,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 argument_list|)
 expr_stmt|;
 break|break;
@@ -662,16 +651,13 @@ condition|)
 block|{
 name|AcpiDmEisaId
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 block|}
@@ -690,7 +676,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer16
 argument_list|)
 expr_stmt|;
 block|}
@@ -711,16 +697,13 @@ condition|)
 block|{
 name|AcpiDmEisaId
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 block|}
@@ -730,16 +713,13 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"0x%8.8X"
 argument_list|,
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 block|}
@@ -978,16 +958,13 @@ argument_list|)
 argument_list|,
 literal|" "
 argument_list|,
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 name|AcpiDmCommaIfFieldMember
@@ -999,16 +976,13 @@ name|Info
 operator|->
 name|BitOffset
 operator|+=
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 break|break;
 case|case
@@ -1017,16 +991,13 @@ case|:
 comment|/* Offset() -- Must account for previous offsets */
 name|Offset
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 name|Info
 operator|->
@@ -1083,16 +1054,13 @@ literal|"AccessAs (%s, "
 argument_list|,
 name|AcpiGbl_AccessTypes
 index|[
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 operator|>>
 literal|8
 index|]
@@ -1109,7 +1077,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1235,7 +1203,7 @@ name|NumResults
 operator|)
 condition|)
 block|{
-name|AcpiDmDecodeInternalObject
+name|AcpiDbDecodeInternalObject
 argument_list|(
 name|WalkState
 operator|->

@@ -460,7 +460,7 @@ block|{
 name|UINT16
 name|OwnerId
 init|=
-literal|0
+name|TABLE_ID_DSDT
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
@@ -1132,6 +1132,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|AcpiNsRemoveReference
 parameter_list|(

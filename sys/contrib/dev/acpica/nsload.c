@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsload - namespace loading/expanding/contracting procedures  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -81,7 +81,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|AcpiGbl_TableData
+name|AcpiGbl_AcpiTableData
 index|[
 name|TableDesc
 operator|->
@@ -334,12 +334,11 @@ argument_list|)
 expr_stmt|;
 name|TableDesc
 operator|=
-name|AcpiGbl_TableLists
+operator|&
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_DSDT
 index|]
-operator|.
-name|Next
 expr_stmt|;
 comment|/* If table already loaded into namespace, just return */
 if|if
@@ -353,6 +352,12 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
+name|TableDesc
+operator|->
+name|TableId
+operator|=
+name|TABLE_ID_DSDT
+expr_stmt|;
 comment|/* Now load the single DSDT */
 name|Status
 operator|=
@@ -389,7 +394,7 @@ name|ACPI_DB_INFO
 operator|,
 literal|"Loading %d SSDTs\n"
 operator|,
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_SSDT
 index|]
@@ -401,12 +406,11 @@ expr_stmt|;
 comment|/*          * Traverse list of SSDT tables          */
 name|TableDesc
 operator|=
-name|AcpiGbl_TableLists
+operator|&
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_SSDT
 index|]
-operator|.
-name|Next
 expr_stmt|;
 for|for
 control|(
@@ -416,7 +420,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_SSDT
 index|]
@@ -480,7 +484,7 @@ name|ACPI_DB_INFO
 operator|,
 literal|"Loading %d PSDTs\n"
 operator|,
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_PSDT
 index|]
@@ -492,12 +496,11 @@ expr_stmt|;
 comment|/*          * Traverse list of PSDT tables          */
 name|TableDesc
 operator|=
-name|AcpiGbl_TableLists
+operator|&
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_PSDT
 index|]
-operator|.
-name|Next
 expr_stmt|;
 for|for
 control|(
@@ -507,7 +510,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|ACPI_TABLE_PSDT
 index|]

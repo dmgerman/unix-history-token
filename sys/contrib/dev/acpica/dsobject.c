@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 117 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 114 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -434,16 +434,13 @@ return|;
 block|}
 name|ByteListLength
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|ByteList
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 block|}
 comment|/*      * The buffer length (number of bytes) will be the larger of:      * 1) The specified buffer length and      * 2) The length of the initializer byte list      */
@@ -491,12 +488,10 @@ name|Pointer
 operator|=
 name|NULL
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"Buffer defined with zero length in AML, creating\n"
+literal|"Buffer created with zero length in AML\n"
 operator|)
 argument_list|)
 expr_stmt|;

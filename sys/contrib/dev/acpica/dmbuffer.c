@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmbuffer - AML disassembler, buffer and string support  *              $Revision: 12 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmbuffer - AML disassembler, buffer and string support  *              $Revision: 10 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -212,16 +212,13 @@ name|Data
 expr_stmt|;
 name|ByteCount
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 comment|/*      * The byte list belongs to a buffer, and can be produced by either      * a ResourceTemplate, Unicode, quoted string, or a plain byte list.      */
 switch|switch
@@ -384,16 +381,13 @@ name|Data
 expr_stmt|;
 name|ByteCount
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|NextOp
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 name|WordCount
 operator|=
@@ -591,16 +585,13 @@ name|Data
 expr_stmt|;
 name|ByteCount
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|NextOp
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 comment|/* Last byte must be the null terminator */
 if|if
@@ -721,18 +712,13 @@ name|WordCount
 operator|=
 name|ACPI_DIV_2
 argument_list|(
-operator|(
-operator|(
-name|UINT32
-operator|)
 name|Op
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
-operator|)
+name|Integer32
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -841,7 +827,7 @@ operator|)
 operator|&
 name|Name
 argument_list|,
-name|METHOD_NAME__HID
+literal|"_HID"
 argument_list|,
 literal|4
 argument_list|)
@@ -889,16 +875,13 @@ name|BigEndianId
 operator|=
 name|AcpiUtDwordByteSwap
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|NextOp
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 comment|/* Create the 3 leading ASCII letters */

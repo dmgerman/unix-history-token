@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -230,8 +230,6 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|Buffer
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
@@ -260,14 +258,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create an actual buffer only if size> 0 */
-if|if
-condition|(
-name|BufferSize
-operator|>
-literal|0
-condition|)
-block|{
 comment|/* Allocate the actual buffer */
 name|Buffer
 operator|=
@@ -304,7 +294,6 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* Complete buffer object initialization */
 name|BufferDesc

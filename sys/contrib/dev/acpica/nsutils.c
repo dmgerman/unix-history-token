@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 129 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 122 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -83,44 +83,7 @@ decl_stmt|;
 name|char
 modifier|*
 name|Name
-init|=
-name|NULL
 decl_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"%8s-%04d: *** Error: Looking up "
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LookupStatus
-operator|==
-name|AE_BAD_CHARACTER
-condition|)
-block|{
-comment|/* There is a non-ascii character in the name */
-name|AcpiOsPrintf
-argument_list|(
-literal|"[0x%4.4X] (NON-ASCII)\n"
-argument_list|,
-operator|*
-operator|(
-name|ACPI_CAST_PTR
-argument_list|(
-name|UINT32
-argument_list|,
-name|InternalName
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Convert path to external format */
 name|Status
 operator|=
@@ -134,6 +97,15 @@ name|NULL
 argument_list|,
 operator|&
 name|Name
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"%8s-%04d: *** Error: Looking up "
+argument_list|,
+name|ModuleName
+argument_list|,
+name|LineNumber
 argument_list|)
 expr_stmt|;
 comment|/* Print target name */
@@ -161,6 +133,16 @@ literal|"[COULD NOT EXTERNALIZE NAME]"
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|" in namespace, %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|LookupStatus
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Name
@@ -172,17 +154,6 @@ name|Name
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|" in namespace, %s\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|LookupStatus
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -341,22 +312,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|Msg
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s "
+literal|"%s [%s] (Node %p)"
 argument_list|,
 name|Msg
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiOsPrintf
-argument_list|(
-literal|"[%s] (Node %p)"
 argument_list|,
 operator|(
 name|char
@@ -1443,7 +1403,7 @@ expr_stmt|;
 name|NumSegments
 operator|=
 operator|(
-name|ACPI_NATIVE_UINT
+name|UINT32
 operator|)
 operator|(
 name|UINT8
@@ -1845,23 +1805,31 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ThisNode
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"NsTerminate"
 argument_list|)
 expr_stmt|;
-comment|/*      * 1) Free the entire namespace -- all nodes and objects      *      * Delete all object descriptors attached to namepsace nodes      */
+name|ThisNode
+operator|=
+name|AcpiGbl_RootNode
+expr_stmt|;
+comment|/*      * 1) Free the entire namespace -- all objects, tables, and stacks      *      * Delete all objects linked to the root      * (additional table descriptors)      */
 name|AcpiNsDeleteNamespaceSubtree
 argument_list|(
-name|AcpiGbl_RootNode
+name|ThisNode
 argument_list|)
 expr_stmt|;
-comment|/* Detach any objects attached to the root */
+comment|/* Detach any object(s) attached to the root */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ThisNode
 argument_list|)
 expr_stmt|;
 if|if
@@ -1871,10 +1839,20 @@ condition|)
 block|{
 name|AcpiNsDetachObject
 argument_list|(
-name|AcpiGbl_RootNode
+name|ThisNode
+argument_list|)
+expr_stmt|;
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 block|}
+name|AcpiNsDeleteChildren
+argument_list|(
+name|ThisNode
+argument_list|)
+expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1885,7 +1863,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/*      * 2) Now we can delete the ACPI tables      */
-name|AcpiTbDeleteAllTables
+name|AcpiTbDeleteAcpiTables
 argument_list|()
 expr_stmt|;
 name|ACPI_DEBUG_PRINT

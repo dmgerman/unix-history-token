@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 95 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -162,7 +162,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name %4.4s Type [%s] found in scope [%4.4s] %p\n"
+literal|"Name %4.4s Type [%s] found at %p\n"
 operator|,
 operator|(
 name|char
@@ -177,12 +177,6 @@ name|NextNode
 operator|->
 name|Type
 argument_list|)
-operator|,
-name|NextNode
-operator|->
-name|Name
-operator|.
-name|Ascii
 operator|,
 name|NextNode
 operator|)
@@ -226,7 +220,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Name %4.4s Type [%s] not found in search in scope [%4.4s] %p first child %p\n"
+literal|"Name %4.4s Type [%s] not found at %p\n"
 operator|,
 operator|(
 name|char
@@ -240,17 +234,7 @@ argument_list|(
 name|Type
 argument_list|)
 operator|,
-name|Node
-operator|->
-name|Name
-operator|.
-name|Ascii
-operator|,
-name|Node
-operator|,
-name|Node
-operator|->
-name|Child
+name|NextNode
 operator|)
 argument_list|)
 expr_stmt|;

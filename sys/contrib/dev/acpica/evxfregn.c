@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -293,14 +293,14 @@ break|break;
 default|default:
 name|Status
 operator|=
-name|AE_BAD_PARAMETER
+name|AE_NOT_EXIST
 expr_stmt|;
 goto|goto
 name|UnlockAndExit
 goto|;
 block|}
 block|}
-comment|/* If the caller hasn't specified a setup routine, use the default */
+comment|/*      * If the caller hasn't specified a setup routine, use the default      */
 if|if
 condition|(
 operator|!
@@ -312,7 +312,7 @@ operator|=
 name|AcpiEvDefaultRegionSetup
 expr_stmt|;
 block|}
-comment|/* Check for an existing internal object */
+comment|/*      * Check for an existing internal object      */
 name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
@@ -325,71 +325,47 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/*          * The attached device object already exists.          * Make sure the handler is not already installed.          */
+comment|/*          * The object exists.          * Make sure the handler is not already installed.          */
+comment|/* check the address handler the user requested */
 name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
-comment|/* Walk the handler list for this device */
 while|while
 condition|(
 name|HandlerObj
 condition|)
 block|{
-comment|/* Same SpaceId indicates a handler already installed */
+comment|/*              * We have an Address handler, see if user requested this              * address space.              */
 if|if
 condition|(
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|SpaceId
 operator|==
 name|SpaceId
 condition|)
 block|{
-if|if
-condition|(
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Handler
-operator|==
-name|Handler
-condition|)
-block|{
-comment|/*                      * It is (relatively) OK to attempt to install the SAME                      * handler twice. This can easily happen with PCI_Config space.                      */
-name|Status
-operator|=
-name|AE_SAME_HANDLER
-expr_stmt|;
-goto|goto
-name|UnlockAndExit
-goto|;
-block|}
-else|else
-block|{
-comment|/* A handler is already installed */
 name|Status
 operator|=
 name|AE_ALREADY_EXISTS
 expr_stmt|;
-block|}
 goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Walk the linked list of handlers */
+comment|/*              * Move through the linked list of handlers              */
 name|HandlerObj
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
@@ -477,12 +453,6 @@ argument_list|,
 name|Type
 argument_list|)
 expr_stmt|;
-comment|/* Remove local reference to the object */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -491,6 +461,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|AcpiUtRemoveReference
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 goto|goto
 name|UnlockAndExit
 goto|;
@@ -522,7 +497,7 @@ name|ObjDesc
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the handler      *      * At this point there is no existing handler.      * Just allocate the object for the handler and link it      * into the list.      */
+comment|/*      * Now we can install the handler      *      * At this point we know that there is no existing handler.      * So, we just allocate the object for the handler and link it      * into the list.      */
 name|HandlerObj
 operator|=
 name|AcpiUtCreateInternalObject
@@ -544,10 +519,9 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Init handler obj */
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|SpaceId
 operator|=
@@ -558,7 +532,7 @@ name|SpaceId
 expr_stmt|;
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Hflags
 operator|=
@@ -566,48 +540,7 @@ name|Flags
 expr_stmt|;
 name|HandlerObj
 operator|->
-name|AddressSpace
-operator|.
-name|RegionList
-operator|=
-name|NULL
-expr_stmt|;
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Node
-operator|=
-name|Node
-expr_stmt|;
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Handler
-operator|=
-name|Handler
-expr_stmt|;
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Context
-operator|=
-name|Context
-expr_stmt|;
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Setup
-operator|=
-name|Setup
-expr_stmt|;
-comment|/* Install at head of Device.AddressSpace list */
-name|HandlerObj
-operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 operator|=
@@ -615,18 +548,49 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
-comment|/*      * The Device object is the first reference on the HandlerObj.      * Each region that uses the handler adds a reference.      */
-name|ObjDesc
-operator|->
-name|Device
-operator|.
-name|AddressSpace
-operator|=
 name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|RegionList
+operator|=
+name|NULL
 expr_stmt|;
-comment|/*      * Walk the namespace finding all of the regions this      * handler will manage.      *      * Start at the device and search the branch toward      * the leaf nodes until either the leaf is encountered or      * a device is detected that has an address handler of the      * same type.      *      * In either case, back up and search down the remainder      * of the branch      */
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Node
+operator|=
+name|Node
+expr_stmt|;
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Handler
+operator|=
+name|Handler
+expr_stmt|;
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Context
+operator|=
+name|Context
+expr_stmt|;
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Setup
+operator|=
+name|Setup
+expr_stmt|;
+comment|/*      * Now walk the namespace finding all of the regions this      * handler will manage.      *      * We start at the device and search the branch toward      * the leaf nodes until either the leaf is encountered or      * a device is detected that has an address handler of the      * same type.      *      * In either case we back up and search down the remainder      * of the branch      */
 name|Status
 operator|=
 name|AcpiNsWalkNamespace
@@ -639,12 +603,46 @@ name|ACPI_UINT32_MAX
 argument_list|,
 name|ACPI_NS_WALK_UNLOCK
 argument_list|,
-name|AcpiEvInstallHandler
+name|AcpiEvAddrHandlerHelper
 argument_list|,
 name|HandlerObj
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+comment|/*      * Place this handler 1st on the list      */
+name|HandlerObj
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|=
+call|(
+name|UINT16
+call|)
+argument_list|(
+name|HandlerObj
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|+
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|ObjDesc
+operator|->
+name|Device
+operator|.
+name|AddrHandler
+operator|=
+name|HandlerObj
 expr_stmt|;
 name|UnlockAndExit
 label|:
@@ -665,7 +663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveAddressSpaceHandler  *  * PARAMETERS:  Device          - Handle for the device  *              SpaceId         - The address space ID  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Remove a previously installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiRemoveAddressSpaceHandler  *  * PARAMETERS:  SpaceId         - The address space ID  *              Handler         - Address of the handler  *  * RETURN:      Status  *  * DESCRIPTION: Install a handler for accesses on an Operation Region  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -789,14 +787,14 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Find the address handler the user requested */
+comment|/*      * find the address handler the user requested      */
 name|HandlerObj
 operator|=
 name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 name|LastObjPtr
 operator|=
@@ -805,26 +803,26 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 while|while
 condition|(
 name|HandlerObj
 condition|)
 block|{
-comment|/* We have a handler, see if user requested this one */
+comment|/*          * We have a handler, see if user requested this one          */
 if|if
 condition|(
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|SpaceId
 operator|==
 name|SpaceId
 condition|)
 block|{
-comment|/* Matched SpaceId, first dereference this in the Regions */
+comment|/*              * Got it, first dereference this in the Regions              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -851,7 +849,7 @@ name|RegionObj
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|RegionList
 expr_stmt|;
@@ -869,27 +867,32 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/*                  * Walk the list: Just grab the head because the                  * DetachRegion removed the previous head.                  */
+comment|/*                  * Walk the list, since we took the first region and it                  * was removed from the list by the dissassociate call                  * we just get the first item on the list again                  */
 name|RegionObj
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|RegionList
 expr_stmt|;
 block|}
-comment|/* Remove this Handler object from the list */
+comment|/*              * Remove this Handler object from the list              */
 operator|*
 name|LastObjPtr
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
-comment|/* Now we can delete the handler object */
+comment|/*              * Now we can delete the handler object              */
+name|AcpiUtRemoveReference
+argument_list|(
+name|HandlerObj
+argument_list|)
+expr_stmt|;
 name|AcpiUtRemoveReference
 argument_list|(
 name|HandlerObj
@@ -899,13 +902,13 @@ goto|goto
 name|UnlockAndExit
 goto|;
 block|}
-comment|/* Walk the linked list of handlers */
+comment|/*          * Move through the linked list of handlers          */
 name|LastObjPtr
 operator|=
 operator|&
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
@@ -913,12 +916,12 @@ name|HandlerObj
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
 block|}
-comment|/* The handler does not exist */
+comment|/*      * The handler does not exist      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

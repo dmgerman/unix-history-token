@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 96 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -140,8 +140,6 @@ block|,
 name|CMD_THREADS
 block|,
 name|CMD_TREE
-block|,
-name|CMD_TYPE
 block|,
 name|CMD_UNLOAD
 block|}
@@ -455,12 +453,6 @@ block|{
 literal|"TREE"
 block|,
 literal|0
-block|}
-block|,
-block|{
-literal|"TYPE"
-block|,
-literal|1
 block|}
 block|,
 block|{
@@ -2084,18 +2076,6 @@ name|CMD_TREE
 case|:
 name|AcpiDbDisplayCallingTree
 argument_list|()
-expr_stmt|;
-break|break;
-case|case
-name|CMD_TYPE
-case|:
-name|AcpiDbDisplayObjectType
-argument_list|(
-name|AcpiGbl_DbArgs
-index|[
-literal|1
-index|]
-argument_list|)
 expr_stmt|;
 break|break;
 case|case

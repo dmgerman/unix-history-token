@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 24 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsio - IO and DMA resource descriptors  *              $Revision: 23 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -167,7 +167,7 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -332,7 +332,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -489,7 +489,7 @@ name|Io
 operator|.
 name|MinBaseAddress
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -515,7 +515,7 @@ name|Io
 operator|.
 name|MaxBaseAddress
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -661,7 +661,7 @@ name|FixedIo
 operator|.
 name|BaseAddress
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,

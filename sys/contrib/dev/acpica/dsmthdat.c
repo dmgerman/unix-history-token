@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 71 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 69 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|WalkState
@@ -176,7 +176,7 @@ name|i
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|WalkState

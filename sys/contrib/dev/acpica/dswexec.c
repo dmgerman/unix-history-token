@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 98 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"acdebug.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdisasm.h"
 end_include
 
 begin_define
@@ -1695,8 +1689,8 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|_UNDER_DEVELOPMENT
 if|if
 condition|(
@@ -1728,30 +1722,6 @@ name|NumOperands
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ACPI_DISASSEMBLER
-comment|/* On error, display method locals/args */
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|AcpiDmDumpMethodInfo
-argument_list|(
-name|Status
-argument_list|,
-name|WalkState
-argument_list|,
-name|Op
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psargs - Parse AML opcode arguments  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -792,23 +792,6 @@ argument_list|,
 name|Status
 argument_list|)
 expr_stmt|;
-name|AcpiOsPrintf
-argument_list|(
-literal|"SearchNode %p StartNode %p ReturnNode %p\n"
-argument_list|,
-name|ScopeInfo
-operator|.
-name|Scope
-operator|.
-name|Node
-argument_list|,
-name|ParserState
-operator|->
-name|StartNode
-argument_list|,
-name|Node
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -923,7 +906,7 @@ name|AML_WORD_OP
 argument_list|)
 expr_stmt|;
 comment|/* Get 2 bytes from the AML stream */
-name|ACPI_MOVE_16_TO_32
+name|ACPI_MOVE_UNALIGNED16_TO_32
 argument_list|(
 operator|&
 name|Arg
@@ -957,7 +940,7 @@ name|AML_DWORD_OP
 argument_list|)
 expr_stmt|;
 comment|/* Get 4 bytes from the AML stream */
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|Arg
@@ -991,7 +974,7 @@ name|AML_QWORD_OP
 argument_list|)
 expr_stmt|;
 comment|/* Get 8 bytes from the AML stream */
-name|ACPI_MOVE_64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 argument_list|(
 operator|&
 name|Arg
@@ -1233,7 +1216,7 @@ case|case
 name|AML_INT_NAMEDFIELD_OP
 case|:
 comment|/* Get the 4-character name */
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|Name
@@ -1299,7 +1282,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 operator|=
 operator|(
 name|ACPI_GET8
@@ -1323,7 +1306,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 operator||=
 name|ACPI_GET8
 argument_list|(

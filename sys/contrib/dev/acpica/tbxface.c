@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -466,7 +466,7 @@ parameter_list|)
 block|{
 name|ACPI_TABLE_DESC
 modifier|*
-name|TableDesc
+name|ListHead
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -488,42 +488,42 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Find all tables of the requested type */
-name|TableDesc
+name|ListHead
 operator|=
-name|AcpiGbl_TableLists
+operator|&
+name|AcpiGbl_AcpiTables
 index|[
 name|TableType
 index|]
-operator|.
-name|Next
 expr_stmt|;
-while|while
-condition|(
-name|TableDesc
-condition|)
-empty_stmt|;
+do|do
 block|{
 comment|/*          * Delete all namespace entries owned by this table.  Note that these          * entries can appear anywhere in the namespace by virtue of the AML          * "Scope" operator.  Thus, we need to track ownership by an ID, not          * simply a position within the hierarchy          */
 name|AcpiNsDeleteNamespaceByOwner
 argument_list|(
-name|TableDesc
+name|ListHead
 operator|->
 name|TableId
 argument_list|)
 expr_stmt|;
-name|TableDesc
-operator|=
-name|TableDesc
-operator|->
-name|Next
-expr_stmt|;
-block|}
-comment|/* Delete (or unmap) all tables of this type */
-name|AcpiTbDeleteTablesByType
+comment|/* Delete (or unmap) the actual table */
+name|AcpiTbDeleteAcpiTable
 argument_list|(
 name|TableType
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+name|ListHead
+operator|!=
+operator|&
+name|AcpiGbl_AcpiTables
+index|[
+name|TableType
+index|]
+condition|)
+do|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -601,7 +601,7 @@ operator|||
 operator|(
 name|ACPI_IS_SINGLE_TABLE
 argument_list|(
-name|AcpiGbl_TableData
+name|AcpiGbl_AcpiTableData
 index|[
 name|TableType
 index|]
@@ -772,7 +772,7 @@ operator|||
 operator|(
 name|ACPI_IS_SINGLE_TABLE
 argument_list|(
-name|AcpiGbl_TableData
+name|AcpiGbl_AcpiTableData
 index|[
 name|TableType
 index|]

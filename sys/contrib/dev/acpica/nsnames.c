@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 83 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 82 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ operator|-=
 name|ACPI_NAME_SIZE
 expr_stmt|;
 comment|/* Put the name into the buffer */
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|(
 name|NameBuffer

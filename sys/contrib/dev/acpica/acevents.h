@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acevents.h - Event subcomponent prototypes and defines  *       $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -153,34 +153,10 @@ comment|/*  * Evgpe - GPE handling and dispatch  */
 end_comment
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvWalkGpeList
-parameter_list|(
-name|ACPI_GPE_CALLBACK
-name|GpeWalkCallback
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|BOOLEAN
-name|AcpiEvValidGpeEvent
-parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|AcpiEvGetGpeEventInfo
 parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
 name|UINT32
 name|GpeNumber
 parameter_list|)
@@ -197,55 +173,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvCreateGpeBlock
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|GpeDevice
-parameter_list|,
-name|ACPI_GENERIC_ADDRESS
-modifier|*
-name|GpeBlockAddress
-parameter_list|,
-name|UINT32
-name|RegisterCount
-parameter_list|,
-name|UINT8
-name|GpeBlockBaseNumber
-parameter_list|,
-name|UINT32
-name|InterruptLevel
-parameter_list|,
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-modifier|*
-name|ReturnGpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvDeleteGpeBlock
-parameter_list|(
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|UINT32
 name|AcpiEvGpeDispatch
 parameter_list|(
 name|ACPI_GPE_EVENT_INFO
 modifier|*
 name|GpeEventInfo
-parameter_list|,
-name|UINT32
-name|GpeNumber
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -254,9 +187,7 @@ begin_function_decl
 name|UINT32
 name|AcpiEvGpeDetect
 parameter_list|(
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|GpeXruptList
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -300,7 +231,7 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiEvInstallHandler
+name|AcpiEvAddrHandlerHelper
 parameter_list|(
 name|ACPI_HANDLE
 name|ObjHandle
@@ -505,18 +436,6 @@ end_function_decl
 begin_comment
 comment|/*  * Evsci - SCI (System Control Interrupt) handling/dispatch  */
 end_comment
-
-begin_function_decl
-name|UINT32
-name|ACPI_SYSTEM_XFACE
-name|AcpiEvGpeXruptHandler
-parameter_list|(
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|UINT32

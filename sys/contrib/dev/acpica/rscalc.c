@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 48 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscalc - Calculate stream and list lengths  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -574,7 +574,7 @@ expr_stmt|;
 operator|++
 name|Buffer
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -659,7 +659,7 @@ expr_stmt|;
 operator|++
 name|Buffer
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -739,7 +739,7 @@ expr_stmt|;
 operator|++
 name|Buffer
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -819,7 +819,7 @@ expr_stmt|;
 operator|++
 name|Buffer
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -899,7 +899,7 @@ expr_stmt|;
 operator|++
 name|Buffer
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -1046,7 +1046,7 @@ operator|++
 name|Buffer
 expr_stmt|;
 comment|/*              * Look at the number of bits set              */
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16

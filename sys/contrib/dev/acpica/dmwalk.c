@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 10 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dmwalk - AML disassembly tree walk  *              $Revision: 9 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -214,7 +214,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Let the callback process the node */
+comment|/*              * Let the callback process the node.              */
 name|Status
 operator|=
 name|DescendingCallback
@@ -848,7 +848,7 @@ name|Level
 operator|--
 expr_stmt|;
 block|}
-comment|/* Start the opcode argument list if necessary */
+comment|/*      * Start the opcode argument list if necessary      */
 name|OpInfo
 operator|=
 name|AcpiPsGetOpcodeInfo
@@ -898,7 +898,7 @@ literal|" ("
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If this is a named opcode, print the associated name value */
+comment|/*          * If this is a named opcode, print the associated name value          */
 if|if
 condition|(
 name|OpInfo

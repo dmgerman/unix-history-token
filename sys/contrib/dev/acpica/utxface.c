@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 101 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -227,7 +227,47 @@ argument_list|(
 literal|"AcpiEnableSubsystem"
 argument_list|)
 expr_stmt|;
-comment|/*      * We must initialize the hardware before we can enable ACPI.      * The values from the FADT are validated here.      */
+comment|/*      * Install the default OpRegion handlers.  These are installed unless      * other handlers have already been installed via the      * InstallAddressSpaceHandler interface      */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_ADDRESS_SPACE_INIT
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"[Init] Installing default address space handlers\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiEvInitAddressSpaces
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/*      * We must initialize the hardware before we can enable ACPI.      * FADT values are validated here.      */
 if|if
 condition|(
 operator|!
@@ -267,7 +307,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Enable ACPI mode      */
+comment|/*      * Enable ACPI on this platform      */
 if|if
 condition|(
 operator|!
@@ -321,7 +361,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Initialize ACPI Event handling      *      * NOTE: We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
+comment|/*      * Note:      * We must have the hardware AND events initialized before we can execute      * ANY control methods SAFELY.  Any control method can require ACPI hardware      * support, so the hardware MUST be initialized before execution!      */
 if|if
 condition|(
 operator|!
@@ -361,7 +401,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Install the SCI handler, Global Lock handler, and GPE handlers */
+comment|/* Install SCI handler, Global Lock handler, GPE handlers */
 if|if
 condition|(
 operator|!
@@ -431,86 +471,6 @@ argument_list|(
 literal|"AcpiInitializeObjects"
 argument_list|)
 expr_stmt|;
-comment|/*      * Install the default OpRegion handlers.  These are installed unless      * other handlers have already been installed via the      * InstallAddressSpaceHandler interface.      *      * NOTE: This will cause _REG methods to be run.  Any objects accessed      * by the _REG methods will be automatically initialized, even if they      * contain executable AML (see call to AcpiNsInitializeObjects below).      */
-if|if
-condition|(
-operator|!
-operator|(
-name|Flags
-operator|&
-name|ACPI_NO_ADDRESS_SPACE_INIT
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"[Init] Installing default address space handlers\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiEvInitAddressSpaces
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/*      * Initialize the objects that remain uninitialized.  This      * runs the executable AML that may be part of the declaration of these      * objects: OperationRegions, BufferFields, Buffers, and Packages.      */
-if|if
-condition|(
-operator|!
-operator|(
-name|Flags
-operator|&
-name|ACPI_NO_OBJECT_INIT
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_EXEC
-operator|,
-literal|"[Init] Initializing ACPI Objects\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AcpiNsInitializeObjects
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/*      * Initialize all device objects in the namespace      * This runs the _STA and _INI methods.      */
 if|if
 condition|(
@@ -534,6 +494,46 @@ expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsInitializeDevices
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/*      * Initialize the objects that remain uninitialized.  This      * runs the executable AML that is part of the declaration of OpRegions      * and Fields.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|Flags
+operator|&
+name|ACPI_NO_OBJECT_INIT
+operator|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_EXEC
+operator|,
+literal|"[Init] Initializing ACPI Objects\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiNsInitializeObjects
 argument_list|()
 expr_stmt|;
 if|if
@@ -834,7 +834,7 @@ name|InfoPtr
 operator|->
 name|NumTableTypes
 operator|=
-name|NUM_ACPI_TABLE_TYPES
+name|NUM_ACPI_TABLES
 expr_stmt|;
 for|for
 control|(
@@ -844,7 +844,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_ACPI_TABLE_TYPES
+name|NUM_ACPI_TABLES
 condition|;
 name|i
 operator|++
@@ -859,7 +859,7 @@ index|]
 operator|.
 name|Count
 operator|=
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|i
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -965,30 +965,17 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Get the first */
-if|if
-condition|(
-name|AcpiGbl_TableLists
-index|[
-name|TableType
-index|]
-operator|.
-name|Next
-condition|)
-block|{
+comment|/*          * Just pluck the pointer out of the global table!          * Will be null if no table is present          */
 operator|*
 name|TablePtrLoc
 operator|=
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|TableType
 index|]
 operator|.
-name|Next
-operator|->
 name|Pointer
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1000,7 +987,7 @@ if|if
 condition|(
 name|Instance
 operator|>
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|TableType
 index|]
@@ -1017,7 +1004,7 @@ block|}
 comment|/* Walk the list to get the desired table      * Since the if (Instance == 1) check above checked for the      * first table, setting TableDesc equal to the .Next member      * is actually pointing to the second table.  Therefore, we      * need to walk from the 2nd table until we reach the Instance      * that the user is looking for and return its table pointer.      */
 name|TableDesc
 operator|=
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
 index|[
 name|TableType
 index|]

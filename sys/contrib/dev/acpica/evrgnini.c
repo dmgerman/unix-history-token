@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 66 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -266,7 +266,7 @@ init|=
 name|AE_OK
 decl_stmt|;
 name|ACPI_INTEGER
-name|PciValue
+name|Temp
 decl_stmt|;
 name|ACPI_PCI_ID
 modifier|*
@@ -281,11 +281,7 @@ name|HandlerObj
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|ParentNode
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|PciRootNode
+name|Node
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -311,7 +307,7 @@ name|RegionObj
 operator|->
 name|Region
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 if|if
 condition|(
@@ -337,11 +333,6 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|RegionContext
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|Function
@@ -359,6 +350,11 @@ argument_list|(
 name|PciId
 argument_list|)
 expr_stmt|;
+operator|*
+name|RegionContext
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -366,186 +362,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ParentNode
-operator|=
-name|AcpiNsGetParentNode
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Node
-argument_list|)
-expr_stmt|;
-comment|/*      * Get the _SEG and _BBN values from the device upon which the handler      * is installed.      *      * We need to get the _SEG and _BBN objects relative to the PCI BUS device.      * This is the device the handler has been registered to handle.      */
-comment|/*      * If the AddressSpace.Node is still pointing to the root, we need      * to scan upward for a PCI Root bridge and re-associate the OpRegion      * handlers with that device.      */
-if|if
-condition|(
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Node
-operator|==
-name|AcpiGbl_RootNode
-condition|)
-block|{
-comment|/* Start search from the parent object */
-name|PciRootNode
-operator|=
-name|ParentNode
-expr_stmt|;
-while|while
-condition|(
-name|PciRootNode
-operator|!=
-name|AcpiGbl_RootNode
-condition|)
-block|{
-name|Status
-operator|=
-name|AcpiUtExecute_HID
-argument_list|(
-name|PciRootNode
-argument_list|,
-operator|&
-name|ObjectHID
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-comment|/* Got a valid _HID, check if this is a PCI root */
-if|if
-condition|(
-operator|!
-operator|(
-name|ACPI_STRNCMP
-argument_list|(
-name|ObjectHID
-operator|.
-name|Value
-argument_list|,
-name|PCI_ROOT_HID_STRING
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|PCI_ROOT_HID_STRING
-argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-comment|/* Install a handler for this PCI root bridge */
-name|Status
-operator|=
-name|AcpiInstallAddressSpaceHandler
-argument_list|(
-operator|(
-name|ACPI_HANDLE
-operator|)
-name|PciRootNode
-argument_list|,
-name|ACPI_ADR_SPACE_PCI_CONFIG
-argument_list|,
-name|ACPI_DEFAULT_HANDLER
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|Status
-operator|==
-name|AE_SAME_HANDLER
-condition|)
-block|{
-comment|/*                              * It is OK if the handler is already installed on the root                              * bridge.  Still need to return a context object for the                              * new PCI_Config operation region, however.                              */
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ACPI_REPORT_ERROR
-argument_list|(
-operator|(
-literal|"Could not install PciConfig handler for Root Bridge %4.4s, %s\n"
-operator|,
-name|PciRootNode
-operator|->
-name|Name
-operator|.
-name|Ascii
-operator|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-break|break;
-block|}
-block|}
-name|PciRootNode
-operator|=
-name|AcpiNsGetParentNode
-argument_list|(
-name|PciRootNode
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* PCI root bridge not found, use namespace root node */
-block|}
-else|else
-block|{
-name|PciRootNode
-operator|=
-name|HandlerObj
-operator|->
-name|AddressSpace
-operator|.
-name|Node
-expr_stmt|;
-block|}
-comment|/*      * If this region is now initialized, we are done.      * (InstallAddressSpaceHandler could have initialized it)      */
-if|if
-condition|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Flags
-operator|&
-name|AOPOBJ_SETUP_COMPLETE
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Region is still not initialized. Create a new context */
+comment|/* Create a new context */
 name|PciId
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -568,18 +385,30 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * For PCI_Config space access, we need the segment, bus,      * device and function numbers.  Acquire them here.      */
-comment|/*      * Get the PCI device and function numbers from the _ADR object      * contained in the parent's scope.      */
+comment|/*      * For PCI Config space access, we have to pass the segment, bus,      * device and function numbers.  This routine must acquire those.      */
+comment|/*      * First get device and function numbers from the _ADR object      * in the parent's scope.      */
+name|Node
+operator|=
+name|AcpiNsGetParentNode
+argument_list|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|Node
+argument_list|)
+expr_stmt|;
+comment|/* Evaluate the _ADR object */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
 argument_list|(
 name|METHOD_NAME__ADR
 argument_list|,
-name|ParentNode
+name|Node
 argument_list|,
 operator|&
-name|PciValue
+name|Temp
 argument_list|)
 expr_stmt|;
 comment|/*      * The default is zero, and since the allocation above zeroed      * the data, just do nothing on failure.      */
@@ -599,7 +428,7 @@ name|ACPI_HIWORD
 argument_list|(
 name|ACPI_LODWORD
 argument_list|(
-name|PciValue
+name|Temp
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -611,22 +440,151 @@ name|ACPI_LOWORD
 argument_list|(
 name|ACPI_LODWORD
 argument_list|(
-name|PciValue
+name|Temp
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The PCI segment number comes from the _SEG method */
+comment|/*      * Get the _SEG and _BBN values from the device upon which the handler      * is installed.      *      * We need to get the _SEG and _BBN objects relative to the PCI BUS device.      * This is the device the handler has been registered to handle.      */
+comment|/*      * If the AddrHandler.Node is still pointing to the root, we need      * to scan upward for a PCI Root bridge and re-associate the OpRegion      * handlers with that device.      */
+if|if
+condition|(
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Node
+operator|==
+name|AcpiGbl_RootNode
+condition|)
+block|{
+comment|/*          * Node is currently the parent object          */
+while|while
+condition|(
+name|Node
+operator|!=
+name|AcpiGbl_RootNode
+condition|)
+block|{
+name|Status
+operator|=
+name|AcpiUtExecute_HID
+argument_list|(
+name|Node
+argument_list|,
+operator|&
+name|ObjectHID
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Got a valid _HID, check if this is a PCI root */
+if|if
+condition|(
+operator|!
+operator|(
+name|ACPI_STRNCMP
+argument_list|(
+name|ObjectHID
+operator|.
+name|Buffer
+argument_list|,
+name|PCI_ROOT_HID_STRING
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|PCI_ROOT_HID_STRING
+argument_list|)
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* Install a handler for this PCI root bridge */
+name|Status
+operator|=
+name|AcpiInstallAddressSpaceHandler
+argument_list|(
+operator|(
+name|ACPI_HANDLE
+operator|)
+name|Node
+argument_list|,
+name|ACPI_ADR_SPACE_PCI_CONFIG
+argument_list|,
+name|ACPI_DEFAULT_HANDLER
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Could not install PciConfig handler for %4.4s, %s\n"
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+break|break;
+block|}
+block|}
+name|Node
+operator|=
+name|AcpiNsGetParentNode
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|Node
+operator|=
+name|HandlerObj
+operator|->
+name|AddrHandler
+operator|.
+name|Node
+expr_stmt|;
+block|}
+comment|/*      * The PCI segment number comes from the _SEG method      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
 argument_list|(
 name|METHOD_NAME__SEG
 argument_list|,
-name|PciRootNode
+name|Node
 argument_list|,
 operator|&
-name|PciValue
+name|Temp
 argument_list|)
 expr_stmt|;
 if|if
@@ -643,21 +601,21 @@ name|Segment
 operator|=
 name|ACPI_LOWORD
 argument_list|(
-name|PciValue
+name|Temp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* The PCI bus number comes from the _BBN method */
+comment|/*      * The PCI bus number comes from the _BBN method      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
 argument_list|(
 name|METHOD_NAME__BBN
 argument_list|,
-name|PciRootNode
+name|Node
 argument_list|,
 operator|&
-name|PciValue
+name|Temp
 argument_list|)
 expr_stmt|;
 if|if
@@ -674,14 +632,14 @@ name|Bus
 operator|=
 name|ACPI_LOWORD
 argument_list|(
-name|PciValue
+name|Temp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Complete this device's PciId */
+comment|/*      * Complete this device's PciId      */
 name|AcpiOsDerivePciId
 argument_list|(
-name|PciRootNode
+name|Node
 argument_list|,
 name|RegionObj
 operator|->
@@ -964,12 +922,11 @@ name|Region
 operator|.
 name|SpaceId
 expr_stmt|;
-comment|/* Setup defaults */
 name|RegionObj
 operator|->
 name|Region
 operator|.
-name|AddressSpace
+name|AddrHandler
 operator|=
 name|NULL
 expr_stmt|;
@@ -1000,7 +957,7 @@ name|Flags
 operator||=
 name|AOPOBJ_OBJECT_INITIALIZED
 expr_stmt|;
-comment|/* Find any "_REG" method associated with this region definition */
+comment|/*      * Find any "_REG" method associated with this region definition      */
 name|Status
 operator|=
 name|AcpiNsSearchNode
@@ -1040,7 +997,7 @@ condition|(
 name|Node
 condition|)
 block|{
-comment|/* Check to see if a handler exists */
+comment|/*          * Check to see if a handler exists          */
 name|HandlerObj
 operator|=
 name|NULL
@@ -1057,7 +1014,7 @@ condition|(
 name|ObjDesc
 condition|)
 block|{
-comment|/* Can only be a handler if the object exists */
+comment|/*              * Can only be a handler if the object exists              */
 switch|switch
 condition|(
 name|Node
@@ -1074,7 +1031,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 break|break;
 case|case
@@ -1086,7 +1043,7 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 break|break;
 case|case
@@ -1098,7 +1055,7 @@ name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 break|break;
 default|default:
@@ -1115,7 +1072,7 @@ if|if
 condition|(
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|SpaceId
 operator|==
@@ -1160,7 +1117,7 @@ name|HandlerObj
 operator|=
 name|HandlerObj
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Next
 expr_stmt|;
@@ -1175,7 +1132,7 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we get here, there is no handler for this region */
+comment|/*      * If we get here, there is no handler for this region      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(

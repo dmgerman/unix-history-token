@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsfield - Dispatcher field routines  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -512,16 +512,13 @@ call|(
 name|UINT8
 call|)
 argument_list|(
-operator|(
-name|UINT32
-operator|)
 name|Arg
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 operator|>>
 literal|8
 argument_list|)
@@ -542,7 +539,7 @@ name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 argument_list|)
 expr_stmt|;
 break|break;
@@ -895,16 +892,13 @@ name|Info
 operator|.
 name|FieldFlags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Arg
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 name|Info
 operator|.
@@ -1369,16 +1363,13 @@ name|Info
 operator|.
 name|BankValue
 operator|=
-operator|(
-name|UINT32
-operator|)
 name|Arg
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer32
 expr_stmt|;
 comment|/* Fourth arg is the field flags */
 name|Arg
@@ -1393,16 +1384,13 @@ name|Info
 operator|.
 name|FieldFlags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Arg
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 comment|/* Each remaining arg is a Named Field */
 name|Info
@@ -1626,16 +1614,13 @@ name|Info
 operator|.
 name|FieldFlags
 operator|=
-operator|(
-name|UINT8
-operator|)
 name|Arg
 operator|->
 name|Common
 operator|.
 name|Value
 operator|.
-name|Integer
+name|Integer8
 expr_stmt|;
 comment|/* Each remaining arg is a Named Field */
 name|Info

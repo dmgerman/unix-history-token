@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 26 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsmisc - Miscellaneous resource descriptors  *              $Revision: 25 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -291,7 +291,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* Dereference */
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -513,7 +513,7 @@ name|VendorSpecific
 operator|.
 name|Length
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,

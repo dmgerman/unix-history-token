@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 155 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 154 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1442,10 +1442,9 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DeviceNode
 parameter_list|,
-name|ACPI_COMPATIBLE_ID_LIST
+name|ACPI_DEVICE_ID
 modifier|*
-modifier|*
-name|ReturnCidList
+name|Cid
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -20,7 +20,7 @@ name|__ACFREEBSD_H__
 end_define
 
 begin_comment
-comment|/*  * Some systems' ASL may have problems because they look for names   * of Microsoft operating systems.  To override this, set hw.acpi.os_name  * to the appropriate string.  */
+comment|/*  * XXX this is technically correct, but will cause problems with some ASL  *     which only works if the string names a Microsoft operating system.  */
 end_comment
 
 begin_define
@@ -79,11 +79,43 @@ begin_comment
 comment|/* for backward compatibility */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_acpi.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
-name|ACPI_DISASSEMBLER
+name|ACPI_DEBUG_OUTPUT
 end_define
+
+begin_comment
+comment|/* for backward compatibility */
+end_comment
 
 begin_endif
 endif|#
@@ -222,19 +254,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_FLUSH_CPU_CACHE
-parameter_list|()
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_define
-define|#
-directive|define
 name|__cli
 parameter_list|()
 end_define
@@ -243,6 +262,13 @@ begin_define
 define|#
 directive|define
 name|__sti
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
 end_define
 

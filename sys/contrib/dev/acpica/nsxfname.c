@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 97 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsxfname - Public interfaces to the ACPI subsystem  *                         ACPI Namespace oriented interfaces  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetHandle  *  * PARAMETERS:  Parent          - Object to search under (search scope).  *              PathName        - Pointer to an asciiz string containing the  *                                  name  *              RetHandle       - Where the return handle is placed  *  * RETURN:      Status  *  * DESCRIPTION: This routine will search for a caller specified name in the  *              name space.  The caller can restrict the search region by  *              specifying a non NULL parent.  The parent value is itself a  *              namespace handle.  *  ******************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiGetHandle  *  * PARAMETERS:  Parent          - Object to search under (search scope).  *              PathName        - Pointer to an asciiz string containing the  *                                  name  *              RetHandle       - Where the return handle is placed  *  * RETURN:      Status  *  * DESCRIPTION: This routine will search for a caller specified name in the  *              name space.  The caller can restrict the search region by  *              specifying a non NULL parent.  The parent value is itself a  *              namespace handle.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -241,7 +241,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetName  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              Buffer          - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter.  This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiGetName  *  * PARAMETERS:  Handle          - Handle to be converted to a pathname  *              NameType        - Full pathname or single segment  *              Buffer          - Buffer for returned path  *  * RETURN:      Pointer to a string containing the fully qualified Name.  *  * DESCRIPTION: This routine returns the fully qualified name associated with  *              the Handle parameter.  This and the AcpiPathnameToHandle are  *              complementary functions.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -443,7 +443,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle          - Object Handle  *              Info            - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  ******************************************************************************/
+comment|/****************************************************************************  *  * FUNCTION:    AcpiGetObjectInfo  *  * PARAMETERS:  Handle          - Object Handle  *              Info            - Where the info is returned  *  * RETURN:      Status  *  * DESCRIPTION: Returns information about an object as gleaned from the  *              namespace node and possibly by running several standard  *              control methods (Such as in the case of a device.)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -453,33 +453,33 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Handle
 parameter_list|,
-name|ACPI_BUFFER
+name|ACPI_DEVICE_INFO
 modifier|*
-name|Buffer
+name|Info
 parameter_list|)
 block|{
+name|ACPI_DEVICE_ID
+name|Hid
+decl_stmt|;
+name|ACPI_DEVICE_ID
+name|Uid
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|UINT32
+name|DeviceStatus
+init|=
+literal|0
+decl_stmt|;
+name|ACPI_INTEGER
+name|Address
+init|=
+literal|0
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
-decl_stmt|;
-name|ACPI_DEVICE_INFO
-name|Info
-decl_stmt|;
-name|ACPI_DEVICE_INFO
-modifier|*
-name|ReturnInfo
-decl_stmt|;
-name|ACPI_COMPATIBLE_ID_LIST
-modifier|*
-name|CidList
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_SIZE
-name|Size
 decl_stmt|;
 comment|/* Parameter validation */
 if|if
@@ -488,33 +488,12 @@ operator|!
 name|Handle
 operator|||
 operator|!
-name|Buffer
+name|Info
 condition|)
 block|{
 return|return
 operator|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
-block|}
-name|Status
-operator|=
-name|AcpiUtValidateBuffer
-argument_list|(
-name|Buffer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
 operator|)
 return|;
 block|}
@@ -566,26 +545,8 @@ name|AE_BAD_PARAMETER
 operator|)
 return|;
 block|}
-comment|/* Init return structure */
-name|Size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_DEVICE_INFO
-argument_list|)
-expr_stmt|;
-name|ACPI_MEMSET
-argument_list|(
-operator|&
 name|Info
-argument_list|,
-literal|0
-argument_list|,
-name|Size
-argument_list|)
-expr_stmt|;
-name|Info
-operator|.
+operator|->
 name|Type
 operator|=
 name|Node
@@ -593,7 +554,7 @@ operator|->
 name|Type
 expr_stmt|;
 name|Info
-operator|.
+operator|->
 name|Name
 operator|=
 name|Node
@@ -601,12 +562,6 @@ operator|->
 name|Name
 operator|.
 name|Integer
-expr_stmt|;
-name|Info
-operator|.
-name|Valid
-operator|=
-literal|0
 expr_stmt|;
 name|Status
 operator|=
@@ -629,18 +584,30 @@ name|Status
 operator|)
 return|;
 block|}
-comment|/* If not a device, we are all done */
+comment|/*      * If not a device, we are all done.      */
 if|if
 condition|(
 name|Info
-operator|.
+operator|->
 name|Type
-operator|==
+operator|!=
 name|ACPI_TYPE_DEVICE
 condition|)
 block|{
-comment|/*          * Get extra info for ACPI Devices objects only:          * Run the Device _HID, _UID, _CID, _STA, and _ADR methods.           *           * Note: none of these methods are required, so they may or may          * not be present for this device.  The Info.Valid bitfield is used          * to indicate which methods were found and ran successfully.          */
-comment|/* Execute the Device._HID method */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/*      * Get extra info for ACPI devices only.  Run the      * _HID, _UID, _STA, and _ADR methods.  Note: none      * of these methods are required, so they may or may      * not be present.  The Info->Valid bits are used      * to indicate which methods ran successfully.      */
+name|Info
+operator|->
+name|Valid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Execute the _HID method and save the result */
 name|Status
 operator|=
 name|AcpiUtExecute_HID
@@ -648,9 +615,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|Info
-operator|.
-name|HardwareId
+name|Hid
 argument_list|)
 expr_stmt|;
 if|if
@@ -661,14 +626,32 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_STRNCPY
+argument_list|(
 name|Info
+operator|->
+name|HardwareId
+argument_list|,
+name|Hid
 operator|.
+name|Buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|Info
+operator|->
+name|HardwareId
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Info
+operator|->
 name|Valid
 operator||=
 name|ACPI_VALID_HID
 expr_stmt|;
 block|}
-comment|/* Execute the Device._UID method */
+comment|/* Execute the _UID method and save the result */
 name|Status
 operator|=
 name|AcpiUtExecute_UID
@@ -676,9 +659,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|Info
-operator|.
-name|UniqueId
+name|Uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -689,58 +670,25 @@ name|Status
 argument_list|)
 condition|)
 block|{
+name|ACPI_STRCPY
+argument_list|(
 name|Info
+operator|->
+name|UniqueId
+argument_list|,
+name|Uid
 operator|.
+name|Buffer
+argument_list|)
+expr_stmt|;
+name|Info
+operator|->
 name|Valid
 operator||=
 name|ACPI_VALID_UID
 expr_stmt|;
 block|}
-comment|/* Execute the Device._CID method */
-name|Status
-operator|=
-name|AcpiUtExecute_CID
-argument_list|(
-name|Node
-argument_list|,
-operator|&
-name|CidList
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|Size
-operator|+=
-operator|(
-operator|(
-name|ACPI_SIZE
-operator|)
-name|CidList
-operator|->
-name|Count
-operator|-
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ACPI_COMPATIBLE_ID
-argument_list|)
-expr_stmt|;
-name|Info
-operator|.
-name|Valid
-operator||=
-name|ACPI_VALID_CID
-expr_stmt|;
-block|}
-comment|/* Execute the Device._STA method */
+comment|/*      * Execute the _STA method and save the result      * _STA is not always present      */
 name|Status
 operator|=
 name|AcpiUtExecute_STA
@@ -748,9 +696,7 @@ argument_list|(
 name|Node
 argument_list|,
 operator|&
-name|Info
-operator|.
-name|CurrentStatus
+name|DeviceStatus
 argument_list|)
 expr_stmt|;
 if|if
@@ -762,13 +708,19 @@ argument_list|)
 condition|)
 block|{
 name|Info
-operator|.
+operator|->
+name|CurrentStatus
+operator|=
+name|DeviceStatus
+expr_stmt|;
+name|Info
+operator|->
 name|Valid
 operator||=
 name|ACPI_VALID_STA
 expr_stmt|;
 block|}
-comment|/* Execute the Device._ADR method */
+comment|/*      * Execute the _ADR method and save result if successful      * _ADR is not always present      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -778,8 +730,6 @@ argument_list|,
 name|Node
 argument_list|,
 operator|&
-name|Info
-operator|.
 name|Address
 argument_list|)
 expr_stmt|;
@@ -792,95 +742,21 @@ argument_list|)
 condition|)
 block|{
 name|Info
-operator|.
+operator|->
+name|Address
+operator|=
+name|Address
+expr_stmt|;
+name|Info
+operator|->
 name|Valid
 operator||=
 name|ACPI_VALID_ADR
 expr_stmt|;
 block|}
-name|Status
-operator|=
-name|AE_OK
-expr_stmt|;
-block|}
-comment|/* Validate/Allocate/Clear caller buffer */
-name|Status
-operator|=
-name|AcpiUtInitializeBuffer
-argument_list|(
-name|Buffer
-argument_list|,
-name|Size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-goto|goto
-name|Cleanup
-goto|;
-block|}
-comment|/* Populate the return buffer */
-name|ReturnInfo
-operator|=
-name|Buffer
-operator|->
-name|Pointer
-expr_stmt|;
-name|ACPI_MEMCPY
-argument_list|(
-name|ReturnInfo
-argument_list|,
-operator|&
-name|Info
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_DEVICE_INFO
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|CidList
-condition|)
-block|{
-name|ACPI_MEMCPY
-argument_list|(
-operator|&
-name|ReturnInfo
-operator|->
-name|CompatibilityId
-argument_list|,
-name|CidList
-argument_list|,
-name|CidList
-operator|->
-name|Size
-argument_list|)
-expr_stmt|;
-block|}
-name|Cleanup
-label|:
-if|if
-condition|(
-name|CidList
-condition|)
-block|{
-name|ACPI_MEM_FREE
-argument_list|(
-name|CidList
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 operator|(
-name|Status
+name|AE_OK
 operator|)
 return|;
 block|}

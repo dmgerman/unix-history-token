@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 84 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -94,7 +94,7 @@ name|WindowSize
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|ACPI_MISALIGNED_TRANSFERS
+name|_HW_ALIGNMENT_SUPPORT
 name|UINT32
 name|Remainder
 decl_stmt|;
@@ -163,7 +163,7 @@ expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef
-name|ACPI_MISALIGNED_TRANSFERS
+name|_HW_ALIGNMENT_SUPPORT
 comment|/*      * Hardware does not support non-aligned data transfers, we must verify      * the request.      */
 operator|(
 name|void
@@ -656,9 +656,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-name|UINT32
-name|Value32
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"ExSystemIoSpaceHandler"
@@ -696,6 +693,11 @@ block|{
 case|case
 name|ACPI_READ
 case|:
+operator|*
+name|Value
+operator|=
+literal|0
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiOsReadPort
@@ -705,16 +707,10 @@ name|ACPI_IO_ADDRESS
 operator|)
 name|Address
 argument_list|,
-operator|&
-name|Value32
+name|Value
 argument_list|,
 name|BitWidth
 argument_list|)
-expr_stmt|;
-operator|*
-name|Value
-operator|=
-name|Value32
 expr_stmt|;
 break|break;
 case|case
@@ -729,9 +725,6 @@ name|ACPI_IO_ADDRESS
 operator|)
 name|Address
 argument_list|,
-operator|(
-name|UINT32
-operator|)
 operator|*
 name|Value
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,15 +295,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AE_SAME_HANDLER
-value|(ACPI_STATUS) (0x001D | AE_CODE_ENVIRONMENTAL)
-end_define
-
-begin_define
-define|#
-directive|define
 name|AE_CODE_ENV_MAX
-value|0x001D
+value|0x001C
 end_define
 
 begin_comment
@@ -831,8 +824,6 @@ block|,
 literal|"AE_LOGICAL_ADDRESS"
 block|,
 literal|"AE_ABORT_METHOD"
-block|,
-literal|"AE_SAME_HANDLER"
 block|}
 decl_stmt|;
 end_decl_stmt

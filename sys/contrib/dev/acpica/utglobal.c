@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 185 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 180 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -722,19 +722,19 @@ comment|/***********************************************************************
 end_comment
 
 begin_decl_stmt
-name|ACPI_TABLE_LIST
-name|AcpiGbl_TableLists
+name|ACPI_TABLE_DESC
+name|AcpiGbl_AcpiTables
 index|[
-name|NUM_ACPI_TABLE_TYPES
+name|NUM_ACPI_TABLES
 index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_TABLE_SUPPORT
-name|AcpiGbl_TableData
+name|AcpiGbl_AcpiTableData
 index|[
-name|NUM_ACPI_TABLE_TYPES
+name|NUM_ACPI_TABLES
 index|]
 init|=
 block|{
@@ -1572,7 +1572,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|MAX_MTX
 condition|)
 block|{
 return|return
@@ -1685,7 +1685,6 @@ expr_stmt|;
 name|AcpiGbl_NextTableOwnerId
 operator|++
 expr_stmt|;
-comment|/* Check for wraparound */
 if|if
 condition|(
 name|AcpiGbl_NextTableOwnerId
@@ -1696,13 +1695,6 @@ block|{
 name|AcpiGbl_NextTableOwnerId
 operator|=
 name|ACPI_FIRST_TABLE_ID
-expr_stmt|;
-name|ACPI_REPORT_WARNING
-argument_list|(
-operator|(
-literal|"Table owner ID wraparound\n"
-operator|)
-argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -1723,7 +1715,6 @@ operator|==
 name|ACPI_FIRST_TABLE_ID
 condition|)
 block|{
-comment|/* Check for wraparound */
 name|AcpiGbl_NextMethodOwnerId
 operator|=
 name|ACPI_FIRST_METHOD_ID
@@ -2141,22 +2132,66 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_ACPI_TABLE_TYPES
+name|NUM_ACPI_TABLES
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+operator|.
+name|Prev
+operator|=
+operator|&
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+expr_stmt|;
+name|AcpiGbl_AcpiTables
 index|[
 name|i
 index|]
 operator|.
 name|Next
 operator|=
+operator|&
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+expr_stmt|;
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+operator|.
+name|Pointer
+operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_TableLists
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+operator|.
+name|Length
+operator|=
+literal|0
+expr_stmt|;
+name|AcpiGbl_AcpiTables
+index|[
+name|i
+index|]
+operator|.
+name|Allocation
+operator|=
+name|ACPI_MEM_NOT_ALLOCATED
+expr_stmt|;
+name|AcpiGbl_AcpiTables
 index|[
 name|i
 index|]
@@ -2175,13 +2210,13 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MUTEX
+name|NUM_MTX
 condition|;
 name|i
 operator|++
 control|)
 block|{
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|i
 index|]
@@ -2190,7 +2225,7 @@ name|Mutex
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|i
 index|]
@@ -2199,7 +2234,7 @@ name|OwnerId
 operator|=
 name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|i
 index|]
@@ -2210,32 +2245,18 @@ literal|0
 expr_stmt|;
 block|}
 comment|/* GPE support */
-name|AcpiGbl_GpeXruptListHead
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_GpeFadtBlocks
-index|[
-literal|0
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|AcpiGbl_GpeFadtBlocks
-index|[
-literal|1
-index|]
+name|AcpiGbl_GpeBlockListHead
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* Global notify handlers */
-name|AcpiGbl_SystemNotify
+name|AcpiGbl_SysNotify
 operator|.
 name|Handler
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_DeviceNotify
+name|AcpiGbl_DrvNotify
 operator|.
 name|Handler
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 109 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 108 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -894,7 +894,7 @@ break|break;
 case|case
 name|DB_WORD_DISPLAY
 case|:
-name|ACPI_MOVE_16_TO_32
+name|ACPI_MOVE_UNALIGNED16_TO_32
 argument_list|(
 operator|&
 name|Temp32
@@ -923,7 +923,7 @@ break|break;
 case|case
 name|DB_DWORD_DISPLAY
 case|:
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|Temp32
@@ -952,7 +952,7 @@ break|break;
 case|case
 name|DB_QWORD_DISPLAY
 case|:
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|Temp32
@@ -973,7 +973,7 @@ argument_list|,
 name|Temp32
 argument_list|)
 expr_stmt|;
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|Temp32

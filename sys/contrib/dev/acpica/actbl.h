@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actbl.h - Table data structures defined in ACPI specification  *       $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -526,37 +526,6 @@ name|CriticalLevel
 decl_stmt|;
 block|}
 name|SMART_BATTERY_DESCRIPTION_TABLE
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|hpet_description_table
-block|{
-name|ACPI_TABLE_HEADER
-name|Header
-decl_stmt|;
-name|UINT32
-name|HardwareId
-decl_stmt|;
-name|UINT32
-name|BaseAddress
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|UINT8
-name|HpetNumber
-decl_stmt|;
-name|UINT16
-name|ClockTick
-decl_stmt|;
-name|UINT8
-name|Attributes
-decl_stmt|;
-block|}
-name|HPET_DESCRIPTION_TABLE
 typedef|;
 end_typedef
 

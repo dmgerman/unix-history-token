@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 67 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -151,6 +151,9 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
+parameter_list|,
+name|UINT32
+name|Offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -168,6 +171,9 @@ parameter_list|,
 name|ACPI_GENERIC_ADDRESS
 modifier|*
 name|Reg
+parameter_list|,
+name|UINT32
+name|Offset
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -176,8 +182,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiHwClearAcpiStatus
 parameter_list|(
-name|UINT32
-name|Flags
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -220,21 +225,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiHwDisableGpeBlock
-parameter_list|(
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|GpeXruptInfo
-parameter_list|,
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|AcpiHwDisableGpeForWakeup
 parameter_list|(
@@ -258,26 +248,10 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiHwClearGpeBlock
-parameter_list|(
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|GpeXruptInfo
-parameter_list|,
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_STATUS
 name|AcpiHwGetGpeStatus
 parameter_list|(
-name|ACPI_GPE_EVENT_INFO
-modifier|*
-name|GpeEventInfo
+name|UINT32
+name|GpeNumber
 parameter_list|,
 name|ACPI_EVENT_STATUS
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 117 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -380,7 +380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiUtTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free global memory  *  ******************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiUtTerminate  *  * PARAMETERS:  none  *  * RETURN:      none  *  * DESCRIPTION: free memory allocated for table storage.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -390,95 +390,13 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-decl_stmt|;
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|NextGpeBlock
-decl_stmt|;
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|GpeXruptInfo
-decl_stmt|;
-name|ACPI_GPE_XRUPT_INFO
-modifier|*
-name|NextGpeXruptInfo
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"UtTerminate"
 argument_list|)
 expr_stmt|;
 comment|/* Free global tables, etc. */
-comment|/* Free global GPE blocks and related info structures */
-name|GpeXruptInfo
-operator|=
-name|AcpiGbl_GpeXruptListHead
-expr_stmt|;
-while|while
-condition|(
-name|GpeXruptInfo
-condition|)
-block|{
-name|GpeBlock
-operator|=
-name|GpeXruptInfo
-operator|->
-name|GpeBlockListHead
-expr_stmt|;
-while|while
-condition|(
-name|GpeBlock
-condition|)
-block|{
-name|NextGpeBlock
-operator|=
-name|GpeBlock
-operator|->
-name|Next
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-operator|->
-name|EventInfo
-argument_list|)
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-operator|->
-name|RegisterInfo
-argument_list|)
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeBlock
-argument_list|)
-expr_stmt|;
-name|GpeBlock
-operator|=
-name|NextGpeBlock
-expr_stmt|;
-block|}
-name|NextGpeXruptInfo
-operator|=
-name|GpeXruptInfo
-operator|->
-name|Next
-expr_stmt|;
-name|ACPI_MEM_FREE
-argument_list|(
-name|GpeXruptInfo
-argument_list|)
-expr_stmt|;
-name|GpeXruptInfo
-operator|=
-name|NextGpeXruptInfo
-expr_stmt|;
-block|}
+comment|/* Nothing to do at this time */
 name|return_VOID
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 95 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"acnamesp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acevents.h"
 end_include
 
 begin_define
@@ -77,10 +71,6 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|SecondDesc
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|NextDesc
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -227,64 +217,6 @@ name|Package
 operator|.
 name|Elements
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_TYPE_DEVICE
-case|:
-if|if
-condition|(
-name|Object
-operator|->
-name|Device
-operator|.
-name|GpeBlock
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|AcpiEvDeleteGpeBlock
-argument_list|(
-name|Object
-operator|->
-name|Device
-operator|.
-name|GpeBlock
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Walk the handler list for this device */
-name|HandlerDesc
-operator|=
-name|Object
-operator|->
-name|Device
-operator|.
-name|AddressSpace
-expr_stmt|;
-while|while
-condition|(
-name|HandlerDesc
-condition|)
-block|{
-name|NextDesc
-operator|=
-name|HandlerDesc
-operator|->
-name|AddressSpace
-operator|.
-name|Next
-expr_stmt|;
-name|AcpiUtRemoveReference
-argument_list|(
-name|HandlerDesc
-argument_list|)
-expr_stmt|;
-name|HandlerDesc
-operator|=
-name|NextDesc
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_MUTEX
@@ -444,22 +376,23 @@ name|Object
 operator|->
 name|Region
 operator|.
-name|AddressSpace
+name|AddrHandler
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|HandlerDesc
-condition|)
-block|{
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|HandlerDesc
 operator|->
-name|AddressSpace
+name|AddrHandler
 operator|.
 name|Hflags
-operator|&
+operator|==
 name|ACPI_ADDR_HANDLER_DEFAULT_INSTALLED
+operator|)
 condition|)
 block|{
 name|ObjPointer
@@ -469,12 +402,6 @@ operator|->
 name|Extra
 operator|.
 name|RegionContext
-expr_stmt|;
-block|}
-name|AcpiUtRemoveReference
-argument_list|(
-name|HandlerDesc
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now we can free the Extra object */
@@ -675,7 +602,7 @@ name|NewCount
 operator|=
 name|Count
 expr_stmt|;
-comment|/*      * Perform the reference count action (increment, decrement, or force delete)      */
+comment|/*      * Reference count action (increment, decrement, or force delete)      */
 switch|switch
 condition|(
 name|Action
@@ -898,6 +825,14 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|Next
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|New
+decl_stmt|;
 name|ACPI_GENERIC_STATE
 modifier|*
 name|StateList
@@ -928,7 +863,7 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure that this isn't a namespace handle */
+comment|/*      * Make sure that this isn't a namespace handle      */
 if|if
 condition|(
 name|ACPI_GET_DESCRIPTOR_TYPE
@@ -1003,13 +938,41 @@ block|{
 case|case
 name|ACPI_TYPE_DEVICE
 case|:
+name|Status
+operator|=
+name|AcpiUtCreateUpdateStateAndPush
+argument_list|(
+name|Object
+operator|->
+name|Device
+operator|.
+name|AddrHandler
+argument_list|,
+name|Action
+argument_list|,
+operator|&
+name|StateList
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+goto|goto
+name|ErrorExit
+goto|;
+block|}
 name|AcpiUtUpdateRefCount
 argument_list|(
 name|Object
 operator|->
 name|Device
 operator|.
-name|SystemNotify
+name|SysHandler
 argument_list|,
 name|Action
 argument_list|)
@@ -1020,11 +983,49 @@ name|Object
 operator|->
 name|Device
 operator|.
-name|DeviceNotify
+name|DrvHandler
 argument_list|,
 name|Action
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
+case|:
+comment|/* Must walk list of address handlers */
+name|Next
+operator|=
+name|Object
+operator|->
+name|AddrHandler
+operator|.
+name|Next
+expr_stmt|;
+while|while
+condition|(
+name|Next
+condition|)
+block|{
+name|New
+operator|=
+name|Next
+operator|->
+name|AddrHandler
+operator|.
+name|Next
+expr_stmt|;
+name|AcpiUtUpdateRefCount
+argument_list|(
+name|Next
+argument_list|,
+name|Action
+argument_list|)
+expr_stmt|;
+name|Next
+operator|=
+name|New
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
@@ -1341,7 +1342,7 @@ argument_list|,
 name|Object
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that we have a valid object */
+comment|/*      * Ensure that we have a valid object      */
 if|if
 condition|(
 operator|!
@@ -1354,7 +1355,7 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/* Increment the reference count */
+comment|/*      * We have a valid ACPI internal object, now increment the reference count      */
 operator|(
 name|void
 operator|)
@@ -1409,7 +1410,7 @@ block|{
 name|return_VOID
 expr_stmt|;
 block|}
-comment|/* Ensure that we have a valid object */
+comment|/*      * Ensure that we have a valid object      */
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 63 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -196,7 +196,7 @@ operator|->
 name|SmiCmd
 argument_list|,
 operator|(
-name|UINT32
+name|ACPI_INTEGER
 operator|)
 name|AcpiGbl_FADT
 operator|->
@@ -228,7 +228,7 @@ operator|->
 name|SmiCmd
 argument_list|,
 operator|(
-name|UINT32
+name|ACPI_INTEGER
 operator|)
 name|AcpiGbl_FADT
 operator|->

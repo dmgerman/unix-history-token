@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nswalk - Functions for walking the ACPI namespace  *              $Revision: 34 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -193,9 +193,6 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
-name|ACPI_STATUS
-name|MutexStatus
-decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|ChildNode
@@ -302,7 +299,7 @@ condition|(
 name|UnlockBeforeCallback
 condition|)
 block|{
-name|MutexStatus
+name|Status
 operator|=
 name|AcpiUtReleaseMutex
 argument_list|(
@@ -313,13 +310,13 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|MutexStatus
+name|Status
 argument_list|)
 condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|MutexStatus
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -342,7 +339,7 @@ condition|(
 name|UnlockBeforeCallback
 condition|)
 block|{
-name|MutexStatus
+name|Status
 operator|=
 name|AcpiUtAcquireMutex
 argument_list|(
@@ -353,13 +350,13 @@ if|if
 condition|(
 name|ACPI_FAILURE
 argument_list|(
-name|MutexStatus
+name|Status
 argument_list|)
 condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|MutexStatus
+name|Status
 argument_list|)
 expr_stmt|;
 block|}

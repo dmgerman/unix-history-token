@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 54 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 53 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -919,12 +919,6 @@ name|i
 operator|++
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (i == 0xEFDC)         {             AcpiDbgLevel = 0x00FFFFFF;         }
-endif|#
-directive|endif
 name|Status
 operator|=
 name|AcpiDbExecuteMethod
@@ -937,55 +931,50 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ReturnObj
+operator|.
+name|Length
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%s During execution of %s at iteration %X\n"
-argument_list|,
-name|AcpiFormatException
-argument_list|(
-name|Status
-argument_list|)
+literal|"Execution of %s returned object %p Buflen %X\n"
 argument_list|,
 name|Info
 operator|->
 name|Pathname
 argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-operator|(
-name|i
-operator|%
-literal|1000
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|AcpiOsPrintf
-argument_list|(
-literal|"%d executions\n"
+name|ReturnObj
+operator|.
+name|Pointer
 argument_list|,
-name|i
+operator|(
+name|UINT32
+operator|)
+name|ReturnObj
+operator|.
+name|Length
+argument_list|)
+expr_stmt|;
+name|AcpiDbDumpObject
+argument_list|(
+name|ReturnObj
+operator|.
+name|Pointer
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|if (ReturnObj.Length)         {             AcpiOsPrintf ("Execution of %s returned object %p Buflen %X\n",                 Info->Pathname, ReturnObj.Pointer, (UINT32) ReturnObj.Length);             AcpiDbDumpObject (ReturnObj.Pointer, 1);         }
-endif|#
-directive|endif
+block|}
 block|}
 comment|/* Signal our completion */
 name|Status

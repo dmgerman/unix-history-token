@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -342,7 +342,7 @@ end_comment
 
 begin_function_decl
 name|void
-name|AcpiTbDeleteAllTables
+name|AcpiTbDeleteAcpiTables
 parameter_list|(
 name|void
 parameter_list|)
@@ -351,7 +351,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiTbDeleteTablesByType
+name|AcpiTbDeleteAcpiTable
 parameter_list|(
 name|ACPI_TABLE_TYPE
 name|Type
@@ -378,6 +378,17 @@ parameter_list|(
 name|ACPI_TABLE_DESC
 modifier|*
 name|TableDesc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiTbFreeAcpiTablesOfType
+parameter_list|(
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableInfo
 parameter_list|)
 function_decl|;
 end_function_decl

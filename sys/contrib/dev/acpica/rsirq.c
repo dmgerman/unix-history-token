@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 34 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsirq - IRQ resource descriptors  *              $Revision: 32 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -568,7 +568,7 @@ operator|<<
 name|Temp8
 expr_stmt|;
 block|}
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -754,7 +754,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_16_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -901,7 +901,7 @@ name|Index
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -1348,7 +1348,7 @@ name|Index
 operator|++
 control|)
 block|{
-name|ACPI_MOVE_32_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1433,10 +1433,7 @@ expr_stmt|;
 comment|/*          * Buffer needs to be set to the length of the sting + one for the          * terminating null          */
 name|Buffer
 operator|+=
-call|(
-name|ACPI_SIZE
-call|)
-argument_list|(
+operator|(
 name|ACPI_STRLEN
 argument_list|(
 name|LinkedList
@@ -1451,7 +1448,7 @@ name|StringPtr
 argument_list|)
 operator|+
 literal|1
-argument_list|)
+operator|)
 expr_stmt|;
 block|}
 comment|/*      * Return the number of bytes consumed in this operation      */

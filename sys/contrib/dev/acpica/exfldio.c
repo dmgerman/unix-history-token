@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1419,7 +1419,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetBufferDatum  *  * PARAMETERS:  Datum               - Where the Datum is returned  *              Buffer              - Raw field buffer  *              BufferLength        - Entire length (used for big-endian only)  *              ByteGranularity     - 1/2/4/8 Granularity of the field  *                                    (aka Datum Size)  *              BufferOffset        - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Get a datum from the buffer according to the buffer field  *              byte granularity  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExGetBufferDatum  *  * PARAMETERS:  Datum               - Where the Datum is returned  *              Buffer              - Raw field buffer  *              ByteGranularity     - 1/2/4/8 Granularity of the field  *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Get a datum from the buffer according to the buffer field  *              byte granularity  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1435,34 +1435,15 @@ modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
-name|BufferLength
-parameter_list|,
-name|UINT32
 name|ByteGranularity
 parameter_list|,
 name|UINT32
-name|BufferOffset
+name|Offset
 parameter_list|)
 block|{
-name|UINT32
-name|Index
-decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Get proper index into buffer (handles big/little endian) */
-name|Index
-operator|=
-name|ACPI_BUFFER_INDEX
-argument_list|(
-name|BufferLength
-argument_list|,
-name|BufferOffset
-argument_list|,
-name|ByteGranularity
-argument_list|)
-expr_stmt|;
-comment|/* Move the requested number of bytes */
 switch|switch
 condition|(
 name|ByteGranularity
@@ -1482,14 +1463,14 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 expr_stmt|;
 break|break;
 case|case
 name|ACPI_FIELD_WORD_GRANULARITY
 case|:
-name|ACPI_MOVE_16_TO_64
+name|ACPI_MOVE_UNALIGNED16_TO_32
 argument_list|(
 name|Datum
 argument_list|,
@@ -1503,7 +1484,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|)
@@ -1512,7 +1493,7 @@ break|break;
 case|case
 name|ACPI_FIELD_DWORD_GRANULARITY
 case|:
-name|ACPI_MOVE_32_TO_64
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 name|Datum
 argument_list|,
@@ -1526,7 +1507,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|)
@@ -1535,7 +1516,7 @@ break|break;
 case|case
 name|ACPI_FIELD_QWORD_GRANULARITY
 case|:
-name|ACPI_MOVE_64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 argument_list|(
 name|Datum
 argument_list|,
@@ -1549,7 +1530,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|)
@@ -1563,7 +1544,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetBufferDatum  *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              BufferLength        - Entire length (used for big-endian only)  *              ByteGranularity     - 1/2/4/8 Granularity of the field  *                                    (aka Datum Size)  *              BufferOffset        - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSetBufferDatum  *  * PARAMETERS:  MergedDatum         - Value to store  *              Buffer              - Receiving buffer  *              ByteGranularity     - 1/2/4/8 Granularity of the field  *                                    (aka Datum Size)  *              Offset              - Datum offset into the buffer  *  * RETURN:      none  *  * DESCRIPTION: Store the merged datum to the buffer according to the  *              byte granularity  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1578,34 +1559,15 @@ modifier|*
 name|Buffer
 parameter_list|,
 name|UINT32
-name|BufferLength
-parameter_list|,
-name|UINT32
 name|ByteGranularity
 parameter_list|,
 name|UINT32
-name|BufferOffset
+name|Offset
 parameter_list|)
 block|{
-name|UINT32
-name|Index
-decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/* Get proper index into buffer (handles big/little endian) */
-name|Index
-operator|=
-name|ACPI_BUFFER_INDEX
-argument_list|(
-name|BufferLength
-argument_list|,
-name|BufferOffset
-argument_list|,
-name|ByteGranularity
-argument_list|)
-expr_stmt|;
-comment|/* Move the requested number of bytes */
 switch|switch
 condition|(
 name|ByteGranularity
@@ -1622,7 +1584,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|=
 operator|(
@@ -1634,7 +1596,7 @@ break|break;
 case|case
 name|ACPI_FIELD_WORD_GRANULARITY
 case|:
-name|ACPI_MOVE_64_TO_16
+name|ACPI_MOVE_UNALIGNED16_TO_16
 argument_list|(
 operator|&
 operator|(
@@ -1646,7 +1608,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|,
@@ -1658,7 +1620,7 @@ break|break;
 case|case
 name|ACPI_FIELD_DWORD_GRANULARITY
 case|:
-name|ACPI_MOVE_64_TO_32
+name|ACPI_MOVE_UNALIGNED32_TO_32
 argument_list|(
 operator|&
 operator|(
@@ -1670,7 +1632,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|,
@@ -1682,7 +1644,7 @@ break|break;
 case|case
 name|ACPI_FIELD_QWORD_GRANULARITY
 case|:
-name|ACPI_MOVE_64_TO_64
+name|ACPI_MOVE_UNALIGNED64_TO_64
 argument_list|(
 operator|&
 operator|(
@@ -1694,7 +1656,7 @@ operator|)
 name|Buffer
 operator|)
 index|[
-name|Index
+name|Offset
 index|]
 operator|)
 argument_list|,
@@ -1943,8 +1905,6 @@ name|MergedDatum
 argument_list|,
 name|Buffer
 argument_list|,
-name|BufferLength
-argument_list|,
 name|ObjDesc
 operator|->
 name|CommonField
@@ -2132,8 +2092,6 @@ name|MergedDatum
 argument_list|,
 name|Buffer
 argument_list|,
-name|BufferLength
-argument_list|,
 name|ObjDesc
 operator|->
 name|CommonField
@@ -2300,8 +2258,6 @@ name|PreviousRawDatum
 argument_list|,
 name|Buffer
 argument_list|,
-name|BufferLength
-argument_list|,
 name|ObjDesc
 operator|->
 name|CommonField
@@ -2453,8 +2409,6 @@ operator|&
 name|ThisRawDatum
 argument_list|,
 name|Buffer
-argument_list|,
-name|BufferLength
 argument_list|,
 name|ObjDesc
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 93 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -414,10 +414,6 @@ name|AcpiGbl_IntegerBitWidth
 operator|=
 literal|32
 expr_stmt|;
-name|AcpiGbl_IntegerNybbleWidth
-operator|=
-literal|8
-expr_stmt|;
 name|AcpiGbl_IntegerByteWidth
 operator|=
 literal|4
@@ -428,10 +424,6 @@ block|{
 name|AcpiGbl_IntegerBitWidth
 operator|=
 literal|64
-expr_stmt|;
-name|AcpiGbl_IntegerNybbleWidth
-operator|=
-literal|16
 expr_stmt|;
 name|AcpiGbl_IntegerByteWidth
 operator|=
@@ -1220,7 +1212,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MUTEX
+name|NUM_MTX
 condition|;
 name|i
 operator|++
@@ -1248,14 +1240,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|Status
-operator|=
-name|AcpiOsCreateLock
-argument_list|(
-operator|&
-name|AcpiGbl_GpeLock
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -1292,7 +1276,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MUTEX
+name|NUM_MTX
 condition|;
 name|i
 operator|++
@@ -1307,11 +1291,6 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiOsDeleteLock
-argument_list|(
-name|AcpiGbl_GpeLock
-argument_list|)
-expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
@@ -1345,7 +1324,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|MAX_MTX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1357,7 +1336,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1374,7 +1353,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|&
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1382,7 +1361,7 @@ operator|.
 name|Mutex
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1391,7 +1370,7 @@ name|OwnerId
 operator|=
 name|ACPI_MUTEX_NOT_ACQUIRED
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1435,7 +1414,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|MAX_MTX
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -1448,7 +1427,7 @@ name|Status
 operator|=
 name|AcpiOsDeleteSemaphore
 argument_list|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1456,7 +1435,7 @@ operator|.
 name|Mutex
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1465,7 +1444,7 @@ name|Mutex
 operator|=
 name|NULL
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1512,7 +1491,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|MAX_MTX
 condition|)
 block|{
 return|return
@@ -1535,7 +1514,7 @@ name|MutexId
 init|;
 name|i
 operator|<
-name|MAX_MUTEX
+name|MAX_MTX
 condition|;
 name|i
 operator|++
@@ -1543,7 +1522,7 @@ control|)
 block|{
 if|if
 condition|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|i
 index|]
@@ -1630,7 +1609,7 @@ name|Status
 operator|=
 name|AcpiOsWaitSemaphore
 argument_list|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1666,7 +1645,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1674,7 +1653,7 @@ operator|.
 name|UseCount
 operator|++
 expr_stmt|;
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1767,7 +1746,7 @@ if|if
 condition|(
 name|MutexId
 operator|>
-name|MAX_MUTEX
+name|MAX_MTX
 condition|)
 block|{
 return|return
@@ -1779,7 +1758,7 @@ block|}
 comment|/*      * Mutex must be acquired in order to release it!      */
 if|if
 condition|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1818,7 +1797,7 @@ name|MutexId
 init|;
 name|i
 operator|<
-name|MAX_MUTEX
+name|MAX_MTX
 condition|;
 name|i
 operator|++
@@ -1826,7 +1805,7 @@ control|)
 block|{
 if|if
 condition|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|i
 index|]
@@ -1872,7 +1851,7 @@ return|;
 block|}
 block|}
 comment|/* Mark unlocked FIRST */
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]
@@ -1885,7 +1864,7 @@ name|Status
 operator|=
 name|AcpiOsSignalSemaphore
 argument_list|(
-name|AcpiGbl_MutexInfo
+name|AcpiGbl_AcpiMutexInfo
 index|[
 name|MutexId
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbgetall - Get all required ACPI tables  *              $Revision: 5 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -426,7 +426,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Get the table address from the common internal XSDT */
+comment|/* Get the table addresss from the common internal XSDT */
 name|Address
 operator|.
 name|Pointer
@@ -715,7 +715,7 @@ name|Length
 argument_list|)
 expr_stmt|;
 comment|/* Always delete the RSDP mapping, we are done with it */
-name|AcpiTbDeleteTablesByType
+name|AcpiTbDeleteAcpiTable
 argument_list|(
 name|ACPI_TABLE_RSDP
 argument_list|)
