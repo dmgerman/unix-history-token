@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.5 (Berkeley) %G%"
+literal|"@(#)login.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<lastlog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
 end_include
 
 begin_define
@@ -893,6 +899,9 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ERNIE
 if|if
 condition|(
 name|pwd
@@ -911,6 +920,8 @@ condition|)
 goto|goto
 name|bad
 goto|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ttyn
