@@ -1195,18 +1195,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|g_sanity
-parameter_list|(
-name|void
-specifier|const
-modifier|*
-name|ptr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|g_spoil
 parameter_list|(
 name|struct
@@ -1281,6 +1269,118 @@ name|error
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+end_ifdef
+
+begin_function_decl
+name|int
+name|g_valid_obj
+parameter_list|(
+name|void
+specifier|const
+modifier|*
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|G_VALID_CLASS
+parameter_list|(
+name|foo
+parameter_list|)
+define|\
+value|KASSERT(g_valid_obj(foo) == 1, ("%p is not a g_class", foo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_GEOM
+parameter_list|(
+name|foo
+parameter_list|)
+define|\
+value|KASSERT(g_valid_obj(foo) == 2, ("%p is not a g_geom", foo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_CONSUMER
+parameter_list|(
+name|foo
+parameter_list|)
+define|\
+value|KASSERT(g_valid_obj(foo) == 3, ("%p is not a g_consumer", foo))
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_PROVIDER
+parameter_list|(
+name|foo
+parameter_list|)
+define|\
+value|KASSERT(g_valid_obj(foo) == 4, ("%p is not a g_provider", foo))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|G_VALID_CLASS
+parameter_list|(
+name|foo
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_GEOM
+parameter_list|(
+name|foo
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_CONSUMER
+parameter_list|(
+name|foo
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|G_VALID_PROVIDER
+parameter_list|(
+name|foo
+parameter_list|)
+value|do { } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1510,12 +1610,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|g_sanity
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* printf("malloc(%d, %x) -> %p\n", size, flags, p); */
 return|return
 operator|(
 name|p
@@ -1535,12 +1629,32 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-name|g_sanity
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
+name|KASSERT
+argument_list|(
+name|g_valid_obj
 argument_list|(
 name|ptr
 argument_list|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"g_free(%p) of live object, type %d"
+operator|,
+name|ptr
+operator|,
+name|g_valid_obj
+argument_list|(
+name|ptr
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
-comment|/* printf("free(%p)\n", ptr); */
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|ptr
@@ -1574,7 +1688,7 @@ directive|define
 name|g_topology_unlock
 parameter_list|()
 define|\
-value|do {							\ 		g_sanity(NULL);					\ 		sx_xunlock(&topology_lock);			\ 	} while (0)
+value|do {							\ 		sx_xunlock(&topology_lock);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1583,7 +1697,7 @@ directive|define
 name|g_topology_assert
 parameter_list|()
 define|\
-value|do {							\ 		g_sanity(NULL);					\ 		sx_assert(&topology_lock, SX_XLOCKED);		\ 	} while (0)
+value|do {							\ 		sx_assert(&topology_lock, SX_XLOCKED);		\ 	} while (0)
 end_define
 
 begin_define
@@ -1592,7 +1706,7 @@ directive|define
 name|g_topology_assert_not
 parameter_list|()
 define|\
-value|do {							\ 		g_sanity(NULL);					\ 		sx_assert(&topology_lock, SX_UNLOCKED);		\ 	} while (0)
+value|do {							\ 		sx_assert(&topology_lock, SX_UNLOCKED);		\ 	} while (0)
 end_define
 
 begin_define

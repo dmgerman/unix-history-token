@@ -38,7 +38,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * 1	G_T_TOPOLOGY  * 2	G_T_BIO  * 4	G_T_ACCESS  * 8	Enable sanity checks  * 16	Allow footshooting on rank#1 providers  * 32	G_T_DETAILS  */
+comment|/*  * 1	G_T_TOPOLOGY  * 2	G_T_BIO  * 4	G_T_ACCESS  * 8	(unused)  * 16	Allow footshooting on rank#1 providers  * 32	G_T_DETAILS  */
 end_comment
 
 begin_define
@@ -171,24 +171,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|g_run_events
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|g_stall_events
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|g_release_events
 parameter_list|(
 name|void
 parameter_list|)

@@ -1395,11 +1395,6 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|g_sanity
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
