@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_swap.c	7.1.1.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_swap.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"file.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"stat.h"
 end_include
 
 begin_include
@@ -673,6 +679,12 @@ modifier|*
 name|sp
 decl_stmt|;
 specifier|register
+name|struct
+name|swdevt
+modifier|*
+name|sp
+decl_stmt|;
+specifier|register
 name|swblk_t
 name|vsbase
 decl_stmt|;
@@ -690,6 +702,9 @@ decl_stmt|;
 specifier|register
 name|int
 name|nblks
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|int
 name|error
@@ -944,6 +959,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|dvbase
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * Don't use the first cluster of the device 			 * in case it starts with a label or boot block. 			 */
+name|rmfree
+argument_list|(
+name|swapmap
+argument_list|,
+name|blk
+operator|-
+name|ctod
+argument_list|(
+name|CLSIZE
+argument_list|)
+argument_list|,
+name|vsbase
+operator|+
+name|ctod
+argument_list|(
+name|CLSIZE
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|rmfree
 argument_list|(
@@ -955,6 +999,11 @@ name|vsbase
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 return|return
 operator|(
 literal|0
