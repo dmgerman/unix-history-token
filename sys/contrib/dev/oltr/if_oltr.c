@@ -7331,8 +7331,6 @@ name|frame_len
 init|=
 name|ByteCount
 decl_stmt|,
-name|hdr_len
-decl_stmt|,
 name|i
 init|=
 operator|(
