@@ -382,7 +382,7 @@ name|rflg
 init|=
 literal|0
 decl_stmt|,
-name|cflg
+name|hflg
 init|=
 literal|0
 decl_stmt|;
@@ -432,11 +432,11 @@ argument_list|(
 operator|*
 name|vp
 argument_list|,
-literal|"-c"
+literal|"-h"
 argument_list|)
 condition|)
 block|{
-name|cflg
+name|hflg
 operator|++
 expr_stmt|;
 name|vp
@@ -479,10 +479,18 @@ name|vp
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|n
 operator|=
-literal|1000
+name|getn
+argument_list|(
+name|value
+argument_list|(
+literal|"history"
+argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 name|dohist1
 argument_list|(
 name|Histlist
@@ -494,7 +502,7 @@ name|n
 argument_list|,
 name|rflg
 argument_list|,
-name|cflg
+name|hflg
 argument_list|)
 expr_stmt|;
 block|}
@@ -509,7 +517,7 @@ argument|np
 argument_list|,
 argument|rflg
 argument_list|,
-argument|cflg
+argument|hflg
 argument_list|)
 end_macro
 
@@ -525,6 +533,10 @@ begin_decl_stmt
 name|int
 modifier|*
 name|np
+decl_stmt|,
+name|rflg
+decl_stmt|,
+name|hflg
 decl_stmt|;
 end_decl_stmt
 
@@ -577,7 +589,7 @@ name|np
 argument_list|,
 name|rflg
 argument_list|,
-name|cflg
+name|hflg
 argument_list|)
 expr_stmt|;
 if|if
@@ -588,7 +600,7 @@ name|phist
 argument_list|(
 name|hp
 argument_list|,
-name|cflg
+name|hflg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -604,7 +616,7 @@ name|phist
 argument_list|(
 name|hp
 argument_list|,
-name|cflg
+name|hflg
 argument_list|)
 expr_stmt|;
 name|hp
@@ -624,7 +636,7 @@ name|phist
 argument_list|(
 name|hp
 argument_list|,
-name|cflg
+name|hflg
 argument_list|)
 specifier|register
 expr|struct
@@ -636,7 +648,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|cflg
+name|hflg
 decl_stmt|;
 end_decl_stmt
 
@@ -644,7 +656,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|cflg
+name|hflg
 operator|==
 literal|0
 condition|)
