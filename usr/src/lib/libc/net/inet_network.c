@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_network.c	5.6 (Berkeley) %G%"
+literal|"@(#)inet_network.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<arpa/inet.h>
 end_include
 
 begin_comment
@@ -66,6 +66,7 @@ parameter_list|(
 name|cp
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|cp

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso_addr.c	5.3 (Berkeley) %G%"
+literal|"@(#)iso_addr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<netiso/iso.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -108,6 +114,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|addr
@@ -408,6 +415,7 @@ name|iso_ntoa
 parameter_list|(
 name|isoa
 parameter_list|)
+specifier|const
 name|struct
 name|iso_addr
 modifier|*

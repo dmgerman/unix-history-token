@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)send.c	5.2 (Berkeley) %G%"
+literal|"@(#)send.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+specifier|const
+name|void
 modifier|*
 name|msg
 decl_stmt|;

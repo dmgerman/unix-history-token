@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)herror.c	6.5 (Berkeley) %G%"
+literal|"@(#)herror.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,24 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -106,21 +124,17 @@ begin_comment
 comment|/*  * herror --  *	print the error indicated by the h_errno value.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|herror
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|iovec
@@ -149,6 +163,10 @@ name|v
 operator|->
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|s
 expr_stmt|;
 name|v
@@ -225,7 +243,7 @@ literal|1
 expr_stmt|;
 name|writev
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|iov
 argument_list|,
@@ -239,7 +257,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

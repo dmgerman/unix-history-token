@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_ntoa.c	5.5 (Berkeley) %G%"
+literal|"@(#)inet_ntoa.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_function
@@ -93,9 +105,17 @@ parameter_list|(
 name|b
 parameter_list|)
 value|(((int)b)&0xff)
-name|sprintf
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
 name|b
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b
+argument_list|)
 argument_list|,
 literal|"%d.%d.%d.%d"
 argument_list|,

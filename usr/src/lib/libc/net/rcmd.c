@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.22 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,37 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signal.h>
 end_include
 
 begin_include
@@ -94,7 +64,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -103,17 +97,23 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_extern
-extern|extern	errno;
-end_extern
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_macro
 name|rcmd
@@ -147,6 +147,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|locuser
@@ -360,7 +361,9 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -369,8 +372,6 @@ sizeof|sizeof
 argument_list|(
 name|sin
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|>=
 literal|0
@@ -731,13 +732,16 @@ name|accept
 argument_list|(
 name|s2
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|from
 argument_list|,
 operator|&
 name|len
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1080,7 +1084,9 @@ argument_list|(
 name|s
 argument_list|,
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 operator|&
 name|sin
@@ -1182,25 +1188,22 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|rhost
+decl_stmt|,
+modifier|*
+name|ruser
+decl_stmt|,
+modifier|*
+name|luser
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|superuser
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|ruser
-decl_stmt|,
-modifier|*
-name|luser
 decl_stmt|;
 end_decl_stmt
 
@@ -1237,6 +1240,10 @@ literal|1
 decl_stmt|;
 name|sp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|rhost
 expr_stmt|;
 name|p
@@ -1572,21 +1579,25 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|user
-decl_stmt|;
-name|char
-name|ahost
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|user
+decl_stmt|,
+name|ahost
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|_checkhost
+parameter_list|()
+function_decl|;
 while|while
 condition|(
 name|fgets

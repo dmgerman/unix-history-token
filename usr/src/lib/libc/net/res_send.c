@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.26 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/nameser.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -86,21 +92,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/nameser.h>
+file|<resolv.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<resolv.h>
+file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -209,6 +214,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -533,6 +539,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 operator|(
 name|_res
@@ -635,6 +646,10 @@ index|]
 operator|.
 name|iov_base
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 expr_stmt|;
 name|iov
@@ -1120,6 +1135,11 @@ name|connect
 argument_list|(
 name|s
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|_res
 operator|.
@@ -1246,6 +1266,11 @@ name|buflen
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|_res
 operator|.

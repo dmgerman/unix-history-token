@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.19 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<arpa/nameser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<arpa/nameser.h>
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_expr_stmt
@@ -82,6 +94,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|u_char
 modifier|*
 name|msg
@@ -91,7 +104,11 @@ name|eomorig
 decl_stmt|,
 modifier|*
 name|comp_dn
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_char
 modifier|*
 name|exp_dn
 decl_stmt|;
@@ -139,6 +156,10 @@ name|exp_dn
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|comp_dn
 expr_stmt|;
 name|eom
@@ -298,6 +319,10 @@ literal|1
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|msg
 operator|+
 operator|(
@@ -411,23 +436,18 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+specifier|const
 name|u_char
 modifier|*
 name|exp_dn
-decl_stmt|,
-modifier|*
-name|comp_dn
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|length
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|u_char
+modifier|*
+name|comp_dn
+decl_stmt|,
 modifier|*
 modifier|*
 name|dnptrs
@@ -435,6 +455,12 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|lastdnptr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|length
 decl_stmt|;
 end_decl_stmt
 
@@ -475,6 +501,10 @@ name|msg
 decl_stmt|;
 name|dn
 operator|=
+operator|(
+name|u_char
+operator|*
+operator|)
 name|exp_dn
 expr_stmt|;
 name|cp

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.14 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -71,6 +71,30 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -134,33 +158,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|extern
-name|u_long
-name|inet_addr
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strncpy
-argument_list|()
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
 name|int
 name|nserv
 init|=

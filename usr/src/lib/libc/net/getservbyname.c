@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getservbyname.c	5.6 (Berkeley) %G%"
+literal|"@(#)getservbyname.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_decl_stmt
@@ -60,6 +66,7 @@ name|name
 parameter_list|,
 name|proto
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name

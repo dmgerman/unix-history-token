@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.32 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1985, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)res_debug.c	5.33 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.32 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -61,14 +61,23 @@ directive|include
 file|<arpa/nameser.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -195,6 +204,11 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|static
+name|void
+name|fp_query
+parameter_list|()
+function_decl|;
 name|fp_query
 argument_list|(
 name|msg
@@ -209,28 +223,23 @@ begin_comment
 comment|/*  * Print the contents of a query.  * This is intended to be primarily a debugging routine.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|fp_query
-argument_list|(
-argument|msg
-argument_list|,
-argument|file
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|msg
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|file
+parameter_list|)
+name|char
+modifier|*
+name|msg
+decl_stmt|;
 name|FILE
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -719,7 +728,7 @@ return|return;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -767,14 +776,30 @@ name|n
 operator|=
 name|dn_expand
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|msg
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|msg
 operator|+
 literal|512
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|name
 argument_list|,
 sizeof|sizeof

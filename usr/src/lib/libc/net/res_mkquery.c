@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.14 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -65,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -105,6 +111,7 @@ comment|/* opcode of query */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dname
@@ -128,6 +135,7 @@ comment|/* class and type of query */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|data
@@ -149,6 +157,7 @@ comment|/* length of data */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|rrec
 modifier|*
@@ -212,12 +221,6 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -420,14 +423,32 @@ name|n
 operator|=
 name|dn_comp
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|dname
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|,
 name|buflen
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|)
 name|dnptrs
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|)
 name|lastdnptr
 argument_list|)
 operator|)
@@ -508,14 +529,32 @@ name|n
 operator|=
 name|dn_comp
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|data
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
 name|cp
 argument_list|,
 name|buflen
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|)
 name|dnptrs
 argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|*
+operator|)
 name|lastdnptr
 argument_list|)
 operator|)

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns_ntoa.c	6.5 (Berkeley) %G%"
+literal|"@(#)ns_ntoa.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<netns/ns.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_function
@@ -68,11 +74,6 @@ index|[
 literal|40
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|spectHex
-parameter_list|()
-function_decl|;
 union|union
 block|{
 name|union
@@ -123,6 +124,12 @@ name|up
 operator|+
 literal|6
 decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|spectHex
+parameter_list|()
+function_decl|;
 name|net
 operator|.
 name|net_e

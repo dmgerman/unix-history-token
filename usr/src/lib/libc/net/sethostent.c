@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sethostent.c	6.7 (Berkeley) %G%"
+literal|"@(#)sethostent.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arpa/nameser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<netdb.h>
 end_include
 
 begin_include
@@ -61,14 +67,12 @@ directive|include
 file|<resolv.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|sethostent
-argument_list|(
-argument|stayopen
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|stayopen
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -83,14 +87,12 @@ operator||
 name|RES_USEVC
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|endhostent
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|_res
 operator|.
@@ -107,7 +109,7 @@ name|_res_close
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

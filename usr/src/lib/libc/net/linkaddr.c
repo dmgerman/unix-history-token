@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)linkaddr.c	5.1 (Berkeley) %G%"
+literal|"@(#)linkaddr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<net/if_dl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_comment
@@ -119,30 +125,26 @@ name|LETTER
 value|(4*3)
 end_define
 
-begin_expr_stmt
+begin_function
+name|void
 name|link_addr
-argument_list|(
+parameter_list|(
 name|addr
-argument_list|,
+parameter_list|,
 name|sdl
-argument_list|)
+parameter_list|)
 specifier|register
+specifier|const
 name|char
-operator|*
+modifier|*
 name|addr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -540,7 +542,7 @@ name|new
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -560,6 +562,7 @@ parameter_list|(
 name|sdl
 parameter_list|)
 specifier|register
+specifier|const
 name|struct
 name|sockaddr_dl
 modifier|*
