@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.96 2001/11/22 21:59:33 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.98 2002/02/20 20:30:13 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -3567,6 +3567,21 @@ operator|->
 name|power
 condition|)
 block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"power exceeded %d %d\n"
+operator|,
+name|power
+operator|,
+name|dev
+operator|->
+name|powersrc
+operator|->
+name|power
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* XXX print nicer message. */
 if|if
 condition|(
