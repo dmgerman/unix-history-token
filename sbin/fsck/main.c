@@ -49,7 +49,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/fsck/main.c,v 1.3 1993/03/23 00:27:55 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/fsck/main.c,v 1.2 1993/07/22 16:51:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1162,6 +1162,12 @@ operator|!
 name|preen
 condition|)
 block|{
+specifier|extern
+name|char
+modifier|*
+name|_osname
+parameter_list|()
+function_decl|;
 name|printf
 argument_list|(
 literal|"\n***** FILE SYSTEM WAS MODIFIED *****\n"
@@ -1173,7 +1179,10 @@ name|hotroot
 condition|)
 name|printf
 argument_list|(
-literal|"\n***** REBOOT UNIX *****\n"
+literal|"\n***** REBOOT %s *****\n"
+argument_list|,
+name|_osname
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
