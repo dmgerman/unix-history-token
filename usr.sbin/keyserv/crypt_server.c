@@ -641,7 +641,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LIBDES
+name|LIBCRYPTO
 end_ifndef
 
 begin_ifdef
@@ -653,8 +653,8 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LIBDES
-value|"libdes.so.3"
+name|LIBCRYPTO
+value|"libcrypto.so.1"
 end_define
 
 begin_else
@@ -665,8 +665,8 @@ end_else
 begin_define
 define|#
 directive|define
-name|LIBDES
-value|"libdes.so.3."
+name|LIBCRYPTO
+value|"libcrypto.so.1."
 end_define
 
 begin_endif
@@ -746,7 +746,7 @@ literal|"%s/%s"
 argument_list|,
 name|_PATH_USRLIB
 argument_list|,
-name|LIBDES
+name|LIBCRYPTO
 argument_list|)
 expr_stmt|;
 else|#
@@ -755,7 +755,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|LIBDES
+name|LIBCRYPTO
 argument_list|)
 expr_stmt|;
 if|if
@@ -814,7 +814,7 @@ name|dirp
 operator|->
 name|d_name
 argument_list|,
-name|LIBDES
+name|LIBCRYPTO
 argument_list|,
 name|len
 argument_list|)
