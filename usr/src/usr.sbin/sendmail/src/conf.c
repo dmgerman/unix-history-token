@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.99 (Berkeley) %G%"
+literal|"@(#)conf.c	8.100 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3410,6 +3410,15 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|_AIX3
+define|#
+directive|define
+name|PROCTITLEPAD
+value|'\0'
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|SETPROC_STATIC
@@ -3669,6 +3678,13 @@ name|p
 operator|++
 operator|=
 name|PROCTITLEPAD
+expr_stmt|;
+name|Argv
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
 expr_stmt|;
 endif|#
 directive|endif

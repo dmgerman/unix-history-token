@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.115 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.116 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -645,16 +645,6 @@ end_define
 
 begin_comment
 comment|/* no vfork primitive available */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SETPROCTITLE
-end_undef
-
-begin_comment
-comment|/* setproctitle confuses AIX */
 end_comment
 
 begin_define
