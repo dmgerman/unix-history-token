@@ -2939,8 +2939,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|printf
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"process ID: %lu\n"
 argument_list|,
 operator|(
@@ -3060,8 +3062,10 @@ name|t
 operator|=
 literal|'\0'
 expr_stmt|;
-name|printf
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"fh_len %d, fh %s\n"
 argument_list|,
 name|mp
@@ -3072,8 +3076,10 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* Show flock structure. */
-name|printf
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"start %qu; len %qu; pid %lu; type %d; whence %d\n"
 argument_list|,
 name|mp
@@ -3111,8 +3117,10 @@ name|l_whence
 argument_list|)
 expr_stmt|;
 comment|/* Show wait flag. */
-name|printf
+name|syslog
 argument_list|(
+name|LOG_DEBUG
+argument_list|,
 literal|"wait was %s\n"
 argument_list|,
 name|mp
