@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.50 (Berkeley) 9/20/96"
+literal|"@(#)err.c	8.52 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1359,6 +1359,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> %s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|,
@@ -2013,8 +2016,8 @@ name|sys_nerr
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTP
 specifier|extern
 name|char

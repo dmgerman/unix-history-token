@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.96 (Berkeley) 11/11/96"
+literal|"@(#)envelope.c	8.99 (Berkeley) 12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,8 +290,11 @@ parameter_list|()
 function_decl|;
 name|printf
 argument_list|(
-literal|"dropenvelope %x: id="
+literal|"dropenvelope %lx: id="
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 argument_list|)
 expr_stmt|;
@@ -567,7 +570,7 @@ name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: q_flags = %x"
+literal|"dropenvelope: %s: q_flags = %x, paddr = %s"
 argument_list|,
 name|e
 operator|->
@@ -576,6 +579,10 @@ argument_list|,
 name|q
 operator|->
 name|q_flags
+argument_list|,
+name|q
+operator|->
+name|q_paddr
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1597,8 +1604,8 @@ name|e_flags
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|QUEUE
 name|queueup
 argument_list|(

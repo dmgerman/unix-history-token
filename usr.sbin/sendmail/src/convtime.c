@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)convtime.c	8.7 (Berkeley) 9/15/96"
+literal|"@(#)convtime.c	8.8 (Berkeley) 11/24/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,10 +316,16 @@ if|if
 condition|(
 name|brief
 condition|)
+block|{
 name|dy
 operator|=
 name|intvl
 expr_stmt|;
+name|wk
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 name|dy

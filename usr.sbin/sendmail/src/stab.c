@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	8.9 (Berkeley) 10/17/96"
+literal|"@(#)stab.c	8.10 (Berkeley) 11/23/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,7 +376,7 @@ expr_stmt|;
 comment|/* determine size of new entry */
 ifdef|#
 directive|ifdef
-name|FFR_MEMORY_MISER
+name|_FFR_MEMORY_MISER
 if|if
 condition|(
 name|type
