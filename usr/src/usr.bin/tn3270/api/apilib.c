@@ -1680,7 +1680,7 @@ comment|/* Interrupt not being handled */
 block|}
 endif|#
 directive|endif
-endif|defined(MSDOS)
+comment|/* defined(MSDOS) */
 if|#
 directive|if
 name|defined
