@@ -639,6 +639,12 @@ operator|!=
 name|EINTR
 condition|)
 break|break;
+if|if
+condition|(
+name|c
+operator|!=
+name|EOF
+condition|)
 name|clearerr
 argument_list|(
 name|fp
