@@ -131,6 +131,17 @@ begin_comment
 comment|/* secs between rexmt's */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LBUFLEN
+value|200
+end_define
+
+begin_comment
+comment|/* size of input buffer */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -181,7 +192,7 @@ begin_decl_stmt
 name|char
 name|line
 index|[
-literal|200
+name|LBUFLEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -835,7 +846,7 @@ argument_list|(
 literal|"(to) "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 operator|&
 name|line
@@ -845,6 +856,15 @@ argument_list|(
 name|line
 argument_list|)
 index|]
+argument_list|,
+name|LBUFLEN
+operator|-
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|makeargv
@@ -861,9 +881,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|argc
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
 name|argc
 operator|>
 literal|3
+operator|)
 condition|)
 block|{
 name|printf
@@ -1424,7 +1452,7 @@ argument_list|(
 literal|"(file) "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 operator|&
 name|line
@@ -1434,6 +1462,15 @@ argument_list|(
 name|line
 argument_list|)
 index|]
+argument_list|,
+name|LBUFLEN
+operator|-
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|makeargv
@@ -1947,7 +1984,7 @@ argument_list|(
 literal|"(files) "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 operator|&
 name|line
@@ -1957,6 +1994,15 @@ argument_list|(
 name|line
 argument_list|)
 index|]
+argument_list|,
+name|LBUFLEN
+operator|-
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|makeargv
@@ -2409,7 +2455,7 @@ argument_list|(
 literal|"(value) "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 operator|&
 name|line
@@ -2419,6 +2465,15 @@ argument_list|(
 name|line
 argument_list|)
 index|]
+argument_list|,
+name|LBUFLEN
+operator|-
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|makeargv
@@ -2534,7 +2589,7 @@ argument_list|(
 literal|"(value) "
 argument_list|)
 expr_stmt|;
-name|gets
+name|fgets
 argument_list|(
 operator|&
 name|line
@@ -2544,6 +2599,15 @@ argument_list|(
 name|line
 argument_list|)
 index|]
+argument_list|,
+name|LBUFLEN
+operator|-
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+argument_list|,
+name|stdin
 argument_list|)
 expr_stmt|;
 name|makeargv
@@ -2820,9 +2884,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gets
+name|fgets
 argument_list|(
 name|line
+argument_list|,
+name|LBUFLEN
+argument_list|,
+name|stdin
 argument_list|)
 operator|==
 literal|0
@@ -2847,12 +2915,23 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|line
 index|[
 literal|0
 index|]
 operator|==
 literal|0
+operator|)
+operator|||
+operator|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'\n'
+operator|)
 condition|)
 continue|continue;
 name|makeargv
