@@ -368,6 +368,13 @@ name|do_trace
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|hintmode
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|char
 modifier|*
