@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.31.2.8 1997/12/02 13:42:52 darrenr Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_compat.h	1.8 1/14/96  * $Id: ip_compat.h,v 2.0.2.31.2.11 1998/05/23 14:29:36 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -730,7 +730,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __NetBSD__ || __OpenBSD__ || __FreeBSD__ */
+comment|/* __NetBSD__ || __OpenBSD__ || __FreeBSD__ || __sgi */
 end_comment
 
 begin_ifndef
@@ -2528,6 +2528,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|ICMP_MINLEN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ICMP_MINLEN
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ICMP_UNREACH
 end_ifndef
 
@@ -4134,6 +4152,48 @@ undef|#
 directive|undef
 name|ULONG_MAX
 end_undef
+
+begin_define
+define|#
+directive|define
+name|s8
+value|__s8
+end_define
+
+begin_define
+define|#
+directive|define
+name|u8
+value|__u8
+end_define
+
+begin_define
+define|#
+directive|define
+name|s16
+value|__s16
+end_define
+
+begin_define
+define|#
+directive|define
+name|u16
+value|__u16
+end_define
+
+begin_define
+define|#
+directive|define
+name|s32
+value|__s32
+end_define
+
+begin_define
+define|#
+directive|define
+name|u32
+value|__u32
+end_define
 
 begin_include
 include|#
