@@ -4,7 +4,7 @@ comment|/* daemon.c: kernel part of Vinum daemon */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.3 1999/01/18 04:32:50 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumdaemon.c,v 1.1.2.3 1999/02/11 05:28:41 grog Exp $  */
 end_comment
 
 begin_define
@@ -94,6 +94,16 @@ begin_comment
 comment|/* options */
 end_comment
 
+begin_decl_stmt
+name|int
+name|daemonpid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PID of daemon */
+end_comment
+
 begin_function
 name|void
 name|vinum_daemon
@@ -113,6 +123,13 @@ name|daemon_save_config
 argument_list|()
 expr_stmt|;
 comment|/* start by saving the configuration */
+name|daemonpid
+operator|=
+name|curproc
+operator|->
+name|p_pid
+expr_stmt|;
+comment|/* mark our territory */
 while|while
 condition|(
 literal|1
@@ -131,6 +148,30 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* wait for something to happen */
+comment|/* 	 * It's conceivable that, as the result of an 	 * I/O error, we'll be out of action long 	 * enough that another daemon gets started. 	 * That's OK, just give up gracefully. 	 */
+if|if
+condition|(
+name|curproc
+operator|->
+name|p_pid
+operator|!=
+name|daemonpid
+condition|)
+block|{
+comment|/* we've been ousted in our sleep */
+if|if
+condition|(
+name|daemon_options
+operator|&
+name|daemon_verbose
+condition|)
+name|printf
+argument_list|(
+literal|"vinumd: abdicating\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 while|while
 condition|(
 name|daemonq
@@ -335,7 +376,6 @@ argument_list|)
 expr_stmt|;
 comment|/* in case somebody's waiting for us to stop */
 return|return;
-break|break;
 case|case
 name|daemonrq_ping
 case|:
@@ -593,10 +633,10 @@ condition|(
 name|result
 condition|)
 comment|/* will be EWOULDBLOCK or EINTR */
-return|return
-name|ESRCH
-return|;
-comment|/* no process */
+name|vinum_daemon
+argument_list|()
+expr_stmt|;
+comment|/* start the daemon */
 return|return
 literal|0
 return|;
