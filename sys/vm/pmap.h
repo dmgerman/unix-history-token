@@ -209,6 +209,9 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|,
+name|vm_prot_t
+name|prot
 parameter_list|)
 function_decl|;
 end_function_decl

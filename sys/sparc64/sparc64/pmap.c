@@ -2766,7 +2766,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Atomically extract and hold the physical page with the given  * pmap and virtual address pair.  */
+comment|/*  * Atomically extract and hold the physical page with the given  * pmap and virtual address pair if that mapping permits the given  * protection.  */
 end_comment
 
 begin_function
@@ -2778,6 +2778,9 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|,
+name|vm_prot_t
+name|prot
 parameter_list|)
 block|{
 name|vm_paddr_t

@@ -3005,7 +3005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Routine:	pmap_extract_and_hold  *	Function:  *		Atomically extract and hold the physical page  *		with the given pmap and virtual address.   */
+comment|/*  *	Routine:	pmap_extract_and_hold  *	Function:  *		Atomically extract and hold the physical page  *		with the given pmap and virtual address pair  *		if that mapping permits the given protection.  */
 end_comment
 
 begin_function
@@ -3017,6 +3017,9 @@ name|pmap
 parameter_list|,
 name|vm_offset_t
 name|va
+parameter_list|,
+name|vm_prot_t
+name|prot
 parameter_list|)
 block|{
 name|vm_paddr_t
