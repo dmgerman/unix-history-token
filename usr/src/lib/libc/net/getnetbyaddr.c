@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getnetbyaddr.c	5.3 (Berkeley) %G%"
+literal|"@(#)getnetbyaddr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,9 +58,11 @@ parameter_list|,
 name|type
 parameter_list|)
 specifier|register
-name|int
+name|long
 name|net
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|type
 decl_stmt|;
 block|{
