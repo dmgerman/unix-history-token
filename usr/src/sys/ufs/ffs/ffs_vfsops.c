@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.72 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.73 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/specdev.h>
 end_include
 
 begin_include
@@ -97,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_include
