@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.58 2003/07/15 07:21:40 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.59 2003/07/19 05:32:07 imp Exp   */
 end_comment
 
 begin_comment
@@ -1524,6 +1524,27 @@ end_define
 begin_comment
 comment|/* BUFFALO */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_BUFFALO_LPC3_CLX
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_BUFFALO_LPC3_CLX
+value|0x0301
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_BUFFALO_LPC3_CLX
+value|"BUFFALO LPC3-CLX Ethernet Adapter"
+end_define
 
 begin_define
 define|#
