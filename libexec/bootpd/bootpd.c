@@ -732,7 +732,8 @@ name|ra_len
 decl_stmt|;
 name|int
 name|nfound
-decl_stmt|,
+decl_stmt|;
+name|fd_set
 name|readfds
 decl_stmt|;
 name|int
@@ -2006,6 +2007,12 @@ endif|#
 directive|endif
 comment|/* SA_NOCLDSTOP */
 comment|/* 	 * Process incoming requests. 	 */
+name|FD_ZERO
+argument_list|(
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2016,11 +2023,13 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|readfds
-operator|=
-literal|1
-operator|<<
+name|FD_SET
+argument_list|(
 name|s
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2039,10 +2048,6 @@ name|s
 operator|+
 literal|1
 argument_list|,
-operator|(
-name|fd_set
-operator|*
-operator|)
 operator|&
 name|readfds
 argument_list|,
@@ -2122,15 +2127,13 @@ block|}
 if|if
 condition|(
 operator|!
-operator|(
-name|readfds
-operator|&
-operator|(
-literal|1
-operator|<<
+name|FD_ISSET
+argument_list|(
 name|s
-operator|)
-operator|)
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
 condition|)
 block|{
 if|if
