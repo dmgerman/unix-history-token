@@ -215,6 +215,65 @@ value|td_sched
 end_define
 
 begin_comment
+comment|/*  * kern.sched.preemption allows user space to determine if preemption support  * is compiled in or not.  It is not currently a boot or runtime flag that  * can be changed.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PREEMPTION
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|kern_sched_preemption
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|kern_sched_preemption
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_sched
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|preemption
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|kern_sched_preemption
+argument_list|,
+literal|0
+argument_list|,
+literal|"Kernel preemption enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/************************************************************************  * Functions that manipulate runnability from a thread perspective.	*  ************************************************************************/
 end_comment
 
