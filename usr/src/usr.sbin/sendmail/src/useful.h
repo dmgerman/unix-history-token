@@ -1,14 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.2	%G% */
+comment|/* **  USEFUL.H -- Some useful stuff. ** **	@(#)useful.h	3.3	%G% */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|makedev
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* support for bool type */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
 name|bool
-value|char
-end_define
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -43,29 +64,9 @@ directive|endif
 endif|NULL
 end_endif
 
-begin_define
-define|#
-directive|define
-name|setbit
-parameter_list|(
-name|bit
-parameter_list|,
-name|word
-parameter_list|)
-value|(word |= bit)
-end_define
-
-begin_define
-define|#
-directive|define
-name|clrbit
-parameter_list|(
-name|bit
-parameter_list|,
-name|word
-parameter_list|)
-value|(word&= ~bit)
-end_define
+begin_comment
+comment|/* bit hacking */
+end_comment
 
 begin_define
 define|#
