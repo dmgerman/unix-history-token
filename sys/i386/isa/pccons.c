@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/pccons.c,v 1.3 1993/07/24 10:46:18 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/isa/pccons.c,v 1.4 1993/08/28 13:26:28 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -354,7 +354,7 @@ begin_define
 define|#
 directive|define
 name|MONO_BUF
-value|0xfe0B0000
+value|(KERNBASE + 0xB0000)
 end_define
 
 begin_define
@@ -368,7 +368,7 @@ begin_define
 define|#
 directive|define
 name|CGA_BUF
-value|0xfe0B8000
+value|(KERNBASE + 0xB8000)
 end_define
 
 begin_define
