@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_tty.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dgb.h"
 end_include
 
