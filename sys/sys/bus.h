@@ -1980,44 +1980,6 @@ define|\ 									\
 value|static driver_t name##_##busname##_driver_list[] = drivers;		\ static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	name##_##busname##_driver_list,					\ 	(sizeof name##_##busname##_driver_list) /			\ 		(sizeof name##_##busname##_driver_list[0]),		\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Broken, to be replaced with DRIVER_MODULE() directly and cdevsw_add()  * or (preferably) make_dev()  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEV_DRIVER_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|busname
-parameter_list|,
-name|driver
-parameter_list|,
-name|devclass
-parameter_list|,		\
-name|devsw
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\ 									\
-value|static struct devsw_module_data name##_##busname##_devsw_mod = {	\     evh, arg,&devsw							\ };									\ 									\ DRIVER_MODULE(name, busname, driver, devclass,				\ 	      devsw_module_handler,&name##_##busname##_devsw_mod)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
