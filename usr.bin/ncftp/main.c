@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* main.c  *  *  $RCSfile: main.c,v $  *  $Revision: 14020.15 $  *  $Date: 93/07/09 11:50:12 $  */
+comment|/* main.c */
 end_comment
 
 begin_define
@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.8.6 (October 30, 1994)"
+value|"1.8.7 (December 11, 1994)"
 end_define
 
 begin_comment
