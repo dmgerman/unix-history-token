@@ -161,7 +161,7 @@ block|,
 comment|/* date_fmt */
 literal|"%a %b %e %X %Z %Y"
 block|,
-comment|/* alt_month 	** Standalone motnhs forms for %OB 	*/
+comment|/* alt_month 	** Standalone months forms for %OB 	*/
 block|{
 literal|"January"
 block|,
