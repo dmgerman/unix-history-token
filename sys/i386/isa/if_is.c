@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  *	$Id$  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  * */
 end_comment
 
 begin_comment
@@ -1043,33 +1043,26 @@ name|unit
 index|]
 decl_stmt|;
 comment|/* Allocate memory */
-comment|/* Temporary hack, will use kmem_alloc in future */
+comment|/* 	 * XXX hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
 define|#
 directive|define
 name|MAXMEM
 value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) + 8)
-specifier|static
-name|u_char
-name|lance_mem
-index|[
-name|NIS
-index|]
-index|[
-name|MAXMEM
-index|]
-decl_stmt|;
-comment|/* Align message descriptors on quad word boundary  		(this is essential) */
 name|temp
 operator|=
 operator|(
 name|u_long
 operator|)
-operator|&
-name|lance_mem
-index|[
-name|unit
-index|]
+name|malloc
+argument_list|(
+name|MAXMEM
+argument_list|,
+name|M_TEMP
+argument_list|,
+name|M_NOWAIT
+argument_list|)
 expr_stmt|;
+comment|/* Align message descriptors on quad word boundary  		(this is essential) */
 name|temp
 operator|=
 operator|(
@@ -1616,7 +1609,7 @@ literal|0xff
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* I wish I knew what this was */
+comment|/* No byte swapping etc */
 name|iswrcsr
 argument_list|(
 name|unit
