@@ -1060,9 +1060,6 @@ operator|&
 name|PAGE_MASK
 condition|)
 block|{
-name|vm_offset_t
-name|kva
-decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
@@ -1105,28 +1102,13 @@ operator|-
 name|base
 decl_stmt|;
 comment|/* 				 * Clear out partial-page garbage in case 				 * the page has been mapped. 				 */
-name|kva
-operator|=
-name|vm_pager_map_page
+name|vm_page_zero_fill_area
 argument_list|(
 name|m
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|kva
-operator|+
+argument_list|,
 name|base
 argument_list|,
 name|size
-argument_list|)
-expr_stmt|;
-name|vm_pager_unmap_page
-argument_list|(
-name|kva
 argument_list|)
 expr_stmt|;
 comment|/* 				 * XXX work around SMP data integrity race 				 * by unmapping the page from user processes. 				 * The garbage we just cleared may be mapped 				 * to a user process running on another cpu 				 * and this code is not running through normal 				 * I/O channels which handle SMP issues for 				 * us, so unmap page to synchronize all cpus. 				 * 				 * XXX should vm_pager_unmap_page() have 				 * dealt with this? 				 */
