@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.9 %G%"
+literal|"@(#)lval.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1553,9 +1553,11 @@ condition|)
 block|{
 name|w
 operator|=
-name|width
+name|bytes
 argument_list|(
-name|ap
+name|sub
+argument_list|,
+name|sub
 argument_list|)
 expr_stmt|;
 name|put
