@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: trap.c 1.37 92/12/20$  *  *	@(#)trap.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4288,12 +4288,7 @@ name|argsize
 operator|=
 name|callp
 operator|->
-name|sy_narg
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|sy_argsize
 expr_stmt|;
 if|if
 condition|(
@@ -4337,9 +4332,7 @@ name|p_tracep
 argument_list|,
 name|code
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|argsize
 argument_list|,
 name|args
 operator|.
@@ -4372,9 +4365,7 @@ name|p_tracep
 argument_list|,
 name|code
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|argsize
 argument_list|,
 name|args
 operator|.
@@ -4428,9 +4419,7 @@ name|rval
 argument_list|,
 name|code
 argument_list|,
-name|callp
-operator|->
-name|sy_narg
+name|argsize
 argument_list|)
 expr_stmt|;
 else|else
