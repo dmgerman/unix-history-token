@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound.h  *  * include file for kernel sources, sound driver.  *   * Copyright by Hannu Savolainen 1995  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * sound.h  *  * include file for kernel sources, sound driver.  *   * Copyright by Hannu Savolainen 1995  * Modified for improving mute support by Jose M. Alcaide, 1999  * and FreeBSD support by Luigi Rizzo, 1997-1999  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifdef
@@ -693,6 +693,13 @@ name|u_long
 name|mix_recsrc
 decl_stmt|;
 comment|/* current recording source(s) */
+name|u_long
+name|mix_muted
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* current muted (volume=0) devices (left/right) */
 name|u_short
 name|mix_levels
 index|[
@@ -829,6 +836,13 @@ define|#
 directive|define
 name|MD_CS4237
 value|0xA7
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_CS4235
+value|0xA8
 end_define
 
 begin_define
@@ -1147,7 +1161,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * mixer description structure and macros  */
+comment|/*  * mixer description structure  */
 end_comment
 
 begin_struct
@@ -1201,6 +1215,65 @@ index|]
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * mute control description structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|mute_def
+block|{
+name|u_int
+name|regno
+range|:
+literal|7
+decl_stmt|;
+comment|/* mute register */
+name|u_int
+name|bit
+range|:
+literal|4
+decl_stmt|;
+comment|/* mute bit */
+name|u_int
+name|nbits
+range|:
+literal|1
+decl_stmt|;
+comment|/* mute capability: 1=yes, 0=no */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mute_def
+name|mute_ent
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|mute_def
+name|mute_tab
+index|[
+literal|32
+index|]
+index|[
+literal|2
+index|]
+index|[
+literal|2
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* [dev][left/right][in/out] */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1216,6 +1289,10 @@ name|d
 parameter_list|)
 value|(d->dbuf_out.chan != d->dbuf_in.chan)
 end_define
+
+begin_comment
+comment|/* macros for filling a mixer table */
+end_comment
 
 begin_define
 define|#
@@ -1275,6 +1352,55 @@ parameter_list|(
 name|name
 parameter_list|)
 value|MIX_ENT(name, 0,0,0,0, 0,0,0,0)
+end_define
+
+begin_comment
+comment|/* macros for filling a mute table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MUT_ENT
+parameter_list|(
+name|name
+parameter_list|,
+name|ireg_l
+parameter_list|,
+name|ibit_l
+parameter_list|,
+name|ilen_l
+parameter_list|,
+name|oreg_l
+parameter_list|,
+name|obit_l
+parameter_list|,
+name|olen_l
+parameter_list|, \
+name|ireg_r
+parameter_list|,
+name|ibit_r
+parameter_list|,
+name|ilen_r
+parameter_list|,
+name|oreg_r
+parameter_list|,
+name|obit_r
+parameter_list|,
+name|olen_r
+parameter_list|)
+define|\
+value|{{{ireg_l, ibit_l, ilen_l}, {oreg_l, obit_l, olen_l}}, \      {{ireg_r, ibit_r, ilen_r}, {oreg_r, obit_r, olen_r}}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MUT_NONE
+parameter_list|(
+name|name
+parameter_list|)
+value|{{{0, 0, 0}, {0, 0, 0}}, {{0, 0, 0}, {0, 0, 0}}}
 end_define
 
 begin_comment
