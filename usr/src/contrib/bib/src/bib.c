@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bib.c	2.5	%G%"
+literal|"@(#)bib.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -274,6 +274,8 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|foot
+decl_stmt|,
+name|doacite
 decl_stmt|,
 name|sort
 decl_stmt|,
@@ -959,6 +961,10 @@ name|ch
 operator|==
 literal|'['
 condition|)
+if|if
+condition|(
+name|doacite
+condition|)
 name|fputs
 argument_list|(
 literal|"\\*([["
@@ -966,7 +972,11 @@ argument_list|,
 name|tfd
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|doacite
+condition|)
 name|fputs
 argument_list|(
 literal|"\\*([{"
@@ -1262,7 +1272,11 @@ name|info
 argument_list|,
 name|CITEEND
 argument_list|,
+name|doacite
+condition|?
 name|tail
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2604,6 +2618,10 @@ operator|->
 name|ri_disambig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|doacite
+condition|)
 name|fputs
 argument_list|(
 name|tempcite
@@ -2614,6 +2632,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|doacite
+condition|)
 name|fputs
 argument_list|(
 name|refinfo
@@ -2632,6 +2654,18 @@ name|ofd
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|doacite
+condition|)
+name|fputs
+argument_list|(
+literal|"\\&"
+argument_list|,
+name|ofd
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2643,6 +2677,10 @@ operator|.
 name|info
 condition|)
 block|{
+if|if
+condition|(
+name|doacite
+condition|)
 name|fputs
 argument_list|(
 name|cites
@@ -2651,6 +2689,18 @@ name|i
 index|]
 operator|.
 name|info
+argument_list|,
+name|ofd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|doacite
+condition|)
+name|fputs
+argument_list|(
+literal|"\\&"
 argument_list|,
 name|ofd
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.5	%G%"
+literal|"@(#)bibargs.c	2.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +182,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* footnoted references ? (default endnotes) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|doacite
+init|=
+name|true
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* place citations ? */
 end_comment
 
 begin_decl_stmt
@@ -725,6 +737,14 @@ break|break;
 block|}
 break|break;
 case|case
+literal|'v'
+case|:
+name|doacite
+operator|=
+name|false
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+case|case
 literal|'f'
 case|:
 name|foot
@@ -778,6 +798,18 @@ condition|)
 name|abbrev
 operator|=
 name|false
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'v'
+condition|)
+name|doacite
+operator|=
+name|true
 expr_stmt|;
 elseif|else
 if|if
@@ -4324,6 +4356,34 @@ argument_list|,
 name|ref
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'0'
+condition|)
+block|{
+comment|/* print nothing */
+for|for
+control|(
+name|fp
+operator|=
+name|field
+init|;
+operator|*
+name|fp
+condition|;
+control|)
+operator|*
+name|cp
+operator|++
+operator|=
+operator|*
+name|fp
+operator|++
+expr_stmt|;
+block|}
 comment|/*       else if (c == '4')          here is how to add new styles */
 elseif|else
 if|if
