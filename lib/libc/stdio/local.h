@@ -364,7 +364,7 @@ specifier|extern
 name|wint_t
 name|__ungetwc
 parameter_list|(
-name|wchar_t
+name|wint_t
 parameter_list|,
 name|FILE
 modifier|*
