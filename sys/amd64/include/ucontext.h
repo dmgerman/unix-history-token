@@ -90,10 +90,23 @@ literal|28
 index|]
 decl_stmt|;
 comment|/* env87 + fpacc87 + u_long */
+define|#
+directive|define
+name|__UC_MC_VALID
+value|0x0001
+comment|/* mcontext register state is valid */
+define|#
+directive|define
+name|__UC_FP_VALID
+value|0x0002
+comment|/* FP registers have been saved */
+name|int
+name|mc_flags
+decl_stmt|;
 name|int
 name|__spare__
 index|[
-literal|17
+literal|16
 index|]
 decl_stmt|;
 block|}
