@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_usrreq.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_usrreq.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -253,8 +253,9 @@ name|req
 operator|==
 name|PRU_CONTROL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|in_control
 argument_list|(
 name|so
@@ -276,8 +277,21 @@ operator|*
 operator|)
 name|rights
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|rights
@@ -856,6 +870,14 @@ operator|->
 name|so_snd
 operator|.
 name|sb_hiwat
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
