@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.18 (Berkeley) %G%"
+literal|"@(#)ls.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,8 +666,6 @@ operator|||
 name|f_timesort
 operator|||
 name|f_size
-operator|||
-name|f_inode
 operator|||
 name|f_type
 expr_stmt|;
@@ -1785,7 +1783,7 @@ decl_stmt|;
 name|struct
 name|dirent
 modifier|*
-name|entry
+name|dp
 decl_stmt|;
 name|LS
 modifier|*
@@ -1893,7 +1891,7 @@ name|cnt
 operator|=
 literal|0
 init|;
-name|entry
+name|dp
 operator|=
 name|readdir
 argument_list|(
@@ -1905,7 +1903,7 @@ block|{
 comment|/* this does -A and -a */
 name|p
 operator|=
-name|entry
+name|dp
 operator|->
 name|d_name
 expr_stmt|;
@@ -2004,7 +2002,7 @@ name|needstat
 operator|&&
 name|lstat
 argument_list|(
-name|entry
+name|dp
 operator|->
 name|d_name
 argument_list|,
@@ -2027,7 +2025,7 @@ name|stderr
 argument_list|,
 literal|"ls: %s: %s\n"
 argument_list|,
-name|entry
+name|dp
 operator|->
 name|d_name
 argument_list|,
@@ -2050,6 +2048,20 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * get the inode from the directory, in case the -f flag 		 * was set and we can't stat the actual file. 		 */
+name|stats
+index|[
+name|cnt
+index|]
+operator|.
+name|lstat
+operator|.
+name|st_ino
+operator|=
+name|dp
+operator|->
+name|d_ino
+expr_stmt|;
 name|stats
 index|[
 name|cnt
@@ -2061,7 +2073,7 @@ name|names
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|entry
+name|dp
 operator|->
 name|d_name
 argument_list|,
@@ -2070,14 +2082,14 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|entry
+name|dp
 operator|->
 name|d_namlen
 argument_list|)
 expr_stmt|;
 name|names
 operator|+=
-name|entry
+name|dp
 operator|->
 name|d_namlen
 expr_stmt|;
