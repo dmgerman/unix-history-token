@@ -4471,7 +4471,7 @@ argument_list|,
 operator|&
 name|curinode
 operator|->
-name|di_ctime
+name|di_mtime
 argument_list|)
 condition|)
 return|return
@@ -4512,7 +4512,7 @@ argument_list|,
 operator|&
 name|curinode
 operator|->
-name|di_ctime
+name|di_atime
 argument_list|)
 condition|)
 return|return
