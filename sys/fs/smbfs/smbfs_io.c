@@ -3409,7 +3409,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|smb_proc_intr
+name|smb_td_intr
 argument_list|(
 name|td
 operator|->
