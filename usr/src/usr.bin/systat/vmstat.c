@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.21 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -4166,6 +4166,11 @@ name|st
 decl_stmt|;
 block|{
 name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|,
 name|size
 decl_stmt|;
 specifier|extern
@@ -4302,11 +4307,27 @@ operator|->
 name|Total
 argument_list|)
 expr_stmt|;
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_VM
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|VM_METER
+expr_stmt|;
 if|if
 condition|(
-name|getkerninfo
+name|sysctl
 argument_list|(
-name|KINFO_METER
+name|mib
+argument_list|,
+literal|2
 argument_list|,
 operator|&
 name|s
@@ -4316,6 +4337,8 @@ argument_list|,
 operator|&
 name|size
 argument_list|,
+name|NULL
+argument_list|,
 literal|0
 argument_list|)
 operator|<
@@ -4324,7 +4347,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"Can't get kerninfo: %s\n"
+literal|"Can't get kernel info: %s\n"
 argument_list|,
 name|strerror
 argument_list|(
