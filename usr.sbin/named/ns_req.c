@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_req.c,v 8.8 1995/06/29 09:26:17 vixie Exp $"
+literal|"$Id: ns_req.c,v 1.1.1.3 1995/10/23 09:26:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4071,6 +4071,53 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+for|for
+control|(
+name|dp
+operator|=
+name|np
+operator|->
+name|n_data
+init|;
+name|dp
+condition|;
+name|dp
+operator|=
+name|dp
+operator|->
+name|d_next
+control|)
+if|if
+condition|(
+name|dp
+operator|->
+name|d_zone
+operator|&&
+name|match
+argument_list|(
+name|dp
+argument_list|,
+name|class
+argument_list|,
+name|T_NS
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|dp
+condition|)
+block|{
+comment|/* 				 * we know the child zone exists but are 				 * missing glue. 				 * 				 * nslookup has called sysquery() to get the 				 * missing glue. 				 * 				 * for UDP, drop the response and let the 				 * client retry.  for TCP, we should probably 				 * (XXX) hold open the TCP connection for a 				 * while in case the sysquery() comes back 				 * soon.  meanwhile we SERVFAIL. 				 */
+if|if
+condition|(
+name|qsp
+condition|)
+goto|goto
+name|do_servfail
+goto|;
+break|break;
+block|}
 name|np
 operator|=
 name|np
@@ -4085,6 +4132,8 @@ comment|/* Try again. */
 case|case
 name|FW_SERVFAIL
 case|:
+name|do_servfail
+label|:
 name|hp
 operator|->
 name|rcode

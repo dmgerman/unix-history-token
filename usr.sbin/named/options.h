@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 4.9.1.16 1994/07/22 08:42:30 vixie Exp $  */
+comment|/* options.h - specify the conditionally-compiled features  * vix 28mar92 [moved out of the Makefile because they were getting too big]  *  * $Id: options.h,v 1.1.1.1 1995/10/23 09:26:10 peter Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * ++Copyright++  * -  * Copyright (c)   *    The Regents of the Univ
 end_comment
 
 begin_comment
-comment|/* Key:  *	ucb = U C Berkeley 4.8.3 release  *	vix = Paul Vixie of Digital  *	del = Don Lewis of Harris  *	mcsun = Piet Beertema of EUNet  *	asp = Andrew Partan of UUNet  *	pma = Paul Albitz of Hewlett Packard  *	bb = Bryan Beecher of UMich  *	mpa = Mark Andrews of CSIRO - DMS  *	rossc = Ross Cartlidge of The Univeritsy of Sydney  *	mtr = Marshall Rose of TPC.INT  */
+comment|/* Key:  *	ucb = U C Berkeley 4.8.3 release  *	vix = Paul Vixie of Digital  *	del = Don Lewis of Harris  *	mcsun = Piet Beertema of EUNet  *	asp = Andrew Partan of UUNet  *	pma = Paul Albitz of Hewlett Packard  *	bb = Bryan Beecher of UMich  *	mpa = Mark Andrews of CSIRO - DMS  *	rossc = Ross Cartlidge of The Univeritsy of Sydney  *	mtr = Marshall Rose of TPC.INT  *      bg = Benoit Grange of INRIA  *      ckd = Christopher Davis of Kapor Enterprises  *      gns = Greg Shapiro of WPI  */
 end_comment
 
 begin_define
@@ -25,14 +25,8 @@ begin_comment
 comment|/*#define ALLOW_T_UNSPEC /* enable the "unspec" RR type for old athena (ucb) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|INVQ
-end_define
-
 begin_comment
-comment|/* enable inverse queries (nslookup) (ucb/vix) */
+comment|/*#define INVQ		/* enable inverse queries (nslookup) (ucb/vix) */
 end_comment
 
 begin_comment
@@ -175,14 +169,8 @@ begin_comment
 comment|/* negative caching (anant@isi.edu) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|VALIDATE
-end_define
-
 begin_comment
-comment|/* validation procedure (anant@isi.edu) */
+comment|/*#define VALIDATE	/* validation procedure (anant@isi.edu) (DO NOT USE!)*/
 end_comment
 
 begin_comment
@@ -206,12 +194,14 @@ name|STUBS
 end_define
 
 begin_comment
-comment|/* allow transfers of NS only for a zone (mpa) (EXP) */
+comment|/* allow transfers of NS only for a zone (mpa) */
 end_comment
 
-begin_comment
-comment|/*#define SUNSECURITY	/* obscure fix for sunos (see below) */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOGFAC
+end_ifndef
 
 begin_define
 define|#
@@ -224,8 +214,19 @@ begin_comment
 comment|/* what syslog facility should named use? */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|SECURE_ZONES
+end_define
+
 begin_comment
-comment|/*#define SECURE_ZONES	/* if you want to inhibit world access to zone(s) */
+comment|/* if you want to inhibit world access to zones (gns)*/
 end_comment
 
 begin_define
@@ -327,6 +328,16 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PURGE_ZONE
+end_define
+
+begin_comment
+comment|/* remove all traces of a zone when reloading (mpa) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|STATS
 end_define
 
@@ -334,8 +345,32 @@ begin_comment
 comment|/* keep nameserver statistics; uses more memory */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RENICE
+end_define
+
 begin_comment
-comment|/*#define RENICE  	/* named-xfer should run at normal priority */
+comment|/* named-xfer should run at normal priority */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XSTATS
+end_define
+
+begin_comment
+comment|/* extended statistics, syslogged periodically (bg) */
+end_comment
+
+begin_comment
+comment|/*#define BIND_NOTIFY	/* experimental - do not enable in customer products */
+end_comment
+
+begin_comment
+comment|/*#define LOC_RR	/* support for (draft) LOC record parsing (ckd) */
 end_comment
 
 begin_comment
@@ -449,53 +484,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SUNOS4
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|SYSV
-argument_list|)
-operator|)
-end_if
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SUNSECURITY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SUNSECURITY
-end_define
-
-begin_comment
-comment|/* mandatory on suns and rlogin etc. depend on this */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -506,6 +494,32 @@ begin_define
 define|#
 directive|define
 name|LAME_DELEGATION
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XSTATS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|STATS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|STATS
 end_define
 
 begin_endif

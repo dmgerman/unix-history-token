@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_glue.c,v 8.7 1995/06/29 09:26:17 vixie Exp $"
+literal|"$Id: db_glue.c,v 1.1.1.3 1995/10/23 09:26:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5259,7 +5259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is nec'y for systems that croak when deref'ing unaligned pointers.  * SPARC is an example.  */
+comment|/*  * This is nec'y for systems that croak when deref'ing unaligned pointers.  * SPARC is an example.  Note that in_addr.s_addr needn't be a 32-bit int,  * so we want to avoid bcopy and let the compiler do the casting for us.  */
 end_comment
 
 begin_function
@@ -5279,6 +5279,9 @@ name|struct
 name|in_addr
 name|ret
 decl_stmt|;
+name|u_int32_t
+name|tmp
+decl_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -5292,10 +5295,16 @@ name|char
 operator|*
 operator|)
 operator|&
-name|ret
+name|tmp
 argument_list|,
 name|INADDRSZ
 argument_list|)
+expr_stmt|;
+name|ret
+operator|.
+name|s_addr
+operator|=
+name|tmp
 expr_stmt|;
 return|return
 operator|(
