@@ -888,5 +888,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Int 15:E820 'SMAP' structure  *  * XXX add constants for type  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMAP_SIG
+value|0x534D4150
+end_define
+
+begin_comment
+comment|/* 'SMAP' */
+end_comment
+
+begin_struct
+struct|struct
+name|bios_smap
+block|{
+name|u_int64_t
+name|base
+decl_stmt|;
+name|u_int64_t
+name|length
+decl_stmt|;
+name|u_int32_t
+name|type
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+struct|;
+end_struct
+
 end_unit
 

@@ -87,7 +87,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
+file|<dev/acpi/acpireg.h>
 end_include
 
 begin_ifndef

@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_acpi.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -22,7 +28,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpireg.h>
 end_include
 
 begin_include

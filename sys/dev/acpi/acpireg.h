@@ -1,25 +1,64 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Takanori Watanabe<takawata@shidahara1.planet.sci.kobe-u.ac.jp>  * Copyright (c) 1999 Mitsuru IWASAKI<iwasaki@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: acpi.h,v 1.9 2000/08/08 14:12:16 iwasaki Exp $  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 Takanori Watanabe<takawata@shidahara1.planet.sci.kobe-u.ac.jp>  * Copyright (c) 1999 Mitsuru IWASAKI<iwasaki@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_SYS_ACPI_H_
-end_ifndef
+begin_comment
+comment|/* Generic Address structure */
+end_comment
 
-begin_define
+begin_struct
+struct|struct
+name|ACPIgas
+block|{
+name|u_int8_t
+name|address_space_id
+decl_stmt|;
 define|#
 directive|define
-name|_SYS_ACPI_H_
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/ioccom.h>
-end_include
+name|ACPI_GAS_MEMORY
+value|0
+define|#
+directive|define
+name|ACPI_GAS_IO
+value|1
+define|#
+directive|define
+name|ACPI_GAS_PCI
+value|2
+define|#
+directive|define
+name|ACPI_GAS_EMBEDDED
+value|3
+define|#
+directive|define
+name|ACPI_GAS_SMBUS
+value|4
+define|#
+directive|define
+name|ACPI_GAS_FIXED
+value|0x7f
+name|u_int8_t
+name|register_bit_width
+decl_stmt|;
+name|u_int8_t
+name|register_bit_offset
+decl_stmt|;
+name|u_int8_t
+name|res
+decl_stmt|;
+name|u_int64_t
+name|address
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+struct|;
+end_struct
 
 begin_comment
 comment|/* Root System Description Pointer */
@@ -252,10 +291,13 @@ decl_stmt|;
 name|u_int8_t
 name|century
 decl_stmt|;
+name|u_int16_t
+name|iapc_boot_arch
+decl_stmt|;
 name|u_char
 name|reserved4
 index|[
-literal|3
+literal|1
 index|]
 decl_stmt|;
 name|u_int32_t
@@ -311,6 +353,57 @@ directive|define
 name|ACPI_FACP_FLAG_DCK_CAP
 value|512
 comment|/* Can support docking */
+name|struct
+name|ACPIgas
+name|reset_reg
+decl_stmt|;
+name|u_int8_t
+name|reset_value
+decl_stmt|;
+name|u_int8_t
+name|reserved5
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_int64_t
+name|x_firmware_ctrl
+decl_stmt|;
+name|u_int64_t
+name|x_dsdt
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm1a_evt_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm1b_evt_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm1a_cnt_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm1b_cnt_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm2_cnt_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_pm_tmr_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_gpe0_blk
+decl_stmt|;
+name|struct
+name|ACPIgas
+name|x_gpe1_blk
+decl_stmt|;
 block|}
 name|__attribute__
 argument_list|(
@@ -577,27 +670,6 @@ name|ACPI_S_STATE_S5
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPIIO_ENABLE
-value|_IO('P', 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPIIO_DISABLE
-value|_IO('P', 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPIIO_SETSLPSTATE
-value|_IOW('P', 3, int)
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -642,41 +714,6 @@ end_define
 begin_comment
 comment|/* unsupported sleeping type */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ACPIrsdp
-modifier|*
-name|acpi_rsdp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ACPI Root System Description Table */
-end_comment
-
-begin_function_decl
-name|void
-name|acpi_init_addr_range
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|acpi_register_addr_range
-parameter_list|(
-name|u_int64_t
-parameter_list|,
-name|u_int64_t
-parameter_list|,
-name|u_int32_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * ACPICA compatibility  */
@@ -1622,15 +1659,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYS_ACPI_H_ */
 end_comment
 
 end_unit

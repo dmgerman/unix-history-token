@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -36,13 +36,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/acpi.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/acpi/acpi.h>
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/acpi/acpivar.h>
 end_include
 
 begin_include
