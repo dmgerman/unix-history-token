@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_frag.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_frag.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -899,7 +899,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|TROLL
+comment|/* TROLL */
 comment|/* 			 *	Tough situation: if the error occured on the last  			 *	fragment, we can not send an ER, as the if_output 			 *	routine consumed the packet. If the error occured 			 *	on any intermediate packets, we can send an ER 			 *	because we still have the original header in (m). 			 */
 if|if
 condition|(
@@ -986,7 +986,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|TROLL
+comment|/* TROLL */
 name|total_len
 operator|-=
 name|frag_size
@@ -3086,8 +3086,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|TROLL
 end_endif
+
+begin_comment
+comment|/* TROLL */
+end_comment
 
 end_unit
 
