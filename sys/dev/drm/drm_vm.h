@@ -282,7 +282,7 @@ operator|(
 name|DRMFILE
 operator|)
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|DRM_CURRENTPID
 argument_list|)

@@ -4558,7 +4558,7 @@ name|void
 operator|*
 operator|)
 call|(
-name|intptr_t
+name|uintptr_t
 call|)
 argument_list|(
 name|DRM_CURRENTPID
@@ -4951,7 +4951,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|priv
 operator|->
@@ -5169,7 +5169,7 @@ operator|(
 name|DRMFILE
 operator|)
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|DRM_CURRENTPID
 argument_list|)
@@ -5467,7 +5467,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|DRM_CURRENTPID
 argument_list|)
@@ -5628,7 +5628,7 @@ name|void
 operator|*
 operator|)
 operator|(
-name|intptr_t
+name|uintptr_t
 operator|)
 name|DRM_CURRENTPID
 expr_stmt|;
