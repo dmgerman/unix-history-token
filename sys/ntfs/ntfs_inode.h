@@ -303,6 +303,9 @@ name|u_int32_t
 name|i_flag
 decl_stmt|;
 name|int
+name|i_lock
+decl_stmt|;
+name|int
 name|i_usecount
 decl_stmt|;
 name|LIST_HEAD
@@ -312,12 +315,13 @@ argument|fnode
 argument_list|)
 name|i_fnlist
 expr_stmt|;
-name|struct
-name|ntvattr
-modifier|*
-name|i_vattrp
-decl_stmt|;
-comment|/* ntvattrs list */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|ntvattr
+argument_list|)
+name|i_valist
+expr_stmt|;
 name|long
 name|i_nlink
 decl_stmt|;
@@ -353,7 +357,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FN_DEFAULT
+name|FN_VALID
 value|0x0002
 end_define
 

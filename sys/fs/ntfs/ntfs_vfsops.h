@@ -6,7 +6,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VG_DONTLOAD
+name|VG_DONTLOADIN
 value|0x0001
 end_define
 
@@ -20,6 +20,32 @@ end_comment
 
 begin_comment
 comment|/* ntnode not loaded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VG_DONTVALIDFN
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Tells ntfs_vgetex to do not validate */
+end_comment
+
+begin_comment
+comment|/* fnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VG_EXT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* This is not main record */
 end_comment
 
 begin_function_decl
@@ -48,6 +74,20 @@ parameter_list|,
 name|struct
 name|vnode
 modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ntfs_calccfree
+parameter_list|(
+name|struct
+name|ntfsmount
+modifier|*
+parameter_list|,
+name|cn_t
 modifier|*
 parameter_list|)
 function_decl|;

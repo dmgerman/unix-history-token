@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_subr.c,v 1.9 1999/02/02 01:54:54 semen Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Semen Ustimenko (semenu@FreeBSD.org)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ntfs_subr.c,v 1.9 1999/02/02 01:54:54 semen Exp $  */
 end_comment
 
 begin_include
@@ -194,6 +194,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  *   */
+end_comment
+
 begin_function
 name|int
 name|ntfs_ntvattrrele
@@ -235,6 +239,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Search attribute specifed in ntnode (load ntnode if nessecary).  * If not found but ATTR_A_ATTRLIST present, read it in and search throught.  * VOP_VGET node needed, and lookup througth it's ntnode (load if nessesary).  *  * ntnode should be locked  */
+end_comment
 
 begin_function
 name|int
@@ -433,7 +441,9 @@ name|vap
 operator|=
 name|ip
 operator|->
-name|i_vattrp
+name|i_valist
+operator|.
+name|lh_first
 init|;
 name|vap
 condition|;
@@ -441,7 +451,9 @@ name|vap
 operator|=
 name|vap
 operator|->
-name|va_nextp
+name|va_list
+operator|.
+name|le_next
 control|)
 block|{
 name|ddprintf
@@ -786,9 +798,10 @@ name|al_inumber
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 			error = VFS_VGET(ntmp->ntm_mountp, aalp->al_inumber,&newvp); */
 name|error
 operator|=
-name|VFS_VGET
+name|ntfs_vgetex
 argument_list|(
 name|ntmp
 operator|->
@@ -797,6 +810,16 @@ argument_list|,
 name|aalp
 operator|->
 name|al_inumber
+argument_list|,
+name|NTFS_A_DATA
+argument_list|,
+name|NULL
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|VG_EXT
+argument_list|,
+name|curproc
 argument_list|,
 operator|&
 name|newvp
@@ -827,6 +850,7 @@ argument_list|(
 name|newvp
 argument_list|)
 expr_stmt|;
+comment|/* XXX have to lock ntnode */
 if|if
 condition|(
 operator|~
@@ -891,7 +915,9 @@ name|vap
 operator|=
 name|newip
 operator|->
-name|i_vattrp
+name|i_valist
+operator|.
+name|lh_first
 init|;
 name|vap
 condition|;
@@ -899,7 +925,9 @@ name|vap
 operator|=
 name|vap
 operator|->
-name|va_nextp
+name|va_list
+operator|.
+name|le_next
 control|)
 block|{
 if|if
@@ -1053,6 +1081,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Read ntnode from disk, make ntvattr list.  *  * ntnode should be locked  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_loadntnode
@@ -1089,8 +1121,7 @@ decl_stmt|;
 name|struct
 name|ntvattr
 modifier|*
-modifier|*
-name|vapp
+name|nvap
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -1368,23 +1399,13 @@ operator|+
 name|off
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_vattrp
-condition|)
-name|printf
+name|LIST_INIT
 argument_list|(
-literal|"ntfs_ntloadnode: WARNING! already loaded?\n"
-argument_list|)
-expr_stmt|;
-name|vapp
-operator|=
 operator|&
 name|ip
 operator|->
-name|i_vattrp
+name|i_valist
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1404,7 +1425,8 @@ name|ntfs_attrtontvattr
 argument_list|(
 name|ntmp
 argument_list|,
-name|vapp
+operator|&
+name|nvap
 argument_list|,
 name|ap
 argument_list|)
@@ -1414,26 +1436,23 @@ condition|(
 name|error
 condition|)
 break|break;
-operator|(
-operator|*
-name|vapp
-operator|)
+name|nvap
 operator|->
 name|va_ip
 operator|=
 name|ip
 expr_stmt|;
-name|vapp
-operator|=
+name|LIST_INSERT_HEAD
+argument_list|(
 operator|&
-operator|(
-operator|(
-operator|*
-name|vapp
-operator|)
+name|ip
 operator|->
-name|va_nextp
-operator|)
+name|i_valist
+argument_list|,
+name|nvap
+argument_list|,
+name|va_list
+argument_list|)
 expr_stmt|;
 name|off
 operator|+=
@@ -1525,6 +1544,100 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Routine locks ntnode and increase usecount, just opposite of  * ntfs_ntput.  */
+end_comment
+
+begin_function
+name|int
+name|ntfs_ntget
+parameter_list|(
+name|struct
+name|ntnode
+modifier|*
+name|ip
+parameter_list|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"ntfs_ntget: get ntnode %d: %p, usecount: %d\n"
+operator|,
+name|ip
+operator|->
+name|i_number
+operator|,
+name|ip
+operator|,
+name|ip
+operator|->
+name|i_usecount
+operator|)
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_usecount
+operator|++
+expr_stmt|;
+name|restart
+label|:
+if|if
+condition|(
+name|ip
+operator|->
+name|i_lock
+condition|)
+block|{
+while|while
+condition|(
+name|ip
+operator|->
+name|i_lock
+condition|)
+block|{
+name|ip
+operator|->
+name|i_lock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|tsleep
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|i_lock
+argument_list|,
+name|PVM
+argument_list|,
+literal|"ntnode"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|restart
+goto|;
+block|}
+name|ip
+operator|->
+name|i_lock
+operator|=
+literal|1
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Routine search ntnode in hash, if found: lock, inc usecount and return.  * If not in hash allocate structure for ntnode, prefill it, lock,  * inc count and return.  *  * ntnode returned locked  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -1534,7 +1647,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|ntfs_ntget
+name|ntfs_ntlookup
 parameter_list|(
 name|struct
 name|ntfsmount
@@ -1559,7 +1672,7 @@ decl_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntget: ntget ntnode %d\n"
+literal|"ntfs_ntlookup: for ntnode %d\n"
 operator|,
 name|ino
 operator|)
@@ -1583,15 +1696,16 @@ argument_list|,
 name|ino
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|ip
 condition|)
 block|{
+name|ntfs_ntget
+argument_list|(
 name|ip
-operator|->
-name|i_usecount
-operator|++
+argument_list|)
 expr_stmt|;
 operator|*
 name|ipp
@@ -1601,7 +1715,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntget: ntnode %d: %p, usecount: %d\n"
+literal|"ntfs_ntlookup: ntnode %d: %p, usecount: %d\n"
 operator|,
 name|ino
 operator|,
@@ -1624,11 +1738,6 @@ condition|(
 name|ntfs_ntnode_hash_lock
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"waiting for hash_lock to free...\n"
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|ntfs_ntnode_hash_lock
@@ -1652,11 +1761,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
-argument_list|(
-literal|"hash_lock freeed\n"
-argument_list|)
-expr_stmt|;
 goto|goto
 name|restart
 goto|;
@@ -1687,7 +1791,7 @@ expr_stmt|;
 name|ddprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntget: allocating ntnode: %d: %p\n"
+literal|"ntfs_ntlookup: allocating ntnode: %d: %p\n"
 operator|,
 name|ino
 operator|,
@@ -1759,6 +1863,12 @@ operator|->
 name|i_usecount
 operator|++
 expr_stmt|;
+name|ip
+operator|->
+name|i_lock
+operator|=
+literal|1
+expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -1796,7 +1906,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntget: ntnode %d: %p, usecount: %d\n"
+literal|"ntfs_ntlookup: ntnode %d: %p, usecount: %d\n"
 operator|,
 name|ino
 operator|,
@@ -1816,9 +1926,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Decrement usecount of ntnode and unlock it, if usecount reach zero,  * deallocate ntnode.  *  * ntnode should be locked on entry, and unlocked on return.  */
+end_comment
+
 begin_function
 name|void
-name|ntfs_ntrele
+name|ntfs_ntput
 parameter_list|(
 name|struct
 name|ntnode
@@ -1831,6 +1945,184 @@ name|ntvattr
 modifier|*
 name|vap
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ip
+operator|->
+name|i_lock
+condition|)
+name|printf
+argument_list|(
+literal|"ntfs_ntput: NOT LOCKED"
+argument_list|)
+expr_stmt|;
+name|dprintf
+argument_list|(
+operator|(
+literal|"ntfs_ntput: rele ntnode %d: %p, usecount: %d\n"
+operator|,
+name|ip
+operator|->
+name|i_number
+operator|,
+name|ip
+operator|,
+name|ip
+operator|->
+name|i_usecount
+operator|)
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_usecount
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_usecount
+operator|<
+literal|0
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"ntfs_ntput: ino: %d usecount: %d \n"
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|ip
+operator|->
+name|i_usecount
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ip
+operator|->
+name|i_usecount
+operator|==
+literal|0
+condition|)
+block|{
+name|dprintf
+argument_list|(
+operator|(
+literal|"ntfs_ntput: deallocating ntnode: %d\n"
+operator|,
+name|ip
+operator|->
+name|i_number
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_fnlist
+operator|.
+name|lh_first
+condition|)
+name|panic
+argument_list|(
+literal|"ntfs_ntput: ntnode has fnodes\n"
+argument_list|)
+expr_stmt|;
+name|ntfs_nthashrem
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|ip
+operator|->
+name|i_valist
+operator|.
+name|lh_first
+operator|!=
+name|NULL
+condition|)
+block|{
+name|vap
+operator|=
+name|ip
+operator|->
+name|i_valist
+operator|.
+name|lh_first
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|vap
+argument_list|,
+name|va_list
+argument_list|)
+expr_stmt|;
+name|ntfs_freentvattr
+argument_list|(
+name|vap
+argument_list|)
+expr_stmt|;
+block|}
+name|FREE
+argument_list|(
+name|ip
+argument_list|,
+name|M_NTFSNTNODE
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ip
+operator|->
+name|i_lock
+operator|<
+literal|0
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|i_lock
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_lock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Decrement usecount of ntnode.  */
+end_comment
+
+begin_function
+name|void
+name|ntfs_ntrele
+parameter_list|(
+name|struct
+name|ntnode
+modifier|*
+name|ip
+parameter_list|)
+block|{
 name|dprintf
 argument_list|(
 operator|(
@@ -1861,7 +2153,6 @@ name|i_usecount
 operator|<
 literal|0
 condition|)
-block|{
 name|panic
 argument_list|(
 literal|"ntfs_ntrele: ino: %d usecount: %d \n"
@@ -1876,89 +2167,11 @@ name|i_usecount
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ip
-operator|->
-name|i_usecount
-operator|==
-literal|0
-condition|)
-block|{
-name|dprintf
-argument_list|(
-operator|(
-literal|"ntfs_ntrele: deallocating ntnode: %d\n"
-operator|,
-name|ip
-operator|->
-name|i_number
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_fnlist
-operator|.
-name|lh_first
-condition|)
-name|panic
-argument_list|(
-literal|"ntfs_ntrele: ntnode has fnodes\n"
-argument_list|)
-expr_stmt|;
-name|ntfs_nthashrem
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|ip
-operator|->
-name|i_vattrp
-condition|)
-block|{
-name|vap
-operator|=
-name|ip
-operator|->
-name|i_vattrp
-expr_stmt|;
-name|ip
-operator|->
-name|i_vattrp
-operator|=
-name|vap
-operator|->
-name|va_nextp
-expr_stmt|;
-name|ntfs_freentvattr
-argument_list|(
-name|vap
-argument_list|)
-expr_stmt|;
-block|}
-name|FREE
-argument_list|(
-name|ip
-argument_list|,
-name|M_NTFSNTNODE
-argument_list|)
-expr_stmt|;
-block|}
-name|dprintf
-argument_list|(
-operator|(
-literal|"ntfs_ntrele: rele ok\n"
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
 end_function
+
+begin_comment
+comment|/*  * Deallocate all memory allocated for ntvattr by call to  * ntfs_attrtontvattr and some other functions.  */
+end_comment
 
 begin_function
 name|void
@@ -2037,6 +2250,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Convert disk image of attribute into ntvattr structure,  * runs are expanded also.  */
+end_comment
 
 begin_function
 name|int
@@ -2508,6 +2725,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Expand run into more utilizable and more memory eating format.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_runtovrun
@@ -2868,6 +3089,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Convert wchar to uppercase wchar, should be macros?  */
+end_comment
+
 begin_function
 name|wchar
 name|ntfs_toupper
@@ -2895,6 +3120,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Compare to unicode strings case insensible.  */
+end_comment
 
 begin_function
 name|int
@@ -2989,6 +3218,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Compare unicode and ascii string case insens.  */
+end_comment
 
 begin_function
 name|int
@@ -3087,6 +3320,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Compare unicode and ascii string case sens.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_uastrcmp
@@ -3179,6 +3416,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*   * Search fnode in ntnode, if not found allocate and preinitialize.  *  * ntnode should be locked on entry.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_fget
@@ -3207,9 +3448,6 @@ modifier|*
 name|fpp
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
 name|struct
 name|fnode
 modifier|*
@@ -3441,70 +3679,6 @@ name|f_attrtype
 operator|=
 name|attrtype
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fp
-operator|->
-name|f_attrtype
-operator|==
-name|NTFS_A_DATA
-operator|)
-operator|&&
-operator|(
-name|fp
-operator|->
-name|f_attrname
-operator|==
-name|NULL
-operator|)
-condition|)
-name|fp
-operator|->
-name|f_flag
-operator||=
-name|FN_DEFAULT
-expr_stmt|;
-else|else
-block|{
-name|error
-operator|=
-name|ntfs_filesize
-argument_list|(
-name|ntmp
-argument_list|,
-name|fp
-argument_list|,
-operator|&
-name|fp
-operator|->
-name|f_size
-argument_list|,
-operator|&
-name|fp
-operator|->
-name|f_allocated
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|FREE
-argument_list|(
-name|fp
-argument_list|,
-name|M_NTFSFNODE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-block|}
 name|ntfs_ntref
 argument_list|(
 name|ip
@@ -3534,6 +3708,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Deallocate fnode, remove it from ntnode's fnode list.  *  * ntnode should be locked.  */
+end_comment
 
 begin_function
 name|void
@@ -3630,6 +3808,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Lookup attribute name in format: [[:$ATTR_TYPE]:$ATTR_NAME],   * $ATTR_TYPE is searched in attrdefs read from $AttrDefs.  * If $ATTR_TYPE nott specifed, ATTR_A_DATA assumed.  */
+end_comment
 
 begin_function
 name|int
@@ -3916,7 +4098,7 @@ end_comment
 
 begin_function
 name|int
-name|ntfs_ntlookup
+name|ntfs_ntlookupfile
 parameter_list|(
 name|struct
 name|ntfsmount
@@ -4007,6 +4189,22 @@ name|aoff
 decl_stmt|;
 name|error
 operator|=
+name|ntfs_ntget
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
 name|ntfs_ntvattrget
 argument_list|(
 name|ntmp
@@ -4054,6 +4252,7 @@ name|vap
 operator|->
 name|va_datalen
 expr_stmt|;
+comment|/* 	 * Divide file name into: foofilefoofilefoofile[:attrspec] 	 * Store like this:       fname:fnamelen       [aname:anamelen] 	 */
 name|fname
 operator|=
 name|cnp
@@ -4114,7 +4313,7 @@ expr_stmt|;
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntlookup: file %s (%d), attr: %s (%d)\n"
+literal|"ntfs_ntlookupfile: %s (%d), attr: %s (%d)\n"
 operator|,
 name|fname
 operator|,
@@ -4131,7 +4330,7 @@ block|}
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntlookup: blocksize: %d, rdsize: %d\n"
+literal|"ntfs_ntlookupfile: blksz: %d, rdsz: %d\n"
 operator|,
 name|blsize
 operator|,
@@ -4446,7 +4645,9 @@ name|attrname
 argument_list|,
 name|LK_EXCLUSIVE
 argument_list|,
-name|VG_DONTLOAD
+name|VG_DONTLOADIN
+operator||
+name|VG_DONTVALIDFN
 argument_list|,
 name|curproc
 argument_list|,
@@ -4468,6 +4669,24 @@ argument_list|(
 name|nvp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nfp
+operator|->
+name|f_flag
+operator|&
+name|FN_VALID
+condition|)
+block|{
+operator|*
+name|vpp
+operator|=
+name|nvp
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 name|nfp
 operator|->
 name|f_fflag
@@ -4582,6 +4801,49 @@ operator||=
 name|FN_PRELOADED
 expr_stmt|;
 block|}
+else|else
+block|{
+name|error
+operator|=
+name|ntfs_filesize
+argument_list|(
+name|ntmp
+argument_list|,
+name|nfp
+argument_list|,
+operator|&
+name|nfp
+operator|->
+name|f_size
+argument_list|,
+operator|&
+name|nfp
+operator|->
+name|f_allocated
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|vput
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+block|}
+name|nfp
+operator|->
+name|f_flag
+operator|&=
+operator|~
+name|FN_VALID
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -4633,7 +4895,7 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntlookup: diving\n"
+literal|"ntfs_ntlookupfile: diving\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4735,7 +4997,7 @@ block|{
 name|dprintf
 argument_list|(
 operator|(
-literal|"ntfs_ntlookup: nowhere to dive :-(\n"
+literal|"ntfs_ntlookupfile: nowhere to dive :-(\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4765,6 +5027,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|ntfs_ntput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|rdbuf
@@ -4779,6 +5046,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Check if name type is permitted to show.  */
+end_comment
 
 begin_function
 name|int
@@ -4857,6 +5128,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read ntfs dir like stream of attr_indexentry, not like btree of them.  * This is done by scaning $BITMAP:$I30 for busy clusters and reading them.  * Ofcouse $INDEX_ROOT:$I30 is read before. Last read values are stored in  * fnode, so we can skip toward record number num almost immediatly.  * Anyway this is rather slow routine. The problem is that we don't know  * how many records are there in $INDEX_ALLOCATION:$I30 block.  */
+end_comment
 
 begin_function
 name|int
@@ -4976,6 +5251,22 @@ name|num
 operator|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ntfs_ntget
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|error
 operator|=
 name|ntfs_ntvattrget
@@ -5691,6 +5982,11 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|ntfs_ntput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5700,7 +5996,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * #undef dprintf #define dprintf(a)  */
+comment|/*  * Convert NTFS times that are in 100 ns units and begins from  * 1601 Jan 1 into unix times.  */
 end_comment
 
 begin_function
@@ -5777,6 +6073,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Get file times from NTFS_A_NAME attribute.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_times
@@ -5817,6 +6117,22 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+name|ntfs_ntget
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
 name|ntfs_ntvattrget
 argument_list|(
 name|ntmp
@@ -5837,11 +6153,18 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|ntfs_ntput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 operator|*
 name|tm
 operator|=
@@ -5856,6 +6179,11 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+name|ntfs_ntput
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5863,6 +6191,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Get file sizes from corresponding attribute.   *   * ntnode under fnode should be locked.  */
+end_comment
 
 begin_function
 name|int
@@ -5921,36 +6253,6 @@ name|i_number
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|fp
-operator|->
-name|f_flag
-operator|&
-name|FN_DEFAULT
-condition|)
-block|{
-name|error
-operator|=
-name|ntfs_ntvattrget
-argument_list|(
-name|ntmp
-argument_list|,
-name|ip
-argument_list|,
-name|NTFS_A_DATA
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|vap
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|error
 operator|=
 name|ntfs_ntvattrget
@@ -5973,7 +6275,6 @@ operator|&
 name|vap
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -6042,6 +6343,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is one of write routine.  *  * ntnode should be locked.  */
+end_comment
 
 begin_function
 name|int
@@ -6304,6 +6609,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is one of write routine.  *  * ntnode should be locked.  */
+end_comment
 
 begin_function
 name|int
@@ -6714,7 +7023,7 @@ argument_list|,
 name|tocopy
 argument_list|)
 expr_stmt|;
-name|bwrite
+name|bawrite
 argument_list|(
 name|bp
 argument_list|)
@@ -6787,6 +7096,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is one of read routines.  *  * ntnode should be locked.  */
+end_comment
 
 begin_function
 name|int
@@ -6997,7 +7310,6 @@ operator|==
 name|NTFS_BOOTINO
 condition|)
 block|{
-comment|/* XXX */
 name|ccl
 operator|-=
 name|ntfs_btocn
@@ -7310,6 +7622,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * This is one of read routines.  *  * ntnode should be locked.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_readattr_plain
@@ -7571,6 +7887,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This is one of read routines.  *  * ntnode should be locked.  */
+end_comment
 
 begin_function
 name|int
@@ -8011,6 +8331,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|UNUSED_CODE
+end_if
+
 begin_function
 name|int
 name|ntfs_parserun
@@ -8269,6 +8595,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Process fixup routine on given buffer.  */
+end_comment
+
 begin_function
 name|int
 name|ntfs_procfixups
@@ -8512,6 +8847,12 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|UNUSED_CODE
+end_if
+
 begin_function
 name|int
 name|ntfs_runtocn
@@ -8712,6 +9053,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

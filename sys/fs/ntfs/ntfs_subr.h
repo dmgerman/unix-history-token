@@ -21,11 +21,12 @@ begin_struct
 struct|struct
 name|ntvattr
 block|{
-name|struct
-name|ntvattr
-modifier|*
-name|va_nextp
-decl_stmt|;
+name|LIST_ENTRY
+argument_list|(
+argument|ntvattr
+argument_list|)
+name|va_list
+expr_stmt|;
 name|u_int32_t
 name|va_vflag
 decl_stmt|;
@@ -665,7 +666,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ntfs_ntlookup
+name|ntfs_ntlookupfile
 name|__P
 argument_list|(
 operator|(
@@ -754,7 +755,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|ntfs_ntget
+name|ntfs_ntlookup
 name|__P
 argument_list|(
 operator|(
@@ -774,8 +775,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|ntfs_ntget
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ntnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|ntfs_ntrele
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ntnode
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ntfs_ntput
 name|__P
 argument_list|(
 operator|(
