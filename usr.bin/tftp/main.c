@@ -1401,7 +1401,10 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|NULL
+name|argv
+index|[
+literal|2
+index|]
 argument_list|)
 expr_stmt|;
 else|else
@@ -1412,10 +1415,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|argv
-index|[
-literal|2
-index|]
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
