@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3344,20 +3344,25 @@ name|int
 name|rdonly
 decl_stmt|;
 comment|/* lookup read-only flag bit */
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* DEBUG: check name ptr/len */
-name|int
-name|newhash
-decl_stmt|;
-comment|/* DEBUG: check name hash */
 name|int
 name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMEI_DIAGNOSTIC
+name|int
+name|newhash
+decl_stmt|;
+comment|/* DEBUG: check name hash */
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+comment|/* DEBUG: check name ptr/len */
+endif|#
+directive|endif
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|wantparent
 operator|=
