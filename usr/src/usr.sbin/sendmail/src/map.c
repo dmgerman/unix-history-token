@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.2 (Berkeley) %G%"
+literal|"@(#)map.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4216,6 +4216,10 @@ name|int
 name|mode
 decl_stmt|;
 block|{
+name|FILE
+modifier|*
+name|af
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4249,6 +4253,40 @@ return|return
 name|FALSE
 return|;
 block|}
+name|af
+operator|=
+name|fopen
+argument_list|(
+name|map
+operator|->
+name|map_file
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|af
+operator|==
+name|NULL
+condition|)
+return|return
+name|FALSE
+return|;
+name|readaliases
+argument_list|(
+name|map
+argument_list|,
+name|af
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|af
+argument_list|)
+expr_stmt|;
 return|return
 name|TRUE
 return|;
