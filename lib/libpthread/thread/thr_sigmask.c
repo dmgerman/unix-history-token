@@ -237,14 +237,9 @@ break|break;
 comment|/* Trap invalid actions: */
 default|default:
 comment|/* Return an invalid argument: */
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
 name|ret
 operator|=
-operator|-
-literal|1
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
