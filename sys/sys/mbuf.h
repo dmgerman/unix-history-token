@@ -1229,7 +1229,7 @@ value|do {						\ 	(m)->m_data += (MHLEN - (len))& ~(sizeof(long) - 1);		\ } whi
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available  * before the current start of data in an mbuf.  */
+comment|/*  * Compute the amount of space available  * before the current start of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
 end_comment
 
 begin_define
@@ -1244,7 +1244,7 @@ value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_data - (m)->m_e
 end_define
 
 begin_comment
-comment|/*  * Compute the amount of space available  * after the end of data in an mbuf.  */
+comment|/*  * Compute the amount of space available  * after the end of data in an mbuf.  *  * The M_WRITABLE() is a temporary, conservative safety measure: the burden  * of checking writability of the mbuf data area rests solely with the caller.  */
 end_comment
 
 begin_define
@@ -1255,7 +1255,7 @@ parameter_list|(
 name|m
 parameter_list|)
 define|\
-value|((m)->m_flags& M_EXT ? (m)->m_ext.ext_buf +			\ 	    (m)->m_ext.ext_size - ((m)->m_data + (m)->m_len) :		\&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
+value|((m)->m_flags& M_EXT ?						\ 	    (M_WRITABLE(m) ? (m)->m_ext.ext_buf + (m)->m_ext.ext_size	\ 		- ((m)->m_data + (m)->m_len) : 0) :			\&(m)->m_dat[MLEN] - ((m)->m_data + (m)->m_len))
 end_define
 
 begin_comment
