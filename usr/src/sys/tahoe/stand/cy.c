@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.5	87/04/02	*/
+comment|/*	cy.c	7.6	87/04/07	*/
 end_comment
 
 begin_comment
@@ -241,11 +241,18 @@ name|i_unit
 operator|!=
 literal|0
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
 literal|"Only 1 cypher supported\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|SCP
 operator|=
 name|CYSCP
@@ -440,11 +447,11 @@ operator|.
 name|tpstatus
 argument_list|)
 expr_stmt|;
-name|_stop
-argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 name|uncache
 argument_list|(
@@ -472,11 +479,22 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"Rewind failed!\n"
+literal|"cy%d: Rewind failed!\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 while|while
 condition|(
 name|io
@@ -498,11 +516,22 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|_stop
+block|{
+name|printf
 argument_list|(
-literal|"cy: seek failure!\n"
+literal|"cy%d: seek failure!\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|io
 operator|->
 name|i_boff
@@ -571,6 +600,11 @@ endif|#
 directive|endif
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
