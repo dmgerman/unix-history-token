@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.16 (Berkeley) %G%"
+literal|"@(#)sem.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,7 +164,7 @@ name|chkclob
 name|__P
 argument_list|(
 operator|(
-name|Char
+name|char
 operator|*
 operator|)
 argument_list|)
@@ -2087,6 +2087,8 @@ name|char
 name|tmp
 index|[
 name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* 	     * so< /dev/std{in,out,err} work 	     */
@@ -2150,8 +2152,6 @@ expr_stmt|;
 name|tmp
 index|[
 name|MAXPATHLEN
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'
@@ -2327,10 +2327,12 @@ operator|->
 name|t_drit
 condition|)
 block|{
-name|Char
+name|char
 name|tmp
 index|[
 name|MAXPATHLEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|cp
@@ -2348,11 +2350,14 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|Strncpy
+name|strncpy
 argument_list|(
 name|tmp
 argument_list|,
+name|short2str
+argument_list|(
 name|cp
+argument_list|)
 argument_list|,
 name|MAXPATHLEN
 argument_list|)
@@ -2360,8 +2365,6 @@ expr_stmt|;
 name|tmp
 index|[
 name|MAXPATHLEN
-operator|-
-literal|1
 index|]
 operator|=
 literal|'\0'
@@ -2411,10 +2414,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|short2str
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|,
 name|O_WRONLY
 operator||
@@ -2432,10 +2432,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|short2str
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|,
 name|O_WRONLY
 argument_list|)
@@ -2487,10 +2484,7 @@ name|stderror
 argument_list|(
 name|ERR_SYSTEM
 argument_list|,
-name|short2str
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -2511,10 +2505,7 @@ name|fd
 operator|=
 name|creat
 argument_list|(
-name|short2str
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|,
 literal|0666
 argument_list|)
@@ -2526,10 +2517,7 @@ name|stderror
 argument_list|(
 name|ERR_SYSTEM
 argument_list|,
-name|short2str
-argument_list|(
 name|tmp
-argument_list|)
 argument_list|,
 name|strerror
 argument_list|(
@@ -2770,7 +2758,7 @@ parameter_list|(
 name|cp
 parameter_list|)
 specifier|register
-name|Char
+name|char
 modifier|*
 name|cp
 decl_stmt|;
@@ -2779,20 +2767,11 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
 if|if
 condition|(
 name|stat
 argument_list|(
-name|ptr
-operator|=
-name|short2str
-argument_list|(
 name|cp
-argument_list|)
 argument_list|,
 operator|&
 name|stb
@@ -2818,7 +2797,7 @@ name|stderror
 argument_list|(
 name|ERR_EXISTS
 argument_list|,
-name|ptr
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
