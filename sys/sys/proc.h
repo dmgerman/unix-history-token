@@ -1192,17 +1192,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_USTATCLOCK
-value|0x00000400
-end_define
-
-begin_comment
-comment|/* Finish user statclock hit at next AST. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDP_CAN_UNBIND
 value|0x00000800
 end_define
