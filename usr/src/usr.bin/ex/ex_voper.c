@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	5.1 %G%"
+literal|"@(#)ex_voper.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,14 +296,14 @@ comment|/* 	 * r		Replace character under cursor with single following 	 *		char
 case|case
 literal|'r'
 case|:
-name|vrep
-argument_list|(
-name|cnt
-argument_list|)
-expr_stmt|;
 name|vmacchng
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|vrep
+argument_list|(
+name|cnt
 argument_list|)
 expr_stmt|;
 return|return;

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	5.3 %G%"
+literal|"@(#)ex_cmds.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1579,7 +1579,6 @@ block|{
 name|tostop
 argument_list|()
 expr_stmt|;
-comment|/* replaced by tostop 					putpad(VE); 					putpad(KE); 					*/
 block|}
 name|flush
 argument_list|()
@@ -1960,6 +1959,9 @@ comment|/* source */
 case|case
 literal|'o'
 case|:
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|inopen
@@ -1967,6 +1969,8 @@ condition|)
 goto|goto
 name|notinvis
 goto|;
+endif|#
+directive|endif
 name|tail
 argument_list|(
 literal|"source"
@@ -1992,7 +1996,7 @@ continue|continue;
 ifdef|#
 directive|ifdef
 name|SIGTSTP
-comment|/* stop */
+comment|/* stop, suspend */
 case|case
 literal|'t'
 case|:
@@ -2001,6 +2005,19 @@ argument_list|(
 literal|"stop"
 argument_list|)
 expr_stmt|;
+goto|goto
+name|suspend
+goto|;
+case|case
+literal|'u'
+case|:
+name|tail
+argument_list|(
+literal|"suspend"
+argument_list|)
+expr_stmt|;
+name|suspend
+label|:
 if|if
 condition|(
 operator|!
@@ -2025,9 +2042,6 @@ operator|!
 name|c
 condition|)
 name|ckaw
-argument_list|()
-expr_stmt|;
-name|eol
 argument_list|()
 expr_stmt|;
 name|onsusp
@@ -2255,7 +2269,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"@(#) Version 3.5, %G%."
+literal|"@(#) Version 3.6, %G%. (EXPERIMENTAL version 3.6, Oct 1980)"
 operator|+
 literal|5
 argument_list|)

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	5.1 %G%  */
+comment|/* sccs id:	@(#)ex.h	6.1 %G%  */
 end_comment
 
 begin_ifdef
@@ -968,6 +968,16 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|seenprompt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 if have gotten user input */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|shudclob
 decl_stmt|;
 end_decl_stmt
@@ -1024,6 +1034,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* For error throws to a visual catch */
+end_comment
+
+begin_decl_stmt
+name|bool
+name|writing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 if in middle of a file write */
 end_comment
 
 begin_decl_stmt

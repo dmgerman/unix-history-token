@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmdsub.c	5.1 %G%"
+literal|"@(#)ex_cmdsub.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,6 +464,20 @@ name|dsavint
 function_decl|)
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"before delete"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|change
 argument_list|()
 expr_stmt|;
@@ -570,6 +584,20 @@ argument_list|,
 name|dsavint
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"after delete"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -2412,17 +2440,9 @@ operator|>
 literal|0
 condition|)
 comment|/* to get first tag in file to work */
-name|fgets
-argument_list|(
-name|linebuf
-argument_list|,
-sizeof|sizeof
-name|linebuf
-argument_list|,
-name|iof
-argument_list|)
-expr_stmt|;
 comment|/* scan to next \n */
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|linebuf
@@ -2432,8 +2452,30 @@ name|linebuf
 argument_list|,
 name|iof
 argument_list|)
-expr_stmt|;
-comment|/* get a line */
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|goleft
+goto|;
+comment|/* get the line itself */
+if|if
+condition|(
+name|fgets
+argument_list|(
+name|linebuf
+argument_list|,
+sizeof|sizeof
+name|linebuf
+argument_list|,
+name|iof
+argument_list|)
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|goleft
+goto|;
 name|linebuf
 index|[
 name|strlen
@@ -2517,6 +2559,8 @@ operator|+
 literal|1
 expr_stmt|;
 else|else
+name|goleft
+label|:
 name|top
 operator|=
 name|mid

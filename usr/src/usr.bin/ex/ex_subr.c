@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	5.1 %G%"
+literal|"@(#)ex_subr.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2336,7 +2336,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Out of memory@saving lines for undo - try using ed or re"
+literal|"Out of memory@saving lines for undo - try using ed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2957,6 +2957,11 @@ argument_list|(
 literal|' '
 argument_list|)
 block|;
+name|edited
+operator|=
+literal|0
+block|;
+comment|/* for temp file errors, for example */
 if|if
 condition|(
 name|e

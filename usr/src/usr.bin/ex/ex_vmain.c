@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	5.3 %G%"
+literal|"@(#)ex_vmain.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,6 +162,10 @@ expr_stmt|;
 name|hold
 operator|=
 literal|0
+expr_stmt|;
+name|seenprompt
+operator|=
+literal|1
 expr_stmt|;
 name|wcursor
 operator|=
@@ -453,7 +457,13 @@ argument_list|(
 name|REMAP
 argument_list|)
 condition|)
+block|{
+name|c
+operator|=
+name|op
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 operator|++
@@ -1089,8 +1099,10 @@ operator|>
 literal|2
 condition|)
 block|{
+name|addr
+operator|=
 name|dot
-operator|+=
+operator|+
 operator|(
 name|vcnt
 operator|-
@@ -1106,6 +1118,17 @@ literal|1
 operator|)
 operator|*
 name|basWLINES
+expr_stmt|;
+name|forbid
+argument_list|(
+name|addr
+operator|>
+name|dol
+argument_list|)
+expr_stmt|;
+name|dot
+operator|=
+name|addr
 expr_stmt|;
 name|vcnt
 operator|=
@@ -1147,8 +1170,10 @@ operator|>
 literal|2
 condition|)
 block|{
+name|addr
+operator|=
 name|dot
-operator|-=
+operator|-
 name|vcline
 operator|-
 literal|2
@@ -1160,6 +1185,17 @@ literal|1
 operator|)
 operator|*
 name|basWLINES
+expr_stmt|;
+name|forbid
+argument_list|(
+name|addr
+operator|<=
+name|zero
+argument_list|)
+expr_stmt|;
+name|dot
+operator|=
+name|addr
 expr_stmt|;
 name|vcnt
 operator|=
@@ -1381,16 +1417,16 @@ case|:
 case|case
 literal|'o'
 case|:
+name|vmacchng
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|voOpen
 argument_list|(
 name|c
 argument_list|,
 name|cnt
-argument_list|)
-expr_stmt|;
-name|vmacchng
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2230,7 +2266,7 @@ goto|;
 ifdef|#
 directive|ifdef
 name|SIGTSTP
-comment|/* 		 * ^Z:	suspend editor session and temporarily return 		 * 	to shell.  Only works on Berkeley tty driver. 		 */
+comment|/* 		 * ^Z:	suspend editor session and temporarily return 		 * 	to shell.  Only works with Berkeley/IIASA process 		 *	control in kernel. 		 */
 case|case
 name|CTRL
 argument_list|(

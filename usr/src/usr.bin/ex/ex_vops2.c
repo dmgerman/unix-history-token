@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops2.c	5.1 %G%"
+literal|"@(#)ex_vops2.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,6 +440,8 @@ name|escape
 decl_stmt|;
 name|int
 name|repcnt
+decl_stmt|,
+name|savedoomed
 decl_stmt|;
 name|short
 name|oldhold
@@ -720,6 +722,8 @@ name|gcursor
 argument_list|,
 operator|&
 name|escape
+argument_list|,
+name|ch
 argument_list|)
 expr_stmt|;
 comment|/* 			 * After an append, stick information 			 * about the ^D's and ^^D's and 0^D's in 			 * the repeated text buffer so repeated 			 * inserts of stuff indented with ^D as backtab's 			 * can work. 			 */
@@ -927,6 +931,10 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|savedoomed
+operator|=
+name|doomed
+expr_stmt|;
 if|if
 condition|(
 name|doomed
@@ -969,6 +977,10 @@ argument_list|()
 argument_list|,
 name|vcline
 argument_list|)
+expr_stmt|;
+name|doomed
+operator|=
+name|savedoomed
 expr_stmt|;
 block|}
 comment|/* 		 * All done unless we are continuing on to another line. 		 */
@@ -1303,7 +1315,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get a line into genbuf after gcursor.  * Cnt limits the number of input characters  * accepted and is used for handling the replace  * single character command.  Aescaped is the location  * where we stick a termination indicator (whether we  * ended with an ESCAPE or a newline/return.  *  * We do erase-kill type processing here and also  * are careful about the way we do this so that it is  * repeatable.  (I.e. so that your kill doesn't happen,  * when you repeat an insert if it was escaped with \ the  * first time you did it.  */
+comment|/*  * Get a line into genbuf after gcursor.  * Cnt limits the number of input characters  * accepted and is used for handling the replace  * single character command.  Aescaped is the location  * where we stick a termination indicator (whether we  * ended with an ESCAPE or a newline/return.  *  * We do erase-kill type processing here and also  * are careful about the way we do this so that it is  * repeatable.  (I.e. so that your kill doesn't happen,  * when you repeat an insert if it was escaped with \ the  * first time you did it.  commch is the command character  * involved, including the prompt for readline.  */
 end_comment
 
 begin_function
@@ -1316,6 +1328,8 @@ parameter_list|,
 name|gcursor
 parameter_list|,
 name|aescaped
+parameter_list|,
+name|commch
 parameter_list|)
 name|int
 name|cnt
@@ -1328,6 +1342,9 @@ decl_stmt|;
 name|bool
 modifier|*
 name|aescaped
+decl_stmt|;
+name|char
+name|commch
 decl_stmt|;
 block|{
 specifier|register
@@ -1347,6 +1364,10 @@ decl_stmt|,
 name|y
 decl_stmt|,
 name|iwhite
+decl_stmt|,
+name|backsl
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1432,6 +1453,10 @@ init|;
 condition|;
 control|)
 block|{
+name|backsl
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|gobblebl
@@ -1495,6 +1520,10 @@ operator|&&
 name|Peekkey
 operator|==
 literal|0
+operator|&&
+name|commch
+operator|!=
+literal|'r'
 condition|)
 while|while
 condition|(
@@ -1854,7 +1883,6 @@ name|tty
 operator|.
 name|sg_kill
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -1877,9 +1905,9 @@ index|[
 name|VKILL
 index|]
 condition|)
-block|{
 endif|#
 directive|endif
+block|{
 name|vgoto
 argument_list|(
 name|y
@@ -1909,9 +1937,11 @@ name|c
 operator|=
 literal|'\\'
 expr_stmt|;
-goto|goto
-name|noput
-goto|;
+name|backsl
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 comment|/* 			 * ^Q		Super quote following character 			 *		Only ^@ is verboten (trapped at 			 *		a lower level) and \n forces a line 			 *		split so doesn't really go in. 			 * 			 * ^V		Synonym for ^Q 			 */
 case|case
 name|CTRL
@@ -2018,12 +2048,12 @@ continue|continue;
 block|}
 if|if
 condition|(
-comment|/* c<= ' '&& */
 name|value
 argument_list|(
 name|WRAPMARGIN
 argument_list|)
 operator|&&
+operator|(
 name|outcol
 operator|>=
 name|OCOLUMNS
@@ -2032,6 +2062,17 @@ name|value
 argument_list|(
 name|WRAPMARGIN
 argument_list|)
+operator|||
+name|backsl
+operator|&&
+name|outcol
+operator|==
+literal|0
+operator|)
+operator|&&
+name|commch
+operator|!=
+literal|'r'
 condition|)
 block|{
 comment|/* 				 * At end of word and hit wrapmargin. 				 * Move the word to next line and keep going. 				 */
@@ -2044,6 +2085,17 @@ name|gcursor
 operator|++
 operator|=
 name|c
+expr_stmt|;
+if|if
+condition|(
+name|backsl
+condition|)
+operator|*
+name|gcursor
+operator|++
+operator|=
+name|getkey
+argument_list|()
 expr_stmt|;
 operator|*
 name|gcursor
@@ -2077,6 +2129,14 @@ empty_stmt|;
 if|if
 condition|(
 name|outcol
+operator|+
+operator|(
+name|backsl
+condition|?
+name|OCOLUMNS
+else|:
+literal|0
+operator|)
 operator|-
 operator|(
 name|gcursor
@@ -2635,6 +2695,12 @@ continue|continue;
 block|}
 name|def
 label|:
+if|if
+condition|(
+operator|!
+name|backsl
+condition|)
+block|{
 name|putchar
 argument_list|(
 name|c
@@ -2643,8 +2709,7 @@ expr_stmt|;
 name|flush
 argument_list|()
 expr_stmt|;
-name|noput
-label|:
+block|}
 if|if
 condition|(
 name|gcursor
@@ -2727,23 +2792,41 @@ name|gcursor
 operator|)
 return|;
 block|}
+end_function
+
+begin_function_decl
 name|int
 name|vgetsplit
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|char
 modifier|*
 name|vsplitpt
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Append the line in buffer at lp  * to the buffer after dot.  */
+end_comment
+
+begin_macro
 name|vdoappend
 argument_list|(
 argument|lp
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|lp
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -2774,9 +2857,18 @@ operator|=
 name|oing
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Subroutine for vdoappend to pass to append.  */
+end_comment
+
+begin_macro
 name|vgetsplit
 argument_list|()
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -2804,20 +2896,35 @@ literal|0
 operator|)
 return|;
 block|}
+end_block
+
+begin_comment
 comment|/*  * Vmaxrep determines the maximum repetitition factor  * allowed that will yield total line length less than  * LBSIZE characters and also does hacks for the R command.  */
+end_comment
+
+begin_macro
 name|vmaxrep
 argument_list|(
 argument|ch
 argument_list|,
 argument|cnt
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 name|ch
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|int
 name|cnt
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 specifier|register
 name|int
@@ -2942,7 +3049,7 @@ name|cnt
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vget.c	5.1 %G%"
+literal|"@(#)ex_vget.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -919,6 +919,8 @@ literal|1
 argument_list|,
 operator|&
 name|waste
+argument_list|,
+name|c
 argument_list|)
 argument_list|)
 expr_stmt|;

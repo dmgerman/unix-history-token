@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex.c	5.3 %G%"
+literal|"@(#)ex.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,32 +391,6 @@ argument_list|,
 name|onhup
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
-if|if
-condition|(
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-operator|==
-name|SIG_DFL
-condition|)
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|onsusp
-argument_list|)
-operator|,
-name|dosusp
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize end of core pointers. 	 * Normally we avoid breaking back to fendcore after each 	 * file since this can be expensive (much core-core copying). 	 * If your system can scatter load processes you could do 	 * this as ed does, saving a little core, but it will probably 	 * not often make much difference. 	 */
 name|fendcore
 operator|=
@@ -779,6 +753,35 @@ name|av
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SIGTSTP
+if|if
+condition|(
+operator|!
+name|hush
+operator|&&
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|==
+name|SIG_DFL
+condition|)
+name|signal
+argument_list|(
+name|SIGTSTP
+argument_list|,
+name|onsusp
+argument_list|)
+operator|,
+name|dosusp
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ac
@@ -914,9 +917,6 @@ name|erewind
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize a temporary file (buffer) and 	 * set up terminal environment.  Read user startup commands. 	 */
-name|init
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|setexit
@@ -1071,6 +1071,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|init
+argument_list|()
+expr_stmt|;
+comment|/* moved after prev 2 chunks to fix directory option */
 comment|/* 	 * Initial processing.  Handle tag, recover, and file argument 	 * implied next commands.  If going in as 'vi', then don't do 	 * anything, just set initev so we will do it later (from within 	 * visual). 	 */
 if|if
 condition|(
@@ -1178,6 +1182,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out trash in state accumulated by startup, 	 * and then do the main command loop for a normal edit. 	 * If you quit out of a 'vi' command by doing Q or ^\, 	 * you also fall through to here. 	 */
+name|seenprompt
+operator|=
+literal|1
+expr_stmt|;
 name|ungetchar
 argument_list|(
 literal|0

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	5.6 %G%"
+literal|"@(#)ex_io.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1476,9 +1476,28 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
+block|{
 name|edited
 operator|++
 expr_stmt|;
+comment|/* 			 * If the user just did "ex foo" he is probably 			 * creating a new file.  Don't be an error, since 			 * this is ugly, and it screws up the + option. 			 */
+if|if
+condition|(
+operator|!
+name|seenprompt
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" [New file]"
+argument_list|)
+expr_stmt|;
+name|noonl
+argument_list|()
+expr_stmt|;
+return|return;
+block|}
+block|}
 name|syserror
 argument_list|()
 expr_stmt|;
@@ -1653,6 +1672,13 @@ block|}
 block|}
 if|if
 condition|(
+name|c
+operator|!=
+literal|'r'
+condition|)
+block|{
+if|if
+condition|(
 name|value
 argument_list|(
 name|READONLY
@@ -1675,11 +1701,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|c
-operator|!=
-literal|'r'
-operator|&&
-operator|(
 operator|(
 name|stbuf
 operator|.
@@ -1698,7 +1719,6 @@ literal|2
 argument_list|)
 operator|<
 literal|0
-operator|)
 condition|)
 block|{
 name|ovro
@@ -1719,6 +1739,7 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -2483,6 +2504,10 @@ condition|)
 name|syserror
 argument_list|()
 expr_stmt|;
+name|writing
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|hush
@@ -2619,6 +2644,10 @@ operator|=
 name|saddr2
 expr_stmt|;
 block|}
+name|writing
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 
@@ -3223,6 +3252,12 @@ name|ointty
 decl_stmt|,
 name|oerrno
 decl_stmt|;
+name|char
+name|savepeekc
+decl_stmt|,
+modifier|*
+name|saveglobp
+decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINT
@@ -3236,6 +3271,22 @@ name|dup
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|savepeekc
+operator|=
+name|peekc
+expr_stmt|;
+name|saveglobp
+operator|=
+name|globp
+expr_stmt|;
+name|peekc
+operator|=
+literal|0
+expr_stmt|;
+name|globp
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3418,6 +3469,14 @@ name|close
 argument_list|(
 name|saveinp
 argument_list|)
+expr_stmt|;
+name|globp
+operator|=
+name|saveglobp
+expr_stmt|;
+name|peekc
+operator|=
+name|savepeekc
 expr_stmt|;
 name|slevel
 operator|--

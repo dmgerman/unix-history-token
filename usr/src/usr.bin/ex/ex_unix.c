@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_unix.c	5.2 %G%"
+literal|"@(#)ex_unix.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1223,6 +1223,20 @@ name|addr2
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"after append in filter"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|close
 argument_list|(

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex_tty.h	5.1 %G%  */
+comment|/* sccs id:	@(#)ex_tty.h	6.1 %G%  */
 end_comment
 
 begin_comment
@@ -969,6 +969,26 @@ end_decl_stmt
 begin_decl_stmt
 name|short
 name|costCM
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # chars to output a typical CM, with padding etc. */
+end_comment
+
+begin_decl_stmt
+name|short
+name|costSR
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* likewise */
+end_comment
+
+begin_decl_stmt
+name|short
+name|costAL
 decl_stmt|;
 end_decl_stmt
 

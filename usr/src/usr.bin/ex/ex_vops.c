@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vops.c	5.1 %G%"
+literal|"@(#)ex_vops.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -684,6 +684,12 @@ name|char
 modifier|*
 name|savecursor
 decl_stmt|;
+name|char
+name|savelb
+index|[
+name|LBSIZE
+index|]
+decl_stmt|;
 name|int
 name|nlines
 decl_stmt|,
@@ -815,6 +821,13 @@ name|savecursor
 operator|=
 name|cursor
 expr_stmt|;
+name|CP
+argument_list|(
+name|savelb
+argument_list|,
+name|linebuf
+argument_list|)
+expr_stmt|;
 name|nlines
 operator|=
 name|dol
@@ -944,6 +957,10 @@ name|truedol
 operator|+=
 name|more
 expr_stmt|;
+name|undap2
+operator|+=
+name|more
+expr_stmt|;
 name|truedol
 operator|-=
 name|nlines
@@ -972,6 +989,13 @@ expr_stmt|;
 name|cursor
 operator|=
 name|savecursor
+expr_stmt|;
+name|CP
+argument_list|(
+name|linebuf
+argument_list|,
+name|savelb
+argument_list|)
 expr_stmt|;
 name|vch_mac
 operator|=

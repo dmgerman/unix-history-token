@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds2.c	5.1 %G%"
+literal|"@(#)ex_cmds2.c	6.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,6 +259,23 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|writing
+condition|)
+block|{
+name|serror
+argument_list|(
+literal|" [Warning - %s is incomplete]"
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
+name|writing
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|error1
 argument_list|(
 name|str
