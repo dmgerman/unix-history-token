@@ -1240,6 +1240,28 @@ literal|0
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|atapi_request_immediate
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"wcd: configuration error, ATAPI core code not present!\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"wcd: check `options ATAPI_STATIC' in your kernel config file!\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|t
 operator|=
 name|malloc
@@ -7327,7 +7349,7 @@ end_comment
 
 begin_function
 name|int
-name|wcd
+name|wcd_mod
 parameter_list|(
 name|struct
 name|lkm_table

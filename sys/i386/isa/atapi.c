@@ -19,6 +19,12 @@ directive|include
 file|"wdc.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATAPI_MODULE
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -26,12 +32,17 @@ file|"wcd.h"
 end_include
 
 begin_comment
-comment|/* #include "wmt.h" -- add your driver here */
+comment|/* # include "wmt.h" -- add your driver here */
 end_comment
 
 begin_comment
-comment|/* #include "wmd.h" -- add your driver here */
+comment|/* # include "wmd.h" -- add your driver here */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -110,6 +121,10 @@ ifndef|#
 directive|ifndef
 name|ATAPI_STATIC
 end_ifndef
+
+begin_comment
+comment|/* this code is compiled as part of the kernel if options ATAPI */
+end_comment
 
 begin_comment
 comment|/*  * In the case of loadable ATAPI driver we need to store  * the probe info for delayed attaching.  */
@@ -221,6 +236,10 @@ end_else
 
 begin_comment
 comment|/* ATAPI_STATIC */
+end_comment
+
+begin_comment
+comment|/* this code is compiled part of the module */
 end_comment
 
 begin_ifdef
@@ -5238,7 +5257,6 @@ file|<sys/lkm.h>
 end_include
 
 begin_function_decl
-specifier|extern
 name|int
 function_decl|(
 modifier|*
@@ -5252,7 +5270,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 function_decl|(
 modifier|*
@@ -5266,7 +5283,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 function_decl|(
 modifier|*
@@ -5285,7 +5301,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|atapires
 function_decl|(
@@ -5360,7 +5375,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 function_decl|(
 modifier|*
@@ -5449,7 +5463,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|atapires
 function_decl|(
@@ -5936,7 +5949,7 @@ end_comment
 
 begin_function
 name|int
-name|atapi
+name|atapi_mod
 parameter_list|(
 name|struct
 name|lkm_table
