@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|ADW_PCI_IOBASE
-value|PCI_MAP_REG_START
+value|PCIR_MAPS
 end_define
 
 begin_comment
@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|ADW_PCI_MEMBASE
-value|PCI_MAP_REG_START + 4
+value|PCIR_MAPS + 4
 end_define
 
 begin_comment
@@ -788,7 +788,7 @@ operator|&&
 operator|(
 name|command
 operator|&
-name|PCI_COMMAND_IO_ENABLE
+name|PCIM_CMD_PORTEN
 operator|)
 operator|!=
 literal|0

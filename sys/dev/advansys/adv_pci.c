@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|PCI_BASEADR0
-value|PCI_MAP_REG_START
+value|PCIR_MAPS
 end_define
 
 begin_comment
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|PCI_BASEADR1
-value|PCI_MAP_REG_START + 4
+value|PCIR_MAPS + 4
 end_define
 
 begin_comment
@@ -357,7 +357,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCI_ID_REG
+name|PCIR_DEVVENDOR
 argument_list|,
 comment|/*bytes*/
 literal|4
