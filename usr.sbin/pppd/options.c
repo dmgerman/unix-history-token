@@ -48,11 +48,24 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|devname
+value|STDLIB_devname
+end_define
+
 begin_include
 include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|devname
+end_undef
 
 begin_include
 include|#
@@ -205,7 +218,7 @@ begin_define
 define|#
 directive|define
 name|GIDSET_TYPE
-value|int
+value|gid_t
 end_define
 
 begin_endif
