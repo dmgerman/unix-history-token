@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: plist.c,v 1.17.2.5 1997/10/09 07:10:14 charnier Exp $"
+literal|"$Id: plist.c,v 1.17.2.6 1998/09/01 06:59:46 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1947,7 +1947,6 @@ argument_list|(
 name|tmp
 argument_list|)
 condition|)
-block|)
 block|{
 name|warnx
 argument_list|(
@@ -2008,16 +2007,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_function
-
-begin_return
 return|return
 name|fail
 return|;
-end_return
+block|}
+end_function
 
 begin_ifdef
-unit|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2078,19 +2074,20 @@ begin_comment
 comment|/* Selectively delete a hierarchy */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+name|int
 name|delete_hierarchy
-argument_list|(
-argument|char *dir
-argument_list|,
-argument|Boolean ign_err
-argument_list|,
-argument|Boolean nukedirs
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|dir
+parameter_list|,
+name|Boolean
+name|ign_err
+parameter_list|,
+name|Boolean
+name|nukedirs
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -2296,7 +2293,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
