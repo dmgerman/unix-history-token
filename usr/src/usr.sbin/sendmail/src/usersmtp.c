@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	3.2	%G%"
+literal|"@(#)usersmtp.c	3.3	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,6 +103,16 @@ name|Debug
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|Status
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exit status */
+end_comment
+
 begin_function
 name|main
 parameter_list|(
@@ -119,10 +129,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|stat
-decl_stmt|;
 while|while
 condition|(
 name|argc
@@ -214,10 +220,10 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-name|EX_TEMPFAIL
+name|Status
 argument_list|)
 expr_stmt|;
-name|stat
+name|Status
 operator|=
 name|runsmtp
 argument_list|(
@@ -233,6 +239,9 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
+name|closeconnection
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|Debug
@@ -241,12 +250,12 @@ name|printf
 argument_list|(
 literal|"Finishing with stat %d\n"
 argument_list|,
-name|stat
+name|Status
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|stat
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -256,7 +265,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  OPENCONNECTION -- open connection to SMTP socket ** **	Parameters: **		none. ** **	Returns: **		file pointer of connection. **		NULL on error. ** **	Side Effects: **		none. */
+comment|/* **  OPENCONNECTION -- open connection to SMTP socket ** **	Parameters: **		host -- the name of the host to connect to.  This **			will be replaced by the canonical name of **			the host. ** **	Returns: **		File descriptor of connection. **		-1 on error. ** **	Side Effects: **		sets 'Status' to represent the problem on error. */
 end_comment
 
 begin_macro
@@ -320,6 +329,40 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+comment|/* verify host name */
+if|if
+condition|(
+name|rhost
+argument_list|(
+operator|&
+name|host
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|Debug
+condition|)
+name|printf
+argument_list|(
+literal|"Unknown host %s\n"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|EX_NOHOST
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 comment|/* create connection (we hope) */
 name|fd
 operator|=
@@ -343,12 +386,18 @@ name|fd
 operator|<
 literal|0
 condition|)
+block|{
+name|Status
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|InConnection
 operator|=
 name|fdopen
@@ -377,12 +426,18 @@ name|OutConnection
 operator|==
 name|NULL
 condition|)
+block|{
+name|Status
+operator|=
+name|EX_SOFTWARE
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|Debug
@@ -406,8 +461,60 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **	CLOSECONNECTION -- close the connection to the SMTP server. ** **	This routine also sends a handshake. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Closes the connection. */
+end_comment
+
+begin_macro
+name|closeconnection
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|int
+name|r
+decl_stmt|;
+name|message
+argument_list|(
+literal|"QUIT"
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|reply
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|Debug
+condition|)
+name|printf
+argument_list|(
+literal|"Closing connection, reply = %d\n"
+argument_list|,
+name|r
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  RUNSMTP -- run the SMTP protocol over connection. ** **	Parameters: **		fr -- from person. **		tolist -- list of recipients. ** **	Returns: **		none. ** **	Side Effects: **		Sends the mail via SMTP. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|REPLYTYPE
+parameter_list|(
+name|r
+parameter_list|)
+value|((r) / 100)
+end_define
 
 begin_macro
 name|runsmtp
@@ -451,7 +558,7 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-comment|/* get greeting message */
+comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/
 name|r
 operator|=
 name|reply
@@ -459,9 +566,10 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|REPLYTYPE
+argument_list|(
 name|r
-operator|/
-literal|100
+argument_list|)
 operator|!=
 literal|2
 condition|)
@@ -470,10 +578,10 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
-comment|/* send the mail command */
+comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 name|message
 argument_list|(
-literal|"MAIL From:<%s>\r\n"
+literal|"MAIL From:<%s>"
 argument_list|,
 name|fr
 argument_list|)
@@ -485,6 +593,20 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|4
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+if|if
+condition|(
 name|r
 operator|!=
 literal|250
@@ -494,7 +616,7 @@ operator|(
 name|EX_SOFTWARE
 operator|)
 return|;
-comment|/* send the recipients */
+comment|/* 	**  Send the recipients. 	*/
 for|for
 control|(
 name|t
@@ -512,7 +634,7 @@ control|)
 block|{
 name|message
 argument_list|(
-literal|"MRCP To:<%s>\r\n"
+literal|"MRCP To:<%s>"
 argument_list|,
 operator|*
 name|t
@@ -525,6 +647,20 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|4
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
+if|if
+condition|(
 name|r
 operator|!=
 literal|250
@@ -535,10 +671,10 @@ name|EX_NOUSER
 operator|)
 return|;
 block|}
-comment|/* send the data */
+comment|/* 	**  Send the data. 	**	Dot hiding is done here. 	*/
 name|message
 argument_list|(
-literal|"DATA\r\n"
+literal|"DATA"
 argument_list|)
 expr_stmt|;
 name|r
@@ -546,6 +682,20 @@ operator|=
 name|reply
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|4
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
 if|if
 condition|(
 name|r
@@ -596,23 +746,20 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-if|if
-condition|(
+name|message
+argument_list|(
+literal|"%s%s"
+argument_list|,
 name|buf
 index|[
 literal|0
 index|]
 operator|==
 literal|'.'
-condition|)
-name|message
-argument_list|(
+condition|?
 literal|"."
-argument_list|)
-expr_stmt|;
-name|message
-argument_list|(
-literal|"%s\r\n"
+else|:
+literal|""
 argument_list|,
 name|buf
 argument_list|)
@@ -620,7 +767,7 @@ expr_stmt|;
 block|}
 name|message
 argument_list|(
-literal|".\r\n"
+literal|"."
 argument_list|)
 expr_stmt|;
 name|r
@@ -628,6 +775,20 @@ operator|=
 name|reply
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|4
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
 if|if
 condition|(
 name|r
@@ -639,10 +800,10 @@ operator|(
 name|EX_SOFTWARE
 operator|)
 return|;
-comment|/* force delivery */
+comment|/* 	**  Make the actual delivery happen. 	*/
 name|message
 argument_list|(
-literal|"DOIT\r\n"
+literal|"DOIT"
 argument_list|)
 expr_stmt|;
 name|r
@@ -659,27 +820,6 @@ condition|)
 return|return
 operator|(
 name|EX_TEMPFAIL
-operator|)
-return|;
-name|message
-argument_list|(
-literal|"QUIT\r\n"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|reply
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|!=
-literal|221
-condition|)
-return|return
-operator|(
-name|EX_SOFTWARE
 operator|)
 return|;
 return|return
@@ -854,6 +994,13 @@ argument_list|,
 name|b
 argument_list|,
 name|c
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 if|if
