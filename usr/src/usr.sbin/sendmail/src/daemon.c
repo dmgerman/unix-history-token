@@ -460,6 +460,24 @@ case|:
 case|case
 name|ETIMEDOUT
 case|:
+case|case
+name|EINPROGRESS
+case|:
+case|case
+name|EALREADY
+case|:
+case|case
+name|EADDRINUSE
+case|:
+case|case
+name|ENETDOWN
+case|:
+case|case
+name|ENETRESET
+case|:
+case|case
+name|ENOBUFS
+case|:
 comment|/* there are others, I'm sure..... */
 return|return
 operator|(
