@@ -255,6 +255,14 @@ condition|(
 name|p
 operator|==
 name|optarg
+operator|||
+name|errno
+operator|==
+name|EINVAL
+operator|||
+name|errno
+operator|==
+name|ERANGE
 condition|)
 block|{
 name|errx
