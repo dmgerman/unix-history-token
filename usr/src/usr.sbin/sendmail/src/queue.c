@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.65 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.66 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.65 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.66 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4997,6 +4997,11 @@ name|setctluser
 parameter_list|()
 function_decl|;
 specifier|extern
+name|void
+name|loseqfile
+parameter_list|()
+function_decl|;
+specifier|extern
 name|ADDRESS
 modifier|*
 name|sendto
@@ -5252,16 +5257,11 @@ argument_list|,
 name|qf
 argument_list|)
 expr_stmt|;
-name|rename
-argument_list|(
-name|qf
-argument_list|,
-name|queuename
+name|loseqfile
 argument_list|(
 name|e
 argument_list|,
-literal|'Q'
-argument_list|)
+literal|"bogus file uid in mqueue"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -5946,16 +5946,11 @@ argument_list|(
 name|qfp
 argument_list|)
 expr_stmt|;
-name|rename
-argument_list|(
-name|qf
-argument_list|,
-name|queuename
+name|loseqfile
 argument_list|(
 name|e
 argument_list|,
-literal|'Q'
-argument_list|)
+literal|"unrecognized line"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7658,6 +7653,108 @@ expr_stmt|;
 return|return
 name|a
 return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  LOSEQFILE -- save the qf as Qf and try to let someone know ** **	Parameters: **		e -- the envelope (e->e_id will be used). **		why -- reported to whomever can hear. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|loseqfile
+parameter_list|(
+name|e
+parameter_list|,
+name|why
+parameter_list|)
+specifier|register
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+name|char
+modifier|*
+name|why
+decl_stmt|;
+block|{
+name|char
+name|buf
+index|[
+literal|40
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|e
+operator|==
+name|NULL
+operator|||
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|)
+return|return;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|e
+operator|->
+name|e_id
+argument_list|)
+operator|>
+sizeof|sizeof
+name|buf
+operator|-
+literal|4
+condition|)
+return|return;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'q'
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|rename
+argument_list|(
+name|buf
+argument_list|,
+name|queuename
+argument_list|(
+name|e
+argument_list|,
+literal|'Q'
+argument_list|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"Losing %s: %s"
+argument_list|,
+name|buf
+argument_list|,
+name|why
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

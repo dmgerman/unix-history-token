@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.51 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1161,6 +1161,26 @@ name|ESM_DONE
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|SafeFileEnv
+operator|!=
+name|NULL
+operator|&&
+name|SafeFileEnv
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|state
+operator|=
+name|ESM_PANIC
+expr_stmt|;
+break|break;
+block|}
 name|strcpy
 argument_list|(
 name|buf
@@ -1353,6 +1373,13 @@ case|case
 name|ESM_PANIC
 case|:
 comment|/* leave the locked queue& transcript files around */
+name|loseqfile
+argument_list|(
+name|e
+argument_list|,
+literal|"savemail panic"
+argument_list|)
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"!554 savemail: cannot save rejected email anywhere"

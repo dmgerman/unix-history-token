@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.71 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5356,6 +5356,16 @@ name|O_NORCPTACTION
 block|,
 name|TRUE
 block|,
+define|#
+directive|define
+name|O_SAFEFILEENV
+value|0x89
+literal|"SafeFileEnvironment"
+block|,
+name|O_SAFEFILEENV
+block|,
+name|FALSE
+block|,
 name|NULL
 block|,
 literal|'\0'
@@ -7691,6 +7701,18 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+case|case
+name|O_SAFEFILEENV
+case|:
+comment|/* chroot() environ for writing to files */
+name|SafeFileEnv
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
