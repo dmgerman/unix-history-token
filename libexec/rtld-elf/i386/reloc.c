@@ -1358,6 +1358,9 @@ name|void
 modifier|*
 name|tls
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|union
 name|descriptor
 name|ldt
@@ -1365,6 +1368,8 @@ decl_stmt|;
 name|int
 name|sel
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*      * Fix the size of the static TLS block by using the maximum      * offset allocated so far and adding a bit for dynamic modules to      * use.      */
 name|tls_static_space
 operator|=
@@ -1393,6 +1398,9 @@ name|Elf_Addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|COMPAT_32BIT
 name|memset
 argument_list|(
 operator|&
@@ -1514,6 +1522,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("movl %0,%%gs" : : "rm" ((sel<< 3) | 7));
+else|#
+directive|else
+name|_amd64_set_gsbase
+argument_list|(
+name|tls
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
