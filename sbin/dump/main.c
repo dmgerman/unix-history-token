@@ -2966,6 +2966,9 @@ case|case
 literal|'f'
 case|:
 case|case
+literal|'D'
+case|:
+case|case
 literal|'h'
 case|:
 case|case
