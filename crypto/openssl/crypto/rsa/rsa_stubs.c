@@ -18,6 +18,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cryptlib.h"
 end_include
 
@@ -143,6 +155,14 @@ operator|!
 name|whined
 condition|)
 block|{
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -184,6 +204,23 @@ argument_list|,
 literal|"** http://www.freebsd.org/handbook/openssl.html, for more information.\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: Unable to find an RSA implementation shared \ library. Install either the USA (%s) or International (%s) RSA library on \ your system and run this program again. See the OpenSSL chapter in the \ FreeBSD Handbook, located at http://www.freebsd.org/handbook/openssl.html, \ for more information."
+argument_list|,
+name|sym
+argument_list|,
+name|RSAUSA_SHLIB
+argument_list|,
+name|RSAINTL_SHLIB
+argument_list|)
+expr_stmt|;
+block|}
 name|whined
 operator|=
 literal|1

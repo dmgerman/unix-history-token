@@ -18,6 +18,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/rsa.h>
 end_include
 
@@ -120,6 +132,14 @@ operator|!
 name|whined
 condition|)
 block|{
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|STDERR_FILENO
+argument_list|)
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -152,6 +172,21 @@ argument_list|,
 literal|"** http://www.freebsd.org/handbook/openssl.html, for more information.\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"** %s: Unable to find an RSAREF shared library \ (%s). Install the /usr/ports/security/rsaref port or package and run this \ program again. See the OpenSSL chapter in the FreeBSD Handbook, located at \ http://www.freebsd.org/handbook/openssl.html, for more information."
+argument_list|, \
+name|sym
+argument_list|,
+name|RSA_SHLIB
+argument_list|)
+expr_stmt|;
+block|}
 name|whined
 operator|=
 literal|1
