@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	5.7 (Berkeley) %G%"
+literal|"@(#)sh.exec.c	5.7 (Berkeley) 5/27/90"
 decl_stmt|;
 end_decl_stmt
 
@@ -244,16 +244,19 @@ decl_stmt|;
 name|bool
 name|slash
 init|=
-name|any
+operator|(
+name|bool
+operator|)
+name|index
 argument_list|(
-literal|'/'
-argument_list|,
 name|t
 operator|->
 name|t_dcom
 index|[
 literal|0
 index|]
+argument_list|,
+literal|'/'
 argument_list|)
 decl_stmt|;
 name|int
@@ -366,7 +369,7 @@ condition|)
 block|{
 name|av
 operator|=
-name|glob
+name|globall
 argument_list|(
 name|av
 argument_list|)

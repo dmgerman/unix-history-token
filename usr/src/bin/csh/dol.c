@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c	5.5 (Berkeley) %G%"
+literal|"@(#)sh.dol.c	5.5 (Berkeley) 1/15/88"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,17 +369,8 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|agargv
-index|[
-name|GAVSIZ
-index|]
-decl_stmt|;
 name|ginit
-argument_list|(
-name|agargv
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Initialize glob's area pointers */
 name|Dvp
@@ -417,13 +408,6 @@ name|Dword
 argument_list|()
 condition|)
 continue|continue;
-name|gargv
-operator|=
-name|copyblk
-argument_list|(
-name|gargv
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1842,12 +1826,12 @@ name|upb
 operator|)
 operator|&&
 operator|!
-name|any
+name|index
 argument_list|(
+literal|"-*"
+argument_list|,
 operator|*
 name|np
-argument_list|,
-literal|"-*"
 argument_list|)
 condition|)
 block|{
@@ -2126,11 +2110,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"htrqxe"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 name|error
@@ -2878,11 +2862,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"$\\`"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 name|unDgetC
@@ -2941,11 +2925,11 @@ name|mbuf
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-literal|'`'
-argument_list|,
 name|mbp
+argument_list|,
+literal|'`'
 argument_list|)
 condition|)
 block|{
