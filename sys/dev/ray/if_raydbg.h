@@ -172,7 +172,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {if (RAY_DEBUG& (mask)) {\     printf("ray%d: %s(%d) " fmt "\n", (sc)->unit,			\ 	__FUNCTION__ , __LINE__ , ##args);				\ } } while (0)
+value|do {if (RAY_DEBUG& (mask)) {\     device_printf((sc)->dev, "%s(%d) " fmt "\n",			\     	__FUNCTION__ , __LINE__ , ##args);				\ } } while (0)
 end_define
 
 begin_else
@@ -243,7 +243,7 @@ name|com
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     printf("ray%d: %s(%d) %s com entry 0x%p\n",	(sc)->unit,		\         __FUNCTION__ , __LINE__ , (s) , (com));				\     printf("  c_mesg %s\n", (com)->c_mesg);				\     printf("  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf("  c_retval 0x%x\n", (com)->c_retval);			\     printf("  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
+value|do { if (RAY_DEBUG& RAY_DBG_COM) {	\     device_printf((sc)->dev, "%s(%d) %s com entry 0x%p\n",		\         __FUNCTION__ , __LINE__ , (s) , (com));				\     printf("  c_mesg %s\n", (com)->c_mesg);				\     printf("  c_flags 0x%b\n", (com)->c_flags, RAY_COM_FLAGS_PRINTFB);	\     printf("  c_retval 0x%x\n", (com)->c_retval);			\     printf("  c_ccs 0x%0x index 0x%02x\n",				\         (com)->c_ccs, RAY_CCS_INDEX((com)->c_ccs));			\ } } while (0)
 end_define
 
 begin_define
