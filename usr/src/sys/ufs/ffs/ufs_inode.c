@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.5	81/04/28	*/
+comment|/*	ufs_inode.c	4.6	81/10/11	*/
 end_comment
 
 begin_include
@@ -1311,26 +1311,6 @@ name|p2
 operator|++
 operator|!=
 literal|0
-operator|&&
-operator|(
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
-operator|!=
-name|IFMPC
-operator|&&
-operator|(
-name|ip
-operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
-operator|!=
-name|IFMPB
 condition|)
 name|printf
 argument_list|(

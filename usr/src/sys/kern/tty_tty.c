@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.3	81/03/09	*/
+comment|/*	tty_tty.c	4.4	81/10/11	*/
 end_comment
 
 begin_comment
-comment|/*  * Indirect driver for controlling tty.  */
+comment|/*  * Indirect driver for controlling tty.  *  * THIS IS GARBAGE: MUST SOON BE DONE WITH struct inode * IN PROC TABLE.  */
 end_comment
 
 begin_include
@@ -292,6 +292,59 @@ operator|,
 name|cmd
 operator|,
 name|addr
+operator|,
+name|flag
+operator|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|syselect
+argument_list|(
+argument|dev
+argument_list|,
+argument|flag
+argument_list|)
+end_macro
+
+begin_block
+block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SDETACH
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
+operator|(
+operator|*
+name|cdevsw
+index|[
+name|major
+argument_list|(
+name|u
+operator|.
+name|u_ttyd
+argument_list|)
+index|]
+operator|.
+name|d_select
+operator|)
+operator|(
+name|dev
 operator|,
 name|flag
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.12	81/08/12	*/
+comment|/*	vfs_vnops.c	4.13	81/10/11	*/
 end_comment
 
 begin_include
@@ -299,9 +299,6 @@ block|{
 case|case
 name|IFCHR
 case|:
-case|case
-name|IFMPC
-case|:
 name|cfunc
 operator|=
 name|cdevsw
@@ -351,9 +348,6 @@ operator|==
 name|dev
 condition|)
 return|return;
-case|case
-name|IFMPB
-case|:
 name|cfunc
 operator|=
 name|bdevsw
@@ -370,17 +364,6 @@ break|break;
 default|default:
 return|return;
 block|}
-if|if
-condition|(
-operator|(
-name|flag
-operator|&
-name|FMP
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
 for|for
 control|(
 name|fp
@@ -450,7 +433,7 @@ operator|==
 name|IFBLK
 condition|)
 block|{
-comment|/* 			 * on last close of a block device (that isn't mounted) 			 * we must invalidate any in core blocks 			 */
+comment|/* 		 * on last close of a block device (that isn't mounted) 		 * we must invalidate any in core blocks 		 */
 name|bflush
 argument_list|(
 name|dev
@@ -461,7 +444,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 call|(
 modifier|*
@@ -537,9 +519,6 @@ block|{
 case|case
 name|IFCHR
 case|:
-case|case
-name|IFMPC
-case|:
 if|if
 condition|(
 name|maj
@@ -567,9 +546,6 @@ expr_stmt|;
 break|break;
 case|case
 name|IFBLK
-case|:
-case|case
-name|IFMPB
 case|:
 if|if
 condition|(
