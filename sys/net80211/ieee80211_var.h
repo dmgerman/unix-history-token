@@ -679,6 +679,10 @@ name|mtx
 name|ic_nodelock
 decl_stmt|;
 comment|/* on node table */
+name|u_int
+name|ic_scangen
+decl_stmt|;
+comment|/* gen# for timeout scan */
 name|struct
 name|ieee80211_node
 modifier|*

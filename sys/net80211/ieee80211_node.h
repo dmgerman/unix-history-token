@@ -139,6 +139,10 @@ expr_stmt|;
 name|u_int
 name|ni_refcnt
 decl_stmt|;
+name|u_int
+name|ni_scangen
+decl_stmt|;
+comment|/* gen# for timeout scan */
 comment|/* hardware */
 name|u_int32_t
 name|ni_rstamp
