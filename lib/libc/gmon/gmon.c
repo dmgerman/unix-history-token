@@ -33,12 +33,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -99,6 +93,11 @@ directive|if
 name|defined
 argument_list|(
 name|__ELF__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|i386
 argument_list|)
 end_if
 
@@ -1209,9 +1208,6 @@ name|p
 operator|->
 name|kcountsize
 argument_list|,
-operator|(
-name|int
-operator|)
 name|p
 operator|->
 name|lowpc
@@ -1348,11 +1344,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mcount.c,v 1.13 1998/07/14 05:09:41 bde Exp $"
+literal|"$Id: mcount.c,v 1.14 1998/09/05 07:57:43 jb Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__alpha__
-end_ifndef
 
 begin_include
 include|#
@@ -1090,15 +1084,6 @@ end_endif
 
 begin_comment
 comment|/* GUPROF */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__NETBSD_SYSCALLS */
 end_comment
 
 end_unit
