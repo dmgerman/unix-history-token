@@ -1850,14 +1850,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|extern
-name|long
-name|u_current_addr
-decl_stmt|;
-specifier|extern
-name|long
-name|u_addr_last
-decl_stmt|;
 specifier|static
 name|pattern_t
 modifier|*

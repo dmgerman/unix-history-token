@@ -1485,5 +1485,19 @@ name|second_addr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|long
+name|u_addr_last
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|u_current_addr
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
