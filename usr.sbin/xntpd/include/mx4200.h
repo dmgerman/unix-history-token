@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) mx4200.h,v 3.1 1993/07/06 01:06:46 jbj Exp */
-end_comment
-
-begin_comment
 comment|/* records transmitted from extern CDU to MX 4200 */
 end_comment
 

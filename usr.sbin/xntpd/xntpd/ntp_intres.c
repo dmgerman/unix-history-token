@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_intres.c,v 3.1 1993/07/06 01:11:16 jbj Exp  * ripped off from ../xnptres/xntpres.c by Greg Troxel 4/2/92  * routine callable from xntpd, rather than separate program  * also, key info passed in via a global, so no key file needed.  */
+comment|/*  * ripped off from ../xnptres/xntpres.c by Greg Troxel 4/2/92  * routine callable from xntpd, rather than separate program  * also, key info passed in via a global, so no key file needed.  */
 end_comment
 
 begin_comment
@@ -399,7 +399,7 @@ comment|/* stuff to be filled in by caller */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|req_keyid
 decl_stmt|;
 end_decl_stmt
@@ -504,7 +504,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -612,6 +612,9 @@ name|FILE
 modifier|*
 name|in
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|debug
@@ -623,6 +626,8 @@ argument_list|,
 literal|"ntp_intres running"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* check out auth stuff */
 if|if
 condition|(
@@ -1041,7 +1046,7 @@ decl_stmt|;
 name|int
 name|ttl
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|keyid
 decl_stmt|;
 block|{
@@ -1173,10 +1178,7 @@ name|ce
 operator|->
 name|ce_keyid
 operator|=
-name|htonl
-argument_list|(
 name|keyid
-argument_list|)
 expr_stmt|;
 name|ce
 operator|->
@@ -1820,15 +1822,10 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-name|M_ADDUF
+name|L_ADDUF
 argument_list|(
+operator|&
 name|ts
-operator|.
-name|l_ui
-argument_list|,
-name|ts
-operator|.
-name|l_uf
 argument_list|,
 name|SKEWTIME
 argument_list|)
@@ -2577,7 +2574,7 @@ index|[
 name|NUMTOK
 index|]
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|intval
 index|[
 name|NUMTOK

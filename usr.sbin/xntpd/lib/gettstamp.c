@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gettstamp.c,v 3.1 1993/07/06 01:08:20 jbj Exp  * gettstamp - return the system time in timestamp format  */
+comment|/*  * gettstamp - return the system time in timestamp format  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_syslog.h,v 3.1 1993/07/06 01:06:59 jbj Exp  * A hack for platforms which require specially built syslog facilities  */
+comment|/*  * A hack for platforms which require specially built syslog facilities  */
 end_comment
 
 begin_ifdef

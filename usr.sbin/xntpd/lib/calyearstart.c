@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* calyearstart.c,v 3.1 1993/07/06 01:08:06 jbj Exp  * calyearstart - determine the NTP time at midnight of January 1 in  *		  the year of the given date.  */
+comment|/*  * calyearstart - determine the NTP time at midnight of January 1 in  *		  the year of the given date.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ comment|/*  * calyeartab - year start offsets from the beginning of a cycle  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|calyeartab
 index|[
 name|YEARSPERCYCLE
@@ -77,22 +77,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|U_LONG
+name|u_long
 name|calyearstart
 parameter_list|(
 name|dateinyear
 parameter_list|)
 specifier|register
-name|U_LONG
+name|u_long
 name|dateinyear
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|cyclestart
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|nextyear
 decl_stmt|,
 name|lastyear

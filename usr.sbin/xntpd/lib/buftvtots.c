@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* buftvtots.c,v 3.1 1993/07/06 01:07:59 jbj Exp  * buftvtots - pull a Unix-format (struct timeval) time stamp out of  *	       an octet stream and convert it to a l_fp time stamp.  *	       This is useful when using the clock line discipline.  */
+comment|/*  * buftvtots - pull a Unix-format (struct timeval) time stamp out of  *	       an octet stream and convert it to a l_fp time stamp.  *	       This is useful when using the clock line discipline.  */
 end_comment
 
 begin_include
@@ -40,11 +40,11 @@ modifier|*
 name|bp
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|sec
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|usec
 decl_stmt|;
 ifdef|#
@@ -61,7 +61,7 @@ expr_stmt|;
 name|sec
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -76,7 +76,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -91,7 +91,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -106,7 +106,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -117,7 +117,7 @@ expr_stmt|;
 name|usec
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -132,7 +132,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -147,7 +147,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -162,7 +162,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -184,7 +184,7 @@ expr_stmt|;
 name|usec
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -199,7 +199,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -214,7 +214,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -229,7 +229,7 @@ expr_stmt|;
 name|usec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -240,7 +240,7 @@ expr_stmt|;
 name|sec
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -255,7 +255,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -270,7 +270,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -285,7 +285,7 @@ expr_stmt|;
 name|sec
 operator|+=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 operator|*
 name|bp
@@ -310,7 +310,7 @@ operator|=
 name|sec
 operator|+
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|JAN_1970
 expr_stmt|;

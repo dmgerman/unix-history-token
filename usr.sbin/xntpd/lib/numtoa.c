@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* numtoa.c,v 3.1 1993/07/06 01:08:38 jbj Exp  * numtoa - return asciized network numbers store in local array space  */
+comment|/*  * numtoa - return asciized network numbers store in local array space  */
 end_comment
 
 begin_include
@@ -34,12 +34,12 @@ name|numtoa
 parameter_list|(
 name|num
 parameter_list|)
-name|U_LONG
+name|u_long
 name|num
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 specifier|register
@@ -66,7 +66,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%lu.%lu.%lu.%lu"
 argument_list|,
 operator|(
 name|netnum

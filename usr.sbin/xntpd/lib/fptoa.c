@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* fptoa.c,v 3.1 1993/07/06 01:08:16 jbj Exp  * fptoa - return an asciized representation of an s_fp number  */
+comment|/*  * fptoa - return an asciized representation of an s_fp number  */
 end_comment
 
 begin_include

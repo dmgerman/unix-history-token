@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_stdlib.h,v 3.1 1993/07/06 01:06:58 jbj Exp  * ntp_stdlib.h - Prototypes for XNTP lib.  */
+comment|/*  * ntp_stdlib.h - Prototypes for XNTP lib.  */
 end_comment
 
 begin_include
@@ -159,7 +159,7 @@ name|auth_des
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|u_char
@@ -189,7 +189,7 @@ name|auth_havekey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -202,7 +202,7 @@ name|auth_parity
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -216,9 +216,9 @@ name|auth_setkey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -232,7 +232,7 @@ name|auth_subkeys
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|u_char
@@ -252,7 +252,7 @@ name|authistrusted
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -265,7 +265,7 @@ name|authusekey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|,
@@ -297,7 +297,7 @@ name|auth1crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -315,7 +315,7 @@ name|auth2crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -333,7 +333,7 @@ name|authdecrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -351,7 +351,7 @@ name|authencrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -369,7 +369,7 @@ name|authhavekey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -397,7 +397,7 @@ name|authtrust
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|)
@@ -412,12 +412,12 @@ name|calleapwhen
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -426,12 +426,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|calyearstart
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -469,9 +469,9 @@ name|int
 operator|,
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|U_LONG
@@ -567,7 +567,7 @@ name|DESauth1crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -585,7 +585,7 @@ name|DESauth2crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -603,7 +603,7 @@ name|DESauthdecrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 specifier|const
 name|U_LONG
@@ -622,7 +622,7 @@ name|DESauthencrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -640,7 +640,7 @@ name|DESauth_setkey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 specifier|const
 name|U_LONG
@@ -724,7 +724,7 @@ name|MD5auth1crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -742,7 +742,7 @@ name|MD5auth2crypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -760,7 +760,7 @@ name|MD5authdecrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 specifier|const
 name|U_LONG
@@ -779,7 +779,7 @@ name|MD5authencrypt
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|U_LONG
 operator|*
@@ -797,7 +797,7 @@ name|MD5auth_setkey
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 specifier|const
 name|U_LONG
@@ -827,7 +827,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|LONG
+name|long
 operator|*
 operator|)
 argument_list|)
@@ -845,7 +845,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -863,7 +863,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -878,7 +878,7 @@ name|humandate
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -892,7 +892,7 @@ name|inttoa
 name|P
 argument_list|(
 operator|(
-name|LONG
+name|long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -906,9 +906,9 @@ name|mfptoa
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|)
@@ -924,9 +924,9 @@ name|mfptoms
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|)
@@ -950,12 +950,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|netof
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -969,7 +969,7 @@ name|numtoa
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -983,7 +983,7 @@ name|numtohost
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1000,7 +1000,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -1009,7 +1009,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|ranp2
 name|P
 argument_list|(
@@ -1028,7 +1028,7 @@ name|refnumtoa
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1041,7 +1041,7 @@ name|tsftomsu
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|)
@@ -1057,7 +1057,7 @@ name|uinttoa
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1074,7 +1074,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)

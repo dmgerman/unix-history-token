@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uinttoa.c,v 3.1 1993/07/06 01:08:54 jbj Exp  * uinttoa - return an asciized unsigned integer  */
+comment|/*  * uinttoa - return an asciized unsigned integer  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|uinttoa
 parameter_list|(
 name|uval
 parameter_list|)
-name|U_LONG
+name|u_long
 name|uval
 decl_stmt|;
 block|{
@@ -51,6 +51,9 @@ name|buf
 argument_list|,
 literal|"%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|uval
 argument_list|)
 expr_stmt|;

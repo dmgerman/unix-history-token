@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authparity.c,v 3.1 1993/07/06 01:07:55 jbj Exp  * auth_parity - set parity on a key/check for odd parity  */
+comment|/*  * auth_parity - set parity on a key/check for odd parity  */
 end_comment
 
 begin_include

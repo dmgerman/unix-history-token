@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_peer.c,v 3.1 1993/07/06 01:11:22 jbj Exp  * ntp_peer.c - management of data maintained for peer associations  */
+comment|/*  * ntp_peer.c - management of data maintained for peer associations  */
 end_comment
 
 begin_include
@@ -142,7 +142,7 @@ comment|/*  * Miscellaneous statistic counters which may be queried.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|peer_timereset
 decl_stmt|;
 end_decl_stmt
@@ -152,7 +152,7 @@ comment|/* time stat counters were zeroed */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|findpeer_calls
 decl_stmt|;
 end_decl_stmt
@@ -162,7 +162,7 @@ comment|/* number of calls to findpeer */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|assocpeer_calls
 decl_stmt|;
 end_decl_stmt
@@ -172,7 +172,7 @@ comment|/* number of calls to findpeerbyassoc */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|peer_allocations
 decl_stmt|;
 end_decl_stmt
@@ -182,7 +182,7 @@ comment|/* number of allocations from the free list */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|peer_demobilizations
 decl_stmt|;
 end_decl_stmt
@@ -220,7 +220,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -254,7 +254,7 @@ comment|/*  * Initialization data.  When configuring peers at initialization tim
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|init_peer_starttime
 decl_stmt|;
 end_decl_stmt
@@ -631,6 +631,8 @@ parameter_list|(
 name|srcadr
 parameter_list|,
 name|dstadr
+parameter_list|,
+name|fd
 parameter_list|)
 name|struct
 name|sockaddr_in
@@ -641,6 +643,9 @@ name|struct
 name|interface
 modifier|*
 name|dstadr
+decl_stmt|;
+name|int
+name|fd
 decl_stmt|;
 block|{
 specifier|register
@@ -654,6 +659,19 @@ name|struct
 name|peer
 modifier|*
 name|peer
+decl_stmt|;
+specifier|register
+name|struct
+name|peer
+modifier|*
+name|best
+init|=
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+literal|0
 decl_stmt|;
 name|int
 name|hash
@@ -729,10 +747,41 @@ name|dstadr
 operator|==
 name|dstadr
 condition|)
+block|{
+name|int
+name|rfd
+init|=
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_BCAST
+operator|)
+condition|?
+name|dstadr
+operator|->
+name|bfd
+else|:
+name|dstadr
+operator|->
+name|fd
+decl_stmt|;
+if|if
+condition|(
+name|rfd
+operator|==
+name|fd
+condition|)
 return|return
 name|peer
 return|;
 comment|/* got it! */
+name|best
+operator|=
+name|peer
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|peer
@@ -767,7 +816,44 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  			 * Multicast hacks to determine peer when a  			 * packet arrives and there exists an assoc. 			 * with src in client/server mode 			 */
+if|if
+condition|(
+operator|(
+operator|(
+name|dstadr
+operator|==
+name|any_interface
+operator|)
+operator|||
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_MCAST
+operator|)
+operator|)
+operator|&&
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_MCAST2
+condition|)
+return|return
+name|peer
+return|;
 block|}
+block|}
+if|if
+condition|(
+name|best
+condition|)
+block|{
+return|return
+name|best
+return|;
 block|}
 comment|/* 	 * If we didn't find the specific peer but found a wild card, 	 * modify the interface and return him. 	 */
 if|if
@@ -1217,7 +1303,7 @@ decl_stmt|;
 name|int
 name|ttl
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|key
 decl_stmt|;
 block|{
@@ -1236,7 +1322,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"peer_config: addr %s mode %d version %d minpoll %d maxpoll %d flags %d ttl %d key %u\n"
+literal|"peer_config: addr %s mode %d version %d minpoll %d maxpoll %d flags %d ttl %d key %lu\n"
 argument_list|,
 name|ntoa
 argument_list|(
@@ -1398,12 +1484,36 @@ name|peer
 operator|->
 name|flags
 operator|&
-operator|(
 name|FLAG_REFCLOCK
-operator||
-name|FLAG_DEFBDELAY
 operator|)
+expr_stmt|;
+name|peer
+operator|->
+name|cast_flags
+operator|=
+operator|(
+name|hmode
+operator|==
+name|MODE_BROADCAST
 operator|)
+condition|?
+name|IN_CLASSD
+argument_list|(
+name|ntohl
+argument_list|(
+name|srcadr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+condition|?
+name|MDF_MCAST
+else|:
+name|MDF_BCAST
+else|:
+name|MDF_UCAST
 expr_stmt|;
 name|peer
 operator|->
@@ -1522,7 +1632,7 @@ decl_stmt|;
 name|int
 name|ttl
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|key
 decl_stmt|;
 block|{
@@ -1538,11 +1648,11 @@ name|i
 decl_stmt|;
 comment|/* 	 * Some dirt here.  Some of the initialization requires 	 * knowlege of our system state. 	 */
 specifier|extern
-name|U_LONG
+name|s_fp
 name|sys_bdelay
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|sys_clock
 decl_stmt|;
 if|if
@@ -1629,6 +1739,60 @@ name|any_interface
 expr_stmt|;
 name|peer
 operator|->
+name|cast_flags
+operator|=
+operator|(
+name|hmode
+operator|==
+name|MODE_BROADCAST
+operator|)
+condition|?
+operator|(
+name|IN_CLASSD
+argument_list|(
+name|ntohl
+argument_list|(
+name|srcadr
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+operator|)
+condition|?
+name|MDF_MCAST
+else|:
+name|MDF_BCAST
+else|:
+operator|(
+name|hmode
+operator|==
+name|MODE_BCLIENT
+operator|||
+name|hmode
+operator|==
+name|MODE_MCLIENT
+operator|)
+condition|?
+operator|(
+name|peer
+operator|->
+name|dstadr
+operator|->
+name|flags
+operator|&
+name|INT_MULTICAST
+operator|)
+condition|?
+name|MDF_MCAST
+else|:
+name|MDF_BCAST
+else|:
+name|MDF_UCAST
+expr_stmt|;
+name|peer
+operator|->
 name|hmode
 operator|=
 operator|(
@@ -1696,12 +1860,6 @@ operator|->
 name|estbdelay
 operator|=
 name|sys_bdelay
-expr_stmt|;
-name|peer
-operator|->
-name|flags
-operator||=
-name|FLAG_DEFBDELAY
 expr_stmt|;
 name|peer
 operator|->
@@ -2239,18 +2397,6 @@ expr_stmt|;
 name|peer
 operator|->
 name|bogusorg
-operator|=
-literal|0
-expr_stmt|;
-name|peer
-operator|->
-name|bogusrec
-operator|=
-literal|0
-expr_stmt|;
-name|peer
-operator|->
-name|bogusdelay
 operator|=
 literal|0
 expr_stmt|;

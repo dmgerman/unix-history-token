@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp  *    * parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *    * parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp  *  * STREAMS module for reference clocks  * (SunOS4.x)  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsestreams.c,v 3.19 1994/02/24 16:33:54 kardel Exp"
+literal|"parsestreams.c,v 3.22 1994/06/01 10:41:16 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -759,7 +759,7 @@ name|char
 name|revision
 index|[]
 init|=
-literal|"3.19"
+literal|"3.22"
 decl_stmt|;
 name|char
 modifier|*
@@ -1941,6 +1941,31 @@ name|parsestream_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_ptr
+operator|==
+operator|(
+name|caddr_t
+operator|)
+literal|0
+condition|)
+block|{
+name|parseprintf
+argument_list|(
+name|DD_OPEN
+argument_list|,
+operator|(
+literal|"parse: OPEN - FAILED - no memory\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+name|OPENFAIL
+return|;
+block|}
 name|WR
 argument_list|(
 name|q
@@ -4263,6 +4288,33 @@ name|savedzsops
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|szs
+operator|==
+operator|(
+expr|struct
+name|savedzsops
+operator|*
+operator|)
+literal|0
+condition|)
+block|{
+name|parseprintf
+argument_list|(
+name|DD_INSTALL
+argument_list|,
+operator|(
+literal|"init_zs_linemon: CD monitor NOT installed - no memory\n"
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+else|else
+block|{
 name|parsestream
 operator|->
 name|parse_data
@@ -4355,6 +4407,7 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
 block|}
 block|}
 end_function
@@ -4682,11 +4735,7 @@ condition|?
 operator|(
 name|zsstatus
 operator|&
-operator|(
-name|ZSRR0_CD
-operator||
 name|ZSRR0_SYNC
-operator|)
 operator|)
 operator|==
 literal|0
@@ -4694,11 +4743,7 @@ else|:
 operator|(
 name|zsstatus
 operator|&
-operator|(
-name|ZSRR0_CD
-operator||
 name|ZSRR0_SYNC
-operator|)
 operator|)
 operator|!=
 literal|0
@@ -5223,7 +5268,7 @@ comment|/* sun */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.19  1994/02/24  16:33:54  kardel  * CD events can also be posted on sync flag  *  * Revision 3.18  1994/02/24  14:12:58  kardel  * initial PPS_SYNC support version  *  * Revision 3.17  1994/02/20  15:18:02  kardel  * rcs id cleanup  *  * Revision 3.16  1994/02/15  22:39:50  kardel  * memory leak on open failure closed  *  * Revision 3.15  1994/02/13  19:16:50  kardel  * updated verbose Copyright message  *  * Revision 3.14  1994/02/02  17:45:38  kardel  * rcs ids fixed  *  * Revision 3.12  1994/01/25  19:05:30  kardel  * 94/01/23 reconcilation  *  * Revision 3.11  1994/01/23  17:22:07  kardel  * 1994 reconcilation  *  * Revision 3.10  1993/12/15  12:48:58  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parsestreams.c,v  * Revision 3.22  1994/06/01  10:41:16  kardel  * CD seems to happen on ZSRR0_SYNC  *  * Revision 3.21  1994/06/01  08:18:57  kardel  * look at CD only  *  * Revision 3.20  1994/05/30  09:57:43  kardel  * kmem_alloc checking  *  * Revision 3.19  1994/02/24  16:33:54  kardel  * CD events can olso be posted on sync flag  *  * Revision 3.18  1994/02/24  14:12:58  kardel  * initial PPS_SYNC support version  *  * Revision 3.17  1994/02/20  15:18:02  kardel  * rcs id cleanup  *  * Revision 3.16  1994/02/15  22:39:50  kardel  * memory leak on open failure closed  *  * Revision 3.15  1994/02/13  19:16:50  kardel  * updated verbose Copyright message  *  * Revision 3.14  1994/02/02  17:45:38  kardel  * rcs ids fixed  *  * Revision 3.12  1994/01/25  19:05:30  kardel  * 94/01/23 reconcilation  *  * Revision 3.11  1994/01/23  17:22:07  kardel  * 1994 reconcilation  *  * Revision 3.10  1993/12/15  12:48:58  kardel  * fixed message loss on M_*HANHUP messages  *  * Revision 3.9  1993/11/05  15:34:55  kardel  * shut up nice feature detection  *  * Revision 3.8  1993/10/22  14:27:56  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.7  1993/10/10  18:13:53  kardel  * Makefile reorganisation, file relocation  *  * Revision 3.6  1993/10/09  15:01:18  kardel  * file structure unified  *  * Revision 3.5  1993/10/04  07:59:31  kardel  * Well, at least we should know that a the tv_usec field should be in the range 0..999999  *  * Revision 3.4  1993/09/26  23:41:33  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/11  00:38:34  kardel  * LINEMON must also cover M_[UN]HANGUP handling  *  * Revision 3.2  1993/07/06  10:02:56  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeSP.c,v 3.1 1993/07/06 01:05:02 jbj Exp  * makeSP - build combination S and P tables for quick DES computation  */
+comment|/*  * makeSP - build combination S and P tables for quick DES computation  */
 end_comment
 
 begin_include
@@ -57,7 +57,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -1326,7 +1326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * selperm - run six bit data through the given selection table, then  *           through the PT table to produce a LONG output.  */
+comment|/*  * selperm - run six bit data through the given selection table, then  *           through the PT table to produce a long output.  */
 end_comment
 
 begin_function
@@ -1346,13 +1346,13 @@ decl_stmt|;
 name|int
 name|sixbits
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|resp
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|res
 decl_stmt|;
 specifier|register
@@ -1551,7 +1551,7 @@ block|{
 name|int
 name|selno
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|result
 decl_stmt|;
 name|int
@@ -1573,7 +1573,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"static U_LONG SP[8][64] = {"
+literal|"static u_long SP[8][64] = {"
 argument_list|)
 expr_stmt|;
 for|for

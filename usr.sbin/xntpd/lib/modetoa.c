@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* modetoa.c,v 3.1 1993/07/06 01:08:33 jbj Exp  * modetoa - return an asciized mode  */
+comment|/*  * modetoa - return an asciized mode  */
 end_comment
 
 begin_include

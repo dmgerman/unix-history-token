@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib_strbuf.h,v 3.1 1993/07/06 01:08:28 jbj Exp  * lib_strbuf.h - definitions for routines which use the common string buffers  */
+comment|/*  * lib_strbuf.h - definitions for routines which use the common string buffers  */
 end_comment
 
 begin_comment

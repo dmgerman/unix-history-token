@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp.h,v 3.1 1993/07/06 01:06:47 jbj Exp  * ntp.h - NTP definitions for the masses  */
+comment|/*  * ntp.h - NTP definitions for the masses  */
 end_comment
 
 begin_include
@@ -181,7 +181,7 @@ begin_define
 define|#
 directive|define
 name|NTP_MAXDISTANCE
-value|(1*FP_SECOND)
+value|(1 * FP_SECOND)
 end_define
 
 begin_comment
@@ -196,7 +196,18 @@ value|6
 end_define
 
 begin_comment
-comment|/* default min poll (64 sec) */
+comment|/* log2 default min poll interval (64 s) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXDPOLL
+value|10
+end_define
+
+begin_comment
+comment|/* log2 default max poll interval (~17 m) */
 end_comment
 
 begin_define
@@ -207,18 +218,18 @@ value|4
 end_define
 
 begin_comment
-comment|/* absolute min poll (16 sec) */
+comment|/* log2 min poll interval (16 s) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NTP_MAXPOLL
-value|10
+value|14
 end_define
 
 begin_comment
-comment|/* actually 1<<10, or 1024 sec */
+comment|/* log2 max poll interval (~4.5 h) */
 end_comment
 
 begin_define
@@ -247,22 +258,22 @@ begin_define
 define|#
 directive|define
 name|NTP_MINDISPERSE
-value|0x28f
+value|(FP_SECOND / 100)
 end_define
 
 begin_comment
-comment|/* 0.01 sec in fp format */
+comment|/* min dispersion (u_fp 10 ms) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NTP_MAXDISPERSE
-value|(16*FP_SECOND)
+value|(FP_SECOND * 16)
 end_define
 
 begin_comment
-comment|/* maximum dispersion (fp 16) */
+comment|/* max dispersion (u_fp 16 s) */
 end_comment
 
 begin_define
@@ -273,7 +284,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* MAXDISPERSE as a shift */
+comment|/* MAXDISPERSE as a shift (u_fp 16 s) */
 end_comment
 
 begin_define
@@ -307,6 +318,17 @@ end_define
 
 begin_comment
 comment|/* maximum authentication key number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTP_MAXD
+value|3
+end_define
+
+begin_comment
+comment|/* log2 estimated error averaging factor */
 end_comment
 
 begin_comment
@@ -371,23 +393,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CLOCK_WEIGHTTC
-value|5
+name|CLOCK_LIMIT
+value|30
 end_define
 
 begin_comment
-comment|/* log2 time constant weight (32) */
+comment|/* time constant adjust threshold */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLOCK_HOLDTC
-value|128
+name|CLOCK_G
+value|2
 end_define
 
 begin_comment
-comment|/* time constant hold (sec) */
+comment|/* log2 frequency averaging factor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_MAXSEC
+value|800
+end_define
+
+begin_comment
+comment|/* max update interval for pll */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLOCK_MAX_FP
+value|0x000020c5
+end_define
+
+begin_comment
+comment|/* max clock offset (s_fp 128 ms) */
 end_comment
 
 begin_define
@@ -398,14 +442,14 @@ value|0x20c49ba6
 end_define
 
 begin_comment
-comment|/* 128 ms, in time stamp format */
+comment|/* max clock offset (l_fp 128 ms) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CLOCK_MAX_I
-value|0x0
+value|0x00000000
 end_define
 
 begin_comment
@@ -424,18 +468,7 @@ comment|/* if clock 1000 sec off, forget it */
 end_comment
 
 begin_comment
-comment|/*  * Unspecified default.  sys.precision defaults to -6 unless otherwise  * adjusted.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFAULT_SYS_PRECISION
-value|(-6)
-end_define
-
-begin_comment
-comment|/*  * Event timers are actually implemented as a sorted queue of expiry  * times.  The queue is slotted, with each slot holding timers which  * expire in a 2**(NTP_MINPOLL-1) (8) second period.  The timers in  * each slot are sorted by increasing expiry time.  The number of  * slots is 2**(NTP_MAXPOLL-(NTP_MINPOLL-1)), or 128, to cover a time  * period of 2**NTP_MAXPOLL (1024) seconds into the future before  * wrapping.  */
+comment|/*  * Event timers are actually implemented as a sorted queue of expiry  * times.  The queue is slotted, with each slot holding timers which  * expire in a 2**(NTP_MINPOLL-1) (8) second period.  The timers in  * each slot are sorted by increasing expiry time.  The number of  * slots is 2**(NTP_MAXPOLL-(NTP_MINPOLL-1)), or 512, to cover a time  * period of 2**NTP_MAXPOLL (16384) seconds into the future before  * wrapping.  */
 end_comment
 
 begin_define
@@ -475,7 +508,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* routine to call to handle event */
-name|U_LONG
+name|u_long
 name|event_time
 decl_stmt|;
 comment|/* expiry time of counter */
@@ -598,15 +631,19 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* interface flags */
-name|LONG
+name|int
+name|last_ttl
+decl_stmt|;
+comment|/* last TTL specified */
+name|long
 name|received
 decl_stmt|;
 comment|/* number of incoming packets */
-name|LONG
+name|long
 name|sent
 decl_stmt|;
 comment|/* number of outgoing packets */
-name|LONG
+name|long
 name|notsent
 decl_stmt|;
 comment|/* number of send failures */
@@ -784,6 +821,12 @@ modifier|*
 name|dstadr
 decl_stmt|;
 comment|/* pointer to address on local host */
+name|struct
+name|refclockproc
+modifier|*
+name|procptr
+decl_stmt|;
+comment|/* pointer to reference clock sutuff */
 name|u_char
 name|leap
 decl_stmt|;
@@ -828,6 +871,10 @@ name|u_char
 name|flags
 decl_stmt|;
 comment|/* peer flags */
+name|u_char
+name|cast_flags
+decl_stmt|;
+comment|/* flags MDF_?CAST */
 name|u_char
 name|flash
 decl_stmt|;
@@ -956,7 +1003,7 @@ name|NTP_SHIFT
 index|]
 decl_stmt|;
 comment|/* error part of shift register */
-name|LONG
+name|long
 name|update
 decl_stmt|;
 comment|/* base sys_clock for skew calc.s */
@@ -984,71 +1031,59 @@ name|u_fp
 name|selectdisp
 decl_stmt|;
 comment|/* select dispersion */
-name|U_LONG
+name|s_fp
 name|estbdelay
 decl_stmt|;
-comment|/* broadcast delay, as a ts fraction */
+comment|/* broadcast offset */
 comment|/* 	 * statistic counters 	 */
-name|U_LONG
+name|u_long
 name|timereset
 decl_stmt|;
 comment|/* time stat counters were reset */
-name|U_LONG
+name|u_long
 name|sent
 decl_stmt|;
 comment|/* number of updates sent */
-name|U_LONG
+name|u_long
 name|received
 decl_stmt|;
 comment|/* number of frames received */
-name|U_LONG
+name|u_long
 name|timereceived
 decl_stmt|;
 comment|/* last time a frame received */
-name|U_LONG
+name|u_long
 name|timereachable
 decl_stmt|;
 comment|/* last reachable/unreachable event */
-name|U_LONG
+name|u_long
 name|processed
 decl_stmt|;
 comment|/* processed by the protocol */
-name|U_LONG
+name|u_long
 name|badauth
 decl_stmt|;
 comment|/* bad credentials detected */
-name|U_LONG
+name|u_long
 name|bogusorg
 decl_stmt|;
 comment|/* rejected due to bogus origin */
-name|U_LONG
-name|bogusrec
-decl_stmt|;
-comment|/* rejected due to bogus receive */
-name|U_LONG
-name|bogusdelay
-decl_stmt|;
-comment|/* rejected due to bogus delay */
-name|U_LONG
-name|disttoolarge
-decl_stmt|;
-comment|/* rejected due to large distance */
-name|U_LONG
+name|u_long
 name|oldpkt
 decl_stmt|;
 comment|/* rejected as duplicate packet */
-name|U_LONG
+name|u_long
 name|seldisptoolarge
 decl_stmt|;
 comment|/* too much dispersion for selection */
-name|U_LONG
+name|u_long
 name|selbroken
 decl_stmt|;
 comment|/* broken NTP detected in selection */
-name|U_LONG
+name|u_long
 name|seltooold
 decl_stmt|;
-comment|/* too LONG since sync in selection */
+comment|/* too long since sync in selection */
 name|u_char
 name|candidate
 decl_stmt|;
@@ -1228,6 +1263,17 @@ begin_comment
 comment|/* a pseudo mode, used internally */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MODE_MCLIENT
+value|9
+end_define
+
+begin_comment
+comment|/* multicast mode, used internally */
+end_comment
+
 begin_comment
 comment|/*  * Values for peer.stratum, sys_stratum  */
 end_comment
@@ -1320,23 +1366,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FLAG_UNUSED
+name|FLAG_MCAST1
 value|0x4
 end_define
 
 begin_comment
-comment|/* (not used) */
+comment|/* multicast client/server mode */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FLAG_DEFBDELAY
+name|FLAG_MCAST2
 value|0x8
 end_define
 
 begin_comment
-comment|/* using default bdelay */
+comment|/* multicast client mode */
 end_comment
 
 begin_define
@@ -1422,7 +1468,7 @@ begin_define
 define|#
 directive|define
 name|PPSREFID
-value|"PPS "
+value|(U_LONG)"PPS "
 end_define
 
 begin_comment
@@ -1452,7 +1498,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* external (e.g., ACTS) */
+comment|/* external (e.g., lockclock) */
 end_comment
 
 begin_define
@@ -1595,7 +1641,7 @@ value|14
 end_define
 
 begin_comment
-comment|/* MSF EES M201, UK */
+comment|/* EES M201 MSF Receiver */
 end_comment
 
 begin_define
@@ -1606,7 +1652,95 @@ value|15
 end_define
 
 begin_comment
-comment|/* TrueTime GPS/TM-TMD */
+comment|/* TrueTime GPS/TM-TMD Receiver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_IRIG_BANCOMM
+value|16
+end_define
+
+begin_comment
+comment|/* Bancomm GPS/IRIG Interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_GPS_DATUM
+value|17
+end_define
+
+begin_comment
+comment|/* Datum Programmable Time System */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_NIST_ACTS
+value|18
+end_define
+
+begin_comment
+comment|/* NIST Auto Computer Time Service */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_WWV_HEATH
+value|19
+end_define
+
+begin_comment
+comment|/* Heath GC1000 WWV/WWVH Receiver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_GPS_NMEA
+value|20
+end_define
+
+begin_comment
+comment|/* NMEA based GPS clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_GPS_MOTO
+value|21
+end_define
+
+begin_comment
+comment|/* Motorola GPS clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_ATOM_PPS
+value|22
+end_define
+
+begin_comment
+comment|/* 1-PPS Clock Discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_MAX
+value|24
+end_define
+
+begin_comment
+comment|/* maximum index (room to expand) */
 end_comment
 
 begin_comment
@@ -1971,6 +2105,10 @@ modifier|*
 name|dstadr
 decl_stmt|;
 comment|/* interface datagram arrived thru */
+name|int
+name|fd
+decl_stmt|;
+comment|/* fd on which it was received */
 name|l_fp
 name|recv_time
 decl_stmt|;
@@ -2377,6 +2515,34 @@ name|PROTO_MULTICAST_DEL
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_PLL
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_PPS
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_MONITOR
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROTO_FILEGEN
+value|11
+end_define
+
 begin_comment
 comment|/*  * Configuration items for the loop filter  */
 end_comment
@@ -2470,22 +2636,41 @@ begin_define
 define|#
 directive|define
 name|DEFPRECISION
-value|(-5)
+value|(-7)
 end_define
 
 begin_comment
-comment|/* conservatively low */
+comment|/* default precision (~10 ms) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFBROADDELAY
-value|(0x020c49ba)
+value|0x00000100
 end_define
 
 begin_comment
-comment|/* 8 ms.  This is round trip delay */
+comment|/* default broadcast offset */
+end_comment
+
+begin_comment
+comment|/* (~4 ms as s_fp) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAUTHDELAY
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* default authentcation delay */
+end_comment
+
+begin_comment
+comment|/* (~100 us as l_fp.u_f) */
 end_comment
 
 begin_define
@@ -2516,12 +2701,6 @@ comment|/* next structure in hash list */
 name|struct
 name|mon_data
 modifier|*
-name|hash_prev
-decl_stmt|;
-comment|/* previous structure in hash list */
-name|struct
-name|mon_data
-modifier|*
 name|mru_next
 decl_stmt|;
 comment|/* next structure in MRU list */
@@ -2543,19 +2722,19 @@ modifier|*
 name|fifo_prev
 decl_stmt|;
 comment|/* previous structure in FIFO list */
-name|U_LONG
+name|u_long
 name|lastdrop
 decl_stmt|;
 comment|/* last time dropped due to RES_LIMIT*/
-name|U_LONG
+name|u_long
 name|lasttime
 decl_stmt|;
 comment|/* last time data updated */
-name|U_LONG
+name|u_long
 name|firsttime
 decl_stmt|;
 comment|/* time structure initialized */
-name|U_LONG
+name|u_long
 name|count
 decl_stmt|;
 comment|/* count we have seen */
@@ -2563,6 +2742,12 @@ name|U_LONG
 name|rmtadr
 decl_stmt|;
 comment|/* address of remote host */
+name|struct
+name|interface
+modifier|*
+name|interface
+decl_stmt|;
+comment|/* interface on which this arrived */
 name|u_short
 name|rmtport
 decl_stmt|;
@@ -2575,9 +2760,57 @@ name|u_char
 name|version
 decl_stmt|;
 comment|/* version of incoming packet */
+name|u_char
+name|cast_flags
+decl_stmt|;
+comment|/* flags MDF_?CAST */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MDF_UCAST
+value|1
+end_define
+
+begin_comment
+comment|/* unicast packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDF_MCAST
+value|2
+end_define
+
+begin_comment
+comment|/* multicast packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDF_BCAST
+value|4
+end_define
+
+begin_comment
+comment|/* broadcast packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDF_LCAST
+value|8
+end_define
+
+begin_comment
+comment|/* local packet */
+end_comment
 
 begin_comment
 comment|/*  * Values used with mon_enabled to indicate reason for enabling monitoring  */
@@ -2638,7 +2871,7 @@ name|U_LONG
 name|mask
 decl_stmt|;
 comment|/* mask for address (host byte order) */
-name|U_LONG
+name|u_long
 name|count
 decl_stmt|;
 comment|/* number of packets matched */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atouint.c,v 3.1 1993/07/06 01:07:42 jbj Exp  * atouint - convert an ascii string to an unsigned long, with error checking  */
+comment|/*  * atouint - convert an ascii string to an unsigned long, with error checking  */
 end_comment
 
 begin_include
@@ -34,13 +34,13 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|uval
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|u
 decl_stmt|;
 specifier|register

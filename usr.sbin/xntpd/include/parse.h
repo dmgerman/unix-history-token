@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp  *  * parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/include/parse.h,v 3.21 1994/05/30 20:58:34 kardel Exp  *  * parse.h,v 3.21 1994/05/30 20:58:34 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifndef
@@ -38,7 +38,7 @@ name|char
 name|parsehrcsid
 index|[]
 init|=
-literal|"parse.h,v 3.17 1994/03/03 09:27:20 kardel Exp"
+literal|"parse.h,v 3.21 1994/05/30 20:58:34 kardel Exp"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,10 +253,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* extern char *malloc();		XXX defined elsewhere */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -426,6 +422,46 @@ end_endif
 begin_comment
 comment|/* PARSESTREAM */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|timercmp
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|timercmp
+end_undef
+
+begin_define
+define|#
+directive|define
+name|timercmp
+parameter_list|(
+name|tvp
+parameter_list|,
+name|uvp
+parameter_list|,
+name|cmp
+parameter_list|)
+define|\
+value|((tvp)->tv_sec cmp (uvp)->tv_sec || \ 	 ((tvp)->tv_sec == (uvp)->tv_sec&& (tvp)->tv_usec cmp (uvp)->tv_usec))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -887,6 +923,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PARSE_STATISTICS
+value|0x08
+end_define
+
+begin_comment
+comment|/* enable statistics */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARSE_FIXED_FMT
 value|0x10
 end_define
@@ -933,8 +980,7 @@ begin_struct
 struct|struct
 name|parsetime
 block|{
-name|unsigned
-name|LONG
+name|u_long
 name|parse_status
 decl_stmt|;
 comment|/* data status - CVT_OK, CVT_NONE, CVT_FAIL ... */
@@ -950,16 +996,15 @@ name|timestamp_t
 name|parse_ptime
 decl_stmt|;
 comment|/* PPS time stamp */
-name|LONG
+name|long
 name|parse_usecerror
 decl_stmt|;
 comment|/* sampled/filtered usec error */
-name|LONG
+name|long
 name|parse_usecdisp
 decl_stmt|;
 comment|/* sampled usecdispersion */
-name|unsigned
-name|LONG
+name|u_long
 name|parse_state
 decl_stmt|;
 comment|/* current receiver state */
@@ -1116,8 +1161,7 @@ block|{
 struct|struct
 name|parsestatus
 block|{
-name|unsigned
-name|LONG
+name|u_long
 name|flags
 decl_stmt|;
 comment|/* new/old flags */
@@ -1127,13 +1171,11 @@ struct|;
 struct|struct
 name|parsegettc
 block|{
-name|unsigned
-name|LONG
+name|u_long
 name|parse_state
 decl_stmt|;
 comment|/* last state */
-name|unsigned
-name|LONG
+name|u_long
 name|parse_badformat
 decl_stmt|;
 comment|/* number of bad packets since last query */
@@ -1187,8 +1229,7 @@ struct|;
 struct|struct
 name|parsesetcs
 block|{
-name|unsigned
-name|LONG
+name|u_long
 name|parse_cs
 decl_stmt|;
 comment|/* character size (needed for stripping) */
@@ -1281,6 +1322,17 @@ name|timestamp_t
 name|parse_lastchar
 decl_stmt|;
 comment|/* time stamp of last received character */
+comment|/*    * private data - fixed format only    */
+name|unsigned
+name|short
+name|parse_plen
+decl_stmt|;
+comment|/* length of private data */
+name|void
+modifier|*
+name|parse_pdata
+decl_stmt|;
+comment|/* private data pointer */
 comment|/*    * time code input buffer (from RS232 or PPS)    */
 name|unsigned
 name|short
@@ -1302,8 +1354,7 @@ name|short
 name|parse_lformat
 decl_stmt|;
 comment|/* last format used */
-name|unsigned
-name|LONG
+name|u_long
 name|parse_lstate
 decl_stmt|;
 comment|/* last state code */
@@ -1317,13 +1368,12 @@ name|short
 name|parse_ldsize
 decl_stmt|;
 comment|/* last data buffer length */
-name|unsigned
-name|LONG
+name|u_long
 name|parse_badformat
 decl_stmt|;
 comment|/* number of unparsable pakets */
 comment|/*    * time stamp filtering    */
-name|LONG
+name|long
 name|parse_delta
 index|[
 name|PARSE_DELTA
@@ -1354,28 +1404,28 @@ struct|struct
 name|clocktime
 comment|/* clock time broken up from time code */
 block|{
-name|LONG
+name|long
 name|day
 decl_stmt|;
-name|LONG
+name|long
 name|month
 decl_stmt|;
-name|LONG
+name|long
 name|year
 decl_stmt|;
-name|LONG
+name|long
 name|hour
 decl_stmt|;
-name|LONG
+name|long
 name|minute
 decl_stmt|;
-name|LONG
+name|long
 name|second
 decl_stmt|;
-name|LONG
+name|long
 name|usecond
 decl_stmt|;
-name|LONG
+name|long
 name|utcoffset
 decl_stmt|;
 comment|/* in seconds */
@@ -1383,7 +1433,7 @@ name|time_t
 name|utctime
 decl_stmt|;
 comment|/* the actual time - alternative to date/time */
-name|LONG
+name|long
 name|flags
 decl_stmt|;
 comment|/* current clock status */
@@ -1564,6 +1614,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CVT_SKIP
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* conversion succeeded */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CVT_BADFMT
 value|0x00000010
 end_define
@@ -1598,8 +1659,15 @@ begin_struct
 struct|struct
 name|clockformat
 block|{
-name|unsigned
-name|LONG
+name|u_long
+function_decl|(
+modifier|*
+name|input
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* special input protocol - implies fixed format */
+name|u_long
 function_decl|(
 modifier|*
 name|convert
@@ -1615,8 +1683,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* routine for handling RS232 sync events (time stamps) */
-name|unsigned
-name|LONG
+name|u_long
 function_decl|(
 modifier|*
 name|syncpps
@@ -1624,8 +1691,7 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* PPS input routine */
-name|unsigned
-name|LONG
+name|u_long
 function_decl|(
 modifier|*
 name|synth
@@ -1648,11 +1714,15 @@ name|short
 name|length
 decl_stmt|;
 comment|/* maximum length of data packet */
-name|unsigned
-name|LONG
+name|u_long
 name|flags
 decl_stmt|;
 comment|/* valid start symbols etc. */
+name|unsigned
+name|short
+name|plen
+decl_stmt|;
+comment|/* length of private data - implies fixed format */
 name|struct
 name|timeval
 name|timeout
@@ -1689,115 +1759,188 @@ begin_comment
 comment|/*  * parse interface  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_ioinit
-parameter_list|(
-comment|/* parse_t *parseio */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|parse_ioend
-parameter_list|(
-comment|/* parse_t *parseio */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_ioread
-parameter_list|(
-comment|/* parse_t *parseio, char ch, timestamp_t *ctime */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parse_t
+operator|*
+operator|,
+name|unsigned
+name|char
+operator|,
+name|timestamp_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_iopps
-parameter_list|(
-comment|/* parse_t *parseio, int status, struct timeval *ptime, parsetime_t *dtime */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parse_t
+operator|*
+operator|,
+name|int
+operator|,
+name|timestamp_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|parse_iodone
-parameter_list|(
-comment|/* parse_t *parseio */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_getstat
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_setstat
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_timecode
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_getfmt
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_setfmt
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|parse_setcs
-parameter_list|(
-comment|/* parsectl_t *dct, parse_t *parse */
-parameter_list|)
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|parsectl_t
+operator|*
+operator|,
+name|parse_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1826,7 +1969,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|LONG
+name|long
 operator|*
 operator|,
 name|int
@@ -1845,8 +1988,7 @@ operator|(
 name|clocktime_t
 operator|*
 operator|,
-name|unsigned
-name|LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -1855,8 +1997,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|LONG
+name|u_long
 name|updatetimeinfo
 name|P
 argument_list|(
@@ -1866,11 +2007,9 @@ operator|*
 operator|,
 name|time_t
 operator|,
-name|unsigned
-name|LONG
+name|u_long
 operator|,
-name|unsigned
-name|LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1893,8 +2032,7 @@ expr|struct
 name|format
 operator|*
 operator|,
-name|unsigned
-name|LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1902,8 +2040,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|LONG
+name|u_long
 name|pps_simple
 name|P
 argument_list|(
@@ -1912,7 +2049,6 @@ name|parse_t
 operator|*
 operator|,
 name|int
-name|status
 operator|,
 name|timestamp_t
 operator|*
@@ -1927,7 +2063,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * History:  *  * parse.h,v  * Revision 3.17  1994/03/03  09:27:20  kardel  * rcs ids fixed  *  * Revision 3.13  1994/01/25  19:04:21  kardel  * 94/01/23 reconcilation  *  * Revision 3.12  1994/01/23  17:23:05  kardel  * 1994 reconcilation  *  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parse.h,v  * Revision 3.21  1994/05/30  20:58:34  kardel  * fix prototypes  *  * Revision 3.20  1994/05/30  10:19:44  kardel  * LONG cleanup  *  * Revision 3.19  1994/05/15  11:30:33  kardel  * documented flag4 as statistics enable flag  *  * Revision 3.18  1994/05/12  12:40:34  kardel  * shut up gcc about broken Sun/BSD code  *  * Revision 3.17  1994/03/03  09:27:20  kardel  * rcs ids fixed  *  * Revision 3.13  1994/01/25  19:04:21  kardel  * 94/01/23 reconcilation  *  * Revision 3.12  1994/01/23  17:23:05  kardel  * 1994 reconcilation  *  * Revision 3.11  1993/11/11  11:20:18  kardel  * declaration fixes  *  * Revision 3.10  1993/11/01  19:59:48  kardel  * parse Solaris support (initial version)  *  * Revision 3.9  1993/10/06  00:14:57  kardel  * include fixes  *  * Revision 3.8  1993/10/05  23:15:41  kardel  * more STREAM protection  *  * Revision 3.7  1993/10/05  22:56:10  kardel  * STREAM must be defined for PARSESTREAMS  *  * Revision 3.6  1993/10/03  19:10:28  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/26  23:41:13  kardel  * new parse driver logic  *  * Revision 3.4  1993/09/01  21:46:31  kardel  * conditional cleanup  *  * Revision 3.3  1993/08/27  00:29:29  kardel  * compilation cleanup  *  * Revision 3.2  1993/07/09  11:37:05  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  09:59:12  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

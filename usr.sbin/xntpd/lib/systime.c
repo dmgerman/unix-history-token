@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* systime.c,v 3.1 1993/07/06 01:08:46 jbj Exp  * systime -- routines to fiddle a UNIX clock.  */
+comment|/*  * systime -- routines to fiddle a UNIX clock.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -32,6 +38,11 @@ name|defined
 argument_list|(
 name|SYS_BSDI
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_44BSD
+argument_list|)
 end_if
 
 begin_include
@@ -60,7 +71,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<sys/timex.h>
+file|"sys/timex.h"
 end_include
 
 begin_endif
@@ -128,13 +139,13 @@ comment|/*  * Clock variables.  We round calls to adjtime() to adj_precision  * 
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|sys_clock
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|LONG
+name|long
 name|adj_precision
 decl_stmt|;
 end_decl_stmt
@@ -144,7 +155,7 @@ comment|/* adj precision in usec (tickadj) */
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|tvu_maxslew
 decl_stmt|;
 end_decl_stmt
@@ -154,13 +165,13 @@ comment|/* maximum adjust doable in 1<<CLOCK_ADJ sec (usec) */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|tsf_maxslew
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* same as above, as LONG format */
+comment|/* same as above, as long format */
 end_comment
 
 begin_decl_stmt
@@ -278,10 +289,6 @@ name|L_ADDUF
 argument_list|(
 name|ts
 argument_list|,
-operator|(
-name|unsigned
-name|LONG
-operator|)
 name|TS_ROUNDBIT
 argument_list|)
 expr_stmt|;
@@ -331,11 +338,11 @@ ifdef|#
 directive|ifdef
 name|STEP_SLEW
 specifier|register
-name|U_LONG
+name|u_long
 name|tmp_ui
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|tmp_uf
 decl_stmt|;
 name|int
@@ -480,19 +487,17 @@ name|ts
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|offset_i
 decl_stmt|,
 name|offset_f
 decl_stmt|;
 specifier|register
-name|LONG
+name|long
 name|temp
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|residual
 decl_stmt|;
 specifier|register
@@ -510,7 +515,7 @@ decl_stmt|;
 name|l_fp
 name|oadjts
 decl_stmt|;
-name|LONG
+name|long
 name|adj
 init|=
 name|ts
@@ -692,11 +697,9 @@ name|debug
 operator|>
 literal|4
 condition|)
-name|syslog
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"maximum slew: %s%s, remainder = %s\n"
+literal|"systime: maximum slew: %s%s, remainder = %s\n"
 argument_list|,
 name|isneg
 condition|?
@@ -819,11 +822,9 @@ name|debug
 operator|>
 literal|4
 condition|)
-name|syslog
+name|printf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"slew adjtv = %s, adjts = %s, sys_clock_offset = %s\n"
+literal|"systime: adjtv = %s, adjts = %s, sys_clock_offset = %s\n"
 argument_list|,
 name|tvtoa
 argument_list|(

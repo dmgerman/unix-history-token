@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authcert.c,v 3.1 1993/07/06 01:04:52 jbj Exp  * This file, and the certdata file, shamelessly stolen  * from Phil Karn's DES implementation.  */
+comment|/*  * This file, and the certdata file, shamelessly stolen  * from Phil Karn's DES implementation.  */
 end_comment
 
 begin_include
@@ -110,6 +110,8 @@ name|answer
 index|[
 literal|2
 index|]
+decl_stmt|,
+name|temp
 decl_stmt|;
 name|int
 name|i
@@ -236,8 +238,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|temp
+operator|=
 name|ntohl
 argument_list|(
 name|cipher
@@ -245,6 +248,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
 operator|!=
 name|answer
 index|[
@@ -252,6 +259,7 @@ name|i
 index|]
 condition|)
 break|break;
+block|}
 name|fail
 operator|=
 literal|0
@@ -292,8 +300,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
+block|{
+name|temp
+operator|=
 name|ntohl
 argument_list|(
 name|cipher
@@ -301,6 +310,10 @@ index|[
 name|i
 index|]
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
 operator|!=
 name|plain
 index|[
@@ -308,6 +321,7 @@ name|i
 index|]
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|i
@@ -378,7 +392,7 @@ index|[
 literal|1
 index|]
 operator|=
-literal|0L
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -491,17 +505,20 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
-literal|"%08x"
+literal|"%08lx"
 argument_list|,
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|*
 name|lp
 operator|++
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"sys/timex.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_stdlib.h"
 end_include
 
@@ -83,12 +89,6 @@ directive|ifdef
 name|KERNEL_PLL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/timex.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -117,12 +117,6 @@ end_else
 begin_comment
 comment|/* KERNEL_PLL */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"ntp_timex.h"
-end_include
 
 begin_define
 define|#
@@ -841,9 +835,6 @@ name|lexit
 goto|;
 block|}
 comment|/* 	 * Fetch timekeeping data and display. 	 */
-if|if
-condition|(
-operator|(
 name|status
 operator|=
 name|ntp_gettime
@@ -851,7 +842,10 @@ argument_list|(
 operator|&
 name|ntv
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|status
 operator|<
 literal|0
 condition|)
@@ -969,9 +963,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|status
 operator|=
 name|ntp_adjtime
@@ -979,7 +970,10 @@ argument_list|(
 operator|&
 name|ntx
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|status
 operator|<
 literal|0
 condition|)
@@ -991,9 +985,9 @@ operator|==
 name|EPERM
 operator|)
 condition|?
-literal|">> Must be root to set kernel values\n>> ntp_adjtime() call fails"
+literal|"Must be root to set kernel values\nntp_adjtime() call fails"
 else|:
-literal|">> ntp_adjtime() call fails"
+literal|"ntp_adjtime() call fails"
 argument_list|)
 expr_stmt|;
 else|else

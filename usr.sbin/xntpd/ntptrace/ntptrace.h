@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntptrace.h,v 3.1 1993/07/06 01:09:39 jbj Exp  * ntptrace.h - declarations for the ntptrace program  */
+comment|/*  * ntptrace.h - declarations for the ntptrace program  */
 end_comment
 
 begin_comment

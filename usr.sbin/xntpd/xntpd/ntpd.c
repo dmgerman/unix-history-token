@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpd.c,v 3.1 1993/07/06 01:11:32 jbj Exp  * ntpd.c - main program for the fixed point NTP daemon  */
+comment|/*  * ntpd.c - main program for the fixed point NTP daemon  */
 end_comment
 
 begin_include
@@ -316,6 +316,12 @@ name|defined
 argument_list|(
 name|SYS_BSDI
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SYS_44BSD
+argument_list|)
 end_if
 
 begin_comment
@@ -563,8 +569,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|{
-name|unsigned
-name|long
+name|u_long
 name|s
 decl_stmt|;
 name|int
@@ -783,7 +788,7 @@ argument_list|(
 name|fid
 argument_list|,
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|TIOCNOTTY
 argument_list|,
@@ -1207,6 +1212,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEBUG */
+comment|/* 	 * Set up signals we should never pay attention to. 	 */
+ifdef|#
+directive|ifdef
+name|SIGPIPE
+operator|(
+name|void
+operator|)
+name|signal_no_reset
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIGPIPE */
 comment|/* 	 * Call the init_ routines to initialize the data structures. 	 * Note that init_systime() may run a protocol to get a crude 	 * estimate of the time as an NTP client when running on the 	 * gizmo board.  It is important that this be run before 	 * init_subs() since the latter uses the time of day to seed 	 * the random number generator.  That is not the only 	 * dependency between these, either, be real careful about 	 * reordering. 	 */
 name|init_auth
 argument_list|()
@@ -1261,6 +1283,13 @@ expr_stmt|;
 name|init_loopfilter
 argument_list|()
 expr_stmt|;
+name|mon_start
+argument_list|(
+name|MON_ON
+argument_list|)
+expr_stmt|;
+comment|/* monitor on by default now      */
+comment|/* turn off in config if unwanted */
 comment|/* 	 * Get configuration.  This (including argument list parsing) is 	 * done in a separate module since this will definitely be different 	 * for the gizmo board. 	 */
 name|getconfig
 argument_list|(
@@ -1443,7 +1472,6 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -1451,7 +1479,6 @@ argument_list|,
 literal|"select() error: %m"
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 name|wait_for_signal

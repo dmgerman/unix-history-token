@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpdate.h,v 3.1 1993/07/06 01:09:23 jbj Exp  * ntpdate.h - declarations for the ntpdate program  */
+comment|/*  * ntpdate.h - declarations for the ntpdate program  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ name|l_fp
 name|reftime
 decl_stmt|;
 comment|/* time of peer's last update */
-name|U_LONG
+name|u_long
 name|event_time
 decl_stmt|;
 comment|/* time for next timeout */
@@ -138,7 +138,7 @@ comment|/* 5 per second */
 end_comment
 
 begin_comment
-comment|/*  * ntpdate will make a LONG adjustment using adjtime() if the times  * are close, or step the time if the times are farther apart.  The  * following defines what is "close".  */
+comment|/*  * ntpdate will make a long adjustment using adjtime() if the times  * are close, or step the time if the times are farther apart.  The  * following defines what is "close".  */
 end_comment
 
 begin_ifdef
@@ -292,17 +292,6 @@ end_define
 
 begin_comment
 comment|/* get 4 samples per server */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFPRECISION
-value|(-5)
-end_define
-
-begin_comment
-comment|/* the precision we claim */
 end_comment
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authkeys.c,v 3.1 1993/07/06 01:07:51 jbj Exp  * authkeys.c - routines to manage the storage of authentication keys  */
+comment|/*  * authkeys.c - routines to manage the storage of authentication keys  */
 end_comment
 
 begin_include
@@ -73,7 +73,7 @@ directive|endif
 block|}
 name|k
 union|;
-name|U_LONG
+name|u_long
 name|keyid
 decl_stmt|;
 name|u_short
@@ -248,12 +248,6 @@ name|authdecryptions
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|U_LONG
-name|authdecryptok
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Storage for free key structures.  We malloc() such things but  * never free them.  */
 end_comment
@@ -376,7 +370,7 @@ comment|/*  * The key cache.  We cache the last key we looked at here.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -469,8 +463,6 @@ name|authencryptions
 operator|=
 name|authdecryptions
 operator|=
-name|authdecryptok
-operator|=
 literal|0
 expr_stmt|;
 ifdef|#
@@ -518,7 +510,7 @@ name|auth_findkey
 parameter_list|(
 name|keyno
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 block|{
@@ -579,7 +571,7 @@ name|auth_havekey
 parameter_list|(
 name|keyno
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 block|{
@@ -677,7 +669,7 @@ name|authhavekey
 parameter_list|(
 name|keyno
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 block|{
@@ -939,7 +931,7 @@ name|keyno
 parameter_list|,
 name|trust
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|int
@@ -1204,7 +1196,7 @@ name|authistrusted
 parameter_list|(
 name|keyno
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 block|{
@@ -1309,7 +1301,7 @@ name|keyno
 parameter_list|,
 name|key
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 specifier|const
@@ -1528,7 +1520,7 @@ name|keyno
 parameter_list|,
 name|key
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 specifier|const
@@ -1968,7 +1960,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG
@@ -2075,7 +2067,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG
@@ -2179,7 +2171,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG
@@ -2290,7 +2282,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG

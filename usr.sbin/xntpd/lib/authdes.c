@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authdes.c,v 3.1 1993/07/06 01:07:45 jbj Exp  * authdes.c - an implementation of the DES cipher algorithm for NTP  */
+comment|/*  * authdes.c - an implementation of the DES cipher algorithm for NTP  */
 end_comment
 
 begin_include

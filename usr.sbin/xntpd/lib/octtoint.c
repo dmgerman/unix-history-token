@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* octtoint.c,v 3.1 1993/07/06 01:08:41 jbj Exp  * octtoint - convert an ascii string in octal to an unsigned  *	      long, with error checking  */
+comment|/*  * octtoint - convert an ascii string in octal to an unsigned  *	      long, with error checking  */
 end_comment
 
 begin_include
@@ -34,13 +34,13 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|ival
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|u
 decl_stmt|;
 specifier|register

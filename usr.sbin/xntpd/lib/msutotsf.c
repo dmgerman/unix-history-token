@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* msutotsf.c,v 3.1 1993/07/06 01:08:35 jbj Exp  * msutotsf - tables for converting from a subsecond millisecond value  *	      to a time stamp fraction.  */
+comment|/*  * msutotsf - tables for converting from a subsecond millisecond value  *	      to a time stamp fraction.  */
 end_comment
 
 begin_include
@@ -20,7 +20,7 @@ comment|/*  * Index each of these tables with five bits of the (less than) 10  *
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|msutotsflo
 index|[
 literal|32
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|msutotsfhi
 index|[
 literal|32

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mkrandkeys.c,v 3.1 1993/07/06 01:05:08 jbj Exp  * mkrandkeys - make a key file for xntpd with some quite random keys  */
+comment|/*  * mkrandkeys - make a key file for xntpd with some quite random keys  */
 end_comment
 
 begin_include
@@ -53,7 +53,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|keydata
 index|[
 literal|2
@@ -93,7 +93,7 @@ name|rand_data
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -138,7 +138,7 @@ decl_stmt|;
 name|int
 name|numkeys
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|tmp
 decl_stmt|;
 name|char
@@ -415,7 +415,7 @@ operator|(
 operator|(
 operator|(
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|*
@@ -679,7 +679,7 @@ name|rand_data
 parameter_list|(
 name|data
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|data
 decl_stmt|;
@@ -692,7 +692,7 @@ name|stat
 name|buf
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|time
 parameter_list|()
 function_decl|;
@@ -758,7 +758,7 @@ argument_list|(
 name|time
 argument_list|(
 operator|(
-name|LONG
+name|long
 operator|*
 operator|)
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* lib_strbuf.c,v 3.1 1993/07/06 01:08:27 jbj Exp  * lib_strbuf - library string storage  */
+comment|/*  * lib_strbuf - library string storage  */
 end_comment
 
 begin_include

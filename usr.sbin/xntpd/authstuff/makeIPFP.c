@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makeIPFP.c,v 3.1 1993/07/06 01:04:58 jbj Exp  * makeIPFP - make fast DES IP and FP tables  */
+comment|/*  * makeIPFP - make fast DES IP and FP tables  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ value|(*(a) == *(b)&& strcmp((a), (b)) == 0)
 end_define
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|IPL
 index|[
 literal|256
@@ -43,7 +43,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|FPL
 index|[
 literal|256
@@ -77,10 +77,10 @@ operator|,
 name|u_char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -841,21 +841,21 @@ name|u_char
 modifier|*
 name|permtab
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|leftp
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|rightp
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|left
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|right
 decl_stmt|;
 specifier|register
@@ -985,10 +985,10 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|left
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|right
 decl_stmt|;
 name|int
@@ -1035,7 +1035,7 @@ expr_stmt|;
 comment|/* 	 * Do the rounds for the IP table.  We save the results of 	 * this as well as printing them.  Note that this is the 	 * left-half table, the right half table will be identical. 	 */
 name|printf
 argument_list|(
-literal|"static U_LONG IP[256] = {"
+literal|"static u_long IP[256] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1496,7 +1496,7 @@ block|}
 comment|/* 	 * Next is the FP table, in big endian order 	 */
 name|printf
 argument_list|(
-literal|"#if BYTE_ORDER == LITTLE_ENDIAN\nstatic U_LONG FP[256] = {"
+literal|"#if BYTE_ORDER == LITTLE_ENDIAN\nstatic u_long FP[256] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1965,7 +1965,7 @@ block|}
 comment|/* 	 * Now reouput the FP table in order appropriate for little 	 * endian machines 	 */
 name|printf
 argument_list|(
-literal|"#else\nstatic U_LONG FP[256] = {"
+literal|"#else\nstatic u_long FP[256] = {"
 argument_list|)
 expr_stmt|;
 for|for

@@ -103,25 +103,25 @@ comment|/* number of structures on free list */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|res_calls
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|res_found
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|res_not_found
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|res_timereset
 decl_stmt|;
 end_decl_stmt
@@ -131,13 +131,13 @@ comment|/*  * Parameters of the RES_LIMITED restriction option.  * client_limit 
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|client_limit
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|client_limit_period
 decl_stmt|;
 end_decl_stmt
@@ -147,7 +147,7 @@ comment|/*  * count number of restriction entries referring to RES_LIMITED  * co
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|res_limited_refcnt
 decl_stmt|;
 end_decl_stmt
@@ -173,7 +173,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -273,7 +273,10 @@ index|]
 operator|.
 name|addr
 operator|=
+name|htonl
+argument_list|(
 name|INADDR_ANY
+argument_list|)
 expr_stmt|;
 name|resinit
 index|[
@@ -330,7 +333,7 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"client_limit=%d"
+literal|"client_limit=%ld"
 argument_list|,
 name|client_limit
 argument_list|)
@@ -353,7 +356,7 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"client_limit_period=%d"
+literal|"client_limit_period=%ld"
 argument_list|,
 name|client_limit_period
 argument_list|)
@@ -404,7 +407,7 @@ modifier|*
 name|match
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|hostaddr
 decl_stmt|;
 specifier|register
@@ -557,7 +560,7 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"limited clients check: %d clients, period %d seconds, net is 0x%X\n"
+literal|"limited clients check: %ld clients, period %ld seconds, net is 0x%lX\n"
 argument_list|,
 name|client_limit
 argument_list|,
@@ -664,7 +667,7 @@ literal|5
 condition|)
 name|printf
 argument_list|(
-literal|"checking: %s: ignore: too old: %d\n"
+literal|"checking: %s: ignore: too old: %ld\n"
 argument_list|,
 name|numtoa
 argument_list|(
@@ -760,7 +763,7 @@ literal|5
 condition|)
 name|printf
 argument_list|(
-literal|"checking: %s: different net 0x%X\n"
+literal|"checking: %s: different net 0x%lX\n"
 argument_list|,
 name|numtoa
 argument_list|(
@@ -860,7 +863,7 @@ literal|4
 condition|)
 name|printf
 argument_list|(
-literal|"this one is rank %d in list, limit is %d: %s\n"
+literal|"this one is rank %d in list, limit is %lu: %s\n"
 argument_list|,
 name|lcnt
 argument_list|,
@@ -981,11 +984,11 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|addr
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|mask
 decl_stmt|;
 specifier|register
@@ -1028,7 +1031,10 @@ if|if
 condition|(
 name|addr
 operator|==
+name|htonl
+argument_list|(
 name|INADDR_ANY
+argument_list|)
 condition|)
 block|{
 name|rlprev
@@ -1410,7 +1416,10 @@ name|rl
 operator|->
 name|addr
 operator|!=
+name|htonl
+argument_list|(
 name|INADDR_ANY
+argument_list|)
 operator|&&
 operator|!
 operator|(

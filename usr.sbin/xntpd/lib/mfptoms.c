@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mfptoms.c,v 3.1 1993/07/06 01:08:31 jbj Exp  * mfptoms - Return an asciized signed LONG fp number in milliseconds  */
+comment|/*  * mfptoms - Return an asciized signed long fp number in milliseconds  */
 end_comment
 
 begin_include
@@ -26,10 +26,10 @@ name|fpf
 parameter_list|,
 name|ndec
 parameter_list|)
-name|U_LONG
+name|u_long
 name|fpi
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|fpf
 decl_stmt|;
 name|int

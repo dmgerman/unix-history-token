@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/dcfd.c,v 3.15 1994/01/25 19:05:42 kardel Exp  *    * dcfd.c,v 3.15 1994/01/25 19:05:42 kardel Exp  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to xntp3 - really!)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/dcfd.c,v 3.18 1994/05/12 12:49:23 kardel Exp  *    * dcfd.c,v 3.18 1994/05/12 12:49:23 kardel Exp  *  * DCF77 100/200ms pulse synchronisation daemon program (via 50Baud serial line)  *  * Features:  *  DCF77 decoding  *  NTP loopfilter logic for local clock  *  interactive display for debugging  *  * Lacks:  *  Leap second handling (at that level you should switch to xntp3 - really!)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
 end_comment
 
 begin_include
@@ -2356,6 +2356,21 @@ operator|++
 expr_stmt|;
 block|}
 comment|/*    * if everything went well so far return the result of the symbolic    * conversion routine else just the accumulated errors    */
+if|if
+condition|(
+name|rtc
+operator|!=
+name|CVT_NONE
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|"%-30s"
+argument_list|,
+literal|"*** BAD DATA"
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|rtc
@@ -2924,7 +2939,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c0.%06d"
+literal|"%c0.%06ld"
 argument_list|,
 operator|(
 name|val
@@ -2938,6 +2953,10 @@ literal|'-'
 else|:
 literal|'+'
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|abs
 argument_list|(
 name|val
@@ -2951,12 +2970,20 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d.%06d"
+literal|"%ld.%06ld"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|val
 operator|->
 name|tv_sec
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|abs
 argument_list|(
 name|val
@@ -3116,8 +3143,12 @@ literal|1000000
 expr_stmt|;
 name|LPRINTF
 argument_list|(
-literal|"adj_time: %d us "
+literal|"adj_time: %ld us "
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
@@ -3238,8 +3269,12 @@ operator|)
 expr_stmt|;
 name|LPRINTF
 argument_list|(
-literal|"read_drift: drift_comp %d "
+literal|"read_drift: drift_comp %ld "
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|drift_comp
 argument_list|)
 expr_stmt|;
@@ -3320,8 +3355,12 @@ operator|)
 decl_stmt|;
 name|LPRINTF
 argument_list|(
-literal|"update_drift: drift_comp %d "
+literal|"update_drift: drift_comp %ld "
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|drift_comp
 argument_list|)
 expr_stmt|;
@@ -3343,7 +3382,7 @@ name|fprintf
 argument_list|(
 name|df
 argument_list|,
-literal|"%4d.%03d %c%d.%06d %.24s\n"
+literal|"%4d.%03d %c%ld.%06ld %.24s\n"
 argument_list|,
 name|idrift
 argument_list|,
@@ -3359,19 +3398,31 @@ literal|'-'
 else|:
 literal|'+'
 argument_list|,
+call|(
+name|long
+name|int
+call|)
+argument_list|(
 name|abs
 argument_list|(
 name|offset
 argument_list|)
 operator|/
 literal|1000000
+argument_list|)
 argument_list|,
+call|(
+name|long
+name|int
+call|)
+argument_list|(
 name|abs
 argument_list|(
 name|offset
 argument_list|)
 operator|%
 literal|1000000
+argument_list|)
 argument_list|,
 name|asctime
 argument_list|(
@@ -3618,13 +3669,17 @@ argument_list|)
 expr_stmt|;
 name|LPRINTF
 argument_list|(
-literal|"clock_adjust: %s, clock_adjust %d, drift_comp %d(%d) "
+literal|"clock_adjust: %s, clock_adjust %ld, drift_comp %ld(%ld) "
 argument_list|,
 name|pr_timeval
 argument_list|(
 name|offset
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|R_SHIFT
 argument_list|(
 name|clock_adjust
@@ -3632,6 +3687,10 @@ argument_list|,
 name|USECSCALE
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|R_SHIFT
 argument_list|(
 name|drift_comp
@@ -3639,6 +3698,10 @@ argument_list|,
 name|USECSCALE
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|drift_comp
 argument_list|)
 expr_stmt|;
@@ -4640,12 +4703,14 @@ operator||
 name|CREAD
 operator||
 name|CLOCAL
+operator||
+name|PARENB
 expr_stmt|;
 name|term
 operator|.
 name|c_iflag
 operator|=
-literal|0
+name|IGNPAR
 expr_stmt|;
 name|term
 operator|.
@@ -4888,7 +4953,7 @@ endif|#
 directive|endif
 name|PRINTF
 argument_list|(
-literal|"  DCF77 monitor - Copyright 1993, Frank Kardel\n\n"
+literal|"  DCF77 monitor - Copyright 1993,1994, Frank Kardel\n\n"
 argument_list|)
 expr_stmt|;
 name|pbuf
@@ -5104,6 +5169,28 @@ expr_stmt|;
 block|}
 name|errs
 operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|trace
+condition|)
+block|{
+name|PRINTF
+argument_list|(
+literal|"\r  %.*s "
+argument_list|,
+literal|59
+operator|-
+name|offset
+argument_list|,
+operator|&
+name|buf
+index|[
+name|offset
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 name|buf
@@ -5362,33 +5449,6 @@ operator|==
 name|CVT_OK
 condition|)
 block|{
-if|if
-condition|(
-name|trace
-operator|&&
-operator|(
-name|i
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-name|PRINTF
-argument_list|(
-literal|"\r  %.*s "
-argument_list|,
-literal|59
-operator|-
-name|offset
-argument_list|,
-operator|&
-name|buf
-index|[
-name|offset
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|i

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpdc.h,v 3.1 1993/07/06 01:12:01 jbj Exp  * ntpdc.h - definitions of interest to xntpdc  */
+comment|/*  * ntpdc.h - definitions of interest to xntpdc  */
 end_comment
 
 begin_include
@@ -69,7 +69,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|STR
+name|NTP_STR
 value|0x1
 end_define
 
@@ -122,13 +122,13 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|LONG
+name|long
 name|ival
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|uval
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 block|}
@@ -243,6 +243,8 @@ operator|,
 name|char
 operator|*
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -256,7 +258,7 @@ name|nntohost
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;

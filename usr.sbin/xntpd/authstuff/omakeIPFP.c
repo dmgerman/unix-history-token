@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* omakeIPFP.c,v 3.1 1993/07/06 01:05:10 jbj Exp  * makeIPFP - make fast DES IP and FP tables  *  * This is an older version which generated tables half the size of  * the current version, but which took about double the CPU time to  * compute permutations from these tables.  Since the CPU spent on the  * permutations is small compared to the CPU spent in the cipher code,  * I may go back to the smaller tables to save the space some day.  */
+comment|/*  * makeIPFP - make fast DES IP and FP tables  *  * This is an older version which generated tables half the size of  * the current version, but which took about double the CPU time to  * compute permutations from these tables.  Since the CPU spent on the  * permutations is small compared to the CPU spent in the cipher code,  * I may go back to the smaller tables to save the space some day.  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ value|(*(a) == *(b)&& strcmp((a), (b)) == 0)
 end_define
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|IPL
 index|[
 literal|8
@@ -46,7 +46,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|FPL
 index|[
 literal|8
@@ -83,10 +83,10 @@ operator|,
 name|u_char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -847,21 +847,21 @@ name|u_char
 modifier|*
 name|permtab
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|leftp
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|rightp
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|left
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|right
 decl_stmt|;
 specifier|register
@@ -991,10 +991,10 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|left
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|right
 decl_stmt|;
 name|int
@@ -1032,7 +1032,7 @@ expr_stmt|;
 comment|/* 	 * Do the rounds for the IPL table.  We save the results of 	 * this as well as printing them.  Note that this is the 	 * left-half table. 	 */
 name|printf
 argument_list|(
-literal|"static U_LONG IP[8][16] = {"
+literal|"static u_long IP[8][16] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1564,7 +1564,7 @@ block|}
 comment|/* 	 * Next are the FP tables 	 */
 name|printf
 argument_list|(
-literal|"static U_LONG FP[8][16] = {"
+literal|"static u_long FP[8][16] = {"
 argument_list|)
 expr_stmt|;
 for|for

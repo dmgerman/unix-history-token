@@ -22,17 +22,17 @@ file|"ntp_stdlib.h"
 end_include
 
 begin_function
-name|U_LONG
+name|u_long
 name|netof
 parameter_list|(
 name|num
 parameter_list|)
-name|U_LONG
+name|u_long
 name|num
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 name|netnum
@@ -63,7 +63,7 @@ operator|&=
 name|IN_CLASSB_NET
 expr_stmt|;
 else|else
-comment|/* treat als other like class A */
+comment|/* treat all other like class A */
 name|netnum
 operator|&=
 name|IN_CLASSA_NET

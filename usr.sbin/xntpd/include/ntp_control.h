@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_control.h,v 3.1 1993/07/06 01:06:50 jbj Exp  * ntp_control.h - definitions related to NTP mode 6 control messages  */
+comment|/*  * ntp_control.h - definitions related to NTP mode 6 control messages  */
 end_comment
 
 begin_include
@@ -1290,19 +1290,19 @@ modifier|*
 name|tr_localaddr
 decl_stmt|;
 comment|/* interface to send this through */
-name|U_LONG
+name|u_long
 name|tr_settime
 decl_stmt|;
 comment|/* time trap was set */
-name|U_LONG
+name|u_long
 name|tr_count
 decl_stmt|;
 comment|/* async messages sent to this guy */
-name|U_LONG
+name|u_long
 name|tr_origtime
 decl_stmt|;
 comment|/* time trap was originally set */
-name|U_LONG
+name|u_long
 name|tr_resets
 decl_stmt|;
 comment|/* count of resets for this trap */

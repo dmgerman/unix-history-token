@@ -525,7 +525,7 @@ name|io_multicast_add
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -538,7 +538,7 @@ name|io_multicast_del
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -558,6 +558,8 @@ operator|,
 expr|struct
 name|interface
 operator|*
+operator|,
+name|int
 operator|,
 expr|struct
 name|pkt
@@ -711,6 +713,19 @@ operator|,
 expr|struct
 name|peer
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|adj_frequency
+name|P
+argument_list|(
+operator|(
+name|s_fp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -901,6 +916,8 @@ operator|,
 expr|struct
 name|interface
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -948,7 +965,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1009,7 +1026,7 @@ name|int
 operator|,
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1287,7 +1304,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1643,7 +1660,6 @@ name|l_fp
 operator|*
 operator|,
 name|s_fp
-operator|*
 operator|,
 name|int
 operator|)

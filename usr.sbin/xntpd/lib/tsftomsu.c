@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tsftomsu.c,v 3.1 1993/07/06 01:08:47 jbj Exp  * tsftomsu - convert from a time stamp fraction to milliseconds  */
+comment|/*  * tsftomsu - convert from a time stamp fraction to milliseconds  */
 end_comment
 
 begin_include
@@ -23,7 +23,7 @@ name|tsf
 parameter_list|,
 name|round
 parameter_list|)
-name|U_LONG
+name|u_long
 name|tsf
 decl_stmt|;
 name|int
@@ -31,13 +31,13 @@ name|round
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|long
 name|val_ui
 decl_stmt|,
 name|val_uf
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|long
 name|tmp_ui
 decl_stmt|,
 name|tmp_uf

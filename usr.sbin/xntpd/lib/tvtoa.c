@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tvtoa.c,v 3.1 1993/07/06 01:08:50 jbj Exp  * tvtoa - return an asciized representation of a struct timeval  */
+comment|/*  * tvtoa - return an asciized representation of a struct timeval  */
 end_comment
 
 begin_include
@@ -46,11 +46,11 @@ modifier|*
 name|buf
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|sec
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|usec
 decl_stmt|;
 specifier|register

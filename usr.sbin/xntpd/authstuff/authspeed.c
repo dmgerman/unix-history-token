@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authspeed.c,v 3.1 1993/07/06 01:04:54 jbj Exp  * authspeed - figure out how LONG it takes to do an NTP encryption  */
+comment|/*  * authspeed - figure out how long it takes to do an NTP encryption  */
 end_comment
 
 begin_if
@@ -229,7 +229,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|dummy3
 decl_stmt|;
 end_decl_stmt
@@ -1570,10 +1570,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|LONG
+name|long
 name|sec
 decl_stmt|;
-name|LONG
+name|long
 name|usec
 decl_stmt|;
 name|sec

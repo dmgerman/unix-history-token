@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getopt.c,v 3.1 1993/07/06 01:08:18 jbj Exp  * getopt - get option letter from argv  *  * This is a version of the public domain getopt() implementation by  * Henry Spencer, changed for 4.3BSD compatibility (in addition to System V).  * It allows rescanning of an option list by setting optind to 0 before  * calling, which is why we use it even if the system has its own (in fact,  * this one has a unique name so as not to conflict with the system's).  * Thanks to Dennis Ferguson for the appropriate modifications.  *  * This file is in the Public Domain.  */
+comment|/*  * getopt - get option letter from argv  *  * This is a version of the public domain getopt() implementation by  * Henry Spencer, changed for 4.3BSD compatibility (in addition to System V).  * It allows rescanning of an option list by setting optind to 0 before  * calling, which is why we use it even if the system has its own (in fact,  * this one has a unique name so as not to conflict with the system's).  * Thanks to Dennis Ferguson for the appropriate modifications.  *  * This file is in the Public Domain.  */
 end_comment
 
 begin_comment

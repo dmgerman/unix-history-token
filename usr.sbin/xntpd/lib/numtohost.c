@@ -55,7 +55,7 @@ name|numtohost
 parameter_list|(
 name|netnum
 parameter_list|)
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 block|{

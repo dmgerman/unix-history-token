@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.13 1994/02/20 13:04:41 kardel Exp  *    * clk_schmid.c,v 3.13 1994/02/20 13:04:41 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *    * clk_schmid.c,v 3.16 1994/05/30 10:20:03 kardel Exp  *  * Schmid clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -133,8 +133,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_schmid
 parameter_list|()
 function_decl|;
@@ -145,12 +144,6 @@ name|clockformat_t
 name|clock_schmid
 init|=
 block|{
-name|cvt_schmid
-block|,
-comment|/* Schmid conversion */
-name|syn_simple
-block|,
-comment|/* easy time stamps */
 operator|(
 name|unsigned
 name|LONG
@@ -161,10 +154,25 @@ argument_list|()
 operator|)
 literal|0
 block|,
+comment|/* no input handling */
+name|cvt_schmid
+block|,
+comment|/* Schmid conversion */
+name|syn_simple
+block|,
+comment|/* easy time stamps */
+operator|(
+name|u_long
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+block|,
 comment|/* not direct PPS monitoring */
 operator|(
-name|unsigned
-name|LONG
+name|u_long
 argument_list|(
 operator|*
 argument_list|)
@@ -191,6 +199,9 @@ operator||
 name|SYNC_START
 block|,
 comment|/* END packet delimiter / synchronisation */
+literal|0
+block|,
+comment|/* no private data (complete messages) */
 block|{
 literal|0
 block|,
@@ -212,8 +223,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_schmid
 parameter_list|(
 name|buffer
@@ -225,6 +235,7 @@ parameter_list|,
 name|clock
 parameter_list|)
 specifier|register
+name|unsigned
 name|char
 modifier|*
 name|buffer
@@ -259,6 +270,10 @@ index|[
 literal|10
 index|]
 operator|!=
+operator|(
+name|unsigned
+name|char
+operator|)
 literal|'\375'
 operator|)
 condition|)
@@ -298,36 +313,8 @@ literal|3
 index|]
 operator|>
 literal|9
-comment|/* Time */
-operator|||
-name|buffer
-index|[
-literal|0
-index|]
-operator|<
-literal|0
-operator|||
-name|buffer
-index|[
-literal|1
-index|]
-operator|<
-literal|0
-operator|||
-name|buffer
-index|[
-literal|2
-index|]
-operator|<
-literal|0
-operator|||
-name|buffer
-index|[
-literal|3
-index|]
-operator|<
-literal|0
 condition|)
+comment|/* Time */
 block|{
 return|return
 name|CVT_FAIL
@@ -635,7 +622,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_SCHMID) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_schmid.c,v  * Revision 3.13  1994/02/20  13:04:41  kardel  * parse add/delete second support  *  * Revision 3.12  1994/02/02  17:45:25  kardel  * rcs ids fixed  *  * Revision 3.10  1994/01/25  19:05:15  kardel  * 94/01/23 reconcilation  *  * Revision 3.9  1994/01/23  17:21:56  kardel  * 1994 reconcilation  *  * Revision 3.8  1993/11/01  20:00:18  kardel  * parse Solaris support (initial version)  *  * Revision 3.7  1993/10/30  09:44:43  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/09  15:01:32  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:47  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:09  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:27  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:19  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:22  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_schmid.c,v  * Revision 3.16  1994/05/30  10:20:03  kardel  * LONG cleanup  *  * Revision 3.15  1994/05/12  12:34:48  kardel  * data type cleanup  *  * Revision 3.14  1994/04/12  14:56:31  kardel  * fix declaration  *  * Revision 3.13  1994/02/20  13:04:41  kardel  * parse add/delete second support  *  * Revision 3.12  1994/02/02  17:45:25  kardel  * rcs ids fixed  *  * Revision 3.10  1994/01/25  19:05:15  kardel  * 94/01/23 reconcilation  *  * Revision 3.9  1994/01/23  17:21:56  kardel  * 1994 reconcilation  *  * Revision 3.8  1993/11/01  20:00:18  kardel  * parse Solaris support (initial version)  *  * Revision 3.7  1993/10/30  09:44:43  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/09  15:01:32  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:47  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:09  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:27  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:19  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:22  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

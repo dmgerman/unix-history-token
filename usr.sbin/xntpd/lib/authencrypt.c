@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authencrypt.c,v 3.1 1993/07/06 01:07:50 jbj Exp  * authencrypt - compute and encrypt the mac field in an NTP packet  */
+comment|/*  * authencrypt - compute and encrypt the mac field in an NTP packet  */
 end_comment
 
 begin_include
@@ -47,7 +47,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -115,7 +115,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG

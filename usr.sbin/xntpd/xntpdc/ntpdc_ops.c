@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpdc_ops.c,v 3.1 1993/07/06 01:12:02 jbj Exp  * ntpdc_ops.c - subroutines which are called to perform operations by xntpdc  */
+comment|/*  * ntpdc_ops.c - subroutines which are called to perform operations by xntpdc  */
 end_comment
 
 begin_include
@@ -31,6 +31,29 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bsdi__
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
 end_include
 
 begin_include
@@ -677,42 +700,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|dodirty
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|parse
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|dontdirty
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|parse
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
 name|trustkey
 name|P
 argument_list|(
@@ -1211,7 +1198,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -1391,7 +1378,7 @@ name|UINT
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1425,7 +1412,7 @@ name|UINT
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1459,7 +1446,7 @@ name|UINT
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1510,28 +1497,28 @@ literal|"unconfigure existing peer assocations"
 block|}
 block|,
 block|{
-literal|"set"
+literal|"enable"
 block|,
 name|set
 block|,
 block|{
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
-literal|"bclient|mclient|auth"
+literal|"auth|bclient|pll|pps|monitor|stats"
 block|,
 literal|"..."
 block|,
@@ -1540,32 +1527,32 @@ block|,
 literal|"..."
 block|}
 block|,
-literal|"set a system flag (bclient, mclient, auth)"
+literal|"set a system flag (auth, bclient, pll, pps, monitor, stats)"
 block|}
 block|,
 block|{
-literal|"clear"
+literal|"disable"
 block|,
 name|sys_clear
 block|,
 block|{
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
-literal|"bclient|mclient|auth"
+literal|"auth|bclient|pll|pps|monitor|stats"
 block|,
 literal|"..."
 block|,
@@ -1574,7 +1561,7 @@ block|,
 literal|"..."
 block|}
 block|,
-literal|"clear a system flag (bclient, mclient, auth)"
+literal|"clear a system flag (auth, bclient, pll, pps, monitor, stats)"
 block|}
 block|,
 block|{
@@ -1615,11 +1602,11 @@ name|ADD
 block|,
 name|ADD
 block|,
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1645,11 +1632,11 @@ name|ADD
 block|,
 name|ADD
 block|,
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1677,7 +1664,7 @@ name|ADD
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|}
@@ -1701,7 +1688,9 @@ block|,
 name|monlist
 block|,
 block|{
-name|NO
+name|OPT
+operator||
+name|INT
 block|,
 name|NO
 block|,
@@ -1711,7 +1700,7 @@ name|NO
 block|}
 block|,
 block|{
-literal|""
+literal|"version"
 block|,
 literal|""
 block|,
@@ -1729,7 +1718,7 @@ block|,
 name|monitor
 block|,
 block|{
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -1757,19 +1746,19 @@ block|,
 name|reset
 block|,
 block|{
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|}
 block|,
 block|{
@@ -1844,63 +1833,7 @@ block|,
 literal|""
 block|}
 block|,
-literal|"request a reread of the `keys' file and re-init of system keys"
-block|}
-block|,
-block|{
-literal|"dodirty"
-block|,
-name|dodirty
-block|,
-block|{
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|}
-block|,
-block|{
-literal|""
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|""
-block|}
-block|,
-literal|"placeholder, historical interest only"
-block|}
-block|,
-block|{
-literal|"dontdirty"
-block|,
-name|dontdirty
-block|,
-block|{
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|,
-name|NO
-block|}
-block|,
-block|{
-literal|""
-block|,
-literal|""
-block|,
-literal|""
-block|,
-literal|""
-block|}
-block|,
-literal|"placeholder, historical interest only"
+literal|"request a reread of the keys file and re-init of system keys"
 block|}
 block|,
 block|{
@@ -2245,9 +2178,9 @@ block|,
 block|{
 name|ADD
 block|,
-name|STR
+name|NTP_STR
 block|,
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|}
@@ -2673,6 +2606,8 @@ operator|*
 operator|)
 operator|&
 name|plist
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2911,6 +2846,8 @@ operator|*
 operator|)
 operator|&
 name|plist
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3226,6 +3163,75 @@ block|}
 end_function
 
 begin_comment
+comment|/* Convert a refid& stratum (in host order) to a string */
+end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|refid_string
+parameter_list|(
+name|refid
+parameter_list|,
+name|stratum
+parameter_list|)
+name|u_long
+name|refid
+decl_stmt|;
+name|int
+name|stratum
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|stratum
+operator|<=
+literal|1
+condition|)
+block|{
+specifier|static
+name|char
+name|junk
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|junk
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|memmove
+argument_list|(
+name|junk
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|refid
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+return|return
+name|junk
+return|;
+block|}
+return|return
+name|numtoa
+argument_list|(
+name|refid
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * printpeer - print detail information for a peer  */
 end_comment
 
@@ -3252,12 +3258,6 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|char
-name|junk
-index|[
-literal|5
-index|]
 decl_stmt|;
 name|char
 modifier|*
@@ -3322,55 +3322,6 @@ operator|->
 name|precision
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|->
-name|stratum
-operator|<=
-literal|1
-condition|)
-block|{
-name|junk
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|memmove
-argument_list|(
-name|junk
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pp
-operator|->
-name|refid
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|str
-operator|=
-name|junk
-expr_stmt|;
-block|}
-else|else
-block|{
-name|str
-operator|=
-name|numtoa
-argument_list|(
-name|pp
-operator|->
-name|refid
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -3400,11 +3351,20 @@ literal|'1'
 else|:
 literal|'0'
 argument_list|,
-name|str
-argument_list|,
-name|ufptoa
+name|refid_string
 argument_list|(
-name|HTONS_FP
+name|pp
+operator|->
+name|refid
+argument_list|,
+name|pp
+operator|->
+name|stratum
+argument_list|)
+argument_list|,
+name|fptoa
+argument_list|(
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -3416,7 +3376,7 @@ argument_list|)
 argument_list|,
 name|ufptoa
 argument_list|(
-name|HTONS_FP
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -3434,7 +3394,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"ppoll %d, hpoll %d, keyid %u, version %d, association %u\n"
+literal|"ppoll %d, hpoll %d, keyid %lu, version %d, association %u\n"
 argument_list|,
 name|pp
 operator|->
@@ -3444,6 +3404,9 @@ name|pp
 operator|->
 name|hpoll
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pp
 operator|->
 name|keyid
@@ -3493,13 +3456,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"estbdelay %s, ttl %d\n"
+literal|"boffset %s, ttl %d\n"
 argument_list|,
-name|mfptoa
+name|fptoa
 argument_list|(
-literal|0
-argument_list|,
-name|ntohl
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -3521,8 +3482,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"timer %ds, flags"
+literal|"timer %lds, flags"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -3597,59 +3561,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s configured"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-name|str
-operator|=
-literal|","
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pp
-operator|->
-name|flags
-operator|&
-name|INFO_FLAG_MINPOLL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s minpoll"
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-name|str
-operator|=
-literal|","
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|pp
-operator|->
-name|flags
-operator|&
-name|INFO_FLAG_AUTHENABLE
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"%s authenable"
+literal|"%s config"
 argument_list|,
 name|str
 argument_list|)
@@ -3675,7 +3587,59 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s reference_clock"
+literal|"%s refclock"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|str
+operator|=
+literal|","
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_AUTHENABLE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s auth"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|str
+operator|=
+literal|","
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|pp
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_BCLIENT
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s bclient"
 argument_list|,
 name|str
 argument_list|)
@@ -3701,7 +3665,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%s preferred_peer"
+literal|"%s prefer"
 argument_list|,
 name|str
 argument_list|)
@@ -3718,7 +3682,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -3745,7 +3709,7 @@ name|tempts
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -3772,7 +3736,7 @@ name|tempts
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -3799,7 +3763,7 @@ name|tempts
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -3861,7 +3825,7 @@ literal|" %-8.8s"
 argument_list|,
 name|fptoa
 argument_list|(
-name|HTONS_FP
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -3932,7 +3896,7 @@ name|i
 operator|++
 control|)
 block|{
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -4071,7 +4035,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|pp
@@ -4101,7 +4065,7 @@ argument_list|)
 argument_list|,
 name|fptoa
 argument_list|(
-name|HTONS_FP
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -4113,7 +4077,7 @@ argument_list|)
 argument_list|,
 name|ufptoa
 argument_list|(
-name|HTONS_FP
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -4125,7 +4089,7 @@ argument_list|)
 argument_list|,
 name|ufptoa
 argument_list|(
-name|HTONS_FP
+name|NTOHS_FP
 argument_list|(
 name|pp
 operator|->
@@ -4294,6 +4258,8 @@ operator|*
 operator|)
 operator|&
 name|pp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4526,6 +4492,8 @@ operator|*
 operator|)
 operator|&
 name|pp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4614,8 +4582,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time last received:   %ds\n"
+literal|"time last received:   %lds\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4631,8 +4602,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time until next send: %ds\n"
+literal|"time until next send: %lds\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4648,8 +4622,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"reachability change:  %ds\n"
+literal|"reachability change:  %lds\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4665,8 +4642,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packets sent:         %d\n"
+literal|"packets sent:         %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4682,25 +4662,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packets received:     %d\n"
+literal|"packets received:     %ld\n"
 argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|received
-argument_list|)
-argument_list|)
-expr_stmt|;
 operator|(
-name|void
+name|long
 operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"packets processed:    %d\n"
-argument_list|,
 name|ntohl
 argument_list|(
 name|pp
@@ -4716,25 +4682,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad length packets:   %d\n"
+literal|"bad authentication:   %ld\n"
 argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|badlength
-argument_list|)
-argument_list|)
-expr_stmt|;
 operator|(
-name|void
+name|long
 operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"bad auth packets:     %d\n"
-argument_list|,
 name|ntohl
 argument_list|(
 name|pp
@@ -4750,8 +4702,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bogus origin packets: %d\n"
+literal|"bogus origin:         %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4767,8 +4722,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"duplicate packets:    %d\n"
+literal|"duplicate:            %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4784,42 +4742,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad delay rejections: %d\n"
+literal|"bad dispersion:       %ld\n"
 argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|baddelay
-argument_list|)
-argument_list|)
-expr_stmt|;
 operator|(
-name|void
+name|long
 operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"select delay rejects: %d\n"
-argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|seldelay
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"select disp rejects:  %d\n"
-argument_list|,
 name|ntohl
 argument_list|(
 name|pp
@@ -4835,8 +4762,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"select finds broken:  %d\n"
+literal|"bad reference time:   %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|pp
@@ -4852,24 +4782,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"too old for select:   %d\n"
-argument_list|,
-name|ntohl
-argument_list|(
-name|pp
-operator|->
-name|selold
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"sel candidate order:  %d\n"
+literal|"candidate order:      %d\n"
 argument_list|,
 operator|(
 name|int
@@ -4877,57 +4790,6 @@ operator|)
 name|pp
 operator|->
 name|candidate
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"falseticker order:    %d\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|pp
-operator|->
-name|falseticker
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"select order:         %d\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|pp
-operator|->
-name|select
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"select total:         %d\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|pp
-operator|->
-name|select_total
 argument_list|)
 expr_stmt|;
 if|if
@@ -5096,6 +4958,8 @@ operator|*
 operator|)
 operator|&
 name|il
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5143,7 +5007,7 @@ block|{
 name|l_fp
 name|temp2ts
 decl_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|il
@@ -5154,7 +5018,7 @@ operator|&
 name|tempts
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|il
@@ -5172,14 +5036,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"offset %s, drift %s, compliance %d, timer %d seconds\n"
+literal|"offset %s, frequency %s, time_const %ld, watchdog %ld\n"
 argument_list|,
 name|lfptoa
 argument_list|(
 operator|&
 name|tempts
 argument_list|,
-literal|7
+literal|6
 argument_list|)
 argument_list|,
 name|lfptoa
@@ -5187,9 +5051,12 @@ argument_list|(
 operator|&
 name|temp2ts
 argument_list|,
-literal|7
+literal|3
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -5197,6 +5064,9 @@ operator|->
 name|compliance
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -5208,7 +5078,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|il
@@ -5226,18 +5096,18 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"offset:     %s seconds\n"
+literal|"offset:               %s s\n"
 argument_list|,
 name|lfptoa
 argument_list|(
 operator|&
 name|tempts
 argument_list|,
-literal|7
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|il
@@ -5255,14 +5125,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"frequency:  %s seconds\n"
+literal|"frequency:            %s ppm\n"
 argument_list|,
 name|lfptoa
 argument_list|(
 operator|&
 name|tempts
 argument_list|,
-literal|7
+literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5273,8 +5143,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"compliance: %d seconds\n"
+literal|"poll adjust:          %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -5290,8 +5163,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"timer:      %d seconds\n"
+literal|"watchdog timer:       %ld s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -5345,16 +5221,6 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|char
-name|junk
-index|[
-literal|5
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|str
-decl_stmt|;
 name|l_fp
 name|tempts
 decl_stmt|;
@@ -5391,6 +5257,8 @@ operator|*
 operator|)
 operator|&
 name|is
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5437,7 +5305,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"system peer:      %s\n"
+literal|"system peer:          %s\n"
 argument_list|,
 name|nntohost
 argument_list|(
@@ -5454,7 +5322,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"system peer mode: %s\n"
+literal|"system peer mode:     %s\n"
 argument_list|,
 name|modetoa
 argument_list|(
@@ -5471,7 +5339,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap indicator:   %c%c\n"
+literal|"leap indicator:       %c%c\n"
 argument_list|,
 name|is
 operator|->
@@ -5501,7 +5369,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"stratum:          %d\n"
+literal|"stratum:              %d\n"
 argument_list|,
 operator|(
 name|int
@@ -5518,7 +5386,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"precision:        %d\n"
+literal|"precision:            %d\n"
 argument_list|,
 operator|(
 name|int
@@ -5535,7 +5403,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"sync distance:    %s\n"
+literal|"root distance:        %s s\n"
 argument_list|,
 name|fptoa
 argument_list|(
@@ -5557,7 +5425,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"sync dispersion:  %s\n"
+literal|"root dispersion:      %s s\n"
 argument_list|,
 name|ufptoa
 argument_list|(
@@ -5572,55 +5440,6 @@ literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|is
-operator|->
-name|stratum
-operator|<=
-literal|1
-condition|)
-block|{
-name|junk
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|memmove
-argument_list|(
-name|junk
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|is
-operator|->
-name|refid
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-name|str
-operator|=
-name|junk
-expr_stmt|;
-block|}
-else|else
-block|{
-name|str
-operator|=
-name|numtoa
-argument_list|(
-name|is
-operator|->
-name|refid
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -5628,12 +5447,21 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"reference ID:     [%s]\n"
+literal|"reference ID:         [%s]\n"
 argument_list|,
-name|str
+name|refid_string
+argument_list|(
+name|is
+operator|->
+name|refid
+argument_list|,
+name|is
+operator|->
+name|stratum
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|is
@@ -5651,7 +5479,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"reference time:   %s\n"
+literal|"reference time:       %s\n"
 argument_list|,
 name|prettydate
 argument_list|(
@@ -5667,7 +5495,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"system flags:     "
+literal|"system flags:         "
 argument_list|)
 expr_stmt|;
 if|if
@@ -5680,9 +5508,19 @@ operator|&
 operator|(
 name|INFO_FLAG_BCLIENT
 operator||
-name|INFO_FLAG_MCLIENT
-operator||
 name|INFO_FLAG_AUTHENABLE
+operator||
+name|INFO_FLAG_PLL
+operator||
+name|INFO_FLAG_PPS
+operator||
+name|INFO_FLAG_PLL_SYNC
+operator||
+name|INFO_FLAG_PPS_SYNC
+operator||
+name|INFO_FLAG_MONITOR
+operator||
+name|INFO_FLAG_FILEGEN
 operator|)
 operator|)
 operator|==
@@ -5702,10 +5540,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|res
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|is
@@ -5714,7 +5548,6 @@ name|flags
 operator|&
 name|INFO_FLAG_BCLIENT
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -5722,38 +5555,9 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bclient"
+literal|"bclient "
 argument_list|)
 expr_stmt|;
-name|res
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|is
-operator|->
-name|flags
-operator|&
-name|INFO_FLAG_MCLIENT
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"mclient"
-argument_list|)
-expr_stmt|;
-name|res
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|is
@@ -5769,13 +5573,115 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%sauthenticate"
+literal|"auth "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_PLL
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
 argument_list|,
-name|res
-condition|?
-literal|", "
-else|:
-literal|""
+literal|"pll "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_PPS
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pps "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_PLL_SYNC
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"kernel_sync "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_PPS_SYNC
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"pps_sync "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_MONITOR
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"monitor "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|is
+operator|->
+name|flags
+operator|&
+name|INFO_FLAG_FILEGEN
+condition|)
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"stats "
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5789,15 +5695,26 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|HTONL_FP
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-operator|&
+name|fp
+argument_list|,
+literal|"frequency:            %s ppm\n"
+argument_list|,
+name|fptoa
+argument_list|(
+name|ntohl
+argument_list|(
 name|is
 operator|->
-name|bdelay
+name|frequency
+argument_list|)
 argument_list|,
-operator|&
-name|tempts
+literal|3
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -5807,18 +5724,44 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"broadcast delay:  %s\n"
+literal|"stability:            %s ppm\n"
 argument_list|,
-name|lfptoa
+name|ufptoa
 argument_list|(
-operator|&
-name|tempts
+name|ntohl
+argument_list|(
+name|is
+operator|->
+name|stability
+argument_list|)
 argument_list|,
-literal|7
+literal|3
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|HTONL_FP
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"broadcastdelay:       %s s\n"
+argument_list|,
+name|fptoa
+argument_list|(
+name|NTOHS_FP
+argument_list|(
+name|is
+operator|->
+name|bdelay
+argument_list|)
+argument_list|,
+literal|6
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|is
@@ -5836,14 +5779,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"encryption delay: %s\n"
+literal|"authdelay:            %s s\n"
 argument_list|,
 name|lfptoa
 argument_list|(
 operator|&
 name|tempts
 argument_list|,
-literal|7
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5924,6 +5867,8 @@ operator|*
 operator|)
 operator|&
 name|ss
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5988,8 +5933,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"system uptime:          %d\n"
+literal|"system uptime:          %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6005,8 +5953,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:       %d\n"
+literal|"time since reset:       %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6022,8 +5973,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad stratum in packet:  %d\n"
+literal|"bad stratum in packet:  %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6039,8 +5993,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"old version packets:    %d\n"
+literal|"old version packets:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6056,8 +6013,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"new version packets:    %d\n"
+literal|"new version packets:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6073,8 +6033,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"unknown version number: %d\n"
+literal|"unknown version number: %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6090,8 +6053,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad packet length:      %d\n"
+literal|"bad packet length:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6107,8 +6073,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packets processed:      %d\n"
+literal|"packets processed:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6124,8 +6093,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad authentication:     %d\n"
+literal|"bad authentication:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6152,8 +6124,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"limitation rejects:     %d\n"
+literal|"limitation rejects:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ss
@@ -6239,6 +6214,8 @@ operator|*
 operator|)
 operator|&
 name|io
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6285,8 +6262,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:      %d\n"
+literal|"time since reset:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6302,11 +6282,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"total receive buffers: %d\n"
+literal|"receive buffers:      %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|io
@@ -6322,11 +6299,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"free receive buffers:  %d\n"
+literal|"free receive buffers: %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|io
@@ -6342,11 +6316,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"used receive buffers:  %d\n"
+literal|"used receive buffers: %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|io
@@ -6362,11 +6333,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"low water refills:     %d\n"
+literal|"low water refills:    %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|io
@@ -6382,8 +6350,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"dropped packets:       %d\n"
+literal|"dropped packets:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6399,8 +6370,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"ignored packets:       %d\n"
+literal|"ignored packets:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6416,8 +6390,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"received packets:      %d\n"
+literal|"received packets:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6433,8 +6410,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packets sent:          %d\n"
+literal|"packets sent:         %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6450,8 +6430,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packets not sent:      %d\n"
+literal|"packets not sent:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6467,8 +6450,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"interrupts handled:    %d\n"
+literal|"interrupts handled:   %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6484,8 +6470,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"received by interrupt: %d\n"
+literal|"received by int:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|io
@@ -6574,6 +6563,8 @@ operator|*
 operator|)
 operator|&
 name|mem
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6620,8 +6611,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:     %d\n"
+literal|"time since reset:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mem
@@ -6639,9 +6633,6 @@ name|fp
 argument_list|,
 literal|"total peer memory:    %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|mem
@@ -6659,9 +6650,6 @@ name|fp
 argument_list|,
 literal|"free peer memory:     %d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ntohs
 argument_list|(
 name|mem
@@ -6677,8 +6665,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"calls to findpeer:    %d\n"
+literal|"calls to findpeer:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mem
@@ -6694,8 +6685,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"new peer allocations: %d\n"
+literal|"new peer allocations: %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mem
@@ -6711,8 +6705,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"peer demobilizations: %d\n"
+literal|"peer demobilizations: %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mem
@@ -6883,6 +6880,8 @@ operator|*
 operator|)
 operator|&
 name|tim
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6929,8 +6928,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:  %d\n"
+literal|"time since reset:  %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|tim
@@ -6946,8 +6948,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"alarms handled:    %d\n"
+literal|"alarms handled:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|tim
@@ -6963,8 +6968,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"alarm overruns:    %d\n"
+literal|"alarm overruns:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|tim
@@ -6980,8 +6988,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"calls to transmit: %d\n"
+literal|"calls to transmit: %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|tim
@@ -7140,7 +7151,7 @@ name|char
 modifier|*
 name|dummy
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|keyid
 decl_stmt|;
 name|u_int
@@ -7276,39 +7287,13 @@ index|]
 operator|.
 name|string
 argument_list|,
-literal|"minpoll"
-argument_list|)
-condition|)
-block|{
-name|flags
-operator||=
-name|CONF_FLAG_MINPOLL
-expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|STREQ
-argument_list|(
-name|pcmd
-operator|->
-name|argval
-index|[
-name|items
-index|]
-operator|.
-name|string
-argument_list|,
 literal|"prefer"
 argument_list|)
 condition|)
-block|{
 name|flags
 operator||=
 name|CONF_FLAG_PREFER
 expr_stmt|;
-block|}
 else|else
 block|{
 operator|(
@@ -7318,7 +7303,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"`%s' not understood\n"
+literal|"%s not understood\n"
 argument_list|,
 name|pcmd
 operator|->
@@ -7334,7 +7319,6 @@ name|res
 operator|++
 expr_stmt|;
 break|break;
-block|}
 block|}
 name|items
 operator|++
@@ -7438,6 +7422,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7582,6 +7568,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -7781,14 +7769,14 @@ index|]
 operator|.
 name|string
 argument_list|,
-literal|"mclient"
+literal|"auth"
 argument_list|)
 condition|)
 name|sys
 operator|.
 name|flags
 operator||=
-name|SYS_FLAG_MCLIENT
+name|SYS_FLAG_AUTHENTICATE
 expr_stmt|;
 elseif|else
 if|if
@@ -7804,14 +7792,83 @@ index|]
 operator|.
 name|string
 argument_list|,
-literal|"auth"
+literal|"pll"
 argument_list|)
 condition|)
 name|sys
 operator|.
 name|flags
 operator||=
-name|SYS_FLAG_AUTHENTICATE
+name|SYS_FLAG_PLL
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|pcmd
+operator|->
+name|argval
+index|[
+name|items
+index|]
+operator|.
+name|string
+argument_list|,
+literal|"pps"
+argument_list|)
+condition|)
+name|sys
+operator|.
+name|flags
+operator||=
+name|SYS_FLAG_PPS
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|pcmd
+operator|->
+name|argval
+index|[
+name|items
+index|]
+operator|.
+name|string
+argument_list|,
+literal|"monitor"
+argument_list|)
+condition|)
+name|sys
+operator|.
+name|flags
+operator||=
+name|SYS_FLAG_MONITOR
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|STREQ
+argument_list|(
+name|pcmd
+operator|->
+name|argval
+index|[
+name|items
+index|]
+operator|.
+name|string
+argument_list|,
+literal|"stats"
+argument_list|)
+condition|)
+name|sys
+operator|.
+name|flags
+operator||=
+name|SYS_FLAG_FILEGEN
 expr_stmt|;
 else|else
 block|{
@@ -7822,7 +7879,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"unknown flag %s\n"
+literal|"Unknown flag %s\n"
 argument_list|,
 name|pcmd
 operator|->
@@ -7884,6 +7941,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8078,7 +8137,7 @@ name|resflags
 modifier|*
 name|rf
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|count
 decl_stmt|;
 name|u_short
@@ -8133,6 +8192,8 @@ operator|*
 operator|)
 operator|&
 name|rl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8199,6 +8260,29 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|rl
+operator|->
+name|mask
+operator|==
+operator|(
+name|U_LONG
+operator|)
+literal|0xffffffff
+operator|)
+condition|)
+name|addr
+operator|=
+name|numtohost
+argument_list|(
+name|rl
+operator|->
+name|addr
+argument_list|)
+expr_stmt|;
+else|else
 name|addr
 operator|=
 name|numtoa
@@ -8405,7 +8489,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-15.15s %-15.15s %9d  %s\n"
+literal|"%-15.15s %-15.15s %9ld  %s\n"
 argument_list|,
 name|addr
 argument_list|,
@@ -8579,10 +8663,10 @@ name|char
 modifier|*
 name|dummy
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|num
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|bit
 decl_stmt|;
 name|int
@@ -8757,7 +8841,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Flag `%s' inappropriate\n"
+literal|"Flag %s inappropriate\n"
 argument_list|,
 name|resflags
 index|[
@@ -8941,6 +9025,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -8990,15 +9076,13 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|struct
-name|info_monitor
+name|char
 modifier|*
-name|ml
+name|struct_star
 decl_stmt|;
 name|struct
-name|old_info_monitor
-modifier|*
-name|oml
+name|in_addr
+name|addr
 decl_stmt|;
 name|int
 name|items
@@ -9009,6 +9093,100 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+name|int
+name|version
+init|=
+operator|-
+literal|1
+decl_stmt|;
+if|if
+condition|(
+name|pcmd
+operator|->
+name|nargs
+operator|>
+literal|0
+condition|)
+block|{
+name|version
+operator|=
+name|pcmd
+operator|->
+name|argval
+index|[
+literal|0
+index|]
+operator|.
+name|ival
+expr_stmt|;
+block|}
+name|res
+operator|=
+name|doquery
+argument_list|(
+name|IMPL_XNTPD
+argument_list|,
+operator|(
+name|version
+operator|==
+literal|1
+operator|||
+name|version
+operator|==
+operator|-
+literal|1
+operator|)
+condition|?
+name|REQ_MON_GETLIST_1
+else|:
+name|REQ_MON_GETLIST
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|items
+argument_list|,
+operator|&
+name|itemsize
+argument_list|,
+operator|&
+name|struct_star
+argument_list|,
+operator|(
+name|version
+operator|<
+literal|0
+operator|)
+condition|?
+operator|(
+literal|1
+operator|<<
+name|INFO_ERR_REQ
+operator|)
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|res
+operator|==
+name|INFO_ERR_REQ
+operator|&&
+name|version
+operator|<
+literal|0
+condition|)
 name|res
 operator|=
 name|doquery
@@ -9035,13 +9213,10 @@ argument_list|,
 operator|&
 name|itemsize
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|ml
+name|struct_star
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9073,10 +9248,22 @@ operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|info_monitor
+name|info_monitor_1
 argument_list|)
 condition|)
 block|{
+name|struct
+name|info_monitor_1
+modifier|*
+name|ml
+init|=
+operator|(
+expr|struct
+name|info_monitor_1
+operator|*
+operator|)
+name|struct_star
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -9084,7 +9271,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"     address          port     count  mode version  lastdrop lasttime firsttime\n"
+literal|"remote address          port local address      count m ver drop   last   first\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -9104,6 +9291,14 @@ operator|>
 literal|0
 condition|)
 block|{
+name|addr
+operator|.
+name|s_addr
+operator|=
+name|ml
+operator|->
+name|daddr
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -9111,7 +9306,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-20.20s %5d %9d %4d   %3d %9u %9u %9u\n"
+literal|"%-22.22s %5d %-15s %8ld %1d %1d %6lu %6lu %7lu\n"
 argument_list|,
 name|nntohost
 argument_list|(
@@ -9127,6 +9322,14 @@ operator|->
 name|port
 argument_list|)
 argument_list|,
+name|inet_ntoa
+argument_list|(
+name|addr
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ml
@@ -9142,6 +9345,9 @@ name|ml
 operator|->
 name|version
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ml
@@ -9149,6 +9355,9 @@ operator|->
 name|lastdrop
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ml
@@ -9156,6 +9365,9 @@ operator|->
 name|lasttime
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ml
@@ -9172,12 +9384,150 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|itemsize
-operator|!=
+operator|==
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|info_monitor
+argument_list|)
+condition|)
+block|{
+name|struct
+name|info_monitor
+modifier|*
+name|ml
+init|=
+operator|(
+expr|struct
+name|info_monitor
+operator|*
+operator|)
+name|struct_star
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"     address               port     count mode ver lastdrop  lasttime firsttime\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"===============================================================================\n"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|items
+operator|>
+literal|0
+condition|)
+block|{
+name|addr
+operator|.
+name|s_addr
+operator|=
+name|ml
+operator|->
+name|lastdrop
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%-25.25s %5d %9ld %4d %2d %9lu %9lu %9lu\n"
+argument_list|,
+name|nntohost
+argument_list|(
+name|ml
+operator|->
+name|addr
+argument_list|)
+argument_list|,
+name|ntohs
+argument_list|(
+name|ml
+operator|->
+name|port
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|ml
+operator|->
+name|count
+argument_list|)
+argument_list|,
+name|ml
+operator|->
+name|mode
+argument_list|,
+name|ml
+operator|->
+name|version
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|ml
+operator|->
+name|lastdrop
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|ml
+operator|->
+name|lasttime
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|ml
+operator|->
+name|firsttime
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ml
+operator|++
+expr_stmt|;
+name|items
+operator|--
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|itemsize
+operator|==
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -9185,29 +9535,18 @@ name|old_info_monitor
 argument_list|)
 condition|)
 block|{
-comment|/* issue warning according to new info_monitor size */
-name|checkitemsize
-argument_list|(
-name|itemsize
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|info_monitor
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+name|struct
+name|old_info_monitor
+modifier|*
 name|oml
-operator|=
+init|=
 operator|(
 expr|struct
 name|old_info_monitor
 operator|*
 operator|)
-name|ml
-expr_stmt|;
+name|struct_star
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -9242,7 +9581,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%-20.20s %5d %9d %4d   %3d %9u %9u\n"
+literal|"%-20.20s %5d %9ld %4d   %3d %9lu %9lu\n"
 argument_list|,
 name|nntohost
 argument_list|(
@@ -9258,6 +9597,9 @@ operator|->
 name|port
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|oml
@@ -9273,6 +9615,9 @@ name|oml
 operator|->
 name|version
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|oml
@@ -9280,6 +9625,9 @@ operator|->
 name|lasttime
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|oml
@@ -9295,6 +9643,21 @@ name|items
 operator|--
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+comment|/* issue warning according to new info_monitor size */
+name|checkitemsize
+argument_list|(
+name|itemsize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|info_monitor
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -9421,6 +9784,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9641,7 +10006,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"Flag `%s' unknown\n"
+literal|"Flag %s unknown\n"
 argument_list|,
 name|pcmd
 operator|->
@@ -9722,6 +10087,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9866,6 +10233,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9955,186 +10324,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"done!\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/*  * dodirty - request the server to do something dirty  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|dodirty
-parameter_list|(
-name|pcmd
-parameter_list|,
-name|fp
-parameter_list|)
-name|struct
-name|parse
-modifier|*
-name|pcmd
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-block|{
-name|int
-name|items
-decl_stmt|;
-name|int
-name|itemsize
-decl_stmt|;
-name|char
-modifier|*
-name|dummy
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-name|res
-operator|=
-name|doquery
-argument_list|(
-name|IMPL_XNTPD
-argument_list|,
-name|REQ_DO_DIRTY_HACK
-argument_list|,
-literal|1
 argument_list|,
 literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|&
-name|items
-argument_list|,
-operator|&
-name|itemsize
-argument_list|,
-operator|&
-name|dummy
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|res
-operator|==
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"done!\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-end_function
-
-begin_comment
-comment|/*  * dontdirty - request the server to not do something dirty  */
-end_comment
-
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|dontdirty
-parameter_list|(
-name|pcmd
-parameter_list|,
-name|fp
-parameter_list|)
-name|struct
-name|parse
-modifier|*
-name|pcmd
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-block|{
-name|int
-name|items
-decl_stmt|;
-name|int
-name|itemsize
-decl_stmt|;
-name|char
-modifier|*
-name|dummy
-decl_stmt|;
-name|int
-name|res
-decl_stmt|;
-name|res
-operator|=
-name|doquery
-argument_list|(
-name|IMPL_XNTPD
-argument_list|,
-name|REQ_DONT_DIRTY_HACK
-argument_list|,
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|,
-operator|&
-name|items
-argument_list|,
-operator|&
-name|itemsize
-argument_list|,
-operator|&
-name|dummy
 argument_list|)
 expr_stmt|;
 if|if
@@ -10255,7 +10446,7 @@ name|int
 name|req
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|keyids
 index|[
 name|MAXARGS
@@ -10330,7 +10521,7 @@ name|ritems
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 argument_list|,
 operator|(
@@ -10347,6 +10538,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10443,6 +10636,8 @@ operator|*
 operator|)
 operator|&
 name|ia
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10489,8 +10684,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:       %d\n"
+literal|"time since reset:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ia
@@ -10506,8 +10704,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"key lookups:            %d\n"
+literal|"key lookups:          %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ia
@@ -10523,8 +10724,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"keys not found:         %d\n"
+literal|"keys not found:       %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ia
@@ -10540,8 +10744,31 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"encryptions:            %d\n"
+literal|"uncached keys:        %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|ia
+operator|->
+name|keyuncached
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"encryptions:          %ld\n"
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ia
@@ -10557,47 +10784,16 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"decryptions:            %d\n"
+literal|"decryptions:          %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ia
 operator|->
 name|decryptions
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"successful decryptions: %d\n"
-argument_list|,
-name|ntohl
-argument_list|(
-name|ia
-operator|->
-name|decryptions
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"uncached keys:          %d\n"
-argument_list|,
-name|ntohl
-argument_list|(
-name|ia
-operator|->
-name|keyuncached
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -10681,6 +10877,8 @@ operator|*
 operator|)
 operator|&
 name|it
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10857,12 +11055,18 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"set for %d secs, last set %d secs ago\n"
+literal|"set for %ld secs, last set %ld secs ago\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|it
 operator|->
 name|origtime
 argument_list|,
+operator|(
+name|long
+operator|)
 name|it
 operator|->
 name|settime
@@ -10875,12 +11079,15 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"sequence %d, number of resets %d\n"
+literal|"sequence %d, number of resets %ld\n"
 argument_list|,
 name|it
 operator|->
 name|sequence
 argument_list|,
+operator|(
+name|long
+operator|)
 name|it
 operator|->
 name|resets
@@ -11126,6 +11333,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11246,7 +11455,7 @@ name|int
 name|req
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|key
 decl_stmt|;
 name|int
@@ -11290,7 +11499,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 argument_list|,
 operator|(
@@ -11308,6 +11517,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11404,6 +11615,8 @@ operator|*
 operator|)
 operator|&
 name|ic
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11450,8 +11663,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time since reset:       %d\n"
+literal|"time since reset:       %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11467,8 +11683,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"requests received:      %d\n"
+literal|"requests received:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11484,8 +11703,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"responses sent:         %d\n"
+literal|"responses sent:         %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11501,8 +11723,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"fragments sent:         %d\n"
+literal|"fragments sent:         %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11518,8 +11743,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"async messages sent:    %d\n"
+literal|"async messages sent:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11535,8 +11763,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"error msgs sent:        %d\n"
+literal|"error msgs sent:        %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11552,8 +11783,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"total bad pkts:         %d\n"
+literal|"total bad pkts:         %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11569,8 +11803,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"packet too short:       %d\n"
+literal|"packet too short:       %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11586,8 +11823,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"response on input:      %d\n"
+literal|"response on input:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11603,8 +11843,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"fragment on input:      %d\n"
+literal|"fragment on input:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11620,8 +11863,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"error set on input:     %d\n"
+literal|"error set on input:     %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11637,8 +11883,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad offset on input:    %d\n"
+literal|"bad offset on input:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11654,8 +11903,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad version packets:    %d\n"
+literal|"bad version packets:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11671,8 +11923,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"data in pkt too short:  %d\n"
+literal|"data in pkt too short:  %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11688,8 +11943,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"unknown op codes:       %d\n"
+literal|"unknown op codes:       %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ic
@@ -11818,6 +12076,8 @@ operator|*
 operator|)
 operator|&
 name|il
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11976,8 +12236,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"time to next leap interrupt: %d seconds\n"
+literal|"time to next leap interrupt: %ld s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12023,8 +12286,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"calls to leap process: %u\n"
+literal|"calls to leap process: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12040,8 +12306,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap more than month away: %u\n"
+literal|"leap more than month away: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12057,8 +12326,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap less than month away: %u\n"
+literal|"leap less than month away: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12074,8 +12346,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap less than day away:   %u\n"
+literal|"leap less than day away:   %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12091,8 +12366,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap in less than 2 hours: %u\n"
+literal|"leap in less than 2 hours: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12108,8 +12386,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"leap happened:             %u\n"
+literal|"leap happened:             %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|il
@@ -12156,7 +12437,7 @@ modifier|*
 name|cl
 decl_stmt|;
 comment|/* 8 is the maximum number of clocks which will fit in a packet */
-name|U_LONG
+name|u_long
 name|clist
 index|[
 name|min
@@ -12186,6 +12467,9 @@ name|struct
 name|clktype
 modifier|*
 name|clk
+decl_stmt|;
+name|u_long
+name|ltemp
 decl_stmt|;
 for|for
 control|(
@@ -12257,6 +12541,8 @@ operator|*
 operator|)
 operator|&
 name|cl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -12362,7 +12648,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"clock type:   %s\n"
+literal|"clock type:           %s\n"
 argument_list|,
 name|clk
 operator|->
@@ -12377,7 +12663,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"clock type:   unknown type (%d)\n"
+literal|"clock type:           unknown type (%d)\n"
 argument_list|,
 name|cl
 operator|->
@@ -12419,8 +12705,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"number of polls:      %u\n"
+literal|"number of polls:      %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12436,8 +12725,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"no response to poll:  %u\n"
+literal|"no response to poll:  %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12453,8 +12745,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad format responses: %u\n"
+literal|"bad format responses: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12470,8 +12765,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"bad data responses:   %u\n"
+literal|"bad data responses:   %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12487,8 +12785,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"running time:         %u\n"
+literal|"running time:         %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12522,7 +12823,7 @@ argument_list|(
 operator|&
 name|ts
 argument_list|,
-literal|7
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12551,7 +12852,7 @@ argument_list|(
 operator|&
 name|ts
 argument_list|,
-literal|7
+literal|6
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -12562,8 +12863,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"fudge value 1:        %ld\n"
+literal|"stratum:              %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|cl
@@ -12572,6 +12876,15 @@ name|fudgeval1
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ltemp
+operator|=
+name|ntohl
+argument_list|(
+name|cl
+operator|->
+name|fudgeval2
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -12579,14 +12892,14 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"fudge value 2:        %ld\n"
+literal|"reference ID:         %s\n"
 argument_list|,
-name|ntohl
-argument_list|(
-name|cl
-operator|->
-name|fudgeval2
-argument_list|)
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ltemp
 argument_list|)
 expr_stmt|;
 operator|(
@@ -12669,7 +12982,7 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
-name|LONG
+name|long
 name|val
 decl_stmt|;
 name|int
@@ -12756,7 +13069,7 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|ts
@@ -12818,7 +13131,7 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|ts
@@ -13021,7 +13334,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"What fudge is `%s'?\n"
+literal|"What fudge is %s?\n"
 argument_list|,
 name|pcmd
 operator|->
@@ -13047,7 +13360,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Can't decode the value `%s'\n"
+literal|"Unknown fudge parameter %s\n"
 argument_list|,
 name|pcmd
 operator|->
@@ -13094,6 +13407,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -13148,7 +13463,7 @@ name|int
 name|n
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|s
 decl_stmt|;
 name|struct
@@ -13157,7 +13472,7 @@ modifier|*
 name|cl
 decl_stmt|;
 comment|/* 8 is the maximum number of clocks which will fit in a packet */
-name|U_LONG
+name|u_long
 name|clist
 index|[
 name|min
@@ -13167,6 +13482,9 @@ argument_list|,
 literal|8
 argument_list|)
 index|]
+decl_stmt|;
+name|u_long
+name|ltemp
 decl_stmt|;
 name|int
 name|qitems
@@ -13253,6 +13571,8 @@ operator|*
 operator|)
 operator|&
 name|cl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -13340,9 +13660,6 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-operator|(
-name|U_LONG
-operator|)
 name|ntohs
 argument_list|(
 name|cl
@@ -13374,6 +13691,25 @@ name|i
 operator|++
 control|)
 block|{
+name|ltemp
+operator|=
+operator|(
+name|u_long
+operator|)
+name|ntohl
+argument_list|(
+name|cl
+operator|->
+name|values
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|ltemp
+operator|&=
+literal|0xffffffff
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -13404,7 +13740,6 @@ operator|<<
 name|i
 operator|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -13414,23 +13749,10 @@ name|fp
 argument_list|,
 literal|"%12ld"
 argument_list|,
-operator|(
-name|LONG
-operator|)
-name|ntohl
-argument_list|(
-name|cl
-operator|->
-name|values
-index|[
-name|i
-index|]
-argument_list|)
+name|ltemp
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|(
 name|void
 operator|)
@@ -13440,18 +13762,9 @@ name|fp
 argument_list|,
 literal|"%12lu"
 argument_list|,
-name|ntohl
-argument_list|(
-name|cl
-operator|->
-name|values
-index|[
-name|i
-index|]
-argument_list|)
+name|ltemp
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 operator|(
 name|void
@@ -13562,7 +13875,7 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-name|HTONL_FP
+name|NTOHL_FP
 argument_list|(
 operator|&
 name|cl
@@ -13692,7 +14005,7 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|LONG
+name|long
 name|precision
 decl_stmt|;
 name|int
@@ -13736,7 +14049,7 @@ literal|1
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|LONG
+name|long
 argument_list|)
 argument_list|,
 operator|(
@@ -13754,6 +14067,8 @@ name|itemsize
 argument_list|,
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -13846,6 +14161,8 @@ operator|*
 operator|)
 operator|&
 name|ik
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -13893,8 +14210,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"pll offset:           %d us\n"
+literal|"pll offset:           %ld us\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -13935,8 +14255,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"maximum error:        %d us\n"
+literal|"maximum error:        %ld us\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -13952,8 +14275,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"estimated error:      %d us\n"
+literal|"estimated error:      %ld us\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -13988,8 +14314,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"pll time constant:    %d\n"
+literal|"pll time constant:    %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14005,8 +14334,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"precision:            %d us\n"
+literal|"precision:            %ld us\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14107,8 +14439,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"pps jitter:           %d us\n"
+literal|"pps jitter:           %ld us\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14143,8 +14478,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"calibration cycles:   %d\n"
+literal|"calibration cycles:   %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14160,8 +14498,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"jitter exceeded:      %d\n"
+literal|"jitter exceeded:      %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14177,8 +14518,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"stability exceeded:   %d\n"
+literal|"stability exceeded:   %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
@@ -14194,8 +14538,11 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"calibration errors:   %d\n"
+literal|"calibration errors:   %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ik
