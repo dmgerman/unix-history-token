@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	pccard.c - Interface code for PC-CARD controllers.  *  *	June 1995, Andrew McRae (andrew@mega.com.au)  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pccard.c,v 1.79 1999/05/30 16:53:28 phk Exp $  */
+comment|/*  *	pccard.c - Interface code for PC-CARD controllers.  *  *	June 1995, Andrew McRae (andrew@mega.com.au)  *-------------------------------------------------------------------------  *  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pccard.c,v 1.80 1999/05/31 11:28:48 phk Exp $  */
 end_comment
 
 begin_include
@@ -2507,6 +2507,7 @@ name|devi
 operator|->
 name|next
 control|)
+block|{
 if|if
 condition|(
 name|devi
@@ -2532,17 +2533,35 @@ name|devi
 operator|->
 name|running
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pccard %s%d: still running\n"
+argument_list|,
+name|devi
+operator|->
+name|drv
+operator|->
+name|name
+argument_list|,
+name|desc
+operator|->
+name|unit
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 name|remove_device
 argument_list|(
 name|devi
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 comment|/* 	 *	If an interrupt mask has been given, then check it 	 *	against the slot interrupt (if one has been allocated). 	 */
 if|if
@@ -2572,11 +2591,29 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pccard: PIOCSDRV requested irq (mask 0x%x) is "
+literal|"not free (available mask 0x%x)\n"
+argument_list|,
+name|desc
+operator|->
+name|irqmask
+argument_list|,
+name|slt
+operator|->
+name|ctrl
+operator|->
+name|irqs
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|slt
@@ -2602,11 +2639,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pccard: PIOSCDRIV irq %d not in "
+literal|"available mask 0x%x\n"
+argument_list|,
+name|slt
+operator|->
+name|irq
+argument_list|,
+name|desc
+operator|->
+name|irqmask
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|slt
 operator|->
 name|irqref
@@ -2654,11 +2707,20 @@ name|irq
 operator|<
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pccard_alloc_intr failed for irq %d\n"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|slt
 operator|->
 name|irq
@@ -2895,11 +2957,32 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"pccard %s%d: Enable failed %d\n"
+argument_list|,
+name|devi
+operator|->
+name|drv
+operator|->
+name|name
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
 name|remove_device
 argument_list|(
 name|devi
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|err
@@ -4166,7 +4249,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|EINVAL
+name|ENOTTY
 operator|)
 return|;
 comment|/* 	 * Get slot state. 	 */

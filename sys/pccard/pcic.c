@@ -3454,7 +3454,7 @@ block|{
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|ENOTTY
 operator|)
 return|;
 comment|/* 	 * Get/set PCIC registers 	 */

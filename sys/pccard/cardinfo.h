@@ -415,6 +415,10 @@ name|iobase
 decl_stmt|;
 comment|/* base of I/O ports */
 name|int
+name|iosize
+decl_stmt|;
+comment|/* Length of I/O ports */
+name|int
 name|irqmask
 decl_stmt|;
 comment|/* Interrupt number(s) to allocate */
@@ -432,6 +436,13 @@ comment|/* For any random info */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DEV_DESC_HAS_SIZE
+value|1
+end_define
 
 begin_struct
 struct|struct
