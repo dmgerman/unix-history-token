@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.2 (Berkeley) %G%"
+literal|"@(#)tio.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -35,12 +41,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -48,14 +48,6 @@ begin_function_decl
 specifier|extern
 name|int
 name|pkfail
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -108,23 +100,11 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|jmp_buf
 name|Failbuf
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|tnullf
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-name|SUCCESS
-return|;
-block|}
-end_block
 
 begin_macro
 name|twrmsg
@@ -605,6 +585,10 @@ name|ret
 operator|=
 name|twrblk
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|bufr
 argument_list|,
@@ -662,6 +646,10 @@ name|ret
 operator|=
 name|twrblk
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|bufr
 argument_list|,
@@ -914,6 +902,10 @@ name|len
 operator|=
 name|trdblk
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Nbytes
 argument_list|,

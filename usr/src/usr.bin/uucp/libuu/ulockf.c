@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ulockf.c	5.3 (Berkeley) %G%"
+literal|"@(#)ulockf.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,14 +32,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* File mode for lock files */
 end_comment
@@ -52,7 +44,11 @@ value|0444
 end_define
 
 begin_comment
-comment|/*  *	ulockf  -  this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  0  |  FAIL  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	this routine will create a lock file (file).  *	If one already exists, the create time is checked for  *	older than the age time (atime).  *	If it is older, an attempt will be made to unlink it  *	and create a new one.  *  *	return codes:  SUCCESS  |  FAIL  */
 end_comment
 
 begin_macro
@@ -411,7 +407,6 @@ index|]
 operator|=
 name|p
 expr_stmt|;
-return|return;
 block|}
 end_block
 
@@ -614,6 +609,12 @@ argument_list|,
 argument|name
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|pid
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char

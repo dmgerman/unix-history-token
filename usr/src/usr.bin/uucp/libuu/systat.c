@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)systat.c	5.3 (Berkeley) %G%"
+literal|"@(#)systat.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,14 +26,6 @@ directive|include
 file|"uucp.h"
 end_include
 
-begin_function_decl
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -43,7 +35,7 @@ name|f
 parameter_list|,
 name|n
 parameter_list|)
-value|sprintf(f, "%s/%s/%.7s", Spool, "STST", n)
+value|sprintf(f, "%s/%s/%s", Spool, "STST", n)
 end_define
 
 begin_define
@@ -52,6 +44,10 @@ directive|define
 name|S_SIZE
 value|100
 end_define
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	make system status entry  *	return codes:  none  */
@@ -360,7 +356,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	callok(name)	check system status for call  *	char *name;  *  *	return codes  0 - ok |>0 system status  */
+comment|/*  *	check system status for call  *  *	return codes  0 - ok |>0 system status  */
 end_comment
 
 begin_macro
