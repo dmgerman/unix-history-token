@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -409,6 +415,16 @@ name|timezone
 operator|*
 operator|)
 literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 if|if
