@@ -45,10 +45,10 @@ name|__STDC__
 operator|)
 undef|#
 directive|undef
-name|__P
+name|__GNU_P
 define|#
 directive|define
-name|__P
+name|__GNU_P
 parameter_list|(
 name|args
 parameter_list|)
@@ -58,10 +58,10 @@ directive|else
 comment|/* Not C++ or ANSI C.  */
 undef|#
 directive|undef
-name|__P
+name|__GNU_P
 define|#
 directive|define
-name|__P
+name|__GNU_P
 parameter_list|(
 name|args
 parameter_list|)
@@ -128,7 +128,7 @@ comment|/* Match STRING against the filename pattern PATTERN,    returning zero 
 specifier|extern
 name|int
 name|fnmatch
-name|__P
+name|__GNU_P
 argument_list|(
 operator|(
 specifier|const
