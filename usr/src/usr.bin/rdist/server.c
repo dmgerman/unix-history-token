@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)server.c	4.22 (Berkeley) 84/12/07"
+literal|"@(#)server.c	4.23 (Berkeley) 85/02/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -4081,7 +4081,7 @@ literal|"%s:%s: %s\n"
 argument_list|,
 name|host
 argument_list|,
-name|cp
+name|new
 argument_list|,
 name|sys_errlist
 index|[
