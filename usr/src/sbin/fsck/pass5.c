@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.10 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -522,6 +522,23 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+name|j
+operator|=
+name|blknum
+argument_list|(
+name|fs
+argument_list|,
+name|fs
+operator|->
+name|fs_size
+operator|+
+name|fs
+operator|->
+name|fs_frag
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -532,14 +549,7 @@ name|fs_size
 init|;
 name|i
 operator|<
-name|fragroundup
-argument_list|(
-name|fs
-argument_list|,
-name|fs
-operator|->
-name|fs_size
-argument_list|)
+name|j
 condition|;
 name|i
 operator|++
