@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Quite extensively rewritten by Poul-Henning Kamp of the FreeBSD  * project, to make these variables more userfriendly.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sysctl.c	8.4 (Berkeley) 4/14/94  * $Id: kern_mib.c,v 1.18 1999/01/26 07:37:11 dillon Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * Quite extensively rewritten by Poul-Henning Kamp of the FreeBSD  * project, to make these variables more userfriendly.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_sysctl.c	8.4 (Berkeley) 4/14/94  * $Id: kern_mib.c,v 1.19 1999/04/28 11:36:56 phk Exp $  */
 end_comment
 
 begin_include
@@ -258,7 +258,7 @@ name|osrelease
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Operating system type"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -278,7 +278,7 @@ literal|0
 argument_list|,
 name|BSD
 argument_list|,
-literal|""
+literal|"Operating system revision"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -298,7 +298,7 @@ name|version
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Kernel version"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -318,7 +318,7 @@ name|ostype
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Operating system type"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -346,7 +346,7 @@ name|osreldate
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Operating system release date"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -367,7 +367,7 @@ name|maxproc
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of processes"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,7 +388,7 @@ name|maxprocperuid
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum processes allowed per userid"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -408,7 +408,7 @@ literal|0
 argument_list|,
 name|ARG_MAX
 argument_list|,
-literal|""
+literal|"Maximum bytes of argument to execve(2)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -428,7 +428,7 @@ literal|0
 argument_list|,
 name|_KPOSIX_VERSION
 argument_list|,
-literal|""
+literal|"Version of POSIX attempting to comply to"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -448,7 +448,7 @@ literal|0
 argument_list|,
 name|NGROUPS_MAX
 argument_list|,
-literal|""
+literal|"Maximum number of groups a user can belong to"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -468,7 +468,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-literal|""
+literal|"Whether job control is available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -494,7 +494,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-literal|""
+literal|"Whether saved set-group/user ID is available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -519,7 +519,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether saved set-group/user ID is available"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -560,7 +560,7 @@ argument_list|,
 sizeof|sizeof
 name|kernelname
 argument_list|,
-literal|""
+literal|"Name of kernel file booted"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -587,7 +587,7 @@ name|mp_ncpus
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Number of active CPUs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -612,7 +612,7 @@ literal|0
 argument_list|,
 literal|1
 argument_list|,
-literal|""
+literal|"Number of active CPUs"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -637,7 +637,7 @@ literal|0
 argument_list|,
 name|BYTE_ORDER
 argument_list|,
-literal|""
+literal|"System byte order"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -657,7 +657,7 @@ literal|0
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-literal|""
+literal|"System memory page size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -687,7 +687,7 @@ name|machine_arch
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"System architecture"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -790,7 +790,7 @@ name|sysctl_hostname
 argument_list|,
 literal|"A"
 argument_list|,
-literal|""
+literal|"Hostname"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -891,7 +891,7 @@ name|sysctl_kern_securelvl
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Current secure level"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -924,7 +924,7 @@ argument_list|(
 name|domainname
 argument_list|)
 argument_list|,
-literal|""
+literal|"Name of the current YP/NIS domain"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -955,7 +955,7 @@ name|hostid
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Host ID"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -979,7 +979,7 @@ literal|""
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"PATH that finds all the standard utilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -999,7 +999,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max ibase/obase values in bc(1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1019,7 +1019,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max array size in bc(1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1039,7 +1039,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max scale value in bc(1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1059,7 +1059,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max string length in bc(1)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1079,7 +1079,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of weights assigned to an LC_COLLATE locale entry"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1119,7 +1119,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max length (bytes) of a text-processing utility's input line"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1139,7 +1139,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Maximum number of repeats of a regexp permitted"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1159,7 +1159,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"The version of POSIX 1003.2 with which the system attempts to comply"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1179,7 +1179,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether C development supports the C bindings option"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1199,7 +1199,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports the C development utilities option"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1239,7 +1239,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports FORTRAN development utilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1259,7 +1259,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports FORTRAN runtime utilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1279,7 +1279,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports creation of locales"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1299,7 +1299,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports software development utilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1319,7 +1319,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Whether system supports the user portability utilities"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1339,7 +1339,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Min Maximum number of streams a process may have open at one time"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1359,7 +1359,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Min Maximum number of types supported for timezone names"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.109 1999/04/24 13:23:48 dt Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  * Copyright (c) 1996 Alex Nash  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.110 1999/04/26 14:57:24 luigi Exp $  */
 end_comment
 
 begin_comment
@@ -387,7 +387,7 @@ name|fw_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable printing of debug ip_fw statements"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -408,7 +408,7 @@ name|fw_one_pass
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Only do a single pass through ipfw rules when using divert(4)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -429,7 +429,7 @@ name|fw_verbose
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Log matches to ipfw rules"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -450,7 +450,7 @@ name|fw_verbose_limit
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Set upper limit of matches of ipfw rules logged"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
