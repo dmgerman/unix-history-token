@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termcap.c	4.2 (Berkeley) %G%"
+literal|"@(#)termcap.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,7 +169,8 @@ name|bp
 expr_stmt|;
 name|tf
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
@@ -266,7 +267,7 @@ block|}
 if|if
 condition|(
 name|tf
-operator|==
+operator|<
 literal|0
 condition|)
 name|tf
@@ -628,11 +629,18 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
+name|hopcount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* unwind recursion */
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 for|for
 control|(
 name|q
@@ -702,6 +710,11 @@ name|tbuf
 operator|=
 name|holdtbuf
 expr_stmt|;
+name|hopcount
+operator|=
+literal|0
+expr_stmt|;
+comment|/* unwind recursion */
 return|return
 operator|(
 literal|1
