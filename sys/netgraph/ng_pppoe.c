@@ -3,6 +3,35 @@ begin_comment
 comment|/*  * ng_pppoe.c  *  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *   * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *   * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Author: Julian Elischer<julian@whistle.com>  *  * $FreeBSD$  * $Whistle: ng_pppoe.c,v 1.7 1999/10/16 10:16:43 julian Exp $  */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|AAA
+value|printf("pppoe: %s\n", __FUNCTION__ );
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AAA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -268,26 +297,6 @@ block|,
 comment|/* [Both] Connection established, Data received */
 name|PPPOE_DEAD
 comment|/* [Both] */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Events for the state machine  */
-end_comment
-
-begin_enum
-enum|enum
-name|event
-block|{
-name|PPPOE_TIMEOUT
-block|,
-comment|/* It's time to do something */
-name|PPPOE_PACKET
-block|,
-comment|/* a packet has been received. */
-name|PPPOE_CLOSE
-comment|/* start shutdown processing */
 block|}
 enum|;
 end_enum
@@ -647,13 +656,14 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+name|AAA
 name|restart
-label|:
+range|:
 name|val
 operator|=
 name|pppoe_sid
 operator|++
-expr_stmt|;
+decl_stmt|;
 comment|/* 	 * Spec says 0xFFFF is reserved. 	 * Also don't use 0x0000 	 */
 if|if
 condition|(
@@ -828,6 +838,7 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
+name|AAA
 while|while
 condition|(
 operator|(
@@ -920,6 +931,7 @@ name|sessp
 name|sp
 parameter_list|)
 block|{
+name|AAA
 if|if
 condition|(
 name|sp
@@ -967,6 +979,7 @@ decl_stmt|;
 name|negp
 name|neg
 decl_stmt|;
+name|AAA
 if|if
 condition|(
 operator|(
@@ -1070,6 +1083,7 @@ name|length
 init|=
 literal|0
 decl_stmt|;
+name|AAA
 if|if
 condition|(
 operator|(
@@ -1086,7 +1100,7 @@ operator|->
 name|neg
 operator|->
 name|m
-operator|=
+operator|==
 name|NULL
 operator|)
 condition|)
@@ -1323,13 +1337,17 @@ decl_stmt|;
 name|hook_p
 name|hook
 decl_stmt|;
+name|AAA
 name|LIST_FOREACH
 argument_list|(
-argument|hook
+name|hook
 argument_list|,
-argument|&node->hooks
+operator|&
+name|node
+operator|->
+name|hooks
 argument_list|,
-argument|hooks
+name|hooks
 argument_list|)
 block|{
 comment|/* skip any hook that is debug or ethernet */
@@ -1510,13 +1528,17 @@ operator|.
 name|sid
 decl_stmt|;
 comment|/* 	 * find matching peer/session combination. 	 */
+name|AAA
 name|LIST_FOREACH
 argument_list|(
-argument|hook
+name|hook
 argument_list|,
-argument|&node->hooks
+operator|&
+name|node
+operator|->
+name|hooks
 argument_list|,
-argument|hooks
+name|hooks
 argument_list|)
 block|{
 comment|/* don't check special hooks */
@@ -1646,6 +1668,7 @@ name|union
 name|uniq
 name|uniq
 decl_stmt|;
+name|AAA
 name|bcopy
 argument_list|(
 name|tag
@@ -1662,7 +1685,7 @@ name|void
 operator|*
 argument_list|)
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 comment|/* cycle through all known hooks */
 name|LIST_FOREACH
 argument_list|(
@@ -1743,6 +1766,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|AAA
 comment|/* Initialize private descriptor */
 name|MALLOC
 argument_list|(
@@ -1760,7 +1784,7 @@ name|M_NETGRAPH
 argument_list|,
 name|M_WAITOK
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|privdata
@@ -1869,6 +1893,7 @@ decl_stmt|;
 name|sessp
 name|sp
 decl_stmt|;
+name|AAA
 if|if
 condition|(
 name|strcmp
@@ -1982,16 +2007,6 @@ name|hook
 operator|=
 name|hook
 expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sp
-operator|->
-name|neg
-operator|->
-name|timeout_handle
-argument_list|)
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2071,6 +2086,7 @@ name|neg
 init|=
 name|NULL
 decl_stmt|;
+name|AAA
 comment|/* Deal with message according to cookie and command */
 switch|switch
 condition|(
@@ -2370,6 +2386,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"pppoe: Session out of mbufs\n"
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|neg
@@ -2417,6 +2438,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"pppoe: Session out of mcls\n"
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|neg
@@ -2442,6 +2468,14 @@ operator|->
 name|neg
 operator|=
 name|neg
+expr_stmt|;
+name|callout_handle_init
+argument_list|(
+operator|&
+name|neg
+operator|->
+name|timeout_handle
+argument_list|)
 expr_stmt|;
 name|neg
 operator|->
@@ -2649,6 +2683,13 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ourmsg
+operator|->
+name|data_len
+condition|)
+block|{
 name|bcopy
 argument_list|(
 name|ourmsg
@@ -2666,6 +2707,7 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+block|}
 name|neg
 operator|->
 name|service_len
@@ -2673,18 +2715,6 @@ operator|=
 name|ourmsg
 operator|->
 name|data_len
-expr_stmt|;
-name|neg
-operator|->
-name|pkt
-operator|->
-name|pkt_header
-operator|.
-name|ph
-operator|.
-name|code
-operator|=
-name|PADI_CODE
 expr_stmt|;
 name|pppoe_start
 argument_list|(
@@ -2695,7 +2725,7 @@ break|break;
 case|case
 name|NGM_PPPOE_LISTEN
 case|:
-comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Install the service matching string. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the hook to 'LISTENING' 			 */
+comment|/* 			 * Check the hook exists and is Uninitialised. 			 * Install the service matching string. 			 * Store the originator of this message so we can send 			 * a success of fail message to them later. 			 * Move the hook to 'LISTENING'  			 */
 name|neg
 operator|->
 name|service
@@ -2724,6 +2754,13 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ourmsg
+operator|->
+name|data_len
+condition|)
+block|{
 name|bcopy
 argument_list|(
 name|ourmsg
@@ -2741,6 +2778,7 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+block|}
 name|neg
 operator|->
 name|service_len
@@ -2801,6 +2839,13 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ourmsg
+operator|->
+name|data_len
+condition|)
+block|{
 name|bcopy
 argument_list|(
 name|ourmsg
@@ -2818,6 +2863,7 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+block|}
 name|neg
 operator|->
 name|ac_name_len
@@ -2901,6 +2947,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Start a client into the first state. A separate function because  * it can be needed if the negotiation times out.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -2924,11 +2974,39 @@ block|}
 name|uniqtag
 struct|;
 comment|/*  	 * kick the state machine into starting up 	 */
+name|AAA
 name|sp
 operator|->
 name|state
-operator|=
+init|=
 name|PPPOE_SINIT
+decl_stmt|;
+comment|/* reset the packet header to broadcast */
+name|sp
+operator|->
+name|neg
+operator|->
+name|pkt
+operator|->
+name|pkt_header
+operator|.
+name|eh
+operator|=
+name|eh_prototype
+expr_stmt|;
+name|sp
+operator|->
+name|neg
+operator|->
+name|pkt
+operator|->
+name|pkt_header
+operator|.
+name|ph
+operator|.
+name|code
+operator|=
+name|PADI_CODE
 expr_stmt|;
 name|uniqtag
 operator|.
@@ -3102,6 +3180,7 @@ name|neg
 init|=
 name|NULL
 decl_stmt|;
+name|AAA
 if|if
 condition|(
 name|hook
@@ -3148,6 +3227,16 @@ name|ethernet_hook
 condition|)
 block|{
 comment|/* 		 * Incoming data.  		 * Dig out various fields from the packet. 		 * use them to decide where to send it. 		 */
+name|printf
+argument_list|(
+literal|"got packet\n"
+argument_list|)
+expr_stmt|;
+name|LEAVE
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|privp
 operator|->
 name|packets_in
@@ -4435,6 +4524,31 @@ name|ph
 operator|.
 name|code
 expr_stmt|;
+if|if
+condition|(
+name|code
+operator|!=
+name|PADI_CODE
+condition|)
+block|{
+name|LEAVE
+argument_list|(
+name|EINVAL
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
+name|untimeout
+argument_list|(
+name|pppoe_ticker
+argument_list|,
+name|hook
+argument_list|,
+name|neg
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
 comment|/* 			 * This is the first time we hear 			 * from the client, so note it's 			 * unicast address, replacing the 			 * broadcast address . 			 */
 name|bcopy
 argument_list|(
@@ -4651,6 +4765,7 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+name|AAA
 name|node
 operator|->
 name|flags
@@ -4747,6 +4862,7 @@ decl_stmt|;
 name|sessp
 name|sp
 decl_stmt|;
+name|AAA
 if|if
 condition|(
 name|hook
@@ -4811,6 +4927,13 @@ name|NGM_PPPOE_CLOSE
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|neg
+condition|)
+block|{
 name|untimeout
 argument_list|(
 name|pppoe_ticker
@@ -4824,12 +4947,45 @@ operator|->
 name|timeout_handle
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|neg
+operator|->
+name|m
+condition|)
+name|m_freem
+argument_list|(
+name|sp
+operator|->
+name|neg
+operator|->
+name|m
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|sp
+operator|->
+name|neg
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
+block|}
 name|FREE
 argument_list|(
 name|sp
 argument_list|,
 name|M_NETGRAPH
 argument_list|)
+expr_stmt|;
+name|hook
+operator|->
+name|private
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -4918,6 +5074,7 @@ name|dummy
 init|=
 name|NULL
 decl_stmt|;
+name|AAA
 switch|switch
 condition|(
 name|sp
@@ -5094,6 +5251,7 @@ name|dummy
 init|=
 name|NULL
 decl_stmt|;
+name|AAA
 switch|switch
 condition|(
 name|sp
@@ -5306,6 +5464,7 @@ literal|0
 index|]
 decl_stmt|;
 comment|/* 	 * Keep processing tags while a tag header will still fit. 	 */
+name|AAA
 while|while
 condition|(
 operator|(
@@ -5446,6 +5605,7 @@ name|ngPPPoE_sts
 modifier|*
 name|sts
 decl_stmt|;
+name|AAA
 name|NG_MKMESSAGE
 argument_list|(
 name|msg
@@ -5462,7 +5622,7 @@ argument_list|)
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|sts
 operator|=
 operator|(
