@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)curses.c	5.5 (Berkeley) %G%"
+literal|"@(#)curses.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ begin_decl_stmt
 name|int
 name|_tty_ch
 init|=
-literal|1
+literal|0
 decl_stmt|,
 comment|/* file channel which is a tty		*/
 name|LINES

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initscr.c	5.3 (Berkeley) %G%"
+literal|"@(#)initscr.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,9 +68,6 @@ name|int
 name|tstp
 parameter_list|()
 function_decl|;
-name|int
-name|nfd
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -94,27 +91,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-for|for
-control|(
-name|_tty_ch
-operator|=
-literal|0
-init|;
-name|_tty_ch
-operator|<
-name|nfd
-condition|;
-name|_tty_ch
-operator|++
-control|)
-if|if
-condition|(
-name|isatty
-argument_list|(
-name|_tty_ch
-argument_list|)
-condition|)
-break|break;
 name|gettmode
 argument_list|()
 expr_stmt|;
