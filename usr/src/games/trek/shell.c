@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)shell.c	4.1	(Berkeley)	%G%"
+literal|"@(#)shell.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sh"
+literal|"/bin/csh"
 argument_list|,
 literal|"-"
 argument_list|,
@@ -78,7 +78,7 @@ argument_list|)
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"cannot execute /bin/sh"
+literal|"cannot execute /bin/csh"
 argument_list|)
 expr_stmt|;
 block|}
