@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.17	82/09/04	*/
+comment|/*	user.h	4.18	82/09/06	*/
 end_comment
 
 begin_include
@@ -290,6 +290,12 @@ comment|/* sum of stats for reaped children */
 name|struct
 name|itimerval
 name|u_timer
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|int
+name|u_XXX
 index|[
 literal|3
 index|]
