@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: awi.c,v 1.61 2004/01/15 13:29:05 onoe Exp $	*/
+comment|/*	$NetBSD: awi.c,v 1.62 2004/01/16 14:13:15 onoe Exp $	*/
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ name|__KERNEL_RCSID
 argument_list|(
 literal|0
 argument_list|,
-literal|"$NetBSD: awi.c,v 1.61 2004/01/15 13:29:05 onoe Exp $"
+literal|"$NetBSD: awi.c,v 1.62 2004/01/16 14:13:15 onoe Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5882,9 +5882,9 @@ if|if
 condition|(
 name|ifp
 operator|->
-name|if_amcount
-operator|!=
-literal|0
+name|if_flags
+operator|&
+name|IFF_ALLMULTI
 condition|)
 goto|goto
 name|set_mib
@@ -6055,6 +6055,9 @@ literal|1
 expr_stmt|;
 name|set_mib
 label|:
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|sc
@@ -6077,6 +6080,8 @@ name|if_flags
 operator||=
 name|IFF_ALLMULTI
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_mib_mgt
@@ -10311,7 +10316,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-comment|/* FALLTHRU */
+break|break;
 case|case
 name|IEEE80211_S_SCAN
 case|:
@@ -11210,9 +11215,21 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+name|EINPROGRESS
+condition|)
+name|error
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 return|return
 call|(
 modifier|*
