@@ -1308,6 +1308,10 @@ literal|1
 operator|)
 return|;
 block|}
+name|int
+name|merge
+parameter_list|()
+function_decl|;
 name|struct
 name|sigvec
 name|mvec
