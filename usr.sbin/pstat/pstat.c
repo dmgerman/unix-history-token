@@ -2243,6 +2243,21 @@ operator|->
 name|i_size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|IN_LOCKED
+condition|)
+name|printf
+argument_list|(
+literal|" lockholder: %d"
+argument_list|,
+name|ip
+operator|->
+name|i_lockholder
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3469,6 +3484,9 @@ modifier|*
 name|mp
 decl_stmt|,
 name|mount
+decl_stmt|,
+modifier|*
+name|mp_next
 decl_stmt|;
 name|struct
 name|vnode
@@ -3476,6 +3494,9 @@ modifier|*
 name|vp
 decl_stmt|,
 name|vnode
+decl_stmt|,
+modifier|*
+name|vp_next
 decl_stmt|;
 name|char
 modifier|*
@@ -3579,11 +3600,7 @@ init|;
 condition|;
 name|mp
 operator|=
-name|mp
-operator|->
-name|mnt_list
-operator|.
-name|cqe_next
+name|mp_next
 control|)
 block|{
 name|KGET2
@@ -3601,6 +3618,14 @@ argument_list|,
 literal|"mount entry"
 argument_list|)
 expr_stmt|;
+name|mp_next
+operator|=
+name|mount
+operator|.
+name|mnt_list
+operator|.
+name|cqe_next
+expr_stmt|;
 for|for
 control|(
 name|vp
@@ -3617,11 +3642,7 @@ name|NULL
 condition|;
 name|vp
 operator|=
-name|vp
-operator|->
-name|v_mntvnodes
-operator|.
-name|le_next
+name|vp_next
 control|)
 block|{
 name|KGET2
@@ -3638,6 +3659,14 @@ argument_list|)
 argument_list|,
 literal|"vnode"
 argument_list|)
+expr_stmt|;
+name|vp_next
+operator|=
+name|vnode
+operator|.
+name|v_mntvnodes
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
