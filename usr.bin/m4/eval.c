@@ -439,6 +439,17 @@ case|case
 name|SYSCTYPE
 case|:
 comment|/* 	 * dosys - execute system command 	 */
+comment|/* Make sure m4 output is NOT interrupted */
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
