@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delwin.c	5.7 (Berkeley) %G%"
+literal|"@(#)delwin.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,11 +65,6 @@ modifier|*
 name|np
 decl_stmt|;
 specifier|register
-name|LINE
-modifier|*
-name|lp
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -82,31 +77,12 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If we are the original window, delete the space for all 		 * the subwindows, and the array of space as well which is 		 * pointed to by win->topline->line. 		 */
-for|for
-control|(
-name|lp
-operator|=
-name|win
-operator|->
-name|topline
-operator|,
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|win
-operator|->
-name|maxy
-condition|;
-name|i
-operator|++
-control|)
+comment|/* 		 * If we are the original window, delete the space for all 		 * the subwindows, the line space and the window space. 		 */
 name|free
 argument_list|(
-name|lp
+name|win
+operator|->
+name|lspace
 argument_list|)
 expr_stmt|;
 name|free

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clrtobot.c	5.8 (Berkeley) %G%"
+literal|"@(#)clrtobot.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 specifier|register
-name|char
+name|__LDATA
 modifier|*
 name|sp
 decl_stmt|,
@@ -141,21 +141,17 @@ operator|++
 control|)
 if|if
 condition|(
-operator|*
 name|sp
+operator|->
+name|ch
 operator|!=
 literal|' '
 operator|||
-operator|*
-operator|(
 name|sp
-operator|+
-name|win
 operator|->
-name|maxx
-operator|)
-operator|&
-name|__STANDOUT
+name|attr
+operator|!=
+literal|0
 condition|)
 block|{
 name|maxx
@@ -182,22 +178,17 @@ index|]
 operator|->
 name|line
 expr_stmt|;
-operator|*
 name|sp
+operator|->
+name|ch
 operator|=
 literal|' '
 expr_stmt|;
-operator|*
-operator|(
 name|sp
-operator|+
-name|win
 operator|->
-name|maxx
-operator|)
-operator|&=
-operator|~
-name|__STANDOUT
+name|attr
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if

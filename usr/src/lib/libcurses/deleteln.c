@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deleteln.c	5.11 (Berkeley) %G%"
+literal|"@(#)deleteln.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,7 +63,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 specifier|register
-name|LINE
+name|__LINE
 modifier|*
 name|temp
 decl_stmt|;
@@ -186,6 +186,8 @@ argument_list|,
 name|win
 operator|->
 name|maxx
+operator|*
+name|__LDATASIZE
 argument_list|)
 expr_stmt|;
 name|touchline
@@ -231,32 +233,6 @@ index|[
 name|y
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|memset
-argument_list|(
-name|temp
-operator|->
-name|line
-argument_list|,
-literal|' '
-argument_list|,
-operator|&
-name|temp
-operator|->
-name|line
-index|[
-name|win
-operator|->
-name|maxx
-index|]
-operator|-
-name|temp
-operator|->
-name|line
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -272,16 +248,30 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|temp
 operator|->
-name|standout
+name|line
 index|[
 name|i
 index|]
-operator|&=
-operator|~
-name|__STANDOUT
+operator|.
+name|ch
+operator|=
+literal|' '
 expr_stmt|;
+name|temp
+operator|->
+name|line
+index|[
+name|i
+index|]
+operator|.
+name|attr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|touchline
 argument_list|(
 name|win

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overlay.c	5.9 (Berkeley) %G%"
+literal|"@(#)overlay.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,7 +83,7 @@ decl_stmt|,
 name|startx
 decl_stmt|;
 specifier|register
-name|char
+name|__LDATA
 modifier|*
 name|sp
 decl_stmt|,
@@ -302,8 +302,9 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
-operator|*
 name|sp
+operator|->
+name|ch
 argument_list|)
 condition|)
 block|{
@@ -320,23 +321,7 @@ name|__waddch
 argument_list|(
 name|win2
 argument_list|,
-name|y2
-argument_list|,
-name|x
-argument_list|,
-operator|*
 name|sp
-argument_list|,
-operator|*
-operator|(
-name|sp
-operator|+
-name|win1
-operator|->
-name|maxx
-operator|)
-operator|&
-name|__STANDOUT
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.11 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,7 +144,7 @@ decl_stmt|;
 name|char
 name|stand
 decl_stmt|;
-name|LINE
+name|__LINE
 modifier|*
 name|lp
 decl_stmt|;
@@ -381,6 +381,8 @@ name|line
 index|[
 name|x
 index|]
+operator|.
+name|ch
 operator|!=
 name|c
 operator|||
@@ -388,10 +390,12 @@ operator|!
 operator|(
 name|lp
 operator|->
-name|standout
+name|line
 index|[
 name|x
 index|]
+operator|.
+name|attr
 operator|&
 name|stand
 operator|)
@@ -505,6 +509,8 @@ name|line
 index|[
 name|x
 index|]
+operator|.
+name|ch
 operator|=
 name|c
 expr_stmt|;
@@ -514,20 +520,24 @@ name|stand
 condition|)
 name|lp
 operator|->
-name|standout
+name|line
 index|[
 name|x
 index|]
+operator|.
+name|attr
 operator||=
 name|__STANDOUT
 expr_stmt|;
 else|else
 name|lp
 operator|->
-name|standout
+name|line
 index|[
 name|x
 index|]
+operator|.
+name|attr
 operator|&=
 operator|~
 name|__STANDOUT

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -213,23 +213,42 @@ value|__unctrllen[(ch)& 0x7f]
 end_define
 
 begin_comment
-comment|/*  * A window is a circular doubly linked list of LINEs who's first line is   * given by the topline pointer in the WINDOW structure.  */
+comment|/*  * A window an array of __LINE structures pointed to by the 'lines' pointer.  * A line is an array of __LDATA structures pointed to by the 'line' pointer.  *  * IMPORTANT: the __LDATA structure must NOT induce any padding, so if new  * fields are added -- padding fields with *constant values* should ensure   * that the compiler will not generate any padding when storing an array of  *  __LDATA structures.  This is to enable consistent use of bcmp, and bcopy  * for comparing and copying arrays.  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|__line
 block|{
-name|struct
-name|__line
-modifier|*
-name|next
-decl_stmt|,
-modifier|*
-name|prev
+name|char
+name|ch
 decl_stmt|;
-comment|/* Next line, previous line. */
+comment|/* the actual character */
+define|#
+directive|define
+name|__STANDOUT
+value|0x01
+comment|/* Added characters are standout. */
+name|char
+name|attr
+decl_stmt|;
+comment|/* attributes of character */
+block|}
+name|__LDATA
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|__LDATASIZE
+value|(sizeof(__LDATA))
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
 define|#
 directive|define
 name|__ISDIRTY
@@ -253,23 +272,13 @@ decl_stmt|,
 name|lastch
 decl_stmt|;
 comment|/* First and last changed columns. */
-define|#
-directive|define
-name|__STANDOUT
-value|0x01
-comment|/* Added characters are standout. */
-name|char
-modifier|*
-name|standout
-decl_stmt|;
-comment|/* Standout character markers. 					 * This field is stored as an  					 * extension to the line, i.e.,  					 * lp->standout = lp->line + win->maxx 					 * is an invariant. 					 */
-name|char
+name|__LDATA
 modifier|*
 name|line
 decl_stmt|;
 comment|/* Pointer to the line text. */
 block|}
-name|LINE
+name|__LINE
 typedef|;
 end_typedef
 
@@ -310,18 +319,18 @@ name|short
 name|ch_off
 decl_stmt|;
 comment|/* x offset for firstch/lastch. */
-name|LINE
+name|__LINE
 modifier|*
 modifier|*
 name|lines
 decl_stmt|;
 comment|/* Array of pointers to the lines */
-name|LINE
+name|__LINE
 modifier|*
-name|topline
+name|lspace
 decl_stmt|;
-comment|/* Pointer to first line in window */
-name|char
+comment|/* line space (for cleanup) */
+name|__LDATA
 modifier|*
 name|wspace
 decl_stmt|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.11 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1397,6 +1397,8 @@ name|line
 index|[
 name|outcol
 index|]
+operator|.
+name|ch
 expr_stmt|;
 if|if
 condition|(
@@ -1408,10 +1410,12 @@ index|[
 name|outline
 index|]
 operator|->
-name|standout
+name|line
 index|[
 name|outcol
 index|]
+operator|.
+name|attr
 operator|&
 name|__STANDOUT
 operator|)

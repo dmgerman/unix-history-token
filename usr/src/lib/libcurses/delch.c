@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)delch.c	5.8 (Berkeley) %G%"
+literal|"@(#)delch.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|win
 decl_stmt|;
 block|{
 specifier|register
-name|char
+name|__LDATA
 modifier|*
 name|end
 decl_stmt|,
@@ -114,30 +114,17 @@ operator|<
 name|end
 condition|)
 block|{
-operator|*
-name|temp1
-operator|=
-operator|*
+name|bcopy
+argument_list|(
 name|temp2
-expr_stmt|;
-comment|/* standout array */
-operator|*
-operator|(
+argument_list|,
 name|temp1
-operator|+
-name|win
-operator|->
-name|maxx
-operator|)
-operator|=
-operator|*
-operator|(
-name|temp2
-operator|+
-name|win
-operator|->
-name|maxx
-operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|__LDATA
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|temp1
 operator|++
@@ -146,22 +133,17 @@ name|temp2
 operator|++
 expr_stmt|;
 block|}
-operator|*
 name|temp1
+operator|->
+name|ch
 operator|=
 literal|' '
 expr_stmt|;
-operator|*
-operator|(
 name|temp1
-operator|+
-name|win
 operator|->
-name|maxx
-operator|)
-operator|&=
-operator|~
-name|__STANDOUT
+name|attr
+operator|=
+literal|0
 expr_stmt|;
 name|touchline
 argument_list|(

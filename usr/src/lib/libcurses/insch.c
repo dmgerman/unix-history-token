@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insch.c	5.7 (Berkeley) %G%"
+literal|"@(#)insch.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|<curses.h>
 end_include
 
 begin_comment
-comment|/*  * winsch --  *	Do an insert-char on the line, leaving (_cury,_curx) unchanged.  */
+comment|/*  * winsch --  *	Do an insert-char on the line, leaving (cury, curx) unchanged.  */
 end_comment
 
 begin_function
@@ -56,7 +56,7 @@ name|ch
 decl_stmt|;
 block|{
 specifier|register
-name|char
+name|__LDATA
 modifier|*
 name|end
 decl_stmt|,
@@ -119,30 +119,17 @@ operator|>
 name|end
 condition|)
 block|{
-operator|*
-name|temp1
-operator|=
-operator|*
+name|bcopy
+argument_list|(
 name|temp2
-expr_stmt|;
-comment|/* standout array */
-operator|*
-operator|(
+argument_list|,
 name|temp1
-operator|+
-name|win
-operator|->
-name|maxx
-operator|)
-operator|=
-operator|*
-operator|(
-name|temp2
-operator|+
-name|win
-operator|->
-name|maxx
-operator|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|__LDATA
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|temp1
 operator|--
@@ -151,19 +138,15 @@ name|temp2
 operator|--
 expr_stmt|;
 block|}
-operator|*
 name|temp1
+operator|->
+name|ch
 operator|=
 name|ch
 expr_stmt|;
-operator|*
-operator|(
 name|temp1
-operator|+
-name|win
 operator|->
-name|maxx
-operator|)
+name|attr
 operator|&=
 operator|~
 name|__STANDOUT
@@ -213,6 +196,8 @@ name|COLS
 operator|-
 literal|1
 index|]
+operator|.
+name|ch
 operator|!=
 literal|' '
 operator|||
@@ -225,14 +210,16 @@ operator|-
 literal|1
 index|]
 operator|->
-name|standout
+name|line
 index|[
 name|COLS
 operator|-
 literal|1
 index|]
-operator|&
-name|__STANDOUT
+operator|.
+name|attr
+operator|!=
+literal|0
 operator|)
 condition|)
 if|if
