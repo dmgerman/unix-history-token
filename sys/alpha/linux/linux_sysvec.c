@@ -147,7 +147,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<alpha/linux/linux_proto.h>
+file|<linux_proto.h>
 end_include
 
 begin_include

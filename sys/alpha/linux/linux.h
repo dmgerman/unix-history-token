@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<alpha/linux/linux_syscall.h>
+file|<linux_syscall.h>
 end_include
 
 begin_ifdef
