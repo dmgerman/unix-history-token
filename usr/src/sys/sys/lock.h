@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.10 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -405,7 +405,7 @@ end_ifdef
 
 begin_decl_stmt
 name|void
-name|simple_unlock
+name|_simple_unlock
 name|__P
 argument_list|(
 operator|(
@@ -414,14 +414,30 @@ expr|struct
 name|simplelock
 operator|*
 name|alp
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|simple_unlock
+parameter_list|(
+name|alp
+parameter_list|)
+value|_simple_unlock(alp, __FILE__, __LINE__)
+end_define
 
 begin_decl_stmt
 name|int
-name|simple_lock_try
+name|_simple_lock_try
 name|__P
 argument_list|(
 operator|(
@@ -430,14 +446,30 @@ expr|struct
 name|simplelock
 operator|*
 name|alp
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|simple_lock_try
+parameter_list|(
+name|alp
+parameter_list|)
+value|_simple_lock_try(alp, __FILE__, __LINE__)
+end_define
+
 begin_decl_stmt
 name|void
-name|simple_lock
+name|_simple_lock
 name|__P
 argument_list|(
 operator|(
@@ -446,10 +478,26 @@ expr|struct
 name|simplelock
 operator|*
 name|alp
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|simple_lock
+parameter_list|(
+name|alp
+parameter_list|)
+value|_simple_lock(alp, __FILE__, __LINE__)
+end_define
 
 begin_decl_stmt
 name|void
