@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|4.10
+literal|4.11
 operator|%
 name|G
 operator|%
@@ -554,12 +554,6 @@ begin_comment
 comment|/* **  PRINTAV -- print argument vector. ** **	Parameters: **		av -- argument vector. ** **	Returns: **		none. ** **	Side Effects: **		prints av. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_expr_stmt
 name|printav
 argument_list|(
@@ -622,12 +616,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
-
 begin_escape
 end_escape
 
@@ -680,12 +668,6 @@ end_escape
 begin_comment
 comment|/* **  XPUTS -- put string doing control escapes. ** **	Parameters: **		s -- string to put. ** **	Returns: **		none. ** **	Side Effects: **		output to stdout */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
 
 begin_expr_stmt
 name|xputs
@@ -798,12 +780,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_escape
 end_escape
@@ -1882,6 +1858,13 @@ name|syserr
 argument_list|(
 literal|"sfgets: timeout on read (mailer may be hung)"
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
