@@ -240,7 +240,7 @@ name|BSD_STYLE_COLORLS
 end_define
 
 begin_comment
-comment|/* Use LC_MESSAGES locale category used to open the message catalog */
+comment|/* Use LC_MESSAGES locale category to open the message catalog */
 end_comment
 
 begin_define
