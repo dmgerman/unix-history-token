@@ -478,6 +478,73 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Minimum MSS we accept and use. This prevents DoS attacks where  * we are forced to a ridiculous low MSS like 20 and send hundreds  * of packets instead of one. The effect scales with the available  * bandwidth and quickly saturates the CPU and network interface  * with packet generation and sending. Set to zero to disable MINMSS  * checking. This setting prevents us from sending too small packets.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tcp_minmss
+init|=
+name|TCP_MINMSS
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|minmss
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_minmss
+argument_list|,
+literal|0
+argument_list|,
+literal|"Minmum TCP Maximum Segment Size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/*  * Number of TCP segments per second we accept from remote host  * before we start to calculate average segment size. If average  * segment size drops below the minimum TCP MSS we assume a DoS  * attack and reset+drop the connection. Care has to be taken not to  * set this value too small to not kill interactive type connections  * (telnet, SSH) which send many small packets.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tcp_minmssoverload
+init|=
+name|TCP_MINMSSOVERLOAD
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|minmssoverload
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_minmssoverload
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of TCP Segments per Second allowed to"
+literal|"be under the MINMSS Size"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_if
 if|#
 directive|if

@@ -4646,6 +4646,12 @@ operator|<=
 name|tp
 operator|->
 name|t_maxseg
+operator|&&
+name|optval
+operator|+
+literal|40
+operator|>=
+name|tcp_minmss
 condition|)
 name|tp
 operator|->

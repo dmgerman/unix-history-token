@@ -535,6 +535,19 @@ name|u_char
 name|snd_limited
 decl_stmt|;
 comment|/* segments limited transmitted */
+comment|/* anti DoS counters */
+name|u_long
+name|rcv_second
+decl_stmt|;
+comment|/* start of interval second */
+name|u_long
+name|rcv_pps
+decl_stmt|;
+comment|/* received packets per second */
+name|u_long
+name|rcv_byps
+decl_stmt|;
+comment|/* received bytes per second */
 block|}
 struct|;
 end_struct
@@ -1046,6 +1059,10 @@ name|u_long
 name|tcps_conndrops
 decl_stmt|;
 comment|/* embryonic connections dropped */
+name|u_long
+name|tcps_minmssdrops
+decl_stmt|;
+comment|/* average minmss too low drops */
 name|u_long
 name|tcps_closed
 decl_stmt|;
@@ -1622,6 +1639,20 @@ end_decl_stmt
 begin_comment
 comment|/* XXX */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_minmss
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tcp_minmssoverload
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

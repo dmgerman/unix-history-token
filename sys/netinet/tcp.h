@@ -337,7 +337,7 @@ value|(TCPOPT_NOP<<24|TCPOPT_NOP<<16|(ccopt)<<8|TCPOLEN_CC)
 end_define
 
 begin_comment
-comment|/*  * Default maximum segment size for TCP.  * With an IP MSS of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */
+comment|/*  * Default maximum segment size for TCP.  * With an IP MTU of 576, this is 536,  * but 512 is probably more convenient.  * This should be defined as MIN(512, IP_MSS - sizeof (struct tcpiphdr)).  */
 end_comment
 
 begin_define
@@ -345,6 +345,28 @@ define|#
 directive|define
 name|TCP_MSS
 value|512
+end_define
+
+begin_comment
+comment|/*  * TCP_MINMSS is defined to be 256 which is fine for the smallest  * link MTU (296 bytes, SLIP interface) in the Internet.  * However it is very unlikely to come across such low MTU interfaces  * these days (anno dato 2003).  * Probably it can be set to 512 without ill effects. But we play safe.  * See tcp_subr.c tcp_minmss SYSCTL declaration for more comments.  * Setting this to "0" disables the minmss check.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MINMSS
+value|256
+end_define
+
+begin_comment
+comment|/*  * TCP_MINMSSOVERLOAD is defined to be 1000 which should cover any type  * of interactive TCP session.  * See tcp_subr.c tcp_minmssoverload SYSCTL declaration and tcp_input.c  * for more comments.  * Setting this to "0" disables the minmssoverload check.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MINMSSOVERLOAD
+value|1000
 end_define
 
 begin_comment
