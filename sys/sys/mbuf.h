@@ -1328,6 +1328,21 @@ value|KASSERT(m != NULL&& m->m_flags& M_PKTHDR,	\ 		("%s: no mbuf packet header!
 end_define
 
 begin_comment
+comment|/*  * Ensure that the supplied mbuf is a valid, non-free mbuf.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_ASSERTVALID
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|KASSERT((((struct mbuf *)m)->m_flags& M_FREELIST) == 0,			\ 		("%s: attempted use of a free mbuf!", __func__))
+end_define
+
+begin_comment
 comment|/*  * Set the m_data pointer of a newly-allocated mbuf (m_get/MGET) to place  * an object of the specified size at the end of the mbuf, longword aligned.  */
 end_comment
 

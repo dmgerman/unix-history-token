@@ -1283,7 +1283,7 @@ name|_ifp
 parameter_list|,
 name|_m
 parameter_list|)
-value|do {					\ 	if ((_ifp)->if_bpf)					\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ } while (0)
+value|do {					\ 	M_ASSERTVALID(_m);					\ 	if ((_ifp)->if_bpf)					\ 		bpf_mtap((_ifp)->if_bpf, (_m));			\ } while (0)
 end_define
 
 begin_endif
