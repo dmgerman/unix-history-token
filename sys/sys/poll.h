@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: poll.h,v 1.2 1997/09/14 05:38:03 peter Exp $  */
+comment|/*-  * Copyright (c) 1997 Peter Wemm<peter@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: poll.h,v 1.3 1997/12/15 03:09:48 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,11 +16,11 @@ name|_SYS_POLL_H_
 end_define
 
 begin_comment
-comment|/*  * This file is intended to be compatable with the traditional poll.h  */
+comment|/*  * This file is intended to be compatable with the traditional poll.h.  */
 end_comment
 
 begin_comment
-comment|/*  * This structure is passed as an array to poll(2)  */
+comment|/*  * This structure is passed as an array to poll(2).  */
 end_comment
 
 begin_struct
@@ -217,7 +217,7 @@ value|(POLLIN|POLLPRI|POLLOUT|POLLRDNORM|POLLRDBAND|\ 			 POLLWRBAND|POLLERR|POL
 end_define
 
 begin_comment
-comment|/*  * Request that poll wait forever.  * XXX this is in stropts.h in SYSV, and not #included by poll.h  */
+comment|/*  * Request that poll() wait forever.  * XXX in SYSV, this is defined in stropts.h, which is not included  * by poll.h.  */
 end_comment
 
 begin_define
@@ -226,10 +226,6 @@ directive|define
 name|INFTIM
 value|(-1)
 end_define
-
-begin_comment
-comment|/* XXX: logically, this should be in<poll.h>, but SVR4 at least has it here */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -245,7 +241,7 @@ end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
-comment|/* XXX poll has "unsigned long" nfds on SVR4, not u_int as on the other BSD's */
+comment|/*  * XXX logically, poll() should be declared in<poll.h>, but SVR4 at  * least has it here in<sys/poll.h>.  * XXX poll() has "unsigned long" nfds on SVR4, not unsigned as on the  * other BSDs.  */
 name|int
 name|poll
 name|__P
@@ -256,7 +252,7 @@ name|pollfd
 operator|*
 name|_pfd
 operator|,
-name|u_int
+name|unsigned
 name|_nfds
 operator|,
 name|int
@@ -276,7 +272,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* !KERNEL */
 end_comment
 
 begin_endif
