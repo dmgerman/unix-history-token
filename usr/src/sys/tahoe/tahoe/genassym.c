@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	1.2 (Berkeley) %G%"
+literal|"@(#)genassym.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"../tahoe/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoe/scb.h"
 end_include
 
 begin_include
@@ -150,6 +156,19 @@ init|=
 operator|(
 expr|struct
 name|pcb
+operator|*
+operator|)
+literal|0
+decl_stmt|;
+specifier|register
+name|struct
+name|scb
+modifier|*
+name|scb
+init|=
+operator|(
+expr|struct
+name|scb
 operator|*
 operator|)
 literal|0
@@ -371,6 +390,16 @@ operator|&
 name|vm
 operator|->
 name|v_intr
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tV_SOFT %d\n"
+argument_list|,
+operator|&
+name|vm
+operator|->
+name|v_soft
 argument_list|)
 expr_stmt|;
 name|printf
@@ -791,6 +820,37 @@ argument_list|,
 name|pcb
 operator|->
 name|pcb_sigc
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSCB_DOADUMP %d\n"
+argument_list|,
+operator|&
+name|scb
+operator|->
+name|scb_doadump
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSCB_BUSERR %d\n"
+argument_list|,
+operator|&
+name|scb
+operator|->
+name|scb_buserr
+argument_list|)
+expr_stmt|;
+define|#
+directive|define
+name|SCB_DEVBASE
+value|(((int)((struct scb *)0)->scb_devint)/sizeof (int))
+name|printf
+argument_list|(
+literal|"#define\tSCB_DEVBASE %d\n"
+argument_list|,
+name|SCB_DEVBASE
 argument_list|)
 expr_stmt|;
 name|printf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_machdep.c	1.2	86/01/05	*/
+comment|/*	vm_machdep.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -302,7 +302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Check for valid program size  */
+comment|/*  * Check for valid program size  * NB - Check data and data growth separately as they may overflow   * when summed together.  */
 end_comment
 
 begin_expr_stmt
@@ -330,9 +330,16 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|maxtsize
+decl_stmt|;
 if|if
 condition|(
+name|ctob
+argument_list|(
 name|ts
+argument_list|)
 operator|>
 name|maxtsize
 operator|||
@@ -1216,11 +1223,21 @@ name|p
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"vtopte v %x\n"
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|panic
 argument_list|(
 literal|"vtopte (no proc)"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|v

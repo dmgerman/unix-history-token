@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scb.h	1.1	86/01/05	*/
+comment|/*	scb.h	1.2	86/01/12	*/
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ name|scb_powfail
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 004: power failure */
+comment|/* 001: power failure */
 name|int
 function_decl|(
 modifier|*
@@ -34,7 +34,7 @@ name|scb_doadump
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 008: power restore */
+comment|/* 002: power restore */
 name|int
 function_decl|(
 modifier|*
@@ -42,7 +42,7 @@ name|scb_vec3
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 00c: reserved */
+comment|/* 003: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -50,7 +50,7 @@ name|scb_vec4
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 010: reserved */
+comment|/* 004: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -58,7 +58,7 @@ name|scb_vec5
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 014: reserved */
+comment|/* 005: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -66,7 +66,7 @@ name|scb_vec6
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 018: reserved */
+comment|/* 006: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -74,7 +74,7 @@ name|scb_hardclock
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 01c: interval timer (clock) */
+comment|/* 007: interval timer (clock) */
 name|int
 function_decl|(
 modifier|*
@@ -82,7 +82,7 @@ name|scb_vec8
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 020: reserved */
+comment|/* 008: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -90,7 +90,7 @@ name|scb_vec9
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 024: reserved */
+comment|/* 009: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -98,7 +98,7 @@ name|scb_cnrint
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 028: console receive */
+comment|/* 00a: console receive */
 name|int
 function_decl|(
 modifier|*
@@ -106,7 +106,7 @@ name|scb_cnxint
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 02c: console transmit */
+comment|/* 00b: console transmit */
 name|int
 function_decl|(
 modifier|*
@@ -114,7 +114,7 @@ name|scb_rmtrint
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 030: remote line receive */
+comment|/* 00c: remote line receive */
 name|int
 function_decl|(
 modifier|*
@@ -122,7 +122,7 @@ name|scb_rmtxint
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 034: remote line transmit */
+comment|/* 00d: remote line transmit */
 name|int
 function_decl|(
 modifier|*
@@ -130,7 +130,7 @@ name|scb_vec14
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 038: reserved */
+comment|/* 00e: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -138,7 +138,7 @@ name|scb_vec15
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 03c: reserved */
+comment|/* 00f: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -149,7 +149,7 @@ index|]
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 040: software ints (ipl 1f-1) */
+comment|/* 010: software ints (ipl 1f-1) */
 name|int
 function_decl|(
 modifier|*
@@ -157,7 +157,7 @@ name|scb_vec31
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 07c: reserved */
+comment|/* 01f: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -165,7 +165,7 @@ name|scb_buserr
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 080: bus error */
+comment|/* 020: bus error */
 name|int
 function_decl|(
 modifier|*
@@ -173,7 +173,7 @@ name|scb_vec33
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 084: reserved */
+comment|/* 021: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -181,7 +181,7 @@ name|scb_vec34
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 088: reserved */
+comment|/* 022: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -189,7 +189,7 @@ name|scb_vec35
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 08c: reserved */
+comment|/* 023: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -197,7 +197,7 @@ name|scb_vec36
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 090: reserved */
+comment|/* 024: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -205,7 +205,7 @@ name|scb_vec37
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 094: reserved */
+comment|/* 025: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -213,7 +213,7 @@ name|scb_vec38
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 098: reserved */
+comment|/* 026: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -221,7 +221,7 @@ name|scb_vec39
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 09c: reserved */
+comment|/* 027: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -229,7 +229,7 @@ name|scb_vec40
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0a0: reserved */
+comment|/* 028: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -237,7 +237,7 @@ name|scb_vec41
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0a4: reserved */
+comment|/* 029: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -245,7 +245,7 @@ name|scb_vec42
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0a8: reserved */
+comment|/* 02a: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -253,7 +253,7 @@ name|scb_syscall
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0ac: system call (kcall) */
+comment|/* 02b: system call (kcall) */
 name|int
 function_decl|(
 modifier|*
@@ -261,7 +261,7 @@ name|scb_privinflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0b0: privileged/reserved inst */
+comment|/* 02c: privileged/reserved inst */
 name|int
 function_decl|(
 modifier|*
@@ -269,7 +269,7 @@ name|scb_respoflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0b4: reserved operand */
+comment|/* 02d: reserved operand */
 name|int
 function_decl|(
 modifier|*
@@ -277,7 +277,7 @@ name|scb_resadflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0b8: reserved addressing mode */
+comment|/* 02e: reserved addressing mode */
 name|int
 function_decl|(
 modifier|*
@@ -285,7 +285,7 @@ name|scb_protflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0bc: access control violation */
+comment|/* 02f: access control violation */
 name|int
 function_decl|(
 modifier|*
@@ -293,7 +293,7 @@ name|scb_transflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0c0: translation not valid */
+comment|/* 030: translation not valid */
 name|int
 function_decl|(
 modifier|*
@@ -301,7 +301,7 @@ name|scb_kspnotval
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0c4: kernel stack invalid */
+comment|/* 031: kernel stack invalid */
 name|int
 function_decl|(
 modifier|*
@@ -309,7 +309,7 @@ name|scb_tracep
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0c8: trace trap */
+comment|/* 032: trace trap */
 name|int
 function_decl|(
 modifier|*
@@ -317,7 +317,7 @@ name|scb_bptflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0cc: breakpoint */
+comment|/* 033: breakpoint */
 name|int
 function_decl|(
 modifier|*
@@ -325,7 +325,7 @@ name|scb_arithtrap
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0d0: arithmetic exception */
+comment|/* 034: arithmetic exception */
 name|int
 function_decl|(
 modifier|*
@@ -333,7 +333,7 @@ name|scb_alignflt
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0d4: alignment fault */
+comment|/* 035: alignment fault */
 name|int
 function_decl|(
 modifier|*
@@ -341,7 +341,7 @@ name|scb_sfexcep
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0d8: system forced exception */
+comment|/* 036: system forced exception */
 name|int
 function_decl|(
 modifier|*
@@ -349,7 +349,7 @@ name|scb_fpm
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0dc: floating point emulation */
+comment|/* 037: floating point emulation */
 name|int
 function_decl|(
 modifier|*
@@ -357,7 +357,7 @@ name|scb_vec56
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0e0: reserved */
+comment|/* 038: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -365,7 +365,7 @@ name|scb_vec57
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0e4: reserved */
+comment|/* 039: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -373,7 +373,7 @@ name|scb_vec58
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0e8: reserved */
+comment|/* 03a: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -381,7 +381,7 @@ name|scb_vec59
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0ec: reserved */
+comment|/* 03b: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -389,7 +389,7 @@ name|scb_vec60
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0f0: reserved */
+comment|/* 03c: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -397,7 +397,7 @@ name|scb_vec61
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0f4: reserved */
+comment|/* 03d: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -405,7 +405,7 @@ name|scb_vec62
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0f8: reserved */
+comment|/* 03e: reserved */
 name|int
 function_decl|(
 modifier|*
@@ -413,21 +413,47 @@ name|scb_vec63
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 0fc: reserved */
+comment|/* 03f: reserved */
 name|int
 function_decl|(
 modifier|*
 name|scb_devint
 index|[
-literal|192
+literal|191
 index|]
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* 100: device vectors */
+comment|/* 040: device vectors */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SCB_LASTIV
+value|(sizeof (((struct scb *)0)->scb_devint) / \     sizeof (((struct scb *)0)->scb_devint[0]))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|scb
+name|scb
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.2	86/01/05	*/
+comment|/*	machdep.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -603,13 +603,11 @@ operator|*
 literal|1024
 operator|*
 literal|1024
-operator|)
-operator|/
-literal|5
 operator|+
 name|physmem
+operator|)
 operator|/
-literal|5
+literal|20
 operator|)
 operator|/
 name|CLSIZE
@@ -1232,11 +1230,7 @@ call|(
 name|long
 call|)
 argument_list|(
-operator|(
 name|nmbclusters
-operator|-
-literal|1
-operator|)
 operator|*
 name|CLSIZE
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.2	86/01/05	*/
+comment|/*	vmparam.h	1.3	86/01/12	*/
 end_comment
 
 begin_comment
@@ -66,14 +66,14 @@ value|UPAGES
 end_define
 
 begin_comment
-comment|/*  * Virtual memory related constants, all in clicks  */
+comment|/*  * Virtual memory related constants, all in bytes  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(6*CLSIZE*1024)
+value|(6*1024*1024)
 end_define
 
 begin_comment
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|DFLDSIZ
-value|(6*1024*1024/NBPG)
+value|(6*1024*1024)
 end_define
 
 begin_comment
@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MAXDSIZ
-value|(19*1024*1024/NBPG)
+value|(16*1024*1024)
 end_define
 
 begin_comment
@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|DFLSSIZ
-value|(512*1024/NBPG)
+value|(512*1024)
 end_define
 
 begin_comment
