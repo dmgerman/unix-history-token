@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.7 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,13 +71,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dinode.h>
+file|<ufs/ufs/dinode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/fs.h>
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
