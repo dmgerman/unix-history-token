@@ -1501,6 +1501,12 @@ operator|->
 name|n_opencount
 operator|==
 literal|0
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
 condition|)
 block|{
 name|SMBERROR
