@@ -4961,7 +4961,7 @@ if|if
 condition|(
 name|risr
 operator|&
-name|RISA_OVERRUN
+name|RIS_OVERRUN
 condition|)
 name|err
 operator||=
