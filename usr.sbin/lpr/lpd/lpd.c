@@ -591,7 +591,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cdlpw46"
+literal|"cdlpwW46"
 argument_list|)
 operator|)
 operator|!=
@@ -636,6 +636,26 @@ break|break;
 case|case
 literal|'w'
 case|:
+comment|/* netbsd uses -w for maxwait */
+comment|/* 			 * This will be removed after the release of 4.4, as 			 * it conflicts with -w in netbsd's lpd.  For now it 			 * is just a warning, so we won't suddenly break lpd 			 * for anyone who is currently using the option. 			 */
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"NOTE: the -w option has been renamed -W"
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"NOTE: please change your lpd config to use -W"
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+literal|'W'
+case|:
 comment|/* allow connections coming from a non-reserved port */
 comment|/* (done by some lpr-implementations for MS-Windows) */
 name|ch_options
@@ -679,6 +699,25 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
+comment|/* 		 * The following options are not in FreeBSD (yet?), but are 		 * listed here to "reserve" them, because the option-letters 		 * are used by either NetBSD or OpenBSD (as of July 2001). 		 */
+case|case
+literal|'b'
+case|:
+comment|/* set bind-addr */
+case|case
+literal|'n'
+case|:
+comment|/* set max num of children */
+case|case
+literal|'r'
+case|:
+comment|/* allow 'of' for remote ptrs */
+comment|/* ...[not needed in freebsd] */
+case|case
+literal|'s'
+case|:
+comment|/* secure (no inet), same as -p */
+comment|/* FALLTHROUGH */
 default|default:
 name|errs
 operator|++
@@ -4160,7 +4199,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-cdlpw46] [port#]\n"
+literal|"usage: lpd [-cdlpW46] [port#]\n"
 argument_list|)
 expr_stmt|;
 else|#
@@ -4169,7 +4208,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lpd [-cdlpw] [port#]\n"
+literal|"usage: lpd [-cdlpW] [port#]\n"
 argument_list|)
 expr_stmt|;
 endif|#
