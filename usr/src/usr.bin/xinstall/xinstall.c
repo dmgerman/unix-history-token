@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.28 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -962,7 +962,35 @@ else|:
 operator|-
 literal|1
 argument_list|)
-operator|||
+condition|)
+block|{
+name|serrno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|to_name
+argument_list|)
+expr_stmt|;
+name|err
+argument_list|(
+literal|"%s: chown/chgrp: %s"
+argument_list|,
+name|to_name
+argument_list|,
+name|strerror
+argument_list|(
+name|serrno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|fchmod
 argument_list|(
 name|to_fd
@@ -985,7 +1013,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|"%s: chmod: %s"
 argument_list|,
 name|to_name
 argument_list|,
@@ -1026,7 +1054,7 @@ argument_list|)
 expr_stmt|;
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|"%s: chflags: %s"
 argument_list|,
 name|to_name
 argument_list|,
