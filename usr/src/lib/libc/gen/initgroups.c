@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initgroups.c	5.8 (Berkeley) %G%"
+literal|"@(#)initgroups.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,10 +35,6 @@ end_endif
 
 begin_comment
 comment|/* LIBC_SCCS and not lint */
-end_comment
-
-begin_comment
-comment|/*  * initgroups  */
 end_comment
 
 begin_include
@@ -98,11 +94,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"initgroups: %s is in too many groups, using first %d\n"
+literal|"%s is in too many groups, using first %d"
 argument_list|,
 name|uname
 argument_list|,
@@ -121,7 +115,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"setgroups"
 argument_list|)
