@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	1.16	88/02/08	*/
+comment|/*	autoconf.c	1.17	88/05/02	*/
 end_comment
 
 begin_comment
@@ -709,7 +709,32 @@ name|vh_lastiv
 operator|=
 name|SCB_LASTIV
 expr_stmt|;
-comment|/* 	 * Grab some memory to record the address space we allocate, 	 * so we can be sure not to place two devices at the same address. 	 * 	 * We could use just 1/8 of this (we only want a 1 bit flag) but 	 * we are going to give it back anyway, and that would make the 	 * code here bigger (which we can't give back), so ... 	 */
+comment|/* 	 * Grab some memory to record the address space we allocate, 	 * so we can be sure not to place two devices at the same address. 	 * Register I/O space is allocated in 256-byte sections, 	 * and memory I/O space is in 4Kb sections.  We record allocations 	 * in 256-byte sections. 	 * 	 * We could use just 1/8 of this (we only want a 1 bit flag) but 	 * we are going to give it back anyway, and that would make the 	 * code here bigger (which we can't give back), so ... 	 */
+define|#
+directive|define
+name|VSECT
+parameter_list|(
+name|a
+parameter_list|)
+value|((a) / 0x100)
+define|#
+directive|define
+name|VSIZE
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s) + 0xff) / 0x100)
+define|#
+directive|define
+name|VALLOC
+parameter_list|(
+name|a
+parameter_list|)
+value|(valloc[VSECT(vboff(a))])
+define|#
+directive|define
+name|VMAPSIZE
+value|VSIZE(ctob(VBIOSIZE))
 name|valloc
 operator|=
 operator|(
@@ -717,10 +742,7 @@ name|caddr_t
 operator|)
 name|malloc
 argument_list|(
-name|ctob
-argument_list|(
-name|VBIOSIZE
-argument_list|)
+name|VMAPSIZE
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -745,10 +767,7 @@ name|bzero
 argument_list|(
 name|valloc
 argument_list|,
-name|ctob
-argument_list|(
-name|VBIOSIZE
-argument_list|)
+name|VMAPSIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check each VERSAbus mass storage controller. 	 * For each one which is potentially on this vba, 	 * see if it is really there, and if it is record it and 	 * then go looking for slaves. 	 */
@@ -833,13 +852,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|valloc
-index|[
-name|vboff
+name|VALLOC
 argument_list|(
 name|addr
 argument_list|)
-index|]
 condition|)
 continue|continue;
 name|reg
@@ -1339,13 +1355,10 @@ condition|)
 block|{
 if|if
 condition|(
-name|valloc
-index|[
-name|vboff
+name|VALLOC
 argument_list|(
 name|addr
 argument_list|)
-index|]
 condition|)
 continue|continue;
 name|reg
@@ -1649,18 +1662,22 @@ name|addr
 argument_list|)
 condition|)
 return|return;
+name|size
+operator|=
+name|VSIZE
+argument_list|(
+name|size
+argument_list|)
+expr_stmt|;
 name|p
 operator|=
 operator|&
-name|valloc
-index|[
-name|vboff
+name|VALLOC
 argument_list|(
 name|addr
+argument_list|)
 operator|+
 name|size
-argument_list|)
-index|]
 expr_stmt|;
 while|while
 condition|(
