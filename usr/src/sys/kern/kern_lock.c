@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.11 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,6 +24,45 @@ end_include
 begin_comment
 comment|/*  * Locking primitives implementation.  * Locks provide shared/exclusive sychronization.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|COUNT
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+value|if (p) (p)->p_locks += (x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COUNT
+parameter_list|(
+name|p
+parameter_list|,
+name|x
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -521,6 +560,13 @@ operator|->
 name|lk_sharecount
 operator|++
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * We hold an exclusive lock, so downgrade it to shared. 		 * An alternative would be to fail with EDEADLK. 		 */
@@ -528,6 +574,13 @@ name|lkp
 operator|->
 name|lk_sharecount
 operator|++
+expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* fall into downgrade */
 case|case
@@ -613,6 +666,14 @@ operator|->
 name|lk_sharecount
 operator|--
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EBUSY
@@ -647,6 +708,14 @@ name|lkp
 operator|->
 name|lk_sharecount
 operator|--
+expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 		 * If we are just polling, check to see if we will block. 		 */
 if|if
@@ -756,6 +825,13 @@ name|lk_exclusivecount
 operator|=
 literal|1
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Someone else has requested upgrade. Release our shared 		 * lock, awaken upgrade requestor if we are the last shared 		 * lock, then request an exclusive lock. 		 */
@@ -817,6 +893,13 @@ name|lkp
 operator|->
 name|lk_exclusivecount
 operator|++
+expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -956,6 +1039,13 @@ name|lk_exclusivecount
 operator|=
 literal|1
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|LK_RELEASE
@@ -995,6 +1085,14 @@ operator|->
 name|lk_exclusivecount
 operator|--
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lkp
@@ -1028,11 +1126,21 @@ name|lk_sharecount
 operator|!=
 literal|0
 condition|)
+block|{
 name|lkp
 operator|->
 name|lk_sharecount
 operator|--
 expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|lkp
@@ -1267,6 +1375,13 @@ operator|->
 name|lk_exclusivecount
 operator|=
 literal|1
+expr_stmt|;
+name|COUNT
+argument_list|(
+name|p
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -1524,15 +1639,27 @@ end_function
 
 begin_function
 name|void
-name|simple_lock
+name|_simple_lock
 parameter_list|(
 name|alp
+parameter_list|,
+name|id
+parameter_list|,
+name|l
 parameter_list|)
 name|__volatile
 name|struct
 name|simplelock
 modifier|*
 name|alp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|id
+decl_stmt|;
+name|int
+name|l
 decl_stmt|;
 block|{
 if|if
@@ -1553,9 +1680,31 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"simple_lock: lock held"
+literal|"%s:%d: simple_lock: lock held"
+argument_list|,
+name|id
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s:%d: simple_lock: lock held\n"
+argument_list|,
+name|id
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|lockpausetime
@@ -1565,7 +1714,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"simple_lock: lock held..."
+literal|"%s:%d: simple_lock: lock held..."
+argument_list|,
+name|id
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
 name|tsleep
@@ -1602,9 +1755,13 @@ end_function
 
 begin_function
 name|int
-name|simple_lock_try
+name|_simple_lock_try
 parameter_list|(
 name|alp
+parameter_list|,
+name|id
+parameter_list|,
+name|l
 parameter_list|)
 name|__volatile
 name|struct
@@ -1612,63 +1769,27 @@ name|simplelock
 modifier|*
 name|alp
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|id
+decl_stmt|;
+name|int
+name|l
+decl_stmt|;
 block|{
+comment|/* 	if (alp->lock_data == 1) { 		if (lockpausetime == -1) 			panic("%s:%d: simple_lock_try: lock held", id, l); 		if (lockpausetime == 0) { 			printf("%s:%d: simple_lock_try: lock held\n", id, l); 		} else if (lockpausetime> 0) { 			printf("%s:%d: simple_lock_try: lock held...", id, l); 			tsleep(&lockpausetime, PCATCH | PPAUSE, "slock", 			    lockpausetime * hz); 			printf(" continuing\n"); 		} 	} 	*/
 if|if
 condition|(
 name|alp
 operator|->
 name|lock_data
-operator|==
-literal|1
 condition|)
-block|{
-if|if
-condition|(
-name|lockpausetime
-operator|==
-operator|-
-literal|1
-condition|)
-name|panic
-argument_list|(
-literal|"simple_lock_try: lock held"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lockpausetime
-operator|>
+return|return
+operator|(
 literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"simple_lock_try: lock held..."
-argument_list|)
-expr_stmt|;
-name|tsleep
-argument_list|(
-operator|&
-name|lockpausetime
-argument_list|,
-name|PCATCH
-operator||
-name|PPAUSE
-argument_list|,
-literal|"slock"
-argument_list|,
-name|lockpausetime
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" continuing\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+operator|)
+return|;
 name|alp
 operator|->
 name|lock_data
@@ -1685,15 +1806,27 @@ end_function
 
 begin_function
 name|void
-name|simple_unlock
+name|_simple_unlock
 parameter_list|(
 name|alp
+parameter_list|,
+name|id
+parameter_list|,
+name|l
 parameter_list|)
 name|__volatile
 name|struct
 name|simplelock
 modifier|*
 name|alp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|id
+decl_stmt|;
+name|int
+name|l
 decl_stmt|;
 block|{
 if|if
@@ -1714,9 +1847,31 @@ literal|1
 condition|)
 name|panic
 argument_list|(
-literal|"simple_unlock: lock not held"
+literal|"%s:%d: simple_unlock: lock not held"
+argument_list|,
+name|id
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lockpausetime
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s:%d: simple_unlock: lock not held\n"
+argument_list|,
+name|id
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|lockpausetime
@@ -1726,7 +1881,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"simple_unlock: lock not held..."
+literal|"%s:%d: simple_unlock: lock not held..."
+argument_list|,
+name|id
+argument_list|,
+name|l
 argument_list|)
 expr_stmt|;
 name|tsleep
