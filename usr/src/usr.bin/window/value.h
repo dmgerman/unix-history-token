@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)value.h	3.3 84/01/12  */
+comment|/*  * @(#)value.h	3.4 %G%  */
 end_comment
 
 begin_struct

@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|sccsid
+index|[]
 init|=
-literal|"@(#)lcmd1.c	3.23 84/05/06"
+literal|"@(#)lcmd1.c	3.24 %G%"
 decl_stmt|;
 end_decl_stmt
 
