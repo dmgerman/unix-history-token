@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*   %{!ansi:								\     %{!std=*:-D_LONGLONG}						\     %{std=gnu*:-D_LONGLONG} }						\   %{std=c99:-D_LONGLONG}						\  */
+end_comment
+
+begin_comment
 comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
@@ -198,14 +202,14 @@ comment|/* ! FREEBSD_NATIVE */
 end_comment
 
 begin_comment
-comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC     option `-posix', and PIC issues.  */
+comment|/* Provide a CPP_SPEC appropriate for FreeBSD.  We just deal with the GCC     option `-posix', and PIC issues.  Try to detect support for the    `long long' type.  Unfortunately the GCC spec parser will not allow us    to properly detect the "iso9899:1990" and "iso9899:199409" forms of    -std=c89.  Because of the ':' in the -std argument. :-(  I have left    them in the spec as a place holder in hopes someone knows a way to make    the detection of them work.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FBSD_CPP_SPEC
-value|"							\   %(cpp_cpu)								\   %{!maout: -D__ELF__}							\   %{munderscores: -D__UNDERSCORES__}					\   %{maout: %{!mno-underscores: -D__UNDERSCORES__}}			\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{posix:-D_POSIX_SOURCE}"
+value|"							\   %(cpp_cpu)								\   %{!maout: -D__ELF__}							\   %{munderscores: -D__UNDERSCORES__}					\   %{maout: %{!mno-underscores: -D__UNDERSCORES__}}			\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{!ansi:%{!std=c89:%{!std=iso9899.1990:%{!std=iso9899.199409:-D_LONGLONG}}}} \   %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
