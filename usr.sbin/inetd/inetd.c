@@ -2092,7 +2092,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unknown rpc/udp or rpc/tpc"
+literal|"unknown rpc/udp or rpc/tcp"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2140,7 +2140,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unknown rpc/udp6 or rpc/tpc6"
+literal|"unknown rpc/udp6 or rpc/tcp6"
 argument_list|)
 expr_stmt|;
 name|exit
