@@ -96,6 +96,13 @@ name|gmonhdr
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|bool
+name|uflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -406,6 +413,14 @@ case|case
 literal|'s'
 case|:
 name|sflag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|uflag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -2976,17 +2991,6 @@ modifier|*
 name|nlistp
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|strtab
-decl_stmt|;
-comment|/* string table from a.out */
-specifier|extern
-name|int
-name|aflag
-decl_stmt|;
-comment|/* if static functions aren't desired */
 name|char
 modifier|*
 name|name
@@ -3032,7 +3036,7 @@ return|return
 name|FALSE
 return|;
 block|}
-comment|/* 	 *	can't have any `funny' characters in name, 	 *	where `funny' includes	`.', .o file names 	 *			and	`$', pascal labels. 	 *	need to make an exception for sparc .mul& co. 	 *	perhaps we should just drop this code entirely... 	 */
+comment|/* 	 *	name must start with an underscore if uflag is set. 	 *	can't have any `funny' characters in name, 	 *	where `funny' includes	`.', .o file names 	 *			and	`$', pascal labels. 	 *	need to make an exception for sparc .mul& co. 	 *	perhaps we should just drop this code entirely... 	 */
 name|name
 operator|=
 name|strtab
@@ -3043,6 +3047,18 @@ name|n_un
 operator|.
 name|n_strx
 expr_stmt|;
+if|if
+condition|(
+name|uflag
+operator|&&
+operator|*
+name|name
+operator|!=
+literal|'_'
+condition|)
+return|return
+name|FALSE
+return|;
 ifdef|#
 directive|ifdef
 name|sparc
