@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	6.8	84/12/20	*/
+comment|/*	tty_pty.c	6.9	85/01/31	*/
 end_comment
 
 begin_comment
@@ -2763,6 +2763,16 @@ name|int
 name|stop
 init|=
 operator|(
+operator|(
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|RAW
+operator|)
+operator|==
+literal|0
+operator|&&
 name|tp
 operator|->
 name|t_stopc
