@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_time.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_time.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -131,11 +131,11 @@ name|atv
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -166,11 +166,11 @@ name|tz
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -251,11 +251,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -289,11 +289,11 @@ name|timeval
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* WHAT DO WE DO ABOUT PENDING REAL-TIME TIMEOUTS??? */
 name|boottime
 operator|.
@@ -362,11 +362,11 @@ name|tz
 operator|=
 name|atz
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -497,11 +497,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|error
@@ -528,11 +528,11 @@ name|timeval
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|ndelta
 operator|=
 name|atv
@@ -651,11 +651,11 @@ name|timeval
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -729,11 +729,11 @@ name|which
 operator|>
 name|ITIMER_PROF
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|s
 operator|=
 name|splclock
@@ -818,8 +818,8 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|(
@@ -841,8 +841,8 @@ expr|struct
 name|itimerval
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -923,11 +923,11 @@ name|which
 operator|>
 name|ITIMER_PROF
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|itvp
 operator|=
 name|uap
@@ -962,11 +962,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -992,11 +992,11 @@ name|retval
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|itvp
@@ -1026,11 +1026,11 @@ operator|.
 name|it_interval
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|s
 operator|=
 name|splclock
@@ -1120,11 +1120,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_ktrace.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -1039,11 +1039,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|ops
@@ -1081,11 +1081,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|vp
 operator|=
 name|ndp
@@ -1106,11 +1106,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EACCES
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
 comment|/* 	 * Clear all uses of the tracefile 	 */
@@ -1356,11 +1356,11 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1410,7 +1410,9 @@ operator|->
 name|p_uid
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(

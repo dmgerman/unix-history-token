@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_prot.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_prot.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -115,11 +115,11 @@ name|p_ppid
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -169,11 +169,11 @@ name|p
 operator|->
 name|p_ppid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -239,11 +239,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -253,11 +253,11 @@ name|p_pgrp
 operator|->
 name|pg_id
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -323,11 +323,11 @@ name|cr_uid
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -379,11 +379,11 @@ name|u_cred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -452,11 +452,11 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -515,11 +515,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -607,11 +607,11 @@ name|u_cred
 operator|->
 name|cr_ngroups
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -625,11 +625,11 @@ name|u_cred
 operator|->
 name|cr_ngroups
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|uap
 operator|->
 name|gidsetsize
@@ -704,11 +704,11 @@ index|]
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
@@ -716,11 +716,11 @@ name|uap
 operator|->
 name|gidsetsize
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -781,11 +781,11 @@ name|p_pid
 argument_list|)
 condition|)
 block|{
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -807,11 +807,11 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
 end_block
@@ -911,11 +911,11 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|p
@@ -926,11 +926,11 @@ name|cp
 operator|->
 name|p_session
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|p
@@ -939,11 +939,11 @@ name|p_flag
 operator|&
 name|SEXEC
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EACCES
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 name|p
@@ -957,11 +957,11 @@ argument_list|(
 name|p
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1024,11 +1024,11 @@ operator|->
 name|p_session
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * done checking, now do it 	 */
 name|pgmv
 argument_list|(
@@ -1041,11 +1041,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1129,11 +1129,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
 if|if
 condition|(
@@ -1182,11 +1182,11 @@ name|p_svuid
 operator|=
 name|uid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1276,11 +1276,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
 if|if
 condition|(
@@ -1317,11 +1317,11 @@ name|p_uid
 operator|=
 name|euid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1407,11 +1407,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|u
@@ -1457,11 +1457,11 @@ operator|=
 name|gid
 expr_stmt|;
 comment|/* ??? */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1553,11 +1553,11 @@ name|u_acflag
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|u
@@ -1590,11 +1590,11 @@ index|]
 operator|=
 name|egid
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1686,13 +1686,13 @@ operator|)
 block|)
 end_block
 
-begin_expr_stmt
-name|RETURN
-argument_list|(
+begin_return
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_if
 if|if
@@ -1727,14 +1727,14 @@ argument_list|)
 operator|)
 end_if
 
-begin_expr_stmt
+begin_return
 unit|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_comment
 comment|/* 	 * Everything's okay, do it. 	 * Copy credentials so other references do not 	 * see our changes. 	 */
@@ -1793,13 +1793,13 @@ name|ruid
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RETURN
-argument_list|(
+begin_return
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_comment
 unit|}
@@ -1883,13 +1883,13 @@ operator|)
 block|)
 end_block
 
-begin_expr_stmt
-name|RETURN
-argument_list|(
+begin_return
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_if
 if|if
@@ -1924,14 +1924,14 @@ argument_list|)
 operator|)
 end_if
 
-begin_expr_stmt
+begin_return
 unit|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_if
 if|if
@@ -1980,13 +1980,13 @@ name|egid
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|RETURN
-argument_list|(
+begin_return
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+operator|)
+return|;
+end_return
 
 begin_endif
 unit|}
@@ -2076,11 +2076,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|ngrp
 operator|=
 name|uap
@@ -2093,11 +2093,11 @@ name|ngrp
 operator|>
 name|NGROUPS
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|error
 operator|=
 name|copyin
@@ -2131,11 +2131,11 @@ if|if
 condition|(
 name|error
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|gp
 operator|=
 name|u
@@ -2177,11 +2177,11 @@ name|cr_ngroups
 operator|=
 name|ngrp
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2645,8 +2645,8 @@ operator|->
 name|p_logname
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|(
@@ -2667,8 +2667,8 @@ name|uap
 operator|->
 name|namelen
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2741,11 +2741,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|error
 operator|=
 name|copyinstr
@@ -2791,11 +2791,11 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -188,11 +188,11 @@ name|p_flag
 operator||=
 name|STRC
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 name|p
 operator|=
@@ -232,11 +232,11 @@ operator|&
 name|STRC
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 while|while
 condition|(
 name|ipc
@@ -357,16 +357,16 @@ name|ip_req
 operator|<
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EIO
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

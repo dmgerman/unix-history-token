@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_resource.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_resource.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -268,11 +268,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -282,21 +282,21 @@ name|PRIO_MAX
 operator|+
 literal|1
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 operator|*
 name|retval
 operator|=
 name|low
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -567,11 +567,11 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -579,16 +579,16 @@ name|found
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -795,11 +795,11 @@ name|which
 operator|>=
 name|RLIM_NLIMITS
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|alimp
 operator|=
 operator|&
@@ -838,11 +838,11 @@ name|rlimit
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|alim
@@ -877,11 +877,11 @@ operator|.
 name|u_acflag
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 switch|switch
 condition|(
 name|uap
@@ -977,11 +977,11 @@ name|rlim_cur
 operator|/
 name|NBPG
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1044,13 +1044,13 @@ name|which
 operator|>=
 name|RLIM_NLIMITS
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|(
@@ -1079,8 +1079,8 @@ expr|struct
 name|rlimit
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1200,14 +1200,14 @@ name|u_cru
 expr_stmt|;
 break|break;
 default|default:
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|copyout
 argument_list|(
 operator|(
@@ -1228,8 +1228,8 @@ expr|struct
 name|rusage
 argument_list|)
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

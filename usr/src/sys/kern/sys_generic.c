@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)sys_generic.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)sys_generic.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -201,11 +201,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|aiov
 operator|.
 name|iov_base
@@ -381,11 +381,11 @@ name|retval
 operator|=
 name|cnt
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -525,11 +525,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -547,11 +547,11 @@ name|iovcnt
 operator|>
 name|UIO_MAXIOV
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|MALLOC
 argument_list|(
 name|iov
@@ -897,11 +897,11 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1026,11 +1026,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|aiov
 operator|.
 name|iov_base
@@ -1221,11 +1221,11 @@ name|retval
 operator|=
 name|cnt
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1365,11 +1365,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1387,11 +1387,11 @@ name|iovcnt
 operator|>
 name|UIO_MAXIOV
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|MALLOC
 argument_list|(
 name|iov
@@ -1752,11 +1752,11 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1878,11 +1878,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|(
@@ -1899,11 +1899,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EBADF
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|com
 operator|=
 name|uap
@@ -1928,11 +1928,11 @@ index|]
 operator||=
 name|UF_EXCLOSE
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1953,11 +1953,11 @@ operator|&=
 operator|~
 name|UF_EXCLOSE
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* 	 * Interpret high order word to find 	 * amount of data to be copied to/from the 	 * user's address space. 	 */
 name|size
@@ -1973,11 +1973,11 @@ name|size
 operator|>
 name|IOCPARM_MAX
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ENOTTY
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|size
@@ -2054,11 +2054,11 @@ argument_list|,
 name|M_IOCTLOPS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 block|}
 else|else
@@ -2254,11 +2254,11 @@ argument_list|,
 name|M_IOCTLOPS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -2751,11 +2751,11 @@ undef|#
 directive|undef
 name|putbits
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 

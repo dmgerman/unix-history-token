@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_sig.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,12 +18,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"syscontext.h"
+file|"user.h"
 end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
@@ -272,11 +268,11 @@ name|sig
 operator|==
 name|SIGSTOP
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sa
 operator|=
 operator|&
@@ -398,11 +394,11 @@ name|vec
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -435,11 +431,11 @@ name|vec
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|setsigvec
 argument_list|(
 name|p
@@ -450,11 +446,11 @@ name|sa
 argument_list|)
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -986,11 +982,11 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1040,11 +1036,11 @@ name|p
 operator|->
 name|p_sig
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1157,11 +1153,11 @@ name|sig
 operator|==
 name|SIGSTOP
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sv
 operator|=
 operator|&
@@ -1289,11 +1285,11 @@ name|vec
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -1326,11 +1322,11 @@ name|vec
 argument_list|)
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 name|sv
 operator|->
 name|sv_flags
@@ -1353,11 +1349,11 @@ name|sv
 argument_list|)
 expr_stmt|;
 block|}
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1430,11 +1426,11 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1509,11 +1505,11 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1616,11 +1612,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* always return EINTR rather than ERESTART... */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINTR
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1720,11 +1716,11 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1764,11 +1760,11 @@ name|u_sigstack
 operator|=
 name|ss
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|error
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -1836,11 +1832,11 @@ name|signo
 operator|>=
 name|NSIG
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1866,11 +1862,11 @@ name|p
 operator|==
 literal|0
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|ESRCH
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -1885,11 +1881,11 @@ operator|->
 name|signo
 argument_list|)
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EPERM
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 if|if
 condition|(
 name|uap
@@ -1905,11 +1901,11 @@ operator|->
 name|signo
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
@@ -1923,8 +1919,8 @@ operator|-
 literal|1
 case|:
 comment|/* broadcast signal */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|killpg1
 argument_list|(
 name|cp
@@ -1937,14 +1933,14 @@ literal|0
 argument_list|,
 literal|1
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 case|case
 literal|0
 case|:
 comment|/* signal own process group */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|killpg1
 argument_list|(
 name|cp
@@ -1957,12 +1953,12 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 default|default:
 comment|/* negative explicit process group */
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|killpg1
 argument_list|(
 name|cp
@@ -1978,8 +1974,8 @@ name|pid
 argument_list|,
 literal|0
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* NOTREACHED */
 block|}
@@ -2051,13 +2047,13 @@ name|signo
 operator|>=
 name|NSIG
 condition|)
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
-name|RETURN
-argument_list|(
+operator|)
+return|;
+return|return
+operator|(
 name|killpg1
 argument_list|(
 name|p
@@ -2072,8 +2068,8 @@ name|pgid
 argument_list|,
 literal|0
 argument_list|)
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -4435,11 +4431,11 @@ argument_list|,
 name|SIGSYS
 argument_list|)
 expr_stmt|;
-name|RETURN
-argument_list|(
+return|return
+operator|(
 name|EINVAL
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
