@@ -2406,7 +2406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find and copy a mount option.  * The size of the buffer has to be specified  * in len, if it is not big enough, EINVAL is  * returned.  Returns ENOENT if the option is  * not found.  Otherwise, the number of bytes  * actually copied are put in done if it's  * non-NULL and 0 is returned.  */
+comment|/*  * Find and copy a mount option.  *  * The size of the buffer has to be specified  * in len, if it is not the same length as the  * mount option, EINVAL is returned.  * Returns ENOENT if the option is not found.  */
 end_comment
 
 begin_function
@@ -2420,8 +2420,6 @@ parameter_list|,
 name|dest
 parameter_list|,
 name|len
-parameter_list|,
-name|done
 parameter_list|)
 name|struct
 name|vfsoptlist
@@ -2439,13 +2437,7 @@ name|dest
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
-decl|*
-name|done
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 name|struct
 name|vfsopt
@@ -2492,7 +2484,7 @@ block|{
 if|if
 condition|(
 name|len
-operator|<
+operator|!=
 name|opt
 operator|->
 name|len
@@ -2515,19 +2507,6 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|done
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|done
-operator|=
-name|opt
-operator|->
-name|len
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2544,7 +2523,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set vnode attributes to VNOVAL  */
