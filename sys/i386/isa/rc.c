@@ -2212,6 +2212,7 @@ operator|)
 operator|)
 operator|||
 operator|(
+operator|(
 operator|!
 operator|(
 name|iack
@@ -2254,6 +2255,7 @@ operator|&
 name|IGNBRK
 operator|)
 operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -2282,6 +2284,7 @@ name|RCSR_FE
 operator|)
 operator|||
 operator|(
+operator|(
 name|iack
 operator|&
 name|RCSR_PE
@@ -2295,6 +2298,7 @@ operator|->
 name|t_iflag
 operator|&
 name|INPCK
+operator|)
 operator|)
 operator|)
 condition|)
@@ -5031,6 +5035,7 @@ operator|&
 name|HUPCL
 operator|)
 operator|||
+operator|(
 operator|!
 operator|(
 name|rc
@@ -5056,6 +5061,7 @@ operator|->
 name|t_cflag
 operator|&
 name|CLOCAL
+operator|)
 operator|)
 operator|||
 operator|!
