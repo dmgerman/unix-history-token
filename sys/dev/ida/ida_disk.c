@@ -607,6 +607,12 @@ argument_list|)
 expr_stmt|;
 name|drv
 operator|->
+name|dev
+operator|=
+name|dev
+expr_stmt|;
+name|drv
+operator|->
 name|controller
 operator|=
 operator|(
