@@ -2870,7 +2870,32 @@ name|NAPM
 operator|>
 literal|0
 comment|/* 	 * We can not use the TSC if we support APM. Precise timekeeping 	 * on an APM'ed machine is at best a fools pursuit, since  	 * any and all of the time spent in various SMM code can't  	 * be reliably accounted for.  Reading the RTC is your only 	 * source of reliable time info.  The i8254 looses too of course 	 * but we need to have some kind of time... 	 * We don't know at this point whether APM is going to be used 	 * or not, nor when it might be activated.  Play it safe. 	 */
+block|{
+name|int
+name|disabled
+init|=
+literal|0
+decl_stmt|;
+name|resource_int_value
+argument_list|(
+literal|"apm"
+argument_list|,
+literal|0
+argument_list|,
+literal|"disabled"
+argument_list|,
+operator|&
+name|disabled
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|disabled
+operator|==
+literal|0
+condition|)
 return|return;
+block|}
 endif|#
 directive|endif
 comment|/* NAPM> 0 */
