@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/vm/vm_glue.c,v 1.4 1993/07/02 08:56:07 davidg Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/vm/vm_glue.c,v 1.5 1993/08/28 09:22:57 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2013,6 +2013,12 @@ begin_comment
 comment|/*  * DEBUG stuff  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|indent
@@ -2116,6 +2122,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|DEBUG
+end_endif
 
 end_unit
 

@@ -3867,6 +3867,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_comment
 comment|/*  *	vm_object_print:	[ debug ]  */
 end_comment
@@ -4109,6 +4115,15 @@ literal|2
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 end_unit
 
