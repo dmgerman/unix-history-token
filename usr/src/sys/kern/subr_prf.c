@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -124,6 +124,59 @@ modifier|*
 name|panicstr
 decl_stmt|;
 end_decl_stmt
+
+begin_extern
+extern|extern	cnputc(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* standard console putc */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|tty
+name|cons
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* standard console tty */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|tty
+modifier|*
+name|constty
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to console "window" tty */
+end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|v_putc
+function_decl|)
+parameter_list|()
+init|=
+name|cnputc
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* routine to putc on virtual console */
+end_comment
 
 begin_extern
 extern|extern	cnputc(
@@ -1456,6 +1509,43 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|startflags
+init|=
+name|flags
+decl_stmt|;
+if|if
+condition|(
+name|panicstr
+condition|)
+name|constty
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|TOCONS
+operator|)
+operator|&&
+name|tp
+operator|==
+literal|0
+operator|&&
+name|constty
+condition|)
+block|{
+name|tp
+operator|=
+name|constty
+expr_stmt|;
+name|flags
+operator||=
+name|TOTTY
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -1689,18 +1779,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|TOCONS
-operator|)
-operator|&&
-name|c
-operator|!=
-literal|'\0'
-condition|)
 call|(
 modifier|*
 name|v_console
