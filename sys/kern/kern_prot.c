@@ -5073,14 +5073,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * XXX should a process be able to affect another process 	 * acting as the same uid (i.e., sendmail delivery, lpd, 	 * et al?) 	 */
-block|if (p1->p_cred->p_ruid == p2->p_ucred->cr_uid) 		return (0); 	if (p1->p_ucred->cr_uid == p2->p_ucred->cr_uid) 		return (0);
-endif|#
-directive|endif
-comment|/* 0 */
 if|if
 condition|(
 operator|!
