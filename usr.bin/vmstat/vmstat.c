@@ -4116,6 +4116,7 @@ decl_stmt|,
 name|nkms
 decl_stmt|;
 name|long
+name|long
 name|totuse
 init|=
 literal|0
@@ -4897,7 +4898,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\nMemory Totals:  In Use    Free    Requests\n"
+literal|"\nMemory Totals:  In Use       Free    Requests\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4905,7 +4906,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"              %7ldK %6ldK    %8ld\n"
+literal|"            %9lldK %9lldK    %8lld\n"
 argument_list|,
 operator|(
 name|totuse
