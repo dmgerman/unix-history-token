@@ -7,7 +7,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|int
+name|size_t
 name|cnt
 decl_stmt|;
 name|char
