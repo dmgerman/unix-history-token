@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -525,7 +531,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|disk
+name|softc
 block|{
 name|u_int
 name|dk_bc
@@ -667,6 +673,10 @@ name|devstat
 name|dk_stats
 decl_stmt|;
 comment|/* devstat entry */
+name|struct
+name|disk
+name|disk
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -689,7 +699,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|disk
+name|softc
 modifier|*
 name|wddrives
 index|[
@@ -851,7 +861,7 @@ name|void
 name|wdustart
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -877,7 +887,7 @@ name|int
 name|wdcommand
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|,
@@ -905,7 +915,7 @@ name|int
 name|wdsetctlr
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -919,7 +929,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int wdwsetctlr(struct disk *du);
+unit|static int wdwsetctlr(struct softc *du);
 endif|#
 directive|endif
 end_endif
@@ -945,7 +955,7 @@ name|int
 name|wdgetctlr
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -963,7 +973,7 @@ modifier|*
 name|bp
 parameter_list|,
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|,
@@ -980,7 +990,7 @@ name|void
 name|wdflushirq
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|,
@@ -996,7 +1006,7 @@ name|int
 name|wdreset
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -1031,7 +1041,7 @@ name|int
 name|wdunwedge
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -1044,7 +1054,7 @@ name|int
 name|wdwait
 parameter_list|(
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|,
@@ -1093,36 +1103,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|d_close_t
-name|wdclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_strategy_t
 name|wdstrategy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_ioctl_t
-name|wdioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_dump_t
-name|wddump
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_psize_t
-name|wdsize
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,7 +1133,7 @@ comment|/* open */
 name|wdopen
 block|,
 comment|/* close */
-name|wdclose
+name|nullclose
 block|,
 comment|/* read */
 name|physread
@@ -1160,7 +1142,7 @@ comment|/* write */
 name|physwrite
 block|,
 comment|/* ioctl */
-name|wdioctl
+name|noioctl
 block|,
 comment|/* poll */
 name|nopoll
@@ -1178,10 +1160,10 @@ comment|/* maj */
 name|CDEV_MAJOR
 block|,
 comment|/* dump */
-name|wddump
+name|nodump
 block|,
 comment|/* psize */
-name|wdsize
+name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
@@ -1189,6 +1171,14 @@ block|,
 comment|/* bmaj */
 name|BDEV_MAJOR
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|wddisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
@@ -1251,7 +1241,7 @@ name|int
 name|interface
 decl_stmt|;
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 decl_stmt|;
@@ -2129,7 +2119,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 decl_stmt|;
@@ -2144,10 +2134,6 @@ name|buf
 index|[]
 init|=
 literal|"wdcXXX"
-decl_stmt|;
-specifier|static
-name|int
-name|once
 decl_stmt|;
 name|dvp
 operator|->
@@ -2168,22 +2154,6 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-operator|!
-name|once
-condition|)
-block|{
-name|cdevsw_add
-argument_list|(
-operator|&
-name|wd_cdevsw
-argument_list|)
-expr_stmt|;
-name|once
-operator|++
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|eide_quirks
@@ -2764,31 +2734,6 @@ argument_list|(
 name|du
 argument_list|)
 expr_stmt|;
-name|make_dev
-argument_list|(
-operator|&
-name|wd_cdevsw
-argument_list|,
-name|dkmakeminor
-argument_list|(
-name|lunit
-argument_list|,
-name|WHOLE_DISK_SLICE
-argument_list|,
-name|RAW_PART
-argument_list|)
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_OPERATOR
-argument_list|,
-literal|0640
-argument_list|,
-literal|"rwd%d"
-argument_list|,
-name|lunit
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Export the drive to the devstat interface. 			 */
 name|devstat_add_entry
 argument_list|(
@@ -2814,6 +2759,25 @@ operator||
 name|DEVSTAT_TYPE_IF_IDE
 argument_list|,
 name|DEVSTAT_PRIORITY_DISK
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Register this media as a disk 			 */
+name|disk_create
+argument_list|(
+name|lunit
+argument_list|,
+operator|&
+name|du
+operator|->
+name|disk
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|wd_cdevsw
+argument_list|,
+operator|&
+name|wddisk_cdevsw
 argument_list|)
 expr_stmt|;
 block|}
@@ -2999,7 +2963,7 @@ name|bp
 parameter_list|)
 block|{
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 decl_stmt|;
@@ -3083,23 +3047,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Do bounds checking, adjust transfer, and set bio_pblkno. 	 */
-if|if
-condition|(
-name|dscheck
-argument_list|(
-name|bp
-argument_list|,
-name|du
-operator|->
-name|dk_slices
-argument_list|)
-operator|<=
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
 comment|/* queue transfer on drive, activate drive and controller if idle */
 name|s
 operator|=
@@ -3218,7 +3165,7 @@ name|wdustart
 parameter_list|(
 specifier|register
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 parameter_list|)
@@ -3347,7 +3294,7 @@ parameter_list|)
 block|{
 specifier|register
 name|struct
-name|disk
+name|softc
 modifier|*
 name|du
 decl_stmt|;
@@ -3717,7 +3664,7 @@ argument|}  	count =
 literal|1
 argument|; 	if( du->dk_flags& DKFL_MULTI) { 		count = howmany(du->dk_bc, DEV_BSIZE); 		if( count> du->dk_multi) 			count = du->dk_multi; 		if( du->dk_currentiosize> count) 			du->dk_currentiosize = count; 	} 	if (!old_epson_note) { 		if (du->dk_flags& DKFL_32BIT) 			outsl(du->dk_port + wd_data, 			      (void *)((int)bp->bio_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(long)); 		else 			outsw(du->dk_port + wd_data, 			      (void *)((int)bp->bio_data 						+ du->dk_skip * DEV_BSIZE), 			      (count * DEV_BSIZE) / sizeof(short)); 		} 	else 		epson_outsw(du->dk_port + wd_data, 		      (void *)((int)bp->bio_data + du->dk_skip * DEV_BSIZE), 		      (count * DEV_BSIZE) / sizeof(short)); 		 	du->dk_bc -= DEV_BSIZE * count; }
 comment|/* Interrupt routine for the controller.  Acknowledge the interrupt, check for  * errors on the current operation, mark it done if necessary, and start  * the next request.  Also check for a partially done transfer, and  * continue with the next chunk if so.  */
-argument|void wdintr(void *unitnum) { 	register struct	disk *du; 	register struct bio *bp; 	int dmastat =
+argument|void wdintr(void *unitnum) { 	register struct	softc *du; 	register struct bio *bp; 	int dmastat =
 literal|0
 argument|;
 comment|/* Shut up GCC */
@@ -3884,7 +3831,7 @@ argument|wdustart(du);
 comment|/* anything more for controller to do? */
 argument|wdstart(unit); }
 comment|/*  * Initialize a drive.  */
-argument|int wdopen(dev_t dev, int flags, int fmt, struct proc *p) { 	register unsigned int lunit; 	register struct disk *du; 	int	error;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
+argument|int wdopen(dev_t dev, int flags, int fmt, struct proc *p) { 	register unsigned int lunit; 	register struct softc *du; 	struct disklabel *dl;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
 literal|0
 argument|) 		return (ENXIO); 	du = wddrives[lunit]; 	if (du == NULL) 		return (ENXIO);  	dev->si_iosize_max =
 literal|248
@@ -3914,74 +3861,15 @@ argument|,
 literal|"wdopen"
 argument|,
 literal|1
-argument|);
-if|#
-directive|if
-literal|1
-argument|wdsleep(du->dk_ctrlr,
+argument|);  	wdsleep(du->dk_ctrlr,
 literal|"wdopn1"
-argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN; 	{ 	struct disklabel label;  	bzero(&label, sizeof label); 	label.d_secsize = du->dk_dd.d_secsize; 	label.d_nsectors = du->dk_dd.d_nsectors; 	label.d_ntracks = du->dk_dd.d_ntracks; 	label.d_ncylinders = du->dk_dd.d_ncylinders; 	label.d_secpercyl = du->dk_dd.d_secpercyl; 	label.d_secperunit = du->dk_dd.d_secperunit; 	error = dsopen(dev, fmt,
-literal|0
-argument|,&du->dk_slices,&label); 	} 	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
+argument|); 	du->dk_flags |= DKFL_LABELLING; 	du->dk_state = WANTOPEN;  	dl =&du->disk.d_label; 	bzero(dl, sizeof(*dl)); 	dl->d_secsize = du->dk_dd.d_secsize; 	dl->d_nsectors = du->dk_dd.d_nsectors; 	dl->d_ntracks = du->dk_dd.d_ntracks; 	dl->d_ncylinders = du->dk_dd.d_ncylinders; 	dl->d_secpercyl = du->dk_dd.d_secpercyl; 	dl->d_secperunit = du->dk_dd.d_secperunit;  	du->dk_flags&= ~DKFL_LABELLING; 	wdsleep(du->dk_ctrlr,
 literal|"wdopn2"
-argument|); 	return (error);
-else|#
-directive|else
-argument|if ((du->dk_flags& DKFL_BSDLABEL) ==
+argument|);  	return
 literal|0
-argument|) {
-comment|/* 		 * wdtab[ctrlr].b_active != 0 implies  XXX applicable now ?? 		 * drive_queue[lunit].b_act == NULL (?)  XXX applicable now ?? 		 * so the following guards most things (until the next i/o). 		 * It doesn't guard against a new i/o starting and being 		 * affected by the label being changed.  Sigh. 		 */
-argument|wdsleep(du->dk_ctrlr,
-literal|"wdopn1"
-argument|);  		du->dk_flags |= DKFL_LABELLING; 		du->dk_state = WANTOPEN;  		error = dsinit(dkmodpart(dev, RAW_PART),&du->dk_dd,&du->dk_slices); 		if (error !=
-literal|0
-argument|) { 			du->dk_flags&= ~DKFL_LABELLING; 			return (error); 		}
-comment|/* XXX check value returned by wdwsetctlr(). */
-argument|wdwsetctlr(du); 		if (dkslice(dev) == WHOLE_DISK_SLICE) { 			dsopen(dev, fmt, du->dk_slices); 			return (
-literal|0
-argument|); 		}
-comment|/* 		 * Read label using RAW_PART partition. 		 * 		 * If the drive has an MBR, then the current geometry (from 		 * wdgetctlr()) is used to read it; then the BIOS/DOS 		 * geometry is inferred and used to read the label off the 		 * 'c' partition.  Otherwise the label is read using the 		 * current geometry.  The label gives the final geometry. 		 * If bad sector handling is enabled, then this geometry 		 * is used to read the bad sector table.  The geometry 		 * changes occur inside readdisklabel() and are propagated 		 * to the driver by resetting the state machine. 		 * 		 * XXX can now handle changes directly since dsinit() doesn't 		 * do too much. 		 */
-argument|msg = correct_readdisklabel(dkmodpart(dev, RAW_PART),&du->dk_dd);
-comment|/* XXX check value returned by wdwsetctlr(). */
-argument|wdwsetctlr(du); 		du->dk_flags&= ~DKFL_LABELLING; 		if (msg != NULL) { 			log(LOG_WARNING,
-literal|"wd%d: cannot find label (%s)\n"
-argument|, 			    lunit, msg); 			if (part != RAW_PART) 				return (EINVAL);
-comment|/* XXX needs translation */
-comment|/* 			 * Soon return.  This is how slices without labels 			 * are allowed.  They only work on the raw partition. 			 */
-argument|} else { 			unsigned long newsize, offset, size;
-if|#
-directive|if
-literal|0
-comment|/* 			 * Force RAW_PART partition to be the whole disk. 			 */
-argument|offset = du->dk_dd.d_partitions[RAW_PART].p_offset; 			if (offset != 0) { 				printf( 		"wd%d: changing offset of '%c' partition from %lu to 0\n", 				       du->dk_lunit, 'a' + RAW_PART, offset); 				du->dk_dd.d_partitions[RAW_PART].p_offset = 0; 			} 			size = du->dk_dd.d_partitions[RAW_PART].p_size; 			newsize = du->dk_dd.d_secperunit;
-comment|/* XXX */
-argument|if (size != newsize) { 				printf( 		"wd%d: changing size of '%c' partition from %lu to %lu\n", 				       du->dk_lunit, 'a' + RAW_PART, size, 				       newsize); 				du->dk_dd.d_partitions[RAW_PART].p_size 					= newsize; 			}
-endif|#
-directive|endif
-argument|}
-comment|/* Pick up changes made by readdisklabel(). */
-argument|wdsleep(du->dk_ctrlr,
-literal|"wdopn2"
-argument|); 		du->dk_state = WANTOPEN; 	}
-comment|/* 	 * Warn if a partion is opened that overlaps another partition which 	 * is open unless one is the "raw" partition (whole disk). 	 */
-argument|if ((du->dk_openpart& mask) ==
-literal|0
-argument|&& part != RAW_PART) { 		int	start, end;  		pp =&du->dk_dd.d_partitions[part]; 		start = pp->p_offset; 		end = pp->p_offset + pp->p_size; 		for (pp = du->dk_dd.d_partitions; 		     pp<&du->dk_dd.d_partitions[du->dk_dd.d_npartitions]; 		     pp++) { 			if (pp->p_offset + pp->p_size<= start || 			    pp->p_offset>= end) 				continue; 			if (pp - du->dk_dd.d_partitions == RAW_PART) 				continue; 			if (du->dk_openpart& (
-literal|1
-argument|<< (pp - du->dk_dd.d_partitions))) 				log(LOG_WARNING,
-literal|"wd%d%c: overlaps open partition (%c)\n"
-argument|, 				    lunit, part +
-literal|'a'
-argument|, 				    pp - du->dk_dd.d_partitions +
-literal|'a'
-argument|); 		} 	} 	if (part>= du->dk_dd.d_npartitions&& part != RAW_PART) 		return (ENXIO);  	dsopen(dev, fmt, du->dk_slices);  	return (
-literal|0
-argument|);
-endif|#
-directive|endif
-argument|}
+argument|; }
 comment|/*  * Implement operations other than read/write.  * Called from wdstart or wdintr during opens.  * Uses finite-state-machine to track progress of operation in progress.  * Returns 0 if operation still in progress, 1 if completed, 2 if error.  */
-argument|static int wdcontrol(register struct bio *bp) { 	register struct disk *du; 	int	ctrlr;  	du = wddrives[dkunit(bp->bio_dev)]; 	ctrlr = du->dk_ctrlr_cmd640;
+argument|static int wdcontrol(register struct bio *bp) { 	register struct softc *du; 	int	ctrlr;  	du = wddrives[dkunit(bp->bio_dev)]; 	ctrlr = du->dk_ctrlr_cmd640;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4028,7 +3916,7 @@ argument|); 	return (
 literal|2
 argument|); }
 comment|/*  * Wait uninterruptibly until controller is not busy, then send it a command.  * The wait usually terminates immediately because we waited for the previous  * command to terminate.  */
-argument|static int wdcommand(struct disk *du, u_int cylinder, u_int head, u_int sector, 	  u_int count, u_int command) { 	u_int	wdc;
+argument|static int wdcommand(struct softc *du, u_int cylinder, u_int head, u_int sector, 	  u_int count, u_int command) { 	u_int	wdc;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4106,7 +3994,7 @@ argument|) 		return (
 literal|1
 argument|); 	if (old_epson_note) 		epson_outb(wdc + wd_command, command); 	else 		outb(wdc + wd_command, command); 	return (
 literal|0
-argument|); }  static void wdsetmulti(struct disk *du) {
+argument|); }  static void wdsetmulti(struct softc *du) {
 comment|/* 	 * The config option flags low 8 bits define the maximum multi-block 	 * transfer size.  If the user wants the maximum that the drive 	 * is capable of, just set the low bits of the config option to 	 * 0x00ff. 	 */
 argument|if ((du->cfg_flags& WDOPT_MULTIMASK) !=
 literal|0
@@ -4128,7 +4016,7 @@ argument|; 			} 		} 	} else { 		du->dk_multi =
 literal|1
 argument|; 	} }
 comment|/*  * issue IDC to drive to tell it just what geometry it is to be.  */
-argument|static int wdsetctlr(struct disk *du) { 	int error =
+argument|static int wdsetctlr(struct softc *du) { 	int error =
 literal|0
 argument|;
 ifdef|#
@@ -4216,11 +4104,11 @@ if|#
 directive|if
 literal|0
 comment|/*  * Wait until driver is inactive, then set up controller.  */
-argument|static int wdwsetctlr(struct disk *du) { 	int	stat; 	int	x;  	wdsleep(du->dk_ctrlr, "wdwset"); 	x = splbio(); 	stat = wdsetctlr(du); 	wdflushirq(du, x); 	splx(x); 	return (stat); }
+argument|static int wdwsetctlr(struct softc *du) { 	int	stat; 	int	x;  	wdsleep(du->dk_ctrlr, "wdwset"); 	x = splbio(); 	stat = wdsetctlr(du); 	wdflushirq(du, x); 	splx(x); 	return (stat); }
 endif|#
 directive|endif
 comment|/*  * gross little callback function for wdddma interface. returns 1 for  * success, 0 for failure.  */
-argument|static int wdsetmode(int mode, void *wdinfo) {     int i;     struct disk *du;      du = wdinfo;     if (bootverbose) 	printf(
+argument|static int wdsetmode(int mode, void *wdinfo) {     int i;     struct softc *du;      du = wdinfo;     if (bootverbose) 	printf(
 literal|"wd%d: wdsetmode() setting transfer mode to %02x\n"
 argument|,  	       du->dk_lunit, mode);     i = wdcommand(du,
 literal|0
@@ -4232,7 +4120,7 @@ argument|&& 	wdwait(du, WDCS_READY, TIMEOUT) ==
 literal|0
 argument|;     return i; }
 comment|/*  * issue READP to drive to ask it what it is.  */
-argument|static int wdgetctlr(struct disk *du) { 	int	i; 	char    tb[DEV_BSIZE], tb2[DEV_BSIZE]; 	struct wdparams *wp = NULL; 	u_long flags = du->cfg_flags;
+argument|static int wdgetctlr(struct softc *du) { 	int	i; 	char    tb[DEV_BSIZE], tb2[DEV_BSIZE]; 	struct wdparams *wp = NULL; 	u_long flags = du->cfg_flags;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4521,232 +4409,19 @@ endif|#
 directive|endif
 argument|return (
 literal|0
-argument|); }  int wdclose(dev_t dev, int flags, int fmt, struct proc *p) { 	dsclose(dev, fmt, wddrives[dkunit(dev)]->dk_slices); 	return (
-literal|0
-argument|); }  int wdioctl(dev_t dev, u_long cmd, caddr_t addr, int flags, struct proc *p) { 	int	lunit = dkunit(dev); 	register struct disk *du; 	int	error;  	du = wddrives[lunit]; 	wdsleep(du->dk_ctrlr,
-literal|"wdioct"
-argument|); 	error = dsioctl(dev, cmd, addr, flags,&du->dk_slices); 	if (error != ENOIOCTL) 		return (error);
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(
-literal|0x432
-argument|,(du->dk_unit)%
-literal|2
-argument|);
-endif|#
-directive|endif
-argument|return (ENOTTY); }  int wdsize(dev_t dev) { 	struct disk *du; 	int	lunit;  	lunit = dkunit(dev); 	if (lunit>= NWD || dktype(dev) !=
-literal|0
-argument|) 		return (-
-literal|1
-argument|); 	du = wddrives[lunit]; 	if (du == NULL) 		return (-
-literal|1
-argument|);
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(
-literal|0x432
-argument|,(du->dk_unit)%
-literal|2
-argument|);
-endif|#
-directive|endif
-argument|return (dssize(dev,&du->dk_slices)); }   int wddump(dev_t dev) {
-ifdef|#
-directive|ifdef
-name|PC98
-comment|/* do nothing */
-argument|printf(
-literal|"wddump!!\n"
-argument|); 	return(
-literal|0
-argument|);
-else|#
-directive|else
-argument|register struct disk *du; 	struct disklabel *lp; 	long	num;
-comment|/* number of sectors to write */
-argument|int	lunit, part; 	long	blkoff, blknum; 	long	blkcnt, blknext; 	u_long	ds_offset; 	u_long	nblocks; 	static int wddoingadump =
-literal|0
-argument|; 	long	cylin, head, sector; 	long	secpertrk, secpercyl; 	char   *addr;
-comment|/* Toss any characters present prior to dump. */
-argument|while (cncheckc() != -
-literal|1
-argument|) 		;
-comment|/* Check for acceptable device. */
-comment|/* XXX should reset to maybe allow du->dk_state< OPEN. */
-argument|lunit = dkunit(dev);
-comment|/* eventually support floppies? */
-argument|part = dkpart(dev); 	if (lunit>= NWD || (du = wddrives[lunit]) == NULL 	    || du->dk_state< OPEN 	    || (lp = dsgetlabel(dev, du->dk_slices)) == NULL) 		return (ENXIO);
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(
-literal|0x432
-argument|,(du->dk_unit)%
-literal|2
-argument|);
-endif|#
-directive|endif
-comment|/* Size of memory to dump, in disk sectors. */
-argument|num = (u_long)Maxmem * PAGE_SIZE / du->dk_dd.d_secsize;   	secpertrk = du->dk_dd.d_nsectors; 	secpercyl = du->dk_dd.d_secpercyl; 	nblocks = lp->d_partitions[part].p_size; 	blkoff = lp->d_partitions[part].p_offset;
-comment|/* XXX */
-argument|ds_offset = du->dk_slices->dss_slices[dkslice(dev)].ds_offset; 	blkoff += ds_offset;
-if|#
-directive|if
-literal|0
-argument|printf("part %d, nblocks %lu, dumplo %ld num %ld\n", 	    part, nblocks, dumplo, num);
-endif|#
-directive|endif
-comment|/* Check transfer bounds against partition size. */
-argument|if (dumplo<
-literal|0
-argument||| dumplo + num> nblocks) 		return (EINVAL);
-comment|/* Check if we are being called recursively. */
-argument|if (wddoingadump) 		return (EFAULT);
-if|#
-directive|if
-literal|0
-comment|/* Mark controller active for if we panic during the dump. */
-argument|wdtab[du->dk_ctrlr].b_active = 1;
-endif|#
-directive|endif
-argument|wddoingadump =
-literal|1
-argument|;
-comment|/* Recalibrate the drive. */
-argument|DELAY(
-literal|5
-argument|);
-comment|/* ATA spec XXX NOT */
-argument|if (wdcommand(du,
-literal|0
-argument|,
-literal|0
-argument|,
-literal|0
-argument|,
-literal|0
-argument|, WDCC_RESTORE | WD_STEP) !=
-literal|0
-argument||| wdwait(du, WDCS_READY | WDCS_SEEKCMPLT, TIMEOUT) !=
-literal|0
-argument||| wdsetctlr(du) !=
-literal|0
-argument|) { 		wderror((struct bio *)NULL, du,
-literal|"wddump: recalibrate failed"
-argument|); 		return (EIO); 	}  	du->dk_flags |= DKFL_SINGLE; 	addr = (char *)
-literal|0
-argument|; 	blknum = dumplo + blkoff; 	while (num>
-literal|0
-argument|) { 		blkcnt = num; 		if (blkcnt> MAXTRANSFER) 			blkcnt = MAXTRANSFER; 		if ((du->dk_flags& DKFL_LBA) ==
-literal|0
-argument|) {
-comment|/* XXX keep transfer within current cylinder. */
-argument|if ((blknum + blkcnt -
-literal|1
-argument|) / secpercyl != 			    blknum / secpercyl) 				blkcnt = secpercyl - (blknum % secpercyl); 		} 		blknext = blknum + blkcnt;
-comment|/* Compute disk address. */
-argument|if (du->dk_flags& DKFL_LBA) { 			sector = (blknum>>
-literal|0
-argument|)&
-literal|0xff
-argument|;  			cylin = (blknum>>
-literal|8
-argument|)&
-literal|0xffff
-argument|; 			head = ((blknum>>
-literal|24
-argument|)&
-literal|0xf
-argument|) | WDSD_LBA;  		} else { 			cylin = blknum / secpercyl; 			head = (blknum % secpercyl) / secpertrk; 			sector = blknum % secpertrk; 		}
-if|#
-directive|if
-literal|0
-comment|/* Let's just talk about this first... */
-argument|printf("cylin %ld head %ld sector %ld addr %p count %ld\n", 		    cylin, head, sector, addr, blkcnt); 		cngetc();
-endif|#
-directive|endif
-comment|/* Do the write. */
-argument|if (wdcommand(du, cylin, head, sector, blkcnt, WDCC_WRITE) 		    !=
-literal|0
-argument|) { 			wderror((struct bio *)NULL, du,
-literal|"wddump: timeout waiting to to give command"
-argument|); 			return (EIO); 		} 		while (blkcnt !=
-literal|0
-argument|) { 			if (is_physical_memory((vm_offset_t)addr)) 				pmap_kenter((vm_offset_t)CADDR1, 					   trunc_page((vm_offset_t)addr)); 			else 				pmap_kenter((vm_offset_t)CADDR1, trunc_page(
-literal|0
-argument|));
-comment|/* Ready to send data? */
-argument|DELAY(
-literal|5
-argument|);
-comment|/* ATA spec */
-argument|if (wdwait(du, WDCS_READY | WDCS_SEEKCMPLT | WDCS_DRQ, TIMEOUT)<
-literal|0
-argument|) { 				wderror((struct bio *)NULL, du,
-literal|"wddump: timeout waiting for DRQ"
-argument|); 				return (EIO); 			} 			if (du->dk_flags& DKFL_32BIT) 				outsl(du->dk_port + wd_data, 				      CADDR1 + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(long)); 			else 				outsw(du->dk_port + wd_data, 				      CADDR1 + ((int)addr& PAGE_MASK), 				      DEV_BSIZE / sizeof(short)); 			addr += DEV_BSIZE;
-comment|/* 			 * If we are dumping core, it may take a while. 			 * So reassure the user and hold off any watchdogs. 			 */
-argument|if ((unsigned)addr % (
-literal|1024
-argument|*
-literal|1024
-argument|) ==
-literal|0
-argument|) {
-ifdef|#
-directive|ifdef
-name|HW_WDOG
-argument|if (wdog_tickler) 					(*wdog_tickler)();
-endif|#
-directive|endif
-comment|/* HW_WDOG */
-argument|printf(
-literal|"%ld "
-argument|, num / (
-literal|1024
-argument|*
-literal|1024
-argument|/ DEV_BSIZE)); 			} 			num--; 			blkcnt--; 		}
-comment|/* Wait for completion. */
-argument|DELAY(
-literal|5
-argument|);
-comment|/* ATA spec XXX NOT */
-argument|if (wdwait(du, WDCS_READY | WDCS_SEEKCMPLT, TIMEOUT)<
-literal|0
-argument|) { 			wderror((struct bio *)NULL, du,
-literal|"wddump: timeout waiting for status"
-argument|); 			return (EIO); 		}
-comment|/* Check final status. */
-argument|if ((du->dk_status& (WDCS_READY | WDCS_SEEKCMPLT | WDCS_DRQ | WDCS_ERR)) 		    != (WDCS_READY | WDCS_SEEKCMPLT)) { 			wderror((struct bio *)NULL, du,
-literal|"wddump: extra DRQ, or error"
-argument|); 			return (EIO); 		}
-comment|/* Update block count. */
-argument|blknum = blknext;
-comment|/* Operator aborting dump? */
-argument|if (cncheckc() != -
-literal|1
-argument|) 			return (EINTR); 	} 	return (
-literal|0
-argument|);
-endif|#
-directive|endif
-argument|}  static void wderror(struct bio *bp, struct disk *du, char *mesg) { 	if (bp == NULL) 		printf(
+argument|); }  static void wderror(struct bio *bp, struct softc *du, char *mesg) { 	if (bp == NULL) 		printf(
 literal|"wd%d: %s"
 argument|, du->dk_lunit, mesg); 	else 		diskerr(bp, mesg, LOG_PRINTF, du->dk_skip, 			dsgetlabel(bp->bio_dev, du->dk_slices)); 	printf(
 literal|" (status %b error %b)\n"
 argument|, 	       du->dk_status, WDCS_BITS, du->dk_error, WDERR_BITS); }
 comment|/*  * Discard any interrupts that were latched by the interrupt system while  * we were doing polled i/o.  */
-argument|static void wdflushirq(struct disk *du, int old_ipl) { 	wdtab[du->dk_ctrlr_cmd640].b_active =
+argument|static void wdflushirq(struct softc *du, int old_ipl) { 	wdtab[du->dk_ctrlr_cmd640].b_active =
 literal|2
 argument|; 	splx(old_ipl); 	(void)splbio(); 	wdtab[du->dk_ctrlr_cmd640].b_active =
 literal|0
 argument|; }
 comment|/*  * Reset the controller.  */
-argument|static int wdreset(struct disk *du) { 	int     err =
+argument|static int wdreset(struct softc *du) { 	int     err =
 literal|0
 argument|;
 ifdef|#
@@ -4813,7 +4488,7 @@ argument|static void wdsleep(int ctrlr, char *wmesg) { 	int s = splbio(); 	if (e
 literal|1
 argument|, wmesg,
 literal|1
-argument|); 	splx(s); }  static void wdtimeout(void *cdu) { 	struct disk *du; 	int	x; 	static	int	timeouts;  	du = (struct disk *)cdu; 	x = splbio();
+argument|); 	splx(s); }  static void wdtimeout(void *cdu) { 	struct softc *du; 	int	x; 	static	int	timeouts;  	du = (struct softc *)cdu; 	x = splbio();
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4842,7 +4517,7 @@ argument|,  				       du->dk_lunit, 				       wddma[du->dk_interface].wdd_dmas
 literal|0
 argument|; 		du->dk_flags |= DKFL_SINGLE; 		wdstart(du->dk_ctrlr); 	} 	timeout(wdtimeout, cdu, hz); 	splx(x); }
 comment|/*  * Reset the controller after it has become wedged.  This is different from  * wdreset() so that wdreset() can be used in the probe and so that this  * can restore the geometry .  */
-argument|static int wdunwedge(struct disk *du) { 	struct disk *du1; 	int	lunit;
+argument|static int wdunwedge(struct softc *du) { 	struct softc *du1; 	int	lunit;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4888,7 +4563,7 @@ name|WD_COUNT_RETRIES
 argument|static int min_retries[NWDC];
 endif|#
 directive|endif
-argument|static int wdwait(struct disk *du, u_char bits_wanted, int timeout) { 	int	wdc; 	u_char	status;
+argument|static int wdwait(struct softc *du, u_char bits_wanted, int timeout) { 	int	wdc; 	u_char	status;
 define|#
 directive|define
 name|POLLING
