@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha    running Windows/NT.    Copyright (C) 1995, 1996, 1999, 2000 Free Software Foundation, Inc.     Donn Terry, Softway Systems, Inc.    From code        Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha    running Windows/NT.    Copyright (C) 1995, 1996, 1999, 2000, 2002 Free Software Foundation, Inc.     Donn Terry, Softway Systems, Inc.    From code        Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -11,17 +11,13 @@ begin_comment
 comment|/* The three "Alpha" defines on the first such line are from the CLAXP spec */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|" \   -D__INTERIX \   -D__OPENNT \   -D__Alpha_AXP -D_M_ALPHA -D_ALPHA_  \   -D__alpha -D__alpha__\   -D__stdcall= \   -D__cdecl= \   -Asystem=unix -Asystem=interix -Acpu=alpha -Amachine=alpha"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {							\ 	builtin_define ("__INTERIX");				\ 	builtin_define ("__OPENNT");				\ 	builtin_define ("__Alpha_AXP");				\ 	builtin_define ("_M_ALPHA");				\ 	builtin_define ("_ALPHA_");				\ 	builtin_define ("__stdcall=");				\ 	builtin_define ("__cdecl=");				\ 	builtin_assert ("system=unix");				\ 	builtin_assert ("system=interix");			\     } while (0)
 end_define
 
 begin_undef
@@ -103,20 +99,13 @@ comment|/* The following are needed for C++, but also needed for profiling */
 end_comment
 
 begin_comment
-comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
+comment|/* Support const sections and the ctors and dtors sections for g++.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|USE_CONST_SECTION
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.rdata"
 end_define
 
@@ -136,63 +125,6 @@ define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
 value|"\t.dtors"
-end_define
-
-begin_comment
-comment|/* A default list of other sections which we might be "in" at any given    time.  For targets that use additional sections (e.g. .tdesc) you    should override this definition in the target-specific file which    includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|in_const
-end_define
-
-begin_comment
-comment|/* A default list of extra section function definitions.  For targets    that use additional sections (e.g. .tdesc) you should override this    definition in the target-specific file which includes this file.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|CONST_SECTION_FUNCTION
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|READONLY_DATA_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-parameter_list|()
-value|const_section ()
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_FUNCTION
-define|\
-value|void									\ const_section ()							\ {									\   if (!USE_CONST_SECTION)						\     text_section();							\   else if (in_section != in_const)					\     {									\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);		\       in_section = in_const;						\     }									\ }
 end_define
 
 begin_comment
@@ -364,33 +296,6 @@ name|FILE
 parameter_list|)
 define|\
 value|{								\   alpha_write_verstamp (FILE);					\   fprintf (FILE, "\t.set noreorder\n");				\   fprintf (FILE, "\t.set volatile\n");                          \   fprintf (FILE, "\t.set noat\n");				\   fprintf (FILE, "\t.globl\t__fltused\n");			\   ASM_OUTPUT_SOURCE_FILENAME (FILE, main_input_filename);	\ }
-end_define
-
-begin_comment
-comment|/* The current Interix assembler (consistent with the DEC documentation)    uses a=b NOT .set a,b; .set is for assembler options.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_OUTPUT_DEFINE_LABEL_DIFFERENCE_SYMBOL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_DEFINE_LABEL_DIFFERENCE_SYMBOL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SY
-parameter_list|,
-name|HI
-parameter_list|,
-name|LO
-parameter_list|)
-define|\
-value|do {									\   assemble_name (FILE, SY);						\   fputc ('=', FILE);							\   assemble_name (FILE, HI);						\   fputc ('-', FILE);							\   assemble_name (FILE, LO);						\  } while (0)
 end_define
 
 end_unit

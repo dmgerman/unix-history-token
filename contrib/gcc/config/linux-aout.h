@@ -4,7 +4,7 @@ comment|/* Definitions for Linux-based GNU systems.    Copyright (C) 1995, 1997,
 end_comment
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
-comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later. */
+comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later.  */
 end_comment
 
 begin_if
@@ -88,13 +88,14 @@ value|"\t.set\t"
 end_define
 
 begin_comment
-comment|/* We need that too. */
+comment|/* We need that too.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 end_unit

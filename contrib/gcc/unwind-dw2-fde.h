@@ -4,7 +4,7 @@ comment|/* Subroutines needed for unwinding stack frames for exception handling.
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Jason Merrill<jason@cygnus.com>.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  In addition to the permissions in the GNU General Public License, the Free Software Foundation gives you unlimited permission to link the compiled version of this file into combinations with other programs, and to distribute those combinations without any restriction coming from the use of this file.  (The General Public License restrictions do apply in other respects; for example, they cover modification of the file, and distribution when not linked into a combine executable.)  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_struct
@@ -109,6 +109,15 @@ decl_stmt|;
 block|}
 name|s
 union|;
+ifdef|#
+directive|ifdef
+name|DWARF2_OBJECT_END_PTR_EXTENSION
+name|char
+modifier|*
+name|fde_end
+decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|object
 modifier|*
@@ -547,6 +556,62 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+specifier|inline
+name|int
+name|last_fde
+argument_list|(
+expr|struct
+name|object
+operator|*
+name|obj
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|,
+name|fde
+operator|*
+name|f
+argument_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DWARF2_OBJECT_END_PTR_EXTENSION
+return|return
+operator|(
+name|char
+operator|*
+operator|)
+name|f
+operator|==
+name|obj
+operator|->
+name|fde_end
+operator|||
+name|f
+operator|->
+name|length
+operator|==
+literal|0
+return|;
+else|#
+directive|else
+return|return
+name|f
+operator|->
+name|length
+operator|==
+literal|0
+return|;
+endif|#
+directive|endif
+block|}
+end_decl_stmt
 
 end_unit
 

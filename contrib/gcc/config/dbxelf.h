@@ -23,16 +23,11 @@ begin_comment
 comment|/* Output DBX (stabs) debugging information if doing -gstabs.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|DBX_DEBUGGING_INFO
-end_undef
-
 begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment

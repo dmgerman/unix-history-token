@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target independent definitions for LynxOS.    Copyright (C) 1993, 1994, 1995, 1996, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* LynxOS is a multi-platform Unix, similar to SVR3, but not identical.    We can get quite a bit from generic svr3, but have to do some overrides. */
+comment|/* LynxOS is a multi-platform Unix, similar to SVR3, but not identical.    We can get quite a bit from generic svr3, but have to do some overrides.  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ file|"svr3.h"
 end_include
 
 begin_comment
-comment|/* Define various macros, depending on the combination of flags. */
+comment|/* Define various macros, depending on the combination of flags.  */
 end_comment
 
 begin_undef
@@ -31,11 +31,11 @@ value|"%{mthreads:-D_MULTITHREADED}  \   %{mposix:-D_POSIX_SOURCE}  \   %{msyste
 end_define
 
 begin_comment
-comment|/* No asm spec needed, since using GNU assembler always. */
+comment|/* No asm spec needed, since using GNU assembler always.  */
 end_comment
 
 begin_comment
-comment|/* No linker spec needed, since using GNU linker always. */
+comment|/* No linker spec needed, since using GNU linker always.  */
 end_comment
 
 begin_undef
@@ -52,7 +52,7 @@ value|"%{mthreads:-L/lib/thread/}  \   %{msystem-v:-lc_v}  \   %{!msystem-v:%{mp
 end_define
 
 begin_comment
-comment|/* Set the appropriate names for the Lynx startfiles. */
+comment|/* Set the appropriate names for the Lynx startfiles.  */
 end_comment
 
 begin_undef
@@ -82,7 +82,7 @@ value|"%{p:_etext.o%s}%{!p:initn.o%s}"
 end_define
 
 begin_comment
-comment|/* Override the svr3 versions. */
+comment|/* Override the svr3 versions.  */
 end_comment
 
 begin_undef
@@ -119,6 +119,7 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef
@@ -135,17 +136,18 @@ value|DBX_DEBUG
 end_define
 
 begin_comment
-comment|/* It is convenient to be able to generate standard coff debugging    if requested via -gcoff. */
+comment|/* It is convenient to be able to generate standard coff debugging    if requested via -gcoff.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
-comment|/* Be function-relative for block and source line stab directives. */
+comment|/* Be function-relative for block and source line stab directives.  */
 end_comment
 
 begin_define
@@ -209,10 +211,11 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
-comment|/* Some additional command-line options. */
+comment|/* Some additional command-line options.  */
 end_comment
 
 begin_define
@@ -286,7 +289,7 @@ value|do {								\   if (TARGET_SYSTEM_V&& profile_flag)				\     warning ("-ms
 end_define
 
 begin_comment
-comment|/* Since init.o et al put all sorts of stuff into the init section,    we can't use the standard init section support in crtbegin.o. */
+comment|/* Since init.o et al put all sorts of stuff into the init section,    we can't use the standard init section support in crtbegin.o.  */
 end_comment
 
 begin_undef
@@ -305,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_fini
+value|in_fini
 end_define
 
 begin_undef
@@ -319,7 +322,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION					\   FINI_SECTION_FUNCTION
+value|FINI_SECTION_FUNCTION
 end_define
 
 begin_undef
@@ -361,7 +364,7 @@ name|DO_GLOBAL_DTORS_BODY
 end_undef
 
 begin_comment
-comment|/* LynxOS doesn't have mcount. */
+comment|/* LynxOS doesn't have mcount.  */
 end_comment
 
 begin_undef

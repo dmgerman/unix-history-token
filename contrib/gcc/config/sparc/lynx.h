@@ -9,12 +9,6 @@ directive|undef
 name|ASM_OUTPUT_IDENT
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|SELECT_RTX_SECTION
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -63,7 +57,7 @@ name|LINK_SPEC
 end_undef
 
 begin_comment
-comment|/* Sparc version of libc.a has references to libm.a (printf calls pow for    instance), so we must always link both.  */
+comment|/* SPARC version of libc.a has references to libm.a (printf calls pow for    instance), so we must always link both.  */
 end_comment
 
 begin_undef

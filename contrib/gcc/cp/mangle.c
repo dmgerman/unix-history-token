@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Name mangling for the 3.0 C++ ABI.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.    Written by Alex Samuel<sameul@codesourcery.com>     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Name mangling for the 3.0 C++ ABI.    Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Written by Alex Samuel<sameul@codesourcery.com>     This file is part of GNU CC.     GNU CC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU CC is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with GNU CC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -28,7 +28,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"tm_p.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cp-tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"real.h"
 end_include
 
 begin_include
@@ -47,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|"varray.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ggc.h"
 end_include
 
 begin_comment
@@ -144,7 +162,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Non-zero if NODE is a class template-id.  We can't rely on    CLASSTYPE_USE_TEMPLATE here because of tricky bugs in the parser    that hard to distinguish A<T> from A, where A<T> is the type as    instantiated outside of the template, and A is the type used    without parameters inside the template.  */
+comment|/* Nonzero if NODE is a class template-id.  We can't rely on    CLASSTYPE_USE_TEMPLATE here because of tricky bugs in the parser    that hard to distinguish A<T> from A, where A<T> is the type as    instantiated outside of the template, and A is the type used    without parameters inside the template.  */
 end_comment
 
 begin_define
@@ -155,7 +173,7 @@ parameter_list|(
 name|NODE
 parameter_list|)
 define|\
-value|(TYPE_LANG_SPECIFIC (NODE) != NULL 				      \&& CLASSTYPE_TEMPLATE_INFO (NODE) != NULL                          \&& (PRIMARY_TEMPLATE_P (CLASSTYPE_TI_TEMPLATE (NODE))))
+value|(TYPE_LANG_SPECIFIC (NODE) != NULL					\&& (TREE_CODE (NODE) == BOUND_TEMPLATE_TEMPLATE_PARM			\        || (CLASSTYPE_TEMPLATE_INFO (NODE) != NULL			\&& (PRIMARY_TEMPLATE_P (CLASSTYPE_TI_TEMPLATE (NODE))))))
 end_define
 
 begin_comment
@@ -235,6 +253,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|integer_type_codes
 index|[
@@ -493,6 +512,16 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|write_conversion_operator_name
+parameter_list|(
+name|tree
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -551,6 +580,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|write_integer_cst
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|write_real_cst
 name|PARAMS
 argument_list|(
 operator|(
@@ -920,35 +962,29 @@ begin_comment
 comment|/* Control functions.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 name|void
 name|start_mangling
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|inline
 specifier|const
 name|char
 modifier|*
 name|finish_mangling
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|bool
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -968,7 +1004,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Foreign language functions. */
+comment|/* Foreign language functions.  */
 end_comment
 
 begin_decl_stmt
@@ -1000,7 +1036,7 @@ value|obstack_1grow (&G.name_obstack, (CHAR))
 end_define
 
 begin_comment
-comment|/* Append a sized buffer to the end of the mangled representation. */
+comment|/* Append a sized buffer to the end of the mangled representation.  */
 end_comment
 
 begin_define
@@ -1032,20 +1068,7 @@ value|obstack_grow (&G.name_obstack, (STRING), strlen (STRING))
 end_define
 
 begin_comment
-comment|/* Return the position at which the next character will be appended to    the mangled representation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mangled_position
-parameter_list|()
-define|\
-value|obstack_object_size (&G.name_obstack)
-end_define
-
-begin_comment
-comment|/* Non-zero if NODE1 and NODE2 are both TREE_LIST nodes and have the    same purpose (context, which may be a type) and value (template    decl).  See write_template_prefix for more information on what this    is used for.  */
+comment|/* Nonzero if NODE1 and NODE2 are both TREE_LIST nodes and have the    same purpose (context, which may be a type) and value (template    decl).  See write_template_prefix for more information on what this    is used for.  */
 end_comment
 
 begin_define
@@ -1059,23 +1082,6 @@ name|NODE2
 parameter_list|)
 define|\
 value|(TREE_CODE (NODE1) == TREE_LIST                                     \&& TREE_CODE (NODE2) == TREE_LIST                                  \&& ((TYPE_P (TREE_PURPOSE (NODE1))                                 \&& same_type_p (TREE_PURPOSE (NODE1), TREE_PURPOSE (NODE2)))\        || TREE_PURPOSE (NODE1) == TREE_PURPOSE (NODE2))             \&& TREE_VALUE (NODE1) == TREE_VALUE (NODE2))
-end_define
-
-begin_comment
-comment|/* Write out a signed quantity in base 10.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|write_signed_number
-parameter_list|(
-name|NUMBER
-parameter_list|)
-define|\
-value|write_number ((NUMBER),
-comment|/*unsigned_p=*/
-value|0, 10)
 end_define
 
 begin_comment
@@ -1096,7 +1102,7 @@ value|1, 10)
 end_define
 
 begin_comment
-comment|/* If DECL is a template instance, return non-zero and, if    TEMPLATE_INFO is non-NULL, set *TEMPLATE_INFO to its template info.    Otherwise return zero.  */
+comment|/* If DECL is a template instance, return nonzero and, if    TEMPLATE_INFO is non-NULL, set *TEMPLATE_INFO to its template info.    Otherwise return zero.  */
 end_comment
 
 begin_function
@@ -1158,7 +1164,7 @@ comment|/* For a templated TYPE_DECL, the template info is hanging 	       off t
 operator|*
 name|template_info
 operator|=
-name|CLASSTYPE_TEMPLATE_INFO
+name|TYPE_TEMPLATE_INFO
 argument_list|(
 name|type
 argument_list|)
@@ -1665,7 +1671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper function for find_substitution.  Returns non-zero if NODE,    which may be a decl or a CLASS_TYPE, is a template-id with template    name of substitution_index[INDEX] in the ::std namespace.  */
+comment|/* Helper function for find_substitution.  Returns nonzero if NODE,    which may be a decl or a CLASS_TYPE, is a template-id with template    name of substitution_index[INDEX] in the ::std namespace.  */
 end_comment
 
 begin_function
@@ -1756,7 +1762,7 @@ argument_list|(
 name|type
 argument_list|)
 operator|&&
-name|CLASSTYPE_TEMPLATE_INFO
+name|TYPE_TEMPLATE_INFO
 argument_list|(
 name|type
 argument_list|)
@@ -1764,7 +1770,7 @@ operator|&&
 operator|(
 name|DECL_NAME
 argument_list|(
-name|CLASSTYPE_TI_TEMPLATE
+name|TYPE_TI_TEMPLATE
 argument_list|(
 name|type
 argument_list|)
@@ -1781,7 +1787,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Helper function for find_substitution.  Returns non-zero if NODE,    which may be a decl or a CLASS_TYPE, is the template-id    ::std::identifier<char>, where identifier is    substitution_index[INDEX].  */
+comment|/* Helper function for find_substitution.  Returns nonzero if NODE,    which may be a decl or a CLASS_TYPE, is the template-id    ::std::identifier<char>, where identifier is    substitution_index[INDEX].  */
 end_comment
 
 begin_function
@@ -1875,7 +1881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check whether a substitution should be used to represent NODE in    the mangling.     First, check standard special-case substitutions.<substitution> ::= St               # ::std                      ::= Sa      	 # ::std::allocator                      ::= Sb               # ::std::basic_string                      ::= Ss           # ::std::basic_string<char, 			       ::std::char_traits<char>, 			       ::std::allocator<char>>                      ::= Si           # ::std::basic_istream<char, ::std::char_traits<char>>                      ::= So           # ::std::basic_ostream<char, ::std::char_traits<char>>                      ::= Sd           # ::std::basic_iostream<char, ::std::char_traits<char>>        Then examine the stack of currently available substitution    candidates for entities appearing earlier in the same mangling     If a substitution is found, write its mangled representation and    return non-zero.  If none is found, just return zero.  */
+comment|/* Check whether a substitution should be used to represent NODE in    the mangling.     First, check standard special-case substitutions.<substitution> ::= St               # ::std                      ::= Sa      	 # ::std::allocator                      ::= Sb               # ::std::basic_string                      ::= Ss           # ::std::basic_string<char, 			       ::std::char_traits<char>, 			       ::std::allocator<char>>                      ::= Si           # ::std::basic_istream<char, ::std::char_traits<char>>                      ::= So           # ::std::basic_ostream<char, ::std::char_traits<char>>                      ::= Sd           # ::std::basic_iostream<char, ::std::char_traits<char>>        Then examine the stack of currently available substitution    candidates for entities appearing earlier in the same mangling     If a substitution is found, write its mangled representation and    return nonzero.  If none is found, just return zero.  */
 end_comment
 
 begin_function
@@ -2287,7 +2293,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Now check the list of available substitutions for this mangling      operation.    */
+comment|/* Now check the list of available substitutions for this mangling      operation.  */
 for|for
 control|(
 name|i
@@ -2531,10 +2537,6 @@ operator|=
 name|get_mostly_instantiated_function_type
 argument_list|(
 name|decl
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -2584,7 +2586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<name> ::=<unscoped-name>           ::=<unscoped-template-name><template-args> 	  ::=<nested-name> 	  ::=<local-name>       If IGNORE_LOCAL_SCOPE is non-zero, this production of<name> is    called from<local-name>, which mangles the enclosing scope    elsewhere and then uses this function to mangle just the part    underneath the function scope.  So don't use the<local-name>    production, to avoid an infinite recursion.  */
+comment|/*<name> ::=<unscoped-name>           ::=<unscoped-template-name><template-args> 	  ::=<nested-name> 	  ::=<local-name>       If IGNORE_LOCAL_SCOPE is nonzero, this production of<name> is    called from<local-name>, which mangles the enclosing scope    elsewhere and then uses this function to mangle just the part    underneath the function scope.  So don't use the<local-name>    production, to avoid an infinite recursion.  */
 end_comment
 
 begin_function
@@ -3080,7 +3082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<prefix> ::=<prefix><unqualified-name>>             ::=<template-prefix><template-args> 	    ::= # empty 	    ::=<substitution>  */
+comment|/*<prefix> ::=<prefix><unqualified-name>             ::=<template-param>             ::=<template-prefix><template-args> 	    ::= # empty 	    ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3136,7 +3138,6 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-comment|/* Node is a decl.  */
 block|{
 comment|/* If this is a function decl, that means we've hit function 	 scope, so this prefix must be for a local name.  In this 	 case, we're under the<local-name> production, which encodes 	 the enclosing function scope elsewhere.  So don't continue 	 here.  */
 if|if
@@ -3163,8 +3164,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* Node is a type.  */
 block|{
+comment|/* Node is a type.  */
 name|decl
 operator|=
 name|TYPE_NAME
@@ -3181,7 +3182,7 @@ argument_list|)
 condition|)
 name|template_info
 operator|=
-name|CLASSTYPE_TEMPLATE_INFO
+name|TYPE_TEMPLATE_INFO
 argument_list|(
 name|node
 argument_list|)
@@ -3196,6 +3197,12 @@ name|node
 argument_list|)
 operator|==
 name|TEMPLATE_TYPE_PARM
+operator|&&
+operator|!
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
 condition|)
 name|G
 operator|.
@@ -3203,6 +3210,26 @@ name|need_abi_warning
 operator|=
 name|true
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|node
+argument_list|)
+operator|==
+name|TEMPLATE_TYPE_PARM
+operator|&&
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+condition|)
+name|write_template_param
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|template_info
@@ -3251,7 +3278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<template-prefix> ::=<prefix><template component>                      ::=<substitution>  */
+comment|/*<template-prefix> ::=<prefix><template component>                      ::=<template-param>                      ::=<substitution>  */
 end_comment
 
 begin_function
@@ -3347,7 +3374,7 @@ argument_list|)
 condition|)
 name|template
 operator|=
-name|CLASSTYPE_TI_TEMPLATE
+name|TYPE_TI_TEMPLATE
 argument_list|(
 name|type
 argument_list|)
@@ -3399,6 +3426,12 @@ argument_list|)
 argument_list|)
 operator|==
 name|TEMPLATE_TEMPLATE_PARM
+operator|&&
+operator|!
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
 condition|)
 name|G
 operator|.
@@ -3406,6 +3439,33 @@ name|need_abi_warning
 operator|=
 name|true
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|template
+argument_list|)
+argument_list|)
+operator|==
+name|TEMPLATE_TEMPLATE_PARM
+operator|&&
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+condition|)
+name|write_template_param
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|template
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|write_prefix
 argument_list|(
 name|context
@@ -3416,6 +3476,7 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
+block|}
 name|add_substitution
 argument_list|(
 name|substitution
@@ -3514,10 +3575,6 @@ init|=
 name|get_mostly_instantiated_function_type
 argument_list|(
 name|decl
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 decl_stmt|;
 name|type
@@ -3531,20 +3588,12 @@ block|}
 else|else
 name|type
 operator|=
-name|TREE_TYPE
-argument_list|(
-name|DECL_NAME
+name|DECL_CONV_FN_TYPE
 argument_list|(
 name|decl
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|write_string
-argument_list|(
-literal|"cv"
-argument_list|)
-expr_stmt|;
-name|write_type
+name|write_conversion_operator_name
 argument_list|(
 name|type
 argument_list|)
@@ -3600,6 +3649,32 @@ name|DECL_NAME
 argument_list|(
 name|decl
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Write the unqualified-name for a conversion operator to TYPE.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|write_conversion_operator_name
+parameter_list|(
+name|tree
+name|type
+parameter_list|)
+block|{
+name|write_string
+argument_list|(
+literal|"cv"
+argument_list|)
+expr_stmt|;
+name|write_type
+argument_list|(
+name|type
 argument_list|)
 expr_stmt|;
 block|}
@@ -3875,7 +3950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write out an integral CST in decimal. Most numbers are small, and    representable in a HOST_WIDE_INT. Occasionally we'll have numbers    bigger than that, which we must deal with. */
+comment|/* Write out an integral CST in decimal. Most numbers are small, and    representable in a HOST_WIDE_INT. Occasionally we'll have numbers    bigger than that, which we must deal with.  */
 end_comment
 
 begin_function
@@ -3912,7 +3987,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* A bignum. We do this in chunks, each of which fits in a 	 HOST_WIDE_INT. */
+comment|/* A bignum. We do this in chunks, each of which fits in a 	 HOST_WIDE_INT.  */
 name|char
 name|buffer
 index|[
@@ -3959,7 +4034,7 @@ decl_stmt|;
 name|int
 name|done
 decl_stmt|;
-comment|/* HOST_WIDE_INT must be at least 32 bits, so 10^9 is 	 representable. */
+comment|/* HOST_WIDE_INT must be at least 32 bits, so 10^9 is 	 representable.  */
 name|chunk
 operator|=
 literal|1000000000
@@ -3978,7 +4053,7 @@ operator|>=
 literal|8
 condition|)
 block|{
-comment|/* It is at least 64 bits, so 10^18 is representable. */
+comment|/* It is at least 64 bits, so 10^18 is representable.  */
 name|chunk_digits
 operator|=
 literal|18
@@ -3990,7 +4065,7 @@ expr_stmt|;
 block|}
 name|type
 operator|=
-name|signed_or_unsigned_type
+name|c_common_signed_or_unsigned_type
 argument_list|(
 literal|1
 argument_list|,
@@ -4206,6 +4281,214 @@ name|write_unsigned_number
 argument_list|(
 name|low
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Write out a floating-point literal.            "Floating-point literals are encoded using the bit pattern of the     target processor's internal representation of that number, as a     fixed-length lowercase hexadecimal string, high-order bytes first     (even if the target processor would store low-order bytes first).     The "n" prefix is not used for floating-point literals; the sign     bit is encoded with the rest of the number.      Here are some examples, assuming the IEEE standard representation     for floating point numbers.  (Spaces are for readability, not     part of the encoding.)          1.0f                    Lf 3f80 0000 E        -1.0f                    Lf bf80 0000 E         1.17549435e-38f         Lf 0080 0000 E         1.40129846e-45f         Lf 0000 0001 E         0.0f                    Lf 0000 0000 E"     Caller is responsible for the Lx and the E.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|write_real_cst
+parameter_list|(
+name|value
+parameter_list|)
+name|tree
+name|value
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+condition|)
+block|{
+name|long
+name|target_real
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* largest supported float */
+name|char
+name|buffer
+index|[
+literal|9
+index|]
+decl_stmt|;
+comment|/* eight hex digits in a 32-bit number */
+name|int
+name|i
+decl_stmt|,
+name|limit
+decl_stmt|,
+name|dir
+decl_stmt|;
+name|tree
+name|type
+init|=
+name|TREE_TYPE
+argument_list|(
+name|value
+argument_list|)
+decl_stmt|;
+name|int
+name|words
+init|=
+name|GET_MODE_BITSIZE
+argument_list|(
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+operator|/
+literal|32
+decl_stmt|;
+name|real_to_target
+argument_list|(
+name|target_real
+argument_list|,
+operator|&
+name|TREE_REAL_CST
+argument_list|(
+name|value
+argument_list|)
+argument_list|,
+name|TYPE_MODE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* The value in target_real is in the target word order,          so we must write it out backward if that happens to be 	 little-endian.  write_number cannot be used, it will 	 produce uppercase.  */
+if|if
+condition|(
+name|FLOAT_WORDS_BIG_ENDIAN
+condition|)
+name|i
+operator|=
+literal|0
+operator|,
+name|limit
+operator|=
+name|words
+operator|,
+name|dir
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|i
+operator|=
+name|words
+operator|-
+literal|1
+operator|,
+name|limit
+operator|=
+operator|-
+literal|1
+operator|,
+name|dir
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+for|for
+control|(
+init|;
+name|i
+operator|!=
+name|limit
+condition|;
+name|i
+operator|+=
+name|dir
+control|)
+block|{
+name|sprintf
+argument_list|(
+name|buffer
+argument_list|,
+literal|"%08lx"
+argument_list|,
+name|target_real
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|write_chars
+argument_list|(
+name|buffer
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* In G++ 3.3 and before the REAL_VALUE_TYPE was written out 	 literally.  Note that compatibility with 3.2 is impossible, 	 because the old floating-point emulator used a different 	 format for REAL_VALUE_TYPE.  */
+name|size_t
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|TREE_REAL_CST
+argument_list|(
+name|value
+argument_list|)
+argument_list|)
+condition|;
+operator|++
+name|i
+control|)
+name|write_number
+argument_list|(
+operator|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
+operator|&
+name|TREE_REAL_CST
+argument_list|(
+name|value
+argument_list|)
+operator|)
+index|[
+name|i
+index|]
+argument_list|,
+comment|/*unsigned_p*/
+literal|1
+argument_list|,
+comment|/*base*/
+literal|16
+argument_list|)
+expr_stmt|;
+name|G
+operator|.
+name|need_abi_warning
+operator|=
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -4525,7 +4808,7 @@ name|int
 name|discriminator
 decl_stmt|;
 block|{
-comment|/* If discriminator is zero, don't write anything.  Otherwise... */
+comment|/* If discriminator is zero, don't write anything.  Otherwise...  */
 if|if
 condition|(
 name|discriminator
@@ -4660,7 +4943,7 @@ name|tree
 name|type
 decl_stmt|;
 block|{
-comment|/* This gets set to non-zero if TYPE turns out to be a (possibly      CV-qualified) builtin type.  */
+comment|/* This gets set to nonzero if TYPE turns out to be a (possibly      CV-qualified) builtin type.  */
 name|int
 name|is_builtin_type
 init|=
@@ -5200,7 +5483,7 @@ block|{
 name|tree
 name|t
 init|=
-name|type_for_mode
+name|c_common_type_for_mode
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -5399,7 +5682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<bare-function-type>.  TYPE is a FUNCTION_TYPE or    METHOD_TYPE.  If INCLUDE_RETURN_TYPE is non-zero, the return value    is mangled before the parameter types.  If non-NULL, DECL is    FUNCTION_DECL for the function whose type is being emitted.<bare-function-type> ::=</signature/ type>+  */
+comment|/* Non-terminal<bare-function-type>.  TYPE is a FUNCTION_TYPE or    METHOD_TYPE.  If INCLUDE_RETURN_TYPE is nonzero, the return value    is mangled before the parameter types.  If non-NULL, DECL is    FUNCTION_DECL for the function whose type is being emitted.<bare-function-type> ::=</signature/ type>+  */
 end_comment
 
 begin_function
@@ -5465,7 +5748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Write the mangled representation of a method parameter list of    types given in PARM_TYPES.  If METHOD_P is non-zero, the function is     considered a non-static method, and the this parameter is omitted.    If non-NULL, DECL is the FUNCTION_DECL for the function whose    parameters are being emitted.  */
+comment|/* Write the mangled representation of a method parameter list of    types given in PARM_TYPES.  If METHOD_P is nonzero, the function is    considered a non-static method, and the this parameter is omitted.    If non-NULL, DECL is the FUNCTION_DECL for the function whose    parameters are being emitted.  */
 end_comment
 
 begin_function
@@ -5686,6 +5969,28 @@ name|tree
 name|args
 decl_stmt|;
 block|{
+name|MANGLE_TRACE_TREE
+argument_list|(
+literal|"template-args"
+argument_list|,
+name|args
+argument_list|)
+expr_stmt|;
+name|write_char
+argument_list|(
+literal|'I'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|args
+argument_list|)
+operator|==
+name|TREE_VEC
+condition|)
+block|{
 name|int
 name|i
 decl_stmt|;
@@ -5697,13 +6002,6 @@ argument_list|(
 name|args
 argument_list|)
 decl_stmt|;
-name|MANGLE_TRACE_TREE
-argument_list|(
-literal|"template-args"
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
 name|my_friendly_assert
 argument_list|(
 name|length
@@ -5728,7 +6026,7 @@ operator|==
 name|TREE_VEC
 condition|)
 block|{
-comment|/* We have nested template args.  We want the innermost template 	 argument list.  */
+comment|/* We have nested template args.  We want the innermost template 	     argument list.  */
 name|args
 operator|=
 name|TREE_VEC_ELT
@@ -5748,11 +6046,6 @@ name|args
 argument_list|)
 expr_stmt|;
 block|}
-name|write_char
-argument_list|(
-literal|'I'
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -5776,6 +6069,43 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|my_friendly_assert
+argument_list|(
+name|TREE_CODE
+argument_list|(
+name|args
+argument_list|)
+operator|==
+name|TREE_LIST
+argument_list|,
+literal|20021014
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|args
+condition|)
+block|{
+name|write_template_arg
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|args
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|args
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|write_char
 argument_list|(
 literal|'E'
@@ -5785,7 +6115,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*<expression> ::=<unary operator-name><expression> 		::=<binary operator-name><expression><expression> 		::=<expr-primary><expr-primary> ::=<template-param> 		  ::= L<type><value number> E  # literal 		  ::= L<mangled-name> E         # external name  */
+comment|/*<expression> ::=<unary operator-name><expression> 		::=<binary operator-name><expression><expression> 		::=<expr-primary><expr-primary> ::=<template-param> 		  ::= L<type><value number> E  # literal 		  ::= L<mangled-name> E         # external name                     ::= sr<type><unqualified-name>                   ::= sr<type><unqualified-name><template-args> */
 end_comment
 
 begin_function
@@ -5883,7 +6213,7 @@ name|expr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Handle template parameters. */
+comment|/* Handle template parameters.  */
 if|if
 condition|(
 name|code
@@ -5917,6 +6247,17 @@ name|code
 argument_list|)
 operator|==
 literal|'c'
+operator|||
+operator|(
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+operator|&&
+name|code
+operator|==
+name|CONST_DECL
+operator|)
 condition|)
 name|write_template_arg_literal
 argument_list|(
@@ -5997,6 +6338,272 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|expr
+argument_list|)
+operator|==
+name|SCOPE_REF
+condition|)
+block|{
+name|tree
+name|scope
+init|=
+name|TREE_OPERAND
+argument_list|(
+name|expr
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|tree
+name|member
+init|=
+name|TREE_OPERAND
+argument_list|(
+name|expr
+argument_list|,
+literal|1
+argument_list|)
+decl_stmt|;
+comment|/* If the MEMBER is a real declaration, then the qualifying 	 scope was not dependent.  Ideally, we would not have a 	 SCOPE_REF in those cases, but sometimes we do.  If the second 	 argument is a DECL, then the name must not have been 	 dependent.  */
+if|if
+condition|(
+name|DECL_P
+argument_list|(
+name|member
+argument_list|)
+condition|)
+name|write_expression
+argument_list|(
+name|member
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|tree
+name|template_args
+decl_stmt|;
+name|write_string
+argument_list|(
+literal|"sr"
+argument_list|)
+expr_stmt|;
+name|write_type
+argument_list|(
+name|scope
+argument_list|)
+expr_stmt|;
+comment|/* If MEMBER is a template-id, separate the template 	     from the arguments.  */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|member
+argument_list|)
+operator|==
+name|TEMPLATE_ID_EXPR
+condition|)
+block|{
+name|template_args
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|member
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|member
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|member
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|member
+argument_list|)
+operator|==
+name|LOOKUP_EXPR
+condition|)
+name|member
+operator|=
+name|TREE_OPERAND
+argument_list|(
+name|member
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|template_args
+operator|=
+name|NULL_TREE
+expr_stmt|;
+comment|/* Write out the name of the MEMBER.  */
+if|if
+condition|(
+name|IDENTIFIER_TYPENAME_P
+argument_list|(
+name|member
+argument_list|)
+condition|)
+name|write_conversion_operator_name
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|member
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IDENTIFIER_OPNAME_P
+argument_list|(
+name|member
+argument_list|)
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|mangled_name
+init|=
+name|NULL
+decl_stmt|;
+comment|/* Unfortunately, there is no easy way to go from the 		 name of the operator back to the corresponding tree 		 code.  */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|LAST_CPLUS_TREE_CODE
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|identifier
+operator|==
+name|member
+condition|)
+block|{
+comment|/* The ABI says that we prefer binary operator 		       names to unary operator names.  */
+if|if
+condition|(
+name|operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|arity
+operator|==
+literal|2
+condition|)
+block|{
+name|mangled_name
+operator|=
+name|operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|mangled_name
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|mangled_name
+condition|)
+name|mangled_name
+operator|=
+name|operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|mangled_name
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|assignment_operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|identifier
+operator|==
+name|member
+condition|)
+block|{
+name|mangled_name
+operator|=
+name|assignment_operator_name_info
+index|[
+name|i
+index|]
+operator|.
+name|mangled_name
+expr_stmt|;
+break|break;
+block|}
+name|write_string
+argument_list|(
+name|mangled_name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|write_source_name
+argument_list|(
+name|member
+argument_list|)
+expr_stmt|;
+comment|/* Write out the template arguments.  */
+if|if
+condition|(
+name|template_args
+condition|)
+name|write_template_args
+argument_list|(
+name|template_args
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -6080,6 +6687,15 @@ condition|(
 name|code
 condition|)
 block|{
+case|case
+name|CALL_EXPR
+case|:
+name|sorry
+argument_list|(
+literal|"call_expr cannot be mangled due to a defect in the C++ ABI"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|CAST_EXPR
 case|:
@@ -6222,7 +6838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Literal subcase of non-terminal<template-arg>.         "Literal arguments, e.g. "A<42L>", are encoded with their type      and value. Negative integer values are preceded with "n"; for      example, "A<-42L>" becomes "1AILln42EE". The bool value false is      encoded as 0, true as 1. If floating-point arguments are accepted      as an extension, their values should be encoded using a      fixed-length lowercase hexadecimal string corresponding to the      internal representation (IEEE on IA-64), high-order bytes first,      without leading zeroes. For example: "Lfbff000000E" is -1.0f."  */
+comment|/* Literal subcase of non-terminal<template-arg>.         "Literal arguments, e.g. "A<42L>", are encoded with their type      and value. Negative integer values are preceded with "n"; for      example, "A<-42L>" becomes "1AILln42EE". The bool value false is      encoded as 0, true as 1."  */
 end_comment
 
 begin_function
@@ -6342,81 +6958,11 @@ argument_list|)
 operator|==
 name|REAL_CST
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|CROSS_COMPILE
-specifier|static
-name|int
-name|explained
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|explained
-condition|)
-block|{
-name|sorry
-argument_list|(
-literal|"real-valued template parameters when cross-compiling"
-argument_list|)
-expr_stmt|;
-name|explained
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|#
-directive|else
-name|size_t
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|TREE_REAL_CST
+name|write_real_cst
 argument_list|(
 name|value
 argument_list|)
-argument_list|)
-condition|;
-operator|++
-name|i
-control|)
-name|write_number
-argument_list|(
-operator|(
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|TREE_REAL_CST
-argument_list|(
-name|value
-argument_list|)
-operator|)
-index|[
-name|i
-index|]
-argument_list|,
-comment|/*unsigned_p=*/
-literal|1
-argument_list|,
-literal|16
-argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 else|else
 name|abort
 argument_list|()
@@ -6528,6 +7074,38 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|TREE_CODE_CLASS
+argument_list|(
+name|code
+argument_list|)
+operator|==
+literal|'c'
+operator|&&
+name|code
+operator|!=
+name|PTRMEM_CST
+operator|)
+operator|||
+operator|(
+name|abi_version_at_least
+argument_list|(
+literal|2
+argument_list|)
+operator|&&
+name|code
+operator|==
+name|CONST_DECL
+operator|)
+condition|)
+name|write_template_arg_literal
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|DECL_P
 argument_list|(
 name|node
@@ -6568,25 +7146,6 @@ literal|'E'
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|TREE_CODE_CLASS
-argument_list|(
-name|code
-argument_list|)
-operator|==
-literal|'c'
-operator|&&
-name|code
-operator|!=
-name|PTRMEM_CST
-condition|)
-name|write_template_arg_literal
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
 else|else
 block|{
 comment|/* Template arguments may be expressions.  */
@@ -6802,7 +7361,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Non-terminal<template-param>.  PARM is a TEMPLATE_TYPE_PARM,    TEMPLATE_TEMPLATE_PARM, BOUND_TEMPLATE_TEMPLATE_PARM or a    TEMPLATE_PARM_INDEX.<template-param> ::= T</parameter/ number> _  */
+comment|/* Non-terminal<template-param>.  PARM is a TEMPLATE_TYPE_PARM,    TEMPLATE_TEMPLATE_PARM, BOUND_TEMPLATE_TEMPLATE_PARM or a    TEMPLATE_PARM_INDEX.<template-param> ::= T</parameter/ number> _     If we are internally mangling then we distinguish level and, for    non-type parms, type too. The mangling appends</level/ number> _</non-type type/ type> _     This is used by mangle_conv_op_name_for_type.  */
 end_comment
 
 begin_function
@@ -6818,6 +7377,14 @@ decl_stmt|;
 block|{
 name|int
 name|parm_index
+decl_stmt|;
+name|int
+name|parm_level
+decl_stmt|;
+name|tree
+name|parm_type
+init|=
+name|NULL_TREE
 decl_stmt|;
 name|MANGLE_TRACE_TREE
 argument_list|(
@@ -6850,6 +7417,13 @@ argument_list|(
 name|parm
 argument_list|)
 expr_stmt|;
+name|parm_level
+operator|=
+name|TEMPLATE_TYPE_LEVEL
+argument_list|(
+name|parm
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|TEMPLATE_PARM_INDEX
@@ -6859,6 +7433,23 @@ operator|=
 name|TEMPLATE_PARM_IDX
 argument_list|(
 name|parm
+argument_list|)
+expr_stmt|;
+name|parm_level
+operator|=
+name|TEMPLATE_PARM_LEVEL
+argument_list|(
+name|parm
+argument_list|)
+expr_stmt|;
+name|parm_type
+operator|=
+name|TREE_TYPE
+argument_list|(
+name|TEMPLATE_PARM_DECL
+argument_list|(
+name|parm
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7016,7 +7607,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Start mangling a new name or type.  */
+comment|/* Start mangling ENTITY.  */
 end_comment
 
 begin_function
@@ -7041,6 +7632,17 @@ name|need_abi_warning
 operator|=
 name|false
 expr_stmt|;
+name|VARRAY_TREE_INIT
+argument_list|(
+name|G
+operator|.
+name|substitutions
+argument_list|,
+literal|1
+argument_list|,
+literal|"mangling substitutions"
+argument_list|)
+expr_stmt|;
 name|obstack_free
 argument_list|(
 operator|&
@@ -7061,7 +7663,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Done with mangling.  Return the generated mangled name.  */
+comment|/* Done with mangling.  Return the generated mangled name.  If WARN is    true, and the name of G.entity will be mangled differently in a    future version of the ABI, issue a warning.  */
 end_comment
 
 begin_function
@@ -7097,12 +7699,11 @@ name|entity
 argument_list|)
 expr_stmt|;
 comment|/* Clear all the substitutions.  */
-name|VARRAY_POP_ALL
-argument_list|(
 name|G
 operator|.
 name|substitutions
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Null-terminate the string.  */
 name|write_char
@@ -7142,17 +7743,6 @@ operator|&
 name|G
 operator|.
 name|name_obstack
-argument_list|)
-expr_stmt|;
-name|VARRAY_TREE_INIT
-argument_list|(
-name|G
-operator|.
-name|substitutions
-argument_list|,
-literal|1
-argument_list|,
-literal|"mangling substitutions"
 argument_list|)
 expr_stmt|;
 comment|/* Cache these identifiers for quick comparison when checking for      standard substitutions.  */
@@ -7906,6 +8496,88 @@ block|}
 end_function
 
 begin_comment
+comment|/* This hash table maps TYPEs to the IDENTIFIER for a conversion    operator to TYPE.  The nodes are TREE_LISTs whose TREE_PURPOSE is    the TYPE and whose TREE_VALUE is the IDENTIFIER.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|(param_is (union tree_node))
+argument_list|)
+name|htab_t
+name|conv_type_names
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Hash a node (VAL1) in the table.  */
+end_comment
+
+begin_function
+specifier|static
+name|hashval_t
+name|hash_type
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|val
+parameter_list|)
+block|{
+return|return
+name|htab_hash_pointer
+argument_list|(
+name|TREE_PURPOSE
+argument_list|(
+operator|(
+name|tree
+operator|)
+name|val
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Compare VAL1 (a node in the table) with VAL2 (a TYPE).  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|compare_type
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|val1
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|val2
+parameter_list|)
+block|{
+return|return
+name|TREE_PURPOSE
+argument_list|(
+operator|(
+name|tree
+operator|)
+name|val1
+argument_list|)
+operator|==
+operator|(
+name|tree
+operator|)
+name|val2
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Return an identifier for the mangled unqualified name for a    conversion operator to TYPE.  This mangling is not specified by the    ABI spec; it is only used internally.  */
 end_comment
 
@@ -7913,52 +8585,109 @@ begin_function
 name|tree
 name|mangle_conv_op_name_for_type
 parameter_list|(
-name|type
-parameter_list|)
+specifier|const
 name|tree
 name|type
-decl_stmt|;
+parameter_list|)
 block|{
+name|void
+modifier|*
+modifier|*
+name|slot
+decl_stmt|;
 name|tree
 name|identifier
 decl_stmt|;
-comment|/* Build the mangling for TYPE.  */
-specifier|const
 name|char
-modifier|*
-name|mangled_type
-init|=
-name|mangle_type_string
-argument_list|(
-name|type
-argument_list|)
+name|buffer
+index|[
+literal|64
+index|]
 decl_stmt|;
-comment|/* Allocate a temporary buffer for the complete name.  */
-name|char
-modifier|*
-name|op_name
-init|=
-name|concat
+if|if
+condition|(
+name|conv_type_names
+operator|==
+name|NULL
+condition|)
+name|conv_type_names
+operator|=
+name|htab_create_ggc
 argument_list|(
-literal|"operator "
+literal|31
 argument_list|,
-name|mangled_type
+operator|&
+name|hash_type
+argument_list|,
+operator|&
+name|compare_type
 argument_list|,
 name|NULL
 argument_list|)
-decl_stmt|;
-comment|/* Find or create an identifier.  */
+expr_stmt|;
+name|slot
+operator|=
+name|htab_find_slot_with_hash
+argument_list|(
+name|conv_type_names
+argument_list|,
+name|type
+argument_list|,
+name|htab_hash_pointer
+argument_list|(
+name|type
+argument_list|)
+argument_list|,
+name|INSERT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|slot
+condition|)
+return|return
+name|TREE_VALUE
+argument_list|(
+operator|(
+name|tree
+operator|)
+operator|*
+name|slot
+argument_list|)
+return|;
+comment|/* Create a unique name corresponding to TYPE.  */
+name|sprintf
+argument_list|(
+name|buffer
+argument_list|,
+literal|"operator %lu"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|htab_elements
+argument_list|(
+name|conv_type_names
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|identifier
 operator|=
 name|get_identifier
 argument_list|(
-name|op_name
+name|buffer
 argument_list|)
 expr_stmt|;
-comment|/* Done with the temporary buffer.  */
-name|free
+operator|*
+name|slot
+operator|=
+name|build_tree_list
 argument_list|(
-name|op_name
+name|type
+argument_list|,
+name|identifier
 argument_list|)
 expr_stmt|;
 comment|/* Set bits on the identifier so we know later it's a conversion.  */
@@ -8213,6 +8942,12 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"gt-cp-mangle.h"
+end_include
 
 end_unit
 

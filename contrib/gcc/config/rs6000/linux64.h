@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler,    for 64 bit powerpc linux.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler,    for 64 bit PowerPC linux.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -50,14 +50,27 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_DEFAULT_SPEC
+name|PROCESSOR_DEFAULT
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_DEFAULT_SPEC
-value|"-D_ARCH_PPC64"
+name|PROCESSOR_DEFAULT
+value|PROCESSOR_PPC630
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROCESSOR_DEFAULT64
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PROCESSOR_DEFAULT64
+value|PROCESSOR_PPC630
 end_define
 
 begin_undef
@@ -286,14 +299,8 @@ value|rs6000_aix_emit_builtin_unwind_init ()
 end_define
 
 begin_comment
-comment|/* Don't assume anything about the header files.  */
+comment|/* Override svr4.h  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_IMPLICIT_EXTERN_C
-end_define
 
 begin_undef
 undef|#
@@ -310,15 +317,16 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D_PPC_ -D__PPC__ -D_PPC64_ -D__PPC64__ -D__powerpc__ -D__powerpc64__ \   -D_PIC_ -D__PIC__ -D_BIG_ENDIAN -D__BIG_ENDIAN__ -D__ELF__ \   -D__LONG_MAX__=9223372036854775807L \   -Acpu=powerpc64 -Amachine=powerpc64"
+value|do                                        \     {                                       \       builtin_define ("__PPC__");           \       builtin_define ("__PPC64__");         \       builtin_define ("__powerpc__");       \       builtin_define ("__powerpc64__");     \       builtin_define ("__PIC__");           \       builtin_define ("__ELF__");           \       builtin_assert ("cpu=powerpc64");     \       builtin_assert ("machine=powerpc64"); \     }                                       \   while (0)
 end_define
 
 begin_undef
@@ -435,41 +443,30 @@ directive|undef
 name|LINK_OS_LINUX_SPEC
 end_undef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CROSS_COMPILE
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|LINK_OS_LINUX_SPEC
-value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib64/ld.so.1}}}"
+value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker /lib64/ld64.so.1}}}"
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NATIVE_CROSS
+end_ifdef
 
 begin_define
 define|#
 directive|define
-name|LINK_OS_LINUX_SPEC
-value|"-m elf64ppc %{!shared: %{!static: \   %{rdynamic:-export-dynamic} \   %{!dynamic-linker:-dynamic-linker ld.so.1}}}"
+name|STARTFILE_PREFIX_SPEC
+value|"/usr/local/lib64/ /lib64/ /usr/lib64/"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CROSS_COMPILE
-end_ifndef
 
 begin_undef
 undef|#
@@ -481,19 +478,8 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_LINUX_SPEC
-value|"\ %{!shared: %{pg:/usr/lib64/gcrt1.o%s} %{!pg:%{p:/usr/lib64/gcrt1.o%s} \   %{!p:/usr/lib64/crt1.o%s}}} /usr/lib64/crti.o%s \ %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}"
+value|"\ %{!shared: %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}} crti.o%s \ %{static:crtbeginT.o%s} \ %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CROSS_COMPILE
-end_ifndef
 
 begin_undef
 undef|#
@@ -505,13 +491,8 @@ begin_define
 define|#
 directive|define
 name|ENDFILE_LINUX_SPEC
-value|"\ %{!shared:crtend.o%s} %{shared:crtendS.o%s} /usr/lib64/crtn.o%s"
+value|"\ %{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -672,6 +653,34 @@ name|RS6000_MCOUNT
 value|"_mcount"
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_comment
+comment|/* _init and _fini functions are built from bits spread across many    object files, each potentially with a different TOC pointer.  For    that reason, place a nop after the call so that the linker can    restore the TOC pointer if a TOC adjusting call stub is needed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRT_CALL_STATIC_FUNCTION
+parameter_list|(
+name|SECTION_OP
+parameter_list|,
+name|FUNC
+parameter_list|)
+define|\
+value|asm (SECTION_OP "\n"					\ "	bl ." #FUNC "\n"				\ "	nop\n"						\ "	.previous");
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* FP save and restore routines.  */
 end_comment
@@ -745,25 +754,17 @@ name|PREFERRED_DEBUGGING_TYPE
 value|DWARF2_DEBUG
 end_define
 
-begin_comment
-comment|/* If we are referencing a function that is static or is known to be    in this file, make the SYMBOL_REF special.  We can use this to indicate    that we can branch to this function without emitting a no-op after the    call.  Do not set this flag if the function is weakly defined.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|ENCODE_SECTION_INFO
+name|TARGET_ENCODE_SECTION_INFO
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|if (TREE_CODE (DECL) == FUNCTION_DECL				\&& (TREE_ASM_WRITTEN (DECL) || ! TREE_PUBLIC (DECL))	\&& ! DECL_WEAK (DECL))					\     SYMBOL_REF_FLAG (XEXP (DECL_RTL (DECL), 0)) = 1;
+name|TARGET_ENCODE_SECTION_INFO
+value|rs6000_xcoff_encode_section_info
 end_define
 
 begin_comment
@@ -840,7 +841,7 @@ value|do									\     {									\       if (!flag_inhibit_size_directive)					\
 end_define
 
 begin_comment
-comment|/* Return non-zero if this entry is to be written into the constant    pool in a special way.  We do so if this is a SYMBOL_REF, LABEL_REF    or a CONST containing one of them.  If -mfp-in-toc (the default),    we also do this for floating-point constants.  We actually can only    do this if the FP formats of the target and host machines are the    same, but we can't check that since not every file that uses    GO_IF_LEGITIMATE_ADDRESS_P includes real.h.  We also do this when    we can write the entry into the TOC and the entry is not larger    than a TOC entry.  */
+comment|/* Return nonzero if this entry is to be written into the constant    pool in a special way.  We do so if this is a SYMBOL_REF, LABEL_REF    or a CONST containing one of them.  If -mfp-in-toc (the default),    we also do this for floating-point constants.  We actually can only    do this if the FP formats of the target and host machines are the    same, but we can't check that since not every file that uses    GO_IF_LEGITIMATE_ADDRESS_P includes real.h.  We also do this when    we can write the entry into the TOC and the entry is not larger    than a TOC entry.  */
 end_comment
 
 begin_undef

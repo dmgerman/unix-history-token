@@ -16,35 +16,15 @@ name|TARGET_DEFAULT
 value|(MASK_FP | MASK_FPREGS | MASK_GAS)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-D__gnu_linux__ -Dlinux -Dunix -Asystem=linux -D_LONGLONG -D__alpha__ " \ SUB_CPP_PREDEFINES
-end_define
-
-begin_comment
-comment|/* The GNU C++ standard library requires that these macros be defined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|CPLUSPLUS_CPP_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPLUSPLUS_CPP_SPEC
-value|"-D_GNU_SOURCE %(cpp)"
+value|do {							\ 	builtin_define ("__gnu_linux__");			\ 	builtin_define ("_LONGLONG");				\ 	builtin_define_std ("linux");				\ 	builtin_define_std ("unix");				\ 	builtin_assert ("system=linux");			\
+comment|/* The GNU C++ standard library requires this.  */
+value|\ 	if (c_language == clk_cplusplus)			\ 	  builtin_define ("_GNU_SOURCE");			\     } while (0)
 end_define
 
 begin_undef
@@ -58,7 +38,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared: -lc} \    %{!shared: %{pthread:-lpthread} \               %{profile:-lc_p} %{!profile: -lc}}"
+value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared: %{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
 begin_comment
@@ -133,6 +113,12 @@ begin_define
 define|#
 directive|define
 name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_F_SETLKW
 end_define
 
 begin_comment

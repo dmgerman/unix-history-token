@@ -249,47 +249,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Begin a region that will contain entries created with    add_partial_entry.  */
+comment|/* Note that the current EH region (if any) may contain a throw, or a    call to a function which itself may contain a throw.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|void
-name|begin_protect_partials
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Create a new exception region and add the handler for the region    onto a list. These regions will be ended (and their handlers emitted)    when end_protect_partials is invoked.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|add_partial_entry
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* End all of the pending exception regions that have handlers added with    add_partial_entry.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|end_protect_partials
+name|note_eh_region_may_contain_throw
 name|PARAMS
 argument_list|(
 operator|(
@@ -353,13 +319,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return nonzero if nothing in this function can throw.  */
+comment|/* Set current_function_nothrow and cfun->all_throwers_are_sibcalls.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|bool
-name|nothrow_function_p
+name|void
+name|set_nothrow_function_flags
 name|PARAMS
 argument_list|(
 operator|(
@@ -571,7 +537,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|rtx
-name|expand_builtin_dwarf_fp_regnum
+name|expand_builtin_dwarf_sp_column
 name|PARAMS
 argument_list|(
 operator|(
@@ -760,12 +726,6 @@ operator|(
 name|DWARF2_UNWIND_INFO
 expr|\
 operator|&&
-name|defined
-argument_list|(
-name|EH_RETURN_STACKADJ_RTX
-argument_list|)
-expr|\
-operator|&&
 operator|(
 name|defined
 argument_list|(
@@ -858,23 +818,6 @@ begin_error
 error|#
 directive|error
 literal|"EH_RETURN_DATA_REGNO required"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EH_RETURN_STACKADJ_RTX
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"EH_RETURN_STACKADJ_RTX required"
 end_error
 
 begin_endif

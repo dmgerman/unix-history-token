@@ -4,6 +4,10 @@ comment|/* Definitions relating to the special __do_global_init function used   
 end_comment
 
 begin_comment
+comment|/* As a special exception, if you link this library with other files,    some of which are compiled with GCC, to produce an executable,    this library does not by itself cause the resulting executable    to be covered by the GNU General Public License.    This exception does not however invalidate any other reasons why    the executable file might be covered by the GNU General Public License.  */
+end_comment
+
+begin_comment
 comment|/*	This file contains definitions and declarations of things 	relating to the normal start-up-time invocation of C++ 	file-scope static object constructors.  These declarations 	and definitions are used by *both* libgcc2.c and by crtstuff.c.  	Note that this file should only be compiled with GCC. */
 end_comment
 

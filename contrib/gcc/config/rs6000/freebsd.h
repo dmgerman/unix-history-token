@@ -86,12 +86,42 @@ value|"%(link_os_freebsd)"
 end_define
 
 begin_comment
+comment|/* XXX: This is wrong for many platforms in sysv4.h.    We should work on getting that defination fixed.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_SHLIB_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LINK_SHLIB_SPEC
+value|"%{shared:-shared} %{!shared: %{static:-static}}"
+end_define
+
+begin_comment
 comment|/************************[  Target stuff  ]***********************************/
 end_comment
 
 begin_comment
 comment|/* Define the actual types of some ANSI-mandated types.      Needs to agree with<machine/ansi.h>.  GCC defaults come from c-decl.c,    c-common.c, and config/<arch>/<arch>.h.  */
 end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|SIZE_TYPE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SIZE_TYPE
+value|"unsigned int"
+end_define
 
 begin_comment
 comment|/* rs6000.h gets this wrong for FreeBSD.  We use the GCC defaults instead.  */
@@ -102,19 +132,6 @@ undef|#
 directive|undef
 name|WCHAR_TYPE
 end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
-end_define
 
 begin_undef
 undef|#

@@ -70,7 +70,7 @@ name|void
 modifier|*
 name|__gthread_mutex_t
 typedef|;
-comment|/*  * External functions provided by RTEMS. They are very similar to their POSIX   * counterparts. A "Wrapper API" is being use to avoid dependency on any RTEMS  * header files.  */
+comment|/*  * External functions provided by RTEMS. They are very similar to their POSIX  * counterparts. A "Wrapper API" is being use to avoid dependency on any RTEMS  * header files.  */
 comment|/* generic per task variables */
 specifier|extern
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for code generation pass of GNU compiler.    Copyright (C) 1987, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ value|XEXP (P, 4)
 end_define
 
 begin_comment
-comment|/* This is the 4th arg to `expand_expr'.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.    EXPAND_WRITE means we are only going to write to the resulting rtx.  */
+comment|/* This is the 4th arg to `expand_expr'.    EXPAND_STACK_PARM means we are possibly expanding a call param onto    the stack.  Choosing a value of 2 isn't special;  It just allows    some code optimization in store_expr.    EXPAND_SUM means it is ok to return a PLUS rtx or MULT rtx.    EXPAND_INITIALIZER is similar but also record any labels on forced_labels.    EXPAND_CONST_ADDRESS means it is ok to return a MEM whose address     is a constant that is not a legitimate address.    EXPAND_WRITE means we are only going to write to the resulting rtx.    EXPAND_MEMORY means we are interested in a memory result, even if     the memory is constant and we could have propagated a constant value.  */
 end_comment
 
 begin_enum
@@ -108,6 +108,12 @@ enum|enum
 name|expand_modifier
 block|{
 name|EXPAND_NORMAL
+init|=
+literal|0
+block|,
+name|EXPAND_STACK_PARM
+init|=
+literal|2
 block|,
 name|EXPAND_SUM
 block|,
@@ -116,6 +122,8 @@ block|,
 name|EXPAND_INITIALIZER
 block|,
 name|EXPAND_WRITE
+block|,
+name|EXPAND_MEMORY
 block|}
 enum|;
 end_enum
@@ -877,7 +885,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Emit a pair of rtl insns to compare two rtx's and to jump     to a label if the comparison is true.  */
+comment|/* Emit a pair of rtl insns to compare two rtx's and to jump    to a label if the comparison is true.  */
 end_comment
 
 begin_decl_stmt
@@ -966,7 +974,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return non-zero if the conditional move is supported.  */
+comment|/* Return nonzero if the conditional move is supported.  */
 end_comment
 
 begin_decl_stmt
@@ -1211,8 +1219,6 @@ name|std_expand_builtin_va_start
 name|PARAMS
 argument_list|(
 operator|(
-name|int
-operator|,
 name|tree
 operator|,
 name|rtx
@@ -1482,23 +1488,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This function is run once to initialize stor-layout.c.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|init_stor_layout_once
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* This is run at the end of compiling a function.  */
 end_comment
 
@@ -1640,6 +1629,19 @@ begin_comment
 comment|/* Emit code to move a block Y to a block X.  */
 end_comment
 
+begin_enum
+enum|enum
+name|block_op_methods
+block|{
+name|BLOCK_OP_NORMAL
+block|,
+name|BLOCK_OP_NO_LIBCALL
+block|,
+name|BLOCK_OP_CALL_PARM
+block|}
+enum|;
+end_enum
+
 begin_decl_stmt
 specifier|extern
 name|rtx
@@ -1652,6 +1654,9 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+expr|enum
+name|block_op_methods
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1705,6 +1710,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Generate a non-consecutive group of registers represented by a PARALLEL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|gen_group_rtx
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Load a BLKmode value into non-consecutive registers represented by a    PARALLEL.  */
 end_comment
 
@@ -1720,6 +1742,25 @@ operator|,
 name|rtx
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Move a non-consecutive group of registers represented by a PARALLEL into    a non-consecutive group of registers represented by a PARALLEL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|emit_group_move
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1860,7 +1901,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return non-zero if it is desirable to store LEN bytes generated by    CONSTFUN with several move instructions by store_by_pieces    function.  CONSTFUNDATA is a pointer which will be passed as argument    in every CONSTFUN call.    ALIGN is maximum alignment we can assume.  */
+comment|/* Return nonzero if it is desirable to store LEN bytes generated by    CONSTFUN with several move instructions by store_by_pieces    function.  CONSTFUNDATA is a pointer which will be passed as argument    in every CONSTFUN call.    ALIGN is maximum alignment we can assume.  */
 end_comment
 
 begin_decl_stmt
@@ -3526,7 +3567,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Probe a range of stack addresses from FIRST to FIRST+SIZE, inclusive.     FIRST is a constant and size is a Pmode RTX.  These are offsets from the    current stack pointer.  STACK_GROWS_DOWNWARD says whether to add or    subtract from the stack.  If SIZE is constant, this is done    with a fixed number of probes.  Otherwise, we must make a loop.  */
+comment|/* Probe a range of stack addresses from FIRST to FIRST+SIZE, inclusive.    FIRST is a constant and size is a Pmode RTX.  These are offsets from the    current stack pointer.  STACK_GROWS_DOWNWARD says whether to add or    subtract from the stack.  If SIZE is constant, this is done    with a fixed number of probes.  Otherwise, we must make a loop.  */
 end_comment
 
 begin_decl_stmt
@@ -3685,6 +3726,28 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|const_mult_add_overflow_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+expr|enum
+name|machine_mode
 operator|,
 name|int
 operator|)
@@ -3925,6 +3988,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vector_mode_valid_p
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

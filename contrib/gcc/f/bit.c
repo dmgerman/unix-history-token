@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"glimits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"bit.h"
 end_include
 

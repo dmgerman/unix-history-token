@@ -14,12 +14,6 @@ name|TARGET_ENDIAN_DEFAULT
 value|0
 end_define
 
-begin_include
-include|#
-directive|include
-file|<alpha/alpha.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -95,8 +89,10 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__unix__ -D__ANSI_COMPAT -Asystem=unix \ -D__OpenBSD__ -D__alpha__ -D__alpha"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	builtin_define ("__OpenBSD__");		\ 	builtin_define ("__ANSI_COMPAT");	\ 	builtin_define ("__unix__");		\ 	builtin_assert ("system=unix");		\     } while (0)
 end_define
 
 begin_comment

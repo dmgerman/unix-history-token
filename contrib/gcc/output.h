@@ -126,12 +126,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTX_CODE
-end_ifdef
-
 begin_comment
 comment|/* Obtain the current length of an insn.  If branch shortening has been done,    get its actual length.  Otherwise, get its maximum length.  */
 end_comment
@@ -472,7 +466,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return 1 if branch is an forward branch.    Uses insn_shuid array, so it works only in the final pass.  May be used by    output templates to add branch prediction hints, for example.  */
+comment|/* Return 1 if branch is a forward branch.    Uses insn_shuid array, so it works only in the final pass.  May be used by    output templates to add branch prediction hints, for example.  */
 end_comment
 
 begin_decl_stmt
@@ -554,6 +548,8 @@ name|add_weak
 name|PARAMS
 argument_list|(
 operator|(
+name|tree
+operator|,
 specifier|const
 name|char
 operator|*
@@ -643,6 +639,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|bool
+name|delete_unreachable_blocks
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|check_function_return_warnings
 name|PARAMS
@@ -653,11 +662,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Functions in varasm.c.  */
@@ -1012,12 +1016,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
-
 begin_comment
 comment|/* Tell assembler to change to section NAME for DECL.    If DECL is NULL, just switch to section NAME.    If NAME is NULL, get the name from DECL.    If RELOC is 1, the initializer for DECL contains relocs.  */
 end_comment
@@ -1141,15 +1139,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TREE_CODE */
-end_comment
-
 begin_comment
 comment|/* Emit any pending weak declarations.  */
 end_comment
@@ -1185,12 +1174,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
 
 begin_comment
 comment|/* Make the rtl for variable VAR be volatile.    Use this only for static variables.  */
@@ -1236,6 +1219,21 @@ operator|(
 name|tree
 operator|,
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_assemble_visibility
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1340,15 +1338,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TREE_CODE */
-end_comment
-
 begin_comment
 comment|/* Assemble code to leave SIZE bytes of zeros.  */
 end_comment
@@ -1417,12 +1406,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTX_CODE
-end_ifdef
-
 begin_comment
 comment|/* Similar, for calling a library function FUN.  */
 end_comment
@@ -1435,30 +1418,6 @@ name|PARAMS
 argument_list|(
 operator|(
 name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Declare the label NAME global.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|assemble_global
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1541,12 +1500,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTX_CODE
-end_ifdef
-
 begin_comment
 comment|/* Use directive OP to assemble an integer object X.  Print OP at the    start of the line, followed immediately by the value of X.  */
 end_comment
@@ -1591,7 +1544,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Assemble the integer constant X into an object of SIZE bytes.  ALIGN is    the alignment of the integer in bits.  Return 1 if we were able to output    the constant, otherwise 0.  If FORCE is non-zero, abort if we can't output    the constant.  */
+comment|/* Assemble the integer constant X into an object of SIZE bytes.  ALIGN is    the alignment of the integer in bits.  Return 1 if we were able to output    the constant, otherwise 0.  If FORCE is nonzero, abort if we can't output    the constant.  */
 end_comment
 
 begin_decl_stmt
@@ -1633,7 +1586,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|REAL_VALUE_TYPE
+name|REAL_VALUE_TYPE_SIZE
 end_ifdef
 
 begin_comment
@@ -1662,28 +1615,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* At the end of a function, forget the memory-constants    previously made for CONST_DOUBLEs.  Mark them as not on real_constant_chain.    Also clear out real_constant_chain and clear out all the chain-pointers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|clear_const_double_mem
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Start deferring output of subconstants.  */
@@ -1760,12 +1691,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TREE_CODE
-end_ifdef
-
 begin_comment
 comment|/* Write all the constants in the constant pool.  */
 end_comment
@@ -1828,17 +1753,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|RTX_CODE
-end_ifdef
-
 begin_comment
 comment|/* When outputting delayed branch sequences, this rtx holds the    sequence being output.  It is null when no delayed branch    sequence is being output, so it can be used as a test in the    insn output code.     This variable is defined  in final.c.  */
 end_comment
@@ -1849,11 +1763,6 @@ name|rtx
 name|final_sequence
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* The line number of the beginning of the current function.  Various    md code needs this so that it can output relative linenumbers.  */
@@ -2024,21 +1933,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Decide whether DECL needs to be in a writable section.  RELOC is the same    as for SELECT_SECTION.  */
+comment|/* Nonzero while outputting an `asm' with operands.    This means that inconsistencies are the user's fault, so don't abort.    The precise value is the insn being output, to pass to error_for_asm.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DECL_READONLY_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|(TREE_READONLY (DECL)					\&& ! TREE_THIS_VOLATILE (DECL)			\&& DECL_INITIAL (DECL)				\&& (DECL_INITIAL (DECL) == error_mark_node		\        || TREE_CONSTANT (DECL_INITIAL (DECL)))		\&& ! (RELOC&& (flag_pic || DECL_ONE_ONLY (DECL))))
-end_define
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|this_is_asm_operands
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Decide whether DECL needs to be in a writable section.    RELOC is the same as for SELECT_SECTION.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|decl_readonly_section
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|decl_readonly_section_1
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* User label prefix in effect for this compilation.  */
@@ -2052,34 +1991,6 @@ modifier|*
 name|user_label_prefix
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This macro gets just the user-specified name    out of the string in a SYMBOL_REF.  On most machines,    we discard the * if any and that's all.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STRIP_NAME_ENCODING
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|(VAR) = ((SYMBOL_NAME) + ((SYMBOL_NAME)[0] == '*'))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Default target function prologue and epilogue assembler output.  */
@@ -2281,8 +2192,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SECTION_MACH_DEP
+name|SECTION_TLS
 value|0x40000
+end_define
+
+begin_comment
+comment|/* contains thread-local storage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECTION_NOTYPE
+value|0x80000
+end_define
+
+begin_comment
+comment|/* don't output @progbits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SECTION_MACH_DEP
+value|0x100000
 end_define
 
 begin_comment
@@ -2377,6 +2310,30 @@ operator|,
 specifier|const
 name|char
 operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|default_section_type_flags_1
+name|PARAMS
+argument_list|(
+operator|(
+expr|union
+name|tree_node
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)
@@ -2553,6 +2510,195 @@ name|rtx_def
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_select_section
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_elf_select_section
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_elf_select_section_1
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_unique_section
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_unique_section_1
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_select_rtx_section
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|rtx
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_elf_select_rtx_section
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|rtx
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|default_strip_name_encoding
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|default_binds_local_p
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|default_binds_local_p_1
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|default_globalize_label
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

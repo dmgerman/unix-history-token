@@ -987,17 +987,15 @@ if|if
 condition|(
 name|next
 operator|&&
-name|SCHED_GROUP_P
+name|INSN_P
 argument_list|(
 name|next
 argument_list|)
 operator|&&
-name|GET_CODE
+name|SCHED_GROUP_P
 argument_list|(
 name|next
 argument_list|)
-operator|!=
-name|CODE_LABEL
 condition|)
 block|{
 comment|/* Notes will never intervene here though, so don't bother checking          for them.  */
@@ -1019,17 +1017,15 @@ operator|)
 operator|!=
 name|NULL
 operator|&&
-name|SCHED_GROUP_P
+name|INSN_P
 argument_list|(
 name|nnext
 argument_list|)
 operator|&&
-name|GET_CODE
+name|SCHED_GROUP_P
 argument_list|(
 name|nnext
 argument_list|)
-operator|!=
-name|CODE_LABEL
 condition|)
 name|next
 operator|=
@@ -1911,19 +1907,15 @@ do|while
 condition|(
 name|insn
 operator|&&
-name|SCHED_GROUP_P
+name|INSN_P
 argument_list|(
 name|insn
 argument_list|)
 operator|&&
-operator|(
-name|GET_CODE
+name|SCHED_GROUP_P
 argument_list|(
 name|insn
 argument_list|)
-operator|!=
-name|CODE_LABEL
-operator|)
 condition|)
 do|;
 return|return
@@ -4467,7 +4459,7 @@ operator|=
 name|loop_notes
 expr_stmt|;
 block|}
-comment|/* If this instruction can throw an exception, then moving it changes      where block boundaries fall.  This is mighty confusing elsewhere.       Therefore, prevent such an instruction from being moved.  */
+comment|/* If this instruction can throw an exception, then moving it changes      where block boundaries fall.  This is mighty confusing elsewhere.      Therefore, prevent such an instruction from being moved.  */
 if|if
 condition|(
 name|can_throw_internal
@@ -4996,8 +4988,6 @@ decl_stmt|,
 name|r0
 decl_stmt|,
 name|set
-decl_stmt|,
-name|note
 decl_stmt|;
 if|if
 condition|(
@@ -5025,14 +5015,6 @@ argument_list|(
 name|insn
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|/* Clear out stale SCHED_GROUP_P.  */
-name|SCHED_GROUP_P
-argument_list|(
-name|insn
-argument_list|)
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Make each JUMP_INSN a scheduling barrier for memory              references.  */
 if|if
@@ -5188,10 +5170,20 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Other call-clobbered hard regs may be clobbered.  */
+comment|/* Other call-clobbered hard regs may be clobbered. 		   Since we only have a choice between 'might be clobbered' 		   and 'definitely not clobbered', we must include all 		   partly call-clobbered registers here.  */
 elseif|else
 if|if
 condition|(
+name|HARD_REGNO_CALL_PART_CLOBBERED
+argument_list|(
+name|i
+argument_list|,
+name|reg_raw_mode
+index|[
+name|i
+index|]
+argument_list|)
+operator|||
 name|TEST_HARD_REG_BIT
 argument_list|(
 name|regs_invalidated_by_call
@@ -5333,66 +5325,6 @@ name|true
 expr_stmt|;
 block|}
 comment|/* See comments on reemit_notes as to why we do this. 	 ??? Actually, the reemit_notes just say what is done, not why.  */
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE
-operator|&&
-operator|(
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_RANGE_BEG
-operator|||
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_RANGE_END
-operator|)
-condition|)
-block|{
-name|loop_notes
-operator|=
-name|alloc_EXPR_LIST
-argument_list|(
-name|REG_SAVE_NOTE
-argument_list|,
-name|NOTE_RANGE_INFO
-argument_list|(
-name|insn
-argument_list|)
-argument_list|,
-name|loop_notes
-argument_list|)
-expr_stmt|;
-name|loop_notes
-operator|=
-name|alloc_EXPR_LIST
-argument_list|(
-name|REG_SAVE_NOTE
-argument_list|,
-name|GEN_INT
-argument_list|(
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-argument_list|)
-argument_list|,
-name|loop_notes
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|GET_CODE
@@ -6169,7 +6101,7 @@ literal|0
 argument_list|,
 argument|i
 argument_list|,
-argument|{       struct deps_reg *reg_last =&deps->reg_last[i];       free_INSN_LIST_list (&reg_last->uses);       free_INSN_LIST_list (&reg_last->sets);       free_INSN_LIST_list (&reg_last->clobbers);     }
+argument|{       struct deps_reg *reg_last =&deps->reg_last[i];       if (reg_last->uses) 	free_INSN_LIST_list (&reg_last->uses);       if (reg_last->sets) 	free_INSN_LIST_list (&reg_last->sets);       if (reg_last->clobbers) 	free_INSN_LIST_list (&reg_last->clobbers);     }
 argument_list|)
 empty_stmt|;
 name|CLEAR_REG_SET

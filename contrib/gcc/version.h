@@ -15,9 +15,17 @@ begin_decl_stmt
 specifier|extern
 specifier|const
 name|char
-modifier|*
-specifier|const
 name|version_string
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+name|bug_report_url
+index|[]
 decl_stmt|;
 end_decl_stmt
 

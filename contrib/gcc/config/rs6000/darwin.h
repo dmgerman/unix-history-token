@@ -64,6 +64,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
@@ -81,8 +82,10 @@ end_define
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ppc__ -D__POWERPC__ -D__NATURAL_ALIGNMENT__ -D__MACH__ -D__BIG_ENDIAN__ -D__APPLE__"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                            \     {                                           \       builtin_define ("__ppc__");               \       builtin_define ("__POWERPC__");           \       builtin_define ("__NATURAL_ALIGNMENT__"); \       builtin_define ("__MACH__");              \       builtin_define ("__APPLE__");             \     }                                           \   while (0)
 end_define
 
 begin_comment
@@ -93,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|CC1_SPEC
-value|"%{!static:-fPIC}"
+value|"\ %{static: %{Zdynamic: %e conflicting code gen style switches are used}}\ %{!static:-fPIC}"
 end_define
 
 begin_comment
@@ -240,48 +243,27 @@ value|assemble_name (FILE, NAME);
 end_define
 
 begin_comment
-comment|/* Output before instructions.  */
-end_comment
-
-begin_comment
-comment|/* This is how to output the definition of a user-level label named NAME,    such as the label on a static function or variable NAME.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { assemble_name (FILE, NAME); fputs (":\n", FILE); } while (0)
-end_define
-
-begin_comment
-comment|/* This is how to output a command to make the user-level label named NAME    defined for reference from other files.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|ASM_GLOBALIZE_LABEL
+name|GLOBAL_ASM_OP
 end_undef
 
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do { fputs ("\t.globl ", FILE);	\        RS6000_OUTPUT_BASENAME (FILE, NAME); putc ('\n', FILE);} while (0)
+name|GLOBAL_ASM_OP
+value|"\t.globl "
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ASM_GLOBALIZE_LABEL
+end_undef
 
 begin_comment
 comment|/* This is how to output an internal label prefix.  rs6000.c uses this    when generating traceback tables.  */
@@ -308,36 +290,6 @@ name|PREFIX
 parameter_list|)
 define|\
 value|fprintf (FILE, "%s", PREFIX)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|TEXT_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TEXT_SECTION_ASM_OP
-value|".text"
-end_define
-
-begin_comment
-comment|/* Output before writable data.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|DATA_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|DATA_SECTION_ASM_OP
-value|".data"
 end_define
 
 begin_comment
@@ -369,19 +321,6 @@ name|ROUNDED
 parameter_list|)
 define|\
 value|do { fputs (".comm ", (FILE));			\        RS6000_OUTPUT_BASENAME ((FILE), (NAME));		\        fprintf ((FILE), ",%d\n", (SIZE)); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_SKIP
-parameter_list|(
-name|FILE
-parameter_list|,
-name|SIZE
-parameter_list|)
-define|\
-value|fprintf (FILE, "\t.space %d\n", SIZE)
 end_define
 
 begin_comment
@@ -431,6 +370,25 @@ define|#
 directive|define
 name|RESTORE_FP_SUFFIX
 value|""
+end_define
+
+begin_comment
+comment|/* This is how to output an assembler line that says to advance    the location counter to a multiple of 2**LOG bytes using the    "nop" instruction as padding.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASM_OUTPUT_ALIGN_WITH_NOP
+parameter_list|(
+name|FILE
+parameter_list|,
+name|LOG
+parameter_list|)
+define|\
+value|do                                                          \     {                                                         \       if ((LOG)< 3)                                          \         {                                                     \           ASM_OUTPUT_ALIGN (FILE,LOG);                        \         }                                                     \       else
+comment|/* nop == ori r0,r0,0 */
+value|\         fprintf (FILE, "\t.align32 %d,0x60000000\n", (LOG));  \     } while (0)
 end_define
 
 begin_comment
@@ -596,7 +554,7 @@ value|((TREE_CODE (STRUCT) == RECORD_TYPE			\     || TREE_CODE (STRUCT) == UNION
 end_define
 
 begin_comment
-comment|/* XXX: Darwin supports neither .quad, or .llong, but it also doesn't    support 64 bit powerpc either, so this just keeps things happy.  */
+comment|/* XXX: Darwin supports neither .quad, or .llong, but it also doesn't    support 64 bit PowerPC either, so this just keeps things happy.  */
 end_comment
 
 begin_define
@@ -632,6 +590,19 @@ define|#
 directive|define
 name|BOOL_TYPE_SIZE
 value|INT_TYPE_SIZE
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|REGISTER_TARGET_PRAGMAS
+end_undef
+
+begin_define
+define|#
+directive|define
+name|REGISTER_TARGET_PRAGMAS
+value|DARWIN_REGISTER_TARGET_PRAGMAS
 end_define
 
 end_unit

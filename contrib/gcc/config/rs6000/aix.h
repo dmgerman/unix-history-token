@@ -28,6 +28,85 @@ value|1
 end_define
 
 begin_comment
+comment|/* AIX always has a TOC.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_NO_TOC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_TOC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIXED_R2
+value|1
+end_define
+
+begin_comment
+comment|/* AIX allows r13 to be used in 32-bit mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIXED_R13
+value|0
+end_define
+
+begin_comment
+comment|/* AIX does not support Altivec.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ALTIVEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTIVEC
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ALTIVEC_ABI
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTIVEC_ABI
+value|0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ALTIVEC_VRSAVE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTIVEC_VRSAVE
+value|0
+end_define
+
+begin_comment
 comment|/* The AIX linker will discard static constructors in object files before    collect has a chance to see them, so scan the object files directly.  */
 end_comment
 
@@ -45,6 +124,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
@@ -92,8 +172,10 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_IBMR2 -D_POWER -D_AIX -D_AIX32 -D_LONG_LONG \ -Asystem=unix -Asystem=aix -Acpu=rs6000 -Amachine=rs6000"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                     \     {                                    \       builtin_define ("_IBMR2");         \       builtin_define ("_POWER");         \       builtin_define ("_AIX");           \       builtin_define ("_AIX32");         \       builtin_define ("_LONG_LONG");     \       builtin_assert ("system=unix");    \       builtin_assert ("system=aix");     \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \     }                                    \   while (0)
 end_define
 
 begin_comment
@@ -104,20 +186,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}\    %(cpp_cpu)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_DEFAULT_SPEC
-value|"-D_ARCH_PWR"
+value|"%{posix: -D_POSIX_SOURCE}\    %{ansi: -D_ANSI_C_SOURCE}"
 end_define
 
 begin_undef
@@ -392,42 +461,6 @@ directive|define
 name|INIT_TARGET_OPTABS
 define|\
 value|do {									\     if (! TARGET_POWER2&& ! TARGET_POWERPC&& TARGET_HARD_FLOAT)	\       {									\ 	fixdfsi_libfunc = init_one_libfunc (RS6000_ITRUNC);		\ 	fixunsdfsi_libfunc = init_one_libfunc (RS6000_UITRUNC);		\       }									\     if (TARGET_HARD_FLOAT)						\       {									\ 	add_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (ADDTF3_LIBCALL);				\ 	sub_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (SUBTF3_LIBCALL);				\ 	smul_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (MULTF3_LIBCALL);				\ 	sdiv_optab->handlers[(int) TFmode].libfunc			\ 	  = init_one_libfunc (DIVTF3_LIBCALL);				\       }									\   } while (0)
-end_define
-
-begin_comment
-comment|/* AIX always has a TOC.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TARGET_NO_TOC
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_TOC
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIXED_R2
-value|1
-end_define
-
-begin_comment
-comment|/* AIX allows r13 to be used.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FIXED_R13
-value|0
 end_define
 
 begin_comment

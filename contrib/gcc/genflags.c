@@ -39,20 +39,6 @@ directive|include
 file|"gensupport.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
 begin_comment
 comment|/* Obstack to remember insns with.  */
 end_comment
@@ -551,7 +537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Print out prototype information for a function.  */
+comment|/* Print out prototype information for a generator function.  If the    insn pattern has been elided, print out a dummy generator that    does nothing.  */
 end_comment
 
 begin_function
@@ -573,6 +559,9 @@ argument_list|(
 name|insn
 argument_list|)
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -583,6 +572,19 @@ argument_list|(
 name|insn
 argument_list|,
 literal|0
+argument_list|)
+decl_stmt|;
+name|int
+name|truth
+init|=
+name|maybe_eval_c_test
+argument_list|(
+name|XSTR
+argument_list|(
+name|insn
+argument_list|,
+literal|2
+argument_list|)
 argument_list|)
 decl_stmt|;
 comment|/* Many md files don't refer to the last two operands passed to the      call patterns.  This means their generator functions will be two      arguments too short.  Instead of changing every md file to touch      those operands, we wrap the prototypes in macros that take the      correct number of arguments.  */
@@ -691,9 +693,25 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|truth
+operator|!=
+literal|0
+condition|)
 name|printf
 argument_list|(
-literal|"extern struct rtx_def *gen_%-*s PARAMS (("
+literal|"extern rtx        gen_%-*s PARAMS (("
+argument_list|,
+name|max_id_len
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"static inline rtx gen_%-*s PARAMS (("
 argument_list|,
 name|max_id_len
 argument_list|,
@@ -706,36 +724,143 @@ name|num
 operator|==
 literal|0
 condition|)
-name|printf
+name|fputs
 argument_list|(
 literal|"void"
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-while|while
-condition|(
-name|num
-operator|--
-operator|>
+for|for
+control|(
+name|i
+operator|=
 literal|1
-condition|)
-name|printf
+init|;
+name|i
+operator|<
+name|num
+condition|;
+name|i
+operator|++
+control|)
+name|fputs
 argument_list|(
-literal|"struct rtx_def *, "
+literal|"rtx, "
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
-name|printf
+name|fputs
 argument_list|(
-literal|"struct rtx_def *"
+literal|"rtx"
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|puts
 argument_list|(
-literal|"));\n"
+literal|"));"
 argument_list|)
 expr_stmt|;
+comment|/* Some back ends want to take the address of generator functions,      so we cannot simply use #define for these dummy definitions.  */
+if|if
+condition|(
+name|truth
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"static inline rtx\ngen_%s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|num
+operator|>
+literal|0
+condition|)
+block|{
+name|putchar
+argument_list|(
+literal|'('
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num
+operator|-
+literal|1
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"%c, "
+argument_list|,
+literal|'a'
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%c)\n"
+argument_list|,
+literal|'a'
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|num
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|"     rtx %c ATTRIBUTE_UNUSED;\n"
+argument_list|,
+literal|'a'
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|puts
+argument_list|(
+literal|"()"
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+literal|"{\n  return 0;\n}"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -769,6 +894,19 @@ name|p
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|int
+name|truth
+init|=
+name|maybe_eval_c_test
+argument_list|(
+name|XSTR
+argument_list|(
+name|insn
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
 decl_stmt|;
 comment|/* Don't mention instructions whose names are the null string      or begin with '*'.  They are in the machine description just      to be recognized.  */
 if|if
@@ -805,30 +943,26 @@ name|max_id_len
 operator|=
 name|len
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define HAVE_%s "
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
-name|XSTR
-argument_list|(
-name|insn
-argument_list|,
-literal|2
-argument_list|)
-argument_list|)
+name|truth
 operator|==
 literal|0
 condition|)
+comment|/* emit nothing */
+empty_stmt|;
+elseif|else
+if|if
+condition|(
+name|truth
+operator|==
+literal|1
+condition|)
 name|printf
 argument_list|(
-literal|"1\n"
+literal|"#define HAVE_%s 1\n"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 else|else
@@ -836,7 +970,9 @@ block|{
 comment|/* Write the macro definition, putting \'s at the end of each line, 	 if more than one.  */
 name|printf
 argument_list|(
-literal|"("
+literal|"#define HAVE_%s ("
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 for|for
@@ -865,24 +1001,26 @@ operator|*
 name|p
 argument_list|)
 condition|)
-name|printf
+name|fputs
 argument_list|(
 literal|" \\\n"
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|putchar
 argument_list|(
-literal|"%c"
-argument_list|,
 operator|*
 name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fputs
 argument_list|(
 literal|")\n"
+argument_list|,
+name|stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -960,6 +1098,11 @@ argument_list|(
 operator|&
 name|obstack
 argument_list|)
+expr_stmt|;
+comment|/* We need to see all the possibilities.  Elided insns may have      direct calls to their generators in C code.  */
+name|insn_elision
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1093,11 +1236,6 @@ name|obstack_finish
 argument_list|(
 operator|&
 name|obstack
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"struct rtx_def;\n"
 argument_list|)
 expr_stmt|;
 for|for

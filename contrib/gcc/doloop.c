@@ -427,7 +427,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return an estimate of the maximum number of loop iterations for the    loop specified by LOOP or zero if the loop is not normal.    MODE is the mode of the iteration count and NONNEG is non-zero if    the iteration count has been proved to be non-negative.  */
+comment|/* Return an estimate of the maximum number of loop iterations for the    loop specified by LOOP or zero if the loop is not normal.    MODE is the mode of the iteration count and NONNEG is nonzero if    the iteration count has been proved to be non-negative.  */
 end_comment
 
 begin_function
@@ -848,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if the loop specified by LOOP is suitable for    the use of special low-overhead looping instructions.  */
+comment|/* Return nonzero if the loop specified by LOOP is suitable for    the use of special low-overhead looping instructions.  */
 end_comment
 
 begin_function
@@ -1094,6 +1094,11 @@ name|comparison_code
 operator|==
 name|NE
 operator|&&
+operator|!
+name|loop_info
+operator|->
+name|preconditioned
+operator|&&
 name|INTVAL
 argument_list|(
 name|loop_info
@@ -1209,7 +1214,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* If the comparison is LEU and the comparison value is UINT_MAX 	 then the loop will not terminate.  Similarly, if the 	 comparison code is GEU and the initial value is 0, the loop 	 will not terminate.  	 If the absolute increment is not 1, the loop can be infinite 	 even with LTU/GTU, e.g. for (i = 3; i> 0; i -= 2)  	 Note that with LE and GE, the loop behaviour is undefined 	 (C++ standard section 5 clause 5) if an overflow occurs, say 	 between INT_MAX and INT_MAX + 1.  We thus don't have to worry 	 about these two cases.  	 ??? We could compute these conditions at run-time and have a 	 additional jump around the loop to ensure an infinite loop. 	 However, it is very unlikely that this is the intended 	 behaviour of the loop and checking for these rare boundary 	 conditions would pessimize all other code.  	 If the loop is executed only a few times an extra check to 	 restart the loop could use up most of the benefits of using a 	 count register loop.  Note however, that normally, this 	 restart branch would never execute, so it could be predicted 	 well by the CPU.  We should generate the pessimistic code by 	 default, and have an option, e.g. -funsafe-loops that would 	 enable count-register loops in this case.  */
+comment|/* If the comparison is LEU and the comparison value is UINT_MAX 	 then the loop will not terminate.  Similarly, if the 	 comparison code is GEU and the comparison value is 0, the 	 loop will not terminate.  	 If the absolute increment is not 1, the loop can be infinite 	 even with LTU/GTU, e.g. for (i = 3; i> 0; i -= 2)  	 Note that with LE and GE, the loop behavior is undefined 	 (C++ standard section 5 clause 5) if an overflow occurs, say 	 between INT_MAX and INT_MAX + 1.  We thus don't have to worry 	 about these two cases.  	 ??? We could compute these conditions at run-time and have a 	 additional jump around the loop to ensure an infinite loop. 	 However, it is very unlikely that this is the intended 	 behavior of the loop and checking for these rare boundary 	 conditions would pessimize all other code.  	 If the loop is executed only a few times an extra check to 	 restart the loop could use up most of the benefits of using a 	 count register loop.  Note however, that normally, this 	 restart branch would never execute, so it could be predicted 	 well by the CPU.  We should generate the pessimistic code by 	 default, and have an option, e.g. -funsafe-loops that would 	 enable count-register loops in this case.  */
 if|if
 condition|(
 name|loop_dump_stream
@@ -1229,7 +1234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Modify the loop to use the low-overhead looping insn where LOOP    describes the loop, ITERATIONS is an RTX containing the desired    number of loop iterations, ITERATIONS_MAX is a CONST_INT specifying    the maximum number of loop iterations, and DOLOOP_INSN is the    low-overhead looping insn to emit at the end of the loop.  This    returns non-zero if it was successful.  */
+comment|/* Modify the loop to use the low-overhead looping insn where LOOP    describes the loop, ITERATIONS is an RTX containing the desired    number of loop iterations, ITERATIONS_MAX is a CONST_INT specifying    the maximum number of loop iterations, and DOLOOP_INSN is the    low-overhead looping insn to emit at the end of the loop.  This    returns nonzero if it was successful.  */
 end_comment
 
 begin_function
@@ -1590,7 +1595,7 @@ argument_list|)
 expr_stmt|;
 name|sequence
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -1655,7 +1660,7 @@ argument_list|)
 expr_stmt|;
 name|sequence
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -1731,7 +1736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle the more complex case, where the bounds are not known at    compile time.  In this case we generate a run_time calculation of    the number of iterations.  We rely on the existence of a run-time    guard to ensure that the loop executes at least once, i.e.,    initial_value obeys the loop comparison condition.  If a guard is    not present, we emit one.  The loop to modify is described by LOOP.    ITERATIONS_MAX is a CONST_INT specifying the estimated maximum    number of loop iterations.  DOLOOP_INSN is the low-overhead looping    insn to insert.  Returns non-zero if loop successfully modified.  */
+comment|/* Handle the more complex case, where the bounds are not known at    compile time.  In this case we generate a run_time calculation of    the number of iterations.  We rely on the existence of a run-time    guard to ensure that the loop executes at least once, i.e.,    initial_value obeys the loop comparison condition.  If a guard is    not present, we emit one.  The loop to modify is described by LOOP.    ITERATIONS_MAX is a CONST_INT specifying the estimated maximum    number of loop iterations.  DOLOOP_INSN is the low-overhead looping    insn to insert.  Returns nonzero if loop successfully modified.  */
 end_comment
 
 begin_function
@@ -1895,7 +1900,7 @@ operator|==
 name|NE
 operator|)
 expr_stmt|;
-comment|/* The number of iterations (prior to any loop unrolling) is given by:         n = (abs (final - initial) + abs_inc - 1) / abs_inc.       However, it is possible for the summation to overflow, and a      safer method is:         n = abs (final - initial) / abs_inc;        n += (abs (final - initial) % abs_inc) != 0;       But when abs_inc is a power of two, the summation won't overflow      except in cases where the loop never terminates.  So we don't      need to use this more costly calculation.       If the loop has been unrolled, the full calculation is         t1 = abs_inc * unroll_number;		        increment per loop        n = (abs (final - initial) + abs_inc - 1) / t1;    full loops        n += ((abs (final - initial) + abs_inc - 1) % t1)>= abs_inc;                                                           partial loop      which works out to be equivalent to         n = (abs (final - initial) + t1 - 1) / t1;       However, in certain cases the unrolled loop will be preconditioned      by emitting copies of the loop body with conditional branches,      so that the unrolled loop is always a full loop and thus needs      no exit tests.  In this case we don't want to add the partial      loop count.  As above, when t1 is a power of two we don't need to      worry about overflow.       The division and modulo operations can be avoided by requiring      that the increment is a power of 2 (precondition_loop_p enforces      this requirement).  Nevertheless, the RTX_COSTS should be checked      to see if a fast divmod is available.  */
+comment|/* The number of iterations (prior to any loop unrolling) is given by:         n = (abs (final - initial) + abs_inc - 1) / abs_inc.       However, it is possible for the summation to overflow, and a      safer method is:         n = abs (final - initial) / abs_inc;        n += (abs (final - initial) % abs_inc) != 0;       But when abs_inc is a power of two, the summation won't overflow      except in cases where the loop never terminates.  So we don't      need to use this more costly calculation.       If the loop has been unrolled, the full calculation is         t1 = abs_inc * unroll_number;		        increment per loop        n = (abs (final - initial) + abs_inc - 1) / t1;    full loops        n += (abs (final - initial) + abs_inc - 1) % t1)>= abs_inc;                                                           partial loop      which works out to be equivalent to         n = (abs (final - initial) + t1 - 1) / t1;       In the case where the loop was preconditioned, a few iterations      may have been executed earlier; but 'initial' was adjusted as they      were executed, so we don't need anything special for that case here.      As above, when t1 is a power of two we don't need to worry about      overflow.       The division and modulo operations can be avoided by requiring      that the increment is a power of 2 (precondition_loop_p enforces      this requirement).  Nevertheless, the RTX_COSTS should be checked      to see if a fast divmod is available.  */
 name|start_sequence
 argument_list|()
 expr_stmt|;
@@ -2140,40 +2145,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|loop_info
-operator|->
-name|preconditioned
-condition|)
-name|diff
-operator|=
-name|expand_simple_binop
-argument_list|(
-name|GET_MODE
-argument_list|(
-name|diff
-argument_list|)
-argument_list|,
-name|PLUS
-argument_list|,
-name|diff
-argument_list|,
-name|GEN_INT
-argument_list|(
-name|abs_inc
-operator|-
-literal|1
-argument_list|)
-argument_list|,
-name|diff
-argument_list|,
-literal|1
-argument_list|,
-name|OPTAB_LIB_WIDEN
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* (abs (final - initial) + abs_inc * unroll_number - 1) */
 name|diff
 operator|=
 name|expand_simple_binop
@@ -2201,6 +2173,7 @@ argument_list|,
 name|OPTAB_LIB_WIDEN
 argument_list|)
 expr_stmt|;
+comment|/* (abs (final - initial) + abs_inc * unroll_number - 1) 	 / (abs_inc * unroll_number)  */
 name|diff
 operator|=
 name|expand_simple_binop
@@ -2329,7 +2302,7 @@ block|}
 block|}
 name|sequence
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -2364,7 +2337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is the main entry point.  Process loop described by LOOP    validating that the loop is suitable for conversion to use a low    overhead looping instruction, replacing the jump insn where    suitable.  We distinguish between loops with compile-time bounds    and those with run-time bounds.  Information from LOOP is used to    compute the number of iterations and to determine whether the loop    is a candidate for this optimization.  Returns non-zero if loop    successfully modified.  */
+comment|/* This is the main entry point.  Process loop described by LOOP    validating that the loop is suitable for conversion to use a low    overhead looping instruction, replacing the jump insn where    suitable.  We distinguish between loops with compile-time bounds    and those with run-time bounds.  Information from LOOP is used to    compute the number of iterations and to determine whether the loop    is a candidate for this optimization.  Returns nonzero if loop    successfully modified.  */
 end_comment
 
 begin_function
@@ -2730,33 +2703,33 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* A raw define_insn may yield a plain pattern.  If a sequence      was involved, the last must be the jump instruction.  */
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|doloop_seq
-argument_list|)
-operator|==
-name|SEQUENCE
-condition|)
-block|{
+comment|/* If multiple instructions were created, the last must be the      jump instruction.  Also, a raw define_insn may yield a plain      pattern.  */
 name|doloop_pat
 operator|=
-name|XVECEXP
-argument_list|(
 name|doloop_seq
-argument_list|,
-literal|0
-argument_list|,
-name|XVECLEN
+expr_stmt|;
+if|if
+condition|(
+name|INSN_P
 argument_list|(
-name|doloop_seq
-argument_list|,
-literal|0
+name|doloop_pat
 argument_list|)
-operator|-
-literal|1
+condition|)
+block|{
+while|while
+condition|(
+name|NEXT_INSN
+argument_list|(
+name|doloop_pat
+argument_list|)
+operator|!=
+name|NULL_RTX
+condition|)
+name|doloop_pat
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|doloop_pat
 argument_list|)
 expr_stmt|;
 if|if
@@ -2781,11 +2754,6 @@ operator|=
 name|NULL_RTX
 expr_stmt|;
 block|}
-else|else
-name|doloop_pat
-operator|=
-name|doloop_seq
-expr_stmt|;
 if|if
 condition|(
 operator|!

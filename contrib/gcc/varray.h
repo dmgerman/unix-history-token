@@ -53,9 +53,14 @@ begin_comment
 comment|/* Auxiliary structure used inside the varray structure, used for    function integration data.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|const_equiv_data
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* Map pseudo reg number in calling function to equivalent constant.  We      cannot in general substitute constants into parameter pseudo registers,      since some machine descriptions (many RISCs) won't always handle      the resulting insns.  So if an incoming parameter has a constant      equivalent, we record it here, and if the resulting insn is      recognizable, we go with it.       We also use this mechanism to convert references to incoming arguments      and stacked variables.  copy_rtx_and_substitute will replace the virtual      incoming argument and virtual stacked variables registers with new      pseudos that contain pointers into the replacement area allocated for      this inline instance.  These pseudos are then marked as being equivalent      to the appropriate address and substituted if valid.  */
 name|struct
@@ -68,8 +73,64 @@ name|unsigned
 name|age
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* Enum indicating what the varray contains.      If this is changed, `element_size' in varray.c needs to be updated.  */
+end_comment
+
+begin_enum
+enum|enum
+name|varray_data_enum
+block|{
+name|VARRAY_DATA_C
+block|,
+name|VARRAY_DATA_UC
+block|,
+name|VARRAY_DATA_S
+block|,
+name|VARRAY_DATA_US
+block|,
+name|VARRAY_DATA_I
+block|,
+name|VARRAY_DATA_U
+block|,
+name|VARRAY_DATA_L
+block|,
+name|VARRAY_DATA_UL
+block|,
+name|VARRAY_DATA_HINT
+block|,
+name|VARRAY_DATA_UHINT
+block|,
+name|VARRAY_DATA_GENERIC
+block|,
+name|VARRAY_DATA_CPTR
+block|,
+name|VARRAY_DATA_RTX
+block|,
+name|VARRAY_DATA_RTVEC
+block|,
+name|VARRAY_DATA_TREE
+block|,
+name|VARRAY_DATA_BITMAP
+block|,
+name|VARRAY_DATA_REG
+block|,
+name|VARRAY_DATA_CONST_EQUIV
+block|,
+name|VARRAY_DATA_BB
+block|,
+name|VARRAY_DATA_TE
+block|,
+name|NUM_VARRAY_DATA
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/* Union of various array types that are used.  */
@@ -77,184 +138,530 @@ end_comment
 
 begin_typedef
 typedef|typedef
-union|union
+name|union
 name|varray_data_tag
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|char
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_C"
+argument_list|)
+operator|)
+argument_list|)
 name|c
 index|[
 literal|1
 index|]
-decl_stmt|;
+block|;
 name|unsigned
 name|char
+name|GTY
+block|((
+name|length
+block|("%0.num_elements")
+operator|,
+block|tag ("VARRAY_DATA_UC")
+typedef|))
 name|uc
 index|[
 literal|1
 index|]
-decl_stmt|;
+typedef|;
+end_typedef
+
+begin_decl_stmt
 name|short
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_S"
+argument_list|)
+operator|)
+argument_list|)
 name|s
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|short
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_US"
+argument_list|)
+operator|)
+argument_list|)
 name|us
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_I"
+argument_list|)
+operator|)
+argument_list|)
 name|i
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|int
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_U"
+argument_list|)
+operator|)
+argument_list|)
 name|u
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|long
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_L"
+argument_list|)
+operator|)
+argument_list|)
 name|l
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|long
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_UL"
+argument_list|)
+operator|)
+argument_list|)
 name|ul
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|HOST_WIDE_INT
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_HINT"
+argument_list|)
+operator|)
+argument_list|)
 name|hint
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|unsigned
 name|HOST_WIDE_INT
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_UHINT"
+argument_list|)
+operator|)
+argument_list|)
 name|uhint
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|PTR
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|use_param
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_GENERIC"
+argument_list|)
+operator|)
+argument_list|)
 name|generic
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_CPTR"
+argument_list|)
+operator|)
+argument_list|)
 name|cptr
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|rtx_def
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_RTX"
+argument_list|)
+operator|)
+argument_list|)
 name|rtx
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|rtvec_def
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_RTVEC"
+argument_list|)
+operator|)
+argument_list|)
 name|rtvec
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|union
 name|tree_node
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_TREE"
+argument_list|)
+operator|)
+argument_list|)
 name|tree
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|bitmap_head_def
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_BITMAP"
+argument_list|)
+operator|)
+argument_list|)
 name|bitmap
 index|[
 literal|1
 index|]
 decl_stmt|;
-name|struct
-name|sched_info_tag
-modifier|*
-name|sched
-index|[
-literal|1
-index|]
-decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|reg_info_def
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_REG"
+argument_list|)
+operator|)
+argument_list|)
 name|reg
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|const_equiv_data
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_CONST_EQUIV"
+argument_list|)
+operator|)
+argument_list|)
 name|const_equiv
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|basic_block_def
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_BB"
+argument_list|)
+operator|)
+argument_list|)
 name|bb
 index|[
 literal|1
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|elt_list
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%0.num_elements"
+argument_list|)
+operator|,
+name|tag
+argument_list|(
+literal|"VARRAY_DATA_TE"
+argument_list|)
+operator|)
+argument_list|)
 name|te
 index|[
 literal|1
 index|]
 decl_stmt|;
-block|}
-name|varray_data
-typedef|;
-end_typedef
+end_decl_stmt
+
+begin_empty_stmt
+unit|} varray_data
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* Virtual array of pointers header.  */
 end_comment
 
-begin_typedef
-typedef|typedef
-struct|struct
+begin_decl_stmt
+name|struct
 name|varray_head_tag
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|size_t
 name|num_elements
 decl_stmt|;
-comment|/* maximum element number allocated */
+comment|/* Maximum element number allocated.  */
 name|size_t
 name|elements_used
 decl_stmt|;
-comment|/* the number of elements used, if 				   using VARRAY_PUSH/VARRAY_POP.  */
-name|size_t
-name|element_size
+comment|/* The number of elements used, if 				   using VARRAY_PUSH/VARRAY_POP.  */
+name|enum
+name|varray_data_enum
+name|type
 decl_stmt|;
-comment|/* size of each data element */
+comment|/* The kind of elements in the varray.  */
 specifier|const
 name|char
 modifier|*
@@ -262,11 +669,30 @@ name|name
 decl_stmt|;
 comment|/* name of the varray for reporting errors */
 name|varray_data
+name|GTY
+argument_list|(
+operator|(
+name|desc
+argument_list|(
+literal|"%0.type"
+argument_list|)
+operator|)
+argument_list|)
 name|data
 decl_stmt|;
-comment|/* data elements follow, must be last */
+comment|/* The data elements follow,  						   must be last.  */
 block|}
-typedef|*
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_typedef
+typedef|typedef
+name|struct
+name|varray_head_tag
+modifier|*
 name|varray_type
 typedef|;
 end_typedef
@@ -284,7 +710,8 @@ argument_list|(
 operator|(
 name|size_t
 operator|,
-name|size_t
+expr|enum
+name|varray_data_enum
 operator|,
 specifier|const
 name|char
@@ -306,7 +733,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (char), name)
+value|va = varray_init (num, VARRAY_DATA_C, name)
 end_define
 
 begin_define
@@ -321,7 +748,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (unsigned char), name)
+value|va = varray_init (num, VARRAY_DATA_UC, name)
 end_define
 
 begin_define
@@ -336,7 +763,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (short), name)
+value|va = varray_init (num, VARRAY_DATA_S, name)
 end_define
 
 begin_define
@@ -351,7 +778,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (unsigned short), name)
+value|va = varray_init (num, VARRAY_DATA_US, name)
 end_define
 
 begin_define
@@ -366,7 +793,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (int), name)
+value|va = varray_init (num, VARRAY_DATA_I, name)
 end_define
 
 begin_define
@@ -381,7 +808,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (unsigned int), name)
+value|va = varray_init (num, VARRAY_DATA_U, name)
 end_define
 
 begin_define
@@ -396,7 +823,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (long), name)
+value|va = varray_init (num, VARRAY_DATA_L, name)
 end_define
 
 begin_define
@@ -411,7 +838,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (unsigned long), name)
+value|va = varray_init (num, VARRAY_DATA_UL, name)
 end_define
 
 begin_define
@@ -426,7 +853,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (HOST_WIDE_INT), name)
+value|va = varray_init (num, VARRAY_DATA_HINT, name)
 end_define
 
 begin_define
@@ -441,7 +868,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (unsigned HOST_WIDE_INT), name)
+value|va = varray_init (num, VARRAY_DATA_UHINT, name)
 end_define
 
 begin_define
@@ -456,7 +883,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (PTR), name)
+value|va = varray_init (num, VARRAY_DATA_GENERIC, name)
 end_define
 
 begin_define
@@ -471,7 +898,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (char *), name)
+value|va = varray_init (num, VARRAY_DATA_CPTR, name)
 end_define
 
 begin_define
@@ -486,7 +913,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct rtx_def *), name)
+value|va = varray_init (num, VARRAY_DATA_RTX, name)
 end_define
 
 begin_define
@@ -501,7 +928,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct rtvec_def), name)
+value|va = varray_init (num, VARRAY_DATA_RTVEC, name)
 end_define
 
 begin_define
@@ -516,7 +943,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (union tree_node *), name)
+value|va = varray_init (num, VARRAY_DATA_TREE, name)
 end_define
 
 begin_define
@@ -531,22 +958,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct bitmap_head_def *), name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_SCHED_INIT
-parameter_list|(
-name|va
-parameter_list|,
-name|num
-parameter_list|,
-name|name
-parameter_list|)
-define|\
-value|va = varray_init (num, sizeof (struct sched_info_tag *), name)
+value|va = varray_init (num, VARRAY_DATA_BITMAP, name)
 end_define
 
 begin_define
@@ -561,7 +973,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct reg_info_def *), name)
+value|va = varray_init (num, VARRAY_DATA_REG, name)
 end_define
 
 begin_define
@@ -576,7 +988,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct const_equiv_data), name)
+value|va = varray_init (num, VARRAY_DATA_CONST_EQUIV, name)
 end_define
 
 begin_define
@@ -591,7 +1003,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct basic_block_def *), name)
+value|va = varray_init (num, VARRAY_DATA_BB, name)
 end_define
 
 begin_define
@@ -606,7 +1018,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|va = varray_init (num, sizeof (struct elt_list *), name)
+value|va = varray_init (num, VARRAY_DATA_TE, name)
 end_define
 
 begin_comment
@@ -685,6 +1097,29 @@ parameter_list|)
 value|((VA)->elements_used = 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VARRAY_CLEAR
+parameter_list|(
+name|VA
+parameter_list|)
+value|varray_clear(VA)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|varray_clear
+name|PARAMS
+argument_list|(
+operator|(
+name|varray_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Check for VARRAY_xxx macros being in bound.  */
 end_comment
@@ -739,7 +1174,7 @@ name|N
 parameter_list|,
 name|T
 parameter_list|)
-value|__extension__			\ (*({ varray_type _va = VA;					\      size_t _n = N; 						\      if (_n>= _va->num_elements)				\        varray_check_failed (_va, _n, __FILE__, __LINE__, __FUNCTION__);	\&_va->data.T[_n]; }))
+value|__extension__			\ (*({ varray_type const _va = (VA);				\      const size_t _n = (N); 					\      if (_n>= _va->num_elements)				\        varray_check_failed (_va, _n, __FILE__, __LINE__, __FUNCTION__);	\&_va->data.T[_n]; }))
 end_define
 
 begin_else
@@ -782,7 +1217,7 @@ parameter_list|,
 name|X
 parameter_list|)
 define|\
-value|do 							\     {							\       if ((VA)->elements_used>= (VA)->num_elements)	\         VARRAY_GROW ((VA), 2 * (VA)->num_elements);	\       (VA)->data.T[(VA)->elements_used++] = (X);	\     }							\   while (0)
+value|do							\     {							\       if ((VA)->elements_used>= (VA)->num_elements)	\         VARRAY_GROW ((VA), 2 * (VA)->num_elements);	\       (VA)->data.T[(VA)->elements_used++] = (X);	\     }							\   while (0)
 end_define
 
 begin_comment
@@ -1007,18 +1442,6 @@ parameter_list|,
 name|N
 parameter_list|)
 value|VARRAY_CHECK (VA, N, bitmap)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_SCHED
-parameter_list|(
-name|VA
-parameter_list|,
-name|N
-parameter_list|)
-value|VARRAY_CHECK (VA, N, sched)
 end_define
 
 begin_define
@@ -1268,18 +1691,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VARRAY_PUSH_SCHED
-parameter_list|(
-name|VA
-parameter_list|,
-name|X
-parameter_list|)
-value|VARRAY_PUSH (VA, sched, X)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VARRAY_PUSH_REG
 parameter_list|(
 name|VA
@@ -1475,16 +1886,6 @@ parameter_list|(
 name|VA
 parameter_list|)
 value|VARRAY_TOP (VA, bitmap)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VARRAY_TOP_SCHED
-parameter_list|(
-name|VA
-parameter_list|)
-value|VARRAY_TOP (VA, sched)
 end_define
 
 begin_define

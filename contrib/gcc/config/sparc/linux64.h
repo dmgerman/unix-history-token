@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH32_SPEC
-value|"%{mlong-double-128:-D__LONG_DOUBLE_128__} \ -D__SIZE_TYPE__=unsigned\\ int -D__PTRDIFF_TYPE__=int \ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+value|"%{mlong-double-128:-D__LONG_DOUBLE_128__} \ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_endif
@@ -120,7 +120,7 @@ define|#
 directive|define
 name|STARTFILE_SPEC
 define|\
-value|"%{!shared: \      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
+value|"%{!shared:%{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} %{!p:crt1.o%s}}}\    crti.o%s %{static:crtbeginT.o%s}\    %{!static:%{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}}"
 end_define
 
 begin_comment
@@ -229,7 +229,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
+comment|/* Define for support of TFmode long double.    SPARC ABI says that long double is 4 words.  */
 end_comment
 
 begin_undef
@@ -341,7 +341,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared: -lc} \    %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \      %{profile:-lc_p} %{!profile: -lc}}"
+value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared: %{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
 begin_comment
@@ -555,31 +555,21 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|DWARF2_DEBUGGING_INFO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|DWARF_DEBUGGING_INFO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|DBX_DEBUGGING_INFO
 end_undef
 
 begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef
@@ -786,7 +776,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* 64-bit Sparc version */
+comment|/* 64-bit SPARC version */
 end_comment
 
 begin_define
@@ -818,7 +808,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* 32-bit Sparc version */
+comment|/* 32-bit SPARC version */
 end_comment
 
 begin_define

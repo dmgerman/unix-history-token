@@ -30,19 +30,6 @@ define|\
 value|{ "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|SUB_CPP_PREDEFINES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUB_CPP_PREDEFINES
-value|"-D__ELF__"
-end_define
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -73,6 +60,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|LINK_SPEC
+value|"-m elf64alpha %{G*} %{relax:-relax}		\   %{O*:-O3} %{!O*:-O1}						\   %{shared:-shared}						\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker %(elf_dynamic_linker)}}	\     %{static:-static}}"
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -90,7 +84,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared:-lc}%{!shared:%{pthread:-lpthread }%{profile:-lc_p}%{!profile:-lc}} "
+value|"%{pthread:-lpthread }%{shared:-lc}%{!shared:%{profile:-lc_p}%{!profile:-lc}} "
 end_define
 
 begin_endif

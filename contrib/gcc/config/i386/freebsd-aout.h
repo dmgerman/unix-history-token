@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997, 1999, 2000, 2002 Free Software    Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler for Intel 80386    running FreeBSD.    Copyright (C) 1988, 1992, 1994, 1996, 1997, 1999, 2000, 2002, 2003    Free Software Foundation, Inc.    Contributed by Poul-Henning Kamp<phk@login.dkuug.dk>    Continued development by David O'Brien<obrien@NUXI.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_comment
-comment|/* This is tested by i386gas.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|YES_UNDERSCORES
-end_define
 
 begin_comment
 comment|/* Don't assume anything about the header files.  */
@@ -22,12 +12,6 @@ define|#
 directive|define
 name|NO_IMPLICIT_EXTERN_C
 end_define
-
-begin_include
-include|#
-directive|include
-file|"i386/gstabs.h"
-end_include
 
 begin_comment
 comment|/* This goes away when the math-emulator is fixed */
@@ -57,17 +41,13 @@ directive|undef
 name|ASM_PREFERRED_EH_DATA_FORMAT
 end_undef
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -D__FreeBSD__\  -Asystem=unix -Asystem=bsd -Asystem=FreeBSD"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_define ("__FreeBSD__");		\ 	builtin_assert ("system=unix");		\ 	builtin_assert ("system=bsd");		\ 	builtin_assert ("system=FreeBSD");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -118,13 +98,6 @@ define|#
 directive|define
 name|WCHAR_TYPE
 value|"int"
-end_define
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
 end_define
 
 begin_undef
@@ -252,26 +225,40 @@ comment|/* Profiling routines, partially copied from i386/osfrose.h.  */
 end_comment
 
 begin_comment
-comment|/* Redefine this to use %eax instead of %edx.  */
+comment|/* Tell final.c that we don't need a label passed to mcount.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_PROFILE_COUNTERS
+value|1
+end_define
 
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf (FILE, "\tleal %sP%d@GOTOFF(%%ebx),%%eax\n",		\ 	       LPREFIX, (LABELNO));					\       fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\     }									\   else									\     {									\       fprintf (FILE, "\tmovl $%sP%d,%%eax\n", LPREFIX, (LABELNO));	\       fprintf (FILE, "\tcall mcount\n");				\     }									\ }
+name|MCOUNT_NAME
+value|"mcount"
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|PROFILE_COUNT_REGISTER
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PROFILE_COUNT_REGISTER
+value|"eax"
 end_define
 
 begin_comment
@@ -296,6 +283,13 @@ name|SIZE_ASM_OP
 value|"\t.size\t"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SET_ASM_OP
+value|"\t.set\t"
+end_define
+
 begin_comment
 comment|/* The following macro defines the format used to output the second    operand of the .type assembler directive.  Different svr4 assemblers    expect various different forms for this operand.  The one given here    is just a default.  You may need to override it in your machine-    specific tm.h file (depending upon the particulars of your assembler).  */
 end_comment
@@ -305,6 +299,26 @@ define|#
 directive|define
 name|TYPE_OPERAND_FMT
 value|"@%s"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HANDLE_SYSV_PRAGMA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASM_WEAKEN_LABEL
+parameter_list|(
+name|FILE
+parameter_list|,
+name|NAME
+parameter_list|)
+define|\
+value|do { fputs ("\t.weak\t", FILE); assemble_name (FILE, NAME); \ 	fputc ('\n', FILE); } while (0)
 end_define
 
 begin_comment
@@ -353,7 +367,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "function");			\     putc ('\n', FILE);							\     ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do								\     {								\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");	\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));		\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_comment
@@ -372,7 +386,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     fprintf (FILE, "%s", TYPE_ASM_OP);					\     assemble_name (FILE, NAME);						\     putc (',', FILE);							\     fprintf (FILE, TYPE_OPERAND_FMT, "object");				\     putc ('\n', FILE);							\     size_directive_output = 0;						\     if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\       {									\         size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, NAME);					\ 	fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));	\       }									\     ASM_OUTPUT_LABEL(FILE, NAME);					\   } while (0)
+value|do								\     {								\       HOST_WIDE_INT size;					\ 								\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");		\ 								\       size_directive_output = 0;				\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\ 	}							\ 								\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_comment
@@ -393,7 +407,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {                                                                    \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);            \      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \          fprintf (FILE, "%s", SIZE_ASM_OP);                             \ 	 assemble_name (FILE, name);                                    \ 	 fprintf (FILE, ",%d\n",  int_size_in_bytes (TREE_TYPE (DECL)));\ 	}								\    } while (0)
+value|do {                                                                    \      const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);            \      HOST_WIDE_INT size;						\      if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)	        \&& ! AT_END&& TOP_LEVEL                                       \&& DECL_INITIAL (DECL) == error_mark_node                      \&& !size_directive_output)                                     \        {                                                                \ 	 size_directive_output = 1;					\ 	 size = int_size_in_bytes (TREE_TYPE (DECL));			\ 	 ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);			\        }								\    } while (0)
 end_define
 
 begin_comment
@@ -412,7 +426,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {									\     if (!flag_inhibit_size_directive)					\       {									\         char label[256];						\ 	static int labelno;						\ 	labelno++;							\ 	ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, (FNAME));					\         fprintf (FILE, ",");						\ 	assemble_name (FILE, label);					\         fprintf (FILE, "-");						\ 	assemble_name (FILE, (FNAME));					\ 	putc ('\n', FILE);						\       }									\   } while (0)
+value|do {									\     if (!flag_inhibit_size_directive)					\       ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);				\   } while (0)
 end_define
 
 begin_define

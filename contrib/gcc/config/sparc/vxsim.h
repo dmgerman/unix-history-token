@@ -350,7 +350,7 @@ comment|/* ??? This does not work in SunOS 4.x, so it is not enabled in sparc.h.
 end_comment
 
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
+comment|/* Define for support of TFmode long double.    SPARC ABI says that long double is 4 words.  */
 end_comment
 
 begin_define

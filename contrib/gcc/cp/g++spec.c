@@ -158,13 +158,13 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-comment|/* If non-zero, the user gave us the `-p' or `-pg' flag.  */
+comment|/* If nonzero, the user gave us the `-p' or `-pg' flag.  */
 name|int
 name|saw_profile_flag
 init|=
 literal|0
 decl_stmt|;
-comment|/* If non-zero, the user gave us the `-v' flag.  */
+comment|/* If nonzero, the user gave us the `-v' flag.  */
 name|int
 name|saw_verbose_flag
 init|=
@@ -197,7 +197,7 @@ modifier|*
 modifier|*
 name|arglist
 decl_stmt|;
-comment|/* Non-zero if we saw a `-xfoo' language specification on the      command line.  Used to avoid adding our own -xc++ if the user      already gave a language for the file.  */
+comment|/* Nonzero if we saw a `-xfoo' language specification on the      command line.  Used to avoid adding our own -xc++ if the user      already gave a language for the file.  */
 name|int
 name|saw_speclang
 init|=
@@ -746,6 +746,24 @@ name|shared_libgcc
 operator|=
 literal|0
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|DEFAULT_WORD_SWITCH_TAKES_ARG
+argument_list|(
+operator|&
+name|argv
+index|[
+name|i
+index|]
+index|[
+literal|1
+index|]
+argument_list|)
+condition|)
+name|i
+operator|++
+expr_stmt|;
 else|else
 comment|/* Pass other options through.  */
 continue|continue;
@@ -1102,6 +1120,31 @@ expr_stmt|;
 name|added_libraries
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|USE_LIBUNWIND_EXCEPTIONS
+ifndef|#
+directive|ifndef
+name|LIBUNWIND
+define|#
+directive|define
+name|LIBUNWIND
+value|"-lunwind"
+endif|#
+directive|endif
+name|arglist
+index|[
+name|j
+operator|++
+index|]
+operator|=
+name|LIBUNWIND
+expr_stmt|;
+name|added_libraries
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1189,14 +1232,14 @@ block|}
 end_function
 
 begin_comment
-comment|/* Called before linking.  Returns 0 on success and -1 on failure. */
+comment|/* Called before linking.  Returns 0 on success and -1 on failure.  */
 end_comment
 
 begin_function
 name|int
 name|lang_specific_pre_link
 parameter_list|()
-comment|/* Not used for C++. */
+comment|/* Not used for C++.  */
 block|{
 return|return
 literal|0
@@ -1205,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Number of extra output files that lang_specific_pre_link may generate. */
+comment|/* Number of extra output files that lang_specific_pre_link may generate.  */
 end_comment
 
 begin_decl_stmt
@@ -1217,8 +1260,29 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Not used for C++. */
+comment|/* Not used for C++.  */
 end_comment
+
+begin_comment
+comment|/* Table of language-specific spec functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|spec_function
+name|lang_specific_spec_functions
+index|[]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

@@ -39,6 +39,12 @@ directive|include
 file|"partition.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hard-reg-set.h"
+end_include
+
 begin_comment
 comment|/* Head of register set linked list.  */
 end_comment
@@ -72,7 +78,7 @@ name|INIT_REG_SET
 parameter_list|(
 name|HEAD
 parameter_list|)
-value|bitmap_initialize (HEAD)
+value|bitmap_initialize (HEAD, 1)
 end_define
 
 begin_comment
@@ -378,7 +384,7 @@ name|INITIALIZE_REG_SET
 parameter_list|(
 name|HEAD
 parameter_list|)
-value|bitmap_initialize (&HEAD)
+value|bitmap_initialize (&HEAD, 1)
 end_define
 
 begin_comment
@@ -496,12 +502,20 @@ name|EDGE_FALLTHRU
 value|1
 end_define
 
+begin_comment
+comment|/* 'Straight line' flow */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EDGE_ABNORMAL
 value|2
 end_define
+
+begin_comment
+comment|/* Strange flow, like computed 					   label, or eh */
+end_comment
 
 begin_define
 define|#
@@ -510,12 +524,20 @@ name|EDGE_ABNORMAL_CALL
 value|4
 end_define
 
+begin_comment
+comment|/* Call with abnormal exit 					   like an exception, or sibcall */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EDGE_EH
 value|8
 end_define
+
+begin_comment
+comment|/* Exception throw */
+end_comment
 
 begin_define
 define|#
@@ -524,12 +546,31 @@ name|EDGE_FAKE
 value|16
 end_define
 
+begin_comment
+comment|/* Not a real edge (profile.c) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EDGE_DFS_BACK
 value|32
 end_define
+
+begin_comment
+comment|/* A backwards edge */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EDGE_CAN_FALLTHRU
+value|64
+end_define
+
+begin_comment
+comment|/* Candidate for straight line 					   flow.  */
+end_comment
 
 begin_define
 define|#
@@ -596,9 +637,24 @@ comment|/* The index of this block.  */
 name|int
 name|index
 decl_stmt|;
+comment|/* Previous and next blocks in the chain.  */
+name|struct
+name|basic_block_def
+modifier|*
+name|prev_bb
+decl_stmt|,
+modifier|*
+name|next_bb
+decl_stmt|;
 comment|/* The loop depth of this block.  */
 name|int
 name|loop_depth
+decl_stmt|;
+comment|/* Outermost loop containing the block.  */
+name|struct
+name|loop
+modifier|*
+name|loop_father
 decl_stmt|;
 comment|/* Expected number of executions: calculated in profile.c.  */
 name|gcov_type
@@ -632,8 +688,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BB_REACHABLE
+name|BB_DIRTY
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BB_NEW
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|BB_REACHABLE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|BB_VISITED
+value|8
 end_define
 
 begin_comment
@@ -644,6 +721,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|n_basic_blocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* First free basic block number.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|last_basic_block
 decl_stmt|;
 end_decl_stmt
 
@@ -680,6 +768,64 @@ value|(VARRAY_BB (basic_block_info, (N)))
 end_define
 
 begin_comment
+comment|/* For iterating over basic blocks.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOR_BB_BETWEEN
+parameter_list|(
+name|BB
+parameter_list|,
+name|FROM
+parameter_list|,
+name|TO
+parameter_list|,
+name|DIR
+parameter_list|)
+define|\
+value|for (BB = FROM; BB != TO; BB = BB->DIR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOR_EACH_BB
+parameter_list|(
+name|BB
+parameter_list|)
+define|\
+value|FOR_BB_BETWEEN (BB, ENTRY_BLOCK_PTR->next_bb, EXIT_BLOCK_PTR, next_bb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FOR_EACH_BB_REVERSE
+parameter_list|(
+name|BB
+parameter_list|)
+define|\
+value|FOR_BB_BETWEEN (BB, EXIT_BLOCK_PTR->prev_bb, ENTRY_BLOCK_PTR, prev_bb)
+end_define
+
+begin_comment
+comment|/* Cycles through _all_ basic blocks, even the fake ones (entry and    exit block).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOR_ALL_BB
+parameter_list|(
+name|BB
+parameter_list|)
+define|\
+value|for (BB = ENTRY_BLOCK_PTR; BB; BB = BB->next_bb)
+end_define
+
+begin_comment
 comment|/* What registers are live at the setjmp call.  */
 end_comment
 
@@ -694,11 +840,24 @@ begin_comment
 comment|/* Special labels found during CFG build.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|rtx
 name|label_value_list
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|rtx
 name|tail_recursion_label_list
 decl_stmt|;
 end_decl_stmt
@@ -844,23 +1003,6 @@ name|EXIT_BLOCK_PTR
 value|(&entry_exit_blocks[1])
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|varray_type
-name|basic_block_for_insn
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|BLOCK_FOR_INSN
-parameter_list|(
-name|INSN
-parameter_list|)
-value|VARRAY_BB (basic_block_for_insn, INSN_UID (INSN))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -871,6 +1013,18 @@ parameter_list|)
 value|(BLOCK_FOR_INSN (INSN)->index + 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|set_block_for_insn
+parameter_list|(
+name|INSN
+parameter_list|,
+name|BB
+parameter_list|)
+value|(BLOCK_FOR_INSN (INSN) = BB)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -878,7 +1032,7 @@ name|compute_bb_for_insn
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -904,21 +1058,6 @@ name|update_bb_for_insn
 name|PARAMS
 argument_list|(
 operator|(
-name|basic_block
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|set_block_for_insn
-name|PARAMS
-argument_list|(
-operator|(
-name|rtx
-operator|,
 name|basic_block
 operator|)
 argument_list|)
@@ -997,6 +1136,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|commit_edge_insertions_watch_calls
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|remove_fake_edges
 name|PARAMS
 argument_list|(
@@ -1056,6 +1208,23 @@ operator|(
 name|sbitmap
 operator|*
 operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|edge
+name|unchecked_make_edge
+name|PARAMS
+argument_list|(
+operator|(
 name|basic_block
 operator|,
 name|basic_block
@@ -1165,13 +1334,13 @@ name|create_basic_block_structure
 name|PARAMS
 argument_list|(
 operator|(
-name|int
-operator|,
 name|rtx
 operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|basic_block
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1184,11 +1353,11 @@ name|create_basic_block
 name|PARAMS
 argument_list|(
 operator|(
-name|int
-operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|basic_block
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1215,6 +1384,19 @@ name|PARAMS
 argument_list|(
 operator|(
 name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clear_bb_flags
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1368,6 +1550,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Dominator information for basic blocks.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|dominance_info
+modifier|*
+name|dominance_info
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* Structure to hold information for each natural loop.  */
 end_comment
 
@@ -1442,6 +1637,13 @@ comment|/* The loop nesting depth.  */
 name|int
 name|depth
 decl_stmt|;
+comment|/* Superloops of the loop.  */
+name|struct
+name|loop
+modifier|*
+modifier|*
+name|pred
+decl_stmt|;
 comment|/* The height of the loop (enclosed loop levels) within the loop      hierarchy tree.  */
 name|int
 name|level
@@ -1464,11 +1666,7 @@ name|loop
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Non-zero if the loop shares a header with another loop.  */
-name|int
-name|shared
-decl_stmt|;
-comment|/* Non-zero if the loop is invalid (e.g., contains setjmp.).  */
+comment|/* Nonzero if the loop is invalid (e.g., contains setjmp.).  */
 name|int
 name|invalid
 decl_stmt|;
@@ -1478,17 +1676,13 @@ modifier|*
 name|aux
 decl_stmt|;
 comment|/* The following are currently used by loop.c but they are likely to      disappear as loop.c is converted to use the CFG.  */
-comment|/* Non-zero if the loop has a NOTE_INSN_LOOP_VTOP.  */
+comment|/* Nonzero if the loop has a NOTE_INSN_LOOP_VTOP.  */
 name|rtx
 name|vtop
 decl_stmt|;
-comment|/* Non-zero if the loop has a NOTE_INSN_LOOP_CONT.      A continue statement will generate a branch to NEXT_INSN (cont).  */
+comment|/* Nonzero if the loop has a NOTE_INSN_LOOP_CONT.      A continue statement will generate a branch to NEXT_INSN (cont).  */
 name|rtx
 name|cont
-decl_stmt|;
-comment|/* The dominator of cont.  */
-name|rtx
-name|cont_dominator
 decl_stmt|;
 comment|/* The NOTE_INSN_LOOP_BEG.  */
 name|rtx
@@ -1544,6 +1738,13 @@ name|loop
 modifier|*
 name|array
 decl_stmt|;
+comment|/* The above array is unused in new loop infrastructure and is kept only for      purposes of the old loop optimizer.  Instead we store just pointers to      loops here.  */
+name|struct
+name|loop
+modifier|*
+modifier|*
+name|parray
+decl_stmt|;
 comment|/* Pointer to root of loop heirachy tree.  */
 name|struct
 name|loop
@@ -1555,8 +1756,7 @@ struct|struct
 name|cfg
 block|{
 comment|/* The bitmap vector of dominators or NULL if not computed.  */
-name|sbitmap
-modifier|*
+name|dominance_info
 name|dom
 decl_stmt|;
 comment|/* The ordering of the basic blocks in a depth first search.  */
@@ -1579,6 +1779,79 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Structure to group all of the information to process IF-THEN and    IF-THEN-ELSE blocks for the conditional execution support.  This    needs to be in a public file in case the IFCVT macros call    functions passing the ce_if_block data structure.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ce_if_block
+block|{
+name|basic_block
+name|test_bb
+decl_stmt|;
+comment|/* First test block.  */
+name|basic_block
+name|then_bb
+decl_stmt|;
+comment|/* THEN block.  */
+name|basic_block
+name|else_bb
+decl_stmt|;
+comment|/* ELSE block or NULL.  */
+name|basic_block
+name|join_bb
+decl_stmt|;
+comment|/* Join THEN/ELSE blocks.  */
+name|basic_block
+name|last_test_bb
+decl_stmt|;
+comment|/* Last bb to hold&& or || tests.  */
+name|int
+name|num_multiple_test_blocks
+decl_stmt|;
+comment|/* # of&& and || basic blocks.  */
+name|int
+name|num_and_and_blocks
+decl_stmt|;
+comment|/* # of&& blocks.  */
+name|int
+name|num_or_or_blocks
+decl_stmt|;
+comment|/* # of || blocks.  */
+name|int
+name|num_multiple_test_insns
+decl_stmt|;
+comment|/* # of insns in&& and || blocks.  */
+name|int
+name|and_and_p
+decl_stmt|;
+comment|/* Complex test is&&.  */
+name|int
+name|num_then_insns
+decl_stmt|;
+comment|/* # of insns in THEN block.  */
+name|int
+name|num_else_insns
+decl_stmt|;
+comment|/* # of insns in ELSE block.  */
+name|int
+name|pass
+decl_stmt|;
+comment|/* Pass number.  */
+ifdef|#
+directive|ifdef
+name|IFCVT_EXTRA_FIELDS
+name|IFCVT_EXTRA_FIELDS
+comment|/* Any machine dependent fields.  */
+endif|#
+directive|endif
+block|}
+name|ce_if_block_t
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|extern
@@ -1721,6 +1994,40 @@ name|loop
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|flow_loop_tree_node_add
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
+operator|,
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|flow_loop_tree_node_remove
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2085,13 +2392,20 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PROP_FINAL
-value|127
+name|PROP_SCAN_DEAD_STORES
+value|256
 end_define
 
 begin_comment
-comment|/* All of the above.  */
+comment|/* Scan for dead code.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PROP_FINAL
+value|(PROP_DEATH_NOTES | PROP_LOG_LINKS  \ 				 | PROP_REG_INFO | PROP_KILL_DEAD_CODE  \ 				 | PROP_SCAN_DEAD_CODE | PROP_AUTOINC \ 				 | PROP_ALLOW_CFG_CHANGES \ 				 | PROP_SCAN_DEAD_STORES)
+end_define
 
 begin_define
 define|#
@@ -2170,6 +2484,17 @@ begin_comment
 comment|/* Do jump threading.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLEANUP_NO_INSN_DEL
+value|128
+end_define
+
+begin_comment
+comment|/* Do not try to delete trivially dead 					   insns.  */
+end_comment
+
 begin_comment
 comment|/* Flags for loop discovery.  */
 end_comment
@@ -2228,19 +2553,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|LOOP_EXITS_DOMS
-value|16
-end_define
-
-begin_comment
-comment|/* Find nodes that dom. all exits.  */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LOOP_ALL
-value|31
+value|15
 end_define
 
 begin_comment
@@ -2267,13 +2581,29 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|update_life_info
 name|PARAMS
 argument_list|(
 operator|(
 name|sbitmap
 operator|,
+expr|enum
+name|update_life_extent
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|update_life_info_in_dirty_blocks
+name|PARAMS
+argument_list|(
+operator|(
 expr|enum
 name|update_life_extent
 operator|,
@@ -2557,11 +2887,76 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|note_prediction_to_br_prob
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|expected_value_to_br_prob
 name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|note_prediction_to_br_prob
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|maybe_hot_bb_p
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|probably_cold_bb_p
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|probably_never_executed_bb_p
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2710,11 +3105,39 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|expunge_block_nocompact
+name|link_block
 name|PARAMS
 argument_list|(
 operator|(
 name|basic_block
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|unlink_block
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|compact_blocks
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2748,7 +3171,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|delete_noop_moves
 name|PARAMS
 argument_list|(
@@ -3067,7 +3490,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|bool
 name|flow_loop_outside_edge_p
 name|PARAMS
 argument_list|(
@@ -3083,6 +3506,209 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|bool
+name|flow_loop_nested_p
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|flow_bb_inside_loop_p
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|,
+specifier|const
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|basic_block
+modifier|*
+name|get_loop_body
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dfs_enumerate_from
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|,
+name|int
+operator|,
+name|bool
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|basic_block
+argument_list|,
+name|void
+operator|*
+argument_list|)
+operator|,
+name|basic_block
+operator|*
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|edge
+name|loop_preheader_edge
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|edge
+name|loop_latch_edge
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|add_bb_to_loop
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|,
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|remove_bb_from_loops
+name|PARAMS
+argument_list|(
+operator|(
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|loop
+modifier|*
+name|find_common_loop
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loop
+operator|*
+operator|,
+expr|struct
+name|loop
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|verify_loop_structure
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|loops
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VLS_EXPECT_PREHEADERS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLS_EXPECT_SIMPLE_LATCHES
+value|2
+end_define
+
 begin_typedef
 typedef|typedef
 name|struct
@@ -3093,7 +3719,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Callback function when enumerating conflicts.  The arguments are    the smaller and larger regno in the conflict.  Returns zero if    enumeration is to continue, non-zero to halt enumeration.  */
+comment|/* Callback function when enumerating conflicts.  The arguments are    the smaller and larger regno in the conflict.  Returns zero if    enumeration is to continue, nonzero to halt enumeration.  */
 end_comment
 
 begin_typedef
@@ -3264,6 +3890,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|set_edge_can_fallthru_flag
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|update_br_prob_note
 name|PARAMS
 argument_list|(
@@ -3282,6 +3921,61 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|can_hoist_insn_p
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|regset
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|hoist_insn_after
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|,
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|hoist_insn_to_edge
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|edge
+operator|,
+name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3317,19 +4011,202 @@ end_enum
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|dominance_info
 name|calculate_dominance_info
 name|PARAMS
 argument_list|(
 operator|(
-name|int
-operator|*
-operator|,
-name|sbitmap
-operator|*
-operator|,
 expr|enum
 name|cdi_direction
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|free_dominance_info
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|basic_block
+name|nearest_common_dominator
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|set_immediate_dominator
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|basic_block
+name|get_immediate_dominator
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|dominated_by_p
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|get_dominated_by
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|add_to_dominance_info
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|delete_from_dominance_info
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|basic_block
+name|recount_dominator
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|redirect_immediate_dominators
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|,
+name|basic_block
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|iterate_fix_dominators
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
+operator|,
+name|basic_block
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|verify_dominators
+name|PARAMS
+argument_list|(
+operator|(
+name|dominance_info
 operator|)
 argument_list|)
 decl_stmt|;

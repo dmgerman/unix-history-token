@@ -55,6 +55,12 @@ directive|include
 file|"ggc.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"target.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1574,7 +1580,22 @@ end_comment
 begin_function
 name|void
 name|xcoffout_end_epilogue
-parameter_list|()
+parameter_list|(
+name|line
+parameter_list|,
+name|file
+parameter_list|)
+name|unsigned
+name|int
+name|line
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 comment|/* We need to pass the correct function size to .function, otherwise,      the xas assembler can't figure out the correct size for the function      aux entry.  So, we emit a label after the last instruction which can      be used by the .function pseudo op to calculate the function size.  */
 specifier|const

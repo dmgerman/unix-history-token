@@ -87,10 +87,26 @@ name|defined
 argument_list|(
 name|_WIN32
 argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__alpha
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|)
 end_if
 
 begin_comment
 comment|/* All known AIX compilers implement these things (but don't always    define __STDC__).  The RISC/OS MIPS compiler defines these things    in SVR4 mode, but does not define __STDC__.  */
+end_comment
+
+begin_comment
+comment|/* eraxxon@alumni.rice.edu: The Compaq C++ compiler, unlike many other    C++ compilers, does not define __STDC__, though it acts as if this    was so. (Verified versions: 5.7, 6.2, 6.3, 6.5) */
 end_comment
 
 begin_define
@@ -848,6 +864,72 @@ begin_comment
 comment|/* ATTRIBUTE_NORETURN */
 end_comment
 
+begin_comment
+comment|/* Attribute `nonnull' was valid as of gcc 3.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NONNULL
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NONNULL
+parameter_list|(
+name|m
+parameter_list|)
+value|__attribute__ ((__nonnull__ (m)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NONNULL
+parameter_list|(
+name|m
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.3 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NONNULL */
+end_comment
+
+begin_comment
+comment|/* Use ATTRIBUTE_PRINTF when the format specifier must not be NULL.    This was the case for the `printf' format attribute by itself    before GCC 3.3, but as of 3.3 we need to add the `nonnull'    attribute to retain this behavior.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -863,7 +945,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|__attribute__ ((__format__ (__printf__, m, n)))
+value|__attribute__ ((__format__ (__printf__, m, n))) ATTRIBUTE_NONNULL(m)
 end_define
 
 begin_define
@@ -908,6 +990,107 @@ end_endif
 
 begin_comment
 comment|/* ATTRIBUTE_PRINTF */
+end_comment
+
+begin_comment
+comment|/* Use ATTRIBUTE_NULL_PRINTF when the format specifier may be NULL.  A    NULL format specifier was allowed as of gcc 3.3.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIBUTE_NULL_PRINTF
+end_ifndef
+
+begin_if
+if|#
+directive|if
+operator|(
+name|GCC_VERSION
+operator|>=
+literal|3003
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+value|__attribute__ ((__format__ (__printf__, m, n)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GNUC>= 3.3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_1
+value|ATTRIBUTE_NULL_PRINTF(1, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_2
+value|ATTRIBUTE_NULL_PRINTF(2, 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_3
+value|ATTRIBUTE_NULL_PRINTF(3, 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_4
+value|ATTRIBUTE_NULL_PRINTF(4, 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTRIBUTE_NULL_PRINTF_5
+value|ATTRIBUTE_NULL_PRINTF(5, 6)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ATTRIBUTE_NULL_PRINTF */
 end_comment
 
 begin_comment

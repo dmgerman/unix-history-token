@@ -60,6 +60,12 @@ directive|include
 file|"intl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"diagnostic.h"
+end_include
+
 begin_comment
 comment|/* Externals defined here. */
 end_comment
@@ -567,12 +573,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|count_error
+operator|!
+name|diagnostic_count_diagnostic
 argument_list|(
-literal|1
+name|global_dc
+argument_list|,
+name|DK_WARNING
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* User wants no warnings. */
@@ -599,9 +606,11 @@ case|:
 case|case
 name|FFEBAD_severityDISASTER
 case|:
-name|count_error
+name|diagnostic_count_diagnostic
 argument_list|(
-literal|0
+name|global_dc
+argument_list|,
+name|DK_ERROR
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1250,9 +1259,9 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|report_error_function
+name|diagnostic_report_current_function
 argument_list|(
-name|fn
+name|global_dc
 argument_list|)
 expr_stmt|;
 name|fprintf

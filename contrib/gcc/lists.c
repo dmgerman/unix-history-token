@@ -50,20 +50,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|zap_lists
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Functions for maintaining cache-able lists of EXPR_LIST and INSN_LISTs.  */
 end_comment
@@ -72,26 +58,38 @@ begin_comment
 comment|/* An INSN_LIST containing all INSN_LISTs allocated but currently unused.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
 name|rtx
 name|unused_insn_list
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* An EXPR_LIST containing all EXPR_LISTs allocated but currently unused.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|(deletable (
+literal|""
+argument|))
+argument_list|)
 name|rtx
 name|unused_expr_list
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/* This function will free an entire list of either EXPR_LIST or INSN_LIST    nodes. This is to be used only only lists that consist exclusively of    nodes of one type only.  This is only called by free_EXPR_LIST_list    and free_INSN_LIST_list.  */
+comment|/* This function will free an entire list of either EXPR_LIST or INSN_LIST    nodes. This is to be used only on lists that consist exclusively of    nodes of one type only.  This is only called by free_EXPR_LIST_list    and free_INSN_LIST_list.  */
 end_comment
 
 begin_function
@@ -177,7 +175,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* This call is used in place of a gen_rtx_INSN_LIST. If there is a cached    node available, we'll use it, otherwise a call to gen_rtx_INSN_LIST     is made.  */
+comment|/* This call is used in place of a gen_rtx_INSN_LIST. If there is a cached    node available, we'll use it, otherwise a call to gen_rtx_INSN_LIST    is made.  */
 end_comment
 
 begin_function
@@ -260,7 +258,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This call is used in place of a gen_rtx_EXPR_LIST. If there is a cached    node available, we'll use it, otherwise a call to gen_rtx_EXPR_LIST     is made.  */
+comment|/* This call is used in place of a gen_rtx_EXPR_LIST. If there is a cached    node available, we'll use it, otherwise a call to gen_rtx_EXPR_LIST    is made.  */
 end_comment
 
 begin_function
@@ -344,54 +342,6 @@ expr_stmt|;
 return|return
 name|r
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/* This function will initialize the EXPR_LIST and INSN_LIST caches.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|zap_lists
-parameter_list|(
-name|dummy
-parameter_list|)
-name|void
-modifier|*
-name|dummy
-name|ATTRIBUTE_UNUSED
-decl_stmt|;
-block|{
-name|unused_expr_list
-operator|=
-name|NULL
-expr_stmt|;
-name|unused_insn_list
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|init_EXPR_INSN_LIST_cache
-parameter_list|()
-block|{
-name|ggc_add_root
-argument_list|(
-operator|&
-name|unused_expr_list
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-name|zap_lists
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -522,6 +472,12 @@ name|ptr
 expr_stmt|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"gt-lists.h"
+end_include
 
 end_unit
 

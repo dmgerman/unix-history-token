@@ -323,7 +323,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared: -lc} \    %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \      %{profile:-lc_p} %{!profile: -lc}}"
+value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
 begin_endif
@@ -582,7 +582,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
+comment|/* Define for support of TFmode long double.    SPARC ABI says that long double is 4 words.  */
 end_comment
 
 begin_define

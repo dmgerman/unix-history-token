@@ -523,7 +523,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For the generation of an ANSI prototype for a function definition, we have    to look at the formal parameter list of the function's own "type" to    determine if the function's formal parameter list should end with an    ellipsis.  Given a tree node, the following function will return non-zero    if the "function type" parameter list should end with an ellipsis.  */
+comment|/* For the generation of an ANSI prototype for a function definition, we have    to look at the formal parameter list of the function's own "type" to    determine if the function's formal parameter list should end with an    ellipsis.  Given a tree node, the following function will return nonzero    if the "function type" parameter list should end with an ellipsis.  */
 end_comment
 
 begin_function
@@ -1599,7 +1599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate a string (source) representation of an entire entity declaration    (using some particular style for function types).     The given entity may be either a variable or a function.     If the "is_func_definition" parameter is non-zero, assume that the thing    we are generating a declaration for is a FUNCTION_DECL node which is    associated with a function definition.  In this case, we can assume that    an attached list of DECL nodes for function formal arguments is present.  */
+comment|/* Generate a string (source) representation of an entire entity declaration    (using some particular style for function types).     The given entity may be either a variable or a function.     If the "is_func_definition" parameter is nonzero, assume that the thing    we are generating a declaration for is a FUNCTION_DECL node which is    associated with a function definition.  In this case, we can assume that    an attached list of DECL nodes for function formal arguments is present.  */
 end_comment
 
 begin_function

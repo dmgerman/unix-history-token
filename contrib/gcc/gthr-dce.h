@@ -231,7 +231,7 @@ name|_LIBOBJC
 end_ifdef
 
 begin_comment
-comment|/* Objective C.  */
+comment|/* Objective-C.  */
 end_comment
 
 begin_pragma

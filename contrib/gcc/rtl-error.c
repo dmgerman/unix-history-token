@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RTL specific diagnostic subroutines for the GNU C compiler    Copyright (C) 2001 Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* RTL specific diagnostic subroutines for the GNU C compiler    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Gabriel Dos Reis<gdr@codesourcery.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ operator|,
 name|va_list
 operator|*
 operator|,
-name|int
+name|diagnostic_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -332,7 +332,7 @@ name|msg
 parameter_list|,
 name|args_ptr
 parameter_list|,
-name|warn
+name|kind
 parameter_list|)
 name|rtx
 name|insn
@@ -346,17 +346,17 @@ name|va_list
 modifier|*
 name|args_ptr
 decl_stmt|;
-name|int
-name|warn
+name|diagnostic_t
+name|kind
 decl_stmt|;
 block|{
-name|diagnostic_context
-name|dc
+name|diagnostic_info
+name|diagnostic
 decl_stmt|;
-name|set_diagnostic_context
+name|diagnostic_set_info
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|,
 name|msg
 argument_list|,
@@ -366,7 +366,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|,
-name|warn
+name|kind
 argument_list|)
 expr_stmt|;
 name|file_and_line_for_asm
@@ -374,24 +374,24 @@ argument_list|(
 name|insn
 argument_list|,
 operator|&
-name|diagnostic_file_location
-argument_list|(
-operator|&
-name|dc
-argument_list|)
+name|diagnostic
+operator|.
+name|location
+operator|.
+name|file
 argument_list|,
 operator|&
-name|diagnostic_line_location
-argument_list|(
-operator|&
-name|dc
-argument_list|)
+name|diagnostic
+operator|.
+name|location
+operator|.
+name|line
 argument_list|)
 expr_stmt|;
 name|report_diagnostic
 argument_list|(
 operator|&
-name|dc
+name|diagnostic
 argument_list|)
 expr_stmt|;
 block|}
@@ -451,8 +451,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|,
-comment|/* warn = */
-literal|0
+name|DK_ERROR
 argument_list|)
 expr_stmt|;
 name|VA_CLOSE
@@ -517,8 +516,7 @@ argument_list|,
 operator|&
 name|ap
 argument_list|,
-comment|/* warn = */
-literal|1
+name|DK_WARNING
 argument_list|)
 expr_stmt|;
 name|VA_CLOSE

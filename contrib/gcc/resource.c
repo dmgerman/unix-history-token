@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for computing resource usage of specific insns.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for computing resource usage of specific insns.    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -472,8 +472,8 @@ name|int
 name|search_limit
 decl_stmt|;
 block|{
-name|int
-name|i
+name|basic_block
+name|bb
 decl_stmt|;
 comment|/* Scan backwards to the previous BARRIER.  Then see if we can find a      label that starts a basic block.  Return the basic block number.  */
 for|for
@@ -520,7 +520,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* The start of the function is basic block zero.  */
+comment|/* The start of the function.  */
 elseif|else
 if|if
 condition|(
@@ -529,7 +529,11 @@ operator|==
 literal|0
 condition|)
 return|return
-literal|0
+name|ENTRY_BLOCK_PTR
+operator|->
+name|next_bb
+operator|->
+name|index
 return|;
 comment|/* See if any of the upcoming CODE_LABELs start a basic block.  If we reach      anything other than a CODE_LABEL or note, we can't find this code.  */
 for|for
@@ -558,30 +562,22 @@ name|insn
 argument_list|)
 control|)
 block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 if|if
 condition|(
 name|insn
 operator|==
-name|BLOCK_HEAD
-argument_list|(
-name|i
-argument_list|)
+name|bb
+operator|->
+name|head
 condition|)
 return|return
-name|i
+name|bb
+operator|->
+name|index
 return|;
 block|}
 return|return
@@ -617,6 +613,29 @@ block|{
 comment|/* If INSN is an annulled branch, skip any insns from the target 	 of the branch.  */
 if|if
 condition|(
+operator|(
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|JUMP_INSN
+operator|||
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|CALL_INSN
+operator|||
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|INSN
+operator|)
+operator|&&
 name|INSN_ANNULLED_BRANCH_P
 argument_list|(
 name|insn
@@ -632,23 +651,66 @@ argument_list|)
 operator|!=
 name|insn
 condition|)
-while|while
-condition|(
-name|INSN_FROM_TARGET_P
-argument_list|(
+block|{
+name|rtx
+name|next
+init|=
 name|NEXT_INSN
 argument_list|(
 name|insn
 argument_list|)
+decl_stmt|;
+name|enum
+name|rtx_code
+name|code
+init|=
+name|GET_CODE
+argument_list|(
+name|next
+argument_list|)
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|code
+operator|==
+name|INSN
+operator|||
+name|code
+operator|==
+name|JUMP_INSN
+operator|||
+name|code
+operator|==
+name|CALL_INSN
+operator|)
+operator|&&
+name|INSN_FROM_TARGET_P
+argument_list|(
+name|next
 argument_list|)
 condition|)
+block|{
 name|insn
+operator|=
+name|next
+expr_stmt|;
+name|next
 operator|=
 name|NEXT_INSN
 argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
+name|code
+operator|=
+name|GET_CODE
+argument_list|(
+name|next
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|insn
 operator|=
 name|NEXT_INSN
@@ -1340,7 +1402,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* Check for a REG_SETJMP.  If it exists, then we must 	     assume that this call can need any register.  	     This is done to be more conservative about how we handle setjmp. 	     We assume that they both use and set all registers.  Using all 	     registers ensures that a register will not be considered dead 	     just because it crosses a setjmp call.  A register should be 	     considered dead only if the setjmp call returns non-zero.  */
+comment|/* Check for a REG_SETJMP.  If it exists, then we must 	     assume that this call can need any register.  	     This is done to be more conservative about how we handle setjmp. 	     We assume that they both use and set all registers.  Using all 	     registers ensures that a register will not be considered dead 	     just because it crosses a setjmp call.  A register should be 	     considered dead only if the setjmp call returns nonzero.  */
 if|if
 condition|(
 name|find_reg_note
@@ -1621,7 +1683,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A subroutine of mark_target_live_regs.  Search forward from TARGET    looking for registers that are set before they are used.  These are dead.     Stop after passing a few conditional jumps, and/or a small    number of unconditional branches.  */
+comment|/* A subroutine of mark_target_live_regs.  Search forward from TARGET    looking for registers that are set before they are used.  These are dead.    Stop after passing a few conditional jumps, and/or a small    number of unconditional branches.  */
 end_comment
 
 begin_function
@@ -3621,7 +3683,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Allocate a place to put our results and chain it into the  	     hash table.  */
+comment|/* Allocate a place to put our results and chain it into the 	     hash table.  */
 name|tinfo
 operator|=
 operator|(
@@ -3847,9 +3909,32 @@ name|real_insn
 init|=
 name|insn
 decl_stmt|;
+name|enum
+name|rtx_code
+name|code
+init|=
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+decl_stmt|;
 comment|/* If this insn is from the target of a branch, it isn't going to 	     be used in the sequel.  If it is used in both cases, this 	     test will not be true.  */
 if|if
 condition|(
+operator|(
+name|code
+operator|==
+name|INSN
+operator|||
+name|code
+operator|==
+name|JUMP_INSN
+operator|||
+name|code
+operator|==
+name|CALL_INSN
+operator|)
+operator|&&
 name|INSN_FROM_TARGET_P
 argument_list|(
 name|insn
@@ -3859,10 +3944,7 @@ continue|continue;
 comment|/* If this insn is a USE made by update_block, we care about the 	     underlying insn.  */
 if|if
 condition|(
-name|GET_CODE
-argument_list|(
-name|insn
-argument_list|)
+name|code
 operator|==
 name|INSN
 operator|&&
@@ -4524,7 +4606,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Indicate what resources are required to be valid at the end of the current      function.  The condition code never is and memory always is.  If the      frame pointer is needed, it is and so is the stack pointer unless      EXIT_IGNORE_STACK is non-zero.  If the frame pointer is not needed, the      stack pointer is.  Registers used to return the function value are      needed.  Registers holding global variables are needed.  */
+comment|/* Indicate what resources are required to be valid at the end of the current      function.  The condition code never is and memory always is.  If the      frame pointer is needed, it is and so is the stack pointer unless      EXIT_IGNORE_STACK is nonzero.  If the frame pointer is not needed, the      stack pointer is.  Registers used to return the function value are      needed.  Registers holding global variables are needed.  */
 name|end_of_function_needs
 operator|.
 name|cc
@@ -4724,7 +4806,7 @@ operator|*
 operator|)
 name|xcalloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|,
 sizeof|sizeof
 argument_list|(

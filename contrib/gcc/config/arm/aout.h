@@ -255,23 +255,12 @@ begin_comment
 comment|/* Generate DBX debugging information.  riscix.h will undefine this because    the native assembler does not support stabs. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DBX_DEBUGGING_INFO
-end_ifndef
-
 begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Acorn dbx moans about continuation chars, so don't use any.  */
@@ -342,57 +331,16 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_OUTPUT_LABEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_LABEL
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do						\     {						\       assemble_name (STREAM,NAME);		\       fputs (":\n", STREAM);			\     }						\   while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* Output a globalising directive for a label.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ASM_GLOBALIZE_LABEL
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do						\     {						\       fprintf (STREAM, "\t.global\t");		\       assemble_name (STREAM, NAME);		\       fputc ('\n',STREAM);			\     }						\   while (0)
+name|GLOBAL_ASM_OP
+value|"\t.global\t"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Make an internal label into a string.  */

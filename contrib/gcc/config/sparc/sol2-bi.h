@@ -20,19 +20,6 @@ name|SPARC_DEFAULT_CMODEL
 value|CM_MEDANY
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|LONG_DOUBLE_TYPE_SIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LONG_DOUBLE_TYPE_SIZE
-value|128
-end_define
-
 begin_define
 define|#
 directive|define
@@ -157,23 +144,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* The sun bundled assembler doesn't accept -Yd, (and neither does gas).    It's safe to pass -s always, even if -g is not used.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_SPEC
-value|"\ %{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Wa,*:%*} -s \ %{fpic:-K PIC} %{fPIC:-K PIC} \ %(asm_cpu)\ "
-end_define
-
 begin_if
 if|#
 directive|if
@@ -240,7 +210,7 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU_SPEC
-value|"\ %{mcypress:} \ %{msparclite:-D__sparclite__} \ %{mf930:-D__sparclite__} %{mf934:-D__sparclite__} \ %{mv8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{msupersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=sparclet:-D__sparclet__} %{mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite:-D__sparclite__} \ %{mcpu=f930:-D__sparclite__} %{mcpu=f934:-D__sparclite__} \ %{mcpu=v8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=supersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=v9:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=ultrasparc:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
+value|"\ %{mcypress:} \ %{msparclite|mf930|mf934:-D__sparclite__} \ %{mv8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{msupersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=sparclet|mcpu=tsc701:-D__sparclet__} \ %{mcpu=sparclite|mcpu-f930|mcpu=f934:-D__sparclite__} \ %{mcpu=v8:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=supersparc:-D__supersparc__ " DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{mcpu=v9|mcpu=ultrasparc:" DEF_ARCH32_SPEC("-D__sparcv8") "} \ %{!mcpu*:%{!mcypress:%{!msparclite:%{!mf930:%{!mf934:%{!mv8:%{!msupersparc:%(cpp_cpu_default)}}}}}}} \ "
 end_define
 
 begin_undef
@@ -254,19 +224,6 @@ define|#
 directive|define
 name|ASM_CPU_SPEC
 value|"\ %{mcpu=ultrasparc:" DEF_ARCH32_SPEC("-xarch=v8plusa") DEF_ARCH64_SPEC(AS_SPARC64_FLAG "a") "} \ %{mcpu=v9:" DEF_ARCH32_SPEC("-xarch=v8plus") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "} \ %{!mcpu=ultrasparc:%{!mcpu=v9:%{mcpu*:" DEF_ARCH32_SPEC("-xarch=v8") DEF_ARCH64_SPEC(AS_SPARC64_FLAG) "}}} \ %{!mcpu*:%(asm_cpu_default)} \ "
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|STARTFILE_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-value|"%{!shared: \ 			 %{!symbolic: \ 			  %{p:mcrt1.o%s} \                           %{!p: \ 	                    %{pg:gcrt1.o%s gmon.o%s} \                             %{!pg:crt1.o%s}}}} \ 			crti.o%s \ 			%{ansi:values-Xc.o%s} \ 			%{!ansi: %{traditional:values-Xt.o%s} \ 				 %{!traditional:values-Xa.o%s}} \ 			crtbegin.o%s"
 end_define
 
 begin_undef
@@ -301,12 +258,6 @@ begin_comment
 comment|/* wchar_t is called differently in<wchar.h> for 32 and 64-bit    compilations.  This is called for by SCD 2.4.1, p. 6-83, Figure 6-65    (32-bit) and p. 6P-10, Figure 6.38 (64-bit).  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NO_BUILTIN_WCHAR_TYPE
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -337,12 +288,6 @@ begin_comment
 comment|/* Same for wint_t.  See SCD 2.4.1, p. 6-83, Figure 6-66 (32-bit).  There's    no corresponding 64-bit definition, but this is what Solaris 8<iso/wchar_iso.h> uses.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NO_BUILTIN_WINT_TYPE
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -379,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH32_SPEC
-value|"-D__SIZE_TYPE__=unsigned\\ int -D__PTRDIFF_TYPE__=int \ -D__WCHAR_TYPE__=long\\ int -D__WINT_TYPE__=long\\ int \ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
+value|"\ -D__GCC_NEW_VARARGS__ -Acpu=sparc -Amachine=sparc"
 end_define
 
 begin_undef
@@ -392,7 +337,7 @@ begin_define
 define|#
 directive|define
 name|CPP_ARCH64_SPEC
-value|"-D__SIZE_TYPE__=long\\ unsigned\\ int -D__PTRDIFF_TYPE__=long\\ int \ -D__WCHAR_TYPE__=int -D__WINT_TYPE__=int \ -D__arch64__ -Acpu=sparc64 -Amachine=sparcv9 -D__sparcv9"
+value|"\ -D__arch64__ -Acpu=sparc64 -Amachine=sparcv9 -D__sparcv9"
 end_define
 
 begin_undef
@@ -471,28 +416,26 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "link_arch32",       LINK_ARCH32_SPEC },              \   { "link_arch64",       LINK_ARCH64_SPEC },              \   { "link_arch_default", LINK_ARCH_DEFAULT_SPEC },	  \   { "link_arch",	 LINK_ARCH_SPEC },
+value|{ "startfile_arch",	 STARTFILE_ARCH_SPEC },		  \   { "link_arch32",       LINK_ARCH32_SPEC },              \   { "link_arch64",       LINK_ARCH64_SPEC },              \   { "link_arch_default", LINK_ARCH_DEFAULT_SPEC },	  \   { "link_arch",	 LINK_ARCH_SPEC },
 end_define
 
 begin_comment
-comment|/* This should be the same as in svr4.h, except with -R added.  */
+comment|/*  * This should be the same as in sol2.h, except with "/sparcv9"  * appended to the paths and /usr/ccs/lib is no longer necessary  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LINK_ARCH32_SPEC
-define|\
-value|"%{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{pg:-Y P,/usr/ucblib:/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:%{!pg:-Y P,/usr/ucblib:/usr/ccs/lib:/usr/lib}}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{pg:-Y P,/usr/ccs/lib/libp:/usr/lib/libp:/usr/ccs/lib:/usr/lib} \        %{!p:%{!pg:-Y P,/usr/ccs/lib:/usr/lib}}}}"
-end_define
 
 begin_define
 define|#
 directive|define
 name|LINK_ARCH64_SPEC
 define|\
-value|"%{mcmodel=medlow:-M /usr/lib/ld/sparcv9/map.below4G} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/ucblib/sparcv9:/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/sparcv9}}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{p:-Y P,/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{pg:-Y P,/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/lib/sparcv9}}}}"
+value|"%{mcmodel=medlow:-M /usr/lib/ld/sparcv9/map.below4G} \    %{G:-G} \    %{YP,*} \    %{R*} \    %{compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/ucblib/sparcv9:/usr/lib/sparcv9}}} \      -R /usr/ucblib} \    %{!compat-bsd: \      %{!YP,*:%{p|pg:-Y P,/usr/lib/libp/sparcv9:/usr/lib/sparcv9} \        %{!p:%{!pg:-Y P,/usr/lib/sparcv9}}}}"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|LINK_ARCH_SPEC
+end_undef
 
 begin_define
 define|#
@@ -507,20 +450,6 @@ directive|define
 name|LINK_ARCH_DEFAULT_SPEC
 define|\
 value|(DEFAULT_ARCH32_P ? LINK_ARCH32_SPEC : LINK_ARCH64_SPEC)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-define|\
-value|"%{h*} %{v:-V} \    %{b} %{Wl,*:%*} \    %{static:-dn -Bstatic} \    %{shared:-G -dy %{!mimpure-text:-z text}} \    %{symbolic:-Bsymbolic -G -dy -z text} \    %(link_arch) \    %{Qy:} %{!Qn:-Qy}"
 end_define
 
 begin_undef

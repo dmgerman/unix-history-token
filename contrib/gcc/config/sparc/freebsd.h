@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Sun Sparc64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Definitions for Sun SPARC64 running FreeBSD using the ELF format    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by David E. O'Brien<obrien@FreeBSD.org> and BSDi.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -17,7 +17,8 @@ begin_define
 define|#
 directive|define
 name|CPP_CPU64_DEFAULT_SPEC
-value|"-D__sparc64__ -D__sparc_v9__ -D__arch64__"
+define|\
+value|"-D__sparc64__ -D__sparc_v9__ -D__sparcv9 -D__sparc__ -D__arch64__"
 end_define
 
 begin_comment
@@ -30,12 +31,9 @@ directive|undef
 name|CPP_PREDEFINES
 end_undef
 
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|FBSD_CPP_PREDEFINES
-end_define
+begin_comment
+comment|/* Do not define it here, we now use TARGET_OS_CPP_BUILTINS.  */
+end_comment
 
 begin_define
 define|#
@@ -65,19 +63,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 
@@ -89,7 +74,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* Define for support of TFmode long double and REAL_ARITHMETIC.    Sparc ABI says that long double is 4 words.  */
+comment|/* Define for support of TFmode long double.    SPARC ABI says that long double is 4 words.  */
 end_comment
 
 begin_undef

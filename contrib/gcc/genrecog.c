@@ -4,7 +4,7 @@ comment|/* Generate code from machine description to recognize rtl as insns.    
 end_comment
 
 begin_comment
-comment|/* This program is used to produce insn-recog.c, which contains a    function called `recog' plus its subroutines.  These functions    contain a decision tree that recognizes whether an rtx, the    argument given to recog, is a valid instruction.     recog returns -1 if the rtx is not valid.  If the rtx is valid,    recog returns a nonnegative number which is the insn code number    for the pattern that matched.  This is the same as the order in the    machine description of the entry that matched.  This number can be    used as an index into various insn_* tables, such as insn_template,    insn_outfun, and insn_n_operands (found in insn-output.c).     The third argument to recog is an optional pointer to an int.  If    present, recog will accept a pattern if it matches except for    missing CLOBBER expressions at the end.  In that case, the value    pointed to by the optional pointer will be set to the number of    CLOBBERs that need to be added (it should be initialized to zero by    the caller).  If it is set nonzero, the caller should allocate a    PARALLEL of the appropriate size, copy the initial entries, and    call add_clobbers (found in insn-emit.c) to fill in the CLOBBERs.     This program also generates the function `split_insns', which    returns 0 if the rtl could not be split, or it returns the split    rtl in a SEQUENCE.     This program also generates the function `peephole2_insns', which    returns 0 if the rtl could not be matched.  If there was a match,    the new rtl is returned in a SEQUENCE, and LAST_INSN will point    to the last recognized insn in the old sequence.  */
+comment|/* This program is used to produce insn-recog.c, which contains a    function called `recog' plus its subroutines.  These functions    contain a decision tree that recognizes whether an rtx, the    argument given to recog, is a valid instruction.     recog returns -1 if the rtx is not valid.  If the rtx is valid,    recog returns a nonnegative number which is the insn code number    for the pattern that matched.  This is the same as the order in the    machine description of the entry that matched.  This number can be    used as an index into various insn_* tables, such as insn_template,    insn_outfun, and insn_n_operands (found in insn-output.c).     The third argument to recog is an optional pointer to an int.  If    present, recog will accept a pattern if it matches except for    missing CLOBBER expressions at the end.  In that case, the value    pointed to by the optional pointer will be set to the number of    CLOBBERs that need to be added (it should be initialized to zero by    the caller).  If it is set nonzero, the caller should allocate a    PARALLEL of the appropriate size, copy the initial entries, and    call add_clobbers (found in insn-emit.c) to fill in the CLOBBERs.     This program also generates the function `split_insns', which    returns 0 if the rtl could not be split, or it returns the split    rtl as an INSN list.     This program also generates the function `peephole2_insns', which    returns 0 if the rtl could not be matched.  If there was a match,    the new rtl is returned in an INSN list, and LAST_INSN will point    to the last recognized insn in the old sequence.  */
 end_comment
 
 begin_include
@@ -435,6 +435,8 @@ block|,
 name|REG
 block|,
 name|MEM
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|,
@@ -464,6 +466,8 @@ name|REG
 block|,
 name|MEM
 block|,
+name|ADDRESSOF
+block|,
 name|PLUS
 block|,
 name|MINUS
@@ -479,6 +483,8 @@ block|{
 name|SUBREG
 block|,
 name|REG
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|,
@@ -489,6 +495,8 @@ block|{
 name|SUBREG
 block|,
 name|REG
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|,
@@ -545,6 +553,8 @@ block|,
 name|REG
 block|,
 name|MEM
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|,
@@ -565,6 +575,8 @@ block|,
 name|SUBREG
 block|,
 name|REG
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|,
@@ -665,6 +677,8 @@ block|,
 name|REG
 block|,
 name|MEM
+block|,
+name|ADDRESSOF
 block|}
 block|}
 block|}
@@ -2366,6 +2380,10 @@ operator|&&
 name|c
 operator|!=
 name|MEM
+operator|&&
+name|c
+operator|!=
+name|ADDRESSOF
 operator|&&
 name|c
 operator|!=
@@ -5243,7 +5261,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Return 0 if we can prove that there is no RTL that can match both    D1 and D2.  Otherwise, return 1 (it may be that there is an RTL that    can match both or just that we couldn't prove there wasn't such an RTL).     TOPLEVEL is non-zero if we are to only look at the top level and not    recursively descend.  */
+comment|/* Return 0 if we can prove that there is no RTL that can match both    D1 and D2.  Otherwise, return 1 (it may be that there is an RTL that    can match both or just that we couldn't prove there wasn't such an RTL).     TOPLEVEL is nonzero if we are to only look at the top level and not    recursively descend.  */
 end_comment
 
 begin_function
@@ -7125,7 +7143,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Assuming that the state of argument is denoted by OLDPOS, take whatever    actions are necessary to move to NEWPOS.  If we fail to move to the    new state, branch to node AFTERWARD if non-zero, otherwise return.     Failure to move to the new state can only occur if we are trying to    match multiple insns and we try to step past the end of the stream.  */
+comment|/* Assuming that the state of argument is denoted by OLDPOS, take whatever    actions are necessary to move to NEWPOS.  If we fail to move to the    new state, branch to node AFTERWARD if nonzero, otherwise return.     Failure to move to the new state can only occur if we are trying to    match multiple insns and we try to step past the end of the stream.  */
 end_comment
 
 begin_function
@@ -8300,7 +8318,7 @@ name|DT_elt_zero_wide_safe
 case|:
 name|printf
 argument_list|(
-name|HOST_WIDE_INT_PRINT_DEC
+name|HOST_WIDE_INT_PRINT_DEC_C
 argument_list|,
 name|p
 operator|->
@@ -8549,7 +8567,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-name|HOST_WIDE_INT_PRINT_DEC
+name|HOST_WIDE_INT_PRINT_DEC_C
 argument_list|,
 name|p
 operator|->
@@ -10113,7 +10131,7 @@ argument_list|)
 expr_stmt|;
 name|puts
 argument_list|(
-literal|"\n\    The function split_insns returns 0 if the rtl could not\n\    be split or the split rtl in a SEQUENCE if it can be.\n\ \n\    The function peephole2_insns returns 0 if the rtl could not\n\    be matched. If there was a match, the new rtl is returned in a SEQUENCE,\n\    and LAST_INSN will point to the last recognized insn in the old sequence.\n\ */\n\n"
+literal|"\n\    The function split_insns returns 0 if the rtl could not\n\    be split or the split rtl as an INSN list if it can be.\n\ \n\    The function peephole2_insns returns 0 if the rtl could not\n\    be matched. If there was a match, the new rtl is returned in an INSN list,\n\    and LAST_INSN will point to the last recognized insn in the old sequence.\n\ */\n\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10165,6 +10183,14 @@ else|:
 literal|1
 argument_list|)
 decl_stmt|;
+name|int
+name|truth
+init|=
+name|maybe_eval_c_test
+argument_list|(
+name|c_test
+argument_list|)
+decl_stmt|;
 name|struct
 name|decision
 modifier|*
@@ -10189,6 +10215,16 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+comment|/* We should never see an insn whose C test is false at compile time.  */
+if|if
+condition|(
+name|truth
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
 name|record_insn_name
 argument_list|(
 name|next_insn_code
@@ -10481,12 +10517,13 @@ name|test
 operator|->
 name|next
 expr_stmt|;
+comment|/* Skip the C test if it's known to be true at compile time.  */
 if|if
 condition|(
-name|c_test
-index|[
-literal|0
-index|]
+name|truth
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* Need a new node if we have another test to add.  */
@@ -10853,12 +10890,13 @@ operator|->
 name|tests
 expr_stmt|;
 block|}
+comment|/* Skip the C test if it's known to be true at compile                  time.  */
 if|if
 condition|(
-name|c_test
-index|[
-literal|0
-index|]
+name|truth
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|test

@@ -93,6 +93,12 @@ directive|include
 file|"timevar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"predict.h"
+end_include
+
 begin_comment
 comment|/* If non-NULL, the address of a language-specific function for    expanding statements.  */
 end_comment
@@ -932,7 +938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate the RTL for EXPR, which is an EXPR_STMT.  WANT_VALUE tells    whether to (1) save the value of the expression, (0) discard it or    (-1) use expr_stmts_for_value to tell.  The use of -1 is    deprecated, and retained only for backward compatibility.    MAYBE_LAST is non-zero if this EXPR_STMT might be the last statement    in expression statement.  */
+comment|/* Generate the RTL for EXPR, which is an EXPR_STMT.  WANT_VALUE tells    whether to (1) save the value of the expression, (0) discard it or    (-1) use expr_stmts_for_value to tell.  The use of -1 is    deprecated, and retained only for backward compatibility.    MAYBE_LAST is nonzero if this EXPR_STMT might be the last statement    in expression statement.  */
 end_comment
 
 begin_function
@@ -1327,9 +1333,12 @@ argument_list|(
 name|t
 argument_list|)
 decl_stmt|;
-comment|/* Recognize the common special-case of do { ... } while (0) and do      not emit the loop widgetry in this case.  In particular this      avoids cluttering the rtl with dummy loop notes, which can affect      alignment of adjacent labels.  */
+comment|/* Recognize the common special-case of do { ... } while (0) and do      not emit the loop widgetry in this case.  In particular this      avoids cluttering the rtl with dummy loop notes, which can affect      alignment of adjacent labels.  COND can be NULL due to parse      errors.  */
 if|if
 condition|(
+operator|!
+name|cond
+operator|||
 name|integer_zerop
 argument_list|(
 name|cond
@@ -1453,7 +1462,7 @@ name|expr
 decl_stmt|;
 name|expr
 operator|=
-name|RETURN_EXPR
+name|RETURN_STMT_EXPR
 argument_list|(
 name|stmt
 argument_list|)
@@ -2094,14 +2103,16 @@ name|explained
 init|=
 literal|0
 decl_stmt|;
-name|warning_with_decl
+name|warning
 argument_list|(
+literal|"destructor needed for `%#D'"
+argument_list|,
+operator|(
 name|TREE_PURPOSE
 argument_list|(
 name|cleanup
 argument_list|)
-argument_list|,
-literal|"destructor needed for `%#D'"
+operator|)
 argument_list|)
 expr_stmt|;
 name|warning
@@ -2637,6 +2648,51 @@ break|break;
 case|case
 name|GOTO_STMT
 case|:
+comment|/* Emit information for branch prediction.  */
+if|if
+condition|(
+operator|!
+name|GOTO_FAKE_P
+argument_list|(
+name|t
+argument_list|)
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|GOTO_DESTINATION
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+operator|==
+name|LABEL_DECL
+operator|&&
+name|flag_guess_branch_prob
+condition|)
+block|{
+name|rtx
+name|note
+init|=
+name|emit_note
+argument_list|(
+name|NULL
+argument_list|,
+name|NOTE_INSN_PREDICTION
+argument_list|)
+decl_stmt|;
+name|NOTE_PREDICTION
+argument_list|(
+name|note
+argument_list|)
+operator|=
+name|NOTE_PREDICT
+argument_list|(
+name|PRED_GOTO
+argument_list|,
+name|NOT_TAKEN
+argument_list|)
+expr_stmt|;
+block|}
 name|genrtl_goto_stmt
 argument_list|(
 name|GOTO_DESTINATION

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler.    For ARM with COFF object format.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.    Contributed by Doug Evans (devans@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler.    For ARM with COFF object format.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.    Contributed by Doug Evans (devans@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -83,6 +83,7 @@ begin_define
 define|#
 directive|define
 name|SDB_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
@@ -168,26 +169,13 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|READONLY_DATA_SECTION
+name|READONLY_DATA_SECTION_ASM_OP
 end_undef
 
 begin_define
 define|#
 directive|define
-name|READONLY_DATA_SECTION
-value|rdata_section
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|RDATA_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|RDATA_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.section .rdata"
 end_define
 
@@ -215,61 +203,6 @@ define|#
 directive|define
 name|DTORS_SECTION_ASM_OP
 value|"\t.section .dtors,\"x\""
-end_define
-
-begin_comment
-comment|/* A list of other sections which the compiler might be "in" at any    given time.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTIONS
-value|SUBTARGET_EXTRA_SECTIONS in_rdata
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_EXTRA_SECTIONS
-end_define
-
-begin_comment
-comment|/* A list of extra section function definitions.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|EXTRA_SECTION_FUNCTIONS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|EXTRA_SECTION_FUNCTIONS
-define|\
-value|RDATA_SECTION_FUNCTION	\   SUBTARGET_EXTRA_SECTION_FUNCTIONS
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_EXTRA_SECTION_FUNCTIONS
-end_define
-
-begin_define
-define|#
-directive|define
-name|RDATA_SECTION_FUNCTION
-define|\
-value|void								\ rdata_section ()						\ {								\   if (in_section != in_rdata)					\     {								\       fprintf (asm_out_file, "%s\n", RDATA_SECTION_ASM_OP);	\       in_section = in_rdata;					\     }								\ }
 end_define
 
 begin_escape

@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* Exception handling and frame unwind runtime interface routines.    Copyright (C) 2001, 2003 Free Software Foundation, Inc.     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public    License for more details.     You should have received a copy of the GNU General Public License    along with GCC; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+end_comment
+
+begin_comment
+comment|/* As a special exception, if you include this header file into source    files compiled by GCC, this header file does not by itself cause    the resulting executable to be covered by the GNU General Public    License.  This exception does not however invalidate any other    reasons why the executable file might be covered by the GNU General    Public License.  */
 end_comment
 
 begin_comment
@@ -39,9 +43,42 @@ name|__mode__
 typedef|(
 name|__word__
 typedef|)));
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__hpux__
+argument_list|)
 typedef|typedef
 name|unsigned
 name|_Unwind_Ptr
+name|__attribute__
+typedef|((
+name|__mode__
+typedef|(
+name|__word__
+typedef|)));
+else|#
+directive|else
+typedef|typedef
+name|unsigned
+name|_Unwind_Ptr
+name|__attribute__
+typedef|((
+name|__mode__
+typedef|(
+name|__pointer__
+typedef|)));
+endif|#
+directive|endif
+typedef|typedef
+name|unsigned
+name|_Unwind_Internal_Ptr
 name|__attribute__
 typedef|((
 name|__mode__
@@ -241,6 +278,42 @@ name|_Unwind_Exception
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* @@@ Resume propagation of an FORCE_UNWIND exception, or to rethrow    a normal exception that was handled.  */
+specifier|extern
+name|_Unwind_Reason_Code
+name|_Unwind_Resume_or_Rethrow
+parameter_list|(
+name|struct
+name|_Unwind_Exception
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* @@@ Use unwind data to perform a stack backtrace.  The trace callback    is called for every stack frame in the call chain, but no cleanup    actions are performed.  */
+typedef|typedef
+name|_Unwind_Reason_Code
+function_decl|(
+modifier|*
+name|_Unwind_Trace_Fn
+function_decl|)
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|_Unwind_Reason_Code
+name|_Unwind_Backtrace
+parameter_list|(
+name|_Unwind_Trace_Fn
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* These functions are used for communicating information about the unwind    context (i.e. the unwind descriptors and the user register state) between    the unwind library and the personality routine and landing pad.  Only    selected registers maybe manipulated.  */
 specifier|extern
 name|_Unwind_Word
@@ -286,6 +359,16 @@ parameter_list|,
 name|_Unwind_Ptr
 parameter_list|)
 function_decl|;
+comment|/* @@@ Retrieve the CFA of the given context.  */
+specifier|extern
+name|_Unwind_Word
+name|_Unwind_GetCFA
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|)
+function_decl|;
 specifier|extern
 name|void
 modifier|*
@@ -305,7 +388,7 @@ name|_Unwind_Context
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* The personality routine is the function in the C++ (or other language)    runtime library which serves as an interface between the system unwind    library and language-specific exception handling semantics.  It is    specific to the code fragment described by an unwind info block, and    it is always referenced via the pointer in the unwind info block, and    hence it has no ABI-specified name.      Note that this implies that two different C++ implementations can    use different names, and have different contents in the language    specific data area.  Moreover, that the language specific data     area contains no version info because name of the function invoked    provides more effective versioning by detecting at link time the    lack of code to handle the different data format.  */
+comment|/* The personality routine is the function in the C++ (or other language)    runtime library which serves as an interface between the system unwind    library and language-specific exception handling semantics.  It is    specific to the code fragment described by an unwind info block, and    it is always referenced via the pointer in the unwind info block, and    hence it has no ABI-specified name.     Note that this implies that two different C++ implementations can    use different names, and have different contents in the language    specific data area.  Moreover, that the language specific data    area contains no version info because name of the function invoked    provides more effective versioning by detecting at link time the    lack of code to handle the different data format.  */
 typedef|typedef
 name|_Unwind_Reason_Code
 function_decl|(
@@ -382,6 +465,15 @@ name|_Unwind_Exception
 modifier|*
 parameter_list|)
 function_decl|;
+specifier|extern
+name|_Unwind_Reason_Code
+name|_Unwind_SjLj_Resume_or_Rethrow
+parameter_list|(
+name|struct
+name|_Unwind_Exception
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* @@@ The following provide access to the base addresses for text    and data-relative addressing in the LDSA.  In order to stay link    compatible with the standard ABI for IA-64, we inline these.  */
 ifdef|#
 directive|ifdef
@@ -450,6 +542,17 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/* @@@ Given an address, return the entry point of the function that    contains it.  */
+specifier|extern
+name|void
+modifier|*
+name|_Unwind_FindEnclosingFunction
+parameter_list|(
+name|void
+modifier|*
+name|pc
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

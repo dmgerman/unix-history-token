@@ -10,5 +10,21 @@ name|PATH_SEPARATOR
 value|';'
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\     }						\   while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_SPEC
+value|"%{posix:-D_POSIX_SOURCE}"
+end_define
+
 end_unit
 

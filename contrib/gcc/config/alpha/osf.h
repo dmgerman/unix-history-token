@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on OSF/1.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2001    Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on OSF/1.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 2001, 2002, 2003    Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -44,19 +44,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"\ -Dunix -D__osf__ -D_LONGLONG -DSYSTYPE_BSD \ -D_SYSTYPE_BSD -Asystem=unix -Asystem=xpg4"
-end_define
-
-begin_comment
-comment|/* Tru64 UNIX V5 requires additional definitions for 16 byte long double    support.  Empty by default.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_XFLOAT_SPEC
-value|""
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {						\ 	builtin_define_std ("unix");			\ 	builtin_define_std ("SYSTYPE_BSD");		\ 	builtin_define ("_SYSTYPE_BSD");		\ 	builtin_define ("__osf__");			\ 	builtin_define ("__digital__");			\ 	builtin_define ("__arch64__");			\ 	builtin_define ("_LONGLONG");			\ 	builtin_define ("__PRAGMA_EXTERN_PREFIX");	\ 	builtin_assert ("system=unix");			\ 	builtin_assert ("system=xpg4");			\
+comment|/* Tru64 UNIX V5 has a 16 byte long		\ 	   double type and requires __X_FLOAT		\ 	   to be defined for<math.h>.  */
+value|\         if (LONG_DOUBLE_TYPE_SIZE == 128)		\           builtin_define ("__X_FLOAT");			\     } while (0)
 end_define
 
 begin_comment
@@ -74,7 +67,7 @@ define|#
 directive|define
 name|CPP_SUBTARGET_SPEC
 define|\
-value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4} %(cpp_xfloat) \ -D__EXTERN_PREFIX"
+value|"%{pthread|threads:-D_REENTRANT} %{threads:-D_PTHREAD_USE_D4}"
 end_define
 
 begin_comment
@@ -244,8 +237,7 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
-define|\
-value|{ "cpp_xfloat", CPP_XFLOAT_SPEC },	\   { "asm_oldas", ASM_OLDAS_SPEC }
+value|{ "asm_oldas", ASM_OLDAS_SPEC }
 end_define
 
 begin_comment
@@ -359,7 +351,7 @@ parameter_list|,
 name|VALUE
 parameter_list|)
 define|\
-value|do							\     {							\       ASM_GLOBALIZE_LABEL (FILE, NAME);			\       fputs ("\t.weakext\t", FILE);			\       assemble_name (FILE, NAME);			\       if (VALUE)					\         {						\           fputc (' ', FILE);				\           assemble_name (FILE, VALUE);			\         }						\       fputc ('\n', FILE);				\     }							\   while (0)
+value|do							\     {							\       (*targetm.asm_out.globalize_label) (FILE, NAME);  \       fputs ("\t.weakext\t", FILE);			\       assemble_name (FILE, NAME);			\       if (VALUE)					\         {						\           fputc (' ', FILE);				\           assemble_name (FILE, VALUE);			\         }						\       fputc ('\n', FILE);				\     }							\   while (0)
 end_define
 
 begin_define
@@ -377,12 +369,6 @@ end_define
 begin_comment
 comment|/* Handle #pragma weak and #pragma pack.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HANDLE_SYSV_PRAGMA
-end_undef
 
 begin_define
 define|#

@@ -26,7 +26,7 @@ block|{
 literal|"@objective-c"
 operator|,
 comment|/* cc1obj has an integrated ISO C preprocessor.  We should invoke the       external preprocessor if -save-temps or -traditional is given.  */
-literal|"%{E|M|MM:%(trad_capable_cpp) -lang-objc %{ansi:-std=c89} %(cpp_options)}\       %{!E:%{!M:%{!MM:\ 	%{save-temps|no-integrated-cpp:%(trad_capable_cpp) -lang-objc %{ansi:-std=c89}\ 	  %(cpp_options) %{save-temps:%b.mi} %{!save-temps:%g.mi} \n\ 	    cc1obj -fpreprocessed %{save-temps:%b.mi} %{!save-temps:%g.mi} %(cc1_options) %{gen-decls}}\ 	%{!save-temps:%{!no-integrated-cpp:\ 	  %{traditional|ftraditional|traditional-cpp:\ 	    tradcpp0 -lang-objc %{ansi:-std=c89} %(cpp_options) %{!pipe:%g.mi} |\n\ 	    cc1obj -fpreprocessed %{!pipe:%g.mi} %(cc1_options) %{gen-decls}}\ 	  %{!traditional:%{!ftraditional:%{!traditional-cpp:\ 	    cc1obj %{ansi:-std=c89} %(cpp_unique_options) %(cc1_options) %{gen-decls}}}}}}\         %{!fsyntax-only:%(invoke_as)}}}}"
+literal|"%{E|M|MM:%(trad_capable_cpp)\           -lang-objc %(cpp_options) %(cpp_debug_options)}\       %{!E:%{!M:%{!MM:\ 	%{traditional|ftraditional|traditional-cpp:\ %eGNU Objective C no longer supports traditional compilation}\ 	%{save-temps|no-integrated-cpp:cc1obj -E %(cpp_options) %{save-temps:%b.mi} %{!save-temps:%g.mi} \n\ 	    cc1obj -fpreprocessed %{save-temps:%b.mi} %{!save-temps:%g.mi} %(cc1_options) %{gen-decls}}\ 	%{!save-temps:%{!no-integrated-cpp:\ 	    cc1obj %(cpp_unique_options) %(cc1_options) %{gen-decls}}}\         %{!fsyntax-only:%(invoke_as)}}}}"
 operator|,
 literal|0
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Language-level data type conversion for GNU C.    Copyright (C) 1987, 1988, 1991, 1998 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Language-level data type conversion for GNU C.    Copyright (C) 1987, 1988, 1991, 1998, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -40,11 +40,17 @@ end_include
 begin_include
 include|#
 directive|include
+file|"c-common.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"toplev.h"
 end_include
 
 begin_comment
-comment|/* Change of width--truncation and extension of integers or reals--    is represented with NOP_EXPR.  Proper functioning of many things    assumes that no other conversions can be NOP_EXPRs.     Conversion between integer and pointer is represented with CONVERT_EXPR.    Converting integer to real uses FLOAT_EXPR    and real to integer uses FIX_TRUNC_EXPR.     Here is a list of all the functions that assume that widening and    narrowing is always done with a NOP_EXPR:      In convert.c, convert_to_integer.      In c-typeck.c, build_binary_op (boolean ops), and truthvalue_conversion.      In expr.c: expand_expr, for operands of a MULT_EXPR.      In fold-const.c: fold.      In tree.c: get_narrower and get_unwidened.  */
+comment|/* Change of width--truncation and extension of integers or reals--    is represented with NOP_EXPR.  Proper functioning of many things    assumes that no other conversions can be NOP_EXPRs.     Conversion between integer and pointer is represented with CONVERT_EXPR.    Converting integer to real uses FLOAT_EXPR    and real to integer uses FIX_TRUNC_EXPR.     Here is a list of all the functions that assume that widening and    narrowing is always done with a NOP_EXPR:      In convert.c, convert_to_integer.      In c-typeck.c, build_binary_op (boolean ops), and 	c_common_truthvalue_conversion.      In expr.c: expand_expr, for operands of a MULT_EXPR.      In fold-const.c: fold.      In tree.c: get_narrower and get_unwidened.  */
 end_comment
 
 begin_escape
@@ -241,12 +247,12 @@ block|{
 name|tree
 name|t
 init|=
-name|truthvalue_conversion
+name|c_common_truthvalue_conversion
 argument_list|(
 name|expr
 argument_list|)
 decl_stmt|;
-comment|/* If truthvalue_conversion returns a NOP_EXPR, we must fold it here 	 to avoid infinite recursion between fold () and convert ().  */
+comment|/* If it returns a NOP_EXPR, we must fold it here to avoid 	 infinite recursion between fold () and convert ().  */
 if|if
 condition|(
 name|TREE_CODE

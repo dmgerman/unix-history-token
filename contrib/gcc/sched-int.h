@@ -4,6 +4,17 @@ comment|/* Instruction scheduling pass.  This file contains definitions used    
 end_comment
 
 begin_comment
+comment|/* Pointer to data describing the current DFA state.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|state_t
+name|curr_state
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Forward declaration.  */
 end_comment
 
@@ -94,7 +105,7 @@ block|}
 modifier|*
 name|reg_last
 struct|;
-comment|/* Element N is set for each register that has any non-zero element      in reg_last[N].{uses,sets,clobbers}.  */
+comment|/* Element N is set for each register that has any nonzero element      in reg_last[N].{uses,sets,clobbers}.  */
 name|regset_head
 name|reg_last_in_use
 decl_stmt|;
@@ -286,7 +297,7 @@ comment|/* The number of incoming edges in the forward dependency graph.      As
 name|int
 name|dep_count
 decl_stmt|;
-comment|/* An encoding of the blockage range function.  Both unit and range      are coded.  */
+comment|/* An encoding of the blockage range function.  Both unit and range      are coded.  This member is used only for old pipeline interface.  */
 name|unsigned
 name|int
 name|blockage
@@ -302,7 +313,7 @@ decl_stmt|;
 name|short
 name|cost
 decl_stmt|;
-comment|/* An encoding of the function units used.  */
+comment|/* An encoding of the function units used.  This member is used only      for old pipeline interface.  */
 name|short
 name|units
 decl_stmt|;
@@ -1151,6 +1162,24 @@ operator|,
 name|rtx
 operator|,
 name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|print_insn
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|rtx
 operator|,
 name|int
 operator|)

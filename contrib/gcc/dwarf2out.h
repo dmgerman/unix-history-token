@@ -105,12 +105,5 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|current_funcdef_number
-decl_stmt|;
-end_decl_stmt
-
 end_unit
 

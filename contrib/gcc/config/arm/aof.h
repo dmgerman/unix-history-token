@@ -101,20 +101,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|RTX
-parameter_list|,
-name|ALIGN
-parameter_list|)
-value|text_section ();
-end_define
-
-begin_define
-define|#
-directive|define
 name|DATA_SECTION_ASM_OP
 value|aof_data_section ()
 end_define
@@ -370,17 +356,15 @@ name|arm_main_function
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Globalizing directive for a label.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|do {							\   fprintf ((STREAM), "\tEXPORT\t");			\   assemble_name ((STREAM), (NAME));			\   fputc ('\n', (STREAM));				\   if ((NAME)[0] == 'm'&& ! strcmp ((NAME), "main"))	\     arm_main_function = 1;				\ } while (0)
+name|GLOBAL_ASM_OP
+value|"\tEXPORT\t"
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Perform various loop optimizations, including strength reduction.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Perform various loop optimizations, including strength reduction.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"tm_p.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"obstack.h"
 end_include
 
 begin_include
@@ -246,17 +240,6 @@ value|2
 end_define
 
 begin_comment
-comment|/* The minimal number of prefetch blocks that a loop must consume to make    the emitting of prefetch instruction in the body of loop worthwhile.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PREFETCH_BLOCKS_IN_LOOP_MIN
-value|6
-end_define
-
-begin_comment
 comment|/* Parameterize some prefetch heuristics so they can be turned on and off    easily for performance testing on new architecures.  These can be    defined in target-dependent files.  */
 end_comment
 
@@ -415,6 +398,50 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Define a limit to how far apart indices can be and still be merged    into a single prefetch.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREFETCH_EXTREME_DIFFERENCE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PREFETCH_EXTREME_DIFFERENCE
+value|4096
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Issue prefetch instructions before the loop to fetch data to be used    in the first few loop iterations.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PREFETCH_BEFORE_LOOP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PREFETCH_BEFORE_LOOP
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Do not handle reversed order prefetches (negative stride).  */
 end_comment
 
@@ -437,41 +464,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Prefetch even if the GIV is not always executed.  */
+comment|/* Prefetch even if the GIV is in conditional code.  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PREFETCH_NOT_ALWAYS
+name|PREFETCH_CONDITIONAL
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PREFETCH_NOT_ALWAYS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* If the loop requires more prefetches than the target can process in    parallel then don't prefetch anything in that loop.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PREFETCH_LIMIT_TO_SIMULTANEOUS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PREFETCH_LIMIT_TO_SIMULTANEOUS
+name|PREFETCH_CONDITIONAL
 value|1
 end_define
 
@@ -516,7 +521,7 @@ parameter_list|,
 name|SET_DEST
 parameter_list|)
 define|\
-value|((REGNO)< FIRST_PSEUDO_REGISTER \  ? HARD_REGNO_NREGS ((REGNO), GET_MODE (SET_DEST)) : 1)
+value|((REGNO)< FIRST_PSEUDO_REGISTER \  ? (int) HARD_REGNO_NREGS ((REGNO), GET_MODE (SET_DEST)) : 1)
 end_define
 
 begin_comment
@@ -596,20 +601,6 @@ name|int
 name|loop_max_reg
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
 
 begin_escape
 end_escape
@@ -2088,6 +2079,36 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|find_mem_in_note_1
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|find_mem_in_note
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|void
 name|load_mems
 name|PARAMS
@@ -2148,6 +2169,8 @@ operator|,
 name|rtx
 operator|,
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2488,6 +2511,21 @@ argument_list|(
 operator|(
 name|rtx
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|gen_load_of_final_value
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3294,16 +3332,6 @@ name|flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If there were lexical blocks inside the loop, they have been      replicated.  We will now have more than one NOTE_INSN_BLOCK_BEG      and NOTE_INSN_BLOCK_END for each such block.  We must duplicate      the BLOCKs as well.  */
-if|if
-condition|(
-name|write_symbols
-operator|!=
-name|NO_DEBUG
-condition|)
-name|reorder_blocks
-argument_list|()
-expr_stmt|;
 name|end_alias_analysis
 argument_list|()
 expr_stmt|;
@@ -4206,7 +4234,30 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Don't try to optimize a MODE_CC set with a constant 		 source.  It probably will be combined with a conditional 		 jump.  */
+if|if
+condition|(
+name|GET_MODE_CLASS
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|set
+argument_list|)
+argument_list|)
+argument_list|)
+operator|==
+name|MODE_CC
+operator|&&
+name|CONSTANT_P
+argument_list|(
+name|src
+argument_list|)
+condition|)
+empty_stmt|;
 comment|/* Don't try to optimize a register that was made 		 by loop-optimization for an inner loop. 		 We don't know its life-span, so we can't compute 		 the benefit.  */
+elseif|else
 if|if
 condition|(
 name|REGNO
@@ -4234,7 +4285,7 @@ argument_list|(
 name|set
 argument_list|)
 argument_list|)
-comment|/* And the set is not guaranteed to be executed once 			  the loop starts, or the value before the set is 			  needed before the set occurs...  			  ??? Note we have quadratic behaviour here, mitigated 			  by the fact that the previous test will often fail for 			  large loops.  Rather than re-scanning the entire loop 			  each time for register usage, we should build tables 			  of the register usage and use them here instead.  */
+comment|/* And the set is not guaranteed to be executed once 			  the loop starts, or the value before the set is 			  needed before the set occurs...  			  ??? Note we have quadratic behavior here, mitigated 			  by the fact that the previous test will often fail for 			  large loops.  Rather than re-scanning the entire loop 			  each time for register usage, we should build tables 			  of the register usage and use them here instead.  */
 operator|&&
 operator|(
 name|maybe_never
@@ -6876,6 +6927,7 @@ name|machine_mode
 name|mode
 decl_stmt|;
 comment|/* Regs that are set more than once are not allowed to match      or be matched.  I'm no longer sure why not.  */
+comment|/* Only pseudo registers are allowed to match or be matched,      since move_movables does not validate the change.  */
 comment|/* Perhaps testing m->consec_sets would be more appropriate here?  */
 for|for
 control|(
@@ -6913,6 +6965,12 @@ operator|.
 name|n_times_set
 operator|==
 literal|1
+operator|&&
+name|m
+operator|->
+name|regno
+operator|>=
+name|FIRST_PSEUDO_REGISTER
 operator|&&
 operator|!
 name|m
@@ -6967,11 +7025,8 @@ name|m1
 operator|->
 name|next
 control|)
-comment|/* ??? HACK!  move_movables does not verify that the replacement 	     is valid, which can have disasterous effects with hard regs 	     and match_dup.  Turn combination off for now.  */
 if|if
 condition|(
-literal|0
-operator|&&
 name|m
 operator|!=
 name|m1
@@ -6994,6 +7049,12 @@ operator|.
 name|n_times_set
 operator|==
 literal|1
+operator|&&
+name|m1
+operator|->
+name|regno
+operator|>=
+name|FIRST_PSEUDO_REGISTER
 comment|/* A reg used outside the loop mustn't be eliminated.  */
 operator|&&
 operator|!
@@ -9270,14 +9331,9 @@ operator|->
 name|set_src
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
-name|get_insns
-argument_list|()
-expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -9289,7 +9345,7 @@ name|m
 operator|->
 name|set_src
 argument_list|,
-name|temp
+name|seq
 argument_list|)
 expr_stmt|;
 name|i1
@@ -9862,7 +9918,7 @@ argument_list|)
 expr_stmt|;
 name|sequence
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -9955,14 +10011,9 @@ operator|->
 name|set_src
 argument_list|)
 expr_stmt|;
-name|temp
-operator|=
-name|get_insns
-argument_list|()
-expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -9974,7 +10025,7 @@ name|m
 operator|->
 name|set_src
 argument_list|,
-name|temp
+name|seq
 argument_list|)
 expr_stmt|;
 name|i1
@@ -11129,6 +11180,12 @@ literal|0
 expr_stmt|;
 name|loop_info
 operator|->
+name|has_prefetch
+operator|=
+literal|0
+expr_stmt|;
+name|loop_info
+operator|->
 name|has_volatile
 operator|=
 literal|0
@@ -11186,6 +11243,16 @@ operator|->
 name|num_mem_sets
 operator|=
 literal|0
+expr_stmt|;
+comment|/* If loop opts run twice, this was set on 1st pass for 2nd.  */
+name|loop_info
+operator|->
+name|preconditioned
+operator|=
+name|NOTE_PRECONDITIONED
+argument_list|(
+name|end
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -12803,7 +12870,7 @@ name|q
 decl_stmt|,
 name|r
 decl_stmt|;
-comment|/* If no suitable BARRIER was found, create a suitable 			   one before TARGET.  Since TARGET is a fall through 			   path, we'll need to insert an jump around our block 			   and add a BARRIER before TARGET.  			   This creates an extra unconditional jump outside 			   the loop.  However, the benefits of removing rarely 			   executed instructions from inside the loop usually 			   outweighs the cost of the extra unconditional jump 			   outside the loop.  */
+comment|/* If no suitable BARRIER was found, create a suitable 			   one before TARGET.  Since TARGET is a fall through 			   path, we'll need to insert a jump around our block 			   and add a BARRIER before TARGET.  			   This creates an extra unconditional jump outside 			   the loop.  However, the benefits of removing rarely 			   executed instructions from inside the loop usually 			   outweighs the cost of the extra unconditional jump 			   outside the loop.  */
 if|if
 condition|(
 name|loc
@@ -14130,6 +14197,24 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* Out-of-range regs can occur when we are called from unrolling. 	 These have always been created by the unroller and are set in 	 the loop, hence are never invariant. */
+if|if
+condition|(
+name|REGNO
+argument_list|(
+name|x
+argument_list|)
+operator|>=
+operator|(
+name|unsigned
+operator|)
+name|regs
+operator|->
+name|num
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|regs
@@ -15451,14 +15536,22 @@ decl_stmt|;
 comment|/* Prefetch stride in bytes in each 				   iteration.  */
 name|unsigned
 name|int
-name|bytes_accesed
+name|bytes_accessed
 decl_stmt|;
-comment|/* Sum of sizes of all acceses to this 				   prefetch area in one iteration.  */
+comment|/* Sum of sizes of all accesses to this 				   prefetch area in one iteration.  */
 name|unsigned
 name|int
 name|total_bytes
 decl_stmt|;
 comment|/* Total bytes loop will access in this block. 				   This is set only for loops with known 				   iteration counts and is 0xffffffff 				   otherwise.  */
+name|int
+name|prefetch_in_loop
+decl_stmt|;
+comment|/* Number of prefetch insns in loop.  */
+name|int
+name|prefetch_before_loop
+decl_stmt|;
+comment|/* Number of prefetch insns before loop.  */
 name|unsigned
 name|int
 name|write
@@ -15466,20 +15559,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* 1 for read/write prefetches.  */
-name|unsigned
-name|int
-name|prefetch_in_loop
-range|:
-literal|1
-decl_stmt|;
-comment|/* 1 for those chosen for prefetching.  */
-name|unsigned
-name|int
-name|prefetch_before_loop
-range|:
-literal|1
-decl_stmt|;
-comment|/* 1 for those chosen for prefetching.  */
 block|}
 struct|;
 end_struct
@@ -16277,7 +16356,19 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|num_prefetches_before
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|num_write_prefetches_before
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|ahead
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
@@ -16336,11 +16427,12 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch: ignoring loop - has call.\n"
+literal|"Prefetch: ignoring loop: has call.\n"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Don't prefetch in loops known to have few iterations.  */
 if|if
 condition|(
 name|PREFETCH_NO_LOW_LOOPCNT
@@ -16370,7 +16462,7 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch: ignoring loop - not enought iterations.\n"
+literal|"Prefetch: ignoring loop: not enough iterations.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -16420,7 +16512,7 @@ condition|(
 name|biv1
 condition|)
 block|{
-comment|/* Discard non-constant additions that we can't handle well yet, and 	     BIVs that are executed multiple times; such BIVs ought to be 	     handled in the nested loop.  We accept not_every_iteration BIVs, 	     since these only result in larger strides and make our 	     heuristics more conservative. 	     ??? What does the last sentence mean?  */
+comment|/* Discard non-constant additions that we can't handle well yet, and 	     BIVs that are executed multiple times; such BIVs ought to be 	     handled in the nested loop.  We accept not_every_iteration BIVs, 	     since these only result in larger strides and make our 	     heuristics more conservative.  */
 if|if
 condition|(
 name|GET_CODE
@@ -16442,7 +16534,7 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch: biv %i ignored: non-constant addition at insn %i:"
+literal|"Prefetch: ignoring biv %d: non-constant addition at insn %d:"
 argument_list|,
 name|REGNO
 argument_list|(
@@ -16494,7 +16586,7 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch: biv %i ignored: maybe_multiple at insn %i:"
+literal|"Prefetch: ignoring biv %d: maybe_multiple at insn %i:"
 argument_list|,
 name|REGNO
 argument_list|(
@@ -16589,10 +16681,24 @@ literal|1
 decl_stmt|;
 name|HOST_WIDE_INT
 name|stride
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|stride_sign
+init|=
+literal|1
 decl_stmt|;
 name|struct
 name|check_store_data
 name|d
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ignore_reason
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|size
@@ -16605,7 +16711,7 @@ name|iv
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* There are several reasons why an induction variable is not 	     interesting to us.  */
+comment|/* See whether an induction variable is interesting to us and if 	     not, report the reason.  */
 if|if
 condition|(
 name|iv
@@ -16613,8 +16719,15 @@ operator|->
 name|giv_type
 operator|!=
 name|DEST_ADDR
-comment|/* We are interested only in constant stride memory references 		 in order to be able to compute density easily.  */
-operator|||
+condition|)
+name|ignore_reason
+operator|=
+literal|"giv is not a destination address"
+expr_stmt|;
+comment|/* We are interested only in constant stride memory references 	     in order to be able to compute density easily.  */
+elseif|else
+if|if
+condition|(
 name|GET_CODE
 argument_list|(
 name|iv
@@ -16623,12 +16736,13 @@ name|mult_val
 argument_list|)
 operator|!=
 name|CONST_INT
-comment|/* Don't handle reversed order prefetches, since they are usually 		 ineffective.  Later we may be able to reverse such BIVs.  */
-operator|||
-operator|(
-name|PREFETCH_NO_REVERSE_ORDER
-operator|&&
-operator|(
+condition|)
+name|ignore_reason
+operator|=
+literal|"stride is not constant"
+expr_stmt|;
+else|else
+block|{
 name|stride
 operator|=
 name|INTVAL
@@ -16639,21 +16753,56 @@ name|mult_val
 argument_list|)
 operator|*
 name|basestride
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|stride
 operator|<
 literal|0
-operator|)
-comment|/* Prefetching of accesses with such an extreme stride is probably 		 not worthwhile, either.  */
-operator|||
-operator|(
+condition|)
+block|{
+name|stride
+operator|=
+operator|-
+name|stride
+expr_stmt|;
+name|stride_sign
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+comment|/* On some targets, reversed order prefetches are not 		 worthwhile.  */
+if|if
+condition|(
+name|PREFETCH_NO_REVERSE_ORDER
+operator|&&
+name|stride_sign
+operator|<
+literal|0
+condition|)
+name|ignore_reason
+operator|=
+literal|"reversed order stride"
+expr_stmt|;
+comment|/* Prefetch of accesses with an extreme stride might not be 		 worthwhile, either.  */
+elseif|else
+if|if
+condition|(
 name|PREFETCH_NO_EXTREME_STRIDE
 operator|&&
 name|stride
 operator|>
 name|PREFETCH_EXTREME_STRIDE
-operator|)
+condition|)
+name|ignore_reason
+operator|=
+literal|"extreme stride"
+expr_stmt|;
 comment|/* Ignore GIVs with varying add values; we can't predict the 		 value for the next iteration.  */
-operator|||
+elseif|else
+if|if
+condition|(
 operator|!
 name|loop_invariant_p
 argument_list|(
@@ -16663,11 +16812,29 @@ name|iv
 operator|->
 name|add_val
 argument_list|)
+condition|)
+name|ignore_reason
+operator|=
+literal|"giv has varying add value"
+expr_stmt|;
 comment|/* Ignore GIVs in the nested loops; they ought to have been 		 handled already.  */
-operator|||
+elseif|else
+if|if
+condition|(
 name|iv
 operator|->
 name|maybe_multiple
+condition|)
+name|ignore_reason
+operator|=
+literal|"giv is in nested loop"
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ignore_reason
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -16678,7 +16845,7 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch: Ignoring giv at %i\n"
+literal|"Prefetch: ignoring giv at %d: %s.\n"
 argument_list|,
 name|INSN_UID
 argument_list|(
@@ -16686,15 +16853,13 @@ name|iv
 operator|->
 name|insn
 argument_list|)
+argument_list|,
+name|ignore_reason
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
 comment|/* Determine the pointer to the basic array we are examining.  It is 	     the sum of the BIV's initial value and the GIV's add_val.  */
-name|index
-operator|=
-literal|0
-expr_stmt|;
 name|address
 operator|=
 name|copy_rtx
@@ -16734,10 +16899,6 @@ operator|&
 name|address
 argument_list|)
 expr_stmt|;
-name|index
-operator|+=
-name|size
-expr_stmt|;
 name|d
 operator|.
 name|mem_write
@@ -16756,7 +16917,7 @@ expr_stmt|;
 comment|/* When the GIV is not always executed, we might be better off by 	     not dirtying the cache pages.  */
 if|if
 condition|(
-name|PREFETCH_NOT_ALWAYS
+name|PREFETCH_CONDITIONAL
 operator|||
 name|iv
 operator|->
@@ -16777,6 +16938,30 @@ operator|&
 name|d
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|loop_dump_stream
+condition|)
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|"Prefetch: Ignoring giv at %d: %s\n"
+argument_list|,
+name|INSN_UID
+argument_list|(
+name|iv
+operator|->
+name|insn
+argument_list|)
+argument_list|,
+literal|"in conditional code."
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Attempt to find another prefetch to the same array and see if we 	     can merge this one.  */
 for|for
 control|(
@@ -16815,7 +17000,7 @@ operator|.
 name|stride
 condition|)
 block|{
-comment|/* In case both access same array (same location 		   just with small difference in constant indexes), merge 		   the prefetches.  Just do the later and the earlier will 		   get prefetched from previous iteration. 		   4096 is artificial threshold.  It should not be too small, 		   but also not bigger than small portion of memory usually 		   traversed by single loop.  */
+comment|/* In case both access same array (same location 		   just with small difference in constant indexes), merge 		   the prefetches.  Just do the later and the earlier will 		   get prefetched from previous iteration. 		   The artificial threshold should not be too small, 		   but also not bigger than small portion of memory usually 		   traversed by single loop.  */
 if|if
 condition|(
 name|index
@@ -16836,7 +17021,7 @@ index|]
 operator|.
 name|index
 operator|<
-literal|4096
+name|PREFETCH_EXTREME_DIFFERENCE
 condition|)
 block|{
 name|info
@@ -16855,7 +17040,7 @@ index|[
 name|i
 index|]
 operator|.
-name|bytes_accesed
+name|bytes_accessed
 operator|+=
 name|size
 expr_stmt|;
@@ -16921,7 +17106,7 @@ name|index
 operator|-
 name|index
 operator|<
-literal|4096
+name|PREFETCH_EXTREME_DIFFERENCE
 condition|)
 block|{
 name|info
@@ -16940,7 +17125,7 @@ index|[
 name|i
 index|]
 operator|.
-name|bytes_accesed
+name|bytes_accessed
 operator|+=
 name|size
 expr_stmt|;
@@ -17018,7 +17203,7 @@ index|[
 name|num_prefetches
 index|]
 operator|.
-name|bytes_accesed
+name|bytes_accessed
 operator|=
 name|size
 expr_stmt|;
@@ -17062,7 +17247,10 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* Attempt to calculate the number of bytes fetched by the loop. 	 Avoid overflow.  */
+name|int
+name|density
+decl_stmt|;
+comment|/* Attempt to calculate the total number of bytes fetched by all 	 iterations of the loop.  Avoid overflow.  */
 if|if
 condition|(
 name|LOOP_INFO
@@ -17127,19 +17315,16 @@ name|total_bytes
 operator|=
 literal|0xffffffff
 expr_stmt|;
-comment|/* Prefetch is worthwhile only when the loads/stores are dense.  */
-if|if
-condition|(
-name|PREFETCH_ONLY_DENSE_MEM
-operator|&&
+name|density
+operator|=
 name|info
 index|[
 name|i
 index|]
 operator|.
-name|bytes_accesed
+name|bytes_accessed
 operator|*
-literal|256
+literal|100
 operator|/
 name|info
 index|[
@@ -17147,8 +17332,21 @@ name|i
 index|]
 operator|.
 name|stride
+expr_stmt|;
+comment|/* Prefetch might be worthwhile only when the loads/stores are dense.  */
+if|if
+condition|(
+name|PREFETCH_ONLY_DENSE_MEM
+condition|)
+if|if
+condition|(
+name|density
+operator|*
+literal|256
 operator|>
 name|PREFETCH_DENSE_MEM
+operator|*
+literal|100
 operator|&&
 operator|(
 name|info
@@ -17195,6 +17393,7 @@ operator|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|info
 index|[
 name|i
@@ -17215,16 +17414,69 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|loop_dump_stream
+condition|)
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|"Prefetch: ignoring giv at %d: %d%% density is too low.\n"
+argument_list|,
+name|INSN_UID
+argument_list|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|giv
+operator|->
+name|insn
+argument_list|)
+argument_list|,
+name|density
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|info
 index|[
 name|i
 index|]
 operator|.
 name|prefetch_in_loop
+operator|=
+literal|1
+operator|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_before_loop
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Find how many prefetch instructions we'll use within the loop.  */
+if|if
+condition|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_in_loop
+operator|!=
+literal|0
 condition|)
 block|{
-name|num_real_prefetches
-operator|+=
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_in_loop
+operator|=
 operator|(
 operator|(
 name|info
@@ -17241,6 +17493,15 @@ operator|)
 operator|/
 name|PREFETCH_BLOCK
 operator|)
+expr_stmt|;
+name|num_real_prefetches
+operator|+=
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_in_loop
 expr_stmt|;
 if|if
 condition|(
@@ -17253,28 +17514,72 @@ name|write
 condition|)
 name|num_real_write_prefetches
 operator|+=
-operator|(
 name|info
 index|[
 name|i
 index|]
 operator|.
-name|stride
-operator|+
-name|PREFETCH_BLOCK
-operator|-
-literal|1
-operator|)
-operator|/
-name|PREFETCH_BLOCK
+name|prefetch_in_loop
 expr_stmt|;
 block|}
 block|}
+comment|/* Determine how many iterations ahead to prefetch within the loop, based      on how many prefetches we currently expect to do within the loop.  */
+if|if
+condition|(
+name|num_real_prefetches
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|ahead
+operator|=
+name|SIMULTANEOUS_PREFETCHES
+operator|/
+name|num_real_prefetches
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 name|loop_dump_stream
 condition|)
-block|{
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|"Prefetch: ignoring prefetches within loop: ahead is zero; %d< %d\n"
+argument_list|,
+name|SIMULTANEOUS_PREFETCHES
+argument_list|,
+name|num_real_prefetches
+argument_list|)
+expr_stmt|;
+name|num_real_prefetches
+operator|=
+literal|0
+operator|,
+name|num_real_write_prefetches
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* We'll also use AHEAD to determine how many prefetch instructions to      emit before a loop, so don't leave it zero.  */
+if|if
+condition|(
+name|ahead
+operator|==
+literal|0
+condition|)
+name|ahead
+operator|=
+name|PREFETCH_BLOCKS_BEFORE_LOOP_MAX
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -17289,11 +17594,115 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* Update if we've decided not to prefetch anything within the loop.  */
+if|if
+condition|(
+name|num_real_prefetches
+operator|==
+literal|0
+condition|)
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_in_loop
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Find how many prefetch instructions we'll use before the loop.  */
+if|if
+condition|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_before_loop
+operator|!=
+literal|0
+condition|)
+block|{
+name|int
+name|n
+init|=
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|total_bytes
+operator|/
+name|PREFETCH_BLOCK
+decl_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+name|ahead
+condition|)
+name|n
+operator|=
+name|ahead
+expr_stmt|;
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_before_loop
+operator|=
+name|n
+expr_stmt|;
+name|num_prefetches_before
+operator|+=
+name|n
+expr_stmt|;
+if|if
+condition|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|write
+condition|)
+name|num_write_prefetches_before
+operator|+=
+name|n
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|loop_dump_stream
+condition|)
+block|{
+if|if
+condition|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_in_loop
+operator|==
+literal|0
+operator|&&
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_before_loop
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Prefetch insn %i address: "
+literal|"Prefetch insn: %d"
 argument_list|,
 name|INSN_UID
 argument_list|(
@@ -17308,23 +17717,85 @@ name|insn
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|print_rtl
+name|fprintf
 argument_list|(
 name|loop_dump_stream
+argument_list|,
+literal|"; in loop: %d; before: %d; %s\n"
 argument_list|,
 name|info
 index|[
 name|i
 index|]
 operator|.
-name|base_address
+name|prefetch_in_loop
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|prefetch_before_loop
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|write
+condition|?
+literal|"read/write"
+else|:
+literal|"read only"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|" Index: "
+literal|" density: %d%%; bytes_accessed: %u; total_bytes: %u\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|bytes_accessed
+operator|*
+literal|100
+operator|/
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|stride
+argument_list|)
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|bytes_accessed
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|total_bytes
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|" index: "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -17345,7 +17816,7 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|" stride: "
+literal|"; stride: "
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -17366,101 +17837,78 @@ name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|" density: %i%% total_bytes: %u%sin loop: %s before: %s\n"
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|bytes_accesed
-operator|*
-literal|100
-operator|/
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|stride
-argument_list|)
-argument_list|,
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|total_bytes
-argument_list|,
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|write
-condition|?
-literal|" read/write "
-else|:
-literal|" read only "
-argument_list|,
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|prefetch_in_loop
-condition|?
-literal|"yes"
-else|:
-literal|"no"
-argument_list|,
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|prefetch_before_loop
-condition|?
-literal|"yes"
-else|:
-literal|"no"
+literal|"; address: "
 argument_list|)
 expr_stmt|;
-block|}
+name|print_rtl
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+name|info
+index|[
+name|i
+index|]
+operator|.
+name|base_address
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|loop_dump_stream
 argument_list|,
-literal|"Real prefetches needed: %i (write: %i)\n"
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|num_real_prefetches
+operator|+
+name|num_prefetches_before
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Record that this loop uses prefetch instructions.  */
+name|LOOP_INFO
+argument_list|(
+name|loop
+argument_list|)
+operator|->
+name|has_prefetch
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|loop_dump_stream
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|"Real prefetches needed within loop: %d (write: %d)\n"
 argument_list|,
 name|num_real_prefetches
 argument_list|,
 name|num_real_write_prefetches
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|num_real_prefetches
-condition|)
-return|return;
-name|ahead
-operator|=
-name|SIMULTANEOUS_PREFETCHES
-operator|/
-name|num_real_prefetches
+name|fprintf
+argument_list|(
+name|loop_dump_stream
+argument_list|,
+literal|"Real prefetches needed before loop: %d (write: %d)\n"
+argument_list|,
+name|num_prefetches_before
+argument_list|,
+name|num_write_prefetches_before
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ahead
-condition|)
-return|return;
+block|}
+block|}
 for|for
 control|(
 name|i
@@ -17475,16 +17923,6 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|prefetch_in_loop
-condition|)
-block|{
 name|int
 name|y
 decl_stmt|;
@@ -17496,22 +17934,12 @@ literal|0
 init|;
 name|y
 operator|<
-operator|(
-operator|(
 name|info
 index|[
 name|i
 index|]
 operator|.
-name|stride
-operator|+
-name|PREFETCH_BLOCK
-operator|-
-literal|1
-operator|)
-operator|/
-name|PREFETCH_BLOCK
-operator|)
+name|prefetch_in_loop
 condition|;
 name|y
 operator|++
@@ -17577,7 +18005,7 @@ decl_stmt|;
 name|rtx
 name|seq
 decl_stmt|;
-comment|/* We can save some effort by offsetting the address on 		 architectures with offsettable memory references.  */
+comment|/* We can save some effort by offsetting the address on 	     architectures with offsettable memory references.  */
 if|if
 condition|(
 name|offsettable_address_p
@@ -17710,7 +18138,7 @@ argument_list|)
 expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -17723,7 +18151,7 @@ argument_list|,
 name|before_insn
 argument_list|)
 expr_stmt|;
-comment|/* Check all insns emitted and record the new GIV 		 information.  */
+comment|/* Check all insns emitted and record the new GIV 	     information.  */
 name|insn
 operator|=
 name|NEXT_INSN
@@ -17774,54 +18202,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 if|if
 condition|(
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|prefetch_before_loop
+name|PREFETCH_BEFORE_LOOP
 condition|)
 block|{
-name|int
-name|y
-decl_stmt|;
-comment|/* Emit INSNs before the loop to fetch the first cache lines.  */
+comment|/* Emit insns before the loop to fetch the first cache lines or, 	     if we're not prefetching within the loop, everything we expect 	     to need.  */
 for|for
 control|(
 name|y
 operator|=
 literal|0
 init|;
-operator|(
-operator|!
+name|y
+operator|<
 name|info
 index|[
 name|i
 index|]
 operator|.
-name|prefetch_in_loop
-operator|||
-name|y
-operator|<
-name|ahead
-operator|)
-operator|&&
-name|y
-operator|*
-name|PREFETCH_BLOCK
-operator|<
-operator|(
-name|int
-operator|)
-name|info
-index|[
-name|i
-index|]
-operator|.
-name|total_bytes
+name|prefetch_before_loop
 condition|;
 name|y
 operator|++
@@ -17896,6 +18296,13 @@ argument_list|(
 name|init_val
 argument_list|)
 condition|)
+block|{
+name|rtx
+name|seq
+decl_stmt|;
+name|start_sequence
+argument_list|()
+expr_stmt|;
 name|init_val
 operator|=
 name|convert_to_mode
@@ -17907,6 +18314,26 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|seq
+operator|=
+name|get_insns
+argument_list|()
+expr_stmt|;
+name|end_sequence
+argument_list|()
+expr_stmt|;
+name|loop_insn_emit_before
+argument_list|(
+name|loop
+argument_list|,
+literal|0
+argument_list|,
+name|loop_start
+argument_list|,
+name|seq
+argument_list|)
+expr_stmt|;
+block|}
 name|loop_iv_add_mult_emit_before
 argument_list|(
 name|loop
@@ -17990,7 +18417,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Dummy register to have non-zero DEST_REG for DEST_ADDR type givs.  */
+comment|/* Dummy register to have nonzero DEST_REG for DEST_ADDR type givs.  */
 end_comment
 
 begin_decl_stmt
@@ -18028,7 +18455,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan the loop body and call FNCALL for each insn.  In the addition to the    LOOP and INSN parameters pass MAYBE_MULTIPLE and NOT_EVERY_ITERATION to the    callback.     NOT_EVERY_ITERATION if current insn is not executed at least once for every    loop iteration except for the last one.     MAYBE_MULTIPLE is 1 if current insn may be executed more than once for every    loop iteration.  */
+comment|/* Scan the loop body and call FNCALL for each insn.  In the addition to the    LOOP and INSN parameters pass MAYBE_MULTIPLE and NOT_EVERY_ITERATION to the    callback.     NOT_EVERY_ITERATION is 1 if current insn is not known to be executed at    least once for every loop iteration except for the last one.     MAYBE_MULTIPLE is 1 if current insn may be executed more than once for every    loop iteration.  */
 end_comment
 
 begin_function
@@ -18048,7 +18475,6 @@ name|loop_insn_callback
 name|fncall
 decl_stmt|;
 block|{
-comment|/* This is 1 if current insn is not executed at least once for every loop      iteration.  */
 name|int
 name|not_every_iteration
 init|=
@@ -18100,7 +18526,7 @@ operator|->
 name|scan_start
 argument_list|)
 expr_stmt|;
-comment|/* Scan through loop to find all possible bivs.  */
+comment|/* Scan through loop and update NOT_EVERY_ITERATION and MAYBE_MULTIPLE.  */
 for|for
 control|(
 name|p
@@ -18734,7 +19160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Determine how BIVS are initialised by looking through pre-header    extended basic block.  */
+comment|/* Determine how BIVS are initialized by looking through pre-header    extended basic block.  */
 end_comment
 
 begin_function
@@ -19400,7 +19826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if it is possible to eliminate the biv BL provided    all givs are reduced.  This is possible if either the reg is not    used outside the loop, or we can compute what its final value will    be.  */
+comment|/* Return nonzero if it is possible to eliminate the biv BL provided    all givs are reduced.  This is possible if either the reg is not    used outside the loop, or we can compute what its final value will    be.  */
 end_comment
 
 begin_function
@@ -20051,6 +20477,14 @@ block|{
 name|rtx
 name|insert_before
 decl_stmt|;
+comment|/* Skip if location is the same as a previous one.  */
+if|if
+condition|(
+name|tv
+operator|->
+name|same
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -20058,9 +20492,12 @@ name|auto_inc_opt
 condition|)
 name|insert_before
 operator|=
+name|NEXT_INSN
+argument_list|(
 name|tv
 operator|->
 name|insn
+argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -20710,16 +21147,28 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|rtx
+name|original_insn
+init|=
+name|v
+operator|->
+name|insn
+decl_stmt|;
+name|rtx
+name|note
+decl_stmt|;
 comment|/* Not replaceable; emit an insn to set the original giv reg from 	     the reduced giv, same as above.  */
+name|v
+operator|->
+name|insn
+operator|=
 name|loop_insn_emit_after
 argument_list|(
 name|loop
 argument_list|,
 literal|0
 argument_list|,
-name|v
-operator|->
-name|insn
+name|original_insn
 argument_list|,
 name|gen_move_insn
 argument_list|(
@@ -20731,6 +21180,29 @@ name|v
 operator|->
 name|new_reg
 argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* The original insn may have a REG_EQUAL note.  This note is  	     now incorrect and may result in invalid substitutions later.  	     The original insn is dead, but may be part of a libcall  	     sequence, which doesn't seem worth the bother of handling.  */
+name|note
+operator|=
+name|find_reg_note
+argument_list|(
+name|original_insn
+argument_list|,
+name|REG_EQUAL
+argument_list|,
+name|NULL_RTX
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|note
+condition|)
+name|remove_note
+argument_list|(
+name|original_insn
+argument_list|,
+name|note
 argument_list|)
 expr_stmt|;
 block|}
@@ -20783,7 +21255,7 @@ name|loop_insn_sink_or_swim
 argument_list|(
 name|loop
 argument_list|,
-name|gen_move_insn
+name|gen_load_of_final_value
 argument_list|(
 name|v
 operator|->
@@ -21405,7 +21877,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Determine how BIVS are initialised by looking through pre-header      extended basic block.  */
+comment|/* Determine how BIVS are initialized by looking through pre-header      extended basic block.  */
 name|loop_bivs_init_find
 argument_list|(
 name|loop
@@ -21838,7 +22310,7 @@ name|loop_insn_sink_or_swim
 argument_list|(
 name|loop
 argument_list|,
-name|gen_move_insn
+name|gen_load_of_final_value
 argument_list|(
 name|bl
 operator|->
@@ -21885,7 +22357,7 @@ name|loop_insn_sink
 argument_list|(
 name|loop
 argument_list|,
-name|gen_move_insn
+name|gen_load_of_final_value
 argument_list|(
 name|bl
 operator|->
@@ -22043,11 +22515,10 @@ name|LOOP_UNROLL
 operator|)
 operator|||
 operator|(
-operator|!
 operator|(
 name|flags
 operator|&
-name|LOOP_FIRST_PASS
+name|LOOP_AUTO_UNROLL
 operator|)
 operator|&&
 name|loop_info
@@ -22096,24 +22567,13 @@ comment|/* HAVE_doloop_end  */
 comment|/* In case number of iterations is known, drop branch prediction note      in the branch.  Do that only in second loop pass, as loop unrolling      may change the number of iterations performed.  */
 if|if
 condition|(
-operator|(
 name|flags
 operator|&
 name|LOOP_BCT
-operator|)
-operator|&&
-name|loop_info
-operator|->
-name|n_iterations
-operator|/
-name|loop_info
-operator|->
-name|unroll_number
-operator|>
-literal|1
 condition|)
 block|{
-name|int
+name|unsigned
+name|HOST_WIDE_INT
 name|n
 init|=
 name|loop_info
@@ -22124,9 +22584,15 @@ name|loop_info
 operator|->
 name|unroll_number
 decl_stmt|;
+if|if
+condition|(
+name|n
+operator|>
+literal|1
+condition|)
 name|predict_insn
 argument_list|(
-name|PREV_INSN
+name|prev_nonnote_insn
 argument_list|(
 name|loop
 operator|->
@@ -23461,6 +23927,12 @@ name|maybe_multiple
 operator|=
 name|maybe_multiple
 expr_stmt|;
+name|v
+operator|->
+name|same
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Add this to the reg's iv_class, creating a class      if this is the first incrementation of the reg.  */
 name|bl
 operator|=
@@ -23621,6 +24093,48 @@ argument_list|)
 operator|=
 name|bl
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Check if location is the same as a previous one.  */
+name|struct
+name|induction
+modifier|*
+name|induction
+decl_stmt|;
+for|for
+control|(
+name|induction
+operator|=
+name|bl
+operator|->
+name|biv
+init|;
+name|induction
+condition|;
+name|induction
+operator|=
+name|induction
+operator|->
+name|next_iv
+control|)
+if|if
+condition|(
+name|location
+operator|==
+name|induction
+operator|->
+name|location
+condition|)
+block|{
+name|v
+operator|->
+name|same
+operator|=
+name|induction
+expr_stmt|;
+break|break;
+block|}
 block|}
 comment|/* Update IV_CLASS entry for this biv.  */
 name|v
@@ -24131,12 +24645,20 @@ name|type
 operator|==
 name|DEST_ADDR
 condition|)
+block|{
 name|v
 operator|->
 name|replaceable
 operator|=
 literal|1
 expr_stmt|;
+name|v
+operator|->
+name|not_replaceable
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* The giv can be replaced outright by the reduced register only if all 	 of the following conditions are true: 	 - the insn that sets the giv is always executed on any iteration 	   on which the giv is used at all 	   (there are two ways to deduce this: 	    either the insn is executed on every iteration, 	    or all uses follow that insn in the same basic block), 	 - the giv is not used outside the loop 	 - no assignments to the biv occur during the giv's lifetime.  */
@@ -24191,6 +24713,12 @@ operator|->
 name|replaceable
 operator|=
 literal|1
+expr_stmt|;
+name|v
+operator|->
+name|not_replaceable
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -24598,6 +25126,12 @@ operator|->
 name|replaceable
 operator|=
 literal|1
+expr_stmt|;
+name|v
+operator|->
+name|not_replaceable
+operator|=
+literal|0
 expr_stmt|;
 comment|/* When trying to determine whether or not a biv increment occurs 	 during the lifetime of the giv, we can ignore uses of the variable 	 outside the loop because final_value is true.  Hence we can not 	 use regno_last_uid and regno_first_uid as above in record_giv.  */
 comment|/* Search the loop to determine whether any assignments to the 	 biv occur during the giv's lifetime.  Start with the insn 	 that sets the giv, and search around the loop until we come 	 back to that insn again.  	 Also fail if there is a jump within the giv's lifetime that jumps 	 to somewhere outside the lifetime but still within the loop.  This 	 catches spaghetti code where the execution order is not linear, and 	 hence the above test fails.  Here we assume that the giv lifetime 	 does not extend from one iteration of the loop to the next, so as 	 to make the test easier.  Since the lifetime isn't known yet, 	 this requires two loops.  See also record_giv above.  */
@@ -26480,7 +27014,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given an expression, X, try to form it as a linear function of a biv.    We will canonicalize it to be of the form 	(plus (mult (BIV) (invar_1)) 	      (invar_2))    with possible degeneracies.     The invariant expressions must each be of a form that can be used as a    machine operand.  We surround then with a USE rtx (a hack, but localized    and certainly unambiguous!) if not a CONST_INT for simplicity in this    routine; it is the caller's responsibility to strip them.     If no such canonicalization is possible (i.e., two biv's are used or an    expression that is neither invariant nor a biv or giv), this routine    returns 0.     For a non-zero return, the result will have a code of CONST_INT, USE,    REG (for a BIV), PLUS, or MULT.  No other codes will occur.     *BENEFIT will be incremented by the benefit of any sub-giv encountered.  */
+comment|/* Given an expression, X, try to form it as a linear function of a biv.    We will canonicalize it to be of the form 	(plus (mult (BIV) (invar_1)) 	      (invar_2))    with possible degeneracies.     The invariant expressions must each be of a form that can be used as a    machine operand.  We surround then with a USE rtx (a hack, but localized    and certainly unambiguous!) if not a CONST_INT for simplicity in this    routine; it is the caller's responsibility to strip them.     If no such canonicalization is possible (i.e., two biv's are used or an    expression that is neither invariant nor a biv or giv), this routine    returns 0.     For a nonzero return, the result will have a code of CONST_INT, USE,    REG (for a BIV), PLUS, or MULT.  No other codes will occur.     *BENEFIT will be incremented by the benefit of any sub-giv encountered.  */
 end_comment
 
 begin_decl_stmt
@@ -28044,7 +28578,7 @@ argument_list|,
 name|benefit
 argument_list|)
 return|;
-comment|/* If consec is non-zero, this is a member of a group of 		       instructions that were moved together.  We handle this 		       case only to the point of seeking to the last insn and 		       looking for a REG_EQUAL.  Fail if we don't find one.  */
+comment|/* If consec is nonzero, this is a member of a group of 		       instructions that were moved together.  We handle this 		       case only to the point of seeking to the last insn and 		       looking for a REG_EQUAL.  Fail if we don't find one.  */
 if|if
 condition|(
 name|m
@@ -31946,7 +32480,7 @@ argument_list|)
 expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -31982,52 +32516,42 @@ name|rtx
 name|seq
 decl_stmt|;
 block|{
+name|rtx
+name|insn
+decl_stmt|;
 comment|/* Update register info for alias analysis.  */
 if|if
 condition|(
-name|GET_CODE
+name|seq
+operator|==
+name|NULL_RTX
+condition|)
+return|return;
+if|if
+condition|(
+name|INSN_P
 argument_list|(
 name|seq
 argument_list|)
-operator|==
-name|SEQUENCE
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
+name|insn
 operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|XVECLEN
-argument_list|(
 name|seq
-argument_list|,
-literal|0
-argument_list|)
-condition|;
-operator|++
-name|i
-control|)
+expr_stmt|;
+while|while
+condition|(
+name|insn
+operator|!=
+name|NULL_RTX
+condition|)
 block|{
 name|rtx
 name|set
 init|=
 name|single_set
 argument_list|(
-name|XVECEXP
-argument_list|(
-name|seq
-argument_list|,
-literal|0
-argument_list|,
-name|i
-argument_list|)
+name|insn
 argument_list|)
 decl_stmt|;
 if|if
@@ -32062,10 +32586,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|insn
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|GET_CODE
@@ -32103,7 +32633,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -32582,7 +33111,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Test whether A * B can be computed without    an actual multiply insn.  Value is 1 if so.  */
+comment|/* Test whether A * B can be computed without    an actual multiply insn.  Value is 1 if so.    ??? This function stinks because it generates a ton of wasted RTL   ??? and as a result fragments GC memory to no end.  There are other   ??? places in the compiler which are invoked a lot and do the same   ??? thing, generate wasted RTL just to see if something is possible.  */
 end_comment
 
 begin_function
@@ -32601,16 +33130,13 @@ name|rtx
 name|b
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
 name|rtx
 name|tmp
 decl_stmt|;
 name|int
 name|win
-init|=
-literal|1
+decl_stmt|,
+name|n_insns
 decl_stmt|;
 comment|/* If only one is constant, make it B.  */
 if|if
@@ -32682,90 +33208,53 @@ argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|tmp
-argument_list|)
-operator|==
-name|SEQUENCE
-condition|)
-block|{
-if|if
-condition|(
-name|XVEC
-argument_list|(
-name|tmp
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-literal|0
-condition|)
 name|win
 operator|=
 literal|1
 expr_stmt|;
-elseif|else
 if|if
 condition|(
-name|XVECLEN
+name|INSN_P
 argument_list|(
 name|tmp
-argument_list|,
-literal|0
 argument_list|)
-operator|>
-literal|3
 condition|)
-name|win
+block|{
+name|n_insns
 operator|=
 literal|0
 expr_stmt|;
-else|else
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|XVECLEN
-argument_list|(
+while|while
+condition|(
 name|tmp
-argument_list|,
-literal|0
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
+operator|!=
+name|NULL_RTX
+condition|)
 block|{
 name|rtx
-name|insn
+name|next
 init|=
-name|XVECEXP
+name|NEXT_INSN
 argument_list|(
 name|tmp
-argument_list|,
-literal|0
-argument_list|,
-name|i
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|++
+name|n_insns
+operator|>
+literal|3
+operator|||
 name|GET_CODE
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 operator|!=
 name|INSN
@@ -32775,7 +33264,7 @@ name|GET_CODE
 argument_list|(
 name|PATTERN
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 argument_list|)
 operator|==
@@ -32787,7 +33276,7 @@ name|SET_SRC
 argument_list|(
 name|PATTERN
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 argument_list|)
 argument_list|)
@@ -32800,7 +33289,7 @@ name|GET_CODE
 argument_list|(
 name|PATTERN
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 argument_list|)
 operator|==
@@ -32812,7 +33301,7 @@ name|XVECEXP
 argument_list|(
 name|PATTERN
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 argument_list|,
 literal|0
@@ -32831,7 +33320,7 @@ name|XVECEXP
 argument_list|(
 name|PATTERN
 argument_list|(
-name|insn
+name|tmp
 argument_list|)
 argument_list|,
 literal|0
@@ -32851,6 +33340,10 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+name|tmp
+operator|=
+name|next
+expr_stmt|;
 block|}
 block|}
 elseif|else
@@ -33967,6 +34460,11 @@ operator|&&
 operator|!
 name|loop_info
 operator|->
+name|has_prefetch
+operator|&&
+operator|!
+name|loop_info
+operator|->
 name|has_volatile
 operator|&&
 name|reversible_mem_store
@@ -34009,7 +34507,14 @@ literal|0
 operator|)
 operator|)
 operator|||
+operator|(
 name|no_use_except_counting
+operator|&&
+operator|!
+name|loop_info
+operator|->
+name|has_prefetch
+operator|)
 condition|)
 block|{
 name|rtx
@@ -34730,7 +35235,7 @@ argument_list|)
 expr_stmt|;
 name|tem
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -34880,7 +35385,7 @@ name|loop_insn_sink
 argument_list|(
 name|loop
 argument_list|,
-name|gen_move_insn
+name|gen_load_of_final_value
 argument_list|(
 name|reg
 argument_list|,
@@ -34939,7 +35444,7 @@ argument_list|)
 expr_stmt|;
 name|tem
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -35261,7 +35766,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Verify whether the biv BL appears to be eliminable,    based on the insns in the loop that refer to it.     If ELIMINATE_P is non-zero, actually do the elimination.     THRESHOLD and INSN_COUNT are from loop_optimize and are used to    determine whether invariant insns should be placed inside or at the    start of the loop.  */
+comment|/* Verify whether the biv BL appears to be eliminable,    based on the insns in the loop that refer to it.     If ELIMINATE_P is nonzero, actually do the elimination.     THRESHOLD and INSN_COUNT are from loop_optimize and are used to    determine whether invariant insns should be placed inside or at the    start of the loop.  */
 end_comment
 
 begin_function
@@ -35638,7 +36143,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* INSN and REFERENCE are instructions in the same insn chain.    Return non-zero if INSN is first.  */
+comment|/* INSN and REFERENCE are instructions in the same insn chain.    Return nonzero if INSN is first.  */
 end_comment
 
 begin_function
@@ -35777,7 +36282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We are trying to eliminate BIV in INSN using GIV.  Return non-zero if    the offset that we have to take into account due to auto-increment /    div derivation is zero.  */
+comment|/* We are trying to eliminate BIV in INSN using GIV.  Return nonzero if    the offset that we have to take into account due to auto-increment /    div derivation is zero.  */
 end_comment
 
 begin_function
@@ -35868,7 +36373,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* If BL appears in X (part of the pattern of INSN), see if we can    eliminate its use.  If so, return 1.  If not, return 0.     If BIV does not appear in X, return 1.     If ELIMINATE_P is non-zero, actually do the elimination.    WHERE_INSN/WHERE_BB indicate where extra insns should be added.    Depending on how many items have been moved out of the loop, it    will either be before INSN (when WHERE_INSN is non-zero) or at the    start of the loop (when WHERE_INSN is zero).  */
+comment|/* If BL appears in X (part of the pattern of INSN), see if we can    eliminate its use.  If so, return 1.  If not, return 0.     If BIV does not appear in X, return 1.     If ELIMINATE_P is nonzero, actually do the elimination.    WHERE_INSN/WHERE_BB indicate where extra insns should be added.    Depending on how many items have been moved out of the loop, it    will either be before INSN (when WHERE_INSN is nonzero) or at the    start of the loop (when WHERE_INSN is zero).  */
 end_comment
 
 begin_function
@@ -36718,6 +37223,61 @@ name|insn
 argument_list|)
 condition|)
 continue|continue;
+comment|/* Don't eliminate if the linear combination that makes up 		   the giv overflows when it is applied to ARG.  */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|arg
+argument_list|)
+operator|==
+name|CONST_INT
+condition|)
+block|{
+name|rtx
+name|add_val
+decl_stmt|;
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|CONST_INT
+condition|)
+name|add_val
+operator|=
+name|v
+operator|->
+name|add_val
+expr_stmt|;
+else|else
+name|add_val
+operator|=
+name|const0_rtx
+expr_stmt|;
+if|if
+condition|(
+name|const_mult_add_overflow_p
+argument_list|(
+name|arg
+argument_list|,
+name|v
+operator|->
+name|mult_val
+argument_list|,
+name|add_val
+argument_list|,
+name|mode
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+continue|continue;
+block|}
 if|if
 condition|(
 operator|!
@@ -36762,54 +37322,29 @@ name|GET_CODE
 argument_list|(
 name|v
 operator|->
-name|mult_val
-argument_list|)
-operator|==
-name|CONST_INT
-operator|&&
-name|GET_CODE
-argument_list|(
-name|v
-operator|->
 name|add_val
 argument_list|)
 operator|==
 name|CONST_INT
 condition|)
 block|{
-name|validate_change
-argument_list|(
-name|insn
-argument_list|,
-operator|&
-name|XEXP
-argument_list|(
-name|x
-argument_list|,
-name|arg_operand
-argument_list|)
-argument_list|,
-name|GEN_INT
-argument_list|(
-name|INTVAL
+name|tem
+operator|=
+name|expand_mult_add
 argument_list|(
 name|arg
-argument_list|)
-operator|*
-name|INTVAL
-argument_list|(
+argument_list|,
+name|NULL_RTX
+argument_list|,
 name|v
 operator|->
 name|mult_val
-argument_list|)
-operator|+
-name|INTVAL
-argument_list|(
+argument_list|,
 name|v
 operator|->
 name|add_val
-argument_list|)
-argument_list|)
+argument_list|,
+name|mode
 argument_list|,
 literal|1
 argument_list|)
@@ -36846,6 +37381,7 @@ argument_list|,
 name|where_insn
 argument_list|)
 expr_stmt|;
+block|}
 name|validate_change
 argument_list|(
 name|insn
@@ -36863,7 +37399,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|apply_change_group
@@ -37815,7 +38350,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given an insn INSN and condition COND, return the condition in a    canonical form to simplify testing by callers.  Specifically:     (1) The code will always be a comparison operation (EQ, NE, GT, etc.).    (2) Both operands will be machine operands; (cc0) will have been replaced.    (3) If an operand is a constant, it will be the second operand.    (4) (LE x const) will be replaced with (LT x<const+1>) and similarly        for GE, GEU, and LEU.     If the condition cannot be understood, or is an inequality floating-point    comparison which needs to be reversed, 0 will be returned.     If REVERSE is non-zero, then reverse the condition prior to canonizing it.     If EARLIEST is non-zero, it is a pointer to a place where the earliest    insn used in locating the condition was found.  If a replacement test    of the condition is desired, it should be placed in front of that    insn and we will be sure that the inputs are still valid.     If WANT_REG is non-zero, we wish the condition to be relative to that    register, if possible.  Therefore, do not canonicalize the condition    further.  */
+comment|/* Given an insn INSN and condition COND, return the condition in a    canonical form to simplify testing by callers.  Specifically:     (1) The code will always be a comparison operation (EQ, NE, GT, etc.).    (2) Both operands will be machine operands; (cc0) will have been replaced.    (3) If an operand is a constant, it will be the second operand.    (4) (LE x const) will be replaced with (LT x<const+1>) and similarly        for GE, GEU, and LEU.     If the condition cannot be understood, or is an inequality floating-point    comparison which needs to be reversed, 0 will be returned.     If REVERSE is nonzero, then reverse the condition prior to canonizing it.     If EARLIEST is nonzero, it is a pointer to a place where the earliest    insn used in locating the condition was found.  If a replacement test    of the condition is desired, it should be placed in front of that    insn and we will be sure that the inputs are still valid.     If WANT_REG is nonzero, we wish the condition to be relative to that    register, if possible.  Therefore, do not canonicalize the condition    further.  */
 end_comment
 
 begin_function
@@ -37966,7 +38501,7 @@ operator|!=
 name|want_reg
 condition|)
 block|{
-comment|/* Set non-zero when we find something of interest.  */
+comment|/* Set nonzero when we find something of interest.  */
 name|rtx
 name|x
 init|=
@@ -38176,6 +38711,14 @@ name|set
 argument_list|)
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FLOAT_STORE_FLAG_VALUE
+name|REAL_VALUE_TYPE
+name|fsfv
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* ??? We may not combine comparisons done in a CCmode with 	     comparisons not done in a CCmode.  This is to aid targets 	     like Alpha that have an IEEE compliant EQ instruction, and 	     a non-IEEE compliant BEQ instruction.  The use of CCmode is 	     actually artificial, simply to prevent the combination, but 	     should not affect other platforms.  	     However, we must allow VOIDmode comparisons to match either 	     CCmode or non-CCmode comparison, because some ports have 	     modeless comparisons inside branch patterns.  	     ??? This mode check should perhaps look more like the mode check 	     in simplify_comparison in combine.  */
 if|if
 condition|(
@@ -38255,12 +38798,16 @@ operator|==
 name|MODE_FLOAT
 operator|&&
 operator|(
-name|REAL_VALUE_NEGATIVE
-argument_list|(
+name|fsfv
+operator|=
 name|FLOAT_STORE_FLAG_VALUE
 argument_list|(
 name|inner_mode
 argument_list|)
+operator|,
+name|REAL_VALUE_NEGATIVE
+argument_list|(
+name|fsfv
 argument_list|)
 operator|)
 operator|)
@@ -38388,12 +38935,16 @@ operator|==
 name|MODE_FLOAT
 operator|&&
 operator|(
-name|REAL_VALUE_NEGATIVE
-argument_list|(
+name|fsfv
+operator|=
 name|FLOAT_STORE_FLAG_VALUE
 argument_list|(
 name|inner_mode
 argument_list|)
+operator|,
+name|REAL_VALUE_NEGATIVE
+argument_list|(
+name|fsfv
 argument_list|)
 operator|)
 operator|)
@@ -38840,7 +39391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a jump insn JUMP, return the condition that will cause it to branch    to its JUMP_LABEL.  If the condition cannot be understood, or is an    inequality floating-point comparison which needs to be reversed, 0 will    be returned.     If EARLIEST is non-zero, it is a pointer to a place where the earliest    insn used in locating the condition was found.  If a replacement test    of the condition is desired, it should be placed in front of that    insn and we will be sure that the inputs are still valid.  */
+comment|/* Given a jump insn JUMP, return the condition that will cause it to branch    to its JUMP_LABEL.  If the condition cannot be understood, or is an    inequality floating-point comparison which needs to be reversed, 0 will    be returned.     If EARLIEST is nonzero, it is a pointer to a place where the earliest    insn used in locating the condition was found.  If a replacement test    of the condition is desired, it should be placed in front of that    insn and we will be sure that the inputs are still valid.  */
 end_comment
 
 begin_function
@@ -39923,14 +40474,11 @@ argument_list|)
 operator|&&
 name|rtx_varies_p
 argument_list|(
-name|gen_rtx_REG
-argument_list|(
-name|Pmode
-argument_list|,
+name|regno_reg_rtx
+index|[
 name|i
-argument_list|)
+index|]
 argument_list|,
-comment|/*for_alias=*/
 literal|1
 argument_list|)
 condition|)
@@ -41009,6 +41557,53 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* If this is a call which uses / clobbers this memory 		 location, we must not change the interface here.  */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|p
+argument_list|)
+operator|==
+name|CALL_INSN
+operator|&&
+name|reg_mentioned_p
+argument_list|(
+name|loop_info
+operator|->
+name|mems
+index|[
+name|i
+index|]
+operator|.
+name|mem
+argument_list|,
+name|CALL_INSN_FUNCTION_USAGE
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|cancel_changes
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|loop_info
+operator|->
+name|mems
+index|[
+name|i
+index|]
+operator|.
+name|optimize
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+else|else
 comment|/* Replace the memory reference with the shadow register.  */
 name|replace_loop_mems
 argument_list|(
@@ -41031,6 +41626,8 @@ name|i
 index|]
 operator|.
 name|reg
+argument_list|,
+name|written
 argument_list|)
 expr_stmt|;
 block|}
@@ -41055,6 +41652,21 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|loop_info
+operator|->
+name|mems
+index|[
+name|i
+index|]
+operator|.
+name|optimize
+condition|)
+empty_stmt|;
+comment|/* We found we couldn't do the replacement, so do nothing.  */
+elseif|else
 if|if
 condition|(
 operator|!
@@ -42384,6 +42996,109 @@ block|}
 end_function
 
 begin_comment
+comment|/* Worker function for find_mem_in_note, called via for_each_rtx.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|find_mem_in_note_1
+parameter_list|(
+name|x
+parameter_list|,
+name|data
+parameter_list|)
+name|rtx
+modifier|*
+name|x
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|*
+name|x
+operator|!=
+name|NULL_RTX
+operator|&&
+name|GET_CODE
+argument_list|(
+operator|*
+name|x
+argument_list|)
+operator|==
+name|MEM
+condition|)
+block|{
+name|rtx
+modifier|*
+name|res
+init|=
+operator|(
+name|rtx
+operator|*
+operator|)
+name|data
+decl_stmt|;
+operator|*
+name|res
+operator|=
+operator|*
+name|x
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns the first MEM found in NOTE by depth-first search.  */
+end_comment
+
+begin_function
+specifier|static
+name|rtx
+name|find_mem_in_note
+parameter_list|(
+name|note
+parameter_list|)
+name|rtx
+name|note
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|note
+operator|&&
+name|for_each_rtx
+argument_list|(
+operator|&
+name|note
+argument_list|,
+name|find_mem_in_note_1
+argument_list|,
+operator|&
+name|note
+argument_list|)
+condition|)
+return|return
+name|note
+return|;
+return|return
+name|NULL_RTX
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Replace MEM with its associated pseudo register.  This function is    called from load_mems via for_each_rtx.  DATA is actually a pointer    to a structure describing the instruction currently being scanned    and the MEM we are currently replacing.  */
 end_comment
 
@@ -42504,6 +43219,8 @@ parameter_list|,
 name|mem
 parameter_list|,
 name|reg
+parameter_list|,
+name|written
 parameter_list|)
 name|rtx
 name|insn
@@ -42513,6 +43230,9 @@ name|mem
 decl_stmt|;
 name|rtx
 name|reg
+decl_stmt|;
+name|int
+name|written
 decl_stmt|;
 block|{
 name|loop_replace_args
@@ -42547,6 +43267,100 @@ operator|&
 name|args
 argument_list|)
 expr_stmt|;
+comment|/* If we hoist a mem write out of the loop, then REG_EQUAL      notes referring to the mem are no longer valid.  */
+if|if
+condition|(
+name|written
+condition|)
+block|{
+name|rtx
+name|note
+decl_stmt|,
+name|sub
+decl_stmt|;
+name|rtx
+modifier|*
+name|link
+decl_stmt|;
+for|for
+control|(
+name|link
+operator|=
+operator|&
+name|REG_NOTES
+argument_list|(
+name|insn
+argument_list|)
+init|;
+operator|(
+name|note
+operator|=
+operator|*
+name|link
+operator|)
+condition|;
+name|link
+operator|=
+operator|&
+name|XEXP
+argument_list|(
+name|note
+argument_list|,
+literal|1
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
+name|REG_NOTE_KIND
+argument_list|(
+name|note
+argument_list|)
+operator|==
+name|REG_EQUAL
+operator|&&
+operator|(
+name|sub
+operator|=
+name|find_mem_in_note
+argument_list|(
+name|note
+argument_list|)
+operator|)
+operator|&&
+name|true_dependence
+argument_list|(
+name|mem
+argument_list|,
+name|VOIDmode
+argument_list|,
+name|sub
+argument_list|,
+name|rtx_varies_p
+argument_list|)
+condition|)
+block|{
+comment|/* Remove the note.  */
+name|validate_change
+argument_list|(
+name|NULL_RTX
+argument_list|,
+name|link
+argument_list|,
+name|XEXP
+argument_list|(
+name|note
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+block|}
 block|}
 end_function
 
@@ -42848,7 +43662,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If WHERE_INSN is non-zero emit insn for PATTERN before WHERE_INSN    in basic block WHERE_BB (ignored in the interim) within the loop    otherwise hoist PATTERN into the loop pre-header.  */
+comment|/* If WHERE_INSN is nonzero emit insn for PATTERN before WHERE_INSN    in basic block WHERE_BB (ignored in the interim) within the loop    otherwise hoist PATTERN into the loop pre-header.  */
 end_comment
 
 begin_function
@@ -43064,6 +43878,67 @@ name|sink
 argument_list|,
 name|pattern
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* bl->final_value can be eighter general_operand or PLUS of general_operand    and constant.  Emit sequence of intructions to load it into REG  */
+end_comment
+
+begin_function
+specifier|static
+name|rtx
+name|gen_load_of_final_value
+parameter_list|(
+name|reg
+parameter_list|,
+name|final_value
+parameter_list|)
+name|rtx
+name|reg
+decl_stmt|,
+name|final_value
+decl_stmt|;
+block|{
+name|rtx
+name|seq
+decl_stmt|;
+name|start_sequence
+argument_list|()
+expr_stmt|;
+name|final_value
+operator|=
+name|force_operand
+argument_list|(
+name|final_value
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|final_value
+operator|!=
+name|reg
+condition|)
+name|emit_move_insn
+argument_list|(
+name|reg
+argument_list|,
+name|final_value
+argument_list|)
+expr_stmt|;
+name|seq
+operator|=
+name|get_insns
+argument_list|()
+expr_stmt|;
+name|end_sequence
+argument_list|()
+expr_stmt|;
+return|return
+name|seq
 return|;
 block|}
 end_function

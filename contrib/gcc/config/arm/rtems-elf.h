@@ -26,17 +26,13 @@ directive|define
 name|HAS_INIT_SECTION
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__rtems__ -D__ELF__ -Asystem=rtems"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {					\ 	builtin_define ("__rtems__");		\ 	builtin_define ("__ELF__");		\ 	builtin_assert ("system=rtems");	\     } while (0)
 end_define
 
 end_unit

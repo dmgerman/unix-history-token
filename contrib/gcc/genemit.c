@@ -197,6 +197,8 @@ name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1172,7 +1174,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-name|HOST_WIDE_INT_PRINT_DEC
+name|HOST_WIDE_INT_PRINT_DEC_C
 argument_list|,
 name|INTVAL
 argument_list|(
@@ -1436,9 +1438,14 @@ name|void
 name|gen_insn
 parameter_list|(
 name|insn
+parameter_list|,
+name|lineno
 parameter_list|)
 name|rtx
 name|insn
+decl_stmt|;
+name|int
+name|lineno
 decl_stmt|;
 block|{
 name|int
@@ -1876,6 +1883,15 @@ operator|==
 literal|'*'
 condition|)
 return|return;
+name|printf
+argument_list|(
+literal|"/* %s:%d */\n"
+argument_list|,
+name|read_rtx_filename
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
 comment|/* Find out how many operands this function has,      and also whether any of them have register constraints.  */
 name|register_constraints
 operator|=
@@ -2583,6 +2599,8 @@ argument_list|)
 operator|==
 name|PARALLEL
 operator|&&
+operator|(
+operator|(
 name|GET_CODE
 argument_list|(
 name|XVECEXP
@@ -2613,6 +2631,22 @@ argument_list|)
 argument_list|)
 operator|==
 name|PC
+operator|)
+operator|||
+name|GET_CODE
+argument_list|(
+name|XVECEXP
+argument_list|(
+name|next
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|==
+name|RETURN
+operator|)
 operator|)
 operator|||
 name|GET_CODE
@@ -2851,10 +2885,10 @@ literal|"  emit_barrier ();"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Call `gen_sequence' to make a SEQUENCE out of all the      insns emitted within this gen_... function.  */
+comment|/* Call `get_insns' to extract the list of all the      insns emitted within this gen_... function.  */
 name|printf
 argument_list|(
-literal|"  _val = gen_sequence ();\n"
+literal|"  _val = get_insns ();\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2871,7 +2905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like gen_expand, but generates a SEQUENCE.  */
+comment|/* Like gen_expand, but generates insns resulting from splitting SPLIT.  */
 end_comment
 
 begin_function
@@ -3495,10 +3529,10 @@ literal|"  emit_barrier ();"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Call `gen_sequence' to make a SEQUENCE out of all the      insns emitted within this gen_... function.  */
+comment|/* Call `get_insns' to make a list of all the      insns emitted within this gen_... function.  */
 name|printf
 argument_list|(
-literal|"  _val = gen_sequence ();\n"
+literal|"  _val = get_insns ();\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -4254,7 +4288,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define DONE return (_val = gen_sequence (), end_sequence (), _val)\n"
+literal|"#define DONE return (_val = get_insns (), end_sequence (), _val)\n\n"
 argument_list|)
 expr_stmt|;
 comment|/* Read the machine description.  */
@@ -4298,12 +4332,23 @@ case|:
 name|gen_insn
 argument_list|(
 name|desc
+argument_list|,
+name|line_no
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|DEFINE_EXPAND
 case|:
+name|printf
+argument_list|(
+literal|"/* %s:%d */\n"
+argument_list|,
+name|read_rtx_filename
+argument_list|,
+name|line_no
+argument_list|)
+expr_stmt|;
 name|gen_expand
 argument_list|(
 name|desc
@@ -4313,6 +4358,15 @@ break|break;
 case|case
 name|DEFINE_SPLIT
 case|:
+name|printf
+argument_list|(
+literal|"/* %s:%d */\n"
+argument_list|,
+name|read_rtx_filename
+argument_list|,
+name|line_no
+argument_list|)
+expr_stmt|;
 name|gen_split
 argument_list|(
 name|desc
@@ -4322,6 +4376,15 @@ break|break;
 case|case
 name|DEFINE_PEEPHOLE2
 case|:
+name|printf
+argument_list|(
+literal|"/* %s:%d */\n"
+argument_list|,
+name|read_rtx_filename
+argument_list|,
+name|line_no
+argument_list|)
+expr_stmt|;
 name|gen_split
 argument_list|(
 name|desc

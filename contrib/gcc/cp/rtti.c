@@ -56,11 +56,11 @@ comment|/* C++ returns type information to the user in struct type_info    objec
 end_comment
 
 begin_comment
-comment|/* Accessors for the type_info objects. We need to remember several things    about each of the type_info types. The global tree nodes such as    bltn_desc_type_node are TREE_LISTs, and these macros are used to access    the required information. */
+comment|/* Accessors for the type_info objects. We need to remember several things    about each of the type_info types. The global tree nodes such as    bltn_desc_type_node are TREE_LISTs, and these macros are used to access    the required information.  */
 end_comment
 
 begin_comment
-comment|/* The RECORD_TYPE of a type_info derived class. */
+comment|/* The RECORD_TYPE of a type_info derived class.  */
 end_comment
 
 begin_define
@@ -74,7 +74,7 @@ value|TREE_TYPE (NODE)
 end_define
 
 begin_comment
-comment|/* The VAR_DECL of the vtable for the type_info derived class.    This is only filled in at the end of the translation. */
+comment|/* The VAR_DECL of the vtable for the type_info derived class.    This is only filled in at the end of the translation.  */
 end_comment
 
 begin_define
@@ -88,7 +88,7 @@ value|TREE_VALUE (NODE)
 end_define
 
 begin_comment
-comment|/* The IDENTIFIER_NODE naming the real class. */
+comment|/* The IDENTIFIER_NODE naming the real class.  */
 end_comment
 
 begin_define
@@ -482,12 +482,15 @@ name|type_info_type_node
 operator|=
 name|xref_tag
 argument_list|(
-name|class_type_node
+name|class_type
 argument_list|,
 name|get_identifier
 argument_list|(
 literal|"type_info"
 argument_list|)
+argument_list|,
+comment|/*attributes=*/
+name|NULL_TREE
 argument_list|,
 literal|1
 argument_list|)
@@ -587,6 +590,8 @@ name|build_int_2
 argument_list|(
 operator|-
 literal|2
+operator|*
+name|TARGET_VTABLE_DATA_ENTRY_DISTANCE
 argument_list|,
 operator|-
 literal|1
@@ -689,9 +694,11 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|build_call
+name|build_cxx_call
 argument_list|(
 name|fn
+argument_list|,
+name|NULL_TREE
 argument_list|,
 name|NULL_TREE
 argument_list|)
@@ -762,9 +769,11 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|build_call
+name|build_cxx_call
 argument_list|(
 name|fn
+argument_list|,
+name|NULL_TREE
 argument_list|,
 name|NULL_TREE
 argument_list|)
@@ -886,7 +895,16 @@ decl_stmt|;
 comment|/* The RTTI information is at index -1.  */
 name|index
 operator|=
-name|integer_minus_one_node
+name|build_int_2
+argument_list|(
+operator|-
+literal|1
+operator|*
+name|TARGET_VTABLE_DATA_ENTRY_DISTANCE
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
@@ -1174,7 +1192,7 @@ argument_list|)
 expr_stmt|;
 name|name_string
 operator|=
-name|combine_strings
+name|fix_string_type
 argument_list|(
 name|build_string
 argument_list|(
@@ -1398,20 +1416,11 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-name|cp_finish_decl
+name|pushdecl_top_level_and_finish
 argument_list|(
 name|d
 argument_list|,
 name|NULL_TREE
-argument_list|,
-name|NULL_TREE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|pushdecl_top_level
-argument_list|(
-name|d
 argument_list|)
 expr_stmt|;
 if|if
@@ -2502,12 +2511,15 @@ name|tinfo_ptr
 operator|=
 name|xref_tag
 argument_list|(
-name|class_type_node
+name|class_type
 argument_list|,
 name|get_identifier
 argument_list|(
 literal|"__class_type_info"
 argument_list|)
+argument_list|,
+comment|/*attributes=*/
+name|NULL_TREE
 argument_list|,
 literal|1
 argument_list|)
@@ -2590,9 +2602,11 @@ expr_stmt|;
 block|}
 name|result
 operator|=
-name|build_call
+name|build_cxx_call
 argument_list|(
 name|dcast_fn
+argument_list|,
+name|elems
 argument_list|,
 name|elems
 argument_list|)
@@ -2756,11 +2770,10 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-comment|/* we want the qualifiers on this type, not any array core, it might have */
 name|int
 name|quals
 init|=
-name|TYPE_QUALS
+name|cp_type_quals
 argument_list|(
 name|type
 argument_list|)
@@ -2802,7 +2815,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero, if the pointer chain TYPE ends at an incomplete type, or    contains a pointer to member of an incomplete class.  */
+comment|/* Return nonzero, if the pointer chain TYPE ends at an incomplete type, or    contains a pointer to member of an incomplete class.  */
 end_comment
 
 begin_function
@@ -3015,20 +3028,11 @@ argument_list|)
 operator|=
 name|name_string
 expr_stmt|;
-name|cp_finish_decl
+name|pushdecl_top_level_and_finish
 argument_list|(
 name|name_decl
 argument_list|,
 name|name_string
-argument_list|,
-name|NULL_TREE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|pushdecl_top_level
-argument_list|(
-name|name_decl
 argument_list|)
 expr_stmt|;
 block|}
@@ -3057,12 +3061,15 @@ name|real_type
 operator|=
 name|xref_tag
 argument_list|(
-name|class_type_node
+name|class_type
 argument_list|,
 name|TINFO_REAL_NAME
 argument_list|(
 name|desc
 argument_list|)
+argument_list|,
+comment|/*attributes=*/
+name|NULL_TREE
 argument_list|,
 literal|1
 argument_list|)
@@ -3137,6 +3144,8 @@ argument_list|,
 name|size_int
 argument_list|(
 literal|2
+operator|*
+name|TARGET_VTABLE_DATA_ENTRY_DISTANCE
 argument_list|)
 argument_list|,
 name|TYPE_SIZE_UNIT
@@ -3770,7 +3779,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Clear the base's dfs marks, after searching for duplicate bases. */
+comment|/* Clear the base's dfs marks, after searching for duplicate bases.  */
 end_comment
 
 begin_function
@@ -3994,7 +4003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero if the typeinfo for type should be placed in     the runtime library.  */
+comment|/* Returns nonzero if the typeinfo for type should be placed in    the runtime library.  */
 end_comment
 
 begin_function
@@ -4082,7 +4091,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generate the initializer for the type info describing    TYPE. VAR_DESC is a . NON_PUBLIC_P is set non-zero, if the VAR_DECL    should not be exported from this object file.  This should only be    called at the end of translation, when we know that no further    types will be completed.  */
+comment|/* Generate the initializer for the type info describing    TYPE. VAR_DESC is a . NON_PUBLIC_P is set nonzero, if the VAR_DECL    should not be exported from this object file.  This should only be    called at the end of translation, when we know that no further    types will be completed.  */
 end_comment
 
 begin_function
@@ -4524,6 +4533,13 @@ argument_list|,
 name|base_init
 argument_list|)
 expr_stmt|;
+name|TREE_HAS_CONSTRUCTOR
+argument_list|(
+name|base_init
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 name|base_inits
 operator|=
 name|tree_cons
@@ -4548,6 +4564,13 @@ name|NULL_TREE
 argument_list|,
 name|base_inits
 argument_list|)
+expr_stmt|;
+name|TREE_HAS_CONSTRUCTOR
+argument_list|(
+name|base_inits
+argument_list|)
+operator|=
+literal|1
 expr_stmt|;
 name|base_inits
 operator|=
@@ -4577,7 +4600,7 @@ argument_list|,
 name|base_inits
 argument_list|)
 expr_stmt|;
-comment|/* Prepend the hint flags. */
+comment|/* Prepend the hint flags.  */
 name|base_inits
 operator|=
 name|tree_cons
@@ -4691,7 +4714,7 @@ argument_list|,
 name|ident
 argument_list|)
 expr_stmt|;
-comment|/* Generate the pseudo type name. */
+comment|/* Generate the pseudo type name.  */
 name|pseudo_name
 operator|=
 operator|(
@@ -4740,7 +4763,7 @@ argument_list|,
 name|ident
 argument_list|)
 expr_stmt|;
-comment|/* First field is the pseudo type_info base class. */
+comment|/* First field is the pseudo type_info base class.  */
 name|fields
 index|[
 literal|0
@@ -4782,7 +4805,7 @@ index|]
 operator|=
 name|field_decl
 expr_stmt|;
-comment|/* Create the pseudo type. */
+comment|/* Create the pseudo type.  */
 name|pseudo_type
 operator|=
 name|make_aggr_type
@@ -4803,12 +4826,12 @@ argument_list|,
 name|ptr_type_node
 argument_list|)
 expr_stmt|;
-name|TYPE_HAS_CONSTRUCTOR
+name|CLASSTYPE_AS_BASE
 argument_list|(
 name|pseudo_type
 argument_list|)
 operator|=
-literal|1
+name|pseudo_type
 expr_stmt|;
 name|result
 operator|=
@@ -4934,11 +4957,16 @@ name|type
 argument_list|)
 condition|)
 block|{
-name|my_friendly_assert
-argument_list|(
+if|if
+condition|(
+operator|!
 name|at_eof
+condition|)
+name|cxx_incomplete_type_error
+argument_list|(
+name|NULL_TREE
 argument_list|,
-literal|20020609
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -5011,7 +5039,7 @@ name|base_binfo
 argument_list|)
 argument_list|)
 condition|)
-comment|/* single non-virtual public. */
+comment|/* single non-virtual public.  */
 return|return
 name|si_class_desc_type_node
 return|;
@@ -5285,7 +5313,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Array, function and enum type_info. No additional fields. */
+comment|/* Array, function and enum type_info. No additional fields.  */
 name|ary_desc_type_node
 operator|=
 name|create_pseudo_type_info
@@ -5352,7 +5380,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* Base class internal helper. Pointer to base type, offset to base,      flags. */
+comment|/* Base class internal helper. Pointer to base type, offset to base,      flags.  */
 block|{
 name|tree
 name|fields
@@ -5419,7 +5447,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* General hierarchy is created as necessary in this vector. */
+comment|/* General hierarchy is created as necessary in this vector.  */
 name|vmi_class_desc_type_node
 operator|=
 name|make_tree_vec
@@ -5427,7 +5455,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Pointer type_info. Adds two fields, qualification mask      and pointer to the pointed to type.  This is really a descendant of      __pbase_type_info. */
+comment|/* Pointer type_info. Adds two fields, qualification mask      and pointer to the pointed to type.  This is really a descendant of      __pbase_type_info.  */
 name|ptr_desc_type_node
 operator|=
 name|create_pseudo_type_info
@@ -5592,12 +5620,15 @@ name|bltn_type
 operator|=
 name|xref_tag
 argument_list|(
-name|class_type_node
+name|class_type
 argument_list|,
 name|get_identifier
 argument_list|(
 literal|"__fundamental_type_info"
 argument_list|)
+argument_list|,
+comment|/*attributes=*/
+name|NULL_TREE
 argument_list|,
 literal|1
 argument_list|)
@@ -5765,7 +5796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero, iff T is a type_info variable which has not had a    definition emitted for it.  */
+comment|/* Return nonzero, iff T is a type_info variable which has not had a    definition emitted for it.  */
 end_comment
 
 begin_function
@@ -6015,7 +6046,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* cp_finish_decl will have dealt with linkage. */
+comment|/* cp_finish_decl will have dealt with linkage.  */
 comment|/* Say we've dealt with it.  */
 name|TREE_TYPE
 argument_list|(

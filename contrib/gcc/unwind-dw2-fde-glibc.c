@@ -271,7 +271,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Like base_of_encoded_value, but take the base from a struct object    instead of an _Unwind_Context.  */
+comment|/* Like base_of_encoded_value, but take the base from a struct    unw_eh_callback_data instead of an _Unwind_Context.  */
 end_comment
 
 begin_function

@@ -49,6 +49,21 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* Flags for NOTE_PREDICTION */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_TAKEN
+value|1
+end_define
+
+begin_comment
+comment|/* Predict edges to the block as taken.  */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|void

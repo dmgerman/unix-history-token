@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for IBM RS/6000.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for IBM RS/6000.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Richard Kenner (kenner@vlsi1.ultra.nyu.edu)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -108,18 +108,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Common CPP definitions used by CPP_SPEC among the various targets    for handling -mcpu=xxx switches.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CPP_CPU_SPEC
-define|\
-value|"%{!mcpu*: \   %{mpower: %{!mpower2: -D_ARCH_PWR}} \   %{mpower2: -D_ARCH_PWR2} \   %{mpowerpc*: -D_ARCH_PPC} \   %{mno-power: %{!mpowerpc*: -D_ARCH_COM}} \   %{!mno-power: %{!mpower2: %(cpp_default)}}} \ %{mcpu=common: -D_ARCH_COM} \ %{mcpu=power: -D_ARCH_PWR} \ %{mcpu=power2: -D_ARCH_PWR2} \ %{mcpu=powerpc: -D_ARCH_PPC} \ %{mcpu=rios: -D_ARCH_PWR} \ %{mcpu=rios1: -D_ARCH_PWR} \ %{mcpu=rios2: -D_ARCH_PWR2} \ %{mcpu=rsc: -D_ARCH_PWR} \ %{mcpu=rsc1: -D_ARCH_PWR} \ %{mcpu=401: -D_ARCH_PPC} \ %{mcpu=403: -D_ARCH_PPC} \ %{mcpu=405: -D_ARCH_PPC} \ %{mcpu=505: -D_ARCH_PPC} \ %{mcpu=601: -D_ARCH_PPC -D_ARCH_PWR} \ %{mcpu=602: -D_ARCH_PPC} \ %{mcpu=603: -D_ARCH_PPC} \ %{mcpu=603e: -D_ARCH_PPC} \ %{mcpu=ec603e: -D_ARCH_PPC} \ %{mcpu=604: -D_ARCH_PPC} \ %{mcpu=604e: -D_ARCH_PPC} \ %{mcpu=620: -D_ARCH_PPC} \ %{mcpu=740: -D_ARCH_PPC} \ %{mcpu=7400: -D_ARCH_PPC} \ %{mcpu=7450: -D_ARCH_PPC} \ %{mcpu=750: -D_ARCH_PPC} \ %{mcpu=801: -D_ARCH_PPC} \ %{mcpu=821: -D_ARCH_PPC} \ %{mcpu=823: -D_ARCH_PPC} \ %{mcpu=860: -D_ARCH_PPC} \ %{maltivec: -D__ALTIVEC__}"
-end_define
-
-begin_comment
 comment|/* Common ASM definitions used by ASM_SPEC among the various targets    for handling -mcpu=xxx switches.  */
 end_comment
 
@@ -128,7 +116,7 @@ define|#
 directive|define
 name|ASM_CPU_SPEC
 define|\
-value|"%{!mcpu*: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwrx} \   %{mpowerpc*: -mppc} \   %{mno-power: %{!mpowerpc*: -mcom}} \   %{!mno-power: %{!mpower2: %(asm_default)}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwrx} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwrx} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=401: -mppc} \ %{mcpu=403: -m403} \ %{mcpu=405: -m405} \ %{mcpu=505: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -mppc} \ %{mcpu=603e: -mppc} \ %{mcpu=ec603e: -mppc} \ %{mcpu=604: -mppc} \ %{mcpu=604e: -mppc} \ %{mcpu=620: -mppc} \ %{mcpu=740: -mppc} \ %{mcpu=7400: -mppc} \ %{mcpu=7450: -mppc} \ %{mcpu=750: -mppc} \ %{mcpu=801: -mppc} \ %{mcpu=821: -mppc} \ %{mcpu=823: -mppc} \ %{mcpu=860: -mppc} \ %{maltivec: -maltivec}"
+value|"%{!mcpu*: \   %{mpower: %{!mpower2: -mpwr}} \   %{mpower2: -mpwrx} \   %{mpowerpc*: -mppc} \   %{mno-power: %{!mpowerpc*: -mcom}} \   %{!mno-power: %{!mpower2: %(asm_default)}}} \ %{mcpu=common: -mcom} \ %{mcpu=power: -mpwr} \ %{mcpu=power2: -mpwrx} \ %{mcpu=power3: -m604} \ %{mcpu=power4: -mpower4} \ %{mcpu=powerpc: -mppc} \ %{mcpu=rios: -mpwr} \ %{mcpu=rios1: -mpwr} \ %{mcpu=rios2: -mpwrx} \ %{mcpu=rsc: -mpwr} \ %{mcpu=rsc1: -mpwr} \ %{mcpu=401: -mppc} \ %{mcpu=403: -m403} \ %{mcpu=405: -m405} \ %{mcpu=505: -mppc} \ %{mcpu=601: -m601} \ %{mcpu=602: -mppc} \ %{mcpu=603: -mppc} \ %{mcpu=603e: -mppc} \ %{mcpu=ec603e: -mppc} \ %{mcpu=604: -mppc} \ %{mcpu=604e: -mppc} \ %{mcpu=620: -mppc} \ %{mcpu=630: -m604} \ %{mcpu=740: -mppc} \ %{mcpu=7400: -mppc} \ %{mcpu=7450: -mppc} \ %{mcpu=750: -mppc} \ %{mcpu=801: -mppc} \ %{mcpu=821: -mppc} \ %{mcpu=823: -mppc} \ %{mcpu=860: -mppc} \ %{mcpu=8540: -me500} \ %{maltivec: -maltivec}"
 end_define
 
 begin_define
@@ -160,7 +148,7 @@ define|#
 directive|define
 name|EXTRA_SPECS
 define|\
-value|{ "cpp_cpu",			CPP_CPU_SPEC },				\   { "cpp_default",		CPP_DEFAULT_SPEC },			\   { "asm_cpu",			ASM_CPU_SPEC },				\   { "asm_default",		ASM_DEFAULT_SPEC },			\   SUBTARGET_EXTRA_SPECS
+value|{ "cpp_default",		CPP_DEFAULT_SPEC },			\   { "asm_cpu",			ASM_CPU_SPEC },				\   { "asm_default",		ASM_DEFAULT_SPEC },			\   SUBTARGET_EXTRA_SPECS
 end_define
 
 begin_comment
@@ -307,7 +295,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Enable load/store multiple, even on powerpc */
+comment|/* Enable load/store multiple, even on PowerPC */
 end_comment
 
 begin_define
@@ -714,6 +702,10 @@ block|,
 name|PROCESSOR_PPC7400
 block|,
 name|PROCESSOR_PPC7450
+block|,
+name|PROCESSOR_PPC8540
+block|,
+name|PROCESSOR_POWER4
 block|}
 enum|;
 end_enum
@@ -813,7 +805,7 @@ define|#
 directive|define
 name|TARGET_OPTIONS
 define|\
-value|{									\    {"cpu=",&rs6000_select[1].string,					\     N_("Use features of and schedule code for given CPU") },		\    {"tune=",&rs6000_select[2].string,					\     N_("Schedule code for given CPU") },				\    {"debug=",&rs6000_debug_name, N_("Enable debug output") },		\    {"abi=",&rs6000_abi_string, N_("Specify ABI to use") },		\    {"long-double-",&rs6000_long_double_size_string,			\     N_("Specify size of long double (64 or 128 bits)") },		\    SUBTARGET_OPTIONS							\ }
+value|{									\    {"cpu=",&rs6000_select[1].string,					\     N_("Use features of and schedule code for given CPU") },		\    {"tune=",&rs6000_select[2].string,					\     N_("Schedule code for given CPU") },				\    {"debug=",&rs6000_debug_name, N_("Enable debug output") },		\    {"traceback=",&rs6000_traceback_name,				\     N_("Select full, part, or no traceback table") },			\    {"abi=",&rs6000_abi_string, N_("Specify ABI to use") },		\    {"long-double-",&rs6000_long_double_size_string,			\     N_("Specify size of long double (64 or 128 bits)") },		\    {"isel=",&rs6000_isel_string,                                       \     N_("Specify yes/no if isel instructions should be generated") },    \    {"vrsave=",&rs6000_altivec_vrsave_string,                         \     N_("Specify yes/no if VRSAVE instructions should be generated for AltiVec") }, \    {"longcall",&rs6000_longcall_switch,				\     N_("Avoid all range limits on call instructions") },		\    {"no-longcall",&rs6000_longcall_switch, "" },			\    SUBTARGET_OPTIONS							\ }
 end_define
 
 begin_comment
@@ -919,6 +911,19 @@ name|TARGET_DEBUG_ARG
 value|rs6000_debug_arg
 end_define
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_traceback_name
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Type of traceback table.  */
+end_comment
+
 begin_comment
 comment|/* These are separate from target_flags because we've run out of bits    there.  */
 end_comment
@@ -946,6 +951,68 @@ name|rs6000_altivec_abi
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_spe_abi
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_isel
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_fprs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_isel_string
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_altivec_vrsave_string
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_altivec_vrsave
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rs6000_longcall_switch
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rs6000_default_long_calls
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -958,6 +1025,41 @@ define|#
 directive|define
 name|TARGET_ALTIVEC_ABI
 value|rs6000_altivec_abi
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ALTIVEC_VRSAVE
+value|rs6000_altivec_vrsave
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_SPE_ABI
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_SPE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_ISEL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_FPRS
+value|1
 end_define
 
 begin_comment
@@ -997,22 +1099,52 @@ directive|define
 name|CAN_DEBUG_WITHOUT_FP
 end_define
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* target machine storage layout */
-end_comment
-
-begin_comment
-comment|/* Define to support cross compilation to an RS6000 target.  */
+comment|/* Target pragma.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REAL_ARITHMETIC
+name|REGISTER_TARGET_PRAGMAS
+parameter_list|(
+name|PFILE
+parameter_list|)
+value|do { \   cpp_register_pragma (PFILE, 0, "longcall", rs6000_pragma_longcall); \ } while (0)
 end_define
+
+begin_comment
+comment|/* Target #defines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|rs6000_cpu_cpp_builtins (pfile)
+end_define
+
+begin_comment
+comment|/* This is used by rs6000_cpu_cpp_builtins to indicate the byte order    we're compiling for.  Some configurations may need to override it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RS6000_CPU_CPP_ENDIAN_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\       if (BYTES_BIG_ENDIAN)			\ 	{					\ 	  builtin_define ("__BIG_ENDIAN__");	\ 	  builtin_define ("_BIG_ENDIAN");	\ 	  builtin_assert ("machine=bigendian");	\ 	}					\       else					\ 	{					\ 	  builtin_define ("__LITTLE_ENDIAN__");	\ 	  builtin_define ("_LITTLE_ENDIAN");	\ 	  builtin_assert ("machine=littleendian"); \ 	}					\     }						\   while (0)
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* Target machine storage layout.  */
+end_comment
 
 begin_comment
 comment|/* Define this macro if it is advisable to hold scalars in registers    in a wider mode than that declared by the program.  In such cases,    the value is constrained to be within the bounds of the declared    type, but kept valid in the wider mode.  The signedness of the    extension may differ from that of the type.  */
@@ -1094,28 +1226,6 @@ name|WORDS_BIG_ENDIAN
 value|1
 end_define
 
-begin_comment
-comment|/* number of bits in an addressable storage unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_UNIT
-value|8
-end_define
-
-begin_comment
-comment|/* Width in bits of a "word", which is the contents of a machine register.    Note that this is not necessarily the width of data type `int';    if using 16-bit ints on a 68000, this would still be 32.    But on a machine with 16-bit registers, this would be 16.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|(! TARGET_POWERPC64 ? 32 : 64)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -1134,12 +1244,35 @@ name|UNITS_PER_WORD
 value|(! TARGET_POWERPC64 ? 4 : 8)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MIN_UNITS_PER_WORD
+value|UNITS_PER_WORD
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MIN_UNITS_PER_WORD
 value|4
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1153,6 +1286,13 @@ define|#
 directive|define
 name|UNITS_PER_ALTIVEC_WORD
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNITS_PER_SPE_WORD
+value|8
 end_define
 
 begin_comment
@@ -1248,17 +1388,6 @@ define|#
 directive|define
 name|LONG_LONG_TYPE_SIZE
 value|64
-end_define
-
-begin_comment
-comment|/* A C expression for the size in bits of the type `char' on the    target machine.  If you don't define this, the default is one    quarter of a word.  (If this would be less than one storage unit,    it is rounded up to one unit.)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHAR_TYPE_SIZE
-value|BITS_PER_UNIT
 end_define
 
 begin_comment
@@ -1419,7 +1548,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE) ? 128 : ALIGN)
+value|((TARGET_ALTIVEC&& TREE_CODE (TYPE) == VECTOR_TYPE) ? 128 :	\     (TARGET_SPE&& TREE_CODE (TYPE) == VECTOR_TYPE) ? 64 : ALIGN)
 end_define
 
 begin_comment
@@ -1445,7 +1574,24 @@ value|8
 end_define
 
 begin_comment
-comment|/* A bitfield declared as `int' forces `int' alignment for the struct.  */
+comment|/* Return 1 if a structure or array containing FIELD should be    accessed using `BLKMODE'.     For the SPE, simd types are V2SI, and gcc can be tempted to put the    entire thing in a DI and use subregs to access the internals.    store_bit_field() will force (subreg:DI (reg:V2SI x))'s to the    back-end.  Because a single GPR can hold a V2SI, but not a DI, the    best thing to do is set structs to BLKmode and avoid Severe Tire    Damage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEMBER_TYPE_FORCES_BLK
+parameter_list|(
+name|FIELD
+parameter_list|,
+name|MODE
+parameter_list|)
+define|\
+value|(TARGET_SPE&& TREE_CODE (TREE_TYPE (FIELD)) == VECTOR_TYPE)
+end_define
+
+begin_comment
+comment|/* A bit-field declared as `int' forces `int' alignment for the struct.  */
 end_comment
 
 begin_define
@@ -1486,11 +1632,11 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|(TREE_CODE (TYPE) == VECTOR_TYPE ? 128	\    : TREE_CODE (TYPE) == ARRAY_TYPE		\&& TYPE_MODE (TREE_TYPE (TYPE)) == QImode	\&& (ALIGN)< BITS_PER_WORD ? BITS_PER_WORD : (ALIGN))
+value|(TREE_CODE (TYPE) == VECTOR_TYPE ? (TARGET_SPE_ABI ? 64 : 128)	\    : TREE_CODE (TYPE) == ARRAY_TYPE		\&& TYPE_MODE (TREE_TYPE (TYPE)) == QImode	\&& (ALIGN)< BITS_PER_WORD ? BITS_PER_WORD : (ALIGN))
 end_define
 
 begin_comment
-comment|/* Non-zero if move instructions will actually fail to work    when given unaligned data.  */
+comment|/* Nonzero if move instructions will actually fail to work    when given unaligned data.  */
 end_comment
 
 begin_define
@@ -1514,7 +1660,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|(STRICT_ALIGNMENT							\    || (((MODE) == SFmode || (MODE) == DFmode || (MODE) == DImode)	\&& (ALIGN)< 32))
+value|(STRICT_ALIGNMENT							\    || (((MODE) == SFmode || (MODE) == DFmode || (MODE) == TFmode	\ 	|| (MODE) == DImode)						\&& (ALIGN)< 32))
 end_define
 
 begin_escape
@@ -1532,7 +1678,7 @@ begin_define
 define|#
 directive|define
 name|FIRST_PSEUDO_REGISTER
-value|110
+value|113
 end_define
 
 begin_comment
@@ -1557,7 +1703,7 @@ name|FIXED_REGISTERS
 define|\
 value|{0, 1, FIXED_R2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, FIXED_R13, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,	   \
 comment|/* AltiVec registers.  */
-value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1						   \ }
+value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1						   \    , 1, 1                                          \ }
 end_define
 
 begin_comment
@@ -1571,7 +1717,7 @@ name|CALL_USED_REGISTERS
 define|\
 value|{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, FIXED_R13, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1,	   \
 comment|/* AltiVec registers.  */
-value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1						   \ }
+value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1						   \    , 1, 1                                          \ }
 end_define
 
 begin_comment
@@ -1585,7 +1731,7 @@ name|CALL_REALLY_USED_REGISTERS
 define|\
 value|{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, FIXED_R13, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1,	   \
 comment|/* AltiVec registers.  */
-value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0						   \ }
+value|\    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \    0, 0						   \    , 0, 0                                          \ }
 end_define
 
 begin_define
@@ -1672,8 +1818,29 @@ name|VRSAVE_REGNO
 value|109
 end_define
 
+begin_define
+define|#
+directive|define
+name|VSCR_REGNO
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPE_ACC_REGNO
+value|111
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPEFSCR_REGNO
+value|112
+end_define
+
 begin_comment
-comment|/* List the order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.     We allocate in the following order: 	fp0		(not saved or used for anything) 	fp13 - fp2	(not saved; incoming fp arg registers) 	fp1		(not saved; return value)  	fp31 - fp14	(saved; order given to save least number) 	cr7, cr6	(not saved or special) 	cr1		(not saved, but used for FP operations) 	cr0		(not saved, but used for arithmetic operations) 	cr4, cr3, cr2	(saved)         r0		(not saved; cannot be base reg) 	r9		(not saved; best for TImode) 	r11, r10, r8-r4	(not saved; highest used first to make less conflict) 	r3     		(not saved; return value register) 	r31 - r13	(saved; order given to save least number) 	r12		(not saved; if used for DImode or DFmode would use r13) 	mq		(not saved; best to use it if we can) 	ctr		(not saved; when we have the choice ctr is better) 	lr		(saved)         cr5, r1, r2, ap, xer, vrsave (fixed)  	AltiVec registers: 	v0 - v1         (not saved or used for anything) 	v13 - v3        (not saved; incoming vector arg registers) 	v2              (not saved; incoming vector arg reg; return value) 	v19 - v14       (not saved or used for anything) 	v31 - v20       (saved; order given to save least number) */
+comment|/* List the order in which to allocate registers.  Each register must be    listed once, even those in FIXED_REGISTERS.     We allocate in the following order: 	fp0		(not saved or used for anything) 	fp13 - fp2	(not saved; incoming fp arg registers) 	fp1		(not saved; return value)  	fp31 - fp14	(saved; order given to save least number) 	cr7, cr6	(not saved or special) 	cr1		(not saved, but used for FP operations) 	cr0		(not saved, but used for arithmetic operations) 	cr4, cr3, cr2	(saved)         r0		(not saved; cannot be base reg) 	r9		(not saved; best for TImode) 	r11, r10, r8-r4	(not saved; highest used first to make less conflict) 	r3     		(not saved; return value register) 	r31 - r13	(saved; order given to save least number) 	r12		(not saved; if used for DImode or DFmode would use r13) 	mq		(not saved; best to use it if we can) 	ctr		(not saved; when we have the choice ctr is better) 	lr		(saved)         cr5, r1, r2, ap, xer, vrsave, vscr (fixed) 	spe_acc, spefscr (fixed)  	AltiVec registers: 	v0 - v1         (not saved or used for anything) 	v13 - v3        (not saved; incoming vector arg registers) 	v2              (not saved; incoming vector arg reg; return value) 	v19 - v14       (not saved or used for anything) 	v31 - v20       (saved; order given to save least number) */
 end_comment
 
 begin_define
@@ -1683,7 +1850,7 @@ name|REG_ALLOC_ORDER
 define|\
 value|{32, 							\    45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34,	\    33,							\    63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51,	\    50, 49, 48, 47, 46, 					\    75, 74, 69, 68, 72, 71, 70,				\    0,							\    9, 11, 10, 8, 7, 6, 5, 4,				\    3,							\    31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19,	\    18, 17, 16, 15, 14, 13, 12,				\    64, 66, 65, 						\    73, 1, 2, 67, 76,					\
 comment|/* AltiVec registers.  */
-value|\    77, 78,						\    90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80,		\    79,							\    96, 95, 94, 93, 92, 91,				\    108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98,	\    97, 109						\ }
+value|\    77, 78,						\    90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80,		\    79,							\    96, 95, 94, 93, 92, 91,				\    108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98,	\    97, 109, 110						\    , 111, 112                                              \ }
 end_define
 
 begin_comment
@@ -1743,6 +1910,20 @@ value|((N)<= 31 || (N) == ARG_POINTER_REGNUM)
 end_define
 
 begin_comment
+comment|/* SPE SIMD registers are just the GPRs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPE_SIMD_REGNO_P
+parameter_list|(
+name|N
+parameter_list|)
+value|((N)<= 31)
+end_define
+
+begin_comment
 comment|/* True if register is the XER register.  */
 end_comment
 
@@ -1771,7 +1952,7 @@ value|((N)>= FIRST_ALTIVEC_REGNO&& (N)<= LAST_ALTIVEC_REGNO)
 end_define
 
 begin_comment
-comment|/* Return number of consecutive hard regs needed starting at reg REGNO    to hold something of mode MODE.    This is ordinarily the length in words of a value of mode MODE    but can be less for certain modes in special long registers.     POWER and PowerPC GPRs hold 32 bits worth;    PowerPC64 GPRs and FPRs point register holds 64 bits worth.  */
+comment|/* Return number of consecutive hard regs needed starting at reg REGNO    to hold something of mode MODE.    This is ordinarily the length in words of a value of mode MODE    but can be less for certain modes in special long registers.     For the SPE, GPRs are 64 bits but only 32 bits are visible in    scalar instructions.  The upper 32 bits are only available to the    SIMD instructions.     POWER and PowerPC GPRs hold 32 bits worth;    PowerPC64 GPRs and FPRs point register holds 64 bits worth.  */
 end_comment
 
 begin_define
@@ -1784,7 +1965,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(FP_REGNO_P (REGNO)							\    ? ((GET_MODE_SIZE (MODE) + UNITS_PER_FP_WORD - 1) / UNITS_PER_FP_WORD) \    : ALTIVEC_REGNO_P (REGNO)						\    ? ((GET_MODE_SIZE (MODE) + UNITS_PER_ALTIVEC_WORD - 1) / UNITS_PER_ALTIVEC_WORD) \    : ((GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD))
+value|(FP_REGNO_P (REGNO)							\    ? ((GET_MODE_SIZE (MODE) + UNITS_PER_FP_WORD - 1) / UNITS_PER_FP_WORD) \    : (SPE_SIMD_REGNO_P (REGNO)&& TARGET_SPE&& SPE_VECTOR_MODE (MODE))   \    ? ((GET_MODE_SIZE (MODE) + UNITS_PER_SPE_WORD - 1) / UNITS_PER_SPE_WORD) \    : ALTIVEC_REGNO_P (REGNO)						\    ? ((GET_MODE_SIZE (MODE) + UNITS_PER_ALTIVEC_WORD - 1) / UNITS_PER_ALTIVEC_WORD) \    : ((GET_MODE_SIZE (MODE) + UNITS_PER_WORD - 1) / UNITS_PER_WORD))
 end_define
 
 begin_define
@@ -1795,7 +1976,18 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|((MODE) == V16QImode		\ 	 || (MODE) == V8HImode		\ 	 || (MODE) == V4SFmode		\ 	 || (MODE) == V4SImode)
+value|((MODE) == V16QImode		\ 	  || (MODE) == V8HImode		\ 	  || (MODE) == V4SFmode		\ 	  || (MODE) == V4SImode)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPE_VECTOR_MODE
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|((MODE) == V4HImode          	\          || (MODE) == V2SFmode          \          || (MODE) == V1DImode          \          || (MODE) == V2SImode)
 end_define
 
 begin_comment
@@ -1810,7 +2002,7 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|(TARGET_ALTIVEC&& ALTIVEC_VECTOR_MODE (MODE))
+value|((TARGET_SPE&& SPE_VECTOR_MODE (MODE))		\ 	 || (TARGET_ALTIVEC&& ALTIVEC_VECTOR_MODE (MODE)))
 end_define
 
 begin_comment
@@ -1827,7 +2019,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|(FP_REGNO_P (REGNO) ?							\    (GET_MODE_CLASS (MODE) == MODE_FLOAT					\     || (GET_MODE_CLASS (MODE) == MODE_INT				\&& GET_MODE_SIZE (MODE) == UNITS_PER_FP_WORD))			\    : ALTIVEC_REGNO_P (REGNO) ? ALTIVEC_VECTOR_MODE (MODE)		\    : CR_REGNO_P (REGNO) ? GET_MODE_CLASS (MODE) == MODE_CC		\    : XER_REGNO_P (REGNO) ? (MODE) == PSImode				\    : ! INT_REGNO_P (REGNO) ? (GET_MODE_CLASS (MODE) == MODE_INT		\&& GET_MODE_SIZE (MODE)<= UNITS_PER_WORD) \    : 1)
+value|(FP_REGNO_P (REGNO) ?							\    (GET_MODE_CLASS (MODE) == MODE_FLOAT					\     || (GET_MODE_CLASS (MODE) == MODE_INT				\&& GET_MODE_SIZE (MODE) == UNITS_PER_FP_WORD))			\    : ALTIVEC_REGNO_P (REGNO) ? ALTIVEC_VECTOR_MODE (MODE)		\    : SPE_SIMD_REGNO_P (REGNO)&& TARGET_SPE&& SPE_VECTOR_MODE (MODE) ? 1 \    : CR_REGNO_P (REGNO) ? GET_MODE_CLASS (MODE) == MODE_CC		\    : XER_REGNO_P (REGNO) ? (MODE) == PSImode				\    : ! INT_REGNO_P (REGNO) ? GET_MODE_SIZE (MODE)<= UNITS_PER_WORD	\    : 1)
 end_define
 
 begin_comment
@@ -1848,41 +2040,25 @@ value|(GET_MODE_CLASS (MODE1) == MODE_FLOAT		\    ? GET_MODE_CLASS (MODE2) == MO
 end_define
 
 begin_comment
-comment|/* A C expression returning the cost of moving data from a register of class    CLASS1 to one of CLASS2.     On the RS/6000, copying between floating-point and fixed-point    registers is expensive.  */
+comment|/* A C expression returning the cost of moving data from a register of class    CLASS1 to one of CLASS2.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REGISTER_MOVE_COST
-parameter_list|(
-name|MODE
-parameter_list|,
-name|CLASS1
-parameter_list|,
-name|CLASS2
-parameter_list|)
-define|\
-value|((CLASS1) == FLOAT_REGS&& (CLASS2) == FLOAT_REGS ? 2	\    : (CLASS1) == FLOAT_REGS&& (CLASS2) != FLOAT_REGS ? 10	\    : (CLASS1) != FLOAT_REGS&& (CLASS2) == FLOAT_REGS ? 10	\    : (CLASS1) == ALTIVEC_REGS&& (CLASS2) != ALTIVEC_REGS ? 20	\    : (CLASS1) != ALTIVEC_REGS&& (CLASS2) == ALTIVEC_REGS ? 20	\    : (((CLASS1) == SPECIAL_REGS || (CLASS1) == MQ_REGS		\        || (CLASS1) == LINK_REGS || (CLASS1) == CTR_REGS		\        || (CLASS1) == LINK_OR_CTR_REGS)				\&& ((CLASS2) == SPECIAL_REGS || (CLASS2) == MQ_REGS	\ 	  || (CLASS2) == LINK_REGS || (CLASS2) == CTR_REGS	\ 	  || (CLASS2) == LINK_OR_CTR_REGS)) ? 10		\    : 2)
+value|rs6000_register_move_cost
 end_define
 
 begin_comment
-comment|/* A C expressions returning the cost of moving data of MODE from a register to    or from memory.     On the RS/6000, bump this up a bit.  */
+comment|/* A C expressions returning the cost of moving data of MODE from a register to    or from memory.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MEMORY_MOVE_COST
-parameter_list|(
-name|MODE
-parameter_list|,
-name|CLASS
-parameter_list|,
-name|IN
-parameter_list|)
-define|\
-value|((GET_MODE_CLASS (MODE) == MODE_FLOAT		\&& (rs6000_cpu == PROCESSOR_RIOS1 || rs6000_cpu == PROCESSOR_PPC601) \     ? 3 : 2) \    + 4)
+value|rs6000_memory_move_cost
 end_define
 
 begin_comment
@@ -1897,6 +2073,17 @@ value|3
 end_define
 
 begin_comment
+comment|/* A fixed register used at prologue and epilogue generation to fix    addressing modes.  The SPE needs heavy addressing fixes at the last    minute, and it's best to save a register for it.     AltiVec also needs fixes, but we've gotten around using r11, which    is actually wrong because when use_backchain_to_restore_sp is true,    we end up clobbering r11.     The AltiVec case needs to be fixed.  Dunno if we should break ABI    compatability and reserve a register for it as well..  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIXED_SCRATCH
+value|(TARGET_SPE ? 14 : 11)
+end_define
+
+begin_comment
 comment|/* Define this macro to change register usage conditional on target flags.    Set MQ register fixed (already call_used) if not POWER architecture    (RIOS1, RIOS2, RSC, and PPC601) so that it will not be allocated.    64-bit AIX reserves GPR13 for thread-private data.    Conditionally disable FPRs.  */
 end_comment
 
@@ -1905,7 +2092,7 @@ define|#
 directive|define
 name|CONDITIONAL_REGISTER_USAGE
 define|\
-value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT)						\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 1)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (DEFAULT_ABI == ABI_DARWIN						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\     global_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (! TARGET_ALTIVEC)							\     {									\       for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)	\ 	fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1; \       call_really_used_regs[VRSAVE_REGNO] = 1;				\     }									\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
+value|{									\   int i;								\   if (! TARGET_POWER)							\     fixed_regs[64] = 1;							\   if (TARGET_64BIT)							\     fixed_regs[13] = call_used_regs[13]					\       = call_really_used_regs[13] = 1; 					\   if (TARGET_SOFT_FLOAT || !TARGET_FPRS)				\     for (i = 32; i< 64; i++)						\       fixed_regs[i] = call_used_regs[i]					\         = call_really_used_regs[i] = 1;					\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 2)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;			\   if (DEFAULT_ABI == ABI_V4						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM			\&& flag_pic == 1)							\     fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (DEFAULT_ABI == ABI_DARWIN						\&& PIC_OFFSET_TABLE_REGNUM != INVALID_REGNUM)			\     global_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]				\       = fixed_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM]			\       = call_really_used_regs[RS6000_PIC_OFFSET_TABLE_REGNUM] = 1;	\   if (TARGET_ALTIVEC)                                                   \     global_regs[VSCR_REGNO] = 1;                                        \   if (TARGET_SPE)							\     {                                                                   \       global_regs[SPEFSCR_REGNO] = 1;					\       fixed_regs[FIXED_SCRATCH]						\         = call_used_regs[FIXED_SCRATCH]					\ 	= call_really_used_regs[FIXED_SCRATCH] = 1; 			\     }                                                                   \   if (! TARGET_ALTIVEC)							\     {									\       for (i = FIRST_ALTIVEC_REGNO; i<= LAST_ALTIVEC_REGNO; ++i)	\ 	fixed_regs[i] = call_used_regs[i] = call_really_used_regs[i] = 1; \       call_really_used_regs[VRSAVE_REGNO] = 1;				\     }									\   if (TARGET_ALTIVEC_ABI)						\     for (i = FIRST_ALTIVEC_REGNO; i< FIRST_ALTIVEC_REGNO + 20; ++i)	\       call_used_regs[i] = call_really_used_regs[i] = 1;			\ }
 end_define
 
 begin_comment
@@ -2035,6 +2222,12 @@ name|ALTIVEC_REGS
 block|,
 name|VRSAVE_REGS
 block|,
+name|VSCR_REGS
+block|,
+name|SPE_ACC_REGS
+block|,
+name|SPEFSCR_REGS
+block|,
 name|NON_SPECIAL_REGS
 block|,
 name|MQ_REGS
@@ -2080,7 +2273,7 @@ define|#
 directive|define
 name|REG_CLASS_NAMES
 define|\
-value|{									\   "NO_REGS",								\   "BASE_REGS",								\   "GENERAL_REGS",							\   "FLOAT_REGS",								\   "ALTIVEC_REGS",							\   "VRSAVE_REGS",							\   "NON_SPECIAL_REGS",							\   "MQ_REGS",								\   "LINK_REGS",								\   "CTR_REGS",								\   "LINK_OR_CTR_REGS",							\   "SPECIAL_REGS",							\   "SPEC_OR_GEN_REGS",							\   "CR0_REGS",								\   "CR_REGS",								\   "NON_FLOAT_REGS",							\   "XER_REGS",								\   "ALL_REGS"								\ }
+value|{									\   "NO_REGS",								\   "BASE_REGS",								\   "GENERAL_REGS",							\   "FLOAT_REGS",								\   "ALTIVEC_REGS",							\   "VRSAVE_REGS",							\   "VSCR_REGS",								\   "SPE_ACC_REGS",                                                       \   "SPEFSCR_REGS",                                                       \   "NON_SPECIAL_REGS",							\   "MQ_REGS",								\   "LINK_REGS",								\   "CTR_REGS",								\   "LINK_OR_CTR_REGS",							\   "SPECIAL_REGS",							\   "SPEC_OR_GEN_REGS",							\   "CR0_REGS",								\   "CR_REGS",								\   "NON_FLOAT_REGS",							\   "XER_REGS",								\   "ALL_REGS"								\ }
 end_define
 
 begin_comment
@@ -2104,6 +2297,12 @@ value|\   { 0x00000000, 0x00000000, 0xffffe000, 0x00001fff },
 comment|/* ALTIVEC_REGS */
 value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00002000 },
 comment|/* VRSAVE_REGS */
+value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00004000 },
+comment|/* VSCR_REGS */
+value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00008000 },
+comment|/* SPE_ACC_REGS */
+value|\   { 0x00000000, 0x00000000, 0x00000000, 0x00010000 },
+comment|/* SPEFSCR_REGS */
 value|\   { 0xffffffff, 0xffffffff, 0x00000008, 0x00000000 },
 comment|/* NON_SPECIAL_REGS */
 value|\   { 0x00000000, 0x00000000, 0x00000001, 0x00000000 },
@@ -2143,7 +2342,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((REGNO) == 0 ? GENERAL_REGS			\   : (REGNO)< 32 ? BASE_REGS			\   : FP_REGNO_P (REGNO) ? FLOAT_REGS		\   : ALTIVEC_REGNO_P (REGNO) ? ALTIVEC_REGS	\   : (REGNO) == CR0_REGNO ? CR0_REGS		\   : CR_REGNO_P (REGNO) ? CR_REGS		\   : (REGNO) == MQ_REGNO ? MQ_REGS		\   : (REGNO) == LINK_REGISTER_REGNUM ? LINK_REGS	\   : (REGNO) == COUNT_REGISTER_REGNUM ? CTR_REGS	\   : (REGNO) == ARG_POINTER_REGNUM ? BASE_REGS	\   : (REGNO) == XER_REGNO ? XER_REGS		\   : (REGNO) == VRSAVE_REGNO ? VRSAVE_REGS	\   : NO_REGS)
+value|((REGNO) == 0 ? GENERAL_REGS			\   : (REGNO)< 32 ? BASE_REGS			\   : FP_REGNO_P (REGNO) ? FLOAT_REGS		\   : ALTIVEC_REGNO_P (REGNO) ? ALTIVEC_REGS	\   : (REGNO) == CR0_REGNO ? CR0_REGS		\   : CR_REGNO_P (REGNO) ? CR_REGS		\   : (REGNO) == MQ_REGNO ? MQ_REGS		\   : (REGNO) == LINK_REGISTER_REGNUM ? LINK_REGS	\   : (REGNO) == COUNT_REGISTER_REGNUM ? CTR_REGS	\   : (REGNO) == ARG_POINTER_REGNUM ? BASE_REGS	\   : (REGNO) == XER_REGNO ? XER_REGS		\   : (REGNO) == VRSAVE_REGNO ? VRSAVE_REGS	\   : (REGNO) == VSCR_REGNO ? VRSAVE_REGS	\   : (REGNO) == SPE_ACC_REGNO ? SPE_ACC_REGS	\   : (REGNO) == SPEFSCR_REGNO ? SPEFSCR_REGS	\   : NO_REGS)
 end_define
 
 begin_comment
@@ -2180,7 +2379,7 @@ value|((C) == 'f' ? FLOAT_REGS	\    : (C) == 'b' ? BASE_REGS	\    : (C) == 'h' ?
 end_define
 
 begin_comment
-comment|/* The letters I, J, K, L, M, N, and P in a register constraint string    can be used to stand for particular ranges of immediate operands.    This macro defines what the ranges are.    C is the letter, and VALUE is a constant value.    Return 1 if VALUE is in the range specified by C.     `I' is a signed 16-bit constant    `J' is a constant with only the high-order 16 bits non-zero    `K' is a constant with only the low-order 16 bits non-zero    `L' is a signed 16-bit constant shifted left 16 bits    `M' is a constant that is greater than 31    `N' is a positive constant that is an exact power of two    `O' is the constant zero    `P' is a constant whose negation is a signed 16-bit constant */
+comment|/* The letters I, J, K, L, M, N, and P in a register constraint string    can be used to stand for particular ranges of immediate operands.    This macro defines what the ranges are.    C is the letter, and VALUE is a constant value.    Return 1 if VALUE is in the range specified by C.     `I' is a signed 16-bit constant    `J' is a constant with only the high-order 16 bits nonzero    `K' is a constant with only the low-order 16 bits nonzero    `L' is a signed 16-bit constant shifted left 16 bits    `M' is a constant that is greater than 31    `N' is a positive constant that is an exact power of two    `O' is the constant zero    `P' is a constant whose negation is a signed 16-bit constant */
 end_comment
 
 begin_define
@@ -2214,7 +2413,7 @@ value|(  (C) == 'G' ? (num_insns_constant (VALUE, GET_MODE (VALUE))		\ 		   == (
 end_define
 
 begin_comment
-comment|/* Optional extra constraints for this machine.     'Q' means that is a memory operand that is just an offset from a reg.    'R' is for AIX TOC entries.    'S' is a constant that can be placed into a 64-bit mask operand    'T' is a constant that can be placed into a 32-bit mask operand    'U' is for V.4 small data references.  */
+comment|/* Optional extra constraints for this machine.     'Q' means that is a memory operand that is just an offset from a reg.    'R' is for AIX TOC entries.    'S' is a constant that can be placed into a 64-bit mask operand    'T' is a constant that can be placed into a 32-bit mask operand    'U' is for V.4 small data references.    't' is for AND masks that can be performed by two rldic{l,r} insns.  */
 end_comment
 
 begin_define
@@ -2227,7 +2426,7 @@ parameter_list|,
 name|C
 parameter_list|)
 define|\
-value|((C) == 'Q' ? GET_CODE (OP) == MEM&& GET_CODE (XEXP (OP, 0)) == REG	\    : (C) == 'R' ? LEGITIMATE_CONSTANT_POOL_ADDRESS_P (OP)		\    : (C) == 'S' ? mask64_operand (OP, DImode)				\    : (C) == 'T' ? mask_operand (OP, SImode)				\    : (C) == 'U' ? (DEFAULT_ABI == ABI_V4				\&& small_data_operand (OP, GET_MODE (OP)))		\    : 0)
+value|((C) == 'Q' ? GET_CODE (OP) == MEM&& GET_CODE (XEXP (OP, 0)) == REG	\    : (C) == 'R' ? LEGITIMATE_CONSTANT_POOL_ADDRESS_P (OP)		\    : (C) == 'S' ? mask64_operand (OP, DImode)				\    : (C) == 'T' ? mask_operand (OP, SImode)				\    : (C) == 'U' ? (DEFAULT_ABI == ABI_V4				\&& small_data_operand (OP, GET_MODE (OP)))		\    : (C) == 't' ? (mask64_2_operand (OP, DImode)			\&& (fixed_regs[CR0_REGNO]				\ 		       || !logical_operand (OP, DImode))		\&& !mask64_operand (OP, DImode))			\    : 0)
 end_define
 
 begin_comment
@@ -2303,35 +2502,23 @@ value|(((CLASS) == FLOAT_REGS) 						\   ? ((GET_MODE_SIZE (MODE) + UNITS_PER_FP
 end_define
 
 begin_comment
-comment|/* If defined, gives a class of registers that cannot be used as the    operand of a SUBREG that changes the mode of the object illegally.  */
+comment|/* Return a class of registers that cannot change FROM mode to TO mode.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLASS_CANNOT_CHANGE_MODE
-value|FLOAT_REGS
-end_define
-
-begin_comment
-comment|/* Defines illegal mode changes for CLASS_CANNOT_CHANGE_MODE.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLASS_CANNOT_CHANGE_MODE_P
+name|CANNOT_CHANGE_MODE_CLASS
 parameter_list|(
 name|FROM
 parameter_list|,
 name|TO
+parameter_list|,
+name|CLASS
 parameter_list|)
 define|\
-value|(GET_MODE_SIZE (FROM) != GET_MODE_SIZE (TO))
+value|(GET_MODE_SIZE (FROM) != GET_MODE_SIZE (TO)				\    ? reg_classes_intersect_p (FLOAT_REGS, CLASS)			\    : (SPE_VECTOR_MODE (FROM) + SPE_VECTOR_MODE (TO)) == 1		\    ? reg_classes_intersect_p (GENERAL_REGS, CLASS) 			\    : 0)
 end_define
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* Stack layout; function entry, exit and calling.  */
@@ -2450,6 +2637,10 @@ name|vrsave_save_offset
 decl_stmt|;
 comment|/* offset to save VRSAVE from initial SP */
 name|int
+name|spe_gp_save_offset
+decl_stmt|;
+comment|/* offset to save spe 64-bit gprs  */
+name|int
 name|toc_save_offset
 decl_stmt|;
 comment|/* offset to save the TOC pointer */
@@ -2513,6 +2704,13 @@ name|int
 name|altivec_padding_size
 decl_stmt|;
 comment|/* size of altivec alignment padding if 				   not in save_size */
+name|int
+name|spe_gp_size
+decl_stmt|;
+comment|/* size of 64-bit GPR save size for SPE */
+name|int
+name|spe_padding_size
+decl_stmt|;
 name|int
 name|toc_size
 decl_stmt|;
@@ -2745,7 +2943,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Define how to find the value returned by a function.    VALTYPE is the data type of the value (as a tree).    If the precise function being called is known, FUNC is its FUNCTION_DECL;    otherwise, FUNC is 0.     On RS/6000 an integer value is in r3 and a floating-point value is in    fp1, unless -msoft-float.  */
+comment|/* Define how to find the value returned by a function.    VALTYPE is the data type of the value (as a tree).    If the precise function being called is known, FUNC is its FUNCTION_DECL;    otherwise, FUNC is 0.     On the SPE, both FPs and vectors are returned in r3.     On RS/6000 an integer value is in r3 and a floating-point value is in    fp1, unless -msoft-float.  */
 end_comment
 
 begin_define
@@ -2758,7 +2956,7 @@ parameter_list|,
 name|FUNC
 parameter_list|)
 define|\
-value|gen_rtx_REG ((INTEGRAL_TYPE_P (VALTYPE)			\&& TYPE_PRECISION (VALTYPE)< BITS_PER_WORD)	\ 	       || POINTER_TYPE_P (VALTYPE)			\ 	       ? word_mode : TYPE_MODE (VALTYPE),		\ 	       TREE_CODE (VALTYPE) == VECTOR_TYPE ? ALTIVEC_ARG_RETURN \ 	       : TREE_CODE (VALTYPE) == REAL_TYPE&& TARGET_HARD_FLOAT \                ? FP_ARG_RETURN : GP_ARG_RETURN)
+value|gen_rtx_REG ((INTEGRAL_TYPE_P (VALTYPE)			\&& TYPE_PRECISION (VALTYPE)< BITS_PER_WORD)	\ 	       || POINTER_TYPE_P (VALTYPE)			\ 	       ? word_mode : TYPE_MODE (VALTYPE),		\ 	       TREE_CODE (VALTYPE) == VECTOR_TYPE		\&& TARGET_ALTIVEC ? ALTIVEC_ARG_RETURN		\ 	       : TREE_CODE (VALTYPE) == REAL_TYPE		\&& TARGET_SPE_ABI&& !TARGET_FPRS		\ 	       ? GP_ARG_RETURN					\ 	       : TREE_CODE (VALTYPE) == REAL_TYPE		\&& TARGET_HARD_FLOAT&& TARGET_FPRS	        \                ? FP_ARG_RETURN : GP_ARG_RETURN)
 end_define
 
 begin_comment
@@ -2773,11 +2971,11 @@ parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|gen_rtx_REG (MODE, ALTIVEC_VECTOR_MODE (MODE) ? ALTIVEC_ARG_RETURN	\ 		     : GET_MODE_CLASS (MODE) == MODE_FLOAT		\&& TARGET_HARD_FLOAT				\ 		     ? FP_ARG_RETURN : GP_ARG_RETURN)
+value|gen_rtx_REG (MODE, ALTIVEC_VECTOR_MODE (MODE) ? ALTIVEC_ARG_RETURN	\ 		     : GET_MODE_CLASS (MODE) == MODE_FLOAT		\&& TARGET_HARD_FLOAT&& TARGET_FPRS		\ 		     ? FP_ARG_RETURN : GP_ARG_RETURN)
 end_define
 
 begin_comment
-comment|/* The AIX ABI for the RS/6000 specifies that all structures are    returned in memory.  The Darwin ABI does the same.  The SVR4 ABI    specifies that structures<= 8 bytes are returned in r3/r4, but a    draft put them in memory, and GCC used to implement the draft    instead of the final standard.  Therefore, TARGET_AIX_STRUCT_RET    controls this instead of DEFAULT_ABI; V.4 targets needing backward    compatibility can change DRAFT_V4_STRUCT_RET to override the    default, and -m switches get the final word.  See    rs6000_override_options for more details.     int_size_in_bytes returns -1 for variable size objects, which go in    memory always.  The cast to unsigned makes -1> 8.  */
+comment|/* The AIX ABI for the RS/6000 specifies that all structures are    returned in memory.  The Darwin ABI does the same.  The SVR4 ABI    specifies that structures<= 8 bytes are returned in r3/r4, but a    draft put them in memory, and GCC used to implement the draft    instead of the final standard.  Therefore, TARGET_AIX_STRUCT_RET    controls this instead of DEFAULT_ABI; V.4 targets needing backward    compatibility can change DRAFT_V4_STRUCT_RET to override the    default, and -m switches get the final word.  See    rs6000_override_options for more details.     The PPC32 SVR4 ABI uses IEEE double extended for long double, if 128-bit    long double support is enabled.  These values are returned in memory.     int_size_in_bytes returns -1 for variable size objects, which go in    memory always.  The cast to unsigned makes -1> 8.  */
 end_comment
 
 begin_define
@@ -2788,7 +2986,7 @@ parameter_list|(
 name|TYPE
 parameter_list|)
 define|\
-value|(AGGREGATE_TYPE_P (TYPE)&& \    (TARGET_AIX_STRUCT_RET || \     (unsigned HOST_WIDEST_INT) int_size_in_bytes (TYPE)> 8))
+value|((AGGREGATE_TYPE_P (TYPE)						\&& (TARGET_AIX_STRUCT_RET						\ 	|| (unsigned HOST_WIDE_INT) int_size_in_bytes (TYPE)> 8))	\    || (DEFAULT_ABI == ABI_V4&& TYPE_MODE (TYPE) == TFmode))
 end_define
 
 begin_comment
@@ -2994,6 +3192,17 @@ begin_comment
 comment|/* always call indirect */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CALL_LIBCALL
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* libcall */
+end_comment
+
 begin_comment
 comment|/* 1 if N is a possible register number for a function value    as seen by the caller.     On RS/6000, this is r3, fp1, and v2 (for AltiVec).  */
 end_comment
@@ -3005,7 +3214,8 @@ name|FUNCTION_VALUE_REGNO_P
 parameter_list|(
 name|N
 parameter_list|)
-value|((N) == GP_ARG_RETURN	\ 				    || ((N) == FP_ARG_RETURN)	\ 				    || (TARGET_ALTIVEC&&	\ 					(N) == ALTIVEC_ARG_RETURN))
+define|\
+value|((N) == GP_ARG_RETURN							\    || ((N) == FP_ARG_RETURN&& TARGET_HARD_FLOAT)			\    || ((N) == ALTIVEC_ARG_RETURN&& TARGET_ALTIVEC))
 end_define
 
 begin_comment
@@ -3020,7 +3230,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|(((unsigned)((N) - GP_ARG_MIN_REG)< (unsigned)(GP_ARG_NUM_REG))	\    || (TARGET_ALTIVEC&&						\        (unsigned)((N) - ALTIVEC_ARG_MIN_REG)< (unsigned)(ALTIVEC_ARG_NUM_REG)) \    || ((unsigned)((N) - FP_ARG_MIN_REG)< (unsigned)(FP_ARG_NUM_REG)))
+value|((unsigned) (N) - GP_ARG_MIN_REG< GP_ARG_NUM_REG			\    || ((unsigned) (N) - ALTIVEC_ARG_MIN_REG< ALTIVEC_ARG_NUM_REG	\&& TARGET_ALTIVEC)						\    || ((unsigned) (N) - FP_ARG_MIN_REG< FP_ARG_NUM_REG			\&& TARGET_HARD_FLOAT))
 end_define
 
 begin_escape
@@ -3032,21 +3242,28 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|machine_function
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* Whether a System V.4 varargs area was created.  */
 name|int
 name|sysv_varargs_p
-decl_stmt|;
+block|;
 comment|/* Flags if __builtin_return_address (n) with n>= 1 was used.  */
 name|int
 name|ra_needs_full_frame
-decl_stmt|;
-block|}
-name|machine_function
-typedef|;
+block|; }
 end_typedef
+
+begin_expr_stmt
+name|machine_function
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Define a data type for recording info about an argument list    during the scan of that argument list.  This data type should    hold all necessary information about the function itself    and about the args processed so far, enough to enable macros    such as FUNCTION_ARG to determine where the next arg should go.     On the RS/6000, this is a structure.  The first element is the number of    total argument words, the second is used to store the next    floating-point register number, and the third says how many more args we    have prototype types for.     For ABI_V4, we treat these slightly differently -- `sysv_gregno' is    the next availible GP register, `fregno' is the next available FP    register, and `words' is the number of words used on the stack.     The varargs/stdarg support requires that this structure's size    be a multiple of sizeof(int).  */
@@ -3129,7 +3346,7 @@ parameter_list|,
 name|INDIRECT
 parameter_list|)
 define|\
-value|init_cumulative_args (&CUM, FNTYPE, LIBNAME, FALSE)
+value|init_cumulative_args (&CUM, FNTYPE, LIBNAME, FALSE, FALSE)
 end_define
 
 begin_comment
@@ -3148,7 +3365,26 @@ parameter_list|,
 name|LIBNAME
 parameter_list|)
 define|\
-value|init_cumulative_args (&CUM, FNTYPE, LIBNAME, TRUE)
+value|init_cumulative_args (&CUM, FNTYPE, LIBNAME, TRUE, FALSE)
+end_define
+
+begin_comment
+comment|/* Like INIT_CUMULATIVE_ARGS' but only used for outgoing libcalls.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_CUMULATIVE_LIBCALL_ARGS
+parameter_list|(
+name|CUM
+parameter_list|,
+name|MODE
+parameter_list|,
+name|LIBNAME
+parameter_list|)
+define|\
+value|init_cumulative_args (&CUM, NULL_TREE, LIBNAME, FALSE, TRUE)
 end_define
 
 begin_comment
@@ -3173,7 +3409,7 @@ value|function_arg_advance (&CUM, MODE, TYPE, NAMED)
 end_define
 
 begin_comment
-comment|/* Non-zero if we can use a floating-point register to pass this arg.  */
+comment|/* Nonzero if we can use a floating-point register to pass this arg.  */
 end_comment
 
 begin_define
@@ -3188,11 +3424,11 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|(GET_MODE_CLASS (MODE) == MODE_FLOAT  \&& (CUM).fregno<= FP_ARG_MAX_REG    \&& TARGET_HARD_FLOAT)
+value|(GET_MODE_CLASS (MODE) == MODE_FLOAT  \&& (CUM).fregno<= FP_ARG_MAX_REG    \&& TARGET_HARD_FLOAT&& TARGET_FPRS)
 end_define
 
 begin_comment
-comment|/* Non-zero if we can use an AltiVec register to pass this arg.  */
+comment|/* Nonzero if we can use an AltiVec register to pass this arg.  */
 end_comment
 
 begin_define
@@ -3353,14 +3589,12 @@ define|#
 directive|define
 name|EXPAND_BUILTIN_VA_START
 parameter_list|(
-name|stdarg
-parameter_list|,
 name|valist
 parameter_list|,
 name|nextarg
 parameter_list|)
 define|\
-value|rs6000_va_start (stdarg, valist, nextarg)
+value|rs6000_va_start (valist, nextarg)
 end_define
 
 begin_comment
@@ -3403,6 +3637,20 @@ value|1
 end_define
 
 begin_comment
+comment|/* We do not allow indirect calls to be optimized into sibling calls, nor    do we allow calls with vector parameters.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_OK_FOR_SIBCALL
+parameter_list|(
+name|DECL
+parameter_list|)
+value|function_ok_for_sibcall ((DECL))
+end_define
+
+begin_comment
 comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
 end_comment
 
@@ -3420,7 +3668,7 @@ value|output_function_profiler ((FILE), (LABELNO));
 end_define
 
 begin_comment
-comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a function,    the stack pointer does not matter. No definition is equivalent to    always zero.     On the RS/6000, this is non-zero because we can restore the stack from    its backpointer, which we maintain.  */
+comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a function,    the stack pointer does not matter. No definition is equivalent to    always zero.     On the RS/6000, this is nonzero because we can restore the stack from    its backpointer, which we maintain.  */
 end_comment
 
 begin_define
@@ -3442,7 +3690,7 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 define|\
-value|((reload_completed&& (REGNO) == LINK_REGISTER_REGNUM)	\    || (TARGET_ALTIVEC&& (REGNO) == VRSAVE_REGNO)		\    || (current_function_calls_eh_return				\&& TARGET_AIX						\&& (REGNO) == TOC_REGISTER))
+value|((reload_completed&& (REGNO) == LINK_REGISTER_REGNUM)	\    || (TARGET_ALTIVEC&& (REGNO) == VRSAVE_REGNO)		\    || (current_function_calls_eh_return				\&& TARGET_AIX						\&& (REGNO) == 2))
 end_define
 
 begin_escape
@@ -3542,7 +3790,7 @@ define|#
 directive|define
 name|ELIMINABLE_REGS
 define|\
-value|{{ FRAME_POINTER_REGNUM, STACK_POINTER_REGNUM},	\  { ARG_POINTER_REGNUM, STACK_POINTER_REGNUM},	\  { ARG_POINTER_REGNUM, FRAME_POINTER_REGNUM},	\  { 30, 30} }
+value|{{ FRAME_POINTER_REGNUM, STACK_POINTER_REGNUM},	\  { ARG_POINTER_REGNUM, STACK_POINTER_REGNUM},	\  { ARG_POINTER_REGNUM, FRAME_POINTER_REGNUM},	\  { RS6000_PIC_OFFSET_TABLE_REGNUM, RS6000_PIC_OFFSET_TABLE_REGNUM } }
 end_define
 
 begin_comment
@@ -3559,7 +3807,7 @@ parameter_list|,
 name|TO
 parameter_list|)
 define|\
-value|((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM	\   ? ! frame_pointer_needed					\   : (FROM) == 30 ? ! TARGET_MINIMAL_TOC || TARGET_NO_TOC || get_pool_size () == 0 \   : 1)
+value|((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM		\   ? ! frame_pointer_needed						\   : (FROM) == RS6000_PIC_OFFSET_TABLE_REGNUM 				\   ? ! TARGET_MINIMAL_TOC || TARGET_NO_TOC || get_pool_size () == 0	\   : 1)
 end_define
 
 begin_comment
@@ -3578,7 +3826,7 @@ parameter_list|,
 name|OFFSET
 parameter_list|)
 define|\
-value|{									\   rs6000_stack_t *info = rs6000_stack_info ();				\ 									\  if ((FROM) == FRAME_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\    (OFFSET) = (info->push_p) ? 0 : - info->total_size;			\  else if ((FROM) == ARG_POINTER_REGNUM&& (TO) == FRAME_POINTER_REGNUM)	\    (OFFSET) = info->total_size;						\  else if ((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\    (OFFSET) = (info->push_p) ? info->total_size : 0;			\   else if ((FROM) == 30)						\     (OFFSET) = 0;							\   else									\     abort ();								\ }
+value|{									\   rs6000_stack_t *info = rs6000_stack_info ();				\ 									\  if ((FROM) == FRAME_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\    (OFFSET) = (info->push_p) ? 0 : - info->total_size;			\  else if ((FROM) == ARG_POINTER_REGNUM&& (TO) == FRAME_POINTER_REGNUM)	\    (OFFSET) = info->total_size;						\  else if ((FROM) == ARG_POINTER_REGNUM&& (TO) == STACK_POINTER_REGNUM)	\    (OFFSET) = (info->push_p) ? info->total_size : 0;			\   else if ((FROM) == RS6000_PIC_OFFSET_TABLE_REGNUM)			\     (OFFSET) = 0;							\   else									\     abort ();								\ }
 end_define
 
 begin_escape
@@ -3799,6 +4047,20 @@ parameter_list|)
 value|(toc_relative_expr_p (X))
 end_define
 
+begin_comment
+comment|/* SPE offset addressing is limited to 5-bits worth of double words.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPE_CONST_OFFSET_OK
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& ~0xf8) == 0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -3848,7 +4110,7 @@ parameter_list|,
 name|STRICT
 parameter_list|)
 define|\
-value|(GET_CODE (X) == PLUS						\&& GET_CODE (XEXP (X, 0)) == REG				\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))		\&& LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 0)		\&& (! ALTIVEC_VECTOR_MODE (MODE)                            \       || (GET_CODE (XEXP (X,1)) == CONST_INT&& INTVAL (XEXP (X,1)) == 0)) \&& (((MODE) != DFmode&& (MODE) != DImode)			\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 4) 	\ 	  : ! (INTVAL (XEXP (X, 1))& 3)))			\&& ((MODE) != TImode						\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 12) 	\ 	  : (LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 8) 	\&& ! (INTVAL (XEXP (X, 1))& 3)))))
+value|(GET_CODE (X) == PLUS						\&& GET_CODE (XEXP (X, 0)) == REG				\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))		\&& LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 0)		\&& (! ALTIVEC_VECTOR_MODE (MODE)                            \       || (GET_CODE (XEXP (X,1)) == CONST_INT&& INTVAL (XEXP (X,1)) == 0)) \&& (! SPE_VECTOR_MODE (MODE)					\       || (GET_CODE (XEXP (X, 1)) == CONST_INT			\&& SPE_CONST_OFFSET_OK (INTVAL (XEXP (X, 1)))))	\&& (((MODE) != DFmode&& (MODE) != DImode)			\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 4) 	\ 	  : ! (INTVAL (XEXP (X, 1))& 3)))			\&& (((MODE) != TFmode&& (MODE) != TImode)			\       || (TARGET_32BIT						\ 	  ? LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 12) 	\ 	  : (LEGITIMATE_ADDRESS_INTEGER_P (XEXP (X, 1), 8) 	\&& ! (INTVAL (XEXP (X, 1))& 3)))))
 end_define
 
 begin_define
@@ -3889,7 +4151,7 @@ parameter_list|,
 name|STRICT
 parameter_list|)
 define|\
-value|(TARGET_ELF						\&& ! flag_pic&& ! TARGET_TOC			\&& GET_MODE_NUNITS (MODE) == 1			\&& (GET_MODE_BITSIZE (MODE)<= 32 			\        || (TARGET_HARD_FLOAT&& (MODE) == DFmode))	\&& GET_CODE (X) == LO_SUM				\&& GET_CODE (XEXP (X, 0)) == REG			\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))	\&& CONSTANT_P (XEXP (X, 1)))
+value|(TARGET_ELF						\&& ! flag_pic&& ! TARGET_TOC			\&& GET_MODE_NUNITS (MODE) == 1			\&& (GET_MODE_BITSIZE (MODE)<= 32 			\        || (TARGET_HARD_FLOAT&& TARGET_FPRS&& (MODE) == DFmode))	\&& GET_CODE (X) == LO_SUM				\&& GET_CODE (XEXP (X, 0)) == REG			\&& INT_REG_OK_FOR_BASE_P (XEXP (X, 0), (STRICT))	\&& CONSTANT_P (XEXP (X, 1)))
 end_define
 
 begin_define
@@ -3998,7 +4260,7 @@ begin_define
 define|#
 directive|define
 name|TOC_REGISTER
-value|(TARGET_MINIMAL_TOC ? 30 : 2)
+value|(TARGET_MINIMAL_TOC ? RS6000_PIC_OFFSET_TABLE_REGNUM : 2)
 end_define
 
 begin_comment
@@ -4104,7 +4366,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Nonzero if access to memory by bytes is no faster than for words.    Also non-zero if doing byte operations (specifically shifts) in registers    is undesirable.  */
+comment|/* Nonzero if access to memory by bytes is no faster than for words.    Also nonzero if doing byte operations (specifically shifts) in registers    is undesirable.  */
 end_comment
 
 begin_define
@@ -4245,9 +4507,9 @@ parameter_list|,
 name|OUTER_CODE
 parameter_list|)
 define|\
-value|case PLUS:								\     return ((GET_CODE (XEXP (X, 1)) == CONST_INT			\&& ((unsigned HOST_WIDE_INT) (INTVAL (XEXP (X, 1))		\ 					   + 0x8000)>= 0x10000)	\&& ((INTVAL (XEXP (X, 1))& 0xffff) != 0))			\ 	    ? COSTS_N_INSNS (2)						\ 	    : COSTS_N_INSNS (1));					\   case AND:								\   case IOR:								\   case XOR:								\     return ((GET_CODE (XEXP (X, 1)) == CONST_INT			\&& (INTVAL (XEXP (X, 1))& (~ (HOST_WIDE_INT) 0xffff)) != 0 \&& ((INTVAL (XEXP (X, 1))& 0xffff) != 0))			\ 	    ? COSTS_N_INSNS (2)						\ 	    : COSTS_N_INSNS (1));					\   case MULT:								\     switch (rs6000_cpu)							\       {									\       case PROCESSOR_RIOS1:						\       case PROCESSOR_PPC405:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (5)					\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (3) : COSTS_N_INSNS (4));		\       case PROCESSOR_RS64A:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (20) : COSTS_N_INSNS (34)		\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (8) : COSTS_N_INSNS (12));		\       case PROCESSOR_RIOS2:						\       case PROCESSOR_MPCCORE:						\       case PROCESSOR_PPC604e:						\         return COSTS_N_INSNS (2);					\       case PROCESSOR_PPC601:						\         return COSTS_N_INSNS (5);					\       case PROCESSOR_PPC603:						\       case PROCESSOR_PPC7400:						\       case PROCESSOR_PPC750:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (5)					\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (2) : COSTS_N_INSNS (3));		\       case PROCESSOR_PPC7450:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (4)					\ 		: COSTS_N_INSNS (3));			    		\       case PROCESSOR_PPC403:						\       case PROCESSOR_PPC604:						\         return COSTS_N_INSNS (4);					\       case PROCESSOR_PPC620:						\       case PROCESSOR_PPC630:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (5) : COSTS_N_INSNS (7)			\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (3) : COSTS_N_INSNS (4));		\       }									\   case DIV:								\   case MOD:								\     if (GET_CODE (XEXP (X, 1)) == CONST_INT				\&& exact_log2 (INTVAL (XEXP (X, 1)))>= 0)			\       return COSTS_N_INSNS (2);						\
+value|case PLUS:								\     return ((GET_CODE (XEXP (X, 1)) == CONST_INT			\&& ((unsigned HOST_WIDE_INT) (INTVAL (XEXP (X, 1))		\ 					   + 0x8000)>= 0x10000)	\&& ((INTVAL (XEXP (X, 1))& 0xffff) != 0))			\ 	    ? COSTS_N_INSNS (2)						\ 	    : COSTS_N_INSNS (1));					\   case AND:								\   case IOR:								\   case XOR:								\     return ((GET_CODE (XEXP (X, 1)) == CONST_INT			\&& (INTVAL (XEXP (X, 1))& (~ (HOST_WIDE_INT) 0xffff)) != 0 \&& ((INTVAL (XEXP (X, 1))& 0xffff) != 0))			\ 	    ? COSTS_N_INSNS (2)						\ 	    : COSTS_N_INSNS (1));					\   case MULT:								\     if (optimize_size)							\       return COSTS_N_INSNS (2);						\     switch (rs6000_cpu)							\       {									\       case PROCESSOR_RIOS1:						\       case PROCESSOR_PPC405:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (5)					\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (3) : COSTS_N_INSNS (4));		\       case PROCESSOR_RS64A:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (20) : COSTS_N_INSNS (34)		\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (8) : COSTS_N_INSNS (12));		\       case PROCESSOR_RIOS2:						\       case PROCESSOR_MPCCORE:						\       case PROCESSOR_PPC604e:						\         return COSTS_N_INSNS (2);					\       case PROCESSOR_PPC601:						\         return COSTS_N_INSNS (5);					\       case PROCESSOR_PPC603:						\       case PROCESSOR_PPC7400:						\       case PROCESSOR_PPC750:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (5)					\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (2) : COSTS_N_INSNS (3));		\       case PROCESSOR_PPC7450:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? COSTS_N_INSNS (4)					\ 		: COSTS_N_INSNS (3));			    		\       case PROCESSOR_PPC403:						\       case PROCESSOR_PPC604:						\       case PROCESSOR_PPC8540:						\         return COSTS_N_INSNS (4);					\       case PROCESSOR_PPC620:						\       case PROCESSOR_PPC630:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (5) : COSTS_N_INSNS (7)			\ 		: INTVAL (XEXP (X, 1))>= -256&& INTVAL (XEXP (X, 1))<= 255 \ 		? COSTS_N_INSNS (3) : COSTS_N_INSNS (4));		\       case PROCESSOR_POWER4:						\         return (GET_CODE (XEXP (X, 1)) != CONST_INT			\ 		? GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (3) : COSTS_N_INSNS (4)			\ 		: COSTS_N_INSNS (2));					\       }									\   case DIV:								\   case MOD:								\     if (GET_CODE (XEXP (X, 1)) == CONST_INT				\&& exact_log2 (INTVAL (XEXP (X, 1)))>= 0)			\       return COSTS_N_INSNS (2);						\
 comment|/* otherwise fall through to normal divide.  */
-value|\   case UDIV:								\   case UMOD:								\     switch (rs6000_cpu)							\       {									\       case PROCESSOR_RIOS1:						\ 	return COSTS_N_INSNS (19);					\       case PROCESSOR_RIOS2:						\ 	return COSTS_N_INSNS (13);					\       case PROCESSOR_RS64A:						\         return (GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (65)					\ 		: COSTS_N_INSNS (67));					\       case PROCESSOR_MPCCORE:						\ 	return COSTS_N_INSNS (6);					\       case PROCESSOR_PPC403:						\ 	return COSTS_N_INSNS (33);					\       case PROCESSOR_PPC405:						\ 	return COSTS_N_INSNS (35);					\       case PROCESSOR_PPC601:						\ 	return COSTS_N_INSNS (36);					\       case PROCESSOR_PPC603:						\ 	return COSTS_N_INSNS (37);					\       case PROCESSOR_PPC604:						\       case PROCESSOR_PPC604e:						\ 	return COSTS_N_INSNS (20);					\       case PROCESSOR_PPC620:						\       case PROCESSOR_PPC630:						\         return (GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (21)					\ 		: COSTS_N_INSNS (37));					\       case PROCESSOR_PPC750:						\       case PROCESSOR_PPC7400:						\         return COSTS_N_INSNS (19);					\       case PROCESSOR_PPC7450:						\         return COSTS_N_INSNS (23);					\       }									\   case FFS:								\     return COSTS_N_INSNS (4);						\   case MEM:								\
+value|\   case UDIV:								\   case UMOD:								\     switch (rs6000_cpu)							\       {									\       case PROCESSOR_RIOS1:						\ 	return COSTS_N_INSNS (19);					\       case PROCESSOR_RIOS2:						\ 	return COSTS_N_INSNS (13);					\       case PROCESSOR_RS64A:						\         return (GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (65)					\ 		: COSTS_N_INSNS (67));					\       case PROCESSOR_MPCCORE:						\ 	return COSTS_N_INSNS (6);					\       case PROCESSOR_PPC403:						\ 	return COSTS_N_INSNS (33);					\       case PROCESSOR_PPC405:						\ 	return COSTS_N_INSNS (35);					\       case PROCESSOR_PPC601:						\ 	return COSTS_N_INSNS (36);					\       case PROCESSOR_PPC603:						\ 	return COSTS_N_INSNS (37);					\       case PROCESSOR_PPC604:						\       case PROCESSOR_PPC604e:						\ 	return COSTS_N_INSNS (20);					\       case PROCESSOR_PPC620:						\       case PROCESSOR_PPC630:						\       case PROCESSOR_POWER4:						\         return (GET_MODE (XEXP (X, 1)) != DImode			\ 		? COSTS_N_INSNS (21)					\ 		: COSTS_N_INSNS (37));					\       case PROCESSOR_PPC750:						\       case PROCESSOR_PPC8540:						\       case PROCESSOR_PPC7400:						\         return COSTS_N_INSNS (19);					\       case PROCESSOR_PPC7450:						\         return COSTS_N_INSNS (23);					\       }									\   case FFS:								\     return COSTS_N_INSNS (4);						\   case MEM:								\
 comment|/* MEM should be slightly more expensive than (plus (reg) (const)) */
 value|\     return 5;
 end_define
@@ -4275,18 +4537,6 @@ comment|/* #define ADJUST_INSN_LENGTH(X,LENGTH) */
 end_comment
 
 begin_comment
-comment|/* Add any extra modes needed to represent the condition code.     For the RS/6000, we need separate modes when unsigned (logical) comparisons    are being done and we need a separate mode for floating-point.  We also    use a mode for the case when we are comparing the results of two    comparisons, as then only the EQ bit is valid in the register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_CC_MODES
-define|\
-value|CC(CCUNSmode,  "CCUNS")	\     CC(CCFPmode,   "CCFP")	\     CC(CCEQmode,   "CCEQ")
-end_define
-
-begin_comment
 comment|/* Given a comparison code (EQ, NE, etc.) and the first operand of a    COMPARE, return the mode to be used for the comparison.  For    floating-point, CCFPmode should be used.  CCUNSmode should be used    for unsigned comparisons.  CCEQmode should be used when we are    doing an inequality comparison on the result of a    comparison.  CCmode should be used in all other cases.  */
 end_comment
 
@@ -4309,14 +4559,24 @@ begin_comment
 comment|/* Define the information needed to generate branch and scc insns.  This is    stored from the compare operation.  Note that we can't use "rtx" here    since it hasn't been defined!  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+unit|))
+name|rtx
 name|rs6000_compare_op0
-decl_stmt|,
-modifier|*
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|rtx
 name|rs6000_compare_op1
 decl_stmt|;
 end_decl_stmt
@@ -4745,6 +5005,12 @@ value|\&rs6000_reg_names[108][0],
 comment|/* v31  */
 value|\&rs6000_reg_names[109][0],
 comment|/* vrsave  */
+value|\&rs6000_reg_names[110][0],
+comment|/* vscr  */
+value|\&rs6000_reg_names[111][0],
+comment|/* spe_acc */
+value|\&rs6000_reg_names[112][0],
+comment|/* spefscr */
 value|\ }
 end_define
 
@@ -4757,7 +5023,7 @@ define|#
 directive|define
 name|DEBUG_REGISTER_NAMES
 define|\
-value|{									\      "r0", "r1",   "r2",  "r3",  "r4",  "r5",  "r6",  "r7",		\      "r8", "r9",  "r10", "r11", "r12", "r13", "r14", "r15",		\     "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",		\     "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31",		\      "f0",  "f1",  "f2",  "f3",  "f4",  "f5",  "f6",  "f7",		\      "f8",  "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\     "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\     "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\      "mq",  "lr", "ctr",  "ap",						\     "cr0", "cr1", "cr2", "cr3", "cr4", "cr5", "cr6", "cr7",		\   "xer",								\      "v0",  "v1",  "v2",  "v3",  "v4",  "v5",  "v6",  "v7",             \      "v8",  "v9", "v10", "v11", "v12", "v13", "v14", "v15",             \     "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",             \     "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",             \     "vrsave"								\ }
+value|{									\      "r0",  "r1",  "r2",  "r3",  "r4",  "r5",  "r6",  "r7",		\      "r8",  "r9", "r10", "r11", "r12", "r13", "r14", "r15",		\     "r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23",		\     "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31",		\      "f0",  "f1",  "f2",  "f3",  "f4",  "f5",  "f6",  "f7",		\      "f8",  "f9", "f10", "f11", "f12", "f13", "f14", "f15",		\     "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",		\     "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",		\      "mq",  "lr", "ctr",  "ap",						\     "cr0", "cr1", "cr2", "cr3", "cr4", "cr5", "cr6", "cr7",		\     "xer",								\      "v0",  "v1",  "v2",  "v3",  "v4",  "v5",  "v6",  "v7",             \      "v8",  "v9", "v10", "v11", "v12", "v13", "v14", "v15",             \     "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",             \     "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",             \     "vrsave", "vscr",							\     "spe_acc", "spefscr"                                                \ }
 end_define
 
 begin_comment
@@ -4769,7 +5035,7 @@ define|#
 directive|define
 name|ADDITIONAL_REGISTER_NAMES
 define|\
-value|{{"r0",    0}, {"r1",    1}, {"r2",    2}, {"r3",    3},	\   {"r4",    4}, {"r5",    5}, {"r6",    6}, {"r7",    7},	\   {"r8",    8}, {"r9",    9}, {"r10",  10}, {"r11",  11},	\   {"r12",  12}, {"r13",  13}, {"r14",  14}, {"r15",  15},	\   {"r16",  16}, {"r17",  17}, {"r18",  18}, {"r19",  19},	\   {"r20",  20}, {"r21",  21}, {"r22",  22}, {"r23",  23},	\   {"r24",  24}, {"r25",  25}, {"r26",  26}, {"r27",  27},	\   {"r28",  28}, {"r29",  29}, {"r30",  30}, {"r31",  31},	\   {"fr0",  32}, {"fr1",  33}, {"fr2",  34}, {"fr3",  35},	\   {"fr4",  36}, {"fr5",  37}, {"fr6",  38}, {"fr7",  39},	\   {"fr8",  40}, {"fr9",  41}, {"fr10", 42}, {"fr11", 43},	\   {"fr12", 44}, {"fr13", 45}, {"fr14", 46}, {"fr15", 47},	\   {"fr16", 48}, {"fr17", 49}, {"fr18", 50}, {"fr19", 51},	\   {"fr20", 52}, {"fr21", 53}, {"fr22", 54}, {"fr23", 55},	\   {"fr24", 56}, {"fr25", 57}, {"fr26", 58}, {"fr27", 59},	\   {"fr28", 60}, {"fr29", 61}, {"fr30", 62}, {"fr31", 63},	\   {"v0",   77}, {"v1",   78}, {"v2",   79}, {"v3",   80},       \   {"v4",   81}, {"v5",   82}, {"v6",   83}, {"v7",   84},       \   {"v8",   85}, {"v9",   86}, {"v10",  87}, {"v11",  88},       \   {"v12",  89}, {"v13",  90}, {"v14",  91}, {"v15",  92},       \   {"v16",  93}, {"v17",  94}, {"v18",  95}, {"v19",  96},       \   {"v20",  97}, {"v21",  98}, {"v22",  99}, {"v23",  100},	\   {"v24",  101},{"v25",  102},{"v26",  103},{"v27",  104},      \   {"v28",  105},{"v29",  106},{"v30",  107},{"v31",  108},      \   {"vrsave", 109},						\
+value|{{"r0",    0}, {"r1",    1}, {"r2",    2}, {"r3",    3},	\   {"r4",    4}, {"r5",    5}, {"r6",    6}, {"r7",    7},	\   {"r8",    8}, {"r9",    9}, {"r10",  10}, {"r11",  11},	\   {"r12",  12}, {"r13",  13}, {"r14",  14}, {"r15",  15},	\   {"r16",  16}, {"r17",  17}, {"r18",  18}, {"r19",  19},	\   {"r20",  20}, {"r21",  21}, {"r22",  22}, {"r23",  23},	\   {"r24",  24}, {"r25",  25}, {"r26",  26}, {"r27",  27},	\   {"r28",  28}, {"r29",  29}, {"r30",  30}, {"r31",  31},	\   {"fr0",  32}, {"fr1",  33}, {"fr2",  34}, {"fr3",  35},	\   {"fr4",  36}, {"fr5",  37}, {"fr6",  38}, {"fr7",  39},	\   {"fr8",  40}, {"fr9",  41}, {"fr10", 42}, {"fr11", 43},	\   {"fr12", 44}, {"fr13", 45}, {"fr14", 46}, {"fr15", 47},	\   {"fr16", 48}, {"fr17", 49}, {"fr18", 50}, {"fr19", 51},	\   {"fr20", 52}, {"fr21", 53}, {"fr22", 54}, {"fr23", 55},	\   {"fr24", 56}, {"fr25", 57}, {"fr26", 58}, {"fr27", 59},	\   {"fr28", 60}, {"fr29", 61}, {"fr30", 62}, {"fr31", 63},	\   {"v0",   77}, {"v1",   78}, {"v2",   79}, {"v3",   80},       \   {"v4",   81}, {"v5",   82}, {"v6",   83}, {"v7",   84},       \   {"v8",   85}, {"v9",   86}, {"v10",  87}, {"v11",  88},       \   {"v12",  89}, {"v13",  90}, {"v14",  91}, {"v15",  92},       \   {"v16",  93}, {"v17",  94}, {"v18",  95}, {"v19",  96},       \   {"v20",  97}, {"v21",  98}, {"v22",  99}, {"v23",  100},	\   {"v24",  101},{"v25",  102},{"v26",  103},{"v27",  104},      \   {"v28",  105},{"v29",  106},{"v30",  107},{"v31",  108},      \   {"vrsave", 109}, {"vscr", 110},				\   {"spe_acc", 111}, {"spefscr", 112},				\
 comment|/* no additional names for: mq, lr, ctr, ap */
 value|\   {"cr0",  68}, {"cr1",  69}, {"cr2",  70}, {"cr3",  71},	\   {"cr4",  72}, {"cr5",  73}, {"cr6",  74}, {"cr7",  75},	\   {"cc",   68}, {"sp",    1}, {"toc",   2} }
 end_define
@@ -4939,7 +5205,7 @@ define|#
 directive|define
 name|PREDICATE_CODES
 define|\
-value|{"any_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,		   \ 		   LABEL_REF, SUBREG, REG, MEM, PARALLEL}},		   \   {"zero_constant", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	   \ 		    LABEL_REF, SUBREG, REG, MEM}},			   \   {"short_cint_operand", {CONST_INT}},					   \   {"u_short_cint_operand", {CONST_INT}},				   \   {"non_short_cint_operand", {CONST_INT}},				   \   {"exact_log2_cint_operand", {CONST_INT}},				   \   {"gpc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_not_cr0_operand", {SUBREG, REG}},				   \   {"reg_or_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_neg_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_aligned_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_u_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_arith_cint_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_add_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_sub_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_logical_cint_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}}, \   {"got_operand", {SYMBOL_REF, CONST, LABEL_REF}},			   \   {"got_no_const_operand", {SYMBOL_REF, LABEL_REF}},			   \   {"easy_fp_constant", {CONST_DOUBLE}},					   \   {"zero_fp_constant", {CONST_DOUBLE}},					   \   {"reg_or_mem_operand", {SUBREG, MEM, REG}},				   \   {"lwa_operand", {SUBREG, MEM, REG}},					   \   {"volatile_mem_operand", {MEM}},					   \   {"offsettable_mem_operand", {MEM}},					   \   {"mem_or_easy_const_operand", {SUBREG, MEM, CONST_DOUBLE}},		   \   {"add_operand", {SUBREG, REG, CONST_INT}},				   \   {"non_add_cint_operand", {CONST_INT}},				   \   {"and_operand", {SUBREG, REG, CONST_INT}},				   \   {"and64_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"logical_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"non_logical_cint_operand", {CONST_INT, CONST_DOUBLE}},		   \   {"mask_operand", {CONST_INT}},					   \   {"mask64_operand", {CONST_INT, CONST_DOUBLE}},			   \   {"count_register_operand", {REG}},					   \   {"xer_operand", {REG}},						   \   {"call_operand", {SYMBOL_REF, REG}},					   \   {"current_file_function_operand", {SYMBOL_REF}},			   \   {"input_operand", {SUBREG, MEM, REG, CONST_INT,			   \ 		     CONST_DOUBLE, SYMBOL_REF}},			   \   {"load_multiple_operation", {PARALLEL}},				   \   {"store_multiple_operation", {PARALLEL}},				   \   {"vrsave_operation", {PARALLEL}},					   \   {"branch_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				  GT, LEU, LTU, GEU, GTU,		   \ 				  UNORDERED, ORDERED,			   \ 				  UNGE, UNLE }},			   \   {"branch_positive_comparison_operator", {EQ, LT, GT, LTU, GTU,	   \ 					   UNORDERED }},		   \   {"scc_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 			       GT, LEU, LTU, GEU, GTU,			   \ 			       UNORDERED, ORDERED,			   \ 			       UNGE, UNLE }},				   \   {"trap_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				GT, LEU, LTU, GEU, GTU}},		   \   {"boolean_operator", {AND, IOR, XOR}},				   \   {"boolean_or_operator", {IOR, XOR}},					   \   {"altivec_register_operand", {REG}},	                                   \   {"min_max_operator", {SMIN, SMAX, UMIN, UMAX}},
+value|{"any_operand", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,		   \ 		   LABEL_REF, SUBREG, REG, MEM, PARALLEL}},		   \   {"zero_constant", {CONST_INT, CONST_DOUBLE, CONST, SYMBOL_REF,	   \ 		    LABEL_REF, SUBREG, REG, MEM}},			   \   {"short_cint_operand", {CONST_INT}},					   \   {"u_short_cint_operand", {CONST_INT}},				   \   {"non_short_cint_operand", {CONST_INT}},				   \   {"exact_log2_cint_operand", {CONST_INT}},				   \   {"gpc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_operand", {SUBREG, REG}},					   \   {"cc_reg_not_cr0_operand", {SUBREG, REG}},				   \   {"reg_or_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_neg_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_aligned_short_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_u_short_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_cint_operand", {SUBREG, REG, CONST_INT}},			   \   {"reg_or_arith_cint_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_add_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_sub_cint64_operand", {SUBREG, REG, CONST_INT}},		   \   {"reg_or_logical_cint_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}}, \   {"got_operand", {SYMBOL_REF, CONST, LABEL_REF}},			   \   {"got_no_const_operand", {SYMBOL_REF, LABEL_REF}},			   \   {"easy_fp_constant", {CONST_DOUBLE}},					   \   {"zero_fp_constant", {CONST_DOUBLE}},					   \   {"reg_or_mem_operand", {SUBREG, MEM, REG}},				   \   {"lwa_operand", {SUBREG, MEM, REG}},					   \   {"volatile_mem_operand", {MEM}},					   \   {"offsettable_mem_operand", {MEM}},					   \   {"mem_or_easy_const_operand", {SUBREG, MEM, CONST_DOUBLE}},		   \   {"add_operand", {SUBREG, REG, CONST_INT}},				   \   {"non_add_cint_operand", {CONST_INT}},				   \   {"and_operand", {SUBREG, REG, CONST_INT}},				   \   {"and64_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"and64_2_operand", {SUBREG, REG, CONST_INT}},			   \   {"logical_operand", {SUBREG, REG, CONST_INT, CONST_DOUBLE}},		   \   {"non_logical_cint_operand", {CONST_INT, CONST_DOUBLE}},		   \   {"mask_operand", {CONST_INT}},					   \   {"mask_operand_wrap", {CONST_INT}},					   \   {"mask64_operand", {CONST_INT}},					   \   {"mask64_2_operand", {CONST_INT}},					   \   {"count_register_operand", {REG}},					   \   {"xer_operand", {REG}},						   \   {"symbol_ref_operand", {SYMBOL_REF}},					   \   {"call_operand", {SYMBOL_REF, REG}},					   \   {"current_file_function_operand", {SYMBOL_REF}},			   \   {"input_operand", {SUBREG, MEM, REG, CONST_INT,			   \ 		     CONST_DOUBLE, SYMBOL_REF}},			   \   {"load_multiple_operation", {PARALLEL}},				   \   {"store_multiple_operation", {PARALLEL}},				   \   {"vrsave_operation", {PARALLEL}},					   \   {"branch_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				  GT, LEU, LTU, GEU, GTU,		   \ 				  UNORDERED, ORDERED,			   \ 				  UNGE, UNLE }},			   \   {"branch_positive_comparison_operator", {EQ, LT, GT, LTU, GTU,	   \ 					   UNORDERED }},		   \   {"scc_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 			       GT, LEU, LTU, GEU, GTU,			   \ 			       UNORDERED, ORDERED,			   \ 			       UNGE, UNLE }},				   \   {"trap_comparison_operator", {EQ, NE, LE, LT, GE,			   \ 				GT, LEU, LTU, GEU, GTU}},		   \   {"boolean_operator", {AND, IOR, XOR}},				   \   {"boolean_or_operator", {IOR, XOR}},					   \   {"altivec_register_operand", {REG}},	                                   \   {"min_max_operator", {SMIN, SMAX, UMIN, UMAX}},
 end_define
 
 begin_comment
@@ -5396,6 +5662,465 @@ block|,
 name|ALTIVEC_BUILTIN_ABS_V8HI
 block|,
 name|ALTIVEC_BUILTIN_ABS_V16QI
+comment|/* SPE builtins.  */
+block|,
+name|SPE_BUILTIN_EVADDW
+block|,
+name|SPE_BUILTIN_EVAND
+block|,
+name|SPE_BUILTIN_EVANDC
+block|,
+name|SPE_BUILTIN_EVDIVWS
+block|,
+name|SPE_BUILTIN_EVDIVWU
+block|,
+name|SPE_BUILTIN_EVEQV
+block|,
+name|SPE_BUILTIN_EVFSADD
+block|,
+name|SPE_BUILTIN_EVFSDIV
+block|,
+name|SPE_BUILTIN_EVFSMUL
+block|,
+name|SPE_BUILTIN_EVFSSUB
+block|,
+name|SPE_BUILTIN_EVLDDX
+block|,
+name|SPE_BUILTIN_EVLDHX
+block|,
+name|SPE_BUILTIN_EVLDWX
+block|,
+name|SPE_BUILTIN_EVLHHESPLATX
+block|,
+name|SPE_BUILTIN_EVLHHOSSPLATX
+block|,
+name|SPE_BUILTIN_EVLHHOUSPLATX
+block|,
+name|SPE_BUILTIN_EVLWHEX
+block|,
+name|SPE_BUILTIN_EVLWHOSX
+block|,
+name|SPE_BUILTIN_EVLWHOUX
+block|,
+name|SPE_BUILTIN_EVLWHSPLATX
+block|,
+name|SPE_BUILTIN_EVLWWSPLATX
+block|,
+name|SPE_BUILTIN_EVMERGEHI
+block|,
+name|SPE_BUILTIN_EVMERGEHILO
+block|,
+name|SPE_BUILTIN_EVMERGELO
+block|,
+name|SPE_BUILTIN_EVMERGELOHI
+block|,
+name|SPE_BUILTIN_EVMHEGSMFAA
+block|,
+name|SPE_BUILTIN_EVMHEGSMFAN
+block|,
+name|SPE_BUILTIN_EVMHEGSMIAA
+block|,
+name|SPE_BUILTIN_EVMHEGSMIAN
+block|,
+name|SPE_BUILTIN_EVMHEGUMIAA
+block|,
+name|SPE_BUILTIN_EVMHEGUMIAN
+block|,
+name|SPE_BUILTIN_EVMHESMF
+block|,
+name|SPE_BUILTIN_EVMHESMFA
+block|,
+name|SPE_BUILTIN_EVMHESMFAAW
+block|,
+name|SPE_BUILTIN_EVMHESMFANW
+block|,
+name|SPE_BUILTIN_EVMHESMI
+block|,
+name|SPE_BUILTIN_EVMHESMIA
+block|,
+name|SPE_BUILTIN_EVMHESMIAAW
+block|,
+name|SPE_BUILTIN_EVMHESMIANW
+block|,
+name|SPE_BUILTIN_EVMHESSF
+block|,
+name|SPE_BUILTIN_EVMHESSFA
+block|,
+name|SPE_BUILTIN_EVMHESSFAAW
+block|,
+name|SPE_BUILTIN_EVMHESSFANW
+block|,
+name|SPE_BUILTIN_EVMHESSIAAW
+block|,
+name|SPE_BUILTIN_EVMHESSIANW
+block|,
+name|SPE_BUILTIN_EVMHEUMI
+block|,
+name|SPE_BUILTIN_EVMHEUMIA
+block|,
+name|SPE_BUILTIN_EVMHEUMIAAW
+block|,
+name|SPE_BUILTIN_EVMHEUMIANW
+block|,
+name|SPE_BUILTIN_EVMHEUSIAAW
+block|,
+name|SPE_BUILTIN_EVMHEUSIANW
+block|,
+name|SPE_BUILTIN_EVMHOGSMFAA
+block|,
+name|SPE_BUILTIN_EVMHOGSMFAN
+block|,
+name|SPE_BUILTIN_EVMHOGSMIAA
+block|,
+name|SPE_BUILTIN_EVMHOGSMIAN
+block|,
+name|SPE_BUILTIN_EVMHOGUMIAA
+block|,
+name|SPE_BUILTIN_EVMHOGUMIAN
+block|,
+name|SPE_BUILTIN_EVMHOSMF
+block|,
+name|SPE_BUILTIN_EVMHOSMFA
+block|,
+name|SPE_BUILTIN_EVMHOSMFAAW
+block|,
+name|SPE_BUILTIN_EVMHOSMFANW
+block|,
+name|SPE_BUILTIN_EVMHOSMI
+block|,
+name|SPE_BUILTIN_EVMHOSMIA
+block|,
+name|SPE_BUILTIN_EVMHOSMIAAW
+block|,
+name|SPE_BUILTIN_EVMHOSMIANW
+block|,
+name|SPE_BUILTIN_EVMHOSSF
+block|,
+name|SPE_BUILTIN_EVMHOSSFA
+block|,
+name|SPE_BUILTIN_EVMHOSSFAAW
+block|,
+name|SPE_BUILTIN_EVMHOSSFANW
+block|,
+name|SPE_BUILTIN_EVMHOSSIAAW
+block|,
+name|SPE_BUILTIN_EVMHOSSIANW
+block|,
+name|SPE_BUILTIN_EVMHOUMI
+block|,
+name|SPE_BUILTIN_EVMHOUMIA
+block|,
+name|SPE_BUILTIN_EVMHOUMIAAW
+block|,
+name|SPE_BUILTIN_EVMHOUMIANW
+block|,
+name|SPE_BUILTIN_EVMHOUSIAAW
+block|,
+name|SPE_BUILTIN_EVMHOUSIANW
+block|,
+name|SPE_BUILTIN_EVMWHSMF
+block|,
+name|SPE_BUILTIN_EVMWHSMFA
+block|,
+name|SPE_BUILTIN_EVMWHSMI
+block|,
+name|SPE_BUILTIN_EVMWHSMIA
+block|,
+name|SPE_BUILTIN_EVMWHSSF
+block|,
+name|SPE_BUILTIN_EVMWHSSFA
+block|,
+name|SPE_BUILTIN_EVMWHUMI
+block|,
+name|SPE_BUILTIN_EVMWHUMIA
+block|,
+name|SPE_BUILTIN_EVMWLSMIAAW
+block|,
+name|SPE_BUILTIN_EVMWLSMIANW
+block|,
+name|SPE_BUILTIN_EVMWLSSIAAW
+block|,
+name|SPE_BUILTIN_EVMWLSSIANW
+block|,
+name|SPE_BUILTIN_EVMWLUMI
+block|,
+name|SPE_BUILTIN_EVMWLUMIA
+block|,
+name|SPE_BUILTIN_EVMWLUMIAAW
+block|,
+name|SPE_BUILTIN_EVMWLUMIANW
+block|,
+name|SPE_BUILTIN_EVMWLUSIAAW
+block|,
+name|SPE_BUILTIN_EVMWLUSIANW
+block|,
+name|SPE_BUILTIN_EVMWSMF
+block|,
+name|SPE_BUILTIN_EVMWSMFA
+block|,
+name|SPE_BUILTIN_EVMWSMFAA
+block|,
+name|SPE_BUILTIN_EVMWSMFAN
+block|,
+name|SPE_BUILTIN_EVMWSMI
+block|,
+name|SPE_BUILTIN_EVMWSMIA
+block|,
+name|SPE_BUILTIN_EVMWSMIAA
+block|,
+name|SPE_BUILTIN_EVMWSMIAN
+block|,
+name|SPE_BUILTIN_EVMWHSSFAA
+block|,
+name|SPE_BUILTIN_EVMWSSF
+block|,
+name|SPE_BUILTIN_EVMWSSFA
+block|,
+name|SPE_BUILTIN_EVMWSSFAA
+block|,
+name|SPE_BUILTIN_EVMWSSFAN
+block|,
+name|SPE_BUILTIN_EVMWUMI
+block|,
+name|SPE_BUILTIN_EVMWUMIA
+block|,
+name|SPE_BUILTIN_EVMWUMIAA
+block|,
+name|SPE_BUILTIN_EVMWUMIAN
+block|,
+name|SPE_BUILTIN_EVNAND
+block|,
+name|SPE_BUILTIN_EVNOR
+block|,
+name|SPE_BUILTIN_EVOR
+block|,
+name|SPE_BUILTIN_EVORC
+block|,
+name|SPE_BUILTIN_EVRLW
+block|,
+name|SPE_BUILTIN_EVSLW
+block|,
+name|SPE_BUILTIN_EVSRWS
+block|,
+name|SPE_BUILTIN_EVSRWU
+block|,
+name|SPE_BUILTIN_EVSTDDX
+block|,
+name|SPE_BUILTIN_EVSTDHX
+block|,
+name|SPE_BUILTIN_EVSTDWX
+block|,
+name|SPE_BUILTIN_EVSTWHEX
+block|,
+name|SPE_BUILTIN_EVSTWHOX
+block|,
+name|SPE_BUILTIN_EVSTWWEX
+block|,
+name|SPE_BUILTIN_EVSTWWOX
+block|,
+name|SPE_BUILTIN_EVSUBFW
+block|,
+name|SPE_BUILTIN_EVXOR
+block|,
+name|SPE_BUILTIN_EVABS
+block|,
+name|SPE_BUILTIN_EVADDSMIAAW
+block|,
+name|SPE_BUILTIN_EVADDSSIAAW
+block|,
+name|SPE_BUILTIN_EVADDUMIAAW
+block|,
+name|SPE_BUILTIN_EVADDUSIAAW
+block|,
+name|SPE_BUILTIN_EVCNTLSW
+block|,
+name|SPE_BUILTIN_EVCNTLZW
+block|,
+name|SPE_BUILTIN_EVEXTSB
+block|,
+name|SPE_BUILTIN_EVEXTSH
+block|,
+name|SPE_BUILTIN_EVFSABS
+block|,
+name|SPE_BUILTIN_EVFSCFSF
+block|,
+name|SPE_BUILTIN_EVFSCFSI
+block|,
+name|SPE_BUILTIN_EVFSCFUF
+block|,
+name|SPE_BUILTIN_EVFSCFUI
+block|,
+name|SPE_BUILTIN_EVFSCTSF
+block|,
+name|SPE_BUILTIN_EVFSCTSI
+block|,
+name|SPE_BUILTIN_EVFSCTSIZ
+block|,
+name|SPE_BUILTIN_EVFSCTUF
+block|,
+name|SPE_BUILTIN_EVFSCTUI
+block|,
+name|SPE_BUILTIN_EVFSCTUIZ
+block|,
+name|SPE_BUILTIN_EVFSNABS
+block|,
+name|SPE_BUILTIN_EVFSNEG
+block|,
+name|SPE_BUILTIN_EVMRA
+block|,
+name|SPE_BUILTIN_EVNEG
+block|,
+name|SPE_BUILTIN_EVRNDW
+block|,
+name|SPE_BUILTIN_EVSUBFSMIAAW
+block|,
+name|SPE_BUILTIN_EVSUBFSSIAAW
+block|,
+name|SPE_BUILTIN_EVSUBFUMIAAW
+block|,
+name|SPE_BUILTIN_EVSUBFUSIAAW
+block|,
+name|SPE_BUILTIN_EVADDIW
+block|,
+name|SPE_BUILTIN_EVLDD
+block|,
+name|SPE_BUILTIN_EVLDH
+block|,
+name|SPE_BUILTIN_EVLDW
+block|,
+name|SPE_BUILTIN_EVLHHESPLAT
+block|,
+name|SPE_BUILTIN_EVLHHOSSPLAT
+block|,
+name|SPE_BUILTIN_EVLHHOUSPLAT
+block|,
+name|SPE_BUILTIN_EVLWHE
+block|,
+name|SPE_BUILTIN_EVLWHOS
+block|,
+name|SPE_BUILTIN_EVLWHOU
+block|,
+name|SPE_BUILTIN_EVLWHSPLAT
+block|,
+name|SPE_BUILTIN_EVLWWSPLAT
+block|,
+name|SPE_BUILTIN_EVRLWI
+block|,
+name|SPE_BUILTIN_EVSLWI
+block|,
+name|SPE_BUILTIN_EVSRWIS
+block|,
+name|SPE_BUILTIN_EVSRWIU
+block|,
+name|SPE_BUILTIN_EVSTDD
+block|,
+name|SPE_BUILTIN_EVSTDH
+block|,
+name|SPE_BUILTIN_EVSTDW
+block|,
+name|SPE_BUILTIN_EVSTWHE
+block|,
+name|SPE_BUILTIN_EVSTWHO
+block|,
+name|SPE_BUILTIN_EVSTWWE
+block|,
+name|SPE_BUILTIN_EVSTWWO
+block|,
+name|SPE_BUILTIN_EVSUBIFW
+block|,
+comment|/* Compares.  */
+name|SPE_BUILTIN_EVCMPEQ
+block|,
+name|SPE_BUILTIN_EVCMPGTS
+block|,
+name|SPE_BUILTIN_EVCMPGTU
+block|,
+name|SPE_BUILTIN_EVCMPLTS
+block|,
+name|SPE_BUILTIN_EVCMPLTU
+block|,
+name|SPE_BUILTIN_EVFSCMPEQ
+block|,
+name|SPE_BUILTIN_EVFSCMPGT
+block|,
+name|SPE_BUILTIN_EVFSCMPLT
+block|,
+name|SPE_BUILTIN_EVFSTSTEQ
+block|,
+name|SPE_BUILTIN_EVFSTSTGT
+block|,
+name|SPE_BUILTIN_EVFSTSTLT
+block|,
+comment|/* EVSEL compares.  */
+name|SPE_BUILTIN_EVSEL_CMPEQ
+block|,
+name|SPE_BUILTIN_EVSEL_CMPGTS
+block|,
+name|SPE_BUILTIN_EVSEL_CMPGTU
+block|,
+name|SPE_BUILTIN_EVSEL_CMPLTS
+block|,
+name|SPE_BUILTIN_EVSEL_CMPLTU
+block|,
+name|SPE_BUILTIN_EVSEL_FSCMPEQ
+block|,
+name|SPE_BUILTIN_EVSEL_FSCMPGT
+block|,
+name|SPE_BUILTIN_EVSEL_FSCMPLT
+block|,
+name|SPE_BUILTIN_EVSEL_FSTSTEQ
+block|,
+name|SPE_BUILTIN_EVSEL_FSTSTGT
+block|,
+name|SPE_BUILTIN_EVSEL_FSTSTLT
+block|,
+name|SPE_BUILTIN_EVSPLATFI
+block|,
+name|SPE_BUILTIN_EVSPLATI
+block|,
+name|SPE_BUILTIN_EVMWHSSMAA
+block|,
+name|SPE_BUILTIN_EVMWHSMFAA
+block|,
+name|SPE_BUILTIN_EVMWHSMIAA
+block|,
+name|SPE_BUILTIN_EVMWHUSIAA
+block|,
+name|SPE_BUILTIN_EVMWHUMIAA
+block|,
+name|SPE_BUILTIN_EVMWHSSFAN
+block|,
+name|SPE_BUILTIN_EVMWHSSIAN
+block|,
+name|SPE_BUILTIN_EVMWHSMFAN
+block|,
+name|SPE_BUILTIN_EVMWHSMIAN
+block|,
+name|SPE_BUILTIN_EVMWHUSIAN
+block|,
+name|SPE_BUILTIN_EVMWHUMIAN
+block|,
+name|SPE_BUILTIN_EVMWHGSSFAA
+block|,
+name|SPE_BUILTIN_EVMWHGSMFAA
+block|,
+name|SPE_BUILTIN_EVMWHGSMIAA
+block|,
+name|SPE_BUILTIN_EVMWHGUMIAA
+block|,
+name|SPE_BUILTIN_EVMWHGSSFAN
+block|,
+name|SPE_BUILTIN_EVMWHGSMFAN
+block|,
+name|SPE_BUILTIN_EVMWHGSMIAN
+block|,
+name|SPE_BUILTIN_EVMWHGUMIAN
+block|,
+name|SPE_BUILTIN_MTSPEFSCR
+block|,
+name|SPE_BUILTIN_MFSPEFSCR
+block|,
+name|SPE_BUILTIN_BRINC
 block|}
 enum|;
 end_enum

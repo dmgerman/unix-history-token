@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"\   %{!m32:-m elf_x86_64} \   %{m32:-m elf_i386} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \         %{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
+value|"\   %{m32:-m elf_i386_fbsd} \   %{Wl,*:%*} \   %{v:-V} \   %{assert*} %{R*} %{rpath*} %{defsym*} \   %{shared:-Bshareable %{h*} %{soname*}} \     %{!shared: \       %{!static: \         %{rdynamic:-export-dynamic} \ 	%{!dynamic-linker:-dynamic-linker /usr/libexec/ld-elf.so.1}} \     %{static:-Bstatic}} \   %{symbolic:-Bsymbolic}"
 end_define
 
 end_unit

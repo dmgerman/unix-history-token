@@ -34,12 +34,6 @@ define|\
 value|do {									\ 	output_file_directive (FILE, main_input_filename);		\ 	if (ix86_asm_dialect == ASM_INTEL)				\ 	  fputs ("\t.intel_syntax\n", FILE);				\   } while (0)
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -107,37 +101,31 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall\t*mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall\tmcount\n");					\ }
+name|MCOUNT_NAME
+value|"mcount"
 end_define
 
 begin_comment
-comment|/* True if it is possible to profile code that does not have a frame    pointer.       The GLIBC version of mcount for the x86 assumes that there is a    frame, so we cannot allow profiling without a frame pointer.  */
+comment|/* The GLIBC version of mcount for the x86 assumes that there is a    frame, so we cannot allow profiling without a frame pointer.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+name|SUBTARGET_FRAME_POINTER_REQUIRED
 end_undef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
-value|false
+name|SUBTARGET_FRAME_POINTER_REQUIRED
+value|current_function_profile
 end_define
 
 begin_undef
@@ -192,17 +180,13 @@ name|WCHAR_TYPE_SIZE
 value|BITS_PER_WORD
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D__gnu_linux__ -Dlinux -Asystem=posix"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("linux");		\ 	builtin_define_std ("unix");		\ 	builtin_define ("__ELF__");		\ 	builtin_define ("__gnu_linux__");	\ 	builtin_assert ("system=posix");	\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
 end_define
 
 begin_undef
@@ -221,7 +205,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE}"
+value|"%{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_else
@@ -233,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
+value|"%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
 end_define
 
 begin_endif
@@ -493,6 +477,16 @@ directive|ifdef
 name|IN_LIBGCC2
 end_ifdef
 
+begin_comment
+comment|/* There's no sys/ucontext.h for some (all?) libc1, so no    signal-turned-exceptions for them.  There's also no configure-run for    the target, so we can't check on (e.g.) HAVE_SYS_UCONTEXT_H.  Using the    target libc1 macro should be enough.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_GNULIBC_1
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -504,11 +498,6 @@ include|#
 directive|include
 file|<sys/ucontext.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -530,6 +519,24 @@ value|\     else if (*(unsigned char *)(pc_+0) == 0xb8				\&& *(unsigned int *)(
 comment|/* The SVR4 register numbering macros aren't usable in libgcc.  */
 value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = (long)&sc_->eax - new_cfa_;		\     (FS)->regs.reg[3].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[3].loc.offset = (long)&sc_->ebx - new_cfa_;		\     (FS)->regs.reg[1].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[1].loc.offset = (long)&sc_->ecx - new_cfa_;		\     (FS)->regs.reg[2].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[2].loc.offset = (long)&sc_->edx - new_cfa_;		\     (FS)->regs.reg[6].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[6].loc.offset = (long)&sc_->esi - new_cfa_;		\     (FS)->regs.reg[7].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[7].loc.offset = (long)&sc_->edi - new_cfa_;		\     (FS)->regs.reg[5].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[5].loc.offset = (long)&sc_->ebp - new_cfa_;		\     (FS)->regs.reg[8].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[8].loc.offset = (long)&sc_->eip - new_cfa_;		\     (FS)->retaddr_column = 8;						\     goto SUCCESS;							\   } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not USE_GNULIBC_1 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IN_LIBGCC2 */
+end_comment
 
 end_unit
 

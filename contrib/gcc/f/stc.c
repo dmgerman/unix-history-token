@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* stc.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Verifies the proper semantics for statements, checking expressions already       semantically analyzed individually, collectively, checking label defs and       refs, and so on.	Uses ffebad to indicate errors in semantics.        In many cases, both a token and a keyword (ffestrFirst, ffestrSecond,       or ffestrOther) is provided.  ONLY USE THE TOKEN as a pointer to the       source-code location for an error message or similar; use the keyword       as the semantic matching for the token, since the token's text might       not match the keyword's code.  For example, INTENT(IN OUT) A in free       source form passes to ffestc_R519_start the token "IN" but the keyword       FFESTR_otherINOUT, and the latter is correct.        Generally, either a single ffestc function handles an entire statement,       in which case its name is ffestc_xyz_, or more than one function is       needed, in which case its names are ffestc_xyz_start_,       ffestc_xyz_item_ or ffestc_xyz_item_abc_, and ffestc_xyz_finish_.       The caller must call _start_ before calling any _item_ functions, and       must call _finish_ afterwards.  If it is clearly a syntactic matter as       to restrictions on the number and variety of _item_ calls, then the caller       should report any errors and ffestc_ should presume it has been taken       care of and handle any semantic problems with grace and no error messages.       If the permitted number and variety of _item_ calls has some basis in       semantics, then the caller should not generate any messages and ffestc       should do all the checking.        A few ffestc functions have names rather than grammar numbers, like       ffestc_elsewhere and ffestc_end.	These are cases where the actual       statement depends on its context rather than just its form; ELSE WHERE       may be the obvious (WHERE...ELSE WHERE...END WHERE) or something a little       more subtle (WHERE: IF THEN...ELSE WHERE...END IF WHERE).	 The actual       ffestc functions do exist and do work, but may or may not be invoked       by ffestb depending on whether some form of resolution is possible.       For example, ffestc_R1103 end-program-stmt is reachable directly when       END PROGRAM [name] is specified, or via ffestc_end when END is specified       and the context is a main program.  So ffestc_xyz_ should make a quick       determination of the context and pick the appropriate ffestc_Nxyz_       function to invoke, without a lot of ceremony.     Modifications: */
+comment|/* stc.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 1997, 2003 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Verifies the proper semantics for statements, checking expressions already       semantically analyzed individually, collectively, checking label defs and       refs, and so on.	Uses ffebad to indicate errors in semantics.        In many cases, both a token and a keyword (ffestrFirst, ffestrSecond,       or ffestrOther) is provided.  ONLY USE THE TOKEN as a pointer to the       source-code location for an error message or similar; use the keyword       as the semantic matching for the token, since the token's text might       not match the keyword's code.  For example, INTENT(IN OUT) A in free       source form passes to ffestc_R519_start the token "IN" but the keyword       FFESTR_otherINOUT, and the latter is correct.        Generally, either a single ffestc function handles an entire statement,       in which case its name is ffestc_xyz_, or more than one function is       needed, in which case its names are ffestc_xyz_start_,       ffestc_xyz_item_ or ffestc_xyz_item_abc_, and ffestc_xyz_finish_.       The caller must call _start_ before calling any _item_ functions, and       must call _finish_ afterwards.  If it is clearly a syntactic matter as       to restrictions on the number and variety of _item_ calls, then the caller       should report any errors and ffestc_ should presume it has been taken       care of and handle any semantic problems with grace and no error messages.       If the permitted number and variety of _item_ calls has some basis in       semantics, then the caller should not generate any messages and ffestc       should do all the checking.        A few ffestc functions have names rather than grammar numbers, like       ffestc_elsewhere and ffestc_end.	These are cases where the actual       statement depends on its context rather than just its form; ELSE WHERE       may be the obvious (WHERE...ELSE WHERE...END WHERE) or something a little       more subtle (WHERE: IF THEN...ELSE WHERE...END IF WHERE).	 The actual       ffestc functions do exist and do work, but may or may not be invoked       by ffestb depending on whether some form of resolution is possible.       For example, ffestc_R1103 end-program-stmt is reachable directly when       END PROGRAM [name] is specified, or via ffestc_end when END is specified       and the context is a main program.  So ffestc_xyz_ should make a quick       determination of the context and pick the appropriate ffestc_Nxyz_       function to invoke, without a lot of ceremony.     Modifications: */
 end_comment
 
 begin_comment
@@ -29536,6 +29536,7 @@ name|type
 operator|)
 operator|||
 operator|(
+operator|(
 name|ffeinfo_kindtype
 argument_list|(
 name|ffebld_info
@@ -29550,6 +29551,19 @@ name|s
 operator|->
 name|kindtype
 operator|)
+operator|&&
+operator|(
+name|ffeinfo_kindtype
+argument_list|(
+name|ffebld_info
+argument_list|(
+name|caseobj
+operator|->
+name|expr1
+argument_list|)
+argument_list|)
+operator|!=
+name|FFEINFO_kindtypeINTEGER1
 operator|)
 operator|)
 operator|||
@@ -29586,6 +29600,7 @@ name|type
 operator|)
 operator|||
 operator|(
+operator|(
 name|ffeinfo_kindtype
 argument_list|(
 name|ffebld_info
@@ -29599,6 +29614,23 @@ operator|!=
 name|s
 operator|->
 name|kindtype
+operator|)
+operator|&&
+operator|(
+name|ffeinfo_kindtype
+argument_list|(
+name|ffebld_info
+argument_list|(
+name|caseobj
+operator|->
+name|expr2
+argument_list|)
+argument_list|)
+operator|!=
+name|FFEINFO_kindtypeINTEGER1
+operator|)
+operator|)
+operator|)
 operator|)
 operator|)
 operator|)

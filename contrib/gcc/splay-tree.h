@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* A splay-tree datatype.      Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Mark Mitchell (mark@markmitchell.com).  This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* A splay-tree datatype.      Copyright 1998, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Mark Mitchell (mark@markmitchell.com).  This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ directive|endif
 comment|/* __cplusplus */
 include|#
 directive|include
-file|<ansidecl.h>
+file|"ansidecl.h"
 comment|/* Use typedefs for the key and data types to facilitate changing    these types, if necessary.  These types should be sufficiently wide    that any pointer or scalar can be cast to these types, and then    cast back, without loss of precision.  */
 typedef|typedef
 name|unsigned

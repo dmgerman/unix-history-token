@@ -151,6 +151,10 @@ literal|"sin_optab->handlers[$A].insn_code = CODE_FOR_$(sin$a2$)"
 block|,
 literal|"cos_optab->handlers[$A].insn_code = CODE_FOR_$(cos$a2$)"
 block|,
+literal|"exp_optab->handlers[$A].insn_code = CODE_FOR_$(exp$a2$)"
+block|,
+literal|"log_optab->handlers[$A].insn_code = CODE_FOR_$(log$a2$)"
+block|,
 literal|"strlen_optab->handlers[$A].insn_code = CODE_FOR_$(strlen$a$)"
 block|,
 literal|"one_cmpl_optab->handlers[$A].insn_code = CODE_FOR_$(one_cmpl$a2$)"

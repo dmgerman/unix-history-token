@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Cray    T3E running Unicos/Mk.    Copyright (C) 2001    Free Software Foundation, Inc.    Contributed by Roman Lechtchinsky (rl@cs.tu-berlin.de)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for DEC Alpha on Cray    T3E running Unicos/Mk.    Copyright (C) 2001, 2002    Free Software Foundation, Inc.    Contributed by Roman Lechtchinsky (rl@cs.tu-berlin.de)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_undef
@@ -37,39 +37,14 @@ begin_comment
 comment|/* The following defines are necessary for the standard headers to work    correctly.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__unix=1 -D_UNICOS=205 -D_CRAY=1 -D_CRAYT3E=1 -D_CRAYMPP=1 -D_CRAYIEEE=1 -D_ADDR64=1 -D_LD64=1 -D__UNICOSMK__ -D__INT_MAX__=9223372036854775807 -D__SHRT_MAX__=2147483647"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do {							\ 	builtin_define ("__unix");				\ 	builtin_define ("_UNICOS=205");				\ 	builtin_define ("_CRAY");				\ 	builtin_define ("_CRAYT3E");				\ 	builtin_define ("_CRAYMPP");				\ 	builtin_define ("_CRAYIEEE");				\ 	builtin_define ("_ADDR64");				\ 	builtin_define ("_LD64");				\ 	builtin_define ("__UNICOSMK__");			\     } while (0)
 end_define
-
-begin_comment
-comment|/* Disable software floating point emulation because it requires a 16-bit    type which we do not have.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_undef
-undef|#
-directive|undef
-name|REAL_ARITHMETIC
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -449,7 +424,7 @@ comment|/* #define FUNCTION_ARG_PARTIAL_NREGS(CUM,MODE,TYPE,NAMED) 0 */
 end_comment
 
 begin_comment
-comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.     On Unicos/Mk, the standard subroutine __T3E_MISMATCH stores all register    arguments on the stack. Unfortunately, it doesn't always store the first    one (i.e. the one that arrives in $16 or $f16). This is not a problem    with stdargs as we always have at least one named argument there. This is    not always the case when varargs.h is used, however. In such cases, we    have to store the first argument ourselves. We use the information from    the CIW to determine whether the first argument arrives in $16 or $f16.  */
+comment|/* Perform any needed actions needed for a function that is receiving a    variable number of arguments.     On Unicos/Mk, the standard subroutine __T3E_MISMATCH stores all register    arguments on the stack. Unfortunately, it doesn't always store the first    one (i.e. the one that arrives in $16 or $f16). This is not a problem    with stdargs as we always have at least one named argument there.  */
 end_comment
 
 begin_undef
@@ -474,7 +449,7 @@ parameter_list|,
 name|NO_RTL
 parameter_list|)
 define|\
-value|{ if ((CUM).num_reg_words< 6)						\     {									\       if (! (NO_RTL))							\         {								\ 	  int start;							\ 									\ 	  start = (CUM).num_reg_words;					\ 	  if (!current_function_varargs || start == 0)			\ 	    ++start;							\ 									\           emit_insn (gen_umk_mismatch_args (GEN_INT (start)));		\ 	  if (current_function_varargs&& (CUM).num_reg_words == 0)	\ 	    {								\ 	      rtx tmp;							\ 	      rtx int_label, end_label;					\ 									\ 	      tmp = gen_reg_rtx (DImode);				\ 	      emit_move_insn (tmp,					\ 			      gen_rtx_ZERO_EXTRACT (DImode,		\ 						    gen_rtx_REG (DImode, 2),\ 						    (GEN_INT (1)),	\ 						    (GEN_INT (7))));	\ 	      int_label = gen_label_rtx ();				\ 	      end_label = gen_label_rtx ();				\ 	      emit_insn (gen_cmpdi (tmp, GEN_INT (0)));			\ 	      emit_jump_insn (gen_beq (int_label));			\ 	      emit_move_insn (gen_rtx_MEM (DFmode, virtual_incoming_args_rtx),\ 			      gen_rtx_REG (DFmode, 48));		\ 	      emit_jump (end_label);					\ 	      emit_label (int_label);					\ 	      emit_move_insn (gen_rtx_MEM (DImode, virtual_incoming_args_rtx),\ 			      gen_rtx_REG (DImode, 16));		\ 	      emit_label (end_label);					\ 	    }								\ 	  emit_insn (gen_arg_home_umk ());				\         }								\ 									\       PRETEND_SIZE = 0;							\     }									\ }
+value|{ if ((CUM).num_reg_words< 6)						\     {									\       if (! (NO_RTL))							\         {								\ 	  int start = (CUM).num_reg_words + 1;				\ 									\           emit_insn (gen_umk_mismatch_args (GEN_INT (start)));		\ 	  emit_insn (gen_arg_home_umk ());				\         }								\ 									\       PRETEND_SIZE = 0;							\     }									\ }
 end_define
 
 begin_comment
@@ -496,38 +471,6 @@ name|REGNO
 parameter_list|)
 value|((REGNO) == 26 || (REGNO) == 15)
 end_define
-
-begin_comment
-comment|/* Machine-specific function data.  */
-end_comment
-
-begin_struct
-struct|struct
-name|machine_function
-block|{
-comment|/* List of call information words for calls from this function.  */
-name|struct
-name|rtx_def
-modifier|*
-name|first_ciw
-decl_stmt|;
-name|struct
-name|rtx_def
-modifier|*
-name|last_ciw
-decl_stmt|;
-name|int
-name|ciw_count
-decl_stmt|;
-comment|/* List of deferred case vectors.  */
-name|struct
-name|rtx_def
-modifier|*
-name|addr_list
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* Would have worked, only the stack doesn't seem to be executable #undef TRAMPOLINE_TEMPLATE #define TRAMPOLINE_TEMPLATE(FILE)			\ do { fprintf (FILE, "\tbr $1,0\n");			\      fprintf (FILE, "\tldq $0,12($1)\n");		\      fprintf (FILE, "\tldq $1,20($1)\n");		\      fprintf (FILE, "\tjmp $31,(r0)\n");		\      fprintf (FILE, "\tbis $31,$31,$31\n");		\      fprintf (FILE, "\tbis $31,$31,$31\n");		\ } while (0) */
@@ -618,13 +561,13 @@ value|unicosmk_data_section ()
 end_define
 
 begin_comment
-comment|/* There are ni read-only sections on Unicos/Mk.  */
+comment|/* There are no read-only sections on Unicos/Mk.  */
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|READONLY_DATA_SECTION
+name|READONLY_DATA_SECTION_ASM_OP
 end_undef
 
 begin_define
@@ -708,26 +651,6 @@ value|void				\ ssib_section ()			\ {				\   in_section = in_ssib;		\ }
 end_define
 
 begin_comment
-comment|/* A C expression which evaluates to true if declshould be placed into a    unique section for some target-specific reason. On Unicos/Mk, functions    and public variables are always placed in unique sections.  */
-end_comment
-
-begin_comment
-comment|/* #define UNIQUE_SECTION_P(DECL) (TREE_PUBLIC (DECL)		\ 				|| TREE_CODE (DECL) == FUNCTION_DECL) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-value|unicosmk_unique_section (DECL, RELOC)
-end_define
-
-begin_comment
 comment|/* This outputs text to go at the start of an assembler file.  */
 end_comment
 
@@ -776,27 +699,6 @@ undef|#
 directive|undef
 name|ASM_OUTPUT_SOURCE_FILENAME
 end_undef
-
-begin_comment
-comment|/* There is no directive for declaring a label as global. Instead, an     additional colon must be appended when the label is defined.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_GLOBALIZE_LABEL
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-end_define
 
 begin_comment
 comment|/* This is how to output a label for a jump table.  Arguments are the same as    for ASM_OUTPUT_INTERNAL_LABEL, except the insn for the jump table is    passed.  */
@@ -1114,71 +1016,6 @@ end_define
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/* We have to define these because we do not use the floating-point    emulation. Unfortunately, atof does not accept hex literals.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|REAL_ARITHMETIC
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|REAL_VALUE_ATOF
-parameter_list|(
-name|x
-parameter_list|,
-name|s
-parameter_list|)
-value|atof(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REAL_VALUE_HTOF
-parameter_list|(
-name|x
-parameter_list|,
-name|s
-parameter_list|)
-value|atof(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REAL_VALUE_TO_TARGET_SINGLE
-parameter_list|(
-name|IN
-parameter_list|,
-name|OUT
-parameter_list|)
-define|\
-value|do {								\   union {							\     float f;							\     HOST_WIDE_INT l;						\   } u;								\ 								\   u.f = (IN);							\   (OUT) = (u.l>> 32)& 0xFFFFFFFF;				\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REAL_VALUE_TO_TARGET_DOUBLE
-parameter_list|(
-name|IN
-parameter_list|,
-name|OUT
-parameter_list|)
-define|\
-value|do {								\   union {							\     REAL_VALUE_TYPE f;						\     HOST_WIDE_INT l;						\   } u;								\ 								\   u.f = (IN);							\   (OUT)[0] = (u.l>> 32)& 0xFFFFFFFF;				\   (OUT)[1] = (u.l& 0xFFFFFFFF);				\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#

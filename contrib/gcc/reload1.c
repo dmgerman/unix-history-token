@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Reload pseudo regs into hard regs for insns that require hard regs.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Reload pseudo regs into hard regs for insns that require hard regs.    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -333,7 +333,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indicate if reg_reloaded_insn / reg_reloaded_contents is valid */
+comment|/* Indicate if reg_reloaded_insn / reg_reloaded_contents is valid.  */
 end_comment
 
 begin_decl_stmt
@@ -686,20 +686,6 @@ name|reload_insn_firstobj
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
-
 begin_comment
 comment|/* List of insn_chain instructions, one for every insn that reload needs to    examine.  */
 end_comment
@@ -885,7 +871,7 @@ value|ARRAY_SIZE (reg_eliminate_1)
 end_define
 
 begin_comment
-comment|/* Record the number of pending eliminations that have an offset not equal    to their initial offset.  If non-zero, we use a new copy of each    replacement result in any insns encountered.  */
+comment|/* Record the number of pending eliminations that have an offset not equal    to their initial offset.  If nonzero, we use a new copy of each    replacement result in any insns encountered.  */
 end_comment
 
 begin_decl_stmt
@@ -917,8 +903,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* For each label, we record the offset of each elimination.  If we reach    a label by more than one path and an offset differs, we cannot do the    elimination.  This information is indexed by the number of the label.    The first table is an array of flags that records whether we have yet    encountered a label and the second table is an array of arrays, one    entry in the latter array for each elimination.  */
+comment|/* For each label, we record the offset of each elimination.  If we reach    a label by more than one path and an offset differs, we cannot do the    elimination.  This information is indexed by the difference of the    number of the label and the first label number.  We can't offset the    pointer itself as this can cause problems on machines with segmented    memory.  The first table is an array of flags that records whether we    have yet encountered a label and the second table is an array of arrays,    one entry in the latter array for each elimination.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|first_label_num
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1905,6 +1898,8 @@ name|PARAMS
 argument_list|(
 operator|(
 name|rtx
+operator|,
+name|rtx
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2078,25 +2073,12 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|reload_cse_delete_noop_set
+name|reload_cse_simplify
 name|PARAMS
 argument_list|(
 operator|(
 name|rtx
 operator|,
-name|rtx
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|reload_cse_simplify
-name|PARAMS
-argument_list|(
-operator|(
 name|rtx
 operator|)
 argument_list|)
@@ -2886,22 +2868,9 @@ name|elim_table
 modifier|*
 name|ep
 decl_stmt|;
-comment|/* The two pointers used to track the true location of the memory used      for label offsets.  */
-name|char
-modifier|*
-name|real_known_ptr
-init|=
-name|NULL
+name|basic_block
+name|bb
 decl_stmt|;
-name|int
-argument_list|(
-operator|*
-name|real_at_ptr
-argument_list|)
-index|[
-name|NUM_ELIMINABLE_REGS
-index|]
-expr_stmt|;
 comment|/* Make sure even insns with volatile mem refs are recognizable.  */
 name|init_recog
 argument_list|()
@@ -3501,6 +3470,7 @@ operator|=
 name|x
 expr_stmt|;
 else|else
+block|{
 name|reg_equiv_memory_loc
 index|[
 name|i
@@ -3519,6 +3489,16 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|reg_equiv_memory_loc
+index|[
+name|i
+index|]
+condition|)
+continue|continue;
+block|}
 block|}
 else|else
 continue|continue;
@@ -3666,24 +3646,28 @@ block|}
 name|init_elim_table
 argument_list|()
 expr_stmt|;
+name|first_label_num
+operator|=
+name|get_first_label_num
+argument_list|()
+expr_stmt|;
 name|num_labels
 operator|=
 name|max_label_num
 argument_list|()
 operator|-
-name|get_first_label_num
-argument_list|()
+name|first_label_num
 expr_stmt|;
 comment|/* Allocate the tables used to store offset information at labels.  */
 comment|/* We used to use alloca here, but the size of what it would try to      allocate would occasionally cause it to exceed the stack limit and      cause a core dump.  */
-name|real_known_ptr
+name|offsets_known_at
 operator|=
 name|xmalloc
 argument_list|(
 name|num_labels
 argument_list|)
 expr_stmt|;
-name|real_at_ptr
+name|offsets_at
 operator|=
 operator|(
 name|int
@@ -3705,31 +3689,6 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|offsets_known_at
-operator|=
-name|real_known_ptr
-operator|-
-name|get_first_label_num
-argument_list|()
-expr_stmt|;
-name|offsets_at
-operator|=
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-index|[
-name|NUM_ELIMINABLE_REGS
-index|]
-operator|)
-operator|(
-name|real_at_ptr
-operator|-
-name|get_first_label_num
-argument_list|()
-operator|)
 expr_stmt|;
 comment|/* Alter each pseudo-reg rtx to contain its hard reg number.      Assign stack slots to the pseudos that lack hard regs or equivalents.      Do not touch virtual registers.  */
 for|for
@@ -4285,7 +4244,7 @@ name|did_spill
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Regardless of the state of spills, if we previously had 		 a register that we thought we could eliminate, but no can 		 not eliminate, we must run another pass.  		 Consider pseudos which have an entry in reg_equiv_* which 		 reference an eliminable register.  We must make another pass 		 to update reg_equiv_* so that we do not substitute in the 		 old value from when we thought the elimination could be 		 performed.  */
+comment|/* Regardless of the state of spills, if we previously had 		 a register that we thought we could eliminate, but now can 		 not eliminate, we must run another pass.  		 Consider pseudos which have an entry in reg_equiv_* which 		 reference an eliminable register.  We must make another pass 		 to update reg_equiv_* so that we do not substitute in the 		 old value from when we thought the elimination could be 		 performed.  */
 name|something_changed
 operator|=
 literal|1
@@ -4555,25 +4514,13 @@ condition|(
 operator|!
 name|frame_pointer_needed
 condition|)
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 name|CLEAR_REGNO_REG_SET
 argument_list|(
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_start
 argument_list|,
@@ -4669,6 +4616,13 @@ index|[
 name|i
 index|]
 decl_stmt|;
+name|REG_USERVAR_P
+argument_list|(
+name|reg
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
 name|PUT_CODE
 argument_list|(
 name|reg
@@ -4684,13 +4638,6 @@ literal|0
 argument_list|)
 operator|=
 name|addr
-expr_stmt|;
-name|REG_USERVAR_P
-argument_list|(
-name|reg
-argument_list|)
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -4764,7 +4711,7 @@ name|reload_completed
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Make a pass over all the insns and delete all USEs which we inserted      only to tag a REG_EQUAL note on them.  Remove all REG_DEAD and REG_UNUSED      notes.  Delete all CLOBBER insns that don't refer to the return value      and simplify (subreg (reg)) operands.  Also remove all REG_RETVAL and      REG_LIBCALL notes since they are no longer useful or accurate.  Strip      and regenerate REG_INC notes that may have been moved around.  */
+comment|/* Make a pass over all the insns and delete all USEs which we inserted      only to tag a REG_EQUAL note on them.  Remove all REG_DEAD and REG_UNUSED      notes.  Delete all CLOBBER insns, except those that refer to the return      value and the special mem:BLK CLOBBERs added to prevent the scheduler      from misarranging variable-array code, and simplify (subreg (reg))      operands.  Also remove all REG_RETVAL and REG_LIBCALL notes since they      are no longer useful or accurate.  Strip and regenerate REG_INC notes      that may have been moved around.  */
 for|for
 control|(
 name|insn
@@ -4860,6 +4807,77 @@ argument_list|)
 argument_list|)
 operator|==
 name|CLOBBER
+operator|&&
+operator|(
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|MEM
+operator|||
+name|GET_MODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|BLKmode
+operator|||
+operator|(
+name|GET_CODE
+argument_list|(
+name|XEXP
+argument_list|(
+name|XEXP
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+operator|!=
+name|SCRATCH
+operator|&&
+name|XEXP
+argument_list|(
+name|XEXP
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+name|stack_pointer_rtx
+operator|)
+operator|)
 operator|&&
 operator|(
 name|GET_CODE
@@ -5122,20 +5140,20 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|real_known_ptr
+name|offsets_known_at
 condition|)
 name|free
 argument_list|(
-name|real_known_ptr
+name|offsets_known_at
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|real_at_ptr
+name|offsets_at
 condition|)
 name|free
 argument_list|(
-name|real_at_ptr
+name|offsets_at
 argument_list|)
 expr_stmt|;
 name|free
@@ -5691,6 +5709,33 @@ index|]
 expr_stmt|;
 break|break;
 default|default:
+if|if
+condition|(
+name|EXTRA_ADDRESS_CONSTRAINT
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|cls
+operator|=
+operator|(
+name|int
+operator|)
+name|reg_class_subunion
+index|[
+name|cls
+index|]
+index|[
+operator|(
+name|int
+operator|)
+name|MODE_BASE_REG_CLASS
+argument_list|(
+name|VOIDmode
+argument_list|)
+index|]
+expr_stmt|;
+else|else
 name|cls
 operator|=
 operator|(
@@ -6179,7 +6224,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* Delete it from the reload chain */
+comment|/* Delete it from the reload chain.  */
 if|if
 condition|(
 name|chain
@@ -8754,7 +8799,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function handles the tracking of elimination offsets around branches.     X is a piece of RTL being scanned.     INSN is the insn that it came from, if any.     INITIAL_P is non-zero if we are to set the offset to be the initial    offset and zero if we are setting the offset of the label to be the    current offset.  */
+comment|/* This function handles the tracking of elimination offsets around branches.     X is a piece of RTL being scanned.     INSN is the insn that it came from, if any.     INITIAL_P is nonzero if we are to set the offset to be the initial    offset and zero if we are setting the offset of the label to be the    current offset.  */
 end_comment
 
 begin_function
@@ -8838,6 +8883,8 @@ name|CODE_LABEL_NUMBER
 argument_list|(
 name|x
 argument_list|)
+operator|-
+name|first_label_num
 index|]
 condition|)
 block|{
@@ -8860,6 +8907,8 @@ name|CODE_LABEL_NUMBER
 argument_list|(
 name|x
 argument_list|)
+operator|-
+name|first_label_num
 index|]
 index|[
 name|i
@@ -8889,6 +8938,8 @@ name|CODE_LABEL_NUMBER
 argument_list|(
 name|x
 argument_list|)
+operator|-
+name|first_label_num
 index|]
 operator|=
 literal|1
@@ -8948,6 +8999,8 @@ name|CODE_LABEL_NUMBER
 argument_list|(
 name|x
 argument_list|)
+operator|-
+name|first_label_num
 index|]
 index|[
 name|i
@@ -9311,7 +9364,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Scan X and replace any eliminable registers (such as fp) with a    replacement (such as sp), plus an offset.     MEM_MODE is the mode of an enclosing MEM.  We need this to know how    much to adjust a register for, e.g., PRE_DEC.  Also, if we are inside a    MEM, we are allowed to replace a sum of a register and the constant zero    with the register, which we cannot do outside a MEM.  In addition, we need    to record the fact that a register is referenced outside a MEM.     If INSN is an insn, it is the insn containing X.  If we replace a REG    in a SET_DEST with an equivalent MEM and INSN is non-zero, write a    CLOBBER of the pseudo after INSN so find_equiv_regs will know that    the REG is being modified.     Alternatively, INSN may be a note (an EXPR_LIST or INSN_LIST).    That's used when we eliminate in expressions stored in notes.    This means, do not set ref_outside_mem even if the reference    is outside of MEMs.     REG_EQUIV_MEM and REG_EQUIV_ADDRESS contain address that have had    replacements done assuming all offsets are at their initial values.  If    they are not, or if REG_EQUIV_ADDRESS is nonzero for a pseudo we    encounter, return the actual location so that find_reloads will do    the proper thing.  */
+comment|/* Scan X and replace any eliminable registers (such as fp) with a    replacement (such as sp), plus an offset.     MEM_MODE is the mode of an enclosing MEM.  We need this to know how    much to adjust a register for, e.g., PRE_DEC.  Also, if we are inside a    MEM, we are allowed to replace a sum of a register and the constant zero    with the register, which we cannot do outside a MEM.  In addition, we need    to record the fact that a register is referenced outside a MEM.     If INSN is an insn, it is the insn containing X.  If we replace a REG    in a SET_DEST with an equivalent MEM and INSN is nonzero, write a    CLOBBER of the pseudo after INSN so find_equiv_regs will know that    the REG is being modified.     Alternatively, INSN may be a note (an EXPR_LIST or INSN_LIST).    That's used when we eliminate in expressions stored in notes.    This means, do not set ref_outside_mem even if the reference    is outside of MEMs.     REG_EQUIV_MEM and REG_EQUIV_ADDRESS contain address that have had    replacements done assuming all offsets are at their initial values.  If    they are not, or if REG_EQUIV_ADDRESS is nonzero for a pseudo we    encounter, return the actual location so that find_reloads will do    the proper thing.  */
 end_comment
 
 begin_function
@@ -13727,7 +13780,7 @@ index|]
 index|]
 expr_stmt|;
 block|}
-comment|/* Update all elimination pairs to reflect the status after the current      insn.  The changes we make were determined by the earlier call to      elimination_effects.       We also detect a cases where register elimination cannot be done,      namely, if a register would be both changed and referenced outside a MEM      in the resulting insn since such an insn is often undefined and, even if      not, we cannot know what meaning will be given to it.  Note that it is      valid to have a register used in an address in an insn that changes it      (presumably with a pre- or post-increment or decrement).       If anything changes, return nonzero.  */
+comment|/* Update all elimination pairs to reflect the status after the current      insn.  The changes we make were determined by the earlier call to      elimination_effects.       We also detect cases where register elimination cannot be done,      namely, if a register would be both changed and referenced outside a MEM      in the resulting insn since such an insn is often undefined and, even if      not, we cannot know what meaning will be given to it.  Note that it is      valid to have a register used in an address in an insn that changes it      (presumably with a pre- or post-increment or decrement).       If anything changes, return nonzero.  */
 for|for
 control|(
 name|ep
@@ -14247,16 +14300,7 @@ name|x
 decl_stmt|;
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|offsets_known_at
-index|[
-name|get_first_label_num
-argument_list|()
-index|]
 argument_list|,
 literal|0
 argument_list|,
@@ -14374,6 +14418,8 @@ operator|=
 name|offsets_at
 index|[
 name|label_nr
+operator|-
+name|first_label_num
 index|]
 index|[
 name|i
@@ -14401,7 +14447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* See if anything that happened changes which eliminations are valid.    For example, on the Sparc, whether or not the frame pointer can    be eliminated can depend on what registers have been used.  We need    not check some conditions again (such as flag_omit_frame_pointer)    since they can't have changed.  */
+comment|/* See if anything that happened changes which eliminations are valid.    For example, on the SPARC, whether or not the frame pointer can    be eliminated can depend on what registers have been used.  We need    not check some conditions again (such as flag_omit_frame_pointer)    since they can't have changed.  */
 end_comment
 
 begin_function
@@ -14416,18 +14462,11 @@ modifier|*
 name|pset
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|HARD_FRAME_POINTER_REGNUM
-operator|!=
-name|FRAME_POINTER_REGNUM
 name|int
 name|previous_frame_pointer_needed
 init|=
 name|frame_pointer_needed
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|elim_table
 modifier|*
@@ -14688,11 +14727,6 @@ operator|--
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|HARD_FRAME_POINTER_REGNUM
-operator|!=
-name|FRAME_POINTER_REGNUM
 comment|/* If we didn't need a frame pointer last time, but we do now, spill      the hard frame pointer.  */
 if|if
 condition|(
@@ -14709,8 +14743,6 @@ argument_list|,
 name|HARD_FRAME_POINTER_REGNUM
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -16038,9 +16070,12 @@ block|{
 name|rtx
 name|oldpat
 init|=
+name|copy_rtx
+argument_list|(
 name|PATTERN
 argument_list|(
 name|insn
+argument_list|)
 argument_list|)
 decl_stmt|;
 comment|/* If this is a USE and CLOBBER of a MEM, ensure that any 	     references to eliminable registers have been removed.  */
@@ -16317,6 +16352,16 @@ name|INSN_P
 argument_list|(
 name|p
 argument_list|)
+operator|&&
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+operator|!=
+name|USE
 operator|&&
 operator|(
 name|recog_memoized
@@ -17006,11 +17051,6 @@ name|unsigned
 name|int
 name|nr
 decl_stmt|;
-name|int
-name|offset
-init|=
-literal|0
-decl_stmt|;
 comment|/* note_stores does give us subregs of hard regs,      subreg_regno_offset will abort if it is not a hard reg.  */
 while|while
 condition|(
@@ -17022,37 +17062,7 @@ operator|==
 name|SUBREG
 condition|)
 block|{
-name|offset
-operator|+=
-name|subreg_regno_offset
-argument_list|(
-name|REGNO
-argument_list|(
-name|SUBREG_REG
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-argument_list|,
-name|GET_MODE
-argument_list|(
-name|SUBREG_REG
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-argument_list|,
-name|SUBREG_BYTE
-argument_list|(
-name|x
-argument_list|)
-argument_list|,
-name|GET_MODE
-argument_list|(
-name|x
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* We ignore the subreg offset when calculating the regno, 	 because we are using the entire underlying hard register 	 below.  */
 name|x
 operator|=
 name|SUBREG_REG
@@ -17077,8 +17087,6 @@ name|REGNO
 argument_list|(
 name|x
 argument_list|)
-operator|+
-name|offset
 expr_stmt|;
 if|if
 condition|(
@@ -17819,7 +17827,7 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* We resolve conflicts with remaining reloads of the same type by      excluding the intervals of of reload registers by them from the      interval of freed reload registers.  Since we only keep track of      one set of interval bounds, we might have to exclude somewhat      more than what would be necessary if we used a HARD_REG_SET here.      But this should only happen very infrequently, so there should      be no reason to worry about it.  */
+comment|/* We resolve conflicts with remaining reloads of the same type by      excluding the intervals of reload registers by them from the      interval of freed reload registers.  Since we only keep track of      one set of interval bounds, we might have to exclude somewhat      more than what would be necessary if we used a HARD_REG_SET here.      But this should only happen very infrequently, so there should      be no reason to worry about it.  */
 name|start_regno
 operator|=
 name|regno
@@ -19649,7 +19657,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* If non-zero, this is a place to get the value of the reload,    rather than using reload_in.  */
+comment|/* If nonzero, this is a place to get the value of the reload,    rather than using reload_in.  */
 end_comment
 
 begin_decl_stmt
@@ -20483,7 +20491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return 1 if the value in reload reg REGNO, as used by a reload    needed for the part of the insn specified by OPNUM and TYPE,    may be used to load VALUE into it.     MODE is the mode in which the register is used, this is needed to    determine how many hard regs to test.     Other read-only reloads with the same value do not conflict    unless OUT is non-zero and these other reloads have to live while    output reloads live.    If OUT is CONST0_RTX, this is a special case: it means that the    test should not be for using register REGNO as reload register, but    for copying from register REGNO into the reload register.     RELOADNUM is the number of the reload we want to load this value for;    a reload does not conflict with itself.     When IGNORE_ADDRESS_RELOADS is set, we can not have conflicts with    reloads that load an address for the very reload we are considering.     The caller has to make sure that there is no conflict with the return    register.  */
+comment|/* Return 1 if the value in reload reg REGNO, as used by a reload    needed for the part of the insn specified by OPNUM and TYPE,    may be used to load VALUE into it.     MODE is the mode in which the register is used, this is needed to    determine how many hard regs to test.     Other read-only reloads with the same value do not conflict    unless OUT is nonzero and these other reloads have to live while    output reloads live.    If OUT is CONST0_RTX, this is a special case: it means that the    test should not be for using register REGNO as reload register, but    for copying from register REGNO into the reload register.     RELOADNUM is the number of the reload we want to load this value for;    a reload does not conflict with itself.     When IGNORE_ADDRESS_RELOADS is set, we can not have conflicts with    reloads that load an address for the very reload we are considering.     The caller has to make sure that there is no conflict with the return    register.  */
 end_comment
 
 begin_function
@@ -20984,7 +20992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find a spill register to use as a reload register for reload R.    LAST_RELOAD is non-zero if this is the last reload for the insn being    processed.     Set rld[R].reg_rtx to the register allocated.     We return 1 if successful, or 0 if we couldn't find a spill reg and    we didn't change anything.  */
+comment|/* Find a spill register to use as a reload register for reload R.    LAST_RELOAD is nonzero if this is the last reload for the insn being    processed.     Set rld[R].reg_rtx to the register allocated.     We return 1 if successful, or 0 if we couldn't find a spill reg and    we didn't change anything.  */
 end_comment
 
 begin_function
@@ -22496,24 +22504,13 @@ if|if
 condition|(
 ifdef|#
 directive|ifdef
-name|CLASS_CANNOT_CHANGE_MODE
+name|CANNOT_CHANGE_MODE_CLASS
 operator|(
-name|TEST_HARD_REG_BIT
-argument_list|(
-name|reg_class_contents
-index|[
-operator|(
-name|int
-operator|)
-name|CLASS_CANNOT_CHANGE_MODE
-index|]
-argument_list|,
-name|i
-argument_list|)
-condition|?
 operator|!
-name|CLASS_CANNOT_CHANGE_MODE_P
+name|REG_CANNOT_CHANGE_MODE_P
 argument_list|(
+name|i
+argument_list|,
 name|GET_MODE
 argument_list|(
 name|last_reg
@@ -22521,7 +22518,9 @@ argument_list|)
 argument_list|,
 name|need_mode
 argument_list|)
-else|:
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|GET_MODE_SIZE
 argument_list|(
@@ -22536,22 +22535,9 @@ argument_list|(
 name|need_mode
 argument_list|)
 operator|)
-operator|)
-else|#
-directive|else
-operator|(
-name|GET_MODE_SIZE
-argument_list|(
-name|GET_MODE
-argument_list|(
-name|last_reg
-argument_list|)
-argument_list|)
-operator|>=
-name|GET_MODE_SIZE
-argument_list|(
-name|need_mode
-argument_list|)
+ifdef|#
+directive|ifdef
+name|CANNOT_CHANGE_MODE_CLASS
 operator|)
 endif|#
 directive|endif
@@ -24854,7 +24840,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* If SMALL_REGISTER_CLASSES is non-zero, we may not have merged two    reloads of the same item for fear that we might not have enough reload    registers. However, normally they will get the same reload register    and hence actually need not be loaded twice.     Here we check for the most common case of this phenomenon: when we have    a number of reloads for the same object, each of which were allocated    the same reload_reg_rtx, that reload_reg_rtx is not used for any other    reload, and is not modified in the insn itself.  If we find such,    merge all the reloads and set the resulting reload to RELOAD_OTHER.    This will not increase the number of spill registers needed and will    prevent redundant code.  */
+comment|/* If SMALL_REGISTER_CLASSES is nonzero, we may not have merged two    reloads of the same item for fear that we might not have enough reload    registers. However, normally they will get the same reload register    and hence actually need not be loaded twice.     Here we check for the most common case of this phenomenon: when we have    a number of reloads for the same object, each of which were allocated    the same reload_reg_rtx, that reload_reg_rtx is not used for any other    reload, and is not modified in the insn itself.  If we find such,    merge all the reloads and set the resulting reload to RELOAD_OTHER.    This will not increase the number of spill registers needed and will    prevent redundant code.  */
 end_comment
 
 begin_function
@@ -25281,6 +25267,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* If this is now RELOAD_OTHER, look for any reloads that load 	     parts of this operand and set them to RELOAD_FOR_OTHER_ADDRESS 	     if they were for inputs, RELOAD_OTHER for outputs.  Note that 	     this test is equivalent to looking for reloads for this operand 	     number.  */
+comment|/* We must take special care when there are two or more reloads to 	     be merged and a RELOAD_FOR_OUTPUT_ADDRESS reload that loads the 	     same value or a part of it; we must not change its type if there 	     is a conflicting input.  */
 if|if
 condition|(
 name|rld
@@ -25325,6 +25312,38 @@ name|when_needed
 operator|!=
 name|RELOAD_OTHER
 operator|&&
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|when_needed
+operator|!=
+name|RELOAD_FOR_OTHER_ADDRESS
+operator|&&
+operator|(
+operator|!
+name|conflicting_input
+operator|||
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|when_needed
+operator|==
+name|RELOAD_FOR_INPUT_ADDRESS
+operator|||
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|when_needed
+operator|==
+name|RELOAD_FOR_INPADDR_ADDRESS
+operator|)
+operator|&&
 name|reg_overlap_mentioned_for_reload_p
 argument_list|(
 name|rld
@@ -25342,6 +25361,10 @@ operator|.
 name|in
 argument_list|)
 condition|)
+block|{
+name|int
+name|k
+decl_stmt|;
 name|rld
 index|[
 name|j
@@ -25375,6 +25398,102 @@ else|:
 name|RELOAD_OTHER
 operator|)
 expr_stmt|;
+comment|/* Check to see if we accidentally converted two reloads 		     that use the same reload register with different inputs 		     to the same type.  If so, the resulting code won't work, 		     so abort.  */
+if|if
+condition|(
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|reg_rtx
+condition|)
+for|for
+control|(
+name|k
+operator|=
+literal|0
+init|;
+name|k
+operator|<
+name|j
+condition|;
+name|k
+operator|++
+control|)
+if|if
+condition|(
+name|rld
+index|[
+name|k
+index|]
+operator|.
+name|in
+operator|!=
+literal|0
+operator|&&
+name|rld
+index|[
+name|k
+index|]
+operator|.
+name|reg_rtx
+operator|!=
+literal|0
+operator|&&
+name|rld
+index|[
+name|k
+index|]
+operator|.
+name|when_needed
+operator|==
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|when_needed
+operator|&&
+name|rtx_equal_p
+argument_list|(
+name|rld
+index|[
+name|k
+index|]
+operator|.
+name|reg_rtx
+argument_list|,
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|reg_rtx
+argument_list|)
+operator|&&
+operator|!
+name|rtx_equal_p
+argument_list|(
+name|rld
+index|[
+name|k
+index|]
+operator|.
+name|in
+argument_list|,
+name|rld
+index|[
+name|j
+index|]
+operator|.
+name|in
+argument_list|)
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -28398,7 +28517,7 @@ operator|==
 name|RELOAD_OTHER
 condition|)
 block|{
-name|emit_insns
+name|emit_insn
 argument_list|(
 name|other_output_reload_insns
 index|[
@@ -29279,14 +29398,14 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Now write all the insns we made for reloads in the order expected by      the allocation functions.  Prior to the insn being reloaded, we write      the following reloads:       RELOAD_FOR_OTHER_ADDRESS reloads for input addresses.       RELOAD_OTHER reloads.       For each operand, any RELOAD_FOR_INPADDR_ADDRESS reloads followed      by any RELOAD_FOR_INPUT_ADDRESS reloads followed by the      RELOAD_FOR_INPUT reload for the operand.       RELOAD_FOR_OPADDR_ADDRS reloads.       RELOAD_FOR_OPERAND_ADDRESS reloads.       After the insn being reloaded, we write the following:       For each operand, any RELOAD_FOR_OUTADDR_ADDRESS reloads followed      by any RELOAD_FOR_OUTPUT_ADDRESS reload followed by the      RELOAD_FOR_OUTPUT reload, followed by any RELOAD_OTHER output      reloads for the operand.  The RELOAD_OTHER output reloads are      output in descending order by reload number.  */
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|other_input_address_reload_insns
 argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|other_input_reload_insns
 argument_list|,
@@ -29307,7 +29426,7 @@ name|j
 operator|++
 control|)
 block|{
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|inpaddr_address_reload_insns
 index|[
@@ -29317,7 +29436,7 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|input_address_reload_insns
 index|[
@@ -29327,7 +29446,7 @@ argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|input_reload_insns
 index|[
@@ -29338,14 +29457,14 @@ name|insn
 argument_list|)
 expr_stmt|;
 block|}
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|other_operand_reload_insns
 argument_list|,
 name|insn
 argument_list|)
 expr_stmt|;
-name|emit_insns_before
+name|emit_insn_before
 argument_list|(
 name|operand_reload_insns
 argument_list|,
@@ -29369,7 +29488,7 @@ block|{
 name|rtx
 name|x
 init|=
-name|emit_insns_after
+name|emit_insn_after
 argument_list|(
 name|outaddr_address_reload_insns
 index|[
@@ -29381,7 +29500,7 @@ argument_list|)
 decl_stmt|;
 name|x
 operator|=
-name|emit_insns_after
+name|emit_insn_after
 argument_list|(
 name|output_address_reload_insns
 index|[
@@ -29393,7 +29512,7 @@ argument_list|)
 expr_stmt|;
 name|x
 operator|=
-name|emit_insns_after
+name|emit_insn_after
 argument_list|(
 name|output_reload_insns
 index|[
@@ -29403,7 +29522,7 @@ argument_list|,
 name|x
 argument_list|)
 expr_stmt|;
-name|emit_insns_after
+name|emit_insn_after
 argument_list|(
 name|other_output_reload_insns
 index|[
@@ -29892,9 +30011,7 @@ name|nr
 operator|==
 name|nnr
 condition|?
-name|gen_rtx_REG
-argument_list|(
-name|reg_raw_mode
+name|regno_reg_rtx
 index|[
 name|REGNO
 argument_list|(
@@ -29908,19 +30025,6 @@ argument_list|)
 operator|+
 name|k
 index|]
-argument_list|,
-name|REGNO
-argument_list|(
-name|rld
-index|[
-name|r
-index|]
-operator|.
-name|reg_rtx
-argument_list|)
-operator|+
-name|k
-argument_list|)
 else|:
 literal|0
 operator|)
@@ -30258,9 +30362,7 @@ name|nr
 operator|==
 name|nnr
 condition|?
-name|gen_rtx_REG
-argument_list|(
-name|reg_raw_mode
+name|regno_reg_rtx
 index|[
 name|REGNO
 argument_list|(
@@ -30274,19 +30376,6 @@ argument_list|)
 operator|+
 name|k
 index|]
-argument_list|,
-name|REGNO
-argument_list|(
-name|rld
-index|[
-name|r
-index|]
-operator|.
-name|reg_rtx
-argument_list|)
-operator|+
-name|k
-argument_list|)
 else|:
 literal|0
 operator|)
@@ -30934,16 +31023,6 @@ decl_stmt|;
 name|rtx
 name|tem
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SECONDARY_MEMORY_NEEDED
-name|int
-name|in_regnum
-decl_stmt|,
-name|out_regnum
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* If IN is a paradoxical SUBREG, remove it and try to put the      opposite SUBREG on OUT.  Likewise for a paradoxical SUBREG on OUT.  */
 if|if
 condition|(
@@ -31580,32 +31659,48 @@ elseif|else
 if|if
 condition|(
 operator|(
-name|in_regnum
-operator|=
-name|true_regnum
+name|GET_CODE
 argument_list|(
 name|in
 argument_list|)
+operator|==
+name|REG
+operator|||
+name|GET_CODE
+argument_list|(
+name|in
+argument_list|)
+operator|==
+name|SUBREG
 operator|)
-operator|>=
-literal|0
 operator|&&
-name|in_regnum
+name|reg_or_subregno
+argument_list|(
+name|in
+argument_list|)
 operator|<
 name|FIRST_PSEUDO_REGISTER
 operator|&&
 operator|(
-name|out_regnum
-operator|=
-name|true_regnum
+name|GET_CODE
 argument_list|(
 name|out
 argument_list|)
+operator|==
+name|REG
+operator|||
+name|GET_CODE
+argument_list|(
+name|out
+argument_list|)
+operator|==
+name|SUBREG
 operator|)
-operator|>=
-literal|0
 operator|&&
-name|out_regnum
+name|reg_or_subregno
+argument_list|(
+name|out
+argument_list|)
 operator|<
 name|FIRST_PSEUDO_REGISTER
 operator|&&
@@ -31613,12 +31708,18 @@ name|SECONDARY_MEMORY_NEEDED
 argument_list|(
 name|REGNO_REG_CLASS
 argument_list|(
-name|in_regnum
+name|reg_or_subregno
+argument_list|(
+name|in
+argument_list|)
 argument_list|)
 argument_list|,
 name|REGNO_REG_CLASS
 argument_list|(
-name|out_regnum
+name|reg_or_subregno
+argument_list|(
+name|out
+argument_list|)
 argument_list|)
 argument_list|,
 name|GET_MODE
@@ -31667,7 +31768,10 @@ argument_list|(
 name|loc
 argument_list|)
 argument_list|,
-name|out_regnum
+name|REGNO
+argument_list|(
+name|out
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -31691,7 +31795,10 @@ argument_list|(
 name|loc
 argument_list|)
 argument_list|,
-name|in_regnum
+name|REGNO
+argument_list|(
+name|in
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|gen_reload
@@ -33512,7 +33619,7 @@ argument_list|)
 else|:
 name|in
 decl_stmt|;
-comment|/* No hard register is equivalent to this register after      inc/dec operation.  If REG_LAST_RELOAD_REG were non-zero,      we could inc/dec that register as well (maybe even using it for      the source), but I'm not sure it's worth worrying about.  */
+comment|/* No hard register is equivalent to this register after      inc/dec operation.  If REG_LAST_RELOAD_REG were nonzero,      we could inc/dec that register as well (maybe even using it for      the source), but I'm not sure it's worth worrying about.  */
 if|if
 condition|(
 name|GET_CODE
@@ -33766,91 +33873,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* INSN is a no-op; delete it.    If this sets the return value of the function, we must keep a USE around,    in case this is in a different basic block than the final USE.  Otherwise,    we could loose important register lifeness information on    SMALL_REGISTER_CLASSES machines, where return registers might be used as    spills:  subsequent passes assume that spill registers are dead at the end    of a basic block.    VALUE must be the return value in such a case, NULL otherwise.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|reload_cse_delete_noop_set
-parameter_list|(
-name|insn
-parameter_list|,
-name|value
-parameter_list|)
-name|rtx
-name|insn
-decl_stmt|,
-name|value
-decl_stmt|;
-block|{
-name|bool
-name|purge
-init|=
-name|BLOCK_FOR_INSN
-argument_list|(
-name|insn
-argument_list|)
-operator|->
-name|end
-operator|==
-name|insn
-decl_stmt|;
-if|if
-condition|(
-name|value
-condition|)
-block|{
-name|PATTERN
-argument_list|(
-name|insn
-argument_list|)
-operator|=
-name|gen_rtx_USE
-argument_list|(
-name|VOIDmode
-argument_list|,
-name|value
-argument_list|)
-expr_stmt|;
-name|INSN_CODE
-argument_list|(
-name|insn
-argument_list|)
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-name|REG_NOTES
-argument_list|(
-name|insn
-argument_list|)
-operator|=
-name|NULL_RTX
-expr_stmt|;
-block|}
-else|else
-name|delete_insn
-argument_list|(
-name|insn
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|purge
-condition|)
-name|purge_dead_edges
-argument_list|(
-name|BLOCK_FOR_INSN
-argument_list|(
-name|insn
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/* See whether a single set SET is a noop.  */
 end_comment
 
@@ -33892,9 +33914,14 @@ name|void
 name|reload_cse_simplify
 parameter_list|(
 name|insn
+parameter_list|,
+name|testreg
 parameter_list|)
 name|rtx
 name|insn
+decl_stmt|;
+name|rtx
+name|testreg
 decl_stmt|;
 block|{
 name|rtx
@@ -33951,24 +33978,24 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+name|REG_P
+argument_list|(
+name|value
+argument_list|)
+operator|&&
 operator|!
 name|REG_FUNCTION_VALUE_P
 argument_list|(
-name|SET_DEST
-argument_list|(
-name|body
-argument_list|)
+name|value
 argument_list|)
 condition|)
 name|value
 operator|=
 literal|0
 expr_stmt|;
-name|reload_cse_delete_noop_set
+name|delete_insn_and_edges
 argument_list|(
 name|insn
-argument_list|,
-name|value
 argument_list|)
 expr_stmt|;
 return|return;
@@ -33986,6 +34013,8 @@ else|else
 name|reload_cse_simplify_operands
 argument_list|(
 name|insn
+argument_list|,
+name|testreg
 argument_list|)
 expr_stmt|;
 block|}
@@ -34068,6 +34097,14 @@ condition|)
 break|break;
 if|if
 condition|(
+name|REG_P
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|part
+argument_list|)
+argument_list|)
+operator|&&
 name|REG_FUNCTION_VALUE_P
 argument_list|(
 name|SET_DEST
@@ -34110,11 +34147,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|reload_cse_delete_noop_set
+name|delete_insn_and_edges
 argument_list|(
 name|insn
-argument_list|,
-name|value
 argument_list|)
 expr_stmt|;
 comment|/* We're done with this insn.  */
@@ -34186,6 +34221,8 @@ else|else
 name|reload_cse_simplify_operands
 argument_list|(
 name|insn
+argument_list|,
+name|testreg
 argument_list|)
 expr_stmt|;
 block|}
@@ -34209,6 +34246,17 @@ decl_stmt|;
 block|{
 name|rtx
 name|insn
+decl_stmt|;
+name|rtx
+name|testreg
+init|=
+name|gen_rtx_REG
+argument_list|(
+name|VOIDmode
+argument_list|,
+operator|-
+literal|1
+argument_list|)
 decl_stmt|;
 name|cselib_init
 argument_list|()
@@ -34242,6 +34290,8 @@ condition|)
 name|reload_cse_simplify
 argument_list|(
 name|insn
+argument_list|,
+name|testreg
 argument_list|)
 expr_stmt|;
 name|cselib_process_insn
@@ -34410,7 +34460,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOAD_EXTEND_OP
-comment|/* When replacing a memory with a register, we need to honor assumptions      that combine made wrt the contents of sign bits.  We'll do this by      generating an extend instruction instead of a reg->reg copy.  Thus       the destination must be a register that we can widen.  */
+comment|/* When replacing a memory with a register, we need to honor assumptions      that combine made wrt the contents of sign bits.  We'll do this by      generating an extend instruction instead of a reg->reg copy.  Thus      the destination must be a register that we can widen.  */
 if|if
 condition|(
 name|GET_CODE
@@ -34823,6 +34873,36 @@ operator|&&
 name|extend_op
 operator|!=
 name|NIL
+ifdef|#
+directive|ifdef
+name|CANNOT_CHANGE_MODE_CLASS
+operator|&&
+operator|!
+name|CANNOT_CHANGE_MODE_CLASS
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|set
+argument_list|)
+argument_list|)
+argument_list|,
+name|word_mode
+argument_list|,
+name|REGNO_REG_CLASS
+argument_list|(
+name|REGNO
+argument_list|(
+name|SET_DEST
+argument_list|(
+name|set
+argument_list|)
+argument_list|)
+argument_list|)
+argument_list|)
+endif|#
+directive|endif
 condition|)
 block|{
 name|rtx
@@ -34916,9 +34996,14 @@ name|int
 name|reload_cse_simplify_operands
 parameter_list|(
 name|insn
+parameter_list|,
+name|testreg
 parameter_list|)
 name|rtx
 name|insn
+decl_stmt|;
+name|rtx
+name|testreg
 decl_stmt|;
 block|{
 name|int
@@ -34963,17 +35048,6 @@ comment|/* Array of alternatives, sorted in order of decreasing desirability.  *
 name|int
 modifier|*
 name|alternative_order
-decl_stmt|;
-name|rtx
-name|reg
-init|=
-name|gen_rtx_REG
-argument_list|(
-name|VOIDmode
-argument_list|,
-operator|-
-literal|1
-argument_list|)
 decl_stmt|;
 name|extract_insn
 argument_list|(
@@ -35480,14 +35554,14 @@ condition|)
 continue|continue;
 name|REGNO
 argument_list|(
-name|reg
+name|testreg
 argument_list|)
 operator|=
 name|regno
 expr_stmt|;
 name|PUT_MODE
 argument_list|(
-name|reg
+name|testreg
 argument_list|,
 name|mode
 argument_list|)
@@ -35714,7 +35788,7 @@ literal|1
 operator|&&
 name|reg_fits_class_p
 argument_list|(
-name|reg
+name|testreg
 argument_list|,
 name|class
 argument_list|,
@@ -35751,7 +35825,7 @@ argument_list|)
 operator|>
 name|rtx_cost
 argument_list|(
-name|reg
+name|testreg
 argument_list|,
 name|SET
 argument_list|)
@@ -36263,6 +36337,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|basic_block
+name|bb
+decl_stmt|;
 name|unsigned
 name|int
 name|r
@@ -36377,28 +36454,16 @@ argument_list|(
 name|ever_live_at_start
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|insn
 operator|=
-name|BLOCK_HEAD
-argument_list|(
-name|i
-argument_list|)
+name|bb
+operator|->
+name|head
 expr_stmt|;
 if|if
 condition|(
@@ -36417,10 +36482,7 @@ name|REG_SET_TO_HARD_REG_SET
 argument_list|(
 name|live
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_start
 argument_list|)
@@ -36430,10 +36492,7 @@ argument_list|(
 operator|&
 name|live
 argument_list|,
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_start
 argument_list|)
@@ -40300,7 +40359,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is used by reload pass, that does emit some instructions after    abnormal calls moving basic block end, but in fact it wants to emit    them on the edge.  Looks for abnormal call edges, find backward the    proper call and fix the damage.      Similar handle instructions throwing exceptions internally.  */
+comment|/* This is used by reload pass, that does emit some instructions after    abnormal calls moving basic block end, but in fact it wants to emit    them on the edge.  Looks for abnormal call edges, find backward the    proper call and fix the damage.     Similar handle instructions throwing exceptions internally.  */
 end_comment
 
 begin_function
@@ -40308,40 +40367,23 @@ name|void
 name|fixup_abnormal_edges
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|bool
 name|inserted
 init|=
 name|false
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|basic_block
 name|bb
-init|=
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
 decl_stmt|;
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
+block|{
 name|edge
 name|e
 decl_stmt|;
-comment|/* Look for cases we are interested in - an calls or instructions causing          exceptions.  */
+comment|/* Look for cases we are interested in - calls or instructions causing          exceptions.  */
 for|for
 control|(
 name|e
@@ -40553,14 +40595,25 @@ name|insn
 argument_list|)
 condition|)
 block|{
-name|rtx
-name|seq
-decl_stmt|;
 name|delete_insn
 argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
+comment|/* Sometimes there's still the return value USE. 		     If it's placed after a trapping call (i.e. that 		     call is the last insn anyway), we have no fallthru 		     edge.  Simply delete this use and don't try to insert 		     on the non-existant edge.  */
+if|if
+condition|(
+name|GET_CODE
+argument_list|(
+name|PATTERN
+argument_list|(
+name|insn
+argument_list|)
+argument_list|)
+operator|!=
+name|USE
+condition|)
+block|{
 comment|/* We're not deleting it, we're moving it.  */
 name|INSN_DELETED_P
 argument_list|(
@@ -40569,29 +40622,28 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Emit a sequence, rather than scarfing the pattern, so 		     that we don't lose REG_NOTES etc.  */
-comment|/* ??? Could copy the test from gen_sequence, but don't 		     think it's worth the bother.  */
-name|seq
-operator|=
-name|gen_rtx_SEQUENCE
+name|PREV_INSN
 argument_list|(
-name|VOIDmode
-argument_list|,
-name|gen_rtvec
-argument_list|(
-literal|1
-argument_list|,
 name|insn
 argument_list|)
+operator|=
+name|NULL_RTX
+expr_stmt|;
+name|NEXT_INSN
+argument_list|(
+name|insn
 argument_list|)
+operator|=
+name|NULL_RTX
 expr_stmt|;
 name|insert_insn_on_edge
 argument_list|(
-name|seq
+name|insn
 argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|insn
 operator|=

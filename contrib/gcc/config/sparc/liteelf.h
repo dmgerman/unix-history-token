@@ -20,28 +20,18 @@ begin_comment
 comment|/* Default to dwarf2 in ELF.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|DWARF_DEBUGGING_INFO
-end_undef
-
 begin_define
 define|#
 directive|define
 name|DWARF_DEBUGGING_INFO
+value|1
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|DWARF2_DEBUGGING_INFO
-end_undef
-
 begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef

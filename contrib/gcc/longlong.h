@@ -81,7 +81,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define auxiliary asm macros.     1) umul_ppmm(high_prod, low_prod, multipler, multiplicand) multiplies two    UWtype integers MULTIPLER and MULTIPLICAND, and generates a two UWtype    word product in HIGH_PROD and LOW_PROD.     2) __umulsidi3(a,b) multiplies two UWtype integers A and B, and returns a    UDWtype product.  This is just a variant of umul_ppmm.     3) udiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator) divides a UDWtype, composed by the UWtype integers    HIGH_NUMERATOR and LOW_NUMERATOR, by DENOMINATOR and places the quotient    in QUOTIENT and the remainder in REMAINDER.  HIGH_NUMERATOR must be less    than DENOMINATOR for correct operation.  If, in addition, the most    significant bit of DENOMINATOR must be 1, then the pre-processor symbol    UDIV_NEEDS_NORMALIZATION is defined to 1.     4) sdiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator).  Like udiv_qrnnd but the numbers are signed.  The quotient    is rounded towards 0.     5) count_leading_zeros(count, x) counts the number of zero-bits from the    msb to the first non-zero bit in the UWtype X.  This is the number of    steps X needs to be shifted left to set the msb.  Undefined for X == 0,    unless the symbol COUNT_LEADING_ZEROS_0 is defined to some value.     6) count_trailing_zeros(count, x) like count_leading_zeros, but counts    from the least significant end.     7) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,    high_addend_2, low_addend_2) adds two UWtype integers, composed by    HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2    respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow    (i.e. carry out) is not stored anywhere, and is lost.     8) sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,    high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,    composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and    LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE    and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,    and is lost.     If any of these macros are left undefined for a particular CPU,    C macros are used.  */
+comment|/* Define auxiliary asm macros.     1) umul_ppmm(high_prod, low_prod, multipler, multiplicand) multiplies two    UWtype integers MULTIPLER and MULTIPLICAND, and generates a two UWtype    word product in HIGH_PROD and LOW_PROD.     2) __umulsidi3(a,b) multiplies two UWtype integers A and B, and returns a    UDWtype product.  This is just a variant of umul_ppmm.     3) udiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator) divides a UDWtype, composed by the UWtype integers    HIGH_NUMERATOR and LOW_NUMERATOR, by DENOMINATOR and places the quotient    in QUOTIENT and the remainder in REMAINDER.  HIGH_NUMERATOR must be less    than DENOMINATOR for correct operation.  If, in addition, the most    significant bit of DENOMINATOR must be 1, then the pre-processor symbol    UDIV_NEEDS_NORMALIZATION is defined to 1.     4) sdiv_qrnnd(quotient, remainder, high_numerator, low_numerator,    denominator).  Like udiv_qrnnd but the numbers are signed.  The quotient    is rounded towards 0.     5) count_leading_zeros(count, x) counts the number of zero-bits from the    msb to the first nonzero bit in the UWtype X.  This is the number of    steps X needs to be shifted left to set the msb.  Undefined for X == 0,    unless the symbol COUNT_LEADING_ZEROS_0 is defined to some value.     6) count_trailing_zeros(count, x) like count_leading_zeros, but counts    from the least significant end.     7) add_ssaaaa(high_sum, low_sum, high_addend_1, low_addend_1,    high_addend_2, low_addend_2) adds two UWtype integers, composed by    HIGH_ADDEND_1 and LOW_ADDEND_1, and HIGH_ADDEND_2 and LOW_ADDEND_2    respectively.  The result is placed in HIGH_SUM and LOW_SUM.  Overflow    (i.e. carry out) is not stored anywhere, and is lost.     8) sub_ddmmss(high_difference, low_difference, high_minuend, low_minuend,    high_subtrahend, low_subtrahend) subtracts two two-word UWtype integers,    composed by HIGH_MINUEND_1 and LOW_MINUEND_1, and HIGH_SUBTRAHEND_2 and    LOW_SUBTRAHEND_2 respectively.  The result is placed in HIGH_DIFFERENCE    and LOW_DIFFERENCE.  Overflow (i.e. carry out) is not stored anywhere,    and is lost.     If any of these macros are left undefined for a particular CPU,    C macros are used.  */
 end_comment
 
 begin_comment
@@ -162,133 +162,6 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
-name|defined
-argument_list|(
-name|__a29k__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_AM29K
-argument_list|)
-operator|)
-operator|&&
-name|W_TYPE_SIZE
-operator|==
-literal|32
-end_if
-
-begin_define
-define|#
-directive|define
-name|add_ssaaaa
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|__asm__ ("add %1,%4,%5\n\taddc %0,%2,%3"				\ 	   : "=r" ((USItype) (sh)),					\ 	    "=&r" ((USItype) (sl))					\ 	   : "%r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sub_ddmmss
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|__asm__ ("sub %1,%4,%5\n\tsubc %0,%2,%3"				\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "r" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "r" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|umul_ppmm
-parameter_list|(
-name|xh
-parameter_list|,
-name|xl
-parameter_list|,
-name|m0
-parameter_list|,
-name|m1
-parameter_list|)
-define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("multiplu %0,%1,%2"					\ 	     : "=r" ((USItype) (xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     __asm__ ("multmu %0,%1,%2"						\ 	     : "=r" ((USItype) (xh))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\   } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|udiv_qrnnd
-parameter_list|(
-name|q
-parameter_list|,
-name|r
-parameter_list|,
-name|n1
-parameter_list|,
-name|n0
-parameter_list|,
-name|d
-parameter_list|)
-define|\
-value|__asm__ ("dividu %0,%3,%4"						\ 	   : "=r" ((USItype) (q)),					\ 	     "=q" ((USItype) (r))					\ 	   : "1" ((USItype) (n1)),					\ 	     "r" ((USItype) (n0)),					\ 	     "r" ((USItype) (d)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|count_leading_zeros
-parameter_list|(
-name|count
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|__asm__ ("clz %0,%1"						\ 	     : "=r" ((USItype) (count))					\ 	     : "r" ((USItype) (x)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|COUNT_LEADING_ZEROS_0
-value|32
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __a29k__ */
-end_comment
-
-begin_if
-if|#
-directive|if
 name|defined
 argument_list|(
 name|__alpha
@@ -348,25 +221,22 @@ define|\
 value|do { UDItype __r;							\     (q) = __udiv_qrnnd (&__r, (n1), (n0), (d));				\     (r) = __r;								\   } while (0)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|UDItype
 name|__udiv_qrnnd
-name|PARAMS
-argument_list|(
-operator|(
+parameter_list|(
 name|UDItype
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|UDItype
-operator|,
+parameter_list|,
 name|UDItype
-operator|,
+parameter_list|,
 name|UDItype
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -680,184 +550,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__clipper__
-argument_list|)
-operator|&&
-name|W_TYPE_SIZE
-operator|==
-literal|32
-end_if
-
-begin_define
-define|#
-directive|define
-name|umul_ppmm
-parameter_list|(
-name|w1
-parameter_list|,
-name|w0
-parameter_list|,
-name|u
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwux %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((USItype) (u)),					\ 	     "r" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
-end_define
-
-begin_define
-define|#
-directive|define
-name|smul_ppmm
-parameter_list|(
-name|w1
-parameter_list|,
-name|w0
-parameter_list|,
-name|u
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|({union {DItype __ll;							\ 	   struct {SItype __l, __h;} __i;				\ 	  } __xx;							\   __asm__ ("mulwx %2,%0"						\ 	   : "=r" (__xx.__ll)						\ 	   : "%0" ((SItype) (u)),					\ 	     "r" ((SItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
-end_define
-
-begin_define
-define|#
-directive|define
-name|__umulsidi3
-parameter_list|(
-name|u
-parameter_list|,
-name|v
-parameter_list|)
-define|\
-value|({UDItype __w;							\     __asm__ ("mulwux %2,%0"						\ 	     : "=r" (__w)						\ 	     : "%0" ((USItype) (u)),					\ 	       "r" ((USItype) (v)));					\     __w; })
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __clipper__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__gmicro__
-argument_list|)
-operator|&&
-name|W_TYPE_SIZE
-operator|==
-literal|32
-end_if
-
-begin_define
-define|#
-directive|define
-name|add_ssaaaa
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|__asm__ ("add.w %5,%1\n\taddx %3,%0"					\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sub_ddmmss
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|__asm__ ("sub.w %5,%1\n\tsubx %3,%0"					\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|umul_ppmm
-parameter_list|(
-name|ph
-parameter_list|,
-name|pl
-parameter_list|,
-name|m0
-parameter_list|,
-name|m1
-parameter_list|)
-define|\
-value|__asm__ ("mulx %3,%0,%1"						\ 	   : "=g" ((USItype) (ph)),					\ 	     "=r" ((USItype) (pl))					\ 	   : "%0" ((USItype) (m0)),					\ 	     "g" ((USItype) (m1)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|udiv_qrnnd
-parameter_list|(
-name|q
-parameter_list|,
-name|r
-parameter_list|,
-name|nh
-parameter_list|,
-name|nl
-parameter_list|,
-name|d
-parameter_list|)
-define|\
-value|__asm__ ("divx %4,%0,%1"						\ 	   : "=g" ((USItype) (q)),					\ 	     "=r" ((USItype) (r))					\ 	   : "1" ((USItype) (nh)),					\ 	     "0" ((USItype) (nl)),					\ 	     "g" ((USItype) (d)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|count_leading_zeros
-parameter_list|(
-name|count
-parameter_list|,
-name|x
-parameter_list|)
-define|\
-value|__asm__ ("bsch/1 %1,%0"						\ 	   : "=g" (count)						\ 	   : "g" ((USItype) (x)),					\ 	     "0" ((USItype) 0))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|__hppa
 argument_list|)
 operator|&&
@@ -994,6 +686,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__s390__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__mvs__
 argument_list|)
 operator|)
@@ -1002,23 +699,6 @@ name|W_TYPE_SIZE
 operator|==
 literal|32
 end_if
-
-begin_define
-define|#
-directive|define
-name|umul_ppmm
-parameter_list|(
-name|xh
-parameter_list|,
-name|xl
-parameter_list|,
-name|m0
-parameter_list|,
-name|m1
-parameter_list|)
-define|\
-value|do {									\     union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mr %0,%3"							\ 	     : "=r" (__xx.__i.__h),					\ 	       "=r" (__xx.__i.__l)					\ 	     : "%1" (__m0),						\ 	       "r" (__m1));						\     (xh) = __xx.__i.__h; (xl) = __xx.__i.__l;				\     (xh) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
-end_define
 
 begin_define
 define|#
@@ -1034,7 +714,7 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     union {DItype __ll;							\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\     __asm__ ("mr %0,%3"							\ 	     : "=r" (__xx.__i.__h),					\ 	       "=r" (__xx.__i.__l)					\ 	     : "%1" (m0),						\ 	       "r" (m1));						\     (xh) = __xx.__i.__h; (xl) = __xx.__i.__l;				\   } while (0)
+value|do {									\     union {DItype __ll;							\ 	   struct {USItype __h, __l;} __i;				\ 	  } __x;							\     __asm__ ("lr %N0,%1\n\tmr %0,%2"					\ 	     : "=&r" (__x.__ll)						\ 	     : "r" (m0), "r" (m1));					\     (xh) = __x.__i.__h; (xl) = __x.__i.__l;				\   } while (0)
 end_define
 
 begin_define
@@ -1053,7 +733,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|do {									\     union {DItype __ll;							\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\     __xx.__i.__h = n1; __xx.__i.__l = n0;				\     __asm__ ("dr %0,%2"							\ 	     : "=r" (__xx.__ll)						\ 	     : "0" (__xx.__ll), "r" (d));				\     (q) = __xx.__i.__l; (r) = __xx.__i.__h;				\   } while (0)
+value|do {									\     union {DItype __ll;							\ 	   struct {USItype __h, __l;} __i;				\ 	  } __x;							\     __x.__i.__h = n1; __x.__i.__l = n0;					\     __asm__ ("dr %0,%2"							\ 	     : "=r" (__x.__ll)						\ 	     : "0" (__x.__ll), "r" (d));				\     (q) = __x.__i.__l; (r) = __x.__i.__h;				\   } while (0)
 end_define
 
 begin_endif
@@ -1206,85 +886,6 @@ end_endif
 
 begin_comment
 comment|/* 80x86 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__i860__
-argument_list|)
-operator|&&
-name|W_TYPE_SIZE
-operator|==
-literal|32
-end_if
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Make sure these patterns really improve the code before    switching them on.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|add_ssaaaa
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|do {									\     union								\       {									\ 	DItype __ll;							\ 	struct {USItype __l, __h;} __i;					\       }  __a, __b, __s;							\     __a.__i.__l = (al);							\     __a.__i.__h = (ah);							\     __b.__i.__l = (bl);							\     __b.__i.__h = (bh);							\     __asm__ ("fiadd.dd %1,%2,%0"					\ 	     : "=f" (__s.__ll)						\ 	     : "%f" (__a.__ll), "f" (__b.__ll));			\     (sh) = __s.__i.__h;							\     (sl) = __s.__i.__l;							\     } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sub_ddmmss
-parameter_list|(
-name|sh
-parameter_list|,
-name|sl
-parameter_list|,
-name|ah
-parameter_list|,
-name|al
-parameter_list|,
-name|bh
-parameter_list|,
-name|bl
-parameter_list|)
-define|\
-value|do {									\     union								\       {									\ 	DItype __ll;							\ 	struct {USItype __l, __h;} __i;					\       }  __a, __b, __s;							\     __a.__i.__l = (al);							\     __a.__i.__h = (ah);							\     __b.__i.__l = (bl);							\     __b.__i.__h = (bh);							\     __asm__ ("fisub.dd %1,%2,%0"					\ 	     : "=f" (__s.__ll)						\ 	     : "%f" (__a.__ll), "f" (__b.__ll));			\     (sh) = __s.__i.__h;							\     (sl) = __s.__i.__l;							\     } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __i860__ */
 end_comment
 
 begin_if
@@ -1511,12 +1112,6 @@ name|defined
 argument_list|(
 name|mcpu32
 argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__NeXT__
-argument_list|)
 end_if
 
 begin_define
@@ -1708,12 +1303,6 @@ operator|||
 name|defined
 argument_list|(
 name|mc68060
-argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__NeXT__
 argument_list|)
 end_if
 
@@ -2044,21 +1633,23 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|do {
+value|do {									\     __asm__ ("ffsd     %2,%0"						\             : "=r" ((USItype) (count))					\             : "0" ((USItype) 0),					\               "r" ((USItype) (x)));					\   } while (0)
 end_define
 
-begin_asm
-asm|__asm__ ("ffsd     %2,%0"                                          \             : "=r" ((USItype) (count))                                 \             : "0" ((USItype) 0),                                       \               "r" ((USItype) (x)));
-end_asm
-
-begin_expr_stmt
-unit|\   } while
-operator|(
-literal|0
-operator|)
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __ns32000__ */
+end_comment
+
+begin_comment
+comment|/* FIXME: We should test _IBMR2 here when we add assembly support for the    system vendor compilers.    FIXME: What's needed for gcc PowerPC VxWorks?  __vxworks__ is not good    enough, since that hits ARM and m68k too.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|(
@@ -2066,17 +1657,58 @@ name|defined
 argument_list|(
 name|_ARCH_PPC
 argument_list|)
+comment|/* AIX */
+expr|\
 operator|||
 name|defined
 argument_list|(
-name|_IBMR2
+name|_ARCH_PWR
 argument_list|)
+comment|/* AIX */
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|_ARCH_COM
+argument_list|)
+comment|/* AIX */
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+comment|/* gcc */
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__POWERPC__
+argument_list|)
+comment|/* BEOS */
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__ppc__
+argument_list|)
+comment|/* Darwin */
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|PPC
+argument_list|)
+comment|/* GNU/Linux, SysV */
+expr|\
 operator|)
-if|#
-directive|if
+operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2094,7 +1726,10 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|do {									\     if (__builtin_constant_p (bh)&& (bh) == 0)				\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\     else								\       __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\ 	     : "=r" ((USItype) (sh)),					\ 	       "=&r" ((USItype) (sl))					\ 	     : "%r" ((USItype) (ah)),					\ 	       "r" ((USItype) (bh)),					\ 	       "%r" ((USItype) (al)),					\ 	       "rI" ((USItype) (bl)));					\   } while (0)
+value|do {									\     if (__builtin_constant_p (bh)&& (bh) == 0)				\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\ 	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == ~(USItype) 0)		\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\ 	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\     else								\       __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\ 	     : "=r" (sh), "=&r" (sl)					\ 	     : "%r" (ah), "r" (bh), "%r" (al), "rI" (bl));		\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2112,10 +1747,10 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|do {									\     if (__builtin_constant_p (ah)&& (ah) == 0)				\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (ah)&& (ah) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) == 0)			\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else if (__builtin_constant_p (bh)&& (bh) ==~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\     else								\       __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\ 	       : "=r" ((USItype) (sh)),					\ 		 "=&r" ((USItype) (sl))					\ 	       : "r" ((USItype) (ah)),					\ 		 "r" ((USItype) (bh)),					\ 		 "rI" ((USItype) (al)),					\ 		 "r" ((USItype) (bl)));					\   } while (0)
-endif|#
-directive|endif
-comment|/* W_TYPE_SIZE */
+value|do {									\     if (__builtin_constant_p (ah)&& (ah) == 0)				\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\ 	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (ah)&& (ah) == ~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\ 	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == 0)			\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\ 	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == ~(USItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\ 	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\     else								\       __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\ 	       : "=r" (sh), "=&r" (sl)					\ 	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl));		\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|count_leading_zeros
@@ -2125,17 +1760,52 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|__asm__ ("{cntlz|cntlzw} %0,%1"					\ 	   : "=r" ((USItype) (count))					\ 	   : "r" ((USItype) (x)))
+value|__asm__ ("{cntlz|cntlzw} %0,%1" : "=r" (count) : "r" (x))
+end_define
+
+begin_define
 define|#
 directive|define
 name|COUNT_LEADING_ZEROS_0
 value|32
+end_define
+
+begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|_ARCH_PPC
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__POWERPC__
+argument_list|)
+expr|\
+operator|||
+name|defined
+argument_list|(
+name|__ppc__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PPC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__vxworks__
+argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2149,11 +1819,17 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhwu %0,%1,%2"						\ 	     : "=r" ((USItype) ph)					\ 	     : "%r" (__m0),						\ 	       "r" (__m1));						\     (pl) = __m0 * __m1;							\   } while (0)
+value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhwu %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\     (pl) = __m0 * __m1;							\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|15
+end_define
+
+begin_define
 define|#
 directive|define
 name|smul_ppmm
@@ -2167,39 +1843,40 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|do {									\     SItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhw %0,%1,%2"						\ 	     : "=r" ((SItype) ph)					\ 	     : "%r" (__m0),						\ 	       "r" (__m1));						\     (pl) = __m0 * __m1;							\   } while (0)
+value|do {									\     SItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhw %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\     (pl) = __m0 * __m1;							\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|SMUL_TIME
 value|14
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|120
+end_define
+
+begin_elif
 elif|#
 directive|elif
 name|defined
 argument_list|(
 name|_ARCH_PWR
 argument_list|)
-define|#
-directive|define
-name|umul_ppmm
-parameter_list|(
-name|xh
-parameter_list|,
-name|xl
-parameter_list|,
-name|m0
-parameter_list|,
-name|m1
-parameter_list|)
-define|\
-value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mul %0,%2,%3"						\ 	     : "=r" ((USItype) (xh)),					\ 	       "=q" ((USItype) (xl))					\ 	     : "r" (__m0),						\ 	       "r" (__m1));						\     (xh) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
+end_elif
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|8
+end_define
+
+begin_define
 define|#
 directive|define
 name|smul_ppmm
@@ -2213,11 +1890,17 @@ parameter_list|,
 name|m1
 parameter_list|)
 define|\
-value|__asm__ ("mul %0,%2,%3"						\ 	   : "=r" ((SItype) (xh)),					\ 	     "=q" ((SItype) (xl))					\ 	   : "r" (m0),							\ 	     "r" (m1))
+value|__asm__ ("mul %0,%2,%3" : "=r" (xh), "=q" (xl) : "r" (m0), "r" (m1))
+end_define
+
+begin_define
 define|#
 directive|define
 name|SMUL_TIME
 value|4
+end_define
+
+begin_define
 define|#
 directive|define
 name|sdiv_qrnnd
@@ -2233,26 +1916,55 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|__asm__ ("div %0,%2,%4"						\ 	   : "=r" ((SItype) (q)), "=q" ((SItype) (r))			\ 	   : "r" ((SItype) (nh)), "1" ((SItype) (nl)), "r" ((SItype) (d)))
+value|__asm__ ("div %0,%2,%4" : "=r" (q), "=q" (r) : "r" (nh), "1" (nl), "r" (d))
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|100
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
 endif|#
 directive|endif
-comment|/* Power architecture variants.  */
+end_endif
+
+begin_comment
+comment|/* 32-bit POWER architecture variants.  */
+end_comment
+
+begin_comment
+comment|/* We should test _IBMR2 here when we add assembly support for the system    vendor compilers.  */
+end_comment
+
+begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
-name|__pyr__
+name|_ARCH_PPC64
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
+operator|)
 operator|&&
 name|W_TYPE_SIZE
 operator|==
-literal|32
+literal|64
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2270,7 +1982,10 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("addw	%5,%1\n\taddwc	%3,%0"				\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
+value|do {									\     if (__builtin_constant_p (bh)&& (bh) == 0)				\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{aze|addze} %0,%2"		\ 	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == ~(UDItype) 0)		\       __asm__ ("{a%I4|add%I4c} %1,%3,%4\n\t{ame|addme} %0,%2"		\ 	     : "=r" (sh), "=&r" (sl) : "r" (ah), "%r" (al), "rI" (bl));\     else								\       __asm__ ("{a%I5|add%I5c} %1,%4,%5\n\t{ae|adde} %0,%2,%3"		\ 	     : "=r" (sh), "=&r" (sl)					\ 	     : "%r" (ah), "r" (bh), "%r" (al), "rI" (bl));		\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2288,25 +2003,102 @@ parameter_list|,
 name|bl
 parameter_list|)
 define|\
-value|__asm__ ("subw	%5,%1\n\tsubwb	%3,%0"				\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
-comment|/* This insn works on Pyramids with AP, XP, or MI CPUs, but not with SP.  */
+value|do {									\     if (__builtin_constant_p (ah)&& (ah) == 0)				\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfze|subfze} %0,%2"	\ 	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (ah)&& (ah) == ~(UDItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{sfme|subfme} %0,%2"	\ 	       : "=r" (sh), "=&r" (sl) : "r" (bh), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == 0)			\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{ame|addme} %0,%2"		\ 	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\     else if (__builtin_constant_p (bh)&& (bh) == ~(UDItype) 0)		\       __asm__ ("{sf%I3|subf%I3c} %1,%4,%3\n\t{aze|addze} %0,%2"		\ 	       : "=r" (sh), "=&r" (sl) : "r" (ah), "rI" (al), "r" (bl));\     else								\       __asm__ ("{sf%I4|subf%I4c} %1,%5,%4\n\t{sfe|subfe} %0,%3,%2"	\ 	       : "=r" (sh), "=&r" (sl)					\ 	       : "r" (ah), "r" (bh), "rI" (al), "r" (bl));		\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|count_leading_zeros
+parameter_list|(
+name|count
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|__asm__ ("cntlzd %0,%1" : "=r" (count) : "r" (x))
+end_define
+
+begin_define
+define|#
+directive|define
+name|COUNT_LEADING_ZEROS_0
+value|64
+end_define
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
 parameter_list|(
-name|w1
+name|ph
 parameter_list|,
-name|w0
+name|pl
 parameter_list|,
-name|u
+name|m0
 parameter_list|,
-name|v
+name|m1
 parameter_list|)
 define|\
-value|({union {UDItype __ll;						\ 	   struct {USItype __h, __l;} __i;				\ 	  } __xx;							\   __asm__ ("movw %1,%R0\n\tuemul %2,%0"					\ 	   : "=&r" (__xx.__ll)						\ 	   : "g" ((USItype) (u)),					\ 	     "g" ((USItype) (v)));					\   (w1) = __xx.__i.__h; (w0) = __xx.__i.__l;})
+value|do {									\     UDItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhdu %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\     (pl) = __m0 * __m1;							\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMUL_TIME
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|smul_ppmm
+parameter_list|(
+name|ph
+parameter_list|,
+name|pl
+parameter_list|,
+name|m0
+parameter_list|,
+name|m1
+parameter_list|)
+define|\
+value|do {									\     DItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("mulhd %0,%1,%2" : "=r" (ph) : "%r" (m0), "r" (m1));	\     (pl) = __m0 * __m1;							\   } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMUL_TIME
+value|14
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDIV_TIME
+value|120
+end_define
+
+begin_comment
+comment|/* ??? */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
-comment|/* __pyr__ */
+end_endif
+
+begin_comment
+comment|/* 64-bit PowerPC.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2318,6 +2110,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2336,6 +2131,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("a %1,%5\n\tae %0,%3"					\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2354,6 +2152,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("s %1,%5\n\tse %0,%3"					\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "r" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "r" ((USItype) (bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2368,14 +2169,23 @@ name|m1
 parameter_list|)
 define|\
 value|do {									\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ (								\        "s	r2,r2\n"						\ "	mts	r10,%2\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	m	r2,%3\n"						\ "	cas	%0,r2,r0\n"						\ "	mfs	r10,%1"							\ 	     : "=r" ((USItype) (ph)),					\ 	       "=r" ((USItype) (pl))					\ 	     : "%r" (__m0),						\ 		"r" (__m1)						\ 	     : "r2");							\     (ph) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|20
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|200
+end_define
+
+begin_define
 define|#
 directive|define
 name|count_leading_zeros
@@ -2386,8 +2196,14 @@ name|x
 parameter_list|)
 define|\
 value|do {									\     if ((x)>= 0x10000)							\       __asm__ ("clz	%0,%1"						\ 	       : "=r" ((USItype) (count))				\ 	       : "r" ((USItype) (x)>> 16));				\     else								\       {									\ 	__asm__ ("clz	%0,%1"						\ 		 : "=r" ((USItype) (count))				\ 		 : "r" ((USItype) (x)));					\ 	(count) += 16;							\       }									\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2398,6 +2214,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2412,12 +2231,21 @@ name|v
 parameter_list|)
 define|\
 value|__asm__ (								\        "dmulu.l	%2,%3\n\tsts	macl,%1\n\tsts	mach,%0"		\ 	   : "=r" ((USItype)(w1)),					\ 	     "=r" ((USItype)(w0))					\ 	   : "r" ((USItype)(u)),					\ 	     "r" ((USItype)(v))						\ 	   : "macl", "mach")
+end_define
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|5
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2430,6 +2258,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|__umulsidi3
@@ -2439,6 +2270,9 @@ parameter_list|,
 name|v
 parameter_list|)
 value|((UDItype)(USItype)u*(USItype)v)
+end_define
+
+begin_define
 define|#
 directive|define
 name|count_leading_zeros
@@ -2449,12 +2283,21 @@ name|x
 parameter_list|)
 define|\
 value|do									\     {									\       UDItype x_ = (USItype)(x);					\       SItype c_;							\ 									\       __asm__ ("nsb %1, %0" : "=r" (c_) : "r" (x_));			\       (count) = c_ - 31;						\     }									\   while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|COUNT_LEADING_ZEROS_0
 value|32
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2478,6 +2321,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2496,6 +2342,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("addcc %r4,%5,%1\n\taddx %r2,%3,%0"				\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "%rJ" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "%rJ" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl))					\ 	   __CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2514,12 +2363,18 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("subcc %r4,%5,%1\n\tsubx %r2,%3,%0"				\ 	   : "=r" ((USItype) (sh)),					\ 	     "=&r" ((USItype) (sl))					\ 	   : "rJ" ((USItype) (ah)),					\ 	     "rI" ((USItype) (bh)),					\ 	     "rJ" ((USItype) (al)),					\ 	     "rI" ((USItype) (bl))					\ 	   __CLOBBER_CC)
+end_define
+
+begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__sparc_v8__
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2534,6 +2389,9 @@ name|v
 parameter_list|)
 define|\
 value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "r" ((USItype) (u)),					\ 	     "r" ((USItype) (v)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|udiv_qrnnd
@@ -2550,15 +2408,27 @@ name|__d
 parameter_list|)
 define|\
 value|__asm__ ("mov %2,%%y;nop;nop;nop;udiv %3,%4,%0;umul %0,%4,%1;sub %3,%1,%1"\ 	   : "=&r" ((USItype) (__q)),					\ 	     "=&r" ((USItype) (__r))					\ 	   : "r" ((USItype) (__n1)),					\ 	     "r" ((USItype) (__n0)),					\ 	     "r" ((USItype) (__d)))
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|__sparclite__
 argument_list|)
+end_if
+
+begin_comment
 comment|/* This has hardware multiply but not divide.  It also has two additional    instructions scan (ffs from high bit) and divscc.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2573,6 +2443,9 @@ name|v
 parameter_list|)
 define|\
 value|__asm__ ("umul %2,%3,%1;rd %%y,%0"					\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "r" ((USItype) (u)),					\ 	     "r" ((USItype) (v)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|udiv_qrnnd
@@ -2589,10 +2462,16 @@ name|d
 parameter_list|)
 define|\
 value|__asm__ ("! Inlined udiv_qrnnd\n"					\ "	wr	%%g0,%2,%%y	! Not a delayed write for sparclite\n"	\ "	tst	%%g0\n"							\ "	divscc	%3,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%%g1\n"						\ "	divscc	%%g1,%4,%0\n"						\ "	rd	%%y,%1\n"						\ "	bl,a 1f\n"							\ "	add	%1,%4,%1\n"						\ "1:	! End of inline udiv_qrnnd"					\ 	   : "=r" ((USItype) (q)),					\ 	     "=r" ((USItype) (r))					\ 	   : "r" ((USItype) (n1)),					\ 	     "r" ((USItype) (n0)),					\ 	     "rI" ((USItype) (d))					\ 	   : "g1" __AND_CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|37
+end_define
+
+begin_define
 define|#
 directive|define
 name|count_leading_zeros
@@ -2603,10 +2482,22 @@ name|x
 parameter_list|)
 define|\
 value|do {                                                                  \   __asm__ ("scan %1,1,%0"                                               \            : "=r" ((USItype) (count))                                   \            : "r" ((USItype) (x)));					\   } while (0)
+end_define
+
+begin_comment
 comment|/* Early sparclites return 63 for an argument of 0, but they warn that future    implementations might change this.  Therefore, leave COUNT_LEADING_ZEROS_0    undefined.  */
+end_comment
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_comment
 comment|/* SPARC without integer multiplication and divide instructions.    (i.e. at least Sun4/20,40,60,65,75,110,260,280,330,360,380,470,490) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2621,12 +2512,24 @@ name|v
 parameter_list|)
 define|\
 value|__asm__ ("! Inlined umul_ppmm\n"					\ "	wr	%%g0,%2,%%y	! SPARC has 0-3 delay insn after a wr\n"\ "	sra	%3,31,%%o5	! Don't move this insn\n"		\ "	and	%2,%%o5,%%o5	! Don't move this insn\n"		\ "	andcc	%%g0,0,%%g1	! Don't move this insn\n"		\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,%3,%%g1\n"						\ "	mulscc	%%g1,0,%%g1\n"						\ "	add	%%g1,%%o5,%0\n"						\ "	rd	%%y,%1"							\ 	   : "=r" ((USItype) (w1)),					\ 	     "=r" ((USItype) (w0))					\ 	   : "%rI" ((USItype) (u)),					\ 	     "r" ((USItype) (v))						\ 	   : "g1", "o5" __AND_CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|39
+end_define
+
+begin_comment
 comment|/* 39 instructions */
+end_comment
+
+begin_comment
 comment|/* It's quite necessary to add this much assembler for the sparc.    The default udiv_qrnnd (in C) is more than 10 times slower!  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|udiv_qrnnd
@@ -2643,20 +2546,47 @@ name|__d
 parameter_list|)
 define|\
 value|__asm__ ("! Inlined udiv_qrnnd\n"					\ "	mov	32,%%g1\n"						\ "	subcc	%1,%2,%%g0\n"						\ "1:	bcs	5f\n"							\ "	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb\n"	\ "	sub	%1,%2,%1	! this kills msb of n\n"		\ "	addx	%1,%1,%1	! so this can't give carry\n"		\ "	subcc	%%g1,1,%%g1\n"						\ "2:	bne	1b\n"							\ "	 subcc	%1,%2,%%g0\n"						\ "	bcs	3f\n"							\ "	 addxcc %0,%0,%0	! shift n1n0 and a q-bit in lsb\n"	\ "	b	3f\n"							\ "	 sub	%1,%2,%1	! this kills msb of n\n"		\ "4:	sub	%1,%2,%1\n"						\ "5:	addxcc	%1,%1,%1\n"						\ "	bcc	2b\n"							\ "	 subcc	%%g1,1,%%g1\n"						\ "! Got carry from n.  Subtract next step to cancel this carry.\n"	\ "	bne	4b\n"							\ "	 addcc	%0,%0,%0	! shift n1n0 and a 0-bit in lsb\n"	\ "	sub	%1,%2,%1\n"						\ "3:	xnor	%0,0,%0\n"						\ "	! End of inline udiv_qrnnd"					\ 	   : "=&r" ((USItype) (__q)),					\ 	     "=&r" ((USItype) (__r))					\ 	   : "r" ((USItype) (__d)),					\ 	     "1" ((USItype) (__n1)),					\ 	     "0" ((USItype) (__n0)) : "g1" __AND_CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|(3+7*32)
+end_define
+
+begin_comment
 comment|/* 7 instructions/iteration. 32 iterations.  */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __sparclite__ */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __sparc_v8__ */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* sparc32 */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|(
@@ -2682,6 +2612,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|64
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2700,6 +2633,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("addcc %r4,%5,%1\n\t"					\    	   "add %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "add %0, 1, %0\n"						\ 	   "1:"								\ 	   : "=r" ((UDItype)(sh)),				      	\ 	     "=&r" ((UDItype)(sl))				      	\ 	   : "%rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "%rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2718,6 +2654,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("subcc %r4,%5,%1\n\t"					\    	   "sub %r2,%3,%0\n\t"						\    	   "bcs,a,pn %%xcc, 1f\n\t"					\    	   "sub %0, 1, %0\n\t"						\ 	   "1:"								\ 	   : "=r" ((UDItype)(sh)),				      	\ 	     "=&r" ((UDItype)(sl))				      	\ 	   : "rJ" ((UDItype)(ah)),				     	\ 	     "rI" ((UDItype)(bh)),				      	\ 	     "rJ" ((UDItype)(al)),				     	\ 	     "rI" ((UDItype)(bl))				       	\ 	   __CLOBBER_CC)
+end_define
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2732,17 +2671,32 @@ name|v
 parameter_list|)
 define|\
 value|do {									\ 	  UDItype tmp1, tmp2, tmp3, tmp4;				\ 	  __asm__ __volatile__ (					\ 		   "srl %7,0,%3\n\t"					\ 		   "mulx %3,%6,%1\n\t"					\ 		   "srlx %6,32,%2\n\t"					\ 		   "mulx %2,%3,%4\n\t"					\ 		   "sllx %4,32,%5\n\t"					\ 		   "srl %6,0,%3\n\t"					\ 		   "sub %1,%5,%5\n\t"					\ 		   "srlx %5,32,%5\n\t"					\ 		   "addcc %4,%5,%4\n\t"					\ 		   "srlx %7,32,%5\n\t"					\ 		   "mulx %3,%5,%3\n\t"					\ 		   "mulx %2,%5,%5\n\t"					\ 		   "sethi %%hi(0x80000000),%2\n\t"			\ 		   "addcc %4,%3,%4\n\t"					\ 		   "srlx %4,32,%4\n\t"					\ 		   "add %2,%2,%2\n\t"					\ 		   "movcc %%xcc,%%g0,%2\n\t"				\ 		   "addcc %5,%4,%5\n\t"					\ 		   "sllx %3,32,%3\n\t"					\ 		   "add %1,%3,%1\n\t"					\ 		   "add %5,%2,%0"					\ 	   : "=r" ((UDItype)(wh)),					\ 	     "=&r" ((UDItype)(wl)),					\ 	     "=&r" (tmp1), "=&r" (tmp2), "=&r" (tmp3), "=&r" (tmp4)	\ 	   : "r" ((UDItype)(u)),					\ 	     "r" ((UDItype)(v))						\ 	   __CLOBBER_CC);						\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|UMUL_TIME
 value|96
+end_define
+
+begin_define
 define|#
 directive|define
 name|UDIV_TIME
 value|230
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* sparc64 */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2753,6 +2707,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|32
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2771,6 +2728,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("addl2 %5,%1\n\tadwc %3,%0"					\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "%0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "%1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2789,6 +2749,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("subl2 %5,%1\n\tsbwc %3,%0"					\ 	   : "=g" ((USItype) (sh)),					\ 	     "=&g" ((USItype) (sl))					\ 	   : "0" ((USItype) (ah)),					\ 	     "g" ((USItype) (bh)),					\ 	     "1" ((USItype) (al)),					\ 	     "g" ((USItype) (bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2803,6 +2766,9 @@ name|m1
 parameter_list|)
 define|\
 value|do {									\     union {								\ 	UDItype __ll;							\ 	struct {USItype __l, __h;} __i;					\       } __xx;								\     USItype __m0 = (m0), __m1 = (m1);					\     __asm__ ("emul %1,%2,$0,%0"						\ 	     : "=r" (__xx.__ll)						\ 	     : "g" (__m0),						\ 	       "g" (__m1));						\     (xh) = __xx.__i.__h;						\     (xl) = __xx.__i.__l;						\     (xh) += ((((SItype) __m0>> 31)& __m1)				\ 	     + (((SItype) __m1>> 31)& __m0));				\   } while (0)
+end_define
+
+begin_define
 define|#
 directive|define
 name|sdiv_qrnnd
@@ -2819,9 +2785,18 @@ name|d
 parameter_list|)
 define|\
 value|do {									\     union {DItype __ll;							\ 	   struct {SItype __l, __h;} __i;				\ 	  } __xx;							\     __xx.__i.__h = n1; __xx.__i.__l = n0;				\     __asm__ ("ediv %3,%2,%0,%1"						\ 	     : "=g" (q), "=g" (r)					\ 	     : "g" (__xx.__ll), "g" (d));				\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __vax__ */
+end_comment
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -2832,6 +2807,9 @@ operator|&&
 name|W_TYPE_SIZE
 operator|==
 literal|16
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2850,6 +2828,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("add	%H1,%H5\n\tadc	%H0,%H3"				\ 	   : "=r" ((unsigned int)(sh)),					\ 	     "=&r" ((unsigned int)(sl))					\ 	   : "%0" ((unsigned int)(ah)),					\ 	     "r" ((unsigned int)(bh)),					\ 	     "%1" ((unsigned int)(al)),					\ 	     "rQR" ((unsigned int)(bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2868,6 +2849,9 @@ name|bl
 parameter_list|)
 define|\
 value|__asm__ ("sub	%H1,%H5\n\tsbc	%H0,%H3"				\ 	   : "=r" ((unsigned int)(sh)),					\ 	     "=&r" ((unsigned int)(sl))					\ 	   : "0" ((unsigned int)(ah)),					\ 	     "r" ((unsigned int)(bh)),					\ 	     "1" ((unsigned int)(al)),					\ 	     "rQR" ((unsigned int)(bl)))
+end_define
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2882,13 +2866,31 @@ name|m1
 parameter_list|)
 define|\
 value|do {									\     union {long int __ll;						\ 	   struct {unsigned int __h, __l;} __i;				\ 	  } __xx;							\     unsigned int __m0 = (m0), __m1 = (m1);				\     __asm__ ("mult	%S0,%H3"					\ 	     : "=r" (__xx.__i.__h),					\ 	       "=r" (__xx.__i.__l)					\ 	     : "%1" (__m0),						\ 	       "rQR" (__m1));						\     (xh) = __xx.__i.__h; (xl) = __xx.__i.__l;				\     (xh) += ((((signed int) __m0>> 15)& __m1)				\ 	     + (((signed int) __m1>> 15)& __m0));			\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __z8000__ */
+end_comment
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __GNUC__ */
+end_comment
+
+begin_comment
 comment|/* If this machine has no inline assembler, use C macros.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -2896,6 +2898,9 @@ name|defined
 argument_list|(
 name|add_ssaaaa
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|add_ssaaaa
@@ -2914,8 +2919,14 @@ name|bl
 parameter_list|)
 define|\
 value|do {									\     UWtype __x;								\     __x = (al) + (bl);							\     (sh) = (ah) + (bh) + (__x< (al));					\     (sl) = __x;								\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -2923,6 +2934,9 @@ name|defined
 argument_list|(
 name|sub_ddmmss
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|sub_ddmmss
@@ -2941,8 +2955,18 @@ name|bl
 parameter_list|)
 define|\
 value|do {									\     UWtype __x;								\     __x = (al) - (bl);							\     (sh) = (ah) - (bh) - (__x> (al));					\     (sl) = __x;								\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
+comment|/* If we lack umul_ppmm but have smul_ppmm, define umul_ppmm in terms of    smul_ppmm.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -2950,6 +2974,50 @@ name|defined
 argument_list|(
 name|umul_ppmm
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|smul_ppmm
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|umul_ppmm
+parameter_list|(
+name|w1
+parameter_list|,
+name|w0
+parameter_list|,
+name|u
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do {									\     UWtype __w1;							\     UWtype __xm0 = (u), __xm1 = (v);					\     smul_ppmm (__w1, w0, __xm0, __xm1);					\     (w1) = __w1 + (-(__xm0>> (W_TYPE_SIZE - 1))& __xm1)		\ 		+ (-(__xm1>> (W_TYPE_SIZE - 1))& __xm0);		\   } while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If we still don't have umul_ppmm, define it using plain C.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|umul_ppmm
+argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|umul_ppmm
@@ -2972,8 +3040,14 @@ comment|/* did we get it? */
 value|\       __x3 += __ll_B;
 comment|/* yes, add it in the proper pos.  */
 value|\ 									\     (w1) = __x3 + __ll_highpart (__x1);					\     (w0) = __ll_lowpart (__x1) * __ll_B + __ll_lowpart (__x0);		\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -2981,6 +3055,9 @@ name|defined
 argument_list|(
 name|__umulsidi3
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|__umulsidi3
@@ -2991,9 +3068,18 @@ name|v
 parameter_list|)
 define|\
 value|({DWunion __w;							\     umul_ppmm (__w.s.high, __w.s.low, u, v);				\     __w.ll; })
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* Define this unconditionally, so it can be used for debugging.  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|__udiv_qrnnd_c
@@ -3012,7 +3098,13 @@ define|\
 value|do {									\     UWtype __d1, __d0, __q1, __q0;					\     UWtype __r1, __r0, __m;						\     __d1 = __ll_highpart (d);						\     __d0 = __ll_lowpart (d);						\ 									\     __r1 = (n1) % __d1;							\     __q1 = (n1) / __d1;							\     __m = (UWtype) __q1 * __d0;						\     __r1 = __r1 * __ll_B | __ll_highpart (n0);				\     if (__r1< __m)							\       {									\ 	__q1--, __r1 += (d);						\ 	if (__r1>= (d))
 comment|/* i.e. we didn't get carry when adding to __r1 */
 value|\ 	  if (__r1< __m)						\ 	    __q1--, __r1 += (d);					\       }									\     __r1 -= __m;							\ 									\     __r0 = __r1 % __d1;							\     __q0 = __r1 / __d1;							\     __m = (UWtype) __q0 * __d0;						\     __r0 = __r0 * __ll_B | __ll_lowpart (n0);				\     if (__r0< __m)							\       {									\ 	__q0--, __r0 += (d);						\ 	if (__r0>= (d))						\ 	  if (__r0< __m)						\ 	    __q0--, __r0 += (d);					\       }									\     __r0 -= __m;							\ 									\     (q) = (UWtype) __q1 * __ll_B | __q0;				\     (r) = __r0;								\   } while (0)
+end_define
+
+begin_comment
 comment|/* If the processor has no udiv_qrnnd but sdiv_qrnnd, go through    __udiv_w_sdiv (defined in libgcc or elsewhere).  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -3025,6 +3117,9 @@ name|defined
 argument_list|(
 name|sdiv_qrnnd
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|udiv_qrnnd
@@ -3041,9 +3136,18 @@ name|d
 parameter_list|)
 define|\
 value|do {									\     USItype __r;							\     (q) = __udiv_w_sdiv (&__r, nh, nl, d);				\     (r) = __r;								\   } while (0)
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* If udiv_qrnnd was not defined for this processor, use __udiv_qrnnd_c.  */
+end_comment
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -3051,16 +3155,28 @@ name|defined
 argument_list|(
 name|udiv_qrnnd
 argument_list|)
+end_if
+
+begin_define
 define|#
 directive|define
 name|UDIV_NEEDS_NORMALIZATION
 value|1
+end_define
+
+begin_define
 define|#
 directive|define
 name|udiv_qrnnd
 value|__udiv_qrnnd_c
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 operator|!
@@ -3068,13 +3184,16 @@ name|defined
 argument_list|(
 name|count_leading_zeros
 argument_list|)
+end_if
+
+begin_decl_stmt
 specifier|extern
 specifier|const
 name|UQItype
 name|__clz_tab
 index|[]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

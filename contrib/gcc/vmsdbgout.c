@@ -63,6 +63,12 @@ directive|include
 file|"langhooks.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"function.h"
+end_include
+
 begin_comment
 comment|/* Difference in seconds between the VMS Epoch and the Unix Epoch */
 end_comment
@@ -200,24 +206,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CHAR_TYPE_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CHAR_TYPE_SIZE
-value|BITS_PER_UNIT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|PTR_SIZE
 end_ifndef
 
@@ -238,7 +226,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Pointer to an structure of filenames referenced by this compilation unit.  */
+comment|/* Pointer to a structure of filenames referenced by this compilation unit.  */
 end_comment
 
 begin_decl_stmt
@@ -389,20 +377,6 @@ directive|define
 name|LINE_INFO_TABLE_INCREMENT
 value|1024
 end_define
-
-begin_comment
-comment|/* The number of the current function definition for which debugging    information is being generated.  These numbers range from 1 up to the    maximum number of function definitions contained within the current    compilation unit.  These numbers are used to create unique label id's unique    to each function definition.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|unsigned
-name|int
-name|current_funcdef_number
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Forward declarations for functions defined in this file.  */
@@ -903,11 +877,48 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|vmsdbgout_end_prologue
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|vmsdbgout_end_function
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|vmsdbgout_end_epilogue
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -970,6 +981,7 @@ comment|/* The debug hooks structure.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|vmsdbg_debug_hooks
@@ -997,18 +1009,14 @@ name|vmsdbgout_source_line
 block|,
 name|vmsdbgout_begin_prologue
 block|,
-name|debug_nothing_int
+name|vmsdbgout_end_prologue
 block|,
-comment|/* end_prologue */
 name|vmsdbgout_end_epilogue
 block|,
-comment|/* end_epilogue */
 name|vmsdbgout_begin_function
 block|,
-comment|/* begin_function */
-name|debug_nothing_int
+name|vmsdbgout_end_function
 block|,
-comment|/* end_function */
 name|vmsdbgout_decl
 block|,
 name|vmsdbgout_global_decl
@@ -1202,28 +1210,6 @@ name|OFFSET
 parameter_list|)
 define|\
 value|(NUMBYTES(OFFSET) == 4 \    ? UNALIGNED_LONG_ASM_OP \    : (NUMBYTES(OFFSET) == 2 ? UNALIGNED_SHORT_ASM_OP : ASM_BYTE_OP))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Pseudo-op for defining a new section.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SECTION_ASM_OP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|SECTION_ASM_OP
-value|".section"
 end_define
 
 begin_endif
@@ -1887,7 +1873,7 @@ break|break;
 case|case
 name|CONST
 case|:
-comment|/* This used to output parentheses around the expression, but that does           not work on the 386 (either ATT or BSD assembler).  */
+comment|/* This used to output parentheses around the expression, but that does          not work on the 386 (either ATT or BSD assembler).  */
 name|addr_const_to_string
 argument_list|(
 name|buf1
@@ -2309,7 +2295,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output the debug header HEADER.  Also output COMMENT if flag_verbose_asm is    set.  Return the header size.  Just return the size if DOSIZEONLY is    non-zero.  */
+comment|/* Output the debug header HEADER.  Also output COMMENT if flag_verbose_asm is    set.  Return the header size.  Just return the size if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -2414,7 +2400,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output the address of SYMBOL.  Also output COMMENT if flag_verbose_asm is    set.  Return the address size.  Just return the size if DOSIZEONLY is    non-zero.  */
+comment|/* Output the address of SYMBOL.  Also output COMMENT if flag_verbose_asm is    set.  Return the address size.  Just return the size if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -2484,7 +2470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output the single byte DATA1.  Also output COMMENT if flag_verbose_asm is    set.  Return the data size.  Just return the size if DOSIZEONLY is    non-zero.  */
+comment|/* Output the single byte DATA1.  Also output COMMENT if flag_verbose_asm is    set.  Return the data size.  Just return the size if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -2554,7 +2540,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output the single word DATA2.  Also output COMMENT if flag_verbose_asm is    set.  Return the data size.  Just return the size if DOSIZEONLY is    non-zero.  */
+comment|/* Output the single word DATA2.  Also output COMMENT if flag_verbose_asm is    set.  Return the data size.  Just return the size if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -2624,7 +2610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output double word DATA4.  Also output COMMENT if flag_verbose_asm is set.    Return the data size.  Just return the size if DOSIZEONLY is non-zero.  */
+comment|/* Output double word DATA4.  Also output COMMENT if flag_verbose_asm is set.    Return the data size.  Just return the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -2694,7 +2680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output quad word DATA8.  Also output COMMENT if flag_verbose_asm is set.    Return the data size.  Just return the size if DOSIZEONLY is non-zero.  */
+comment|/* Output quad word DATA8.  Also output COMMENT if flag_verbose_asm is set.    Return the data size.  Just return the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -2765,7 +2751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output the difference between LABEL1 and LABEL2.  Also output COMMENT if    flag_verbose_asm is set.  Return the data size.  Just return the size if    DOSIZEONLY is non-zero.  */
+comment|/* Output the difference between LABEL1 and LABEL2.  Also output COMMENT if    flag_verbose_asm is set.  Return the data size.  Just return the size if    DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -2843,7 +2829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a character string STRING.  Also write COMMENT if flag_verbose_asm is    set.  Return the string length.  Just return the length if DOSIZEONLY is    non-zero.  */
+comment|/* Output a character string STRING.  Also write COMMENT if flag_verbose_asm is    set.  Return the string length.  Just return the length if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -2916,7 +2902,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a module begin header and return the header size.  Just return the    size if DOSIZEONLY is non-zero.  */
+comment|/* Output a module begin header and return the header size.  Just return the    size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -3266,7 +3252,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a module end trailer and return the trailer size.   Just return    the size if DOSIZEONLY is non-zero.  */
+comment|/* Output a module end trailer and return the trailer size.   Just return    the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -3331,7 +3317,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a routine begin header routine RTNNUM and return the header size.    Just return the size if DOSIZEONLY is non-zero.  */
+comment|/* Output a routine begin header routine RTNNUM and return the header size.    Just return the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -3356,8 +3342,6 @@ name|rtnname
 decl_stmt|;
 name|int
 name|rtnnamelen
-decl_stmt|,
-name|rtnentrynamelen
 decl_stmt|;
 name|char
 modifier|*
@@ -3394,38 +3378,15 @@ argument_list|(
 name|rtnname
 argument_list|)
 expr_stmt|;
-name|rtnentrynamelen
-operator|=
-name|rtnnamelen
-operator|+
-literal|4
-expr_stmt|;
-comment|/* "..en" */
 name|rtnentryname
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
+name|concat
 argument_list|(
-name|rtnentrynamelen
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|rtnentryname
-argument_list|,
 name|rtnname
-argument_list|)
-expr_stmt|;
-name|strcat
-argument_list|(
-name|rtnentryname
 argument_list|,
 literal|"..en"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -3777,7 +3738,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a routine end trailer for routine RTNNUM and return the header size.    Just return the size if DOSIZEONLY is non-zero.  */
+comment|/* Output a routine end trailer for routine RTNNUM and return the header size.    Just return the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -3951,7 +3912,7 @@ value|((I)< 256 ? DST_K_INCR_LINUM \   : (I)< 65536 ? DST_K_INCR_LINUM_W : DST_K
 end_define
 
 begin_comment
-comment|/* Output the PC to line number correlations and return the size.  Just return    the size if DOSIZEONLY is non-zero */
+comment|/* Output the PC to line number correlations and return the size.  Just return    the size if DOSIZEONLY is nonzero */
 end_comment
 
 begin_function
@@ -4267,8 +4228,12 @@ argument_list|,
 literal|"line_num (%d)"
 argument_list|,
 name|ln
+condition|?
+name|ln
 operator|-
 literal|1
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 name|totsize
@@ -4276,8 +4241,12 @@ operator|+=
 name|write_debug_data4
 argument_list|(
 name|ln
+condition|?
+name|ln
 operator|-
 literal|1
+else|:
+literal|0
 argument_list|,
 name|buff
 argument_list|,
@@ -4567,7 +4536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output a source correlation for file FILEID using information saved in    FILE_INFO_ENTRY and return the size.  Just return the size if DOSIZEONLY is    non-zero.  */
+comment|/* Output a source correlation for file FILEID using information saved in    FILE_INFO_ENTRY and return the size.  Just return the size if DOSIZEONLY is    nonzero.  */
 end_comment
 
 begin_function
@@ -5155,6 +5124,15 @@ name|dst_w_type
 operator|=
 name|DST_K_SOURCE
 expr_stmt|;
+if|if
+condition|(
+name|src_command_dl
+operator|.
+name|dst_a_src_cmd_fields
+operator|.
+name|dst_w_src_unsword
+condition|)
+block|{
 name|totsize
 operator|+=
 name|write_debug_header
@@ -5420,6 +5398,7 @@ name|dosizeonly
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 return|return
 name|totsize
 return|;
@@ -5427,7 +5406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output all the source correlation entries and return the size.  Just return    the size if DOSIZEONLY is non-zero.  */
+comment|/* Output all the source correlation entries and return the size.  Just return    the size if DOSIZEONLY is nonzero.  */
 end_comment
 
 begin_function
@@ -5540,16 +5519,13 @@ operator|>
 name|DINFO_LEVEL_NONE
 condition|)
 block|{
-name|current_funcdef_number
-operator|++
-expr_stmt|;
 name|ASM_GENERATE_INTERNAL_LABEL
 argument_list|(
 name|label
 argument_list|,
 name|FUNC_BEGIN_LABEL
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -5568,9 +5544,23 @@ comment|/* Output a marker (i.e. a label) for the beginning of a function, after
 end_comment
 
 begin_function
+specifier|static
 name|void
-name|vmsdbgout_after_prologue
-parameter_list|()
+name|vmsdbgout_end_prologue
+parameter_list|(
+name|line
+parameter_list|,
+name|file
+parameter_list|)
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
 block|{
 name|char
 name|label
@@ -5578,6 +5568,24 @@ index|[
 name|MAX_ARTIFICIAL_LABEL_BYTES
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|write_symbols
+operator|==
+name|VMS_AND_DWARF2_DEBUG
+condition|)
+call|(
+modifier|*
+name|dwarf2_debug_hooks
+operator|.
+name|end_prologue
+call|)
+argument_list|(
+name|line
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug_info_level
@@ -5591,7 +5599,7 @@ name|label
 argument_list|,
 name|FUNC_PROLOG_LABEL
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -5601,7 +5609,50 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+comment|/* VMS PCA expects every PC range to correlate to some line and file */
+name|vmsdbgout_source_line
+argument_list|(
+name|line
+argument_list|,
+name|file
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* No output for VMS debug, but make obligatory call to Dwarf2 debug */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|vmsdbgout_end_function
+parameter_list|(
+name|line
+parameter_list|)
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|write_symbols
+operator|==
+name|VMS_AND_DWARF2_DEBUG
+condition|)
+call|(
+modifier|*
+name|dwarf2_debug_hooks
+operator|.
+name|end_function
+call|)
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5613,7 +5664,20 @@ begin_function
 specifier|static
 name|void
 name|vmsdbgout_end_epilogue
-parameter_list|()
+parameter_list|(
+name|line
+parameter_list|,
+name|file
+parameter_list|)
+name|unsigned
+name|int
+name|line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+decl_stmt|;
 block|{
 name|char
 name|label
@@ -5633,7 +5697,11 @@ name|dwarf2_debug_hooks
 operator|.
 name|end_epilogue
 call|)
-argument_list|()
+argument_list|(
+name|line
+argument_list|,
+name|file
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5649,7 +5717,7 @@ name|label
 argument_list|,
 name|FUNC_END_LABEL
 argument_list|,
-name|current_funcdef_number
+name|current_function_funcdef_no
 argument_list|)
 expr_stmt|;
 name|ASM_OUTPUT_LABEL
@@ -5657,6 +5725,14 @@ argument_list|(
 name|asm_out_file
 argument_list|,
 name|label
+argument_list|)
+expr_stmt|;
+comment|/* VMS PCA expects every PC range to correlate to some line and file */
+name|vmsdbgout_source_line
+argument_list|(
+name|line
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -6302,7 +6378,7 @@ name|i
 return|;
 block|}
 block|}
-comment|/* Prepare to add a new table entry by making sure there is enough space in       the table to do so.  If not, expand the current table.  */
+comment|/* Prepare to add a new table entry by making sure there is enough space in      the table to do so.  If not, expand the current table.  */
 if|if
 condition|(
 name|file_info_table_in_use
@@ -6839,36 +6915,15 @@ name|DST_K_UNKNOWN
 expr_stmt|;
 name|module_producer
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xmalloc
-argument_list|(
-name|strlen
+name|concat
 argument_list|(
 name|language_string
-argument_list|)
-operator|+
-literal|1
-operator|+
-name|strlen
-argument_list|(
-name|version_string
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|module_producer
 argument_list|,
-literal|"%s %s"
-argument_list|,
-name|language_string
+literal|" "
 argument_list|,
 name|version_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|ASM_GENERATE_INTERNAL_LABEL

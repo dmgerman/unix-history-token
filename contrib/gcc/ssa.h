@@ -84,8 +84,7 @@ name|sbitmap
 operator|*
 name|frontiers
 operator|,
-name|int
-operator|*
+name|dominance_info
 name|idom
 operator|)
 argument_list|)
@@ -164,8 +163,12 @@ begin_comment
 comment|/* Element I is the single instruction that sets register I.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|varray_type
 name|ssa_definition
 decl_stmt|;

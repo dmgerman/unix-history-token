@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Compilation switch flag definitions for GCC.    Copyright (C) 1987, 1988, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -310,13 +310,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn if a switch on an enum fails to have a case for every enum value.  */
+comment|/* Warn if a switch on an enum, that does not have a default case,    fails to have a case for every enum value.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|warn_switch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if a switch does not have a default case.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_switch_default
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if a switch on an enum fails to have a case for every enum    value (regardless of the presence or otherwise of a default case).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_switch_enum
 decl_stmt|;
 end_decl_stmt
 
@@ -427,6 +449,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means warn about constructs which might not be strict    aliasing safe.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_strict_aliasing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if generating code to do profiling.  */
 end_comment
 
@@ -478,6 +511,17 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|flag_reorder_blocks
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if functions should be reordered.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_reorder_functions
 decl_stmt|;
 end_decl_stmt
 
@@ -830,6 +874,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means that no NaNs or +-Infs are expected.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_finite_math_only
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Zero means that floating-point math operations cannot generate a    (user-visible) trap.  This is the case, for example, in nonstop    IEEE 754 arithmetic.  */
 end_comment
 
@@ -958,7 +1013,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The following flags have effect only for scheduling before register    allocation:     flag_schedule_interblock means schedule insns accross basic blocks.    flag_schedule_speculative means allow speculative motion of non-load insns.    flag_schedule_speculative_load means allow speculative motion of some    load insns.    flag_schedule_speculative_load_dangerous allows speculative motion of more    load insns.  */
+comment|/* The following flags have effect only for scheduling before register    allocation:     flag_schedule_interblock means schedule insns across basic blocks.    flag_schedule_speculative means allow speculative motion of non-load insns.    flag_schedule_speculative_load means allow speculative motion of some    load insns.    flag_schedule_speculative_load_dangerous allows speculative motion of more    load insns.  */
 end_comment
 
 begin_decl_stmt
@@ -1034,17 +1089,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means pretend it is OK to examine bits of target floats,    even if that isn't true.  The resulting code will have incorrect constants,    but the same series of instructions that the native compiler would make.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_pretend_float
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Nonzero means change certain warnings into errors.    Usually these are warnings about failure to conform to some standard.  */
 end_comment
 
@@ -1056,7 +1100,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means generate position-independent code.    This is not fully implemented yet.  */
+comment|/* Nonzero means generate position-independent code.  1 vs 2 for a     target-dependent "small" or "large" mode.  */
 end_comment
 
 begin_decl_stmt
@@ -1272,18 +1316,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -fbounded-pointers causes gcc to compile pointers as composite    objects occupying three words: the pointer value, the base address    of the referent object, and the address immediately beyond the end    of the referent object.  The base and extent allow us to perform    runtime bounds checking.  -fbounded-pointers implies -fcheck-bounds.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_bounded_pointers
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -fcheck-bounds causes gcc to generate array bounds checks.    For C, C++: defaults to value of flag_bounded_pointers.    For ObjC: defaults to off.    For Java: defaults to on.    For Fortran: defaults to off.    For CHILL: defaults to off.  */
+comment|/* -fcheck-bounds causes gcc to generate array bounds checks.    For C, C++ and ObjC: defaults off.    For Java: defaults to on.    For Fortran: defaults to off.  */
 end_comment
 
 begin_decl_stmt
@@ -1535,7 +1568,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Non-zero means to collect statistics which might be expensive    and to print them when we are done.  */
+comment|/* Nonzero means to collect statistics which might be expensive    and to print them when we are done.  */
 end_comment
 
 begin_decl_stmt
@@ -1555,6 +1588,115 @@ name|int
 name|flag_non_call_exceptions
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means put zero initialized data in the bss section.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_zero_initialized_in_bss
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means disable transformations observable by signaling NaNs.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_signaling_nans
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* A string that's used when a random name is required.  NULL means    to make it really random.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|flag_random_seed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* True if the given mode has a NaN representation and the treatment of    NaN operands is important.  Certain optimizations, such as folding    x * 0 into x, are not correct for NaN operands, and are normally    disabled for modes with NaNs.  The user can ask for them to be    done anyway using the -funsafe-math-optimizations switch.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HONOR_NANS
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(MODE_HAS_NANS (MODE)&& !flag_finite_math_only)
+end_define
+
+begin_comment
+comment|/* Like HONOR_NANs, but true if we honor signaling NaNs (or sNaNs).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HONOR_SNANS
+parameter_list|(
+name|MODE
+parameter_list|)
+value|(flag_signaling_nans&& HONOR_NANS (MODE))
+end_define
+
+begin_comment
+comment|/* As for HONOR_NANS, but true if the mode can represent infinity and    the treatment of infinite values is important.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HONOR_INFINITIES
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(MODE_HAS_INFINITIES (MODE)&& !flag_finite_math_only)
+end_define
+
+begin_comment
+comment|/* Like HONOR_NANS, but true if the given mode distinguishes between    postive and negative zero, and the sign of zero is important.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HONOR_SIGNED_ZEROS
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(MODE_HAS_SIGNED_ZEROS (MODE)&& !flag_unsafe_math_optimizations)
+end_define
+
+begin_comment
+comment|/* Like HONOR_NANS, but true if given mode supports sign-dependent rounding,    and the rounding mode is important.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HONOR_SIGN_DEPENDENT_ROUNDING
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(MODE_HAS_SIGN_DEPENDENT_ROUNDING (MODE)&& !flag_unsafe_math_optimizations)
+end_define
 
 begin_endif
 endif|#

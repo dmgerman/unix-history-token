@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"hard-reg-set.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rtl.h"
 end_include
 
@@ -39,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|"flags.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"hard-reg-set.h"
 end_include
 
 begin_include
@@ -175,10 +175,6 @@ decl_stmt|;
 comment|/* the hard reg number chosen for given quantity,      or -1 if none was found.  */
 name|short
 name|phys_reg
-decl_stmt|;
-comment|/* Nonzero if this quantity has been used in a SUBREG in some      way that is illegal.  */
-name|char
-name|changes_mode
 decl_stmt|;
 block|}
 struct|;
@@ -983,18 +979,6 @@ argument_list|(
 name|regno
 argument_list|)
 expr_stmt|;
-name|qty
-index|[
-name|qtyno
-index|]
-operator|.
-name|changes_mode
-operator|=
-name|REG_CHANGES_MODE
-argument_list|(
-name|regno
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1011,12 +995,13 @@ name|local_alloc
 parameter_list|()
 block|{
 name|int
-name|b
-decl_stmt|,
 name|i
 decl_stmt|;
 name|int
 name|max_qty
+decl_stmt|;
+name|basic_block
+name|b
 decl_stmt|;
 comment|/* We need to keep track of whether or not we recorded a LABEL_REF so      that we know if the jump optimizer needs to be rerun.  */
 name|recorded_label_ref
@@ -1032,6 +1017,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Promote REG_EQUAL notes to REG_EQUIV notes and adjust status of affected      registers.  */
+if|if
+condition|(
+name|optimize
+condition|)
 name|update_equiv_regs
 argument_list|()
 expr_stmt|;
@@ -1230,19 +1219,10 @@ operator|=
 name|max_qty
 expr_stmt|;
 comment|/* Allocate each block's local registers, block by block.  */
-for|for
-control|(
-name|b
-operator|=
-literal|0
-init|;
-name|b
-operator|<
-name|n_basic_blocks
-condition|;
-name|b
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|b
+argument_list|)
 block|{
 comment|/* NEXT_QTY indicates which elements of the `qty_...' 	 vectors might need to be initialized because they were used 	 for the previous block; it is set to the entire array before 	 block 0.  Initialize those, with explicit loop if there are few, 	 else with bzero and bcopy.  Do not initialize vectors that are 	 explicit set by `alloc_qty'.  */
 if|if
@@ -1336,6 +1316,8 @@ expr_stmt|;
 name|block_alloc
 argument_list|(
 name|b
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 block|}
@@ -1915,7 +1897,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero if X (used to initialize register REGNO) is movable.    X is only movable if the registers it uses have equivalent initializations    which appear to be within the same loop (or in an inner loop) and movable    or if they are not candidates for local_alloc and don't vary.  */
+comment|/* Returns nonzero if X (used to initialize register REGNO) is movable.    X is only movable if the registers it uses have equivalent initializations    which appear to be within the same loop (or in an inner loop) and movable    or if they are not candidates for local_alloc and don't vary.  */
 end_comment
 
 begin_function
@@ -2855,8 +2837,8 @@ block|{
 name|rtx
 name|insn
 decl_stmt|;
-name|int
-name|block
+name|basic_block
+name|bb
 decl_stmt|;
 name|int
 name|loop_depth
@@ -2895,28 +2877,11 @@ name|init_alias_analysis
 argument_list|()
 expr_stmt|;
 comment|/* Scan the insns and find which registers have equivalences.  Do this      in a separate scan of the insns because (due to -fcse-follow-jumps)      a register can be set below its use.  */
-for|for
-control|(
-name|block
-operator|=
-literal|0
-init|;
-name|block
-operator|<
-name|n_basic_blocks
-condition|;
-name|block
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|block
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|loop_depth
 operator|=
 name|bb
@@ -3785,30 +3750,11 @@ block|}
 block|}
 block|}
 comment|/* Now scan all regs killed in an insn to see if any of them are      registers only used that once.  If so, see if we can replace the      reference with the equivalent from.  If we can, delete the      initializing reference and this register will go away.  If we      can't replace the reference, and the initialzing reference is      within the same loop (or in an inner loop), then move the register      initialization just before the use, so that they are in the same      basic block.  */
-for|for
-control|(
-name|block
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|block
-operator|>=
-literal|0
-condition|;
-name|block
-operator|--
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB_REVERSE
 argument_list|(
-name|block
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|loop_depth
 operator|=
 name|bb
@@ -4245,13 +4191,9 @@ argument_list|(
 name|regno
 argument_list|)
 operator|=
-name|block
-operator|>=
-literal|0
-condition|?
-name|block
-else|:
-literal|0
+name|bb
+operator|->
+name|index
 expr_stmt|;
 name|REG_N_CALLS_CROSSED
 argument_list|(
@@ -4269,21 +4211,15 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
-name|block
-operator|>=
-literal|0
-operator|&&
 name|insn
 operator|==
-name|BLOCK_HEAD
-argument_list|(
-name|block
-argument_list|)
+name|bb
+operator|->
+name|head
 condition|)
-name|BLOCK_HEAD
-argument_list|(
-name|block
-argument_list|)
+name|bb
+operator|->
+name|head
 operator|=
 name|PREV_INSN
 argument_list|(
@@ -4315,8 +4251,6 @@ condition|)
 block|{
 name|int
 name|j
-decl_stmt|,
-name|l
 decl_stmt|;
 if|if
 condition|(
@@ -4325,26 +4259,14 @@ operator|>
 literal|8
 condition|)
 block|{
-for|for
-control|(
-name|l
-operator|=
-literal|0
-init|;
-name|l
-operator|<
-name|n_basic_blocks
-condition|;
-name|l
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|AND_COMPL_REG_SET
 argument_list|(
-name|BASIC_BLOCK
-argument_list|(
-name|l
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_start
 argument_list|,
@@ -4354,10 +4276,7 @@ argument_list|)
 expr_stmt|;
 name|AND_COMPL_REG_SET
 argument_list|(
-name|BASIC_BLOCK
-argument_list|(
-name|l
-argument_list|)
+name|bb
 operator|->
 name|global_live_at_end
 argument_list|,
@@ -4376,9 +4295,7 @@ literal|0
 argument_list|,
 argument|j
 argument_list|,
-argument|{ 	    for (l =
-literal|0
-argument|; l< n_basic_blocks; l++) 	      { 	        CLEAR_REGNO_REG_SET (BASIC_BLOCK (l)->global_live_at_start, j); 	        CLEAR_REGNO_REG_SET (BASIC_BLOCK (l)->global_live_at_end, j); 	      } 	  }
+argument|{ 	    FOR_EACH_BB (bb) 	      { 	        CLEAR_REGNO_REG_SET (bb->global_live_at_start, j); 	        CLEAR_REGNO_REG_SET (bb->global_live_at_end, j); 	      } 	  }
 argument_list|)
 empty_stmt|;
 block|}
@@ -4975,6 +4892,19 @@ literal|0
 index|]
 operator|==
 literal|'p'
+operator|||
+name|EXTRA_ADDRESS_CONSTRAINT
+argument_list|(
+name|recog_data
+operator|.
+name|constraints
+index|[
+name|i
+index|]
+index|[
+literal|0
+index|]
+argument_list|)
 condition|)
 while|while
 condition|(
@@ -6859,7 +6789,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Attempt to combine the two registers (rtx's) USEDREG and SETREG.    Returns 1 if have done so, or 0 if cannot.     Combining registers means marking them as having the same quantity    and adjusting the offsets within the quantity if either of    them is a SUBREG).     We don't actually combine a hard reg with a pseudo; instead    we just record the hard reg as the suggestion for the pseudo's quantity.    If we really combined them, we could lose if the pseudo lives    across an insn that clobbers the hard reg (eg, movstr).     ALREADY_DEAD is non-zero if USEDREG is known to be dead even though    there is no REG_DEAD note on INSN.  This occurs during the processing    of REG_NO_CONFLICT blocks.     MAY_SAVE_COPYCOPY is non-zero if this insn is simply copying USEDREG to    SETREG or if the input and output must share a register.    In that case, we record a hard reg suggestion in QTY_PHYS_COPY_SUGG.     There are elaborate checks for the validity of combining.  */
+comment|/* Attempt to combine the two registers (rtx's) USEDREG and SETREG.    Returns 1 if have done so, or 0 if cannot.     Combining registers means marking them as having the same quantity    and adjusting the offsets within the quantity if either of    them is a SUBREG).     We don't actually combine a hard reg with a pseudo; instead    we just record the hard reg as the suggestion for the pseudo's quantity.    If we really combined them, we could lose if the pseudo lives    across an insn that clobbers the hard reg (eg, movstr).     ALREADY_DEAD is nonzero if USEDREG is known to be dead even though    there is no REG_DEAD note on INSN.  This occurs during the processing    of REG_NO_CONFLICT blocks.     MAY_SAVE_COPYCOPY is nonzero if this insn is simply copying USEDREG to    SETREG or if the input and output must share a register.    In that case, we record a hard reg suggestion in QTY_PHYS_COPY_SUGG.     There are elaborate checks for the validity of combining.  */
 end_comment
 
 begin_function
@@ -7985,22 +7915,6 @@ name|alternate_class
 operator|=
 name|rclass
 expr_stmt|;
-if|if
-condition|(
-name|REG_CHANGES_MODE
-argument_list|(
-name|reg
-argument_list|)
-condition|)
-name|qty
-index|[
-name|qtyno
-index|]
-operator|.
-name|changes_mode
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -8248,7 +8162,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Record the death of REG in the current insn.  If OUTPUT_P is non-zero,    REG is an output that is dying (i.e., it is never used), otherwise it    is an input (the normal case).    If OUTPUT_P is 1, then we extend the life past the end of this insn.  */
+comment|/* Record the death of REG in the current insn.  If OUTPUT_P is nonzero,    REG is an output that is dying (i.e., it is never used), otherwise it    is an input (the normal case).    If OUTPUT_P is 1, then we extend the life past the end of this insn.  */
 end_comment
 
 begin_function
@@ -8481,7 +8395,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Find a block of SIZE words of hard regs in reg_class CLASS    that can hold something of machine-mode MODE      (but actually we test only the first of the block for holding MODE)    and still free between insn BORN_INDEX and insn DEAD_INDEX,    and return the number of the first of them.    Return -1 if such a block cannot be found.    If QTYNO crosses calls, insist on a register preserved by calls,    unless ACCEPT_CALL_CLOBBERED is nonzero.     If JUST_TRY_SUGGESTED is non-zero, only try to see if the suggested    register is available.  If not, return -1.  */
+comment|/* Find a block of SIZE words of hard regs in reg_class CLASS    that can hold something of machine-mode MODE      (but actually we test only the first of the block for holding MODE)    and still free between insn BORN_INDEX and insn DEAD_INDEX,    and return the number of the first of them.    Return -1 if such a block cannot be found.    If QTYNO crosses calls, insist on a register preserved by calls,    unless ACCEPT_CALL_CLOBBERED is nonzero.     If JUST_TRY_SUGGESTED is nonzero, only try to see if the suggested    register is available.  If not, return -1.  */
 end_comment
 
 begin_function
@@ -8531,17 +8445,10 @@ name|i
 decl_stmt|,
 name|ins
 decl_stmt|;
-ifdef|#
-directive|ifdef
 name|HARD_REG_SET
-comment|/* Declare it register if it's a scalar.  */
-specifier|register
-endif|#
-directive|endif
-name|HARD_REG_SET
-name|used
-decl_stmt|,
 name|first_used
+decl_stmt|,
+name|used
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -8744,27 +8651,20 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|CLASS_CANNOT_CHANGE_MODE
-if|if
-condition|(
+name|CANNOT_CHANGE_MODE_CLASS
+name|cannot_change_mode_set_regs
+argument_list|(
+operator|&
+name|used
+argument_list|,
+name|mode
+argument_list|,
 name|qty
 index|[
 name|qtyno
 index|]
 operator|.
-name|changes_mode
-condition|)
-name|IOR_HARD_REG_SET
-argument_list|(
-name|used
-argument_list|,
-name|reg_class_contents
-index|[
-operator|(
-name|int
-operator|)
-name|CLASS_CANNOT_CHANGE_MODE
-index|]
+name|first_reg
 argument_list|)
 expr_stmt|;
 endif|#
@@ -9109,7 +9009,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Mark that REGNO with machine-mode MODE is live starting from the current    insn (if LIFE is non-zero) or dead starting at the current insn (if LIFE    is zero).  */
+comment|/* Mark that REGNO with machine-mode MODE is live starting from the current    insn (if LIFE is nonzero) or dead starting at the current insn (if LIFE    is zero).  */
 end_comment
 
 begin_function
@@ -9185,7 +9085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Mark register number REGNO (with machine-mode MODE) as live (if LIFE    is non-zero) or dead (if LIFE is zero) from insn number BIRTH (inclusive)    to insn number DEATH (exclusive).  */
+comment|/* Mark register number REGNO (with machine-mode MODE) as live (if LIFE    is nonzero) or dead (if LIFE is zero) from insn number BIRTH (inclusive)    to insn number DEATH (exclusive).  */
 end_comment
 
 begin_function
@@ -9709,6 +9609,12 @@ name|c
 argument_list|)
 operator|==
 name|NO_REGS
+operator|&&
+operator|!
+name|EXTRA_ADDRESS_CONSTRAINT
+argument_list|(
+name|c
+argument_list|)
 condition|)
 break|break;
 comment|/* FALLTHRU */

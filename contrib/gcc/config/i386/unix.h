@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Unix assembler syntax for the Intel 80386.    Copyright (C) 1988, 1994, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Unix assembler syntax for the Intel 80386.    Copyright (C) 1988, 1994, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -99,20 +99,14 @@ value|"\t.bss"
 end_define
 
 begin_comment
-comment|/* This is how to output a command to make the user-level label named NAME    defined for reference from other files.  */
+comment|/* Globalizing directive for a label.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASM_GLOBALIZE_LABEL
-parameter_list|(
-name|FILE
-parameter_list|,
-name|NAME
-parameter_list|)
-define|\
-value|(fputs (".globl ", FILE), assemble_name (FILE, NAME), fputs ("\n", FILE))
+name|GLOBAL_ASM_OP
+value|".globl "
 end_define
 
 begin_comment
@@ -124,42 +118,6 @@ define|#
 directive|define
 name|TARGET_SUBTARGET_DEFAULT
 value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS)
-end_define
-
-begin_comment
-comment|/* Floating-point return values come in the FP register.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VALUE_REGNO
-parameter_list|(
-name|MODE
-parameter_list|)
-define|\
-value|(GET_MODE_CLASS (MODE) == MODE_FLOAT				\&& TARGET_FLOAT_RETURNS_IN_80387 ? FIRST_FLOAT_REG		\    : (MODE) == TImode || VECTOR_MODE_P (MODE) ? FIRST_SSE_REG	\    : 0)
-end_define
-
-begin_comment
-comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|x86_output_mi_thunk (FILE, DELTA, FUNCTION);
 end_define
 
 end_unit

@@ -288,7 +288,7 @@ value|(&(SET)->maps[(MAP)->included_from])
 end_define
 
 begin_comment
-comment|/* Non-zero if the map is at the bottom of the include stack.  */
+comment|/* Nonzero if the map is at the bottom of the include stack.  */
 end_comment
 
 begin_define

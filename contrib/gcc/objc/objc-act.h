@@ -36,16 +36,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|objc_decode_option
+specifier|const
+name|char
+modifier|*
+name|objc_printable_name
 name|PARAMS
 argument_list|(
 operator|(
-name|int
+name|tree
 operator|,
-name|char
-operator|*
-operator|*
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -486,13 +486,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|objc_receiver_context
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* the following routines are used to implement statically typed objects */
 end_comment
@@ -720,6 +713,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|CLASS_OWN_IVARS
+parameter_list|(
+name|CLASS
+parameter_list|)
+value|TREE_VEC_ELT (TYPE_BINFO (CLASS), 5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PROTOCOL_NAME
 parameter_list|(
 name|CLASS
@@ -887,9 +890,14 @@ name|attr
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|hashed_attribute
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|attr
 name|next
@@ -898,12 +906,20 @@ name|tree
 name|value
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
 
-begin_struct
-struct|struct
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|struct
 name|hashed_entry
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|attr
 name|list
@@ -915,38 +931,37 @@ name|tree
 name|key
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern GTY ((length (
+literal|"SIZEHASHTABLE"
+end_extern
 
 begin_decl_stmt
-specifier|extern
+unit|)))
 name|hash
 modifier|*
 name|nst_method_hash_list
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY ((length (
+literal|"SIZEHASHTABLE"
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|)))
 name|hash
 modifier|*
 name|cls_method_hash_list
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|HASH_ALLOC_LIST_SIZE
-value|170
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATTR_ALLOC_LIST_SIZE
-value|170
-end_define
 
 begin_define
 define|#
@@ -959,9 +974,14 @@ begin_comment
 comment|/* Objective-C/Objective-C++ @implementation list.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|imp_entry
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|struct
 name|imp_entry
@@ -983,11 +1003,18 @@ name|meta_decl
 decl_stmt|;
 comment|/* _OBJC_METACLASS_<my_name>; */
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern GTY((
+end_extern
 
 begin_decl_stmt
-specifier|extern
+unit|))
 name|struct
 name|imp_entry
 modifier|*
@@ -1164,8 +1191,12 @@ block|}
 enum|;
 end_enum
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|objc_global_trees
 index|[

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for AMD x86-64 running Linux-based GNU systems with ELF format.    Copyright (C) 2001, 2002 Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>, based on linux.h.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for AMD x86-64 running Linux-based GNU systems with ELF format.    Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.    Contributed by Jan Hubicka<jh@suse.cz>, based on linux.h.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -9,12 +9,6 @@ directive|define
 name|LINUX_DEFAULT_ELF
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -22,17 +16,13 @@ name|TARGET_VERSION
 value|fprintf (stderr, " (x86-64 Linux/ELF)");
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -Dunix -D__gnu_linux__ -Dlinux -Asystem(posix)"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do								\     {								\ 	builtin_define_std ("linux");				\ 	builtin_define_std ("unix");				\ 	builtin_define ("__gnu_linux__");			\ 	builtin_define ("__ELF__");				\ 	builtin_assert ("system=posix");			\ 	if (flag_pic)						\ 	  {							\ 	    builtin_define ("__PIC__");				\ 	    builtin_define ("__pic__");				\ 	  }							\ 	if (TARGET_64BIT)					\ 	  {							\ 	    builtin_define ("__LP64__");			\ 	    builtin_define ("_LP64");				\ 	  }							\     }								\   while (0)
 end_define
 
 begin_undef
@@ -45,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT} %{!m32:-D__LONG_MAX__=9223372036854775807L}"
+value|"%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
 end_define
 
 begin_comment
@@ -79,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%{!m32:-m elf_x86_64 -Y P,/usr/lib64} %{m32:-m elf_i386} \   %{shared:-shared} \   %{!shared: \     %{!static: \       %{rdynamic:-export-dynamic} \       %{m32:%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \       %{!m32:%{!dynamic-linker:-dynamic-linker /lib64/ld-linux-x86-64.so.2}}} \     %{static:-static}}"
+value|"%{!m32:-m elf_x86_64} %{m32:-m elf_i386} \   %{shared:-shared} \   %{!shared: \     %{!static: \       %{rdynamic:-export-dynamic} \       %{m32:%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} \       %{!m32:%{!dynamic-linker:-dynamic-linker /lib64/ld-linux-x86-64.so.2}}} \     %{static:-static}}"
 end_define
 
 begin_undef
@@ -173,7 +163,7 @@ value|\     if (*(unsigned char *)(pc_+0) == 0x48				\&& *(unsigned long *)(pc_+
 comment|/* Register 7 is rsp  */
 value|\     (FS)->cfa_reg = 7;							\     (FS)->cfa_offset = new_cfa_ - (long) (CONTEXT)->cfa;		\ 									\
 comment|/* The SVR4 register numbering macros aren't usable in libgcc.  */
-value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = (long)&sc_->rax - new_cfa_;		\     (FS)->regs.reg[1].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[1].loc.offset = (long)&sc_->rbx - new_cfa_;		\     (FS)->regs.reg[2].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[2].loc.offset = (long)&sc_->rcx - new_cfa_;		\     (FS)->regs.reg[3].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[3].loc.offset = (long)&sc_->rdx - new_cfa_;		\     (FS)->regs.reg[4].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[4].loc.offset = (long)&sc_->rbp - new_cfa_;		\     (FS)->regs.reg[5].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[5].loc.offset = (long)&sc_->rsi - new_cfa_;		\     (FS)->regs.reg[6].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[6].loc.offset = (long)&sc_->rdi - new_cfa_;		\     (FS)->regs.reg[8].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[8].loc.offset = (long)&sc_->r8 - new_cfa_;		\     (FS)->regs.reg[9].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[9].loc.offset = (long)&sc_->r9 - new_cfa_;		\     (FS)->regs.reg[10].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[10].loc.offset = (long)&sc_->r10 - new_cfa_;		\     (FS)->regs.reg[11].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[11].loc.offset = (long)&sc_->r11 - new_cfa_;		\     (FS)->regs.reg[12].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[12].loc.offset = (long)&sc_->r12 - new_cfa_;		\     (FS)->regs.reg[13].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[13].loc.offset = (long)&sc_->r13 - new_cfa_;		\     (FS)->regs.reg[14].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[14].loc.offset = (long)&sc_->r14 - new_cfa_;		\     (FS)->regs.reg[15].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[15].loc.offset = (long)&sc_->r15 - new_cfa_;		\     (FS)->retaddr_column = 16;						\     goto SUCCESS;							\   } while (0)
+value|\     (FS)->regs.reg[0].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[0].loc.offset = (long)&sc_->rax - new_cfa_;		\     (FS)->regs.reg[1].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[1].loc.offset = (long)&sc_->rdx - new_cfa_;		\     (FS)->regs.reg[2].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[2].loc.offset = (long)&sc_->rcx - new_cfa_;		\     (FS)->regs.reg[3].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[3].loc.offset = (long)&sc_->rbx - new_cfa_;		\     (FS)->regs.reg[4].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[4].loc.offset = (long)&sc_->rsi - new_cfa_;		\     (FS)->regs.reg[5].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[5].loc.offset = (long)&sc_->rdi - new_cfa_;		\     (FS)->regs.reg[6].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[6].loc.offset = (long)&sc_->rbp - new_cfa_;		\     (FS)->regs.reg[8].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[8].loc.offset = (long)&sc_->r8 - new_cfa_;		\     (FS)->regs.reg[9].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[9].loc.offset = (long)&sc_->r9 - new_cfa_;		\     (FS)->regs.reg[10].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[10].loc.offset = (long)&sc_->r10 - new_cfa_;		\     (FS)->regs.reg[11].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[11].loc.offset = (long)&sc_->r11 - new_cfa_;		\     (FS)->regs.reg[12].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[12].loc.offset = (long)&sc_->r12 - new_cfa_;		\     (FS)->regs.reg[13].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[13].loc.offset = (long)&sc_->r13 - new_cfa_;		\     (FS)->regs.reg[14].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[14].loc.offset = (long)&sc_->r14 - new_cfa_;		\     (FS)->regs.reg[15].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[15].loc.offset = (long)&sc_->r15 - new_cfa_;		\     (FS)->regs.reg[16].how = REG_SAVED_OFFSET;				\     (FS)->regs.reg[16].loc.offset = (long)&sc_->rip - new_cfa_;		\     (FS)->retaddr_column = 16;						\     goto SUCCESS;							\   } while (0)
 end_define
 
 begin_else

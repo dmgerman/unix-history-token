@@ -69,9 +69,6 @@ decl_stmt|;
 name|int
 name|line
 decl_stmt|;
-name|int
-name|indent_level
-decl_stmt|;
 block|}
 struct|;
 end_struct

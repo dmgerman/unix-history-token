@@ -112,7 +112,7 @@ value|DWARF2_DEBUG
 end_define
 
 begin_comment
-comment|/* Return a non-zero value if DECL has a section attribute.  */
+comment|/* Return a nonzero value if DECL has a section attribute.  */
 end_comment
 
 begin_define
@@ -148,7 +148,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do									\     {									\       if (IN_NAMED_SECTION (DECL))					\ 	named_section (DECL, NULL, 0);					\       else								\ 	bss_section ();							\       									\       ASM_GLOBALIZE_LABEL (FILE, NAME);					\       									\       ASM_OUTPUT_ALIGN (FILE, floor_log2 (ALIGN / BITS_PER_UNIT));	\ 									\       last_assemble_variable_decl = DECL;				\       ASM_DECLARE_OBJECT_NAME (FILE, NAME, DECL);			\       ASM_OUTPUT_SKIP (FILE, SIZE ? SIZE : 1);				\     } 									\   while (0)
+value|do									\     {									\       if (IN_NAMED_SECTION (DECL))					\ 	named_section (DECL, NULL, 0);					\       else								\ 	bss_section ();							\       									\       (*targetm.asm_out.globalize_label) (FILE, NAME);			\       									\       ASM_OUTPUT_ALIGN (FILE, floor_log2 (ALIGN / BITS_PER_UNIT));	\ 									\       last_assemble_variable_decl = DECL;				\       ASM_DECLARE_OBJECT_NAME (FILE, NAME, DECL);			\       ASM_OUTPUT_SKIP (FILE, SIZE ? SIZE : 1);				\     } 									\   while (0)
 end_define
 
 begin_undef
@@ -173,26 +173,8 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do									\     {									\       if ((DECL) != NULL&& IN_NAMED_SECTION (DECL))			\ 	named_section (DECL, NULL, 0);					\       else								\ 	bss_section ();							\ 									\       ASM_OUTPUT_ALIGN (FILE, floor_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (FILE, NAME);					\       fprintf (FILE, "\t.space\t%d\n", SIZE);				\     }									\   while (0)
+value|do									\     {									\       if ((DECL) != NULL&& IN_NAMED_SECTION (DECL))			\ 	named_section (DECL, NULL, 0);					\       else								\ 	bss_section ();							\ 									\       ASM_OUTPUT_ALIGN (FILE, floor_log2 (ALIGN / BITS_PER_UNIT));	\       ASM_OUTPUT_LABEL (FILE, NAME);					\       fprintf (FILE, "\t.space\t%d\n", SIZE ? SIZE : 1);		\     }									\   while (0)
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|CPP_PREDEFINES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#

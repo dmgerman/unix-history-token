@@ -19,15 +19,16 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
 define|\
-value|"-DPPC -D__embedded__ -D__simulator__ -Asystem=embedded -Asystem=simulator -Acpu=powerpc -Amachine=powerpc"
+value|do                                       \     {                                      \       builtin_define_std ("PPC");          \       builtin_define ("__embedded__");     \       builtin_define ("__simulator__");    \       builtin_assert ("system=embedded");  \       builtin_assert ("system=simulator"); \       builtin_assert ("cpu=powerpc");      \       builtin_assert ("machine=powerpc");  \     }                                      \   while (0)
 end_define
 
 begin_comment

@@ -125,24 +125,20 @@ argument_list|)
 expr_stmt|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|obstack
-name|permanent_obstack
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* The PENDING_TEMPLATES is a TREE_LIST of templates whose    instantiations have been deferred, either because their definitions    were not yet available, or because we were putting off doing the    work.  The TREE_PURPOSE of each entry is a SRCLOC indicating where    the instantiate request occurred; the TREE_VALUE is a either a DECL    (for a function or static data member), or a TYPE (for a class)    indicating what we are hoping to instantiate.  */
+comment|/* The PENDING_TEMPLATES is a TREE_LIST of templates whose    instantiations have been deferred, either because their definitions    were not yet available, or because we were putting off doing the    work.  The TREE_PURPOSE of each entry is a SRCLOC indicating where    the instantiate request occurred; the TREE_VALUE is either a DECL    (for a function or static data member), or a TYPE (for a class)    indicating what we are hoping to instantiate.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|tree
 name|pending_templates
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -164,19 +160,27 @@ name|template_header_count
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|tree
 name|saved_trees
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|varray_type
 name|inline_parm_levels
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -185,12 +189,27 @@ name|inline_parm_levels_used
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|tree
 name|current_tinst_level
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|saved_access_scope
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* A map from local variable declarations in the body of the template    presently being instantiated to the corresponding instantiated    local variables.  */
@@ -202,20 +221,6 @@ name|htab_t
 name|local_specializations
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_alloc
-value|xmalloc
-end_define
-
-begin_define
-define|#
-directive|define
-name|obstack_chunk_free
-value|free
-end_define
 
 begin_define
 define|#
@@ -301,6 +306,49 @@ end_define
 begin_comment
 comment|/* We don't need to try to unify the current 			     type with the desired type.  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|push_access_scope_real
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|push_access_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|pop_access_scope
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -685,6 +733,8 @@ name|tree_fn_t
 operator|,
 name|void
 operator|*
+operator|,
+name|htab_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -850,6 +900,22 @@ begin_decl_stmt
 specifier|static
 name|int
 name|mark_template_parm
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|template_parm_this_level_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -1433,37 +1499,250 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Called once to initialize pt.c.  */
+comment|/* Make the current scope suitable for access checking when we are    processing T.  T can be FUNCTION_DECL for instantiated function    template, TEMPLATE_DECL for uninstantiated one, or VAR_DECL for    static member variable (need by instantiate_decl).  ARGS is the     template argument for TEMPLATE_DECL.  If CONTEXT is not NULL_TREE,     this is used instead of the context of T.  */
 end_comment
 
 begin_function
 name|void
-name|init_pt
-parameter_list|()
+name|push_access_scope_real
+parameter_list|(
+name|t
+parameter_list|,
+name|args
+parameter_list|,
+name|context
+parameter_list|)
+name|tree
+name|t
+decl_stmt|,
+name|args
+decl_stmt|,
+name|context
+decl_stmt|;
 block|{
-name|ggc_add_tree_root
+if|if
+condition|(
+name|TREE_CODE
 argument_list|(
-operator|&
-name|pending_templates
+name|t
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+name|DECL_FUNCTION_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+comment|/* When we are processing specialization `foo<Outer>' for code like  	   template<class U> typename U::Inner foo (); 	   class Outer { 	     struct Inner {}; 	     friend Outer::Inner foo<Outer> (); 	   };  	 `T' is a TEMPLATE_DECL, but `Outer' is only a friend of one of 	 its specialization.  We can get the FUNCTION_DECL with the right 	 information because this specialization has already been 	 registered by the friend declaration above.  */
+if|if
+condition|(
+name|DECL_FUNCTION_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+operator|&&
+name|args
+condition|)
+block|{
+name|tree
+name|full_args
+init|=
+name|tsubst_template_arg_vector
+argument_list|(
+name|DECL_TI_ARGS
+argument_list|(
+name|DECL_TEMPLATE_RESULT
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
 argument_list|,
-literal|1
+name|args
+argument_list|,
+name|tf_none
+argument_list|)
+decl_stmt|;
+name|tree
+name|spec
+init|=
+name|NULL_TREE
+decl_stmt|;
+if|if
+condition|(
+name|full_args
+operator|!=
+name|error_mark_node
+condition|)
+name|spec
+operator|=
+name|retrieve_specialization
+argument_list|(
+name|t
+argument_list|,
+name|full_args
 argument_list|)
 expr_stmt|;
-name|ggc_add_tree_root
+if|if
+condition|(
+name|spec
+condition|)
+name|t
+operator|=
+name|spec
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|!
+name|context
+condition|)
+name|context
+operator|=
+name|DECL_CONTEXT
 argument_list|(
-operator|&
-name|saved_trees
-argument_list|,
-literal|1
+name|t
 argument_list|)
 expr_stmt|;
-name|ggc_add_tree_root
+if|if
+condition|(
+name|context
+operator|&&
+name|TYPE_P
 argument_list|(
-operator|&
-name|current_tinst_level
-argument_list|,
-literal|1
+name|context
 argument_list|)
+condition|)
+name|push_nested_class
+argument_list|(
+name|context
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
+name|push_to_top_level
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+name|DECL_FUNCTION_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|saved_access_scope
+operator|=
+name|tree_cons
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|current_function_decl
+argument_list|,
+name|saved_access_scope
+argument_list|)
+expr_stmt|;
+name|current_function_decl
+operator|=
+name|t
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Like push_access_scope_real, but always uses DECL_CONTEXT.  */
+end_comment
+
+begin_function
+name|void
+name|push_access_scope
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+decl_stmt|;
+block|{
+name|push_access_scope_real
+argument_list|(
+name|t
+argument_list|,
+name|NULL_TREE
+argument_list|,
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Restore the scope set up by push_access_scope.  T is the node we    are processing.  */
+end_comment
+
+begin_function
+name|void
+name|pop_access_scope
+parameter_list|(
+name|t
+parameter_list|)
+name|tree
+name|t
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+name|DECL_FUNCTION_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+name|current_function_decl
+operator|=
+name|TREE_VALUE
+argument_list|(
+name|saved_access_scope
+argument_list|)
+expr_stmt|;
+name|saved_access_scope
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|saved_access_scope
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|DECL_CLASS_SCOPE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+name|pop_nested_class
+argument_list|()
+expr_stmt|;
+else|else
+name|pop_from_top_level
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2190,7 +2469,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Undo the effects of begin_member_template_processing. */
+comment|/* Undo the effects of begin_member_template_processing.  */
 end_comment
 
 begin_function
@@ -2253,7 +2532,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero iff T is a member template function.  We must be    careful as in       template<class T> class C { void f(); }     Here, f is a template function, and a member, but not a member    template.  This function does not concern itself with the origin of    T, only its present state.  So if we have        template<class T> class C { template<class U> void f(U); }     then neither C<int>::f<char> nor C<T>::f<double> is considered    to be a member template.  But, `template<class U> void    C<int>::f(U)' is considered a member template.  */
+comment|/* Returns nonzero iff T is a member template function.  We must be    careful as in       template<class T> class C { void f(); }     Here, f is a template function, and a member, but not a member    template.  This function does not concern itself with the origin of    T, only its present state.  So if we have        template<class T> class C { template<class U> void f(U); }     then neither C<int>::f<char> nor C<T>::f<double> is considered    to be a member template.  But, `template<class U> void    C<int>::f(U)' is considered a member template.  */
 end_comment
 
 begin_function
@@ -2333,7 +2612,7 @@ comment|/* UNUSED */
 end_comment
 
 begin_comment
-comment|/* Returns non-zero iff T is a member template class.  See    is_member_template for a description of what precisely constitutes    a member template.  */
+comment|/* Returns nonzero iff T is a member template class.  See    is_member_template for a description of what precisely constitutes    a member template.  */
 end_comment
 
 begin_comment
@@ -2722,7 +3001,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This routine is called when a specialization is declared.  If it is    illegal to declare a specialization here, an error is reported.  */
+comment|/* This routine is called when a specialization is declared.  If it is    invalid to declare a specialization here, an error is reported.  */
 end_comment
 
 begin_function
@@ -2770,7 +3049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We've just seen template<>. */
+comment|/* We've just seen template<>.  */
 end_comment
 
 begin_function
@@ -2813,7 +3092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Any template<>'s that we have seen thus far are not referring to a    function specialization. */
+comment|/* Any template<>'s that we have seen thus far are not referring to a    function specialization.  */
 end_comment
 
 begin_function
@@ -2833,7 +3112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* We've just seen a template header.  If SPECIALIZATION is non-zero,    it was of the form template<>.  */
+comment|/* We've just seen a template header.  If SPECIALIZATION is nonzero,    it was of the form template<>.  */
 end_comment
 
 begin_function
@@ -2906,9 +3185,25 @@ name|tree
 name|type
 decl_stmt|;
 block|{
+comment|/* TYPE maybe an ERROR_MARK_NODE.  */
+name|tree
+name|context
+init|=
+name|TYPE_P
+argument_list|(
+name|type
+argument_list|)
+condition|?
+name|TYPE_CONTEXT
+argument_list|(
+name|type
+argument_list|)
+else|:
+name|NULL_TREE
+decl_stmt|;
 if|if
 condition|(
-name|IS_AGGR_TYPE
+name|CLASS_TYPE_P
 argument_list|(
 name|type
 argument_list|)
@@ -2919,6 +3214,7 @@ name|type
 argument_list|)
 condition|)
 block|{
+comment|/* This is for ordinary explicit specialization and partial 	 specialization of a template class such as:  	   template<> class C<int>;  	 or:  	   template<class T> class C<T*>;  	 Make sure that `C<int>' and `C<T*>' are implicit instantiations.  */
 if|if
 condition|(
 name|CLASSTYPE_IMPLICIT_INSTANTIATION
@@ -2997,6 +3293,164 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|CLASS_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+operator|!
+name|CLASSTYPE_USE_TEMPLATE
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|CLASSTYPE_TEMPLATE_INFO
+argument_list|(
+name|type
+argument_list|)
+operator|&&
+name|context
+operator|&&
+name|CLASS_TYPE_P
+argument_list|(
+name|context
+argument_list|)
+operator|&&
+name|CLASSTYPE_TEMPLATE_INFO
+argument_list|(
+name|context
+argument_list|)
+condition|)
+block|{
+comment|/* This is for an explicit specialization of member class 	 template according to [temp.expl.spec/18]:  	   template<> template<class U> class C<int>::D;  	 The context `C<int>' must be an implicit instantiation. 	 Otherwise this is just a member class template declared 	 earlier like:  	   template<> class C<int> { template<class U> class D; }; 	   template<> template<class U> class C<int>::D;  	 In the first case, `C<int>::D' is a specialization of `C<T>::D' 	 while in the second case, `C<int>::D' is a primary template 	 and `C<T>::D' may not exist.  */
+if|if
+condition|(
+name|CLASSTYPE_IMPLICIT_INSTANTIATION
+argument_list|(
+name|context
+argument_list|)
+operator|&&
+operator|!
+name|COMPLETE_TYPE_P
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|tree
+name|t
+decl_stmt|;
+if|if
+condition|(
+name|current_namespace
+operator|!=
+name|decl_namespace_context
+argument_list|(
+name|CLASSTYPE_TI_TEMPLATE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|pedwarn
+argument_list|(
+literal|"specializing `%#T' in different namespace"
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+name|cp_pedwarn_at
+argument_list|(
+literal|"  from definition of `%#D'"
+argument_list|,
+name|CLASSTYPE_TI_TEMPLATE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Check for invalid specialization after instantiation:  	       template<> template<> class C<int>::D<int>; 	       template<> template<class U> class C<int>::D;  */
+for|for
+control|(
+name|t
+operator|=
+name|DECL_TEMPLATE_INSTANTIATIONS
+argument_list|(
+name|most_general_template
+argument_list|(
+name|CLASSTYPE_TI_TEMPLATE
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+argument_list|)
+init|;
+name|t
+condition|;
+name|t
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|t
+argument_list|)
+control|)
+if|if
+condition|(
+name|TREE_VALUE
+argument_list|(
+name|t
+argument_list|)
+operator|!=
+name|type
+operator|&&
+name|TYPE_CONTEXT
+argument_list|(
+name|TREE_VALUE
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+operator|==
+name|context
+condition|)
+name|error
+argument_list|(
+literal|"specialization `%T' after instantiation `%T'"
+argument_list|,
+name|type
+argument_list|,
+name|TREE_VALUE
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Mark TYPE as a specialization.  And as a result, we only 	     have one level of template argument for the innermost 	     class template.  */
+name|SET_CLASSTYPE_TEMPLATE_SPECIALIZATION
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
+name|CLASSTYPE_TI_ARGS
+argument_list|(
+name|type
+argument_list|)
+operator|=
+name|INNERMOST_TEMPLATE_ARGS
+argument_list|(
+name|CLASSTYPE_TI_ARGS
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -3141,7 +3595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns non-zero iff DECL is a specialization of TMPL.  */
+comment|/* Returns nonzero iff DECL is a specialization of TMPL.  */
 end_comment
 
 begin_function
@@ -3719,7 +4173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Returns the template (one of the functions given by TEMPLATE_ID)    which can be specialized to match the indicated DECL with the    explicit template args given in TEMPLATE_ID.  The DECL may be    NULL_TREE if none is available.  In that case, the functions in    TEMPLATE_ID are non-members.     If NEED_MEMBER_TEMPLATE is non-zero the function is known to be a    specialization of a member template.     The template args (those explicitly specified and those deduced)    are output in a newly created vector *TARGS_OUT.     If it is impossible to determine the result, an error message is    issued.  The error_mark_node is returned to indicate failure.  */
+comment|/* Returns the template (one of the functions given by TEMPLATE_ID)    which can be specialized to match the indicated DECL with the    explicit template args given in TEMPLATE_ID.  The DECL may be    NULL_TREE if none is available.  In that case, the functions in    TEMPLATE_ID are non-members.     If NEED_MEMBER_TEMPLATE is nonzero the function is known to be a    specialization of a member template.     The template args (those explicitly specified and those deduced)    are output in a newly created vector *TARGS_OUT.     If it is impossible to determine the result, an error message is    issued.  The error_mark_node is returned to indicate failure.  */
 end_comment
 
 begin_function
@@ -3809,7 +4263,7 @@ condition|)
 return|return
 name|error_mark_node
 return|;
-comment|/* Check for baselinks. */
+comment|/* Check for baselinks.  */
 if|if
 condition|(
 name|BASELINK_P
@@ -3819,7 +4273,7 @@ argument_list|)
 condition|)
 name|fns
 operator|=
-name|TREE_VALUE
+name|BASELINK_FUNCTIONS
 argument_list|(
 name|fns
 argument_list|)
@@ -3858,9 +4312,6 @@ argument_list|)
 control|)
 block|{
 name|tree
-name|tmpl
-decl_stmt|;
-name|tree
 name|fn
 init|=
 name|OVL_CURRENT
@@ -3877,18 +4328,100 @@ argument_list|)
 operator|==
 name|TEMPLATE_DECL
 condition|)
+block|{
+name|tree
+name|decl_arg_types
+decl_stmt|;
 comment|/* DECL might be a specialization of FN.  */
-name|tmpl
+comment|/* Adjust the type of DECL in case FN is a static member.  */
+name|decl_arg_types
 operator|=
-name|fn
+name|TYPE_ARG_TYPES
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DECL_STATIC_FUNCTION_P
+argument_list|(
+name|fn
+argument_list|)
+operator|&&
+name|DECL_NONSTATIC_MEMBER_FUNCTION_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+name|decl_arg_types
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|decl_arg_types
+argument_list|)
+expr_stmt|;
+comment|/* Check that the number of function parameters matches. 	     For example, 	       template<class T> void f(int i = 0); 	       template<> void f<int>(); 	     The specialization f<int> is invalid but is not caught 	     by get_bindings below.  */
+if|if
+condition|(
+name|list_length
+argument_list|(
+name|TYPE_ARG_TYPES
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|fn
+argument_list|)
+argument_list|)
+argument_list|)
+operator|!=
+name|list_length
+argument_list|(
+name|decl_arg_types
+argument_list|)
+condition|)
+continue|continue;
+comment|/* See whether this function might be a specialization of this 	     template.  */
+name|targs
+operator|=
+name|get_bindings
+argument_list|(
+name|fn
+argument_list|,
+name|decl
+argument_list|,
+name|explicit_targs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|targs
+condition|)
+comment|/* We cannot deduce template arguments that when used to 	       specialize TMPL will produce DECL.  */
+continue|continue;
+comment|/* Save this template, and the arguments deduced.  */
+name|templates
+operator|=
+name|tree_cons
+argument_list|(
+name|targs
+argument_list|,
+name|fn
+argument_list|,
+name|templates
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
 name|need_member_template
 condition|)
 comment|/* FN is an ordinary member function, and we need a 	   specialization of a member template.  */
-continue|continue;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -3900,7 +4433,7 @@ operator|!=
 name|FUNCTION_DECL
 condition|)
 comment|/* We can get IDENTIFIER_NODEs here in certain erroneous 	   cases.  */
-continue|continue;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -3911,7 +4444,7 @@ name|fn
 argument_list|)
 condition|)
 comment|/* This is just an ordinary non-member function.  Nothing can 	   be a specialization of that.  */
-continue|continue;
+empty_stmt|;
 elseif|else
 if|if
 condition|(
@@ -3921,7 +4454,7 @@ name|fn
 argument_list|)
 condition|)
 comment|/* Cannot specialize functions that are created implicitly.  */
-continue|continue;
+empty_stmt|;
 else|else
 block|{
 name|tree
@@ -4019,39 +4552,7 @@ argument_list|,
 name|candidates
 argument_list|)
 expr_stmt|;
-continue|continue;
 block|}
-comment|/* See whether this function might be a specialization of this 	 template.  */
-name|targs
-operator|=
-name|get_bindings
-argument_list|(
-name|tmpl
-argument_list|,
-name|decl
-argument_list|,
-name|explicit_targs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|targs
-condition|)
-comment|/* We cannot deduce template arguments that when used to 	   specialize TMPL will produce DECL.  */
-continue|continue;
-comment|/* Save this template, and the arguments deduced.  */
-name|templates
-operator|=
-name|tree_cons
-argument_list|(
-name|targs
-argument_list|,
-name|tmpl
-argument_list|,
-name|templates
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4063,7 +4564,7 @@ name|templates
 argument_list|)
 condition|)
 block|{
-comment|/* We have: 	  	   [temp.expl.spec]  	   It is possible for a specialization with a given function 	   signature to be instantiated from more than one function 	   template.  In such cases, explicit specification of the 	   template arguments must be used to uniquely identify the 	   function template specialization being specialized.  	 Note that here, there's no suggestion that we're supposed to 	 determine which of the candidate templates is most 	 specialized.  However, we, also have:  	   [temp.func.order]  	   Partial ordering of overloaded function template 	   declarations is used in the following contexts to select 	   the function template to which a function template 	   specialization refers:              -- when an explicit specialization refers to a function 	      template.   	 So, we do use the partial ordering rules, at least for now. 	 This extension can only serve to make illegal programs legal, 	 so it's safe.  And, there is strong anecdotal evidence that 	 the committee intended the partial ordering rules to apply; 	 the EDG front-end has that behavior, and John Spicer claims 	 that the committee simply forgot to delete the wording in 	 [temp.expl.spec].  */
+comment|/* We have: 	  	   [temp.expl.spec]  	   It is possible for a specialization with a given function 	   signature to be instantiated from more than one function 	   template.  In such cases, explicit specification of the 	   template arguments must be used to uniquely identify the 	   function template specialization being specialized.  	 Note that here, there's no suggestion that we're supposed to 	 determine which of the candidate templates is most 	 specialized.  However, we, also have:  	   [temp.func.order]  	   Partial ordering of overloaded function template 	   declarations is used in the following contexts to select 	   the function template to which a function template 	   specialization refers:              -- when an explicit specialization refers to a function 	      template.   	 So, we do use the partial ordering rules, at least for now. 	 This extension can only serve to make invalid programs valid, 	 so it's safe.  And, there is strong anecdotal evidence that 	 the committee intended the partial ordering rules to apply; 	 the EDG front-end has that behavior, and John Spicer claims 	 that the committee simply forgot to delete the wording in 	 [temp.expl.spec].  */
 name|tree
 name|tmpl
 init|=
@@ -4186,7 +4687,7 @@ return|return
 name|error_mark_node
 return|;
 block|}
-comment|/* We have one, and exactly one, match. */
+comment|/* We have one, and exactly one, match.  */
 if|if
 condition|(
 name|candidates
@@ -4671,7 +5172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check to see if the function just declared, as indicated in    DECLARATOR, and in DECL, is a specialization of a function    template.  We may also discover that the declaration is an explicit    instantiation at this point.     Returns DECL, or an equivalent declaration that should be used    instead if all goes well.  Issues an error message if something is    amiss.  Returns error_mark_node if the error is not easily    recoverable.        FLAGS is a bitmask consisting of the following flags:      2: The function has a definition.    4: The function is a friend.     The TEMPLATE_COUNT is the number of references to qualifying    template classes that appeared in the name of the function.  For    example, in       template<class T> struct S { void f(); };      void S<int>::f();          the TEMPLATE_COUNT would be 1.  However, explicitly specialized    classes are not counted in the TEMPLATE_COUNT, so that in       template<class T> struct S {};      template<> struct S<int> { void f(); }      template<> void S<int>::f();     the TEMPLATE_COUNT would be 0.  (Note that this declaration is    illegal; there should be no template<>.)     If the function is a specialization, it is marked as such via    DECL_TEMPLATE_SPECIALIZATION.  Furthermore, its DECL_TEMPLATE_INFO    is set up correctly, and it is added to the list of specializations     for that template.  */
+comment|/* Check to see if the function just declared, as indicated in    DECLARATOR, and in DECL, is a specialization of a function    template.  We may also discover that the declaration is an explicit    instantiation at this point.     Returns DECL, or an equivalent declaration that should be used    instead if all goes well.  Issues an error message if something is    amiss.  Returns error_mark_node if the error is not easily    recoverable.        FLAGS is a bitmask consisting of the following flags:      2: The function has a definition.    4: The function is a friend.     The TEMPLATE_COUNT is the number of references to qualifying    template classes that appeared in the name of the function.  For    example, in       template<class T> struct S { void f(); };      void S<int>::f();          the TEMPLATE_COUNT would be 1.  However, explicitly specialized    classes are not counted in the TEMPLATE_COUNT, so that in       template<class T> struct S {};      template<> struct S<int> { void f(); }      template<> void S<int>::f();     the TEMPLATE_COUNT would be 0.  (Note that this declaration is    invalid; there should be no template<>.)     If the function is a specialization, it is marked as such via    DECL_TEMPLATE_SPECIALIZATION.  Furthermore, its DECL_TEMPLATE_INFO    is set up correctly, and it is added to the list of specializations     for that template.  */
 end_comment
 
 begin_function
@@ -4923,7 +5424,7 @@ operator|!
 name|is_friend
 condition|)
 block|{
-comment|/* For backwards compatibility, we accept:  	       template<class T> struct S { void f(); }; 	       void S<int>::f() {} // Missing template<>  	     That used to be legal C++.  */
+comment|/* For backwards compatibility, we accept:  	       template<class T> struct S { void f(); }; 	       void S<int>::f() {} // Missing template<>  	     That used to be valid C++.  */
 if|if
 condition|(
 name|pedantic
@@ -5159,13 +5660,13 @@ condition|(
 operator|!
 name|explicit_instantiation
 condition|)
-comment|/* A specialization in class scope.  This is illegal, 	       but the error will already have been flagged by 	       check_specialization_scope.  */
+comment|/* A specialization in class scope.  This is invalid, 	       but the error will already have been flagged by 	       check_specialization_scope.  */
 return|return
 name|error_mark_node
 return|;
 else|else
 block|{
-comment|/* It's not legal to write an explicit instantiation in 		 class scope, e.g.:  	           class C { template void f(); }  		   This case is caught by the parser.  However, on 		   something like: 	        		   template class C { void f(); };  		   (which is illegal) we can get here.  The error will be 		   issued later.  */
+comment|/* It's not valid to write an explicit instantiation in 		 class scope, e.g.:  	           class C { template void f(); }  		   This case is caught by the parser.  However, on 		   something like: 	        		   template class C { void f(); };  		   (which is invalid) we can get here.  The error will be 		   issued later.  */
 empty_stmt|;
 block|}
 return|return
@@ -5258,17 +5759,10 @@ name|idx
 decl_stmt|;
 if|if
 condition|(
-name|name
-operator|==
-name|constructor_name
+name|constructor_name_p
 argument_list|(
-name|ctype
-argument_list|)
-operator|||
 name|name
-operator|==
-name|constructor_name_full
-argument_list|(
+argument_list|,
 name|ctype
 argument_list|)
 condition|)
@@ -5379,7 +5873,7 @@ for|for
 control|(
 name|idx
 operator|=
-literal|2
+name|CLASSTYPE_FIRST_CONVERSION_SLOT
 init|;
 name|idx
 operator|<
@@ -5609,6 +6103,33 @@ name|targs
 argument_list|)
 return|;
 block|}
+comment|/* If we thought that the DECL was a member function, but it 	     turns out to be specializing a static member function, 	     make DECL a static member function as well.  We also have 	     to adjust last_function_parms to avoid confusing 	     start_function later.  */
+if|if
+condition|(
+name|DECL_STATIC_FUNCTION_P
+argument_list|(
+name|tmpl
+argument_list|)
+operator|&&
+name|DECL_NONSTATIC_MEMBER_FUNCTION_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+block|{
+name|revert_static_member_fn
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+name|last_function_parms
+operator|=
+name|TREE_CHAIN
+argument_list|(
+name|last_function_parms
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* If this is a specialization of a member template of a 	     template class.  In we want to return the TEMPLATE_DECL, 	     not the specialization of it.  */
 if|if
 condition|(
@@ -5635,33 +6156,6 @@ expr_stmt|;
 return|return
 name|tmpl
 return|;
-block|}
-comment|/* If we thought that the DECL was a member function, but it 	     turns out to be specializing a static member function, 	     make DECL a static member function as well.  */
-if|if
-condition|(
-name|DECL_STATIC_FUNCTION_P
-argument_list|(
-name|tmpl
-argument_list|)
-operator|&&
-name|DECL_NONSTATIC_MEMBER_FUNCTION_P
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-block|{
-name|revert_static_member_fn
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
-name|last_function_parms
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|last_function_parms
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Set up the DECL_TEMPLATE_INFO for DECL.  */
 name|DECL_TEMPLATE_INFO
@@ -5800,7 +6294,7 @@ name|template_header_count
 operator|<=
 name|context_depth
 condition|)
-comment|/* This is OK; the template headers are for the context.  We 	   are actually too lenient here; like 	   check_explicit_specialization we should consider the number 	   of template types included in the actual declaration.  For 	   example,   	     template<class T> struct S { 	       template<class U> template<class V> 	       struct I {}; 	     };   	   is illegal, but:  	     template<class T> struct S { 	       template<class U> struct I; 	     };   	     template<class T> template<class U. 	     struct S<T>::I {};  	   is not.  */
+comment|/* This is OK; the template headers are for the context.  We 	   are actually too lenient here; like 	   check_explicit_specialization we should consider the number 	   of template types included in the actual declaration.  For 	   example,   	     template<class T> struct S { 	       template<class U> template<class V> 	       struct I {}; 	     };   	   is invalid, but:  	     template<class T> struct S { 	       template<class U> struct I; 	     };   	     template<class T> template<class U. 	     struct S<T>::I {};  	   is not.  */
 empty_stmt|;
 elseif|else
 if|if
@@ -7210,23 +7704,6 @@ name|decl
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|CAN_HAVE_FULL_LANG_DECL_P
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|tmpl
-argument_list|)
-operator|=
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|decl
-argument_list|)
-expr_stmt|;
 name|DECL_STATIC_FUNCTION_P
 argument_list|(
 name|tmpl
@@ -7243,6 +7720,16 @@ name|tmpl
 argument_list|)
 operator|=
 name|DECL_CONSTRUCTOR_P
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+name|DECL_DESTRUCTOR_P
+argument_list|(
+name|tmpl
+argument_list|)
+operator|=
+name|DECL_DESTRUCTOR_P
 argument_list|(
 name|decl
 argument_list|)
@@ -7303,12 +7790,12 @@ comment|/* The index of the specialization argument we are currently      proces
 name|int
 name|current_arg
 decl_stmt|;
-comment|/* An array whose size is the number of template parameters.  The      elements are non-zero if the parameter has been used in any one      of the arguments processed so far.  */
+comment|/* An array whose size is the number of template parameters.  The      elements are nonzero if the parameter has been used in any one      of the arguments processed so far.  */
 name|int
 modifier|*
 name|parms
 decl_stmt|;
-comment|/* An array whose size is the number of template arguments.  The      elements are non-zero if the argument makes use of template      parameters of this level.  */
+comment|/* An array whose size is the number of template arguments.  The      elements are nonzero if the argument makes use of template      parameters of this level.  */
 name|int
 modifier|*
 name|arg_uses_template_parms
@@ -7530,7 +8017,7 @@ name|struct
 name|template_parm_data
 name|tpd2
 decl_stmt|;
-comment|/* We check that each of the template parameters given in the      partial specialization is used in the argument list to the      specialization.  For example:         template<class T> struct S;        template<class T> struct S<T*>;       The second declaration is OK because `T*' uses the template      parameter T, whereas         template<class T> struct S<int>;       is no good.  Even trickier is:         template<class T>        struct S1        { 	  template<class U> 	  struct S2; 	  template<class U> 	  struct S2<T>;        };       The S2<T> declaration is actually illegal; it is a      full-specialization.  Of course,   	  template<class U> 	  struct S2<T (*)(U)>;       or some such would have been OK.  */
+comment|/* We check that each of the template parameters given in the      partial specialization is used in the argument list to the      specialization.  For example:         template<class T> struct S;        template<class T> struct S<T*>;       The second declaration is OK because `T*' uses the template      parameter T, whereas         template<class T> struct S<int>;       is no good.  Even trickier is:         template<class T>        struct S1        { 	  template<class U> 	  struct S2; 	  template<class U> 	  struct S2<T>;        };       The S2<T> declaration is actually invalid; it is a      full-specialization.  Of course,   	  template<class U> 	  struct S2<T (*)(U)>;       or some such would have been OK.  */
 name|tpd
 operator|.
 name|level
@@ -7640,6 +8127,8 @@ name|mark_template_parm
 argument_list|,
 operator|&
 name|tpd
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7933,6 +8422,8 @@ name|mark_template_parm
 argument_list|,
 operator|&
 name|tpd2
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -8043,7 +8534,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check that a template declaration's use of default arguments is not    invalid.  Here, PARMS are the template parameters.  IS_PRIMARY is    non-zero if DECL is the thing declared by a primary template.    IS_PARTIAL is non-zero if DECL is a partial specialization.  */
+comment|/* Check that a template declaration's use of default arguments is not    invalid.  Here, PARMS are the template parameters.  IS_PRIMARY is    nonzero if DECL is the thing declared by a primary template.    IS_PARTIAL is nonzero if DECL is a partial specialization.  */
 end_comment
 
 begin_function
@@ -8331,7 +8822,7 @@ argument_list|(
 name|current_class_type
 argument_list|)
 condition|)
-comment|/* If we're inside a class definition, there's no need to        examine the parameters to the class itself.  On the one        hand, they will be checked when the class is defined, and,        on the other, default arguments are legal in things like:          template<class T = double>          struct S { template<class U> void f(U); };        Here the default argument for `S' has no bearing on the        declaration of `f'.  */
+comment|/* If we're inside a class definition, there's no need to        examine the parameters to the class itself.  On the one        hand, they will be checked when the class is defined, and,        on the other, default arguments are valid in things like:          template<class T = double>          struct S { template<class U> void f(U); };        Here the default argument for `S' has no bearing on the        declaration of `f'.  */
 name|last_level_to_check
 operator|=
 name|template_class_depth
@@ -8462,7 +8953,73 @@ block|}
 end_function
 
 begin_comment
-comment|/* Creates a TEMPLATE_DECL for the indicated DECL using the template    parameters given by current_template_args, or reuses a    previously existing one, if appropriate.  Returns the DECL, or an    equivalent one, if it is replaced via a call to duplicate_decls.       If IS_FRIEND is non-zero, DECL is a friend declaration.  */
+comment|/* Worker for push_template_decl_real, called via    for_each_template_parm.  DATA is really an int, indicating the    level of the parameters we are interested in.  If T is a template    parameter of that level, return nonzero.  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|template_parm_this_level_p
+parameter_list|(
+name|t
+parameter_list|,
+name|data
+parameter_list|)
+name|tree
+name|t
+decl_stmt|;
+name|void
+modifier|*
+name|data
+decl_stmt|;
+block|{
+name|int
+name|this_level
+init|=
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|data
+decl_stmt|;
+name|int
+name|level
+decl_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|t
+argument_list|)
+operator|==
+name|TEMPLATE_PARM_INDEX
+condition|)
+name|level
+operator|=
+name|TEMPLATE_PARM_LEVEL
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+else|else
+name|level
+operator|=
+name|TEMPLATE_TYPE_LEVEL
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
+return|return
+name|level
+operator|==
+name|this_level
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Creates a TEMPLATE_DECL for the indicated DECL using the template    parameters given by current_template_args, or reuses a    previously existing one, if appropriate.  Returns the DECL, or an    equivalent one, if it is replaced via a call to duplicate_decls.       If IS_FRIEND is nonzero, DECL is a friend declaration.  */
 end_comment
 
 begin_function
@@ -8843,7 +9400,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* Since a template declaration already existed for this 	     class-type, we must be redeclaring it here.  Make sure 	     that the redeclaration is legal.  */
+comment|/* Since a template declaration already existed for this 	     class-type, we must be redeclaring it here.  Make sure 	     that the redeclaration is valid.  */
 name|redeclare_class_template
 argument_list|(
 name|TREE_TYPE
@@ -8894,7 +9451,7 @@ name|decl
 argument_list|)
 condition|)
 block|{
-comment|/* A specialization of a member template of a template 		 class. */
+comment|/* A specialization of a member template of a template 		 class.  */
 name|SET_DECL_TEMPLATE_SPECIALIZATION
 argument_list|(
 name|tmpl
@@ -9353,6 +9910,7 @@ if|if
 condition|(
 name|primary
 condition|)
+block|{
 name|DECL_PRIMARY_TEMPLATE
 argument_list|(
 name|tmpl
@@ -9360,6 +9918,55 @@ argument_list|)
 operator|=
 name|tmpl
 expr_stmt|;
+if|if
+condition|(
+name|DECL_CONV_FN_P
+argument_list|(
+name|tmpl
+argument_list|)
+condition|)
+block|{
+name|int
+name|depth
+init|=
+name|TMPL_PARMS_DEPTH
+argument_list|(
+name|DECL_TEMPLATE_PARMS
+argument_list|(
+name|tmpl
+argument_list|)
+argument_list|)
+decl_stmt|;
+comment|/* It is a conversion operator. See if the type converted to 	     depends on innermost template operands.  */
+if|if
+condition|(
+name|for_each_template_parm
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|tmpl
+argument_list|)
+argument_list|)
+argument_list|,
+name|template_parm_this_level_p
+argument_list|,
+operator|&
+name|depth
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|DECL_TEMPLATE_CONV_FN_P
+argument_list|(
+name|tmpl
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
 name|info
 operator|=
 name|tree_cons
@@ -10165,7 +10772,7 @@ case|:
 case|case
 name|ENUMERAL_TYPE
 case|:
-comment|/* For a non-type template-parameter of integral or enumeration          type, integral promotions (_conv.prom_) and integral          conversions (_conv.integral_) are applied. */
+comment|/* For a non-type template-parameter of integral or enumeration          type, integral promotions (_conv.prom_) and integral          conversions (_conv.integral_) are applied.  */
 if|if
 condition|(
 operator|!
@@ -10582,7 +11189,7 @@ return|return
 name|error_mark_node
 return|;
 block|}
-name|mark_addressable
+name|cxx_mark_addressable
 argument_list|(
 name|expr
 argument_list|)
@@ -11096,7 +11703,7 @@ operator|==
 name|OFFSET_TYPE
 condition|)
 block|{
-comment|/* The template argument was the name of some 	 member function.  That's usually 	 illegal, but static members are OK.  In any 	 case, grab the underlying fields/functions 	 and issue an error later if required.  */
+comment|/* The template argument was the name of some 	 member function.  That's usually 	 invalid, but static members are OK.  In any 	 case, grab the underlying fields/functions 	 and issue an error later if required.  */
 name|arg
 operator|=
 name|TREE_VALUE
@@ -11713,7 +12320,7 @@ argument_list|(
 name|t
 argument_list|)
 condition|)
-comment|/* We used to call digest_init here.  However, digest_init 	   will report errors, which we don't want when complain 	   is zero.  More importantly, digest_init will try too 	   hard to convert things: for example, `0' should not be 	   converted to pointer type at this point according to 	   the standard.  Accepting this is not merely an 	   extension, since deciding whether or not these 	   conversions can occur is part of determining which 	   function template to call, or whether a given explicit 	   argument specification is legal.  */
+comment|/* We used to call digest_init here.  However, digest_init 	   will report errors, which we don't want when complain 	   is zero.  More importantly, digest_init will try too 	   hard to convert things: for example, `0' should not be 	   converted to pointer type at this point according to 	   the standard.  Accepting this is not merely an 	   extension, since deciding whether or not these 	   conversions can occur is part of determining which 	   function template to call, or whether a given explicit 	   argument specification is valid.  */
 name|val
 operator|=
 name|convert_nontype_argument
@@ -11768,7 +12375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Convert all template arguments to their appropriate types, and    return a vector containing the innermost resulting template    arguments.  If any error occurs, return error_mark_node. Error and    warning messages are issued under control of COMPLAIN.  Some error    messages are issued even if COMPLAIN is zero; for instance, if a    template argument is composed from a local class.     If REQUIRE_ALL_ARGUMENTS is non-zero, all arguments must be    provided in ARGLIST, or else trailing parameters must have default    values.  If REQUIRE_ALL_ARGUMENTS is zero, we will attempt argument    deduction for any unspecified trailing arguments.  */
+comment|/* Convert all template arguments to their appropriate types, and    return a vector containing the innermost resulting template    arguments.  If any error occurs, return error_mark_node. Error and    warning messages are issued under control of COMPLAIN.  Some error    messages are issued even if COMPLAIN is zero; for instance, if a    template argument is composed from a local class.     If REQUIRE_ALL_ARGUMENTS is nonzero, all arguments must be    provided in ARGLIST, or else trailing parameters must have default    values.  If REQUIRE_ALL_ARGUMENTS is zero, we will attempt argument    deduction for any unspecified trailing arguments.  */
 end_comment
 
 begin_function
@@ -13002,7 +13609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return a TEMPLATE_ID_EXPR corresponding to the indicated FNS (which    may be either a _DECL or an overloaded function or an    IDENTIFIER_NODE), and ARGLIST.  */
+comment|/* Return a TEMPLATE_ID_EXPR corresponding to the indicated FNS and    ARGLIST.  Valid choices for FNS are given in the cp-tree.def    documentation for TEMPLATE_ID_EXPR.  */
 end_comment
 
 begin_function
@@ -13026,6 +13633,19 @@ if|if
 condition|(
 name|fns
 operator|==
+name|error_mark_node
+operator|||
+name|arglist
+operator|==
+name|error_mark_node
+condition|)
+return|return
+name|error_mark_node
+return|;
+if|if
+condition|(
+name|fns
+operator|==
 name|NULL_TREE
 condition|)
 block|{
@@ -13036,6 +13656,75 @@ argument_list|)
 expr_stmt|;
 return|return
 name|error_mark_node
+return|;
+block|}
+name|my_friendly_assert
+argument_list|(
+name|TREE_CODE
+argument_list|(
+name|fns
+argument_list|)
+operator|==
+name|TEMPLATE_DECL
+operator|||
+name|TREE_CODE
+argument_list|(
+name|fns
+argument_list|)
+operator|==
+name|OVERLOAD
+operator|||
+name|BASELINK_P
+argument_list|(
+name|fns
+argument_list|)
+operator|||
+name|TREE_CODE
+argument_list|(
+name|fns
+argument_list|)
+operator|==
+name|IDENTIFIER_NODE
+operator|||
+name|TREE_CODE
+argument_list|(
+name|fns
+argument_list|)
+operator|==
+name|LOOKUP_EXPR
+argument_list|,
+literal|20020730
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BASELINK_P
+argument_list|(
+name|fns
+argument_list|)
+condition|)
+block|{
+name|BASELINK_FUNCTIONS
+argument_list|(
+name|fns
+argument_list|)
+operator|=
+name|build
+argument_list|(
+name|TEMPLATE_ID_EXPR
+argument_list|,
+name|unknown_type_node
+argument_list|,
+name|BASELINK_FUNCTIONS
+argument_list|(
+name|fns
+argument_list|)
+argument_list|,
+name|arglist
+argument_list|)
+expr_stmt|;
+return|return
+name|fns
 return|;
 block|}
 name|type
@@ -13061,23 +13750,6 @@ name|type
 operator|=
 name|unknown_type_node
 expr_stmt|;
-if|if
-condition|(
-name|processing_template_decl
-condition|)
-return|return
-name|build_min
-argument_list|(
-name|TEMPLATE_ID_EXPR
-argument_list|,
-name|type
-argument_list|,
-name|fns
-argument_list|,
-name|arglist
-argument_list|)
-return|;
-else|else
 return|return
 name|build
 argument_list|(
@@ -13157,7 +13829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given an IDENTIFIER_NODE (type TEMPLATE_DECL) and a chain of    parameters, find the desired type.     D1 is the PTYPENAME terminal, and ARGLIST is the list of arguments.    (Actually ARGLIST may be either a TREE_LIST or a TREE_VEC.  It will    be a TREE_LIST if called directly from the parser, and a TREE_VEC    otherwise.)     IN_DECL, if non-NULL, is the template declaration we are trying to    instantiate.       If ENTERING_SCOPE is non-zero, we are about to enter the scope of    the class we are looking up.        Issue error and warning messages under control of COMPLAIN.     If the template class is really a local class in a template    function, then the FUNCTION_CONTEXT is the function in which it is    being instantiated.  */
+comment|/* Given an IDENTIFIER_NODE (type TEMPLATE_DECL) and a chain of    parameters, find the desired type.     D1 is the PTYPENAME terminal, and ARGLIST is the list of arguments.    (Actually ARGLIST may be either a TREE_LIST or a TREE_VEC.  It will    be a TREE_LIST if called directly from the parser, and a TREE_VEC    otherwise.)     IN_DECL, if non-NULL, is the template declaration we are trying to    instantiate.       If ENTERING_SCOPE is nonzero, we are about to enter the scope of    the class we are looking up.        Issue error and warning messages under control of COMPLAIN.     If the template class is really a local class in a template    function, then the FUNCTION_CONTEXT is the function in which it is    being instantiated.  */
 end_comment
 
 begin_function
@@ -13204,6 +13876,11 @@ decl_stmt|;
 name|tree
 name|t
 decl_stmt|;
+name|timevar_push
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -13455,9 +14132,13 @@ argument_list|,
 name|d1
 argument_list|)
 expr_stmt|;
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|error_mark_node
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -13522,9 +14203,13 @@ name|in_decl
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|error_mark_node
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -13585,9 +14270,13 @@ name|arglist2
 operator|==
 name|error_mark_node
 condition|)
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|error_mark_node
-return|;
+argument_list|)
+expr_stmt|;
 name|parm
 operator|=
 name|bind_template_template_parm
@@ -13600,9 +14289,13 @@ argument_list|,
 name|arglist2
 argument_list|)
 expr_stmt|;
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|parm
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -13856,9 +14549,13 @@ operator|==
 name|error_mark_node
 condition|)
 comment|/* We were unable to bind the arguments.  */
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|error_mark_node
-return|;
+argument_list|)
+expr_stmt|;
 comment|/* In the scope of a template class, explicit references to the 	 template class refer to the type of the template, not any 	 instantiation of it.  For example, in: 	  	   template<class T> class C { void f(C<T>); }  	 the `C<T>' is just the same as `C'.  Outside of the 	 class, however, such a reference is an instantiation.  */
 if|if
 condition|(
@@ -13945,9 +14642,13 @@ if|if
 condition|(
 name|found
 condition|)
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|found
-return|;
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -14016,12 +14717,16 @@ argument_list|)
 operator|=
 name|found
 expr_stmt|;
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|TREE_VALUE
 argument_list|(
 name|found
 argument_list|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* This type is a "partial instantiation" if any of the template 	 arguments still involve template parameters.  Note that we set 	 IS_PARTIAL_INSTANTIATION for partial specializations as 	 well.  */
 name|is_partial_instantiation
@@ -14071,9 +14776,13 @@ comment|/*globalize=*/
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|found
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|context
 operator|=
@@ -14259,25 +14968,12 @@ argument_list|)
 operator|=
 name|type_decl
 expr_stmt|;
-name|DECL_SOURCE_FILE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|type_decl
 argument_list|)
 operator|=
-name|DECL_SOURCE_FILE
-argument_list|(
-name|TYPE_STUB_DECL
-argument_list|(
-name|template_type
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|DECL_SOURCE_LINE
-argument_list|(
-name|type_decl
-argument_list|)
-operator|=
-name|DECL_SOURCE_LINE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|TYPE_STUB_DECL
 argument_list|(
@@ -14292,6 +14988,32 @@ operator|=
 name|TYPE_NAME
 argument_list|(
 name|t
+argument_list|)
+expr_stmt|;
+name|TREE_PRIVATE
+argument_list|(
+name|type_decl
+argument_list|)
+operator|=
+name|TREE_PRIVATE
+argument_list|(
+name|TYPE_STUB_DECL
+argument_list|(
+name|template_type
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|TREE_PROTECTED
+argument_list|(
+name|type_decl
+argument_list|)
+operator|=
+name|TREE_PROTECTED
+argument_list|(
+name|TYPE_STUB_DECL
+argument_list|(
+name|template_type
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Set up the template information.  We have to figure out which 	 template is the immediate parent if this is a full 	 instantiation.  */
@@ -14588,10 +15310,19 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-return|return
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
 name|t
-return|;
+argument_list|)
+expr_stmt|;
 block|}
+name|timevar_pop
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -14608,6 +15339,9 @@ decl_stmt|;
 name|void
 modifier|*
 name|data
+decl_stmt|;
+name|htab_t
+name|visited
 decl_stmt|;
 block|}
 struct|;
@@ -14674,6 +15408,47 @@ name|pfd
 operator|->
 name|data
 decl_stmt|;
+name|void
+modifier|*
+modifier|*
+name|slot
+decl_stmt|;
+comment|/* If we have already visited this tree, there's no need to walk      subtrees.  Otherwise, add it to the visited table.  */
+name|slot
+operator|=
+name|htab_find_slot
+argument_list|(
+name|pfd
+operator|->
+name|visited
+argument_list|,
+operator|*
+name|tp
+argument_list|,
+name|INSERT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|slot
+condition|)
+block|{
+operator|*
+name|walk_subtrees
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|NULL_TREE
+return|;
+block|}
+operator|*
+name|slot
+operator|=
+operator|*
+name|tp
+expr_stmt|;
 if|if
 condition|(
 name|TYPE_P
@@ -14691,6 +15466,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14751,6 +15530,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14773,6 +15556,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14795,6 +15582,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14835,6 +15626,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14876,6 +15671,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14905,6 +15704,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14927,6 +15730,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -14990,6 +15797,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -15020,6 +15831,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -15057,6 +15872,10 @@ argument_list|,
 name|fn
 argument_list|,
 name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
 argument_list|)
 condition|)
 return|return
@@ -15127,6 +15946,38 @@ return|return
 name|error_mark_node
 return|;
 break|break;
+case|case
+name|BASELINK
+case|:
+comment|/* If we do not handle this case specially, we end up walking 	 the BINFO hierarchy, which is circular, and therefore 	 confuses walk_tree.  */
+operator|*
+name|walk_subtrees
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|for_each_template_parm
+argument_list|(
+name|BASELINK_FUNCTIONS
+argument_list|(
+operator|*
+name|tp
+argument_list|)
+argument_list|,
+name|fn
+argument_list|,
+name|data
+argument_list|,
+name|pfd
+operator|->
+name|visited
+argument_list|)
+condition|)
+return|return
+name|error_mark_node
+return|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -15138,7 +15989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For each TEMPLATE_TYPE_PARM, TEMPLATE_TEMPLATE_PARM,     BOUND_TEMPLATE_TEMPLATE_PARM or TEMPLATE_PARM_INDEX in T,     call FN with the parameter and the DATA.    If FN returns non-zero, the iteration is terminated, and    for_each_template_parm returns 1.  Otherwise, the iteration    continues.  If FN never returns a non-zero value, the value    returned by for_each_template_parm is 0.  If FN is NULL, it is    considered to be the function which always returns 1.  */
+comment|/* For each TEMPLATE_TYPE_PARM, TEMPLATE_TEMPLATE_PARM,     BOUND_TEMPLATE_TEMPLATE_PARM or TEMPLATE_PARM_INDEX in T,     call FN with the parameter and the DATA.    If FN returns nonzero, the iteration is terminated, and    for_each_template_parm returns 1.  Otherwise, the iteration    continues.  If FN never returns a nonzero value, the value    returned by for_each_template_parm is 0.  If FN is NULL, it is    considered to be the function which always returns 1.  */
 end_comment
 
 begin_function
@@ -15151,6 +16002,8 @@ parameter_list|,
 name|fn
 parameter_list|,
 name|data
+parameter_list|,
+name|visited
 parameter_list|)
 name|tree
 name|t
@@ -15162,10 +16015,16 @@ name|void
 modifier|*
 name|data
 decl_stmt|;
+name|htab_t
+name|visited
+decl_stmt|;
 block|{
 name|struct
 name|pair_fn_data
 name|pfd
+decl_stmt|;
+name|int
+name|result
 decl_stmt|;
 comment|/* Set up.  */
 name|pfd
@@ -15180,8 +16039,35 @@ name|data
 operator|=
 name|data
 expr_stmt|;
-comment|/* Walk the tree.  (Conceptually, we would like to walk without      duplicates, but for_each_template_parm_r recursively calls      for_each_template_parm, so we would need to reorganize a fair      bit to use walk_tree_without_duplicates.)  */
-return|return
+comment|/* Walk the tree.  (Conceptually, we would like to walk without      duplicates, but for_each_template_parm_r recursively calls      for_each_template_parm, so we would need to reorganize a fair      bit to use walk_tree_without_duplicates, so we keep our own      visited list.)  */
+if|if
+condition|(
+name|visited
+condition|)
+name|pfd
+operator|.
+name|visited
+operator|=
+name|visited
+expr_stmt|;
+else|else
+name|pfd
+operator|.
+name|visited
+operator|=
+name|htab_create
+argument_list|(
+literal|37
+argument_list|,
+name|htab_hash_pointer
+argument_list|,
+name|htab_eq_pointer
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
 name|walk_tree
 argument_list|(
 operator|&
@@ -15196,6 +16082,22 @@ name|NULL
 argument_list|)
 operator|!=
 name|NULL_TREE
+expr_stmt|;
+comment|/* Clean up.  */
+if|if
+condition|(
+operator|!
+name|visited
+condition|)
+name|htab_delete
+argument_list|(
+name|pfd
+operator|.
+name|visited
+argument_list|)
+expr_stmt|;
+return|return
+name|result
 return|;
 block|}
 end_function
@@ -15218,6 +16120,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 return|;
 block|}
@@ -15884,7 +16788,7 @@ operator|=
 name|NULL_TREE
 expr_stmt|;
 block|}
-comment|/* Inside pushdecl_namespace_level, we will push into the 	 current namespace. However, the friend function should go 	 into the namespace of the template. */
+comment|/* Inside pushdecl_namespace_level, we will push into the 	 current namespace. However, the friend function should go 	 into the namespace of the template.  */
 name|ns
 operator|=
 name|decl_namespace_context
@@ -16494,6 +17398,8 @@ decl_stmt|,
 name|pattern
 decl_stmt|,
 name|t
+decl_stmt|,
+name|member
 decl_stmt|;
 name|tree
 name|typedecl
@@ -16759,12 +17665,22 @@ argument_list|(
 name|pattern
 argument_list|)
 expr_stmt|;
-name|CLASSTYPE_TAGS
+name|CLASSTYPE_DECL_LIST
 argument_list|(
 name|type
 argument_list|)
 operator|=
-name|CLASSTYPE_TAGS
+name|CLASSTYPE_DECL_LIST
+argument_list|(
+name|pattern
+argument_list|)
+expr_stmt|;
+name|CLASSTYPE_NESTED_UDTS
+argument_list|(
+name|type
+argument_list|)
+operator|=
+name|CLASSTYPE_NESTED_UDTS
 argument_list|(
 name|pattern
 argument_list|)
@@ -16824,7 +17740,7 @@ condition|(
 name|t
 condition|)
 block|{
-comment|/* This TYPE is actually a instantiation of of a partial 	 specialization.  We replace the innermost set of ARGS with 	 the arguments appropriate for substitution.  For example, 	 given:  	   template<class T> struct S {}; 	   template<class T> struct S<T*> {}; 	  	 and supposing that we are instantiating S<int*>, ARGS will 	 present be {int*} but we need {int}.  */
+comment|/* This TYPE is actually an instantiation of a partial 	 specialization.  We replace the innermost set of ARGS with 	 the arguments appropriate for substitution.  For example, 	 given:  	   template<class T> struct S {}; 	   template<class T> struct S<T*> {}; 	  	 and supposing that we are instantiating S<int*>, ARGS will 	 present be {int*} but we need {int}.  */
 name|tree
 name|inner_args
 init|=
@@ -17170,6 +18086,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|DECL_CLASS_SCOPE_P
+argument_list|(
+name|TYPE_MAIN_DECL
+argument_list|(
+name|pattern
+argument_list|)
+argument_list|)
+condition|)
+comment|/* First instantiate our enclosing class.  */
+name|complete_type
+argument_list|(
+name|TYPE_CONTEXT
+argument_list|(
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|TYPE_BINFO_BASETYPES
 argument_list|(
 name|pattern
@@ -17344,34 +18279,6 @@ expr_stmt|;
 comment|/* Now call xref_basetypes to set up all the base-class 	 information.  */
 name|xref_basetypes
 argument_list|(
-name|TREE_CODE
-argument_list|(
-name|pattern
-argument_list|)
-operator|==
-name|RECORD_TYPE
-condition|?
-operator|(
-name|CLASSTYPE_DECLARED_CLASS
-argument_list|(
-name|pattern
-argument_list|)
-condition|?
-name|class_type_node
-else|:
-name|record_type_node
-operator|)
-else|:
-name|union_type_node
-argument_list|,
-name|DECL_NAME
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|pattern
-argument_list|)
-argument_list|)
-argument_list|,
 name|type
 argument_list|,
 name|base_list
@@ -17386,32 +18293,55 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Now members are processed in the order of declaration.  */
 for|for
 control|(
-name|t
+name|member
 operator|=
-name|CLASSTYPE_TAGS
+name|CLASSTYPE_DECL_LIST
 argument_list|(
 name|pattern
 argument_list|)
 init|;
-name|t
+name|member
 condition|;
-name|t
+name|member
 operator|=
 name|TREE_CHAIN
 argument_list|(
-name|t
+name|member
 argument_list|)
 control|)
 block|{
 name|tree
-name|tag
+name|t
 init|=
 name|TREE_VALUE
 argument_list|(
+name|member
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|TREE_PURPOSE
+argument_list|(
+name|member
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|TYPE_P
+argument_list|(
 name|t
 argument_list|)
+condition|)
+block|{
+comment|/* Build new CLASSTYPE_NESTED_UDTS.  */
+name|tree
+name|tag
+init|=
+name|t
 decl_stmt|;
 name|tree
 name|name
@@ -17468,7 +18398,7 @@ argument_list|(
 name|tag
 argument_list|)
 condition|)
-comment|/* Unfortunately, lookup_template_class sets 	       CLASSTYPE_IMPLICIT_INSTANTIATION for a partial 	       instantiation (i.e., for the type of a member template 	       class nested within a template class.)  This behavior is 	       required for maybe_process_partial_specialization to work 	       correctly, but is not accurate in this case; the TAG is not 	       an instantiation of anything.  (The corresponding 	       TEMPLATE_DECL is an instantiation, but the TYPE is not.) */
+comment|/* Unfortunately, lookup_template_class sets 		       CLASSTYPE_IMPLICIT_INSTANTIATION for a partial 		       instantiation (i.e., for the type of a member template 		       class nested within a template class.)  This behavior is 		       required for maybe_process_partial_specialization to work 		       correctly, but is not accurate in this case; the TAG is not 		       an instantiation of anything.  (The corresponding 		       TEMPLATE_DECL is an instantiation, but the TYPE is not.) */
 name|CLASSTYPE_USE_TEMPLATE
 argument_list|(
 name|newtag
@@ -17476,7 +18406,7 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Now, we call pushtag to put this NEWTAG into the scope of 	     TYPE.  We first set up the IDENTIFIER_TYPE_VALUE to avoid 	     pushtag calling push_template_decl.  We don't have to do 	     this for enums because it will already have been done in 	     tsubst_enum.  */
+comment|/* Now, we call pushtag to put this NEWTAG into the scope of 		     TYPE.  We first set up the IDENTIFIER_TYPE_VALUE to avoid 		     pushtag calling push_template_decl.  We don't have to do 		     this for enums because it will already have been done in 		     tsubst_enum.  */
 if|if
 condition|(
 name|name
@@ -17500,25 +18430,56 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Don't replace enum constants here.  */
-for|for
-control|(
-name|t
-operator|=
-name|TYPE_FIELDS
-argument_list|(
-name|pattern
-argument_list|)
-init|;
-name|t
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
+elseif|else
+if|if
+condition|(
+name|TREE_CODE
 argument_list|(
 name|t
 argument_list|)
-control|)
+operator|==
+name|FUNCTION_DECL
+operator|||
+name|DECL_FUNCTION_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+comment|/* Build new TYPE_METHODS.  */
+name|tree
+name|r
+init|=
+name|tsubst
+argument_list|(
+name|t
+argument_list|,
+name|args
+argument_list|,
+name|tf_error
+argument_list|,
+name|NULL_TREE
+argument_list|)
+decl_stmt|;
+name|set_current_access_from_decl
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+name|grok_special_member_properties
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+name|finish_member_declaration
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Build new TYPE_FIELDS.  */
 if|if
 condition|(
 name|TREE_CODE
@@ -17532,7 +18493,7 @@ block|{
 name|tree
 name|r
 decl_stmt|;
-comment|/* The the file and line for this declaration, to assist in 	   error message reporting.  Since we called push_tinst_level 	   above, we don't need to restore these.  */
+comment|/* The the file and line for this declaration, to assist 		     in error message reporting.  Since we called  		     push_tinst_level above, we don't need to restore these.  */
 name|lineno
 operator|=
 name|DECL_SOURCE_LINE
@@ -17647,7 +18608,7 @@ operator|==
 name|FIELD_DECL
 condition|)
 block|{
-comment|/* Determine whether R has a valid type and can be 	       completed later.  If R is invalid, then it is replaced 	       by error_mark_node so that it will not be added to 	       TYPE_FIELDS.  */
+comment|/* Determine whether R has a valid type and can be 			 completed later.  If R is invalid, then it is 			 replaced by error_mark_node so that it will not be 			 added to TYPE_FIELDS.  */
 name|tree
 name|rtype
 init|=
@@ -17658,14 +18619,26 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|can_complete_type_without_circularity
 argument_list|(
 name|rtype
 argument_list|)
 condition|)
+name|complete_type
+argument_list|(
+name|rtype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|COMPLETE_TYPE_P
+argument_list|(
+name|rtype
+argument_list|)
+condition|)
 block|{
-name|incomplete_type_error
+name|cxx_incomplete_type_error
 argument_list|(
 name|r
 argument_list|,
@@ -17678,190 +18651,69 @@ name|error_mark_node
 expr_stmt|;
 block|}
 block|}
-comment|/* R will have a TREE_CHAIN if and only if it has already been 	   processed by finish_member_declaration.  This can happen 	   if, for example, it is a TYPE_DECL for a class-scoped 	   ENUMERAL_TYPE; such a thing will already have been added to 	   the field list by tsubst_enum above.  */
+comment|/* If it is a TYPE_DECL for a class-scoped ENUMERAL_TYPE, 		     such a thing will already have been added to the field 		     list by tsubst_enum in finish_member_declaration in the 		     CLASSTYPE_NESTED_UDTS case above.  */
 if|if
 condition|(
 operator|!
-name|TREE_CHAIN
+operator|(
+name|TREE_CODE
 argument_list|(
 name|r
-argument_list|)
-condition|)
-block|{
-name|set_current_access_from_decl
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-name|finish_member_declaration
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-comment|/* Set up the list (TYPE_METHODS) and vector (CLASSTYPE_METHOD_VEC)      for this instantiation.  */
-for|for
-control|(
-name|t
-operator|=
-name|TYPE_METHODS
-argument_list|(
-name|pattern
-argument_list|)
-init|;
-name|t
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|t
-argument_list|)
-control|)
-block|{
-name|tree
-name|r
-init|=
-name|tsubst
-argument_list|(
-name|t
-argument_list|,
-name|args
-argument_list|,
-name|tf_error
-argument_list|,
-name|NULL_TREE
-argument_list|)
-decl_stmt|;
-name|set_current_access_from_decl
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-name|grok_special_member_properties
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-name|finish_member_declaration
-argument_list|(
-name|r
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Construct the DECL_FRIENDLIST for the new class type.  */
-name|typedecl
-operator|=
-name|TYPE_MAIN_DECL
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|t
-operator|=
-name|DECL_FRIENDLIST
-argument_list|(
-name|TYPE_MAIN_DECL
-argument_list|(
-name|pattern
-argument_list|)
-argument_list|)
-init|;
-name|t
-operator|!=
-name|NULL_TREE
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|t
-argument_list|)
-control|)
-block|{
-name|tree
-name|friends
-decl_stmt|;
-for|for
-control|(
-name|friends
-operator|=
-name|TREE_VALUE
-argument_list|(
-name|t
-argument_list|)
-init|;
-name|friends
-operator|!=
-name|NULL_TREE
-condition|;
-name|friends
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|friends
-argument_list|)
-control|)
-if|if
-condition|(
-name|TREE_PURPOSE
-argument_list|(
-name|friends
 argument_list|)
 operator|==
-name|error_mark_node
+name|TYPE_DECL
+operator|&&
+name|TREE_CODE
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+operator|==
+name|ENUMERAL_TYPE
+operator|&&
+name|DECL_ARTIFICIAL
+argument_list|(
+name|r
+argument_list|)
+operator|)
 condition|)
-name|add_friend
+block|{
+name|set_current_access_from_decl
 argument_list|(
-name|type
-argument_list|,
-name|tsubst_friend_function
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|friends
-argument_list|)
-argument_list|,
-name|args
-argument_list|)
+name|r
 argument_list|)
 expr_stmt|;
-else|else
-name|abort
-argument_list|()
+name|finish_member_declaration
+argument_list|(
+name|r
+argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|t
-operator|=
-name|CLASSTYPE_FRIEND_CLASSES
-argument_list|(
-name|pattern
-argument_list|)
-init|;
-name|t
-operator|!=
-name|NULL_TREE
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|t
-argument_list|)
-control|)
+block|}
+block|}
+block|}
+else|else
 block|{
+if|if
+condition|(
+name|TYPE_P
+argument_list|(
+name|t
+argument_list|)
+operator|||
+name|DECL_CLASS_TEMPLATE_P
+argument_list|(
+name|t
+argument_list|)
+condition|)
+block|{
+comment|/* Build new CLASSTYPE_FRIEND_CLASSES.  */
 name|tree
 name|friend_type
 init|=
-name|TREE_VALUE
-argument_list|(
 name|t
-argument_list|)
 decl_stmt|;
 name|tree
 name|new_friend_type
@@ -17920,7 +18772,7 @@ name|friend_type
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* The call to xref_tag_from_type does injection for friend 	     classes.  */
+comment|/* The call to xref_tag_from_type does injection for friend 		     classes.  */
 name|push_nested_namespace
 argument_list|(
 name|ns
@@ -17952,7 +18804,7 @@ argument_list|)
 operator|==
 name|TEMPLATE_DECL
 condition|)
-comment|/* Trick make_friend_class into realizing that the friend 	   we're adding is a template, not an ordinary class.  It's 	   important that we use make_friend_class since it will 	   perform some error-checking and output cross-reference 	   information.  */
+comment|/* Trick make_friend_class into realizing that the friend 		   we're adding is a template, not an ordinary class.  It's 		   important that we use make_friend_class since it will 		   perform some error-checking and output cross-reference 		   information.  */
 operator|++
 name|processing_template_decl
 expr_stmt|;
@@ -17982,55 +18834,30 @@ operator|--
 name|processing_template_decl
 expr_stmt|;
 block|}
-comment|/* Now that TYPE_FIELDS and TYPE_METHODS are set up.  We can      instantiate templates used by this class.  */
-for|for
-control|(
-name|t
-operator|=
-name|TYPE_FIELDS
+else|else
+comment|/* Build new DECL_FRIENDLIST.  */
+name|add_friend
 argument_list|(
 name|type
-argument_list|)
-init|;
-name|t
-condition|;
-name|t
-operator|=
-name|TREE_CHAIN
+argument_list|,
+name|tsubst_friend_function
 argument_list|(
 name|t
+argument_list|,
+name|args
 argument_list|)
-control|)
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|t
-argument_list|)
-operator|==
-name|FIELD_DECL
-condition|)
-block|{
-name|TREE_TYPE
-argument_list|(
-name|t
-argument_list|)
-operator|=
-name|complete_type
-argument_list|(
-name|TREE_TYPE
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|require_complete_type
-argument_list|(
-name|t
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* Set the file and line number information to whatever is given for      the class itself.  This puts error messages involving generated      implicit functions at a predictable point, and the same point      that would be used for non-template classes.  */
+name|typedecl
+operator|=
+name|TYPE_MAIN_DECL
+argument_list|(
+name|type
+argument_list|)
+expr_stmt|;
 name|lineno
 operator|=
 name|DECL_SOURCE_LINE
@@ -18130,6 +18957,24 @@ argument_list|()
 expr_stmt|;
 name|pop_tinst_level
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|TYPE_CONTAINS_VPTR_P
+argument_list|(
+name|type
+argument_list|)
+condition|)
+name|keyed_classes
+operator|=
+name|tree_cons
+argument_list|(
+name|NULL_TREE
+argument_list|,
+name|type
+argument_list|,
+name|keyed_classes
+argument_list|)
 expr_stmt|;
 return|return
 name|type
@@ -18734,7 +19579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Substitute the ARGS into the indicated aggregate (or enumeration)    type T.  If T is not an aggregate or enumeration type, it is    handled as if by tsubst.  IN_DECL is as for tsubst.  If    ENTERING_SCOPE is non-zero, T is the context for a template which    we are presently tsubst'ing.  Return the substituted value.  */
+comment|/* Substitute the ARGS into the indicated aggregate (or enumeration)    type T.  If T is not an aggregate or enumeration type, it is    handled as if by tsubst.  IN_DECL is as for tsubst.  If    ENTERING_SCOPE is nonzero, T is the context for a template which    we are presently tsubst'ing.  Return the substituted value.  */
 end_comment
 
 begin_function
@@ -18969,22 +19814,11 @@ name|tree
 name|arg
 decl_stmt|;
 block|{
-comment|/* This default argument came from a template.  Instantiate the      default argument here, not in tsubst.  In the case of      something like:               template<class T>        struct S { 	 static T t(); 	 void f(T = t());        };            we must be careful to do name lookup in the scope of S<T>,      rather than in the current class.  */
-if|if
-condition|(
-name|DECL_CLASS_SCOPE_P
+comment|/* This default argument came from a template.  Instantiate the      default argument here, not in tsubst.  In the case of      something like:               template<class T>        struct S { 	 static T t(); 	 void f(T = t());        };            we must be careful to do name lookup in the scope of S<T>,      rather than in the current class.       ??? current_class_type affects a lot more than name lookup.  This is      very fragile.  Fortunately, it will go away when we do 2-phase name      binding properly.  */
+comment|/* FN is already the desired FUNCTION_DECL.  */
+name|push_access_scope
 argument_list|(
 name|fn
-argument_list|)
-condition|)
-name|pushclass
-argument_list|(
-name|DECL_CONTEXT
-argument_list|(
-name|fn
-argument_list|)
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|arg
@@ -19005,15 +19839,10 @@ argument_list|,
 name|NULL_TREE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DECL_CLASS_SCOPE_P
+name|pop_access_scope
 argument_list|(
 name|fn
 argument_list|)
-condition|)
-name|popclass
-argument_list|()
 expr_stmt|;
 comment|/* Make sure the default argument is reasonable.  */
 name|arg
@@ -19167,15 +19996,6 @@ name|in_decl
 init|=
 name|t
 decl_stmt|;
-name|my_friendly_assert
-argument_list|(
-name|complain
-operator|&
-name|tf_error
-argument_list|,
-literal|20011214
-argument_list|)
-expr_stmt|;
 comment|/* Set the filename and linenumber to improve error-reporting.  */
 name|saved_lineno
 operator|=
@@ -19396,28 +20216,6 @@ comment|/*entering_scope=*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|r
-argument_list|)
-operator|=
-name|tsubst_aggr_type
-argument_list|(
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|t
-argument_list|)
-argument_list|,
-name|args
-argument_list|,
-name|complain
-argument_list|,
-name|in_decl
-argument_list|,
-comment|/*entering_scope=*/
-literal|1
-argument_list|)
-expr_stmt|;
 name|DECL_TEMPLATE_INFO
 argument_list|(
 name|r
@@ -19562,7 +20360,7 @@ argument_list|)
 operator|=
 name|NULL_TREE
 expr_stmt|;
-comment|/* The template parameters for this new template are all the 	   template parameters for the old template, except the 	   outermost level of parameters. */
+comment|/* The template parameters for this new template are all the 	   template parameters for the old template, except the 	   outermost level of parameters.  */
 name|DECL_TEMPLATE_PARMS
 argument_list|(
 name|r
@@ -19680,6 +20478,21 @@ block|{
 name|tree
 name|spec
 decl_stmt|;
+comment|/* If T is not dependent, just return it.  */
+if|if
+condition|(
+operator|!
+name|uses_template_parms
+argument_list|(
+name|DECL_TI_ARGS
+argument_list|(
+name|t
+argument_list|)
+argument_list|)
+condition|)
+return|return
+name|t
+return|;
 comment|/* Calculate the most general template of which R is a 	       specialization, and the complete set of arguments used to 	       specialize R.  */
 name|gen_tmpl
 operator|=
@@ -19940,28 +20753,6 @@ name|r
 argument_list|)
 operator|=
 name|ctx
-expr_stmt|;
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|r
-argument_list|)
-operator|=
-name|tsubst_aggr_type
-argument_list|(
-name|DECL_VIRTUAL_CONTEXT
-argument_list|(
-name|t
-argument_list|)
-argument_list|,
-name|args
-argument_list|,
-name|complain
-argument_list|,
-name|t
-argument_list|,
-comment|/*entering_scope=*/
-literal|1
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20417,30 +21208,16 @@ name|DECL_TEMPLATE_PARM_P
 argument_list|(
 name|r
 argument_list|)
-operator|&&
-name|PROMOTE_PROTOTYPES
-operator|&&
-name|INTEGRAL_TYPE_P
-argument_list|(
-name|type
-argument_list|)
-operator|&&
-name|TYPE_PRECISION
-argument_list|(
-name|type
-argument_list|)
-operator|<
-name|TYPE_PRECISION
-argument_list|(
-name|integer_type_node
-argument_list|)
 condition|)
 name|DECL_ARG_TYPE
 argument_list|(
 name|r
 argument_list|)
 operator|=
-name|integer_type_node
+name|type_passed_as
+argument_list|(
+name|type
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -20873,6 +21650,7 @@ argument_list|)
 operator|==
 name|VAR_DECL
 condition|)
+block|{
 name|DECL_DEAD_FOR_LOCAL
 argument_list|(
 name|r
@@ -20880,6 +21658,14 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
+name|DECL_INITIALIZED_P
+argument_list|(
+name|r
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -23042,6 +23828,8 @@ block|{
 if|if
 condition|(
 name|complain
+operator|&
+name|tf_error
 condition|)
 name|error
 argument_list|(
@@ -23140,7 +23928,7 @@ condition|)
 return|return
 name|error_mark_node
 return|;
-comment|/* Substitue the exception specification. */
+comment|/* Substitue the exception specification.  */
 name|raises
 operator|=
 name|TYPE_RAISES_EXCEPTIONS
@@ -23601,7 +24389,7 @@ name|complain
 operator|&
 name|tf_error
 condition|)
-name|incomplete_type_error
+name|cxx_incomplete_type_error
 argument_list|(
 name|NULL_TREE
 argument_list|,
@@ -24078,9 +24866,27 @@ return|return
 name|error_mark_node
 return|;
 return|return
+name|cp_build_qualified_type_real
+argument_list|(
 name|TREE_TYPE
 argument_list|(
 name|e1
+argument_list|)
+argument_list|,
+name|cp_type_quals
+argument_list|(
+name|t
+argument_list|)
+operator||
+name|cp_type_quals
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|e1
+argument_list|)
+argument_list|)
+argument_list|,
+name|complain
 argument_list|)
 return|;
 block|}
@@ -25908,20 +26714,13 @@ break|break;
 case|case
 name|CTOR_INITIALIZER
 case|:
-block|{
-name|tree
-name|member_init_list
-decl_stmt|;
-name|tree
-name|base_init_list
-decl_stmt|;
 name|prep_stmt
 argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-name|member_init_list
-operator|=
+name|finish_mem_initializers
+argument_list|(
 name|tsubst_initializer_list
 argument_list|(
 name|TREE_OPERAND
@@ -25933,30 +26732,9 @@ argument_list|)
 argument_list|,
 name|args
 argument_list|)
-expr_stmt|;
-name|base_init_list
-operator|=
-name|tsubst_initializer_list
-argument_list|(
-name|TREE_OPERAND
-argument_list|(
-name|t
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|emit_base_init
-argument_list|(
-name|member_init_list
-argument_list|,
-name|base_init_list
 argument_list|)
 expr_stmt|;
 break|break;
-block|}
 case|case
 name|RETURN_STMT
 case|:
@@ -25969,7 +26747,7 @@ name|finish_return_stmt
 argument_list|(
 name|tsubst_expr
 argument_list|(
-name|RETURN_EXPR
+name|RETURN_STMT_EXPR
 argument_list|(
 name|t
 argument_list|)
@@ -26229,10 +27007,7 @@ modifier|*
 specifier|const
 name|name
 init|=
-call|(
-modifier|*
-name|decl_printable_name
-call|)
+name|cxx_printable_name
 argument_list|(
 name|current_function_decl
 argument_list|,
@@ -26285,7 +27060,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* A DECL_STMT can also be used as an expression, in the condition 	   clause of a if/for/while construct.  If we aren't followed by 	   another statement, return our decl.  */
+comment|/* A DECL_STMT can also be used as an expression, in the condition 	   clause of an if/for/while construct.  If we aren't followed by 	   another statement, return our decl.  */
 if|if
 condition|(
 name|TREE_CHAIN
@@ -27241,18 +28016,6 @@ name|NULL_TREE
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|CTOR_STMT
-case|:
-name|add_stmt
-argument_list|(
-name|copy_node
-argument_list|(
-name|t
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
 name|abort
 argument_list|()
@@ -27357,7 +28120,7 @@ decl_stmt|;
 name|tree
 name|clone
 decl_stmt|;
-comment|/* Look for the clone. */
+comment|/* Look for the clone.  */
 for|for
 control|(
 name|clone
@@ -27556,6 +28319,28 @@ return|;
 block|}
 block|}
 block|}
+comment|/* Make sure that we can see identifiers, and compute access      correctly.  The desired FUNCTION_DECL for FNDECL may or may not be      created earlier.  Let push_access_scope_real figure that out.  */
+name|push_access_scope_real
+argument_list|(
+name|gen_tmpl
+argument_list|,
+name|targ_ptr
+argument_list|,
+name|tsubst
+argument_list|(
+name|DECL_CONTEXT
+argument_list|(
+name|gen_tmpl
+argument_list|)
+argument_list|,
+name|targ_ptr
+argument_list|,
+name|tf_error
+argument_list|,
+name|gen_tmpl
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* substitute template parameters */
 name|fndecl
 operator|=
@@ -27570,6 +28355,11 @@ name|targ_ptr
 argument_list|,
 name|tf_error
 argument_list|,
+name|gen_tmpl
+argument_list|)
+expr_stmt|;
+name|pop_access_scope
+argument_list|(
 name|gen_tmpl
 argument_list|)
 expr_stmt|;
@@ -28121,6 +28911,30 @@ operator||=
 name|UNIFY_ALLOW_OUTER_MORE_CV_QUAL
 expr_stmt|;
 block|}
+comment|/* DR 322. For conversion deduction, remove a reference type on parm      too (which has been swapped into ARG).  */
+if|if
+condition|(
+name|strict
+operator|==
+name|DEDUCE_CONV
+operator|&&
+name|TREE_CODE
+argument_list|(
+operator|*
+name|arg
+argument_list|)
+operator|==
+name|REFERENCE_TYPE
+condition|)
+operator|*
+name|arg
+operator|=
+name|TREE_TYPE
+argument_list|(
+operator|*
+name|arg
+argument_list|)
+expr_stmt|;
 return|return
 name|result
 return|;
@@ -28233,7 +29047,7 @@ argument_list|,
 literal|290
 argument_list|)
 expr_stmt|;
-comment|/* ARGS could be NULL (via a call from parse.y to      build_x_function_call).  */
+comment|/* ARGS could be NULL.  */
 if|if
 condition|(
 name|xargs
@@ -28806,18 +29620,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Strip baselink information.  */
-while|while
+if|if
 condition|(
-name|TREE_CODE
+name|BASELINK_P
 argument_list|(
 name|arg
 argument_list|)
-operator|==
-name|TREE_LIST
 condition|)
 name|arg
 operator|=
-name|TREE_VALUE
+name|BASELINK_FUNCTIONS
 argument_list|(
 name|arg
 argument_list|)
@@ -28973,6 +29785,13 @@ name|arg
 argument_list|)
 operator|==
 name|OVERLOAD
+operator|||
+name|TREE_CODE
+argument_list|(
+name|arg
+argument_list|)
+operator|==
+name|FUNCTION_DECL
 condition|)
 block|{
 for|for
@@ -29353,20 +30172,8 @@ decl_stmt|,
 name|args
 decl_stmt|;
 block|{
-name|int
-name|i
-decl_stmt|;
-name|int
-name|nparms
-init|=
-name|TREE_VEC_LENGTH
-argument_list|(
 name|parms
-argument_list|)
-decl_stmt|;
-name|tree
-name|new_parms
-init|=
+operator|=
 name|tsubst
 argument_list|(
 name|parms
@@ -29382,80 +30189,27 @@ name|tf_none
 argument_list|,
 name|NULL_TREE
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|new_parms
+name|parms
 operator|==
 name|error_mark_node
 condition|)
 return|return
 literal|1
 return|;
-name|args
-operator|=
+return|return
+operator|!
+name|comp_template_args
+argument_list|(
+name|parms
+argument_list|,
 name|INNERMOST_TEMPLATE_ARGS
 argument_list|(
 name|args
 argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nparms
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|tree
-name|parm
-init|=
-name|TREE_VEC_ELT
-argument_list|(
-name|new_parms
-argument_list|,
-name|i
 argument_list|)
-decl_stmt|;
-name|tree
-name|arg
-init|=
-name|TREE_VEC_ELT
-argument_list|(
-name|args
-argument_list|,
-name|i
-argument_list|)
-decl_stmt|;
-comment|/* In case we are deducing from a function argument of a function 	 templates, some parameters may not be deduced yet.  So we 	 make sure that only fully substituted elements of PARM are 	 compared below.  */
-if|if
-condition|(
-operator|!
-name|uses_template_parms
-argument_list|(
-name|parm
-argument_list|)
-operator|&&
-operator|!
-name|template_args_equal
-argument_list|(
-name|parm
-argument_list|,
-name|arg
-argument_list|)
-condition|)
-return|return
-literal|1
-return|;
-block|}
-return|return
-literal|0
 return|;
 block|}
 end_function
@@ -29501,20 +30255,28 @@ argument_list|(
 name|arg
 argument_list|)
 operator|||
+operator|(
+name|most_general_template
+argument_list|(
 name|CLASSTYPE_TI_TEMPLATE
 argument_list|(
 name|arg
 argument_list|)
+argument_list|)
 operator|!=
+name|most_general_template
+argument_list|(
 name|CLASSTYPE_TI_TEMPLATE
 argument_list|(
 name|parm
 argument_list|)
+argument_list|)
+operator|)
 condition|)
 return|return
 name|NULL_TREE
 return|;
-comment|/* We need to make a new template argument vector for the call to      unify.  If we used TARGS, we'd clutter it up with the result of      the attempted unification, even if this class didn't work out.      We also don't want to commit ourselves to all the unifications      we've already done, since unification is supposed to be done on      an argument-by-argument basis.  In other words, consider the      following pathological case:         template<int I, int J, int K>        struct S {};                template<int I, int J>        struct S<I, J, 2> : public S<I, I, I>, S<J, J, J> {};                template<int I, int J, int K>        void f(S<I, J, K>, S<I, I, I>);                void g() {          S<0, 0, 0> s0;          S<0, 1, 2> s2;                  f(s0, s2);        }       Now, by the time we consider the unification involving `s2', we      already know that we must have `f<0, 0, 0>'.  But, even though      `S<0, 1, 2>' is derived from `S<0, 0, 0>', the code is not legal      because there are two ways to unify base classes of S<0, 1, 2>      with S<I, I, I>.  If we kept the already deduced knowledge, we      would reject the possibility I=1.  */
+comment|/* We need to make a new template argument vector for the call to      unify.  If we used TARGS, we'd clutter it up with the result of      the attempted unification, even if this class didn't work out.      We also don't want to commit ourselves to all the unifications      we've already done, since unification is supposed to be done on      an argument-by-argument basis.  In other words, consider the      following pathological case:         template<int I, int J, int K>        struct S {};                template<int I, int J>        struct S<I, J, 2> : public S<I, I, I>, S<J, J, J> {};                template<int I, int J, int K>        void f(S<I, J, K>, S<I, I, I>);                void g() {          S<0, 0, 0> s0;          S<0, 1, 2> s2;                  f(s0, s2);        }       Now, by the time we consider the unification involving `s2', we      already know that we must have `f<0, 0, 0>'.  But, even though      `S<0, 1, 2>' is derived from `S<0, 0, 0>', the code is invalid      because there are two ways to unify base classes of S<0, 1, 2>      with S<I, I, I>.  If we kept the already deduced knowledge, we      would reject the possibility I=1.  */
 name|copy_of_targs
 operator|=
 name|make_tree_vec
@@ -29935,7 +30697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decide whether ARG can be unified with PARM, considering only the    cv-qualifiers of each type, given STRICT as documented for unify.    Returns non-zero iff the unification is OK on that basis.*/
+comment|/* Decide whether ARG can be unified with PARM, considering only the    cv-qualifiers of each type, given STRICT as documented for unify.    Returns nonzero iff the unification is OK on that basis.*/
 end_comment
 
 begin_function
@@ -30627,6 +31389,19 @@ return|;
 block|}
 else|else
 block|{
+comment|/* If ARG is an offset type, we're trying to unify '*T' with 	     'U C::*', which is ill-formed. See the comment in the 	     POINTER_TYPE case about this ugliness. */
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|arg
+argument_list|)
+operator|==
+name|OFFSET_TYPE
+condition|)
+return|return
+literal|1
+return|;
 comment|/* If PARM is `const T' and ARG is only `int', we don't have 	     a match unless we are allowing additional qualification. 	     If ARG is `const int' and PARM is just `T' that's OK; 	     that binds `const int' to `T'.  */
 if|if
 condition|(
@@ -30856,6 +31631,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|TREE_TYPE
+argument_list|(
+name|arg
+argument_list|)
+condition|)
+comment|/* Template-parameter dependent expression.  Just accept it for now. 	   It will later be processed in convert_template_argument.  */
+empty_stmt|;
+elseif|else
+if|if
+condition|(
 name|same_type_p
 argument_list|(
 name|TREE_TYPE
@@ -30984,7 +31770,7 @@ operator|==
 name|OFFSET_TYPE
 condition|)
 block|{
-comment|/* Avoid getting confused about cv-quals; don't recurse here. 	       Pointers to members should really be just OFFSET_TYPE, not 	       this two-level nonsense... */
+comment|/* Avoid getting confused about cv-quals; don't recurse here. 	       Pointers to members should really be just OFFSET_TYPE, not 	       this two-level nonsense...  */
 name|parm
 operator|=
 name|TREE_TYPE
@@ -31149,7 +31935,9 @@ argument_list|(
 name|arg
 argument_list|)
 argument_list|,
-name|UNIFY_ALLOW_NONE
+name|strict
+operator|&
+name|UNIFY_ALLOW_MORE_CV_QUAL
 argument_list|)
 return|;
 case|case
@@ -31944,6 +32732,25 @@ name|int
 name|extern_p
 decl_stmt|;
 block|{
+comment|/* We used to set this unconditionally; we moved that to      do_decl_instantiation so it wouldn't get set on members of      explicit class template instantiations.  But we still need to set      it here for the 'extern template' case in order to suppress      implicit instantiations.  */
+if|if
+condition|(
+name|extern_p
+condition|)
+name|SET_DECL_EXPLICIT_INSTANTIATION
+argument_list|(
+name|result
+argument_list|)
+expr_stmt|;
+comment|/* If this entity has already been written out, it's too late to      make any modifications.  */
+if|if
+condition|(
+name|TREE_ASM_WRITTEN
+argument_list|(
+name|result
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|TREE_CODE
@@ -31961,15 +32768,13 @@ argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-comment|/* We used to set this unconditionally; we moved that to      do_decl_instantiation so it wouldn't get set on members of      explicit class template instantiations.  But we still need to set      it here for the 'extern template' case in order to suppress      implicit instantiations.  */
-if|if
-condition|(
-name|extern_p
-condition|)
-name|SET_DECL_EXPLICIT_INSTANTIATION
+comment|/* This might have been set by an earlier implicit instantiation.  */
+name|DECL_COMDAT
 argument_list|(
 name|result
 argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -32021,7 +32826,6 @@ name|result
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
 name|TREE_CODE
@@ -32321,7 +33125,7 @@ name|decl
 argument_list|)
 expr_stmt|;
 else|else
-comment|/* We can get here for some illegal specializations.  */
+comment|/* We can get here for some invalid specializations.  */
 return|return
 name|NULL_TREE
 return|;
@@ -32996,6 +33800,25 @@ operator|!=
 name|TEMPLATE_DECL
 condition|)
 break|break;
+if|if
+condition|(
+name|CLASS_TYPE_P
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+operator|&&
+name|CLASSTYPE_TEMPLATE_SPECIALIZATION
+argument_list|(
+name|TREE_TYPE
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+condition|)
+break|break;
 comment|/* Stop if we run into an explicitly specialized class template.  */
 if|if
 condition|(
@@ -33274,43 +34097,20 @@ block|}
 end_function
 
 begin_comment
-comment|/* called from the parser.  */
+comment|/* Explicitly instantiate DECL.  */
 end_comment
 
 begin_function
 name|void
 name|do_decl_instantiation
 parameter_list|(
-name|declspecs
-parameter_list|,
-name|declarator
-parameter_list|,
-name|storage
-parameter_list|)
-name|tree
-name|declspecs
-decl_stmt|,
-name|declarator
-decl_stmt|,
-name|storage
-decl_stmt|;
-block|{
 name|tree
 name|decl
-init|=
-name|grokdeclarator
-argument_list|(
-name|declarator
-argument_list|,
-name|declspecs
-argument_list|,
-name|NORMAL
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|tree
+name|storage
+parameter_list|)
+block|{
 name|tree
 name|result
 init|=
@@ -33425,7 +34225,7 @@ name|result
 operator|=
 name|decl
 expr_stmt|;
-comment|/* Check for various error cases.  Note that if the explicit      instantiation is legal the RESULT will currently be marked as an      *implicit* instantiation; DECL_EXPLICIT_INSTANTIATION is not set      until we get here.  */
+comment|/* Check for various error cases.  Note that if the explicit      instantiation is valid the RESULT will currently be marked as an      *implicit* instantiation; DECL_EXPLICIT_INSTANTIATION is not set      until we get here.  */
 if|if
 condition|(
 name|DECL_TEMPLATE_SPECIALIZATION
@@ -33668,7 +34468,71 @@ block|}
 end_function
 
 begin_comment
-comment|/* Perform an explicit instantiation of template class T.  STORAGE, if    non-null, is the RID for extern, inline or static.  COMPLAIN is    non-zero if this is called from the parser, zero if called recursively,    since the standard is unclear (as detailed below).  */
+comment|/* Called from do_type_instantiation through binding_table_foreach to    do recursive instantiation for the type bound in ENTRY.   */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|bt_instantiate_type_proc
+parameter_list|(
+name|binding_entry
+name|entry
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|tree
+name|storage
+init|=
+operator|*
+operator|(
+name|tree
+operator|*
+operator|)
+name|data
+decl_stmt|;
+if|if
+condition|(
+name|IS_AGGR_TYPE
+argument_list|(
+name|entry
+operator|->
+name|type
+argument_list|)
+operator|&&
+operator|!
+name|uses_template_parms
+argument_list|(
+name|CLASSTYPE_TI_ARGS
+argument_list|(
+name|entry
+operator|->
+name|type
+argument_list|)
+argument_list|)
+condition|)
+name|do_type_instantiation
+argument_list|(
+name|TYPE_MAIN_DECL
+argument_list|(
+name|entry
+operator|->
+name|type
+argument_list|)
+argument_list|,
+name|storage
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Perform an explicit instantiation of template class T.  STORAGE, if    non-null, is the RID for extern, inline or static.  COMPLAIN is    nonzero if this is called from the parser, zero if called recursively,    since the standard is unclear (as detailed below).  */
 end_comment
 
 begin_function
@@ -34079,59 +34943,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|tmp
-operator|=
-name|CLASSTYPE_TAGS
+if|if
+condition|(
+name|CLASSTYPE_NESTED_UDTS
 argument_list|(
 name|t
 argument_list|)
-init|;
-name|tmp
-condition|;
-name|tmp
-operator|=
-name|TREE_CHAIN
-argument_list|(
-name|tmp
-argument_list|)
-control|)
-if|if
-condition|(
-name|IS_AGGR_TYPE
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|tmp
-argument_list|)
-argument_list|)
-operator|&&
-operator|!
-name|uses_template_parms
-argument_list|(
-name|CLASSTYPE_TI_ARGS
-argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|tmp
-argument_list|)
-argument_list|)
-argument_list|)
 condition|)
-name|do_type_instantiation
+name|binding_table_foreach
 argument_list|(
-name|TYPE_MAIN_DECL
+name|CLASSTYPE_NESTED_UDTS
 argument_list|(
-name|TREE_VALUE
-argument_list|(
-name|tmp
-argument_list|)
+name|t
 argument_list|)
 argument_list|,
+name|bt_instantiate_type_proc
+argument_list|,
+operator|&
 name|storage
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -34197,6 +35026,18 @@ argument_list|(
 name|tmpl
 argument_list|)
 expr_stmt|;
+name|push_access_scope_real
+argument_list|(
+name|gen_tmpl
+argument_list|,
+name|args
+argument_list|,
+name|DECL_CONTEXT
+argument_list|(
+name|decl
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|unregistered
 operator|=
 name|unregister_specialization
@@ -34212,26 +35053,6 @@ argument_list|(
 name|unregistered
 argument_list|,
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TREE_CODE
-argument_list|(
-name|decl
-argument_list|)
-operator|==
-name|VAR_DECL
-condition|)
-comment|/* Make sure that we can see identifiers, and compute access        correctly, for the class members used in the declaration of        this static variable.  */
-name|pushclass
-argument_list|(
-name|DECL_CONTEXT
-argument_list|(
-name|decl
-argument_list|)
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* Do the substitution to get the new declaration.  */
@@ -34259,6 +35080,14 @@ name|VAR_DECL
 condition|)
 block|{
 comment|/* Set up DECL_INITIAL, since tsubst doesn't.  */
+if|if
+condition|(
+operator|!
+name|DECL_INITIALIZED_IN_CLASS_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
 name|DECL_INITIAL
 argument_list|(
 name|new_decl
@@ -34280,10 +35109,6 @@ argument_list|(
 name|decl
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|/* Pop the class context we pushed above.  */
-name|popclass
-argument_list|()
 expr_stmt|;
 block|}
 elseif|else
@@ -34314,6 +35139,11 @@ operator|=
 name|NULL_TREE
 expr_stmt|;
 block|}
+name|pop_access_scope
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
 comment|/* The immediate parent of the new template is still whatever it was      before, even though tsubst sets DECL_TI_TEMPLATE up as the most      general template.  We also reset the DECL_ASSEMBLER_NAME since      tsubst always calculates the name as if the function in question      were really a template instance, and sometimes, with friend      functions, this is not so.  See tsubst_friend_function for      details.  */
 name|DECL_TI_TEMPLATE
 argument_list|(
@@ -34371,7 +35201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Produce the definition of D, a _DECL generated from a template.  If    DEFER_OK is non-zero, then we don't have to actually do the    instantiation now; we just have to do it sometime.  */
+comment|/* Produce the definition of D, a _DECL generated from a template.  If    DEFER_OK is nonzero, then we don't have to actually do the    instantiation now; we just have to do it sometime.  */
 end_comment
 
 begin_function
@@ -34398,12 +35228,10 @@ name|d
 argument_list|)
 decl_stmt|;
 name|tree
+name|gen_args
+decl_stmt|;
+name|tree
 name|args
-init|=
-name|DECL_TI_ARGS
-argument_list|(
-name|d
-argument_list|)
 decl_stmt|;
 name|tree
 name|td
@@ -34455,6 +35283,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TREE_CODE
+argument_list|(
+name|d
+argument_list|)
+operator|==
+name|VAR_DECL
+condition|)
+name|defer_ok
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Don't instantiate cloned functions.  Instead, instantiate the      functions they cloned.  */
 if|if
 condition|(
@@ -34496,13 +35337,20 @@ argument_list|(
 name|tmpl
 argument_list|)
 expr_stmt|;
+name|gen_args
+operator|=
+name|DECL_TI_ARGS
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|spec
 operator|=
 name|retrieve_specialization
 argument_list|(
 name|gen_tmpl
 argument_list|,
-name|args
+name|gen_args
 argument_list|)
 expr_stmt|;
 if|if
@@ -34614,6 +35462,47 @@ name|DECL_TEMPLATE_RESULT
 argument_list|(
 name|td
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|DECL_NAMESPACE_SCOPE_P
+argument_list|(
+name|d
+argument_list|)
+operator|&&
+operator|!
+name|DECL_INITIALIZED_IN_CLASS_P
+argument_list|(
+name|d
+argument_list|)
+operator|)
+operator|||
+name|DECL_TEMPLATE_SPECIALIZATION
+argument_list|(
+name|td
+argument_list|)
+condition|)
+comment|/* In the case of a friend template whose definition is provided        outside the class, we may have too many arguments.  Drop the        ones we don't need.  The same is true for specializations.  */
+name|args
+operator|=
+name|get_innermost_template_args
+argument_list|(
+name|gen_args
+argument_list|,
+name|TMPL_PARMS_DEPTH
+argument_list|(
+name|DECL_TEMPLATE_PARMS
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|args
+operator|=
+name|gen_args
 expr_stmt|;
 if|if
 condition|(
@@ -34809,6 +35698,12 @@ argument_list|(
 name|gen
 argument_list|)
 decl_stmt|;
+comment|/* Make sure that we can see identifiers, and compute access 	 correctly.  D is already the target FUNCTION_DECL with the 	 right context.  */
+name|push_access_scope
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|TREE_CODE
@@ -34826,7 +35721,7 @@ argument_list|(
 name|gen
 argument_list|)
 argument_list|,
-name|args
+name|gen_args
 argument_list|,
 name|tf_error
 operator||
@@ -34842,7 +35737,7 @@ argument_list|(
 name|type
 argument_list|)
 argument_list|,
-name|args
+name|gen_args
 argument_list|,
 name|tf_error
 operator||
@@ -34851,7 +35746,7 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* Don't simply tsubst the function type, as that will give 	     duplicate warnings about poor parameter qualifications. 	     The function arguments are the same as the decl_arguments 	     without the top level cv qualifiers. */
+comment|/* Don't simply tsubst the function type, as that will give 	     duplicate warnings about poor parameter qualifications. 	     The function arguments are the same as the decl_arguments 	     without the top level cv qualifiers.  */
 name|type
 operator|=
 name|TREE_TYPE
@@ -34864,12 +35759,17 @@ name|tsubst
 argument_list|(
 name|type
 argument_list|,
-name|args
+name|gen_args
 argument_list|,
 name|tf_error
 operator||
 name|tf_warning
 argument_list|,
+name|d
+argument_list|)
+expr_stmt|;
+name|pop_access_scope
+argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
@@ -34992,14 +35892,6 @@ condition|)
 name|push_to_top_level
 argument_list|()
 expr_stmt|;
-comment|/* We're now committed to instantiating this template.  Mark it as      instantiated so that recursive calls to instantiate_decl do not      try to instantiate it again.  */
-name|DECL_TEMPLATE_INSTANTIATED
-argument_list|(
-name|d
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
 comment|/* Regenerate the declaration in case the template has been modified      by a subsequent redeclaration.  */
 name|regenerate_decl_from_template
 argument_list|(
@@ -35033,6 +35925,14 @@ operator|==
 name|VAR_DECL
 condition|)
 block|{
+comment|/* Clear out DECL_RTL; whatever was there before may not be right 	 since we've reset the type of the declaration.  */
+name|SET_DECL_RTL
+argument_list|(
+name|d
+argument_list|,
+name|NULL_RTX
+argument_list|)
+expr_stmt|;
 name|DECL_IN_AGGR_P
 argument_list|(
 name|d
@@ -35040,13 +35940,11 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|DECL_INTERFACE_KNOWN
+name|import_export_decl
 argument_list|(
 name|d
 argument_list|)
-condition|)
+expr_stmt|;
 name|DECL_EXTERNAL
 argument_list|(
 name|d
@@ -35058,37 +35956,51 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-else|else
-block|{
+if|if
+condition|(
 name|DECL_EXTERNAL
 argument_list|(
 name|d
 argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-name|DECL_NOT_REALLY_EXTERN
+condition|)
+block|{
+comment|/* The fact that this code is executing indicates that: 	      	     (1) D is a template static data member, for which a 	         definition is available.  	     (2) An implicit or explicit instantiation has occured.  	     (3) We are not going to emit a definition of the static 	         data member at this time.  	     This situation is peculiar, but it occurs on platforms 	     without weak symbols when performing an implicit 	     instantiation.  There, we cannot implicitly instantiate a 	     defined static data member in more than one translation 	     unit, so import_export_decl marks the declaration as 	     external; we must rely on explicit instantiation.  */
+block|}
+else|else
+block|{
+comment|/* Mark D as instantiated so that recursive calls to 	     instantiate_decl do not try to instantiate it again.  */
+name|DECL_TEMPLATE_INSTANTIATED
 argument_list|(
 name|d
 argument_list|)
 operator|=
 literal|1
 expr_stmt|;
-block|}
 name|cp_finish_decl
 argument_list|(
 name|d
 argument_list|,
+operator|(
+operator|!
+name|DECL_INITIALIZED_IN_CLASS_P
+argument_list|(
+name|d
+argument_list|)
+condition|?
 name|DECL_INITIAL
 argument_list|(
 name|d
 argument_list|)
+else|:
+name|NULL_TREE
+operator|)
 argument_list|,
 name|NULL_TREE
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -35104,6 +36016,14 @@ block|{
 name|htab_t
 name|saved_local_specializations
 decl_stmt|;
+comment|/* Mark D as instantiated so that recursive calls to 	 instantiate_decl do not try to instantiate it again.  */
+name|DECL_TEMPLATE_INSTANTIATED
+argument_list|(
+name|d
+argument_list|)
+operator|=
+literal|1
+expr_stmt|;
 comment|/* Save away the current list, in case we are instantiating one 	 template from within the body of another.  */
 name|saved_local_specializations
 operator|=
@@ -35124,6 +36044,11 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Set up context.  */
+name|import_export_decl
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
 name|start_function
 argument_list|(
 name|NULL_TREE
@@ -35163,12 +36088,16 @@ operator|=
 name|saved_local_specializations
 expr_stmt|;
 comment|/* Finish the function.  */
-name|expand_body
-argument_list|(
+name|d
+operator|=
 name|finish_function
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|expand_body
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 block|}
@@ -35524,16 +36453,9 @@ name|argvec
 decl_stmt|;
 block|{
 name|tree
-name|first
+name|inits
 init|=
 name|NULL_TREE
-decl_stmt|;
-name|tree
-modifier|*
-name|p
-init|=
-operator|&
-name|first
 decl_stmt|;
 for|for
 control|(
@@ -35574,6 +36496,27 @@ name|tf_warning
 argument_list|,
 name|NULL_TREE
 argument_list|)
+expr_stmt|;
+name|decl
+operator|=
+name|expand_member_init
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|decl
+operator|&&
+operator|!
+name|DECL_P
+argument_list|(
+name|decl
+argument_list|)
+condition|)
+name|in_base_initializer
+operator|=
+literal|1
 expr_stmt|;
 name|init
 operator|=
@@ -35637,7 +36580,13 @@ name|val
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|init
+operator|!=
+name|void_type_node
+condition|)
 name|init
 operator|=
 name|convert_from_reference
@@ -35645,39 +36594,39 @@ argument_list|(
 name|init
 argument_list|)
 expr_stmt|;
-operator|*
-name|p
+name|in_base_initializer
 operator|=
-name|expand_member_init
-argument_list|(
-name|current_class_ref
-argument_list|,
-name|decl
-argument_list|,
-name|init
-condition|?
-name|init
-else|:
-name|void_type_node
-argument_list|)
+literal|0
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|p
+name|decl
 condition|)
-name|p
+block|{
+name|init
 operator|=
-operator|&
-name|TREE_CHAIN
+name|build_tree_list
 argument_list|(
-operator|*
-name|p
+name|decl
+argument_list|,
+name|init
 argument_list|)
 expr_stmt|;
+name|TREE_CHAIN
+argument_list|(
+name|init
+argument_list|)
+operator|=
+name|inits
+expr_stmt|;
+name|inits
+operator|=
+name|init
+expr_stmt|;
+block|}
 block|}
 return|return
-name|first
+name|inits
 return|;
 block|}
 end_function
@@ -35828,7 +36777,7 @@ argument_list|(
 name|newtag
 argument_list|)
 expr_stmt|;
-name|DECL_SOURCE_LINE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -35836,23 +36785,7 @@ name|newtag
 argument_list|)
 argument_list|)
 operator|=
-name|DECL_SOURCE_LINE
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|tag
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|DECL_SOURCE_FILE
-argument_list|(
-name|TYPE_NAME
-argument_list|(
-name|newtag
-argument_list|)
-argument_list|)
-operator|=
-name|DECL_SOURCE_FILE
+name|DECL_SOURCE_LOCATION
 argument_list|(
 name|TYPE_NAME
 argument_list|(
@@ -35864,7 +36797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* DECL is a FUNCTION_DECL that is a template specialization.  Return    its type -- but without substituting the innermost set of template    arguments.  So, innermost set of template parameters will appear in    the type.  If CONTEXTP is non-NULL, then the partially substituted    DECL_CONTEXT (if any) will also be filled in.  Similarly, TPARMSP    will be filled in with the substituted template parameters, if it    is non-NULL.  */
+comment|/* DECL is a FUNCTION_DECL that is a template specialization.  Return    its type -- but without substituting the innermost set of template    arguments.  So, innermost set of template parameters will appear in    the type.  */
 end_comment
 
 begin_function
@@ -35872,28 +36805,11 @@ name|tree
 name|get_mostly_instantiated_function_type
 parameter_list|(
 name|decl
-parameter_list|,
-name|contextp
-parameter_list|,
-name|tparmsp
 parameter_list|)
 name|tree
 name|decl
 decl_stmt|;
-name|tree
-modifier|*
-name|contextp
-decl_stmt|;
-name|tree
-modifier|*
-name|tparmsp
-decl_stmt|;
 block|{
-name|tree
-name|context
-init|=
-name|NULL_TREE
-decl_stmt|;
 name|tree
 name|fn_type
 decl_stmt|;
@@ -35958,20 +36874,6 @@ operator|=
 name|TREE_TYPE
 argument_list|(
 name|tmpl
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DECL_STATIC_FUNCTION_P
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-name|context
-operator|=
-name|DECL_CONTEXT
-argument_list|(
-name|decl
 argument_list|)
 expr_stmt|;
 if|if
@@ -36049,32 +36951,18 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Make sure that we can see identifiers, and compute access 	 correctly.  We can just use the context of DECL for the 	 partial substitution here.  It depends only on outer template 	 parameters, regardless of whether the innermost level is 	 specialized or not.  */
+name|push_access_scope
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
 comment|/* Now, do the (partial) substitution to figure out the 	 appropriate function type.  */
 name|fn_type
 operator|=
 name|tsubst
 argument_list|(
 name|fn_type
-argument_list|,
-name|partial_args
-argument_list|,
-name|tf_error
-argument_list|,
-name|NULL_TREE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|DECL_STATIC_FUNCTION_P
-argument_list|(
-name|decl
-argument_list|)
-condition|)
-name|context
-operator|=
-name|tsubst
-argument_list|(
-name|context
 argument_list|,
 name|partial_args
 argument_list|,
@@ -36101,25 +36989,12 @@ argument_list|,
 name|tf_error
 argument_list|)
 expr_stmt|;
+name|pop_access_scope
+argument_list|(
+name|decl
+argument_list|)
+expr_stmt|;
 block|}
-if|if
-condition|(
-name|contextp
-condition|)
-operator|*
-name|contextp
-operator|=
-name|context
-expr_stmt|;
-if|if
-condition|(
-name|tparmsp
-condition|)
-operator|*
-name|tparmsp
-operator|=
-name|tparms
-expr_stmt|;
 return|return
 name|fn_type
 return|;
@@ -36171,7 +37046,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* [temp.param] Check that template non-type parm TYPE is of an allowable    type. Return zero for ok, non-zero for disallowed. Issue error and    warning messages under control of COMPLAIN.  */
+comment|/* [temp.param] Check that template non-type parm TYPE is of an allowable    type. Return zero for ok, nonzero for disallowed. Issue error and    warning messages under control of COMPLAIN.  */
 end_comment
 
 begin_function
@@ -36277,6 +37152,12 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"gt-cp-pt.h"
+end_include
 
 end_unit
 

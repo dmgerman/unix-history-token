@@ -4,7 +4,7 @@ comment|/* Definitions for Linux-based GNU systems with ELF format    Copyright 
 end_comment
 
 begin_comment
-comment|/* Don't assume anything about the header files. */
+comment|/* Don't assume anything about the header files.  */
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ name|NO_IMPLICIT_EXTERN_C
 end_define
 
 begin_comment
-comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later. */
+comment|/* GNU/Linux uses ctype from glibc.a. I am not sure how complete it is.    For now, we play safe. It may change later.  */
 end_comment
 
 begin_if
@@ -80,7 +80,7 @@ name|MD_STARTFILE_PREFIX
 end_undef
 
 begin_comment
-comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'. */
+comment|/* Provide a STARTFILE_SPEC appropriate for GNU/Linux.  Here we add    the GNU/Linux magical crtbegin.o file (see crtstuff.c) which    provides part of the support for getting C++ file-scope static    object constructed before entering `main'.  */
 end_comment
 
 begin_undef
@@ -140,7 +140,7 @@ value|"%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s"
 end_define
 
 begin_comment
-comment|/* This is for -profile to use -lc_p instead of -lc. */
+comment|/* This is for -profile to use -lc_p instead of -lc.  */
 end_comment
 
 begin_ifndef
@@ -185,7 +185,7 @@ name|LIB_SPEC
 end_undef
 
 begin_comment
-comment|/* We no longer link with libc_p.a or libg.a by default. If you    want to profile or debug the GNU/Linux C library, please add    -profile or -ggdb to LDFLAGS at the link time, respectively. */
+comment|/* We no longer link with libc_p.a or libg.a by default. If you    want to profile or debug the GNU/Linux C library, please add    -profile or -ggdb to LDFLAGS at the link time, respectively.  */
 end_comment
 
 begin_if
@@ -218,7 +218,7 @@ define|#
 directive|define
 name|LIB_SPEC
 define|\
-value|"%{shared: -lc} \    %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \ 	%{profile:-lc_p} %{!profile: -lc}}"
+value|"%{pthread:-lpthread} \    %{shared:-lc} \    %{!shared:%{mieee-fp:-lieee} %{profile:-lc_p}%{!profile:-lc}}"
 end_define
 
 begin_endif
@@ -279,6 +279,12 @@ begin_define
 define|#
 directive|define
 name|HANDLE_PRAGMA_PACK_PUSH_POP
+end_define
+
+begin_define
+define|#
+directive|define
+name|TARGET_HAS_F_SETLKW
 end_define
 
 end_unit

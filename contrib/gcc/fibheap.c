@@ -330,6 +330,9 @@ name|node
 decl_stmt|;
 name|node
 operator|=
+operator|(
+name|fibnode_t
+operator|)
 name|xcalloc
 argument_list|(
 literal|1

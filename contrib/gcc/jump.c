@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Optimize jump instructions, for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997    1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Optimize jump instructions, for GNU compiler.    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997    1998, 1999, 2000, 2001, 2002, 2003  Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -1280,7 +1280,7 @@ decl_stmt|;
 name|rtx
 name|loop_pre_header_label
 decl_stmt|;
-comment|/* Scan the exit code.  We do not perform this optimization if any insn:           is a CALL_INSN 	 is a CODE_LABEL 	 has a REG_RETVAL or REG_LIBCALL note (hard to adjust) 	 is a NOTE_INSN_LOOP_BEG because this means we have a nested loop 	 is a NOTE_INSN_BLOCK_{BEG,END} because duplicating these notes 	      is not valid.       We also do not do this if we find an insn with ASM_OPERANDS.  While      this restriction should not be necessary, copying an insn with      ASM_OPERANDS can confuse asm_noperands in some cases.       Also, don't do this if the exit code is more than 20 insns.  */
+comment|/* Scan the exit code.  We do not perform this optimization if any insn:           is a CALL_INSN 	 is a CODE_LABEL 	 has a REG_RETVAL or REG_LIBCALL note (hard to adjust) 	 is a NOTE_INSN_LOOP_BEG because this means we have a nested loop       We also do not do this if we find an insn with ASM_OPERANDS.  While      this restriction should not be necessary, copying an insn with      ASM_OPERANDS can confuse asm_noperands in some cases.       Also, don't do this if the exit code is more than 20 insns.  */
 for|for
 control|(
 name|insn
@@ -1334,26 +1334,6 @@ return|;
 case|case
 name|NOTE
 case|:
-comment|/* We could be in front of the wrong NOTE_INSN_LOOP_END if there is 	     a jump immediately after the loop start that branches outside 	     the loop but within an outer loop, near the exit test. 	     If we copied this exit test and created a phony 	     NOTE_INSN_LOOP_VTOP, this could make instructions immediately 	     before the exit test look like these could be safely moved 	     out of the loop even if they actually may be never executed. 	     This can be avoided by checking here for NOTE_INSN_LOOP_CONT.  */
-if|if
-condition|(
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_LOOP_BEG
-operator|||
-name|NOTE_LINE_NUMBER
-argument_list|(
-name|insn
-argument_list|)
-operator|==
-name|NOTE_INSN_LOOP_CONT
-condition|)
-return|return
-literal|0
-return|;
 if|if
 condition|(
 name|optimize
@@ -1781,6 +1761,16 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|INSN_SCOPE
+argument_list|(
+name|copy
+argument_list|)
+operator|=
+name|INSN_SCOPE
+argument_list|(
+name|insn
+argument_list|)
+expr_stmt|;
 comment|/* Copy all REG_NOTES except REG_LABEL since mark_jump_label will 	     make them.  */
 for|for
 control|(
@@ -1919,6 +1909,16 @@ argument_list|)
 argument_list|)
 argument_list|,
 name|loop_start
+argument_list|)
+expr_stmt|;
+name|INSN_SCOPE
+argument_list|(
+name|copy
+argument_list|)
+operator|=
+name|INSN_SCOPE
+argument_list|(
+name|insn
 argument_list|)
 expr_stmt|;
 if|if
@@ -2752,21 +2752,6 @@ return|;
 default|default:
 break|break;
 block|}
-comment|/* In case we give up IEEE compatibility, all comparisons are reversible.  */
-if|if
-condition|(
-name|TARGET_FLOAT_FORMAT
-operator|!=
-name|IEEE_FLOAT_FORMAT
-operator|||
-name|flag_unsafe_math_optimizations
-condition|)
-return|return
-name|reverse_condition
-argument_list|(
-name|code
-argument_list|)
-return|;
 if|if
 condition|(
 name|GET_MODE_CLASS
@@ -2943,7 +2928,7 @@ name|UNKNOWN
 return|;
 block|}
 block|}
-comment|/* An integer condition.  */
+comment|/* Test for an integer condition, or a floating-point comparison      in which NaNs can be ignored.  */
 if|if
 condition|(
 name|GET_CODE
@@ -2969,7 +2954,7 @@ operator|!=
 name|MODE_CC
 operator|&&
 operator|!
-name|FLOAT_MODE_P
+name|HONOR_NANS
 argument_list|(
 name|mode
 argument_list|)
@@ -3190,19 +3175,6 @@ name|rtx_code
 name|code
 decl_stmt|;
 block|{
-comment|/* Non-IEEE formats don't have unordered conditions.  */
-if|if
-condition|(
-name|TARGET_FLOAT_FORMAT
-operator|!=
-name|IEEE_FLOAT_FORMAT
-condition|)
-return|return
-name|reverse_condition
-argument_list|(
-name|code
-argument_list|)
-return|;
 switch|switch
 condition|(
 name|code
@@ -3574,7 +3546,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return non-zero if CODE1 is more strict than CODE2, i.e., if the    truth of CODE1 implies the truth of CODE2.  */
+comment|/* Return nonzero if CODE1 is more strict than CODE2, i.e., if the    truth of CODE1 implies the truth of CODE2.  */
 end_comment
 
 begin_function
@@ -4945,7 +4917,7 @@ name|HAVE_cc0
 end_ifdef
 
 begin_comment
-comment|/* Return non-zero if X is an RTX that only sets the condition codes    and has no side effects.  */
+comment|/* Return nonzero if X is an RTX that only sets the condition codes    and has no side effects.  */
 end_comment
 
 begin_function
@@ -5477,9 +5449,6 @@ name|CC0
 case|:
 case|case
 name|REG
-case|:
-case|case
-name|SUBREG
 case|:
 case|case
 name|CONST_INT
@@ -6026,7 +5995,7 @@ name|CALL
 operator|)
 condition|)
 break|break;
-comment|/* If we reach a SEQUENCE, it is too complex to try to 	 do anything with it, so give up.  */
+comment|/* If we reach a SEQUENCE, it is too complex to try to 	 do anything with it, so give up.  We can be run during 	 and after reorg, so SEQUENCE rtl can legitimately show 	 up here.  */
 if|if
 condition|(
 name|GET_CODE
@@ -7334,7 +7303,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* We have determined that INSN is never reached, and are about to    delete it.  Print a warning if the user asked for one.     To try to make this warning more useful, this should only be called    once per basic block not reached, and it only warns when the basic    block contains more than one line from the current function, and    contains at least one operation.  CSE and inlining can duplicate insns,    so it's possible to get spurious warnings from this.  */
+comment|/* We have determined that AVOIDED_INSN is never reached, and are    about to delete it.  If the insn chain between AVOIDED_INSN and    FINISH contains more than one line from the current function, and    contains at least one operation, print a warning if the user asked    for it.  If FINISH is NULL, look between AVOIDED_INSN and a LABEL.     CSE and inlining can duplicate insns, so it's possible to get    spurious warnings from this.  */
 end_comment
 
 begin_function
@@ -7378,12 +7347,46 @@ operator|!
 name|warn_notreached
 condition|)
 return|return;
-comment|/* Scan forwards, looking at LINE_NUMBER notes, until      we hit a LABEL or we run out of insns.  */
-for|for
-control|(
+comment|/* Back up to the first of any NOTEs preceding avoided_insn; flow passes      us the head of a block, a NOTE_INSN_BASIC_BLOCK, which often follows      the line note.  */
 name|insn
 operator|=
 name|avoided_insn
+expr_stmt|;
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|rtx
+name|prev
+init|=
+name|PREV_INSN
+argument_list|(
+name|insn
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|prev
+operator|==
+name|NULL_RTX
+operator|||
+name|GET_CODE
+argument_list|(
+name|prev
+argument_list|)
+operator|!=
+name|NOTE
+condition|)
+break|break;
+name|insn
+operator|=
+name|prev
+expr_stmt|;
+block|}
+comment|/* Scan forwards, looking at LINE_NUMBER notes, until we hit a LABEL      in case FINISH is NULL, otherwise until we run out of insns.  */
+for|for
+control|(
 init|;
 name|insn
 operator|!=
@@ -7399,6 +7402,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|finish
 operator|==
 name|NULL
@@ -7409,6 +7413,14 @@ name|insn
 argument_list|)
 operator|==
 name|CODE_LABEL
+operator|)
+operator|||
+name|GET_CODE
+argument_list|(
+name|insn
+argument_list|)
+operator|==
+name|BARRIER
 condition|)
 break|break;
 if|if

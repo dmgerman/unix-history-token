@@ -13,12 +13,6 @@ directive|include
 file|"config.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SDB_DEBUGGING_INFO
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -28,8 +22,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|"debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tree.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"ggc.h"
+end_include
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|tree
+name|anonymous_types
+expr_stmt|;
+end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SDB_DEBUGGING_INFO
+end_ifdef
 
 begin_include
 include|#
@@ -76,12 +99,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ggc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"tm_p.h"
 end_include
 
@@ -94,7 +111,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"debug.h"
+file|"langhooks.h"
 end_include
 
 begin_comment
@@ -333,7 +350,12 @@ name|sdbout_end_epilogue
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -390,6 +412,10 @@ argument_list|(
 operator|(
 name|unsigned
 name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1230,6 +1256,7 @@ comment|/* The debug hooks structure.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|sdb_debug_hooks
@@ -1280,7 +1307,7 @@ directive|else
 name|sdbout_begin_prologue
 block|,
 comment|/* begin_prologue */
-name|debug_nothing_int
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_prologue */
 endif|#
@@ -1363,24 +1390,8 @@ operator|++
 expr_stmt|;
 name|labelstr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|permalloc
+name|xstrdup
 argument_list|(
-name|strlen
-argument_list|(
-name|label
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|labelstr
-argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
@@ -3593,56 +3604,6 @@ name|C_AUTO
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|GET_CODE
-argument_list|(
-name|value
-argument_list|)
-operator|==
-name|MEM
-operator|&&
-name|GET_CODE
-argument_list|(
-name|XEXP
-argument_list|(
-name|value
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-operator|==
-name|CONST
-condition|)
-block|{
-comment|/* Handle an obscure case which can arise when optimizing and 	     when there are few available registers.  (This is *always* 	     the case for i386/i486 targets).  The DECL_RTL looks like 	     (MEM (CONST ...)) even though this variable is a local `auto' 	     or a local `register' variable.  In effect, what has happened 	     is that the reload pass has seen that all assignments and 	     references for one such a local variable can be replaced by 	     equivalent assignments and references to some static storage 	     variable, thereby avoiding the need for a register.  In such 	     cases we're forced to lie to debuggers and tell them that 	     this variable was itself `static'.  */
-name|PUT_SDB_DEF
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
-name|PUT_SDB_VAL
-argument_list|(
-name|XEXP
-argument_list|(
-name|XEXP
-argument_list|(
-name|value
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|PUT_SDB_SCL
-argument_list|(
-name|C_STAT
-argument_list|)
-expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* It is something we don't know how to represent for SDB.  */
@@ -3800,13 +3761,6 @@ end_ifdef
 begin_comment
 comment|/* Machinery to record and output anonymous types.  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|tree
-name|anonymous_types
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
@@ -5775,7 +5729,14 @@ block|{
 name|tree
 name|decl
 init|=
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|decls
+operator|.
 name|getdecls
+call|)
 argument_list|()
 decl_stmt|;
 name|unsigned
@@ -6201,6 +6162,8 @@ block|{
 name|sdbout_end_prologue
 argument_list|(
 name|line
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}
@@ -6217,10 +6180,18 @@ name|void
 name|sdbout_end_prologue
 parameter_list|(
 name|line
+parameter_list|,
+name|file
 parameter_list|)
 name|unsigned
 name|int
 name|line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
 name|sdb_begin_function_line
@@ -6306,7 +6277,22 @@ begin_function
 specifier|static
 name|void
 name|sdbout_end_epilogue
-parameter_list|()
+parameter_list|(
+name|line
+parameter_list|,
+name|file
+parameter_list|)
+name|unsigned
+name|int
+name|line
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|file
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 specifier|const
 name|char
@@ -6590,7 +6576,14 @@ for|for
 control|(
 name|t
 operator|=
+call|(
+modifier|*
+name|lang_hooks
+operator|.
+name|decls
+operator|.
 name|getdecls
+call|)
 argument_list|()
 init|;
 name|t
@@ -6642,21 +6635,29 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|SDB_ALLOW_FORWARD_REFERENCES
-name|ggc_add_tree_root
-argument_list|(
-operator|&
-name|anonymous_types
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SDB_DEBUGGING_INFO */
+end_comment
+
+begin_comment
+comment|/* This should never be used, but its address is needed for comparisons.  */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|struct
+name|gcc_debug_hooks
+name|sdb_debug_hooks
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -6666,6 +6667,12 @@ end_endif
 begin_comment
 comment|/* SDB_DEBUGGING_INFO */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"gt-sdbout.h"
+end_include
 
 end_unit
 

@@ -86,7 +86,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* A dump_info gives information about how we should perform the dump     and about the current state of the dump.  */
+comment|/* A dump_info gives information about how we should perform the dump    and about the current state of the dump.  */
 end_comment
 
 begin_struct
@@ -128,7 +128,7 @@ comment|/* Free queue nodes.  */
 name|dump_queue_p
 name|free_list
 decl_stmt|;
-comment|/* The tree nodes which we have already written out.  The       keys are the addresses of the nodes; the values are the integer      indices we assigned them.  */
+comment|/* The tree nodes which we have already written out.  The      keys are the addresses of the nodes; the values are the integer      indices we assigned them.  */
 name|splay_tree
 name|nodes
 decl_stmt|;

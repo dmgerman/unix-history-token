@@ -67,7 +67,7 @@ define|#
 directive|define
 name|SUBTARGET_EXTRA_SPECS
 define|\
-value|{ "subtarget_extra_asm_spec",	SUBTARGET_EXTRA_ASM_SPEC },
+value|{ "subtarget_extra_asm_spec",	SUBTARGET_EXTRA_ASM_SPEC }, \   { "subtarget_asm_float_spec", SUBTARGET_ASM_FLOAT_SPEC },
 end_define
 
 begin_endif
@@ -96,6 +96,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|SUBTARGET_ASM_FLOAT_SPEC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_ASM_FLOAT_SPEC
+value|"\ %{mapcs-float:-mfloat} %{msoft-float:-mno-fpu}"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ASM_SPEC
 end_ifndef
 
@@ -103,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|ASM_SPEC
-value|"\ %{mbig-endian:-EB} \ %{mcpu=*:-m%*} \ %{march=*:-m%*} \ %{mapcs-*:-mapcs-%*} \ %{mapcs-float:-mfloat} \ %{msoft-float:-mno-fpu} \ %{mthumb-interwork:-mthumb-interwork} \ %(subtarget_extra_asm_spec)"
+value|"\ %{mbig-endian:-EB} \ %{mlittle-endian:-EL} \ %{mcpu=*:-mcpu=%*} \ %{march=*:-march=%*} \ %{mapcs-*:-mapcs-%*} \ %(subtarget_asm_float_spec) \ %{mthumb-interwork:-mthumb-interwork} \ %(subtarget_extra_asm_spec)"
 end_define
 
 begin_endif
@@ -125,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|TYPE_OPERAND_FMT
-value|"%s"
+value|"%%%s"
 end_define
 
 begin_comment
@@ -150,7 +168,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do							\     {							\       ARM_DECLARE_FUNCTION_NAME (FILE, NAME, DECL);     \       fprintf (FILE, "%s", TYPE_ASM_OP);		\       assemble_name (FILE, NAME);			\       putc (',', FILE);					\       fprintf (FILE, TYPE_OPERAND_FMT, "function");	\       putc ('\n', FILE);				\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));	\       ASM_OUTPUT_LABEL(FILE, NAME);			\     }							\   while (0)
+value|do								\     {								\       ARM_DECLARE_FUNCTION_NAME (FILE, NAME, DECL);		\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");	\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));		\       ASM_OUTPUT_LABEL(FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_comment
@@ -175,7 +193,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do								\     {								\       ARM_DECLARE_FUNCTION_SIZE (FILE, FNAME, DECL);		\       if (!flag_inhibit_size_directive)				\         {							\           char label[256];					\ 	  static int labelno;					\ 	  labelno ++;						\ 	  ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);	\ 	  ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);	\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	  assemble_name (FILE, (FNAME));			\           fprintf (FILE, ",");					\ 	  assemble_name (FILE, label);				\           fprintf (FILE, "-");					\ 	  assemble_name (FILE, (FNAME));			\ 	  putc ('\n', FILE);					\         }							\     }								\   while (0)
+value|do								\     {								\       ARM_DECLARE_FUNCTION_SIZE (FILE, FNAME, DECL);		\       if (!flag_inhibit_size_directive)				\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);			\     }								\   while (0)
 end_define
 
 begin_comment
@@ -203,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-value|"%{mbig-endian:-EB} -X"
+value|"%{mbig-endian:-EB} %{mlittle-endian:-EL} -X"
 end_define
 
 begin_endif

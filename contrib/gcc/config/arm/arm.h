@@ -15,6 +15,23 @@ directive|define
 name|GCC_ARM_H
 end_define
 
+begin_comment
+comment|/* Target CPU builtins.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TARGET_CPU_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do							\     {							\ 	if (TARGET_ARM)					\ 	  builtin_define ("__arm__");			\ 	else						\ 	  builtin_define ("__thumb__");			\ 							\ 	if (TARGET_BIG_END)				\ 	  {						\ 	    builtin_define ("__ARMEB__");		\ 	    if (TARGET_THUMB)				\ 	      builtin_define ("__THUMBEB__");		\ 	    if (TARGET_LITTLE_WORDS)			\ 	      builtin_define ("__ARMWEL__");		\ 	  }						\         else						\ 	  {						\ 	    builtin_define ("__ARMEL__");		\ 	    if (TARGET_THUMB)				\ 	      builtin_define ("__THUMBEL__");		\ 	  }						\ 							\ 	if (TARGET_APCS_32)				\ 	  builtin_define ("__APCS_32__");		\ 	else						\ 	  builtin_define ("__APCS_26__");		\ 							\ 	if (TARGET_SOFT_FLOAT)				\ 	  builtin_define ("__SOFTFP__");		\ 							\
+comment|/* FIXME: TARGET_HARD_FLOAT currently implies	\ 	   FPA.  */
+value|\ 	if (TARGET_VFP&& !TARGET_HARD_FLOAT)		\ 	  builtin_define ("__VFP_FP__");		\ 							\
+comment|/* Add a define for interworking.		\ 	   Needed when building libgcc.a.  */
+value|\ 	if (TARGET_INTERWORK)				\ 	  builtin_define ("__THUMB_INTERWORK__");	\ 							\ 	builtin_assert ("cpu=arm");			\ 	builtin_assert ("machine=arm");			\     } while (0)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -268,11 +285,13 @@ name|arm_ccfsm_state
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+unit|))
+name|rtx
 name|arm_target_insn
 decl_stmt|;
 end_decl_stmt
@@ -302,23 +321,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Define the information needed to generate branch insns.  This is    stored from the compare operation.  Note that we can't use "rtx" here    since it hasn't been defined!  */
+comment|/* Define the information needed to generate branch insns.  This is    stored from the compare operation.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+unit|))
+name|rtx
 name|arm_compare_op0
 decl_stmt|;
 end_decl_stmt
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+unit|))
+name|rtx
 name|arm_compare_op1
 decl_stmt|;
 end_decl_stmt
@@ -329,9 +352,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|pool_vector_label
 decl_stmt|;
 end_decl_stmt
@@ -344,6 +365,21 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|return_used_this_function
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used to produce AOF syntax assembler.  */
+end_comment
+
+begin_extern
+extern|extern GTY((
+end_extern
+
+begin_decl_stmt
+unit|))
+name|rtx
+name|aof_pic_label
 decl_stmt|;
 end_decl_stmt
 
@@ -601,71 +637,12 @@ name|CPP_SPEC
 define|#
 directive|define
 name|CPP_SPEC
-value|"\ %(cpp_cpu_arch) %(cpp_apcs_pc) %(cpp_float) \ %(cpp_endian) %(subtarget_cpp_spec) %(cpp_isa) %(cpp_interwork)"
-define|#
-directive|define
-name|CPP_ISA_SPEC
-value|"%{mthumb:-D__thumb__} %{!mthumb:-D__arm__}"
+value|"%(cpp_cpu_arch) %(subtarget_cpp_spec)			\ %{mapcs-32:%{mapcs-26:							\ 	%e-mapcs-26 and -mapcs-32 may not be used together}}		\ %{msoft-float:%{mhard-float:						\ 	%e-msoft-float and -mhard_float may not be used together}}	\ %{mbig-endian:%{mlittle-endian:						\ 	%e-mbig-endian and -mlittle-endian may not be used together}}"
 comment|/* Set the architecture define -- if -march= is set, then it overrides    the -mcpu= setting.  */
 define|#
 directive|define
 name|CPP_CPU_ARCH_SPEC
-value|"\ -Acpu=arm -Amachine=arm \ %{march=arm2:-D__ARM_ARCH_2__} \ %{march=arm250:-D__ARM_ARCH_2__} \ %{march=arm3:-D__ARM_ARCH_2__} \ %{march=arm6:-D__ARM_ARCH_3__} \ %{march=arm600:-D__ARM_ARCH_3__} \ %{march=arm610:-D__ARM_ARCH_3__} \ %{march=arm7:-D__ARM_ARCH_3__} \ %{march=arm700:-D__ARM_ARCH_3__} \ %{march=arm710:-D__ARM_ARCH_3__} \ %{march=arm720:-D__ARM_ARCH_3__} \ %{march=arm7100:-D__ARM_ARCH_3__} \ %{march=arm7500:-D__ARM_ARCH_3__} \ %{march=arm7500fe:-D__ARM_ARCH_3__} \ %{march=arm7m:-D__ARM_ARCH_3M__} \ %{march=arm7dm:-D__ARM_ARCH_3M__} \ %{march=arm7dmi:-D__ARM_ARCH_3M__} \ %{march=arm7tdmi:-D__ARM_ARCH_4T__} \ %{march=arm8:-D__ARM_ARCH_4__} \ %{march=arm810:-D__ARM_ARCH_4__} \ %{march=arm9:-D__ARM_ARCH_4T__} \ %{march=arm920:-D__ARM_ARCH_4__} \ %{march=arm920t:-D__ARM_ARCH_4T__} \ %{march=arm9tdmi:-D__ARM_ARCH_4T__} \ %{march=strongarm:-D__ARM_ARCH_4__} \ %{march=strongarm110:-D__ARM_ARCH_4__} \ %{march=strongarm1100:-D__ARM_ARCH_4__} \ %{march=xscale:-D__ARM_ARCH_5TE__} \ %{march=xscale:-D__XSCALE__} \ %{march=armv2:-D__ARM_ARCH_2__} \ %{march=armv2a:-D__ARM_ARCH_2__} \ %{march=armv3:-D__ARM_ARCH_3__} \ %{march=armv3m:-D__ARM_ARCH_3M__} \ %{march=armv4:-D__ARM_ARCH_4__} \ %{march=armv4t:-D__ARM_ARCH_4T__} \ %{march=armv5:-D__ARM_ARCH_5__} \ %{march=armv5t:-D__ARM_ARCH_5T__} \ %{march=armv5e:-D__ARM_ARCH_5E__} \ %{march=armv5te:-D__ARM_ARCH_5TE__} \ %{!march=*: \  %{mcpu=arm2:-D__ARM_ARCH_2__} \  %{mcpu=arm250:-D__ARM_ARCH_2__} \  %{mcpu=arm3:-D__ARM_ARCH_2__} \  %{mcpu=arm6:-D__ARM_ARCH_3__} \  %{mcpu=arm600:-D__ARM_ARCH_3__} \  %{mcpu=arm610:-D__ARM_ARCH_3__} \  %{mcpu=arm7:-D__ARM_ARCH_3__} \  %{mcpu=arm700:-D__ARM_ARCH_3__} \  %{mcpu=arm710:-D__ARM_ARCH_3__} \  %{mcpu=arm720:-D__ARM_ARCH_3__} \  %{mcpu=arm7100:-D__ARM_ARCH_3__} \  %{mcpu=arm7500:-D__ARM_ARCH_3__} \  %{mcpu=arm7500fe:-D__ARM_ARCH_3__} \  %{mcpu=arm7m:-D__ARM_ARCH_3M__} \  %{mcpu=arm7dm:-D__ARM_ARCH_3M__} \  %{mcpu=arm7dmi:-D__ARM_ARCH_3M__} \  %{mcpu=arm7tdmi:-D__ARM_ARCH_4T__} \  %{mcpu=arm8:-D__ARM_ARCH_4__} \  %{mcpu=arm810:-D__ARM_ARCH_4__} \  %{mcpu=arm9:-D__ARM_ARCH_4T__} \  %{mcpu=arm920:-D__ARM_ARCH_4__} \  %{mcpu=arm920t:-D__ARM_ARCH_4T__} \  %{mcpu=arm9tdmi:-D__ARM_ARCH_4T__} \  %{mcpu=strongarm:-D__ARM_ARCH_4__} \  %{mcpu=strongarm110:-D__ARM_ARCH_4__} \  %{mcpu=strongarm1100:-D__ARM_ARCH_4__} \  %{mcpu=xscale:-D__ARM_ARCH_5TE__} \  %{mcpu=xscale:-D__XSCALE__} \  %{!mcpu*:%(cpp_cpu_arch_default)}} \ "
-comment|/* Define __APCS_26__ if the PC also contains the PSR */
-define|#
-directive|define
-name|CPP_APCS_PC_SPEC
-value|"\ %{mapcs-32:%{mapcs-26:%e-mapcs-26 and -mapcs-32 may not be used together} \  -D__APCS_32__} \ %{mapcs-26:-D__APCS_26__} \ %{!mapcs-32: %{!mapcs-26:%(cpp_apcs_pc_default)}} \ "
-ifndef|#
-directive|ifndef
-name|CPP_APCS_PC_DEFAULT_SPEC
-define|#
-directive|define
-name|CPP_APCS_PC_DEFAULT_SPEC
-value|"-D__APCS_26__"
-endif|#
-directive|endif
-define|#
-directive|define
-name|CPP_FLOAT_SPEC
-value|"\ %{msoft-float:\   %{mhard-float:%e-msoft-float and -mhard_float may not be used together} \   -D__SOFTFP__} \ %{!mhard-float:%{!msoft-float:%(cpp_float_default)}} \ "
-comment|/* Default is hard float, which doesn't define anything */
-define|#
-directive|define
-name|CPP_FLOAT_DEFAULT_SPEC
-value|""
-define|#
-directive|define
-name|CPP_ENDIAN_SPEC
-value|"\ %{mbig-endian:								\   %{mlittle-endian:							\     %e-mbig-endian and -mlittle-endian may not be used together}	\   -D__ARMEB__ %{mwords-little-endian:-D__ARMWEL__} %{mthumb:-D__THUMBEB__}}\ %{mlittle-endian:-D__ARMEL__ %{mthumb:-D__THUMBEL__}}			\ %{!mlittle-endian:%{!mbig-endian:%(cpp_endian_default)}}		\ "
-comment|/* Default is little endian.  */
-define|#
-directive|define
-name|CPP_ENDIAN_DEFAULT_SPEC
-value|"-D__ARMEL__ %{mthumb:-D__THUMBEL__}"
-comment|/* Add a define for interworking.  Needed when building libgcc.a.      This must define __THUMB_INTERWORK__ to the pre-processor if    interworking is enabled by default.  */
-ifndef|#
-directive|ifndef
-name|CPP_INTERWORK_DEFAULT_SPEC
-define|#
-directive|define
-name|CPP_INTERWORK_DEFAULT_SPEC
-value|""
-endif|#
-directive|endif
-define|#
-directive|define
-name|CPP_INTERWORK_SPEC
-value|"						\ %{mthumb-interwork:							\   %{mno-thumb-interwork: %eincompatible interworking options}		\   -D__THUMB_INTERWORK__}						\ %{!mthumb-interwork:%{!mno-thumb-interwork:%(cpp_interwork_default)}}	\ "
-ifndef|#
-directive|ifndef
-name|CPP_PREDEFINES
-define|#
-directive|define
-name|CPP_PREDEFINES
-value|""
-endif|#
-directive|endif
+value|"\ %{march=arm2:-D__ARM_ARCH_2__} \ %{march=arm250:-D__ARM_ARCH_2__} \ %{march=arm3:-D__ARM_ARCH_2__} \ %{march=arm6:-D__ARM_ARCH_3__} \ %{march=arm600:-D__ARM_ARCH_3__} \ %{march=arm610:-D__ARM_ARCH_3__} \ %{march=arm7:-D__ARM_ARCH_3__} \ %{march=arm700:-D__ARM_ARCH_3__} \ %{march=arm710:-D__ARM_ARCH_3__} \ %{march=arm720:-D__ARM_ARCH_3__} \ %{march=arm7100:-D__ARM_ARCH_3__} \ %{march=arm7500:-D__ARM_ARCH_3__} \ %{march=arm7500fe:-D__ARM_ARCH_3__} \ %{march=arm7m:-D__ARM_ARCH_3M__} \ %{march=arm7dm:-D__ARM_ARCH_3M__} \ %{march=arm7dmi:-D__ARM_ARCH_3M__} \ %{march=arm7tdmi:-D__ARM_ARCH_4T__} \ %{march=arm8:-D__ARM_ARCH_4__} \ %{march=arm810:-D__ARM_ARCH_4__} \ %{march=arm9:-D__ARM_ARCH_4T__} \ %{march=arm920:-D__ARM_ARCH_4__} \ %{march=arm920t:-D__ARM_ARCH_4T__} \ %{march=arm9tdmi:-D__ARM_ARCH_4T__} \ %{march=strongarm:-D__ARM_ARCH_4__} \ %{march=strongarm110:-D__ARM_ARCH_4__} \ %{march=strongarm1100:-D__ARM_ARCH_4__} \ %{march=xscale:-D__ARM_ARCH_5TE__} \ %{march=xscale:-D__XSCALE__} \ %{march=armv2:-D__ARM_ARCH_2__} \ %{march=armv2a:-D__ARM_ARCH_2__} \ %{march=armv3:-D__ARM_ARCH_3__} \ %{march=armv3m:-D__ARM_ARCH_3M__} \ %{march=armv4:-D__ARM_ARCH_4__} \ %{march=armv4t:-D__ARM_ARCH_4T__} \ %{march=armv5:-D__ARM_ARCH_5__} \ %{march=armv5t:-D__ARM_ARCH_5T__} \ %{march=armv5e:-D__ARM_ARCH_5E__} \ %{march=armv5te:-D__ARM_ARCH_5TE__} \ %{!march=*: \  %{mcpu=arm2:-D__ARM_ARCH_2__} \  %{mcpu=arm250:-D__ARM_ARCH_2__} \  %{mcpu=arm3:-D__ARM_ARCH_2__} \  %{mcpu=arm6:-D__ARM_ARCH_3__} \  %{mcpu=arm600:-D__ARM_ARCH_3__} \  %{mcpu=arm610:-D__ARM_ARCH_3__} \  %{mcpu=arm7:-D__ARM_ARCH_3__} \  %{mcpu=arm700:-D__ARM_ARCH_3__} \  %{mcpu=arm710:-D__ARM_ARCH_3__} \  %{mcpu=arm720:-D__ARM_ARCH_3__} \  %{mcpu=arm7100:-D__ARM_ARCH_3__} \  %{mcpu=arm7500:-D__ARM_ARCH_3__} \  %{mcpu=arm7500fe:-D__ARM_ARCH_3__} \  %{mcpu=arm7m:-D__ARM_ARCH_3M__} \  %{mcpu=arm7dm:-D__ARM_ARCH_3M__} \  %{mcpu=arm7dmi:-D__ARM_ARCH_3M__} \  %{mcpu=arm7tdmi:-D__ARM_ARCH_4T__} \  %{mcpu=arm8:-D__ARM_ARCH_4__} \  %{mcpu=arm810:-D__ARM_ARCH_4__} \  %{mcpu=arm9:-D__ARM_ARCH_4T__} \  %{mcpu=arm920:-D__ARM_ARCH_4__} \  %{mcpu=arm920t:-D__ARM_ARCH_4T__} \  %{mcpu=arm9tdmi:-D__ARM_ARCH_4T__} \  %{mcpu=strongarm:-D__ARM_ARCH_4__} \  %{mcpu=strongarm110:-D__ARM_ARCH_4__} \  %{mcpu=strongarm1100:-D__ARM_ARCH_4__} \  %{mcpu=xscale:-D__ARM_ARCH_5TE__} \  %{mcpu=xscale:-D__XSCALE__} \  %{!mcpu*:%(cpp_cpu_arch_default)}} \ "
 ifndef|#
 directive|ifndef
 name|CC1_SPEC
@@ -680,7 +657,7 @@ define|#
 directive|define
 name|EXTRA_SPECS
 define|\
-value|{ "cpp_cpu_arch",		CPP_CPU_ARCH_SPEC },		\   { "cpp_cpu_arch_default",	CPP_ARCH_DEFAULT_SPEC },	\   { "cpp_apcs_pc",		CPP_APCS_PC_SPEC },		\   { "cpp_apcs_pc_default",	CPP_APCS_PC_DEFAULT_SPEC },	\   { "cpp_float",		CPP_FLOAT_SPEC },		\   { "cpp_float_default",	CPP_FLOAT_DEFAULT_SPEC },	\   { "cpp_endian",		CPP_ENDIAN_SPEC },		\   { "cpp_endian_default",	CPP_ENDIAN_DEFAULT_SPEC },	\   { "cpp_isa",			CPP_ISA_SPEC },			\   { "cpp_interwork",		CPP_INTERWORK_SPEC },		\   { "cpp_interwork_default",	CPP_INTERWORK_DEFAULT_SPEC },	\   { "subtarget_cpp_spec",	SUBTARGET_CPP_SPEC },           \   SUBTARGET_EXTRA_SPECS
+value|{ "cpp_cpu_arch",		CPP_CPU_ARCH_SPEC },		\   { "cpp_cpu_arch_default",	CPP_ARCH_DEFAULT_SPEC },	\   { "subtarget_cpp_spec",	SUBTARGET_CPP_SPEC },           \   SUBTARGET_EXTRA_SPECS
 ifndef|#
 directive|ifndef
 name|SUBTARGET_EXTRA_SPECS
@@ -814,6 +791,16 @@ define|#
 directive|define
 name|THUMB_FLAG_CALLER_SUPER_INTERWORKING
 value|(1<< 20)
+comment|/* Nonzero means target uses VFP FP.  */
+define|#
+directive|define
+name|ARM_FLAG_VFP
+value|(1<< 21)
+comment|/* Nonzero means to use ARM/Thumb Procedure Call Standard conventions.  */
+define|#
+directive|define
+name|ARM_FLAG_ATPCS
+value|(1<< 22)
 define|#
 directive|define
 name|TARGET_APCS_FRAME
@@ -844,6 +831,10 @@ name|TARGET_APCS_REENT
 value|(target_flags& ARM_FLAG_APCS_REENT)
 define|#
 directive|define
+name|TARGET_ATPCS
+value|(target_flags& ARM_FLAG_ATPCS)
+define|#
+directive|define
 name|TARGET_MMU_TRAPS
 value|(target_flags& ARM_FLAG_MMU_TRAPS)
 define|#
@@ -854,6 +845,10 @@ define|#
 directive|define
 name|TARGET_HARD_FLOAT
 value|(! TARGET_SOFT_FLOAT)
+define|#
+directive|define
+name|TARGET_VFP
+value|(target_flags& ARM_FLAG_VFP)
 define|#
 directive|define
 name|TARGET_BIG_END
@@ -907,7 +902,7 @@ define|#
 directive|define
 name|TARGET_BACKTRACE
 value|(leaf_function_p ()	      			\ 				         ? (target_flags& THUMB_FLAG_LEAF_BACKTRACE)	\ 				         : (target_flags& THUMB_FLAG_BACKTRACE))
-comment|/* SUBTARGET_SWITCHES is used to add flags on a per-config basis.    Bit 31 is reserved.  See riscix.h.  */
+comment|/* SUBTARGET_SWITCHES is used to add flags on a per-config basis.  */
 ifndef|#
 directive|ifndef
 name|SUBTARGET_SWITCHES
@@ -1319,10 +1314,6 @@ name|PROMOTE_FUNCTION_ARGS
 end_define
 
 begin_comment
-comment|/* Define for XFmode extended real floating point support.    This will automatically cause REAL_ARITHMETIC to be defined.  */
-end_comment
-
-begin_comment
 comment|/* For the ARM:    I think I have added all the code to make this work.  Unfortunately,    early releases of the floating point emulation code on RISCiX used a    different format for extended precision numbers.  On my RISCiX box there    is a bug somewhere which causes the machine to lock up when running enquire    with long doubles.  There is the additional aspect that Norcroft C    treats long doubles as doubles and we ought to remain compatible.    Perhaps someone with an FPA coprocessor and not running RISCiX would like    to try this someday. */
 end_comment
 
@@ -1339,20 +1330,6 @@ define|#
 directive|define
 name|ENABLE_XF_PATTERNS
 value|0
-end_define
-
-begin_comment
-comment|/* Define if you don't want extended real, but do want to use the    software floating point emulator for REAL_ARITHMETIC and    decimal<-> binary conversion. */
-end_comment
-
-begin_comment
-comment|/* See comment above */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REAL_ARITHMETIC
 end_define
 
 begin_comment
@@ -1432,32 +1409,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Define this if most significant word of doubles is the lowest numbered.    This is always true, even when in little-endian mode.  */
+comment|/* Define this if most significant word of doubles is the lowest numbered.    The rules are different based on whether or not we use FPA-format or    VFP-format doubles.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FLOAT_WORDS_BIG_ENDIAN
-value|1
-end_define
-
-begin_comment
-comment|/* Number of bits in an addressable storage unit */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_UNIT
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|BITS_PER_WORD
-value|32
+value|(arm_float_words_big_endian ())
 end_define
 
 begin_define
@@ -1465,13 +1424,6 @@ define|#
 directive|define
 name|UNITS_PER_WORD
 value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|POINTER_SIZE
-value|32
 end_define
 
 begin_define
@@ -1486,6 +1438,13 @@ define|#
 directive|define
 name|STACK_BOUNDARY
 value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|PREFERRED_STACK_BOUNDARY
+value|(TARGET_ATPCS ? 64 : 32)
 end_define
 
 begin_define
@@ -1563,7 +1522,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the value used to initialise arm_structure_size_boundary.  If a    particular arm target wants to change the default value it should change    the definition of this macro, not STRUCTRUE_SIZE_BOUNDARY.  See netbsd.h    for an example of this.  */
+comment|/* This is the value used to initialize arm_structure_size_boundary.  If a    particular arm target wants to change the default value it should change    the definition of this macro, not STRUCTRUE_SIZE_BOUNDARY.  See netbsd.h    for an example of this.  */
 end_comment
 
 begin_ifndef
@@ -1598,7 +1557,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Non-zero if move instructions will actually fail to work    when given unaligned data.  */
+comment|/* Nonzero if move instructions will actually fail to work    when given unaligned data.  */
 end_comment
 
 begin_define
@@ -1606,13 +1565,6 @@ define|#
 directive|define
 name|STRICT_ALIGNMENT
 value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_FLOAT_FORMAT
-value|IEEE_FLOAT_FORMAT
 end_define
 
 begin_escape
@@ -1719,7 +1671,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NUM_INTS
+name|ARM_NUM_INTS
 parameter_list|(
 name|X
 parameter_list|)
@@ -1733,12 +1685,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NUM_REGS
+name|ARM_NUM_REGS
 parameter_list|(
 name|MODE
 parameter_list|)
 define|\
-value|NUM_INTS (GET_MODE_SIZE (MODE))
+value|ARM_NUM_INTS (GET_MODE_SIZE (MODE))
 end_define
 
 begin_comment
@@ -1748,14 +1700,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NUM_REGS2
+name|ARM_NUM_REGS2
 parameter_list|(
 name|MODE
 parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|NUM_INTS ((MODE) == BLKmode ? 		\   int_size_in_bytes (TYPE) : GET_MODE_SIZE (MODE))
+value|ARM_NUM_INTS ((MODE) == BLKmode ? 		\   int_size_in_bytes (TYPE) : GET_MODE_SIZE (MODE))
 end_define
 
 begin_comment
@@ -1994,7 +1946,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((TARGET_ARM 				\&& REGNO>= FIRST_ARM_FP_REGNUM	\&& REGNO != FRAME_POINTER_REGNUM	\&& REGNO != ARG_POINTER_REGNUM)	\    ? 1 : NUM_REGS (MODE))
+value|((TARGET_ARM 				\&& REGNO>= FIRST_ARM_FP_REGNUM	\&& REGNO != FRAME_POINTER_REGNUM	\&& REGNO != ARG_POINTER_REGNUM)	\    ? 1 : ARM_NUM_REGS (MODE))
 end_define
 
 begin_comment
@@ -2524,7 +2476,7 @@ parameter_list|,
 name|MODE
 parameter_list|)
 define|\
-value|((CLASS) == FPU_REGS ? 1 : NUM_REGS (MODE))
+value|((CLASS) == FPU_REGS ? 1 : ARM_NUM_REGS (MODE))
 end_define
 
 begin_comment
@@ -2755,7 +2707,7 @@ comment|/* Never call indirect.  */
 end_comment
 
 begin_comment
-comment|/* These bits describe the different types of function supported    by the ARM backend.  They are exclusive.  ie a function cannot be both a    normal function and an interworked function, for example.  Knowing the    type of a function is important for determining its prologue and    epilogue sequences.    Note value 7 is currently unassigned.  Also note that the interrupt    function types all have bit 2 set, so that they can be tested for easily.    Note that 0 is deliberately chosen for ARM_FT_UNKNOWN so that when the    machine_function structure is initialised (to zero) func_type will    default to unknown.  This will force the first use of arm_current_func_type    to call arm_compute_func_type.  */
+comment|/* These bits describe the different types of function supported    by the ARM backend.  They are exclusive.  ie a function cannot be both a    normal function and an interworked function, for example.  Knowing the    type of a function is important for determining its prologue and    epilogue sequences.    Note value 7 is currently unassigned.  Also note that the interrupt    function types all have bit 2 set, so that they can be tested for easily.    Note that 0 is deliberately chosen for ARM_FT_UNKNOWN so that when the    machine_function structure is initialized (to zero) func_type will    default to unknown.  This will force the first use of arm_current_func_type    to call arm_compute_func_type.  */
 end_comment
 
 begin_define
@@ -2950,40 +2902,49 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|machine_function
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* Additionsl stack adjustment in __builtin_eh_throw.  */
-name|struct
-name|rtx_def
-modifier|*
+name|rtx
 name|eh_epilogue_sp_ofs
-decl_stmt|;
+block|;
 comment|/* Records if LR has to be saved for far jumps.  */
 name|int
 name|far_jump_used
-decl_stmt|;
+block|;
 comment|/* Records if ARG_POINTER was ever live.  */
 name|int
 name|arg_pointer_live
-decl_stmt|;
+block|;
 comment|/* Records if the save of LR has been eliminated.  */
 name|int
 name|lr_save_eliminated
-decl_stmt|;
+block|;
+comment|/* The size of the stack frame.  Only valid after reload.  */
+name|int
+name|frame_size
+block|;
 comment|/* Records the type of the current function.  */
 name|unsigned
 name|long
 name|func_type
-decl_stmt|;
+block|;
 comment|/* Record if the function has a variable argument list.  */
 name|int
 name|uses_anonymous_args
-decl_stmt|;
-block|}
-name|machine_function
-typedef|;
+block|; }
 end_typedef
+
+begin_expr_stmt
+name|machine_function
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* A C type for declaring a variable that is used as the first argument of    `FUNCTION_ARG' and other related values.  For some target machines, the    type `int' suffices and can hold the number of bytes of argument so far.  */
@@ -3045,7 +3006,28 @@ parameter_list|,
 name|NAMED
 parameter_list|)
 define|\
-value|(    NUM_ARG_REGS> (CUM).nregs				\&& (NUM_ARG_REGS< ((CUM).nregs + NUM_REGS2 (MODE, TYPE)))	\    ?   NUM_ARG_REGS - (CUM).nregs : 0)
+value|(    NUM_ARG_REGS> (CUM).nregs				\&& (NUM_ARG_REGS< ((CUM).nregs + ARM_NUM_REGS2 (MODE, TYPE)))	\    ?   NUM_ARG_REGS - (CUM).nregs : 0)
+end_define
+
+begin_comment
+comment|/* A C expression that indicates when an argument must be passed by    reference.  If nonzero for an argument, a copy of that argument is    made in memory and a pointer to the argument is passed instead of    the argument itself.  The pointer is passed in whatever way is    appropriate for passing a pointer to that type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_ARG_PASS_BY_REFERENCE
+parameter_list|(
+name|CUM
+parameter_list|,
+name|MODE
+parameter_list|,
+name|TYPE
+parameter_list|,
+name|NAMED
+parameter_list|)
+define|\
+value|arm_function_arg_pass_by_reference (&CUM, MODE, TYPE, NAMED)
 end_define
 
 begin_comment
@@ -3087,7 +3069,7 @@ parameter_list|,
 name|NAMED
 parameter_list|)
 define|\
-value|(CUM).nregs += NUM_REGS2 (MODE, TYPE)
+value|(CUM).nregs += ARM_NUM_REGS2 (MODE, TYPE)
 end_define
 
 begin_comment
@@ -3102,6 +3084,23 @@ parameter_list|(
 name|REGNO
 parameter_list|)
 value|(IN_RANGE ((REGNO), 0, 3))
+end_define
+
+begin_comment
+comment|/* Implement `va_arg'.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXPAND_BUILTIN_VA_ARG
+parameter_list|(
+name|valist
+parameter_list|,
+name|type
+parameter_list|)
+define|\
+value|arm_va_arg (valist, type)
 end_define
 
 begin_escape
@@ -3171,7 +3170,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Call the function profiler with a given profile label.  The Acorn    compiler puts this BEFORE the prolog but gcc puts it afterwards.    On the ARM the full profile code will look like: 	.data 	LP1 		.word	0 	.text 		mov	ip, lr 		bl	mcount 		.word	LP1     profile_function() in final.c outputs the .data section, FUNCTION_PROFILER    will output the .text section.     The ``mov ip,lr'' seems like a good idea to stick with cc convention.    ``prof'' doesn't seem to mind about this!  */
+comment|/* Call the function profiler with a given profile label.  The Acorn    compiler puts this BEFORE the prolog but gcc puts it afterwards.    On the ARM the full profile code will look like: 	.data 	LP1 		.word	0 	.text 		mov	ip, lr 		bl	mcount 		.word	LP1     profile_function() in final.c outputs the .data section, FUNCTION_PROFILER    will output the .text section.     The ``mov ip,lr'' seems like a good idea to stick with cc convention.    ``prof'' doesn't seem to mind about this!     Note - this version of the code is designed to work in both ARM and    Thumb modes.  */
 end_comment
 
 begin_ifndef
@@ -3198,29 +3197,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|THUMB_FUNCTION_PROFILER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|THUMB_FUNCTION_PROFILER
-parameter_list|(
-name|STREAM
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{							\   fprintf (STREAM, "\tmov\tip, lr\n");			\   fprintf (STREAM, "\tbl\tmcount\n");			\   fprintf (STREAM, "\t.word\tLP%d\n", LABELNO);		\ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_ifdef
 
 begin_define
 define|#
@@ -3234,6 +3215,29 @@ parameter_list|)
 define|\
 value|if (TARGET_ARM)					\     ARM_FUNCTION_PROFILER (STREAM, LABELNO)		\   else							\     THUMB_FUNCTION_PROFILER (STREAM, LABELNO)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_PROFILER
+parameter_list|(
+name|STREAM
+parameter_list|,
+name|LABELNO
+parameter_list|)
+define|\
+value|ARM_FUNCTION_PROFILER (STREAM, LABELNO)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* EXIT_IGNORE_STACK should be nonzero if, when returning from a function,    the stack pointer does not matter.  The value is tested only in    functions that have frame pointers.    No definition is equivalent to always zero.     On the ARM, the function epilogue recovers the stack pointer from the    frame.  */
@@ -3300,6 +3304,17 @@ define|\
 value|(((TO) == FRAME_POINTER_REGNUM&& (FROM) == ARG_POINTER_REGNUM) ? 0 :	\    ((TO) == STACK_POINTER_REGNUM&& frame_pointer_needed) ? 0 :		\    ((TO) == ARM_HARD_FRAME_POINTER_REGNUM&& TARGET_THUMB) ? 0 :	\    ((TO) == THUMB_HARD_FRAME_POINTER_REGNUM&& TARGET_ARM) ? 0 :	\    1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|THUMB_REG_PUSHED_P
+parameter_list|(
+name|reg
+parameter_list|)
+define|\
+value|(regs_ever_live [reg]						\&& (! call_used_regs [reg]					\        || (flag_pic&& (reg) == PIC_OFFSET_TABLE_REGNUM))	\&& !(TARGET_SINGLE_PIC_BASE&& ((reg) == arm_pic_register)))
+end_define
+
 begin_comment
 comment|/* Define the offset between two registers, one to be eliminated, and the    other its replacement, at the start of a routine.  */
 end_comment
@@ -3335,7 +3350,7 @@ parameter_list|,
 name|OFFSET
 parameter_list|)
 define|\
-value|{									\   (OFFSET) = 0;								\   if ((FROM) == ARG_POINTER_REGNUM)					\     {									\       int count_regs = 0;						\       int regno;							\       for (regno = 8; regno< 13; regno ++)				\ 	if (regs_ever_live[regno]&& ! call_used_regs[regno])		\ 	  count_regs ++;						\       if (count_regs)							\ 	(OFFSET) += 4 * count_regs;					\       count_regs = 0;							\       for (regno = 0; regno<= LAST_LO_REGNUM; regno ++)		\ 	if (regs_ever_live[regno]&& ! call_used_regs[regno])		\ 	  count_regs ++;						\       if (count_regs || ! leaf_function_p () || thumb_far_jump_used_p (0))\ 	(OFFSET) += 4 * (count_regs + 1);				\       if (TARGET_BACKTRACE)						\         {								\ 	  if ((count_regs& 0xFF) == 0&& (regs_ever_live[3] != 0))	\ 	    (OFFSET) += 20;						\ 	  else								\ 	    (OFFSET) += 16;						\         }								\     }									\   if ((TO) == STACK_POINTER_REGNUM)					\     {									\       (OFFSET) += current_function_outgoing_args_size;			\       (OFFSET) += ROUND_UP (get_frame_size ());				\      }									\ }
+value|{									\   (OFFSET) = 0;								\   if ((FROM) == ARG_POINTER_REGNUM)					\     {									\       int count_regs = 0;						\       int regno;							\       for (regno = 8; regno< 13; regno ++)				\         if (THUMB_REG_PUSHED_P (regno))					\           count_regs ++;						\       if (count_regs)							\ 	(OFFSET) += 4 * count_regs;					\       count_regs = 0;							\       for (regno = 0; regno<= LAST_LO_REGNUM; regno ++)		\         if (THUMB_REG_PUSHED_P (regno))					\ 	  count_regs ++;						\       if (count_regs || ! leaf_function_p () || thumb_far_jump_used_p (0))\ 	(OFFSET) += 4 * (count_regs + 1);				\       if (TARGET_BACKTRACE)						\         {								\ 	  if ((count_regs& 0xFF) == 0&& (regs_ever_live[3] != 0))	\ 	    (OFFSET) += 20;						\ 	  else								\ 	    (OFFSET) += 16;						\         }								\     }									\   if ((TO) == STACK_POINTER_REGNUM)					\     {									\       (OFFSET) += current_function_outgoing_args_size;			\       (OFFSET) += thumb_get_frame_size ();				\      }									\ }
 end_define
 
 begin_define
@@ -3743,29 +3758,6 @@ value|case SHORT_CALL_FLAG_CHAR: return 1;		\   case LONG_CALL_FLAG_CHAR:  retur
 end_define
 
 begin_comment
-comment|/* This has to be handled by a function because more than part of the    ARM backend uses function name prefixes to encode attributes.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|STRIP_NAME_ENCODING
-end_undef
-
-begin_define
-define|#
-directive|define
-name|STRIP_NAME_ENCODING
-parameter_list|(
-name|VAR
-parameter_list|,
-name|SYMBOL_NAME
-parameter_list|)
-define|\
-value|(VAR) = arm_strip_name_encoding (SYMBOL_NAME)
-end_define
-
-begin_comment
 comment|/* This is how to output a reference to a user-level label named NAME.    `assemble_name' uses this.  */
 end_comment
 
@@ -3785,69 +3777,8 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|asm_fprintf (FILE, "%U%s", arm_strip_name_encoding (NAME))
+value|arm_asm_output_labelref (FILE, NAME)
 end_define
-
-begin_comment
-comment|/* If we are referencing a function that is weak then encode a long call    flag in the function name, otherwise if the function is static or    or known to be defined in this file then encode a short call flag.    This macro is used inside the ENCODE_SECTION macro.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARM_ENCODE_CALL_TYPE
-parameter_list|(
-name|decl
-parameter_list|)
-define|\
-value|if (TREE_CODE_CLASS (TREE_CODE (decl)) == 'd')			\     {									\       if (TREE_CODE (decl) == FUNCTION_DECL&& DECL_WEAK (decl))	\         arm_encode_call_attribute (decl, LONG_CALL_FLAG_CHAR);		\       else if (! TREE_PUBLIC (decl))        				\         arm_encode_call_attribute (decl, SHORT_CALL_FLAG_CHAR);		\     }
-end_define
-
-begin_comment
-comment|/* Symbols in the text segment can be accessed without indirecting via the    constant pool; it may take an extra binary operation, but this is still    faster than indirecting via memory.  Don't do this when not optimizing,    since we won't be calculating al of the offsets necessary to do this    simplification.  */
-end_comment
-
-begin_comment
-comment|/* This doesn't work with AOF syntax, since the string table may be in    a different AREA.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|AOF_ASSEMBLER
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|decl
-parameter_list|)
-define|\
-value|{									\   if (optimize> 0&& TREE_CONSTANT (decl)				\&& (!flag_writable_strings || TREE_CODE (decl) != STRING_CST))	\     {									\       rtx rtl = (TREE_CODE_CLASS (TREE_CODE (decl)) != 'd'		\                  ? TREE_CST_RTL (decl) : DECL_RTL (decl));		\       SYMBOL_REF_FLAG (XEXP (rtl, 0)) = 1;				\     }									\   ARM_ENCODE_CALL_TYPE (decl)						\ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|decl
-parameter_list|)
-define|\
-value|{									\   ARM_ENCODE_CALL_TYPE (decl)						\ }
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -4130,7 +4061,7 @@ value|\   if (GET_MODE_SIZE (MODE)< 4						\&& ! (reload_in_progress || reload_c
 comment|/* Accept any base register.  SP only in SImode or larger.  */
 value|\   else if (GET_CODE (X) == REG						\&& THUMB_REG_MODE_OK_FOR_BASE_P (X, MODE))			\     goto WIN;								\
 comment|/* This is PC relative data before MACHINE_DEPENDENT_REORG runs.  */
-value|\   else if (GET_MODE_SIZE (MODE)>= 4&& CONSTANT_P (X)			\&& CONSTANT_POOL_ADDRESS_P (X)&& ! flag_pic)		\     goto WIN;								\
+value|\   else if (GET_MODE_SIZE (MODE)>= 4&& CONSTANT_P (X)			\&& GET_CODE (X) == SYMBOL_REF 				\&& CONSTANT_POOL_ADDRESS_P (X)&& ! flag_pic)		\     goto WIN;								\
 comment|/* This is PC relative data after MACHINE_DEPENDENT_REORG runs.  */
 value|\   else if (GET_MODE_SIZE (MODE)>= 4&& reload_completed		\&& (GET_CODE (X) == LABEL_REF				\ 	       || (GET_CODE (X) == CONST				\&& GET_CODE (XEXP (X, 0)) == PLUS			\&& GET_CODE (XEXP (XEXP (X, 0), 0)) == LABEL_REF	\&& GET_CODE (XEXP (XEXP (X, 0), 1)) == CONST_INT)))	\     goto WIN;								\
 comment|/* Post-inc indexing only supported for SImode and larger.  */
@@ -4614,7 +4545,7 @@ parameter_list|(
 name|X
 parameter_list|)
 define|\
-value|(   ! symbol_mentioned_p (X)					\&& ! label_mentioned_p (X)					\&& (! CONSTANT_POOL_ADDRESS_P (X)				\ 	     || (   ! symbol_mentioned_p (get_pool_constant (X))  	\&& ! label_mentioned_p (get_pool_constant (X)))))
+value|(!(symbol_mentioned_p (X)					\ 	   || label_mentioned_p (X)					\ 	   || (GET_CODE (X) == SYMBOL_REF				\&& CONSTANT_POOL_ADDRESS_P (X)				\&& (symbol_mentioned_p (get_pool_constant (X))		\ 		   || label_mentioned_p (get_pool_constant (X))))))
 end_define
 
 begin_comment
@@ -4650,16 +4581,8 @@ comment|/* Condition code information. */
 end_comment
 
 begin_comment
-comment|/* Given a comparison code (EQ, NE, etc.) and the first operand of a COMPARE,    return the mode to be used for the comparison.     CCFPEmode should be used with floating inequalities,    CCFPmode should be used with floating equalities.    CC_NOOVmode should be used with SImode integer equalities.    CC_Zmode should be used if only the Z flag is set correctly    CCmode should be used otherwise. */
+comment|/* Given a comparison code (EQ, NE, etc.) and the first operand of a COMPARE,    return the mode to be used for the comparison.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|EXTRA_CC_MODES
-define|\
-value|CC(CC_NOOVmode, "CC_NOOV") \         CC(CC_Zmode, "CC_Z") \         CC(CC_SWPmode, "CC_SWP") \         CC(CCFPmode, "CCFP") \         CC(CCFPEmode, "CCFPE") \         CC(CC_DNEmode, "CC_DNE") \         CC(CC_DEQmode, "CC_DEQ") \         CC(CC_DLEmode, "CC_DLE") \         CC(CC_DLTmode, "CC_DLT") \         CC(CC_DGEmode, "CC_DGE") \         CC(CC_DGTmode, "CC_DGT") \         CC(CC_DLEUmode, "CC_DLEU") \         CC(CC_DLTUmode, "CC_DLTU") \         CC(CC_DGEUmode, "CC_DGEU") \         CC(CC_DGTUmode, "CC_DGTU") \         CC(CC_Cmode, "CC_C")
-end_define
 
 begin_define
 define|#
@@ -4993,27 +4916,6 @@ value|if (TARGET_ARM)				\     ARM_PRINT_OPERAND_ADDRESS (STREAM, X)	\   else			
 end_define
 
 begin_comment
-comment|/* Output code to add DELTA to the first argument, and then jump to FUNCTION.    Used for C++ multiple inheritance.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ASM_OUTPUT_MI_THUNK
-parameter_list|(
-name|FILE
-parameter_list|,
-name|THUNK_FNDECL
-parameter_list|,
-name|DELTA
-parameter_list|,
-name|FUNCTION
-parameter_list|)
-define|\
-value|do										\     {										\       int mi_delta = (DELTA);							\       const char *const mi_op = mi_delta< 0 ? "sub" : "add";			\       int shift = 0;								\       int this_regno = (aggregate_value_p (TREE_TYPE (TREE_TYPE (FUNCTION)))	\ 		        ? 1 : 0);						\       if (mi_delta< 0)								\         mi_delta = - mi_delta;							\       while (mi_delta != 0)							\         {									\           if ((mi_delta& (3<< shift)) == 0)					\ 	    shift += 2;								\           else									\ 	    {									\ 	      asm_fprintf (FILE, "\t%s\t%r, %r, #%d\n",				\ 		           mi_op, this_regno, this_regno,			\ 		           mi_delta& (0xff<< shift));				\ 	      mi_delta&= ~(0xff<< shift);					\ 	      shift += 8;							\ 	    }									\         }									\       fputs ("\tb\t", FILE);							\       assemble_name (FILE, XSTR (XEXP (DECL_RTL (FUNCTION), 0), 0));		\       if (NEED_PLT_RELOC)							\         fputs ("(PLT)", FILE);							\       fputc ('\n', FILE);							\     }										\   while (0)
-end_define
-
-begin_comment
 comment|/* A C expression whose value is RTL representing the value of the return    address for the frame COUNT steps up from the current frame.  */
 end_comment
 
@@ -5070,7 +4972,7 @@ name|MASK_RETURN_ADDR
 define|\
 comment|/* If we are generating code for an ARM2/ARM3 machine or for an ARM6	\      in 26 bit mode, the condition codes must be masked out of the	\      return address.  This does not apply to ARM6 and later processors	\      when running in 32 bit mode.  */
 define|\
-value|((!TARGET_APCS_32) ? (GEN_INT (RETURN_ADDR_MASK26))			\    : (GEN_INT ((unsigned long)0xffffffff)))
+value|((!TARGET_APCS_32) ? (gen_int_mode (RETURN_ADDR_MASK26, Pmode))	\    : (arm_arch4 || TARGET_THUMB) ?					\      (gen_int_mode ((unsigned long)0xffffffff, Pmode))			\    : arm_gen_return_addr_mask ())
 end_define
 
 begin_escape

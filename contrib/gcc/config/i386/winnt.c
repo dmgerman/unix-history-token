@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Subroutines for insn-output.c for Windows NT.    Contributed by Douglas Rupp (drupp@cs.washington.edu)    Copyright (C) 1995, 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Subroutines for insn-output.c for Windows NT.    Contributed by Douglas Rupp (drupp@cs.washington.edu)    Copyright (C) 1995, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"hashtab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ggc.h"
 end_include
 
 begin_comment
@@ -486,7 +492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if DECL is a dllexport'd object.  */
+comment|/* Return nonzero if DECL is a dllexport'd object.  */
 end_comment
 
 begin_function
@@ -579,7 +585,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if DECL is a dllimport'd object.  */
+comment|/* Return nonzero if DECL is a dllimport'd object.  */
 end_comment
 
 begin_function
@@ -686,7 +692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if SYMBOL is marked as being dllexport'd.  */
+comment|/* Return nonzero if SYMBOL is marked as being dllexport'd.  */
 end_comment
 
 begin_function
@@ -707,7 +713,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'@'
+name|DLL_IMPORT_EXPORT_PREFIX
 operator|&&
 name|symbol
 index|[
@@ -727,7 +733,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return non-zero if SYMBOL is marked as being dllimport'd.  */
+comment|/* Return nonzero if SYMBOL is marked as being dllimport'd.  */
 end_comment
 
 begin_function
@@ -748,7 +754,7 @@ index|[
 literal|0
 index|]
 operator|==
-literal|'@'
+name|DLL_IMPORT_EXPORT_PREFIX
 operator|&&
 name|symbol
 index|[
@@ -903,7 +909,9 @@ name|sprintf
 argument_list|(
 name|newname
 argument_list|,
-literal|"@e.%s"
+literal|"%ce.%s"
+argument_list|,
+name|DLL_IMPORT_EXPORT_PREFIX
 argument_list|,
 name|oldname
 argument_list|)
@@ -1198,7 +1206,9 @@ name|sprintf
 argument_list|(
 name|newname
 argument_list|,
-literal|"@i._imp__%s"
+literal|"%ci._imp__%s"
+argument_list|,
+name|DLL_IMPORT_EXPORT_PREFIX
 argument_list|,
 name|oldname
 argument_list|)
@@ -1425,20 +1435,27 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Cover function to implement ENCODE_SECTION_INFO.  */
-end_comment
-
 begin_function
 name|void
 name|i386_pe_encode_section_info
 parameter_list|(
 name|decl
+parameter_list|,
+name|first
 parameter_list|)
 name|tree
 name|decl
 decl_stmt|;
+name|int
+name|first
+decl_stmt|;
 block|{
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+return|return;
 comment|/* This bit is copied from i386.h.  */
 if|if
 condition|(
@@ -1574,7 +1591,7 @@ argument_list|(
 name|decl
 argument_list|)
 expr_stmt|;
-comment|/* It might be that DECL has already been marked as dllimport, but a      subsequent definition nullified that.  The attribute is gone but      DECL_RTL still has @i._imp__foo.  We need to remove that. Ditto      for the DECL_NON_ADDR_CONST_P flag.  */
+comment|/* It might be that DECL has already been marked as dllimport, but a      subsequent definition nullified that.  The attribute is gone but      DECL_RTL still has (DLL_IMPORT_EXPORT_PREFIX)i._imp__foo.  We need      to remove that. Ditto for the DECL_NON_ADDR_CONST_P flag.  */
 elseif|else
 if|if
 condition|(
@@ -1745,8 +1762,112 @@ block|}
 end_function
 
 begin_comment
-comment|/* Cover function for UNIQUE_SECTION.  */
+comment|/* Strip only the leading encoding, leaving the stdcall suffix.  */
 end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|i386_pe_strip_name_encoding
+parameter_list|(
+name|str
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|{
+if|if
+condition|(
+operator|*
+name|str
+operator|==
+name|DLL_IMPORT_EXPORT_PREFIX
+condition|)
+name|str
+operator|+=
+literal|3
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|str
+operator|==
+literal|'*'
+condition|)
+name|str
+operator|+=
+literal|1
+expr_stmt|;
+return|return
+name|str
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Also strip the stdcall suffix.  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|i386_pe_strip_name_encoding_full
+parameter_list|(
+name|str
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|{
+specifier|const
+name|char
+modifier|*
+name|p
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|name
+init|=
+name|i386_pe_strip_name_encoding
+argument_list|(
+name|str
+argument_list|)
+decl_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|'@'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+return|return
+name|ggc_alloc_string
+argument_list|(
+name|name
+argument_list|,
+name|p
+operator|-
+name|name
+argument_list|)
+return|;
+return|return
+name|name
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -1788,11 +1909,10 @@ name|decl
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Strip off any encoding in fnname.  */
-name|STRIP_NAME_ENCODING
-argument_list|(
 name|name
-argument_list|,
+operator|=
+name|i386_pe_strip_name_encoding_full
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -1810,32 +1930,20 @@ name|prefix
 operator|=
 literal|".text$"
 expr_stmt|;
-comment|/* else if (DECL_INITIAL (decl) == 0 	   || DECL_INITIAL (decl) == error_mark_node)     prefix = ".bss";  */
 elseif|else
 if|if
 condition|(
-name|DECL_READONLY_SECTION
+name|decl_readonly_section
 argument_list|(
 name|decl
 argument_list|,
 name|reloc
 argument_list|)
 condition|)
-ifdef|#
-directive|ifdef
-name|READONLY_DATA_SECTION
 name|prefix
 operator|=
 literal|".rdata$"
 expr_stmt|;
-else|#
-directive|else
-name|prefix
-operator|=
-literal|".text$"
-expr_stmt|;
-endif|#
-directive|endif
 else|else
 name|prefix
 operator|=
@@ -1979,7 +2087,7 @@ if|if
 condition|(
 name|decl
 operator|&&
-name|DECL_READONLY_SECTION
+name|decl_readonly_section
 argument_list|(
 name|decl
 argument_list|,
@@ -2234,7 +2342,7 @@ file|"gsyms.h"
 end_include
 
 begin_comment
-comment|/* Mark a function appropriately.  This should only be called for    functions for which we are not emitting COFF debugging information.    FILE is the assembler output file, NAME is the name of the    function, and PUBLIC is non-zero if the function is globally    visible.  */
+comment|/* Mark a function appropriately.  This should only be called for    functions for which we are not emitting COFF debugging information.    FILE is the assembler output file, NAME is the name of the    function, and PUBLIC is nonzero if the function is globally    visible.  */
 end_comment
 
 begin_function
@@ -2362,7 +2470,7 @@ expr|struct
 name|extern_list
 operator|*
 operator|)
-name|permalloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -2456,7 +2564,7 @@ expr|struct
 name|export_list
 operator|*
 operator|)
-name|permalloc
+name|xmalloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -2616,7 +2724,7 @@ name|file
 argument_list|,
 literal|"\t.ascii \" -export:%s%s\"\n"
 argument_list|,
-name|I386_PE_STRIP_ENCODING
+name|i386_pe_strip_name_encoding
 argument_list|(
 name|q
 operator|->

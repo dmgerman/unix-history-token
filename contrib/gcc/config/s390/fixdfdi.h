@@ -145,6 +145,16 @@ block|}
 union|;
 end_union
 
+begin_function_decl
+name|UDItype_x
+name|__fixunsdfdi
+parameter_list|(
+name|double
+name|a1
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* convert double to unsigned int */
 end_comment
@@ -441,6 +451,16 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_function_decl
+name|DItype_x
+name|__fixdfdi
+parameter_list|(
+name|double
+name|a1
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* convert double to int */
@@ -754,6 +774,16 @@ block|}
 union|;
 end_union
 
+begin_function_decl
+name|UDItype_x
+name|__fixunssfdi
+parameter_list|(
+name|float
+name|a1
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* convert float to unsigned int */
 end_comment
@@ -1038,6 +1068,16 @@ decl_stmt|;
 block|}
 union|;
 end_union
+
+begin_function_decl
+name|DItype_x
+name|__fixsfdi
+parameter_list|(
+name|float
+name|a1
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* convert double to int */

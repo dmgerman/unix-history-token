@@ -32,7 +32,7 @@ comment|/* Usage of TREE_LANG_FLAG_?:    0: COMPOUND_STMT_NO_SCOPE (in COMPOUND_
 end_comment
 
 begin_comment
-comment|/* Reserved identifiers.  This is the union of all the keywords for C,    C++, and Objective C.  All the type modifiers have to be in one    block at the beginning, because they are used as mask bits.  There    are 27 type modifiers; if we add many more we will have to redesign    the mask mechanism.  */
+comment|/* Reserved identifiers.  This is the union of all the keywords for C,    C++, and Objective-C.  All the type modifiers have to be in one    block at the beginning, because they are used as mask bits.  There    are 27 type modifiers; if we add many more we will have to redesign    the mask mechanism.  */
 end_comment
 
 begin_enum
@@ -75,6 +75,8 @@ block|,
 name|RID_UNBOUNDED
 block|,
 name|RID_COMPLEX
+block|,
+name|RID_THREAD
 block|,
 comment|/* C++ */
 name|RID_FRIEND
@@ -231,30 +233,7 @@ name|RID_REINTCAST
 block|,
 name|RID_STATCAST
 block|,
-comment|/* alternate spellings */
-name|RID_AND
-block|,
-name|RID_AND_EQ
-block|,
-name|RID_NOT
-block|,
-name|RID_NOT_EQ
-block|,
-name|RID_OR
-block|,
-name|RID_OR_EQ
-block|,
-name|RID_XOR
-block|,
-name|RID_XOR_EQ
-block|,
-name|RID_BITAND
-block|,
-name|RID_BITOR
-block|,
-name|RID_COMPL
-block|,
-comment|/* Objective C */
+comment|/* Objective-C */
 name|RID_ID
 block|,
 name|RID_AT_ENCODE
@@ -438,9 +417,14 @@ begin_comment
 comment|/* Identifier part common to the C front ends.  Inherits from    tree_identifier, despite appearances.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|c_common_identifier
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|struct
 name|tree_common
@@ -448,11 +432,23 @@ name|common
 decl_stmt|;
 name|struct
 name|cpp_hashnode
+name|GTY
+argument_list|(
+operator|(
+name|skip
+argument_list|(
+literal|""
+argument_list|)
+operator|)
+argument_list|)
 name|node
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -679,8 +675,12 @@ name|void_zero_node
 value|c_global_trees[CTI_VOID_ZERO]
 end_define
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|c_global_trees
 index|[
@@ -723,13 +723,12 @@ enum|enum
 name|c_language_kind
 block|{
 name|clk_c
+init|=
+literal|0
 block|,
-comment|/* A dialect of C: K&R C, ANSI/ISO C89, C2000, 		       etc.  */
+comment|/* A dialect of C: K&R C, ANSI/ISO C89, C2000, etc.  */
 name|clk_cplusplus
-block|,
 comment|/* ANSI/ISO C++ */
-name|clk_objective_c
-comment|/* Objective C */
 block|}
 name|c_language_kind
 typedef|;
@@ -739,9 +738,14 @@ begin_comment
 comment|/* Information about a statement tree.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|stmt_tree_s
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* The last statement added to the tree.  */
 name|tree
@@ -757,13 +761,16 @@ name|char
 modifier|*
 name|x_last_expr_filename
 decl_stmt|;
-comment|/* In C++, Non-zero if we should treat statements as full      expressions.  In particular, this variable is no-zero if at the      end of a statement we should destroy any temporaries created      during that statement.  Similarly, if, at the end of a block, we      should destroy any local variables in this block.  Normally, this      variable is non-zero, since those are the normal semantics of      C++.       However, in order to represent aggregate initialization code as      tree structure, we use statement-expressions.  The statements      within the statement expression should not result in cleanups      being run until the entire enclosing statement is complete.       This flag has no effect in C.  */
+comment|/* In C++, Nonzero if we should treat statements as full      expressions.  In particular, this variable is no-zero if at the      end of a statement we should destroy any temporaries created      during that statement.  Similarly, if, at the end of a block, we      should destroy any local variables in this block.  Normally, this      variable is nonzero, since those are the normal semantics of      C++.       However, in order to represent aggregate initialization code as      tree structure, we use statement-expressions.  The statements      within the statement expression should not result in cleanups      being run until the entire enclosing statement is complete.       This flag has no effect in C.  */
 name|int
 name|stmts_are_full_exprs_p
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_typedef
 typedef|typedef
@@ -778,9 +785,14 @@ begin_comment
 comment|/* Global state pertinent to the current function.  Some C dialects    extend this structure with additional fields.  */
 end_comment
 
-begin_struct
-struct|struct
-name|language_function
+begin_decl_stmt
+name|struct
+name|c_language_function
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 comment|/* While we are parsing the function, this contains information      about the statement-tree that we are building.  */
 name|struct
@@ -792,8 +804,11 @@ name|tree
 name|x_scope_stmt_stack
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* When building a statement-tree, this is the last statement added to    the tree.  */
@@ -910,6 +925,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|extern
+name|tree
+name|gettags
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Callback that determines if it's ok for a function to have no    noreturn attribute.  */
 end_comment
@@ -928,6 +956,32 @@ operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|yyparse
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|free_parser_stacks
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1087,20 +1141,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|mark_stmt_tree
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|shadow_warning
 name|PARAMS
 argument_list|(
@@ -1162,9 +1202,14 @@ begin_comment
 comment|/* Extra information associated with a DECL.  Other C dialects extend    this structure in various ways.  The C front-end only uses this    structure for FUNCTION_DECLs; all other DECLs have a NULL    DECL_LANG_SPECIFIC field.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|c_lang_decl
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|unsigned
 name|declared_inline
@@ -1172,8 +1217,11 @@ range|:
 literal|1
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* In a FUNCTION_DECL for which DECL_BUILT_IN does not hold, this is      the approximate number of statements in this function.  There is      no need for this number to be exact; it is only used in various      heuristics regarding optimization.  */
@@ -1190,21 +1238,6 @@ define|\
 value|(FUNCTION_DECL_CHECK (NODE)->decl.u1.i)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|c_mark_lang_decl
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|c_lang_decl
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* The variant of the C language being processed.  Each C language    front-end defines this variable.  */
 end_comment
@@ -1217,13 +1250,72 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means give string constants the type `const char *', rather    than `char *'.  */
+comment|/* Switches common to the C front ends.  */
+end_comment
+
+begin_comment
+comment|/* Nonzero if prepreprocessing only.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_const_strings
+name|flag_preprocess_only
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if an ISO standard was selected.  It rejects macros in the    user's namespace.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_iso
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero whenever Objective-C functionality is being used.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_objc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if -undef was given.  It suppresses target built-in macros    and assertions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_undef
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means don't recognize the non-ANSI builtin functions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_no_builtin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means don't recognize the non-ANSI builtin functions.    -ansi sets this.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_no_nonansi_builtin
 decl_stmt|;
 end_decl_stmt
 
@@ -1250,7 +1342,227 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn about *printf or *scanf format/argument anomalies.  */
+comment|/* Nonzero means allow Microsoft extensions without warnings or errors.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_ms_extensions
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means don't recognize the keyword `asm'.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_no_asm
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means give string constants the type `const char *', as mandated    by the standard.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_const_strings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means `$' can be in an identifier.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dollars_in_ident
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means to treat bitfields as signed unless they say `unsigned'.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_signed_bitfields
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|explicit_flag_signed_bitfields
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about pointer casts that can drop a type qualifier    from the pointer target type.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_cast_qual
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about functions which might be candidates for format attributes.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_missing_format_attribute
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about sizeof(function) or addition/subtraction    of function pointers.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_pointer_arith
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn for any global function def    without separate previous prototype decl.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_missing_prototypes
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if adding () is suggested.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_parentheses
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if initializer is not completely bracketed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_missing_braces
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about comparison of signed and unsigned values.    If -1, neither -Wsign-compare nor -Wno-sign-compare has been specified.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_sign_compare
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about usage of long long when `-pedantic'.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_long_long
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about deprecated conversion from string constant to    `char *'.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_write_strings
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about multiple (redundant) decls for the same single    variable or function.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_redundant_decls
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about testing equality of floating point numbers.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_float_equal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about a subscript that has type char.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_char_subscripts
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if a type conversion is done that might have confusing results.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_conversion
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about #pragma directives that are not recognized.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_unknown_pragmas
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tri state variable.  */
+end_comment
+
+begin_comment
+comment|/* Warn about format/argument anomalies in calls to formatted I/O functions    (*printf, *scanf, strftime, strfmon, etc.).  */
 end_comment
 
 begin_decl_stmt
@@ -1283,6 +1595,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Warn about zero-length formats.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_format_zero_length
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Warn about non-literal format arguments.  */
 end_comment
 
@@ -1305,57 +1628,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn about possible violations of sequence point rules.  */
+comment|/* C/ObjC language option variables.  */
+end_comment
+
+begin_comment
+comment|/* Nonzero means message about use of implicit function declarations;  1 means warning; 2 means error.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_sequence_point
+name|mesg_implicit_function_declaration
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn about functions which might be candidates for format attributes.  */
+comment|/* Nonzero means allow type mismatches in conditional expressions;    just make their values `void'.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_missing_format_attribute
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means warn about sizeof (function) or addition/subtraction    of function pointers.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|warn_pointer_arith
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means to warn about compile-time division by zero.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|warn_div_by_zero
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Nonzero means do some things the same way PCC does.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|flag_traditional
+name|flag_cond_mismatch
 decl_stmt|;
 end_decl_stmt
 
@@ -1382,7 +1676,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means environment is hosted (i.e., not freestanding) */
+comment|/* Nonzero means that we have builtin functions, and main is an int */
 end_comment
 
 begin_decl_stmt
@@ -1404,57 +1698,584 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means don't recognize any builtin functions.  */
+comment|/* Nonzero means warn when casting a function call to a type that does    not match the return type (e.g. (float)sqrt() or (anything*)malloc()    when there is no previous declaration of sqrt or malloc.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_no_builtin
+name|warn_bad_function_cast
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means don't recognize the non-ANSI builtin functions.    -ansi sets this.  */
+comment|/* Warn about traditional constructs whose meanings changed in ANSI C.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|flag_no_nonansi_builtin
+name|warn_traditional
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means warn about suggesting putting in ()'s.  */
+comment|/* Nonzero means warn for non-prototype function decls    or non-prototyped defs without previous prototype.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_parentheses
+name|warn_strict_prototypes
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Warn if a type conversion is done that might have confusing results.  */
+comment|/* Nonzero means warn for any global function def    without separate previous decl.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_conversion
+name|warn_missing_declarations
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means warn about usage of long long,    when `-pedantic' and not C99.  */
+comment|/* Nonzero means warn about extern declarations of objects not at    file-scope level and about *all* declarations of functions (whether    extern or static) not at file-scope level.  Note that we exclude    implicit function declarations.  To get warnings about those, use    -Wimplicit.  */
 end_comment
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|warn_long_long
+name|warn_nested_externs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if main is suspicious.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_main
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about possible violations of sequence point rules.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_sequence_point
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means to warn about compile-time division by zero.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_div_by_zero
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about use of implicit int.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_implicit_int
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn about NULL being passed to argument slots marked as requiring    non-NULL.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_nonnull
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ObjC language option variables.  */
+end_comment
+
+begin_comment
+comment|/* Open and close the file for outputting class declarations, if    requested (ObjC).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_gen_declaration
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Generate code for GNU or NeXT runtime environment.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_next_runtime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Tells the compiler that this is a special run.  Do not perform any    compiling, instead we are to test some platform dependent features    and output a C header file with appropriate definitions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|print_struct_values
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ???.  Undocumented.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|constant_string_class_name
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if multiple methods are seen for the same selector, but with    different argument types.  Performs the check on the whole selector    table at the end of compilation.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_selector
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if a @selector() is found, and no method with that selector    has been previously declared.  The check is done on each    @selector() as soon as it is found - so it warns about forward    declarations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_undeclared_selector
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Warn if methods required by a protocol are not implemented in the     class adopting it.  When turned off, methods inherited to that    class are also considered implemented.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_protocol
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* C++ language option variables.  */
+end_comment
+
+begin_comment
+comment|/* Nonzero means don't recognize any extension keywords.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_no_gnu_keywords
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means do emit exported implementations of functions even if    they can be inlined.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_implement_inlines
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means do emit exported implementations of templates, instead of    multiple static copies in each file that needs a definition.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_external_templates
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means that the decision to emit or not emit the implementation of a    template depends on where the template is instantiated, rather than where    it is defined.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_alt_external_templates
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means that implicit instantiations will be emitted if needed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_implicit_templates
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means that implicit instantiations of inline templates will be    emitted if needed, even if instantiations of non-inline templates    aren't.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_implicit_inline_templates
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means generate separate instantiation control files and    juggle them at link time.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_use_repository
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want to issue diagnostics that the standard says are not    required.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_optional_diags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means we should attempt to elide constructors when possible.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_elide_constructors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means that member functions defined in class scope are    inline by default.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_default_inline
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Controls whether compiler generates 'type descriptor' that give    run-time type information.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_rtti
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want to conserve space in the .o files.  We do this    by putting uninitialized data and runtime initialized data into    .common instead of .data at the expense of not flagging multiple    definitions.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_conserve_space
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want to obey access control semantics.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_access_control
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want to check the return value of new and avoid calling    constructors if it is a null pointer.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_check_new
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want the new ISO rules for pushing a new scope for `for'    initialization variables.    0: Old rules, set by -fno-for-scope.    2: New ISO rules, set by -ffor-scope.    1: Try to implement new ISO rules, but with backup compatibility    (and warnings).  This is the default, for now.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_new_for_scope
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if we want to emit defined symbols with common-like linkage as    weak symbols where possible, in order to conform to C++ semantics.    Otherwise, emit them as local symbols.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_weak
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero to use __cxa_atexit, rather than atexit, to register    destructors for local statics and global objects.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_use_cxa_atexit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means output .vtable_{entry,inherit} for use in doing vtable gc.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_vtable_gc
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means make the default pedwarns warnings instead of errors.    The value of this flag is ignored if -pedantic is specified.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_permissive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means to implement standard semantics for exception    specifications, calling unexpected if an exception is thrown that    doesn't match the specification.  Zero means to treat them as    assertions and optimize accordingly, but not check them.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_enforce_eh_specs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  The version of the C++ ABI in use.  The following values are     allowed:      0: The version of the ABI believed most conformant with the         C++ ABI specification.  This ABI may change as bugs are        discovered and fixed.  Therefore, 0 will not necessarily        indicate the same ABI in different versions of G++.      1: The version of the ABI first used in G++ 3.2.      Additional positive integers will be assigned as new versions of     the ABI become the default version of the ABI.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|flag_abi_version
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about things that will change when compiling    with an ABI-compliant compiler.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_abi
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about implicit declarations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_implicit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when all ctors or dtors are private, and the class    has no friends.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_ctor_dtor_privacy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn in function declared in derived class has the    same name as a virtual in the base class, but fails to match the    type signature of any virtual function in the base class.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_overloaded_virtual
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when declaring a class that has a non virtual    destructor, when it really ought to have a virtual one.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_nonvdtor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when the compiler will reorder code.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_reorder
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when synthesis behavior differs from Cfront's.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_synth
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when we convert a pointer to member function    into a pointer to (void or function).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_pmf2ptr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn about violation of some Effective C++ style rules.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_ecpp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn where overload resolution chooses a promotion from    unsigned to signed over a conversion to an unsigned of the same size.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_sign_promo
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when an old-style cast is used.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_old_style_cast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means warn when non-templatized friend functions are    declared within a template */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_nontemplate_friend
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero means complain about deprecated features.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_deprecated
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Maximum template instantiation depth.  This limit is rather    arbitrary, but it exists to limit the time it takes to notice    infinite template instantiations.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|max_tinst_depth
 decl_stmt|;
 end_decl_stmt
 
@@ -1534,6 +2355,30 @@ name|exp
 parameter_list|)
 value|((enum tree_code) TREE_COMPLEXITY (exp))
 end_define
+
+begin_comment
+comment|/* Attribute table common to the C front ends.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|attribute_spec
+name|c_common_attribute_table
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|attribute_spec
+name|c_common_format_attribute_table
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Pointer to function to lazily generate the VAR_DECL for __FUNCTION__ etc.    ID is the identifier to use, NAME is the string.    TYPE_DEP indicates whether it depends on type of the function or not    (i.e. __PRETTY_FUNCTION__).  */
@@ -1676,6 +2521,54 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|check_function_arguments
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|check_function_arguments_recurse
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+argument_list|(
+argument|*
+argument_list|)
+operator|(
+name|void
+operator|*
+operator|,
+name|tree
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+operator|,
+name|void
+operator|*
+operator|,
+name|tree
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|check_function_format
 name|PARAMS
 argument_list|(
@@ -1765,6 +2658,109 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|c_common_decode_option
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_type_for_mode
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_type_for_size
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_unsigned_type
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_signed_type
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_signed_or_unsigned_type
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|tree
+name|c_common_truthvalue_conversion
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|c_apply_type_quals_to_decl
 name|PARAMS
@@ -1781,24 +2777,16 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|tree
-name|c_sizeof
+name|c_sizeof_or_alignof_type
 name|PARAMS
 argument_list|(
 operator|(
 name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|c_alignof
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
+operator|,
+expr|enum
+name|tree_code
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1834,6 +2822,18 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|my_friendly_assert
+parameter_list|(
+name|EXP
+parameter_list|,
+name|N
+parameter_list|)
+value|(void) \  (((EXP) == 0) ? (fancy_abort (__FILE__, __LINE__, __FUNCTION__), 0) : 0)
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -1934,9 +2934,24 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Concatenate a list of STRING_CST nodes into one STRING_CST.  */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|tree
+name|fix_string_type
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|varray_head_tag
+struct_decl|;
+end_struct_decl
 
 begin_decl_stmt
 specifier|extern
@@ -1945,7 +2960,9 @@ name|combine_strings
 name|PARAMS
 argument_list|(
 operator|(
-name|tree
+expr|struct
+name|varray_head_tag
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2031,6 +3048,26 @@ directive|define
 name|GET_DIRECTIVE_LINE
 parameter_list|()
 value|get_directive_line ()
+end_define
+
+begin_define
+define|#
+directive|define
+name|c_sizeof
+parameter_list|(
+name|T
+parameter_list|)
+value|c_sizeof_or_alignof_type (T, SIZEOF_EXPR, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|c_alignof
+parameter_list|(
+name|T
+parameter_list|)
+value|c_sizeof_or_alignof_type (T, ALIGNOF_EXPR, 1)
 end_define
 
 begin_comment
@@ -2177,7 +3214,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|c_common_post_options
 name|PARAMS
 argument_list|(
@@ -2220,6 +3257,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|c_common_parse_file
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|HOST_WIDE_INT
 name|c_common_get_alias_set
 name|PARAMS
@@ -2248,19 +3298,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|self_promoting_args_p
-name|PARAMS
-argument_list|(
-operator|(
-name|tree
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|simple_type_promotes_to
 name|PARAMS
 argument_list|(
 operator|(
@@ -2390,7 +3427,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RETURN_EXPR
+name|RETURN_STMT_EXPR
 parameter_list|(
 name|NODE
 parameter_list|)
@@ -2879,7 +3916,7 @@ value|(TREE_COMPLEXITY ((NODE)))
 end_define
 
 begin_comment
-comment|/* If non-zero, the STMT_LINENO for NODE is the line at which the    function ended.  */
+comment|/* If nonzero, the STMT_LINENO for NODE is the line at which the    function ended.  */
 end_comment
 
 begin_define
@@ -2958,19 +3995,6 @@ undef|#
 directive|undef
 name|DEFTREECODE
 end_undef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|add_c_tree_codes
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -3657,21 +4681,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
-name|mark_c_language_function
-name|PARAMS
-argument_list|(
-operator|(
-expr|struct
-name|language_function
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|case_compare
 name|PARAMS
@@ -3749,16 +4758,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* enum expand_modified is in expr.h, as is the macro below.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|QUEUED_VAR
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|rtx
@@ -3773,17 +4772,11 @@ operator|,
 expr|enum
 name|machine_mode
 operator|,
-expr|enum
-name|expand_modifier
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3816,11 +4809,42 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|c_unsafe_for_reeval
+name|c_common_unsafe_for_reeval
 name|PARAMS
 argument_list|(
 operator|(
 name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|init_c_lex
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|cb_register_builtins
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3873,6 +4897,22 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|c_dump_tree
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|tree
 operator|)
 argument_list|)
 decl_stmt|;

@@ -64,7 +64,7 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_comment
@@ -74,8 +74,10 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__BEOS__ -D__POWERPC__ -Asystem=beos -Acpu=powerpc -Amachine=powerpc"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                      \     {                                     \       builtin_define ("__BEOS__");        \       builtin_define ("__POWERPC__");     \       builtin_assert ("system=beos");     \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \     }                                     \   while (0)
 end_define
 
 begin_undef
@@ -88,20 +90,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%{posix: -D_POSIX_SOURCE} %(cpp_cpu)"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CPP_DEFAULT_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CPP_DEFAULT_SPEC
-value|"-D_ARCH_PPC"
+value|"%{posix: -D_POSIX_SOURCE}"
 end_define
 
 begin_comment

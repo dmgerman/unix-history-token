@@ -35,12 +35,14 @@ begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef
@@ -61,6 +63,19 @@ undef|#
 directive|undef
 name|ASM_FINAL_SPEC
 end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|CPP_SUBTARGET_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|CPP_SUBTARGET_SPEC
+value|"-D__ELF__"
+end_define
 
 begin_undef
 undef|#
@@ -86,19 +101,6 @@ define|#
 directive|define
 name|ASM_SPEC
 value|"%{G*} %{relax:-relax} %{!gstabs*:-no-mdebug}%{gstabs*:-mdebug}"
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|LINK_SPEC
-end_undef
-
-begin_define
-define|#
-directive|define
-name|LINK_SPEC
-value|"-m elf64alpha %{G*} %{relax:-relax}		\   %{O*:-O3} %{!O*:-O1}						\   %{shared:-shared}						\   %{!shared:							\     %{!static:							\       %{rdynamic:-export-dynamic}				\       %{!dynamic-linker:-dynamic-linker %(elf_dynamic_linker)}}	\     %{static:-static}}"
 end_define
 
 begin_comment
@@ -133,16 +135,6 @@ define|#
 directive|define
 name|IDENT_ASM_OP
 value|"\t.ident\t"
-end_define
-
-begin_comment
-comment|/* Allow #sccs in preprocessor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
 end_define
 
 begin_comment
@@ -292,7 +284,7 @@ parameter_list|,
 name|FUN
 parameter_list|)
 define|\
-value|ASM_GLOBALIZE_LABEL (FILE, XSTR (FUN, 0))
+value|(*targetm.asm_out.globalize_label) (FILE, XSTR (FUN, 0))
 end_define
 
 begin_comment
@@ -359,7 +351,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   fprintf (FILE, "%s", TYPE_ASM_OP);					\   assemble_name (FILE, NAME);						\   putc (',', FILE);							\   fprintf (FILE, TYPE_OPERAND_FMT, "object");				\   putc ('\n', FILE);							\   if (!flag_inhibit_size_directive)					\     {									\       fprintf (FILE, "%s", SIZE_ASM_OP);				\       assemble_name (FILE, NAME);					\       fprintf (FILE, ",%d\n", (SIZE));					\     }									\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE) ? (SIZE) : 1);				\ } while (0)
+value|do {									\   if ((SIZE)<= g_switch_value)						\     sbss_section();							\   else									\     bss_section();							\   ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");			\   if (!flag_inhibit_size_directive)					\     ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, SIZE);			\   ASM_OUTPUT_ALIGN ((FILE), exact_log2((ALIGN) / BITS_PER_UNIT));	\   ASM_OUTPUT_LABEL(FILE, NAME);						\   ASM_OUTPUT_SKIP((FILE), (SIZE) ? (SIZE) : 1);				\ } while (0)
 end_define
 
 begin_comment
@@ -388,7 +380,7 @@ parameter_list|,
 name|ALIGN
 parameter_list|)
 define|\
-value|do {									\   ASM_GLOBALIZE_LABEL (FILE, NAME);					\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
+value|do {									\   (*targetm.asm_out.globalize_label) (FILE, NAME);	       		\   ASM_OUTPUT_ALIGNED_LOCAL (FILE, NAME, SIZE, ALIGN);			\ } while (0)
 end_define
 
 begin_comment
@@ -426,33 +418,16 @@ name|ASCII_DATA_ASM_OP
 value|"\t.ascii\t"
 end_define
 
-begin_comment
-comment|/* Support const sections and the ctors and dtors sections for g++.    Note that there appears to be two different ways to support const    sections at the moment.  You can either #define the symbol    READONLY_DATA_SECTION (giving it some code which switches to the    readonly data section) or else you can #define the symbols    EXTRA_SECTIONS, EXTRA_SECTION_FUNCTIONS, SELECT_SECTION, and    SELECT_RTX_SECTION.  We do both here just to be on the safe side.  */
-end_comment
-
 begin_undef
 undef|#
 directive|undef
-name|USE_CONST_SECTION
+name|READONLY_DATA_SECTION_ASM_OP
 end_undef
 
 begin_define
 define|#
 directive|define
-name|USE_CONST_SECTION
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CONST_SECTION_ASM_OP
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.section\t.rodata"
 end_define
 
@@ -572,7 +547,7 @@ begin_define
 define|#
 directive|define
 name|EXTRA_SECTIONS
-value|in_const, in_sbss, in_sdata
+value|in_sbss, in_sdata
 end_define
 
 begin_comment
@@ -590,7 +565,7 @@ define|#
 directive|define
 name|EXTRA_SECTION_FUNCTIONS
 define|\
-value|CONST_SECTION_FUNCTION						\   SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
+value|SECTION_FUNCTION_TEMPLATE(sbss_section, in_sbss, SBSS_SECTION_ASM_OP)	\   SECTION_FUNCTION_TEMPLATE(sdata_section, in_sdata, SDATA_SECTION_ASM_OP)
 end_define
 
 begin_decl_stmt
@@ -618,34 +593,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_undef
-undef|#
-directive|undef
-name|READONLY_DATA_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|READONLY_DATA_SECTION
-parameter_list|()
-value|const_section ()
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|CONST_SECTION_FUNCTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|CONST_SECTION_FUNCTION
-define|\
-value|void								\ const_section ()						\ {								\   if (!USE_CONST_SECTION)					\     text_section();						\   else if (in_section != in_const)				\     {								\       fprintf (asm_out_file, "%s\n", CONST_SECTION_ASM_OP);	\       in_section = in_const;					\     }								\ }
-end_define
 
 begin_undef
 undef|#
@@ -679,52 +626,11 @@ name|TARGET_ASM_NAMED_SECTION
 value|default_elf_asm_named_section
 end_define
 
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of DECL.  DECL is either a `VAR_DECL' node    or a constant of some sort.  RELOC indicates whether forming    the initial value of DECL requires link-time relocations.     Set SECNUM to: 	0	.text 	1	.rodata 	2	.data 	3	.sdata 	4	.bss 	5	.sbss */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|DO_SELECT_SECTION
-parameter_list|(
-name|SECNUM
-parameter_list|,
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do								\      {								\        HOST_WIDE_INT size;					\        SECNUM = 1;						\        if (TREE_CODE (DECL) == FUNCTION_DECL)			\ 	 {							\ 	   SECNUM = 0;						\ 	   break;						\ 	 }							\        else if (TREE_CODE (DECL) == STRING_CST)			\ 	 {							\ 	   if (flag_writable_strings)				\ 	     SECNUM = 2;					\ 	   else							\ 	     SECNUM = 0x101;					\ 	   break;						\ 	 }							\        else if (TREE_CODE (DECL) == VAR_DECL)			\ 	 {							\ 	   if (DECL_INITIAL (DECL) == NULL			\ 	       || DECL_INITIAL (DECL) == error_mark_node)	\ 	     SECNUM = 4;					\ 	   else if ((flag_pic&& RELOC)				\ 		    || ! TREE_READONLY (DECL)			\ 		    || TREE_SIDE_EFFECTS (DECL)			\ 		    || ! TREE_CONSTANT (DECL_INITIAL (DECL)))	\ 	     SECNUM = 2;					\ 	  else if (flag_merge_constants>= 2)			\ 	    {							\
-comment|/* C and C++ don't allow different variables to	\ 		 share the same location.  -fmerge-all-constants\ 		 allows even that (at the expense of not	\ 		 conforming).  */
-value|\ 	      if (TREE_CODE (DECL_INITIAL (DECL)) == STRING_CST)\ 		SECNUM = 0x201;					\ 	      else						\ 		SECNUM = 0x301;					\ 	    }							\ 	 }							\        else if (TREE_CODE (DECL) == CONSTRUCTOR)		\ 	 {							\ 	   if ((flag_pic&& RELOC)				\ 	       || TREE_SIDE_EFFECTS (DECL)			\ 	       || ! TREE_CONSTANT (DECL))			\ 	     SECNUM = 2;					\ 	 }							\ 								\
-comment|/* Select small data sections based on size.  */
-value|\        size = int_size_in_bytes (TREE_TYPE (DECL));		\        if (size>= 0&& size<= g_switch_value)			\ 	 {							\ 	   if ((SECNUM& 0xff)>= 2)				\ 	     SECNUM += 1;					\
-comment|/* Move readonly data to .sdata only if -msmall-data.  */
-value|\
-comment|/* ??? Consider .sdata.{lit4,lit8} as		\ 	      SHF_MERGE|SHF_ALPHA_GPREL.  */
-value|\ 	   else if (TARGET_SMALL_DATA)				\ 	     SECNUM = 3;					\ 	 }							\      }								\    while (0)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SELECT_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|do							\     {							\       typedef void (*sec_fn) PARAMS ((void));		\       static sec_fn const sec_functions[6] =		\       {							\ 	text_section,					\ 	const_section,					\ 	data_section,					\ 	sdata_section,					\ 	bss_section,					\ 	sbss_section					\       };						\ 							\       int sec;						\ 							\       DO_SELECT_SECTION (sec, DECL, RELOC);		\ 							\       switch (sec)					\ 	{						\ 	case 0x101:					\ 	  mergeable_string_section (DECL, ALIGN, 0);	\ 	  break;					\ 	case 0x201:					\ 	  mergeable_string_section (DECL_INITIAL (DECL),\ 				    ALIGN, 0);		\ 	  break;					\ 	case 0x301:					\ 	  mergeable_constant_section (DECL_MODE (DECL),	\ 				      ALIGN, 0);	\ 	  break;					\ 	default:					\ 	  (*sec_functions[sec]) ();			\ 	  break;					\ 	}						\     }							\   while (0)
+name|TARGET_ASM_SELECT_SECTION
+value|default_elf_select_section
 end_define
 
 begin_define
@@ -735,52 +641,6 @@ parameter_list|(
 name|DECL
 parameter_list|)
 value|(DECL_WEAK (DECL) = 1)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|UNIQUE_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do									\     {									\       static const char * const prefixes[6][2] =			\       {									\ 	{ ".text.",   ".gnu.linkonce.t." },				\ 	{ ".rodata.", ".gnu.linkonce.r." },				\ 	{ ".data.",   ".gnu.linkonce.d." },				\ 	{ ".sdata.",  ".gnu.linkonce.s." },				\ 	{ ".bss.",    ".gnu.linkonce.b." },				\ 	{ ".sbss.",   ".gnu.linkonce.sb." }				\       };								\ 									\       int nlen, plen, sec;						\       const char *name, *prefix;					\       char *string;							\ 									\       DO_SELECT_SECTION (sec, DECL, RELOC);				\ 									\       name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));		\       STRIP_NAME_ENCODING (name, name);					\       nlen = strlen (name);						\ 									\       prefix = prefixes[sec& 0xff][DECL_ONE_ONLY(DECL)];		\       plen = strlen (prefix);						\ 									\       string = alloca (nlen + plen + 1);				\ 									\       memcpy (string, prefix, plen);					\       memcpy (string + plen, name, nlen + 1);				\ 									\       DECL_SECTION_NAME (DECL) = build_string (nlen + plen, string);	\     }									\   while (0)
-end_define
-
-begin_comment
-comment|/* A C statement or statements to switch to the appropriate    section for output of RTX in mode MODE.  RTX is some kind    of constant in RTL.  The argument MODE is redundant except    in the case of a `const_int' rtx.  Currently, these always    go into the const section.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_RTX_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|RTX
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|do {									\   if (TARGET_SMALL_DATA&& GET_MODE_SIZE (MODE)<= g_switch_value)	\
-comment|/* ??? Consider .sdata.{lit4,lit8} as SHF_MERGE|SHF_ALPHA_GPREL.  */
-value|\     sdata_section ();							\   else									\     mergeable_constant_section((MODE), (ALIGN), 0);			\ } while (0)
 end_define
 
 begin_comment
@@ -951,7 +811,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do {								\     HOST_WIDE_INT size;						\     fprintf (FILE, "%s", TYPE_ASM_OP);				\     assemble_name (FILE, NAME);					\     putc (',', FILE);						\     fprintf (FILE, TYPE_OPERAND_FMT, "object");			\     putc ('\n', FILE);						\     size_directive_output = 0;					\     if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)	\       {								\ 	size_directive_output = 1;				\ 	fprintf (FILE, "%s", SIZE_ASM_OP);			\ 	assemble_name (FILE, NAME);				\ 	fputc (',', FILE);					\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, size);		\ 	fputc ('\n', FILE);					\       }								\     ASM_OUTPUT_LABEL(FILE, NAME);				\   } while (0)
+value|do {								\     HOST_WIDE_INT size;						\     ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");		\     size_directive_output = 0;					\     if (!flag_inhibit_size_directive				\&& DECL_SIZE (DECL)					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)	\       {								\ 	size_directive_output = 1;				\         ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\       }								\     ASM_OUTPUT_LABEL(FILE, NAME);				\   } while (0)
 end_define
 
 begin_comment
@@ -978,7 +838,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do {									\     const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\     HOST_WIDE_INT size;							\     if (!flag_inhibit_size_directive					\&& DECL_SIZE (DECL)						\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)		\       {									\ 	size_directive_output = 1;					\ 	fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	assemble_name (FILE, name);					\ 	fputc (',', FILE);						\ 	fprintf (FILE, HOST_WIDE_INT_PRINT_DEC, size);			\ 	fputc ('\n', FILE);						\       }									\   } while (0)
+value|do {									\     const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\     HOST_WIDE_INT size;							\     if (!flag_inhibit_size_directive					\&& DECL_SIZE (DECL)						\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output					\&& (size = int_size_in_bytes (TREE_TYPE (DECL)))> 0)		\       {									\ 	size_directive_output = 1;					\ 	ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);			\       }									\   } while (0)
 end_define
 
 begin_comment
@@ -1090,6 +950,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment

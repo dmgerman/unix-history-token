@@ -39,13 +39,6 @@ directive|include
 file|"flags.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NAME_OF_STDIN
-value|"<stdin>"
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|FILE
@@ -55,9 +48,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
+name|ffe_parse_file
+parameter_list|(
+name|set_yydebug
+parameter_list|)
 name|int
-name|yyparse
-parameter_list|()
+name|set_yydebug
+name|ATTRIBUTE_UNUSED
+decl_stmt|;
 block|{
 name|ffewhereFile
 name|wf
@@ -73,7 +72,7 @@ name|stderr
 argument_list|,
 literal|"GNU Fortran Front End version %s\n"
 argument_list|,
-name|ffe_version_string
+name|version_string
 argument_list|)
 expr_stmt|;
 if|if
@@ -114,9 +113,6 @@ expr_stmt|;
 name|ffecom_finish_compile
 argument_list|()
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

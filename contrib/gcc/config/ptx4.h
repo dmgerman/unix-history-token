@@ -202,7 +202,7 @@ value|"%{h*} %{v:-V} \ 		   %{b} %{Wl,*:%*} \ 		   %{static:-dn -Bstatic} \ 		  
 end_define
 
 begin_comment
-comment|/* Gcc automatically adds in one of the files /lib/values-Xc.o,    /lib/values-Xa.o, or /lib/values-Xt.o for each final link    step (depending upon the other gcc options selected, such as    -traditional and -ansi).  These files each contain one (initialized)    copy of a special variable called `_lib_version'.  Each one of these    files has `_lib_version' initialized to a different (enum) value.    The SVR4 library routines query the value of `_lib_version' at run    to decide how they should behave.  Specifically, they decide (based    upon the value of `_lib_version') if they will act in a strictly ANSI    conforming manner or not. */
+comment|/* Gcc automatically adds in one of the files /lib/values-Xc.o    or /lib/values-Xa.o, for each final link step (depending upon the other    gcc options selected, such as -ansi).  These files each contain one    (initialized) copy of a special variable called `_lib_version'.  Each    one of these files has `_lib_version' initialized to a different (enum)    value.  The SVR4 library routines query the value of `_lib_version'    at run to decide how they should behave.  Specifically, they decide    (based upon the value of `_lib_version') if they will act in a strictly    ANSI conforming manner or not. */
 end_comment
 
 begin_undef
@@ -215,21 +215,11 @@ begin_define
 define|#
 directive|define
 name|STARTFILE_SPEC
-value|"%{!shared: \ 			 %{!symbolic: \ 			  %{pg:gcrt1.o%s}%{!pg:%{p:mcrt1.o%s}%{!p:crt1.o%s}}}}\ 			%{pg:gcrti.o%s}%{!pg:crti.o%s} \ 			%{ansi:values-Xc.o%s} \ 			%{!ansi: \ 			 %{traditional:values-Xt.o%s} \ 			 %{!traditional:values-Xa.o%s}} \  			crtbegin.o%s"
+value|"%{!shared: \ 			 %{!symbolic: \ 			  %{pg:gcrt1.o%s}%{!pg:%{p:mcrt1.o%s}%{!p:crt1.o%s}}}}\ 			%{pg:gcrti.o%s}%{!pg:crti.o%s} \ 			%{ansi:values-Xc.o%s} \ 			%{!ansi:values-Xa.o%s} \  			crtbegin.o%s"
 end_define
 
 begin_comment
-comment|/* Allow #sccs in preprocessor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCCS_DIRECTIVE
-end_define
-
-begin_comment
-comment|/* Don't use bcopy, which doesn't handle overlaps before DYNIX/ptx 4.6. */
+comment|/* Don't use bcopy, which doesn't handle overlaps before DYNIX/ptx 4.6.  */
 end_comment
 
 begin_undef
@@ -351,7 +341,7 @@ value|BITS_PER_WORD
 end_define
 
 begin_comment
-comment|/* This says how to output assembler code to declare an uninitialized    external linkage data item.  There's a bug in the DYNIX/ptx linker    (PR 254649) when the alignment for such an object is specified, so    ignore the ALIGN parameter. */
+comment|/* This says how to output assembler code to declare an uninitialized    external linkage data item.  There's a bug in the DYNIX/ptx linker    (PR 254649) when the alignment for such an object is specified, so    ignore the ALIGN parameter.  */
 end_comment
 
 begin_undef

@@ -1,33 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Intel 386 running system V.    Copyright (C) 1988, 1996, 2000 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Intel 386 running system V.    Copyright (C) 1988, 1996, 2000, 2002 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"i386/i386.h"
-end_include
-
-begin_comment
-comment|/* Use default settings for system V.3.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"svr3.h"
-end_include
-
-begin_comment
-comment|/* Use the ATT assembler syntax.    This overrides at least one macro (USER_LABEL_PREFIX) from svr3.h.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"i386/att.h"
-end_include
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (80386, ATT syntax)");
+end_define
 
 begin_comment
 comment|/* Use crt1.o as a startup file and crtn.o as a closing file.  */
@@ -59,19 +40,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Dunix -Asystem=svr3"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("unix");		\ 	builtin_assert ("system=svr3");		\     }						\   while (0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"%(cpp_cpu) %{posix:-D_POSIX_SOURCE}"
+value|"%{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
-comment|/* Writing `int' for a bitfield forces int alignment for the structure.  */
+comment|/* Writing `int' for a bit-field forces int alignment for the structure.  */
 end_comment
 
 begin_define
@@ -104,16 +87,11 @@ begin_comment
 comment|/* We want to be able to get DBX debugging information via -gstabs.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|DBX_DEBUGGING_INFO
-end_undef
-
 begin_define
 define|#
 directive|define
 name|DBX_DEBUGGING_INFO
+value|1
 end_define
 
 begin_undef

@@ -46,20 +46,14 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{									\   if (TARGET_64BIT&& flag_pic)						\     fprintf (FILE, "\tcall\t*mcount@PLT\n");				\   else if (flag_pic)							\     fprintf (FILE, "\tcall\t*mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall\tmcount\n");					\ }
+name|MCOUNT_NAME
+value|"mcount"
 end_define
 
 begin_undef
@@ -189,12 +183,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|DWARF2_DEBUGGING_INFO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|DWARF_DEBUGGING_INFO
 end_undef
 
@@ -202,6 +190,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_define

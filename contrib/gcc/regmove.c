@@ -497,7 +497,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Return non-zero if registers with CLASS1 and CLASS2 can be merged without    causing too much register allocation problems.  */
+comment|/* Return nonzero if registers with CLASS1 and CLASS2 can be merged without    causing too much register allocation problems.  */
 end_comment
 
 begin_function
@@ -1068,7 +1068,7 @@ decl_stmt|;
 name|int
 name|flags_nregs
 decl_stmt|;
-name|int
+name|basic_block
 name|block
 decl_stmt|;
 ifdef|#
@@ -1190,21 +1190,10 @@ operator|=
 name|flags
 expr_stmt|;
 comment|/* Process each basic block.  */
-for|for
-control|(
-name|block
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|block
-operator|>=
-literal|0
-condition|;
-name|block
-operator|--
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|block
+argument_list|)
 block|{
 name|rtx
 name|insn
@@ -1216,17 +1205,15 @@ name|live
 decl_stmt|;
 name|insn
 operator|=
-name|BLOCK_HEAD
-argument_list|(
 name|block
-argument_list|)
+operator|->
+name|head
 expr_stmt|;
 name|end
 operator|=
-name|BLOCK_END
-argument_list|(
 name|block
-argument_list|)
+operator|->
+name|end
 expr_stmt|;
 comment|/* Look out for the (unlikely) case of flags being live across 	 basic block boundaries.  */
 name|live
@@ -1257,10 +1244,7 @@ name|live
 operator||=
 name|REGNO_REG_SET_P
 argument_list|(
-name|BASIC_BLOCK
-argument_list|(
 name|block
-argument_list|)
 operator|->
 name|global_live_at_start
 argument_list|,
@@ -1757,6 +1741,33 @@ name|dest
 argument_list|,
 name|p
 argument_list|)
+comment|/* If SRC is an asm-declared register, it must not be replaced 	     in any asm.  Unfortunately, the REG_EXPR tree for the asm 	     variable may be absent in the SRC rtx, so we can't check the 	     actual register declaration easily (the asm operand will have 	     it, though).  To avoid complicating the test for a rare case, 	     we just don't perform register replacement for a hard reg 	     mentioned in an asm.  */
+operator|||
+operator|(
+name|sregno
+operator|<
+name|FIRST_PSEUDO_REGISTER
+operator|&&
+name|asm_noperands
+argument_list|(
+name|PATTERN
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+operator|>=
+literal|0
+operator|&&
+name|reg_overlap_mentioned_p
+argument_list|(
+name|src
+argument_list|,
+name|PATTERN
+argument_list|(
+name|p
+argument_list|)
+argument_list|)
+operator|)
 comment|/* Don't change a USE of a register.  */
 operator|||
 operator|(
@@ -3093,7 +3104,7 @@ argument_list|)
 expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -3154,7 +3165,7 @@ argument_list|(
 name|insn
 argument_list|)
 expr_stmt|;
-comment|/* Move any notes mentioning src to the move instruction */
+comment|/* Move any notes mentioning src to the move instruction.  */
 for|for
 control|(
 name|link
@@ -3239,7 +3250,7 @@ name|p_insn_notes
 operator|=
 name|NULL_RTX
 expr_stmt|;
-comment|/* Is the insn the head of a basic block?  If so extend it */
+comment|/* Is the insn the head of a basic block?  If so extend it.  */
 name|insn_uid
 operator|=
 name|INSN_UID
@@ -4243,6 +4254,9 @@ name|copy_src
 decl_stmt|,
 name|copy_dst
 decl_stmt|;
+name|basic_block
+name|bb
+decl_stmt|;
 comment|/* ??? Hack.  Regmove doesn't examine the CFG, and gets mightily      confused by non-call exceptions ending blocks.  */
 if|if
 condition|(
@@ -4332,31 +4346,23 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 name|regmove_bb_head
 index|[
 name|INSN_UID
 argument_list|(
-name|BLOCK_HEAD
-argument_list|(
-name|i
-argument_list|)
+name|bb
+operator|->
+name|head
 argument_list|)
 index|]
 operator|=
-name|i
+name|bb
+operator|->
+name|index
 expr_stmt|;
 comment|/* A forward/backward pass.  Replace output operands with input operands.  */
 for|for
@@ -6041,27 +6047,17 @@ expr_stmt|;
 block|}
 block|}
 comment|/* In fixup_match_1, some insns may have been inserted after basic block      ends.  Fix that here.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|rtx
 name|end
 init|=
-name|BLOCK_END
-argument_list|(
-name|i
-argument_list|)
+name|bb
+operator|->
+name|end
 decl_stmt|;
 name|rtx
 name|new
@@ -6090,18 +6086,17 @@ operator|>=
 name|old_max_uid
 operator|&&
 operator|(
-name|i
+name|bb
+operator|->
+name|next_bb
 operator|==
-name|n_basic_blocks
-operator|-
-literal|1
+name|EXIT_BLOCK_PTR
 operator|||
-name|BLOCK_HEAD
-argument_list|(
-name|i
-operator|+
-literal|1
-argument_list|)
+name|bb
+operator|->
+name|next_bb
+operator|->
+name|head
 operator|!=
 name|next
 operator|)
@@ -6117,10 +6112,9 @@ argument_list|(
 name|new
 argument_list|)
 expr_stmt|;
-name|BLOCK_END
-argument_list|(
-name|i
-argument_list|)
+name|bb
+operator|->
+name|end
 operator|=
 name|new
 expr_stmt|;
@@ -8985,28 +8979,16 @@ name|void
 name|combine_stack_adjustments
 parameter_list|()
 block|{
-name|int
-name|i
+name|basic_block
+name|bb
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|i
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 name|combine_stack_adjustments_for_block
 argument_list|(
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
+name|bb
 argument_list|)
 expr_stmt|;
 block|}

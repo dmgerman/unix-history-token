@@ -23,7 +23,7 @@ begin_struct
 struct|struct
 name|gcc_debug_hooks
 block|{
-comment|/* Initialise debug output.  MAIN_FILENAME is the name of the main      input file.  */
+comment|/* Initialize debug output.  MAIN_FILENAME is the name of the main      input file.  */
 name|void
 argument_list|(
 argument|* init
@@ -221,6 +221,11 @@ operator|(
 name|unsigned
 name|int
 name|line
+operator|,
+specifier|const
+name|char
+operator|*
+name|file
 operator|)
 argument_list|)
 expr_stmt|;
@@ -232,7 +237,14 @@ argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+name|line
+operator|,
+specifier|const
+name|char
+operator|*
+name|file
 operator|)
 argument_list|)
 expr_stmt|;
@@ -333,6 +345,7 @@ end_struct
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 modifier|*
@@ -466,6 +479,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|do_nothing_debug_hooks
@@ -474,6 +488,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|dbx_debug_hooks
@@ -482,6 +497,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|sdb_debug_hooks
@@ -490,6 +506,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|xcoff_debug_hooks
@@ -498,6 +515,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|dwarf_debug_hooks
@@ -506,6 +524,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|dwarf2_debug_hooks
@@ -514,6 +533,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|vmsdbg_debug_hooks
@@ -549,7 +569,12 @@ name|dwarf2out_end_epilogue
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+name|unsigned
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -589,23 +614,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|dwarf2out_do_frame
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* When writing VMS debug info, output label after the prologue of the    function.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|vmsdbgout_after_prologue
 name|PARAMS
 argument_list|(
 operator|(

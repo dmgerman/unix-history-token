@@ -116,7 +116,7 @@ file|"ssa.h"
 end_include
 
 begin_comment
-comment|/* TODO:      Handle subregs better, maybe.  For now, if a reg that's set in a    subreg expression is duplicated going into SSA form, an extra copy    is inserted first that copies the entire reg into the duplicate, so    that the other bits are preserved.  This isn't strictly SSA, since    at least part of the reg is assigned in more than one place (though    they are adjacent).     ??? What to do about strict_low_part.  Probably I'll have to split    them out of their current instructions first thing.     Actually the best solution may be to have a kind of "mid-level rtl"    in which the RTL encodes exactly what we want, without exposing a    lot of niggling processor details.  At some later point we lower    the representation, calling back into optabs to finish any necessary    expansion.  */
+comment|/* TODO:     Handle subregs better, maybe.  For now, if a reg that's set in a    subreg expression is duplicated going into SSA form, an extra copy    is inserted first that copies the entire reg into the duplicate, so    that the other bits are preserved.  This isn't strictly SSA, since    at least part of the reg is assigned in more than one place (though    they are adjacent).     ??? What to do about strict_low_part.  Probably I'll have to split    them out of their current instructions first thing.     Actually the best solution may be to have a kind of "mid-level rtl"    in which the RTL encodes exactly what we want, without exposing a    lot of niggling processor details.  At some later point we lower    the representation, calling back into optabs to finish any necessary    expansion.  */
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ comment|/* All pseudo-registers and select hard registers are converted to SSA  
 end_comment
 
 begin_comment
-comment|/* If conservative_reg_partition is non-zero, use a conservative    register partitioning algorithm (which leaves more regs after    emerging from SSA) instead of the coalescing one.  This is being    left in for a limited time only, as a debugging tool until the    coalescing algorithm is validated.  */
+comment|/* If conservative_reg_partition is nonzero, use a conservative    register partitioning algorithm (which leaves more regs after    emerging from SSA) instead of the coalescing one.  This is being    left in for a limited time only, as a debugging tool until the    coalescing algorithm is validated.  */
 end_comment
 
 begin_decl_stmt
@@ -238,6 +238,19 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|rtx
+name|gen_sequence
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -527,8 +540,7 @@ name|sbitmap
 operator|*
 name|frontiers
 operator|,
-name|int
-operator|*
+name|dominance_info
 name|idom
 operator|,
 name|int
@@ -707,9 +719,8 @@ operator|(
 name|int
 name|b
 operator|,
-name|int
-operator|*
-name|idom
+name|dominance_info
+name|dom
 operator|)
 argument_list|)
 decl_stmt|;
@@ -725,8 +736,7 @@ operator|(
 name|int
 name|nregs
 operator|,
-name|int
-operator|*
+name|dominance_info
 name|idom
 operator|)
 argument_list|)
@@ -1840,7 +1850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given the SET of a phi node, remove the alternative for predecessor    block C.  Return non-zero on success, or zero if no alternative is    found for C.  */
+comment|/* Given the SET of a phi node, remove the alternative for predecessor    block C.  Return nonzero on success, or zero if no alternative is    found for C.  */
 end_comment
 
 begin_function
@@ -2079,7 +2089,7 @@ name|int
 name|nregs
 decl_stmt|;
 block|{
-name|int
+name|basic_block
 name|bb
 decl_stmt|;
 name|sbitmap_vector_zero
@@ -2093,18 +2103,10 @@ name|fe_evals
 operator|=
 name|evals
 expr_stmt|;
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|rtx
 name|p
@@ -2114,20 +2116,20 @@ decl_stmt|;
 name|fe_current_bb
 operator|=
 name|bb
+operator|->
+name|index
 expr_stmt|;
 name|p
 operator|=
-name|BLOCK_HEAD
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|head
 expr_stmt|;
 name|last
 operator|=
-name|BLOCK_END
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|end
 expr_stmt|;
 while|while
 condition|(
@@ -2173,7 +2175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computing the Dominance Frontier:       As decribed in Morgan, section 3.5, this may be done simply by     walking the dominator tree bottom-up, computing the frontier for    the children before the parent.  When considering a block B,    there are two cases:     (1) A flow graph edge leaving B that does not lead to a child    of B in the dominator tree must be a block that is either equal    to B or not dominated by B.  Such blocks belong in the frontier    of B.     (2) Consider a block X in the frontier of one of the children C    of B.  If X is not equal to B and is not dominated by B, it    is in the frontier of B. */
+comment|/* Computing the Dominance Frontier:     As decribed in Morgan, section 3.5, this may be done simply by    walking the dominator tree bottom-up, computing the frontier for    the children before the parent.  When considering a block B,    there are two cases:     (1) A flow graph edge leaving B that does not lead to a child    of B in the dominator tree must be a block that is either equal    to B or not dominated by B.  Such blocks belong in the frontier    of B.     (2) Consider a block X in the frontier of one of the children C    of B.  If X is not equal to B and is not dominated by B, it    is in the frontier of B. */
 end_comment
 
 begin_function
@@ -2193,8 +2195,7 @@ name|sbitmap
 modifier|*
 name|frontiers
 decl_stmt|;
-name|int
-modifier|*
+name|dominance_info
 name|idom
 decl_stmt|;
 name|int
@@ -2215,7 +2216,7 @@ decl_stmt|;
 name|edge
 name|e
 decl_stmt|;
-name|int
+name|basic_block
 name|c
 decl_stmt|;
 name|SET_BIT
@@ -2234,25 +2235,20 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Do the frontier of the children first.  Not all children in the      dominator tree (blocks dominated by this one) are children in the      CFG, so check all blocks.  */
-for|for
-control|(
-name|c
-operator|=
-literal|0
-init|;
-name|c
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|c
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|c
+argument_list|)
 if|if
 condition|(
+name|get_immediate_dominator
+argument_list|(
 name|idom
-index|[
+argument_list|,
 name|c
-index|]
+argument_list|)
+operator|->
+name|index
 operator|==
 name|bb
 operator|&&
@@ -2262,6 +2258,8 @@ argument_list|(
 name|done
 argument_list|,
 name|c
+operator|->
+name|index
 argument_list|)
 condition|)
 name|compute_dominance_frontiers_1
@@ -2271,6 +2269,8 @@ argument_list|,
 name|idom
 argument_list|,
 name|c
+operator|->
+name|index
 argument_list|,
 name|done
 argument_list|)
@@ -2304,14 +2304,16 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|get_immediate_dominator
+argument_list|(
 name|idom
-index|[
+argument_list|,
 name|e
 operator|->
 name|dest
+argument_list|)
 operator|->
 name|index
-index|]
 operator|!=
 name|bb
 condition|)
@@ -2331,25 +2333,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Find blocks conforming to rule (2).  */
-for|for
-control|(
-name|c
-operator|=
-literal|0
-init|;
-name|c
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|c
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|c
+argument_list|)
 if|if
 condition|(
+name|get_immediate_dominator
+argument_list|(
 name|idom
-index|[
+argument_list|,
 name|c
-index|]
+argument_list|)
+operator|->
+name|index
 operator|==
 name|bb
 condition|)
@@ -2359,13 +2356,13 @@ name|x
 decl_stmt|;
 name|EXECUTE_IF_SET_IN_SBITMAP
 argument_list|(
-argument|frontiers[c]
+argument|frontiers[c->index]
 argument_list|,
 literal|0
 argument_list|,
 argument|x
 argument_list|,
-argument|{ 	    if (idom[x] != bb) 	      SET_BIT (frontiers[bb], x); 	  }
+argument|{ 	    if (get_immediate_dominator (idom, BASIC_BLOCK (x))->index != bb) 	      SET_BIT (frontiers[bb], x); 	  }
 argument_list|)
 empty_stmt|;
 block|}
@@ -2384,8 +2381,7 @@ name|sbitmap
 modifier|*
 name|frontiers
 decl_stmt|;
-name|int
-modifier|*
+name|dominance_info
 name|idom
 decl_stmt|;
 block|{
@@ -2394,7 +2390,7 @@ name|done
 init|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 decl_stmt|;
 name|sbitmap_zero
@@ -2468,7 +2464,7 @@ name|worklist
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 for|for
@@ -2870,7 +2866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Rename the registers to conform to SSA.      This is essentially the algorithm presented in Figure 7.8 of Morgan,    with a few changes to reduce pattern search time in favour of a bit    more memory usage.  */
+comment|/* Rename the registers to conform to SSA.     This is essentially the algorithm presented in Figure 7.8 of Morgan,    with a few changes to reduce pattern search time in favor of a bit    more memory usage.  */
 end_comment
 
 begin_comment
@@ -3053,7 +3049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This is part of a rather ugly hack to allow the pre-ssa regno to be    reused.  If, during processing, a register has not yet been touched,    ssa_rename_to[regno][machno] will be NULL.  Now, in the course of pushing    and popping values from ssa_rename_to, when we would ordinarily     pop NULL back in, we pop RENAME_NO_RTX.  We treat this exactly the    same as NULL, except that it signals that the original regno has    already been reused.  */
+comment|/* This is part of a rather ugly hack to allow the pre-ssa regno to be    reused.  If, during processing, a register has not yet been touched,    ssa_rename_to[regno][machno] will be NULL.  Now, in the course of pushing    and popping values from ssa_rename_to, when we would ordinarily    pop NULL back in, we pop RENAME_NO_RTX.  We treat this exactly the    same as NULL, except that it signals that the original regno has    already been reused.  */
 end_comment
 
 begin_define
@@ -3289,7 +3285,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Part one of the first step of rename_block, called through for_each_rtx.     Mark pseudos that are set for later update.  Transform uses of pseudos.  */
+comment|/* Part one of the first step of rename_block, called through for_each_rtx.    Mark pseudos that are set for later update.  Transform uses of pseudos.  */
 end_comment
 
 begin_function
@@ -3435,7 +3431,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Some SETs also use the REG specified in their LHS. 	   These can be detected by the presence of 	   STRICT_LOW_PART, SUBREG, SIGN_EXTRACT, and ZERO_EXTRACT 	   in the LHS.  Handle these by changing 	   (set (subreg (reg foo)) ...) 	   into 	   (sequence [(set (reg foo_1) (reg foo)) 	              (set (subreg (reg foo_1)) ...)])    	   FIXME: Much of the time this is too much.  For some constructs 	   we know that the output register is strictly an output 	   (paradoxical SUBREGs and some libcalls for example).  	   For those cases we are better off not making the false 	   dependency.  */
+comment|/* Some SETs also use the REG specified in their LHS. 	   These can be detected by the presence of 	   STRICT_LOW_PART, SUBREG, SIGN_EXTRACT, and ZERO_EXTRACT 	   in the LHS.  Handle these by changing 	   (set (subreg (reg foo)) ...) 	   into 	   (sequence [(set (reg foo_1) (reg foo)) 	              (set (subreg (reg foo_1)) ...)])  	   FIXME: Much of the time this is too much.  For some constructs 	   we know that the output register is strictly an output 	   (paradoxical SUBREGs and some libcalls for example).  	   For those cases we are better off not making the false 	   dependency.  */
 if|if
 condition|(
 name|GET_CODE
@@ -3681,11 +3677,11 @@ if|if
 condition|(
 name|new_reg
 operator|!=
-name|NULL_RTX
+name|RENAME_NO_RTX
 operator|&&
 name|new_reg
 operator|!=
-name|RENAME_NO_RTX
+name|NULL_RTX
 condition|)
 block|{
 if|if
@@ -3709,7 +3705,21 @@ operator|=
 name|new_reg
 expr_stmt|;
 block|}
-comment|/* Else this is a use before a set.  Warn?  */
+else|else
+block|{
+comment|/* Undefined value used, rename it to a new pseudo register so 		 that it cannot conflict with an existing register.  */
+operator|*
+name|ptr
+operator|=
+name|gen_reg_rtx
+argument_list|(
+name|GET_MODE
+argument_list|(
+name|x
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|-
@@ -3819,6 +3829,104 @@ end_function
 
 begin_function
 specifier|static
+name|rtx
+name|gen_sequence
+parameter_list|()
+block|{
+name|rtx
+name|first_insn
+init|=
+name|get_insns
+argument_list|()
+decl_stmt|;
+name|rtx
+name|result
+decl_stmt|;
+name|rtx
+name|tem
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+comment|/* Count the insns in the chain.  */
+name|len
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|tem
+operator|=
+name|first_insn
+init|;
+name|tem
+condition|;
+name|tem
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|tem
+argument_list|)
+control|)
+name|len
+operator|++
+expr_stmt|;
+name|result
+operator|=
+name|gen_rtx_SEQUENCE
+argument_list|(
+name|VOIDmode
+argument_list|,
+name|rtvec_alloc
+argument_list|(
+name|len
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|tem
+operator|=
+name|first_insn
+init|;
+name|tem
+condition|;
+name|tem
+operator|=
+name|NEXT_INSN
+argument_list|(
+name|tem
+argument_list|)
+operator|,
+name|i
+operator|++
+control|)
+name|XVECEXP
+argument_list|(
+name|result
+argument_list|,
+literal|0
+argument_list|,
+name|i
+argument_list|)
+operator|=
+name|tem
+expr_stmt|;
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|rename_block
 parameter_list|(
@@ -3829,8 +3937,7 @@ parameter_list|)
 name|int
 name|bb
 decl_stmt|;
-name|int
-modifier|*
+name|dominance_info
 name|idom
 decl_stmt|;
 block|{
@@ -3859,7 +3966,7 @@ name|set_data
 init|=
 name|NULL
 decl_stmt|;
-name|int
+name|basic_block
 name|c
 decl_stmt|;
 comment|/* Step One: Walk the basic block, adding new names for sets and      replacing uses.  */
@@ -4241,31 +4348,28 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Step Three: Do the same to the children of this block in      dominator order.  */
-for|for
-control|(
-name|c
-operator|=
-literal|0
-init|;
-name|c
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|c
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|c
+argument_list|)
 if|if
 condition|(
+name|get_immediate_dominator
+argument_list|(
 name|idom
-index|[
+argument_list|,
 name|c
-index|]
+argument_list|)
+operator|->
+name|index
 operator|==
 name|bb
 condition|)
 name|rename_block
 argument_list|(
 name|c
+operator|->
+name|index
 argument_list|,
 name|idom
 argument_list|)
@@ -4352,8 +4456,7 @@ parameter_list|)
 name|int
 name|nregs
 decl_stmt|;
-name|int
-modifier|*
+name|dominance_info
 name|idom
 decl_stmt|;
 block|{
@@ -4432,7 +4535,7 @@ argument_list|,
 name|idom
 argument_list|)
 expr_stmt|;
-comment|/* ??? Update basic_block_live_at_start, and other flow info       as needed.  */
+comment|/* ??? Update basic_block_live_at_start, and other flow info      as needed.  */
 name|ssa_rename_to_pseudo
 operator|=
 name|NULL
@@ -4464,12 +4567,14 @@ modifier|*
 name|idfs
 decl_stmt|;
 comment|/* Element I is the immediate dominator of block I.  */
-name|int
-modifier|*
+name|dominance_info
 name|idom
 decl_stmt|;
 name|int
 name|nregs
+decl_stmt|;
+name|basic_block
+name|bb
 decl_stmt|;
 comment|/* Don't do it twice.  */
 if|if
@@ -4492,48 +4597,8 @@ argument_list|)
 expr_stmt|;
 name|idom
 operator|=
-operator|(
-name|int
-operator|*
-operator|)
-name|alloca
-argument_list|(
-name|n_basic_blocks
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|idom
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|n_basic_blocks
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|calculate_dominance_info
 argument_list|(
-name|idom
-argument_list|,
-name|NULL
-argument_list|,
 name|CDI_DOMINATORS
 argument_list|)
 expr_stmt|;
@@ -4542,9 +4607,6 @@ condition|(
 name|rtl_dump_file
 condition|)
 block|{
-name|int
-name|i
-decl_stmt|;
 name|fputs
 argument_list|(
 literal|";; Immediate Dominators:\n"
@@ -4552,31 +4614,28 @@ argument_list|,
 name|rtl_dump_file
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|i
-control|)
+name|FOR_EACH_BB
+argument_list|(
+argument|bb
+argument_list|)
 name|fprintf
 argument_list|(
 name|rtl_dump_file
 argument_list|,
 literal|";\t%3d = %3d\n"
 argument_list|,
-name|i
+name|bb
+operator|->
+name|index
 argument_list|,
+name|get_immediate_dominator
+argument_list|(
 name|idom
-index|[
-name|i
-index|]
+argument_list|,
+name|bb
+argument_list|)
+operator|->
+name|index
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -4590,9 +4649,9 @@ name|dfs
 operator|=
 name|sbitmap_vector_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|,
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|compute_dominance_frontiers
@@ -4617,7 +4676,7 @@ literal|"; Basic Block"
 argument_list|,
 name|dfs
 argument_list|,
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|fflush
@@ -4642,7 +4701,7 @@ name|sbitmap_vector_alloc
 argument_list|(
 name|nregs
 argument_list|,
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|find_evaluations
@@ -4659,7 +4718,7 @@ name|sbitmap_vector_alloc
 argument_list|(
 name|nregs
 argument_list|,
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|compute_iterated_dominance_frontiers
@@ -4744,6 +4803,11 @@ name|max_reg_num
 argument_list|()
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|free_dominance_info
+argument_list|(
+name|idom
 argument_list|)
 expr_stmt|;
 block|}
@@ -4889,7 +4953,7 @@ literal|0
 argument_list|,
 argument|s
 argument_list|,
-argument|{       if (! TEST_BIT (visited, s))         tstack = ephi_forward (s, visited, succ, tstack);     }
+argument|{       if (! TEST_BIT (visited, s)) 	tstack = ephi_forward (s, visited, succ, tstack);     }
 argument_list|)
 empty_stmt|;
 operator|*
@@ -5020,7 +5084,7 @@ decl_stmt|;
 name|int
 name|p
 decl_stmt|;
-comment|/* Iterate through the predecessor list looking for unvisited nodes.      If there are any, we have a cycle, and must deal with that.  At       the same time, look for a visited predecessor.  If there is one,      we won't need to create a temporary.  */
+comment|/* Iterate through the predecessor list looking for unvisited nodes.      If there are any, we have a cycle, and must deal with that.  At      the same time, look for a visited predecessor.  If there is one,      we won't need to create a temporary.  */
 name|EXECUTE_IF_SET_IN_SBITMAP
 argument_list|(
 argument|pred[t]
@@ -5194,7 +5258,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Build the auxiliary graph R(B).        The nodes of the graph are the members of the register partition      present in Phi(B).  There is an edge from FIND(T0)->FIND(T1) for      each T0 = PHI(...,T1,...), where T1 is for the edge from block C.  */
+comment|/* Build the auxiliary graph R(B).       The nodes of the graph are the members of the register partition      present in Phi(B).  There is an edge from FIND(T0)->FIND(T1) for      each T0 = PHI(...,T1,...), where T1 is for the edge from block C.  */
 name|nodes
 operator|=
 operator|(
@@ -5366,7 +5430,7 @@ argument_list|)
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* If the two registers are already in the same partition,  	 nothing will need to be done.  */
+comment|/* If the two registers are already in the same partition, 	 nothing will need to be done.  */
 if|if
 condition|(
 name|reg
@@ -5506,7 +5570,7 @@ argument_list|(
 name|visited
 argument_list|)
 expr_stmt|;
-comment|/* As we find a solution to the tsort, collect the implementation       insns in a sequence.  */
+comment|/* As we find a solution to the tsort, collect the implementation      insns in a sequence.  */
 name|start_sequence
 argument_list|()
 expr_stmt|;
@@ -5549,7 +5613,7 @@ expr_stmt|;
 block|}
 name|insn
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -5606,7 +5670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For basic block B, consider all phi insns which provide an    alternative corresponding to an incoming abnormal critical edge.    Place the phi alternative corresponding to that abnormal critical    edge in the same register class as the destination of the set.       From Morgan, p. 178:       For each abnormal critical edge (C, B),       if T0 = phi (T1, ..., Ti, ..., Tm) is a phi node in B,       and C is the ith predecessor of B,       then T0 and Ti must be equivalent.      Return non-zero iff any such cases were found for which the two    regs were not already in the same class.  */
+comment|/* For basic block B, consider all phi insns which provide an    alternative corresponding to an incoming abnormal critical edge.    Place the phi alternative corresponding to that abnormal critical    edge in the same register class as the destination of the set.     From Morgan, p. 178:       For each abnormal critical edge (C, B),      if T0 = phi (T1, ..., Ti, ..., Tm) is a phi node in B,      and C is the ith predecessor of B,      then T0 and Ti must be equivalent.     Return nonzero iff any such cases were found for which the two    regs were not already in the same class.  */
 end_comment
 
 begin_function
@@ -6209,7 +6273,7 @@ name|partition
 name|compute_conservative_reg_partition
 parameter_list|()
 block|{
-name|int
+name|basic_block
 name|bb
 decl_stmt|;
 name|int
@@ -6229,23 +6293,17 @@ name|num_elements
 argument_list|)
 decl_stmt|;
 comment|/* The first priority is to make sure registers that might have to      be copied on abnormal critical edges are placed in the same      partition.  This saves us from having to split abnormal critical      edges.  */
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 name|changed
 operator|+=
 name|make_regs_equivalent_over_bad_edges
 argument_list|(
 name|bb
+operator|->
+name|index
 argument_list|,
 name|p
 argument_list|)
@@ -6262,23 +6320,17 @@ name|changed
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 name|changed
 operator|+=
 name|make_equivalent_phi_alternatives_equivalent
 argument_list|(
 name|bb
+operator|->
+name|index
 argument_list|,
 name|p
 argument_list|)
@@ -6291,11 +6343,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following functions compute a register partition that attempts    to eliminate as many reg copies and phi node copies as possible by    coalescing registers.   This is the strategy:      1. As in the conservative case, the top priority is to coalesce        registers that otherwise would cause copies to be placed on        abnormal critical edges (which isn't possible).      2. Figure out which regs are involved (in the LHS or RHS) of        copies and phi nodes.  Compute conflicts among these regs.        3. Walk around the instruction stream, placing two regs in the        same class of the partition if one appears on the LHS and the        other on the RHS of a copy or phi node and the two regs don't        conflict.  The conflict information of course needs to be        updated.        4. If anything has changed, there may be new opportunities to        coalesce regs, so go back to 2. */
+comment|/* The following functions compute a register partition that attempts    to eliminate as many reg copies and phi node copies as possible by    coalescing registers.   This is the strategy:      1. As in the conservative case, the top priority is to coalesce        registers that otherwise would cause copies to be placed on        abnormal critical edges (which isn't possible).      2. Figure out which regs are involved (in the LHS or RHS) of        copies and phi nodes.  Compute conflicts among these regs.      3. Walk around the instruction stream, placing two regs in the        same class of the partition if one appears on the LHS and the        other on the RHS of a copy or phi node and the two regs don't        conflict.  The conflict information of course needs to be        updated.      4. If anything has changed, there may be new opportunities to        coalesce regs, so go back to 2. */
 end_comment
 
 begin_comment
-comment|/* If REG1 and REG2 don't conflict in CONFLICTS, place them in the    same class of partition P, if they aren't already.  Update    CONFLICTS appropriately.       Returns one if REG1 and REG2 were placed in the same class but were    not previously; zero otherwise.       See Morgan figure 11.15.  */
+comment|/* If REG1 and REG2 don't conflict in CONFLICTS, place them in the    same class of partition P, if they aren't already.  Update    CONFLICTS appropriately.     Returns one if REG1 and REG2 were placed in the same class but were    not previously; zero otherwise.     See Morgan figure 11.15.  */
 end_comment
 
 begin_function
@@ -6571,7 +6623,7 @@ operator|!=
 name|REG
 condition|)
 continue|continue;
-comment|/* Coalesce only if the reg modes are the same.  As long as 	 each reg's rtx is unique, it can have only one mode, so two 	 pseudos of different modes can't be coalesced into one.             FIXME: We can probably get around this by inserting SUBREGs          where appropriate, but for now we don't bother.  */
+comment|/* Coalesce only if the reg modes are the same.  As long as 	 each reg's rtx is unique, it can have only one mode, so two 	 pseudos of different modes can't be coalesced into one.           FIXME: We can probably get around this by inserting SUBREGs          where appropriate, but for now we don't bother.  */
 if|if
 condition|(
 name|GET_MODE
@@ -6700,7 +6752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* For each alternative in a phi function corresponding to basic block    BB (in phi nodes in successor block to BB), place the reg in the    phi alternative and the reg to which the phi value is set into the    same class in partition P, if allowed by CONFLICTS.       Return the number of changes that were made to P.        See Morgan figure 11.14.  */
+comment|/* For each alternative in a phi function corresponding to basic block    BB (in phi nodes in successor block to BB), place the reg in the    phi alternative and the reg to which the phi value is set into the    same class in partition P, if allowed by CONFLICTS.     Return the number of changes that were made to P.     See Morgan figure 11.14.  */
 end_comment
 
 begin_function
@@ -6766,7 +6818,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute and return a partition of pseudos.  Where possible,    non-conflicting pseudos are placed in the same class.       The caller is responsible for deallocating the returned partition.  */
+comment|/* Compute and return a partition of pseudos.  Where possible,    non-conflicting pseudos are placed in the same class.     The caller is responsible for deallocating the returned partition.  */
 end_comment
 
 begin_function
@@ -6775,7 +6827,7 @@ name|partition
 name|compute_coalesced_reg_partition
 parameter_list|()
 block|{
-name|int
+name|basic_block
 name|bb
 decl_stmt|;
 name|int
@@ -6803,21 +6855,15 @@ name|num_elements
 argument_list|)
 decl_stmt|;
 comment|/* The first priority is to make sure registers that might have to      be copied on abnormal critical edges are placed in the same      partition.  This saves us from having to split abnormal critical      edges (which can't be done).  */
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 name|make_regs_equivalent_over_bad_edges
 argument_list|(
 name|bb
+operator|->
+name|index
 argument_list|,
 name|p
 argument_list|)
@@ -6858,32 +6904,16 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: Better would be to process most frequently executed 	 blocks first, so that most frequently executed copies would 	 be more likely to be removed by register coalescing.  But any 	 order will generate correct, if non-optimal, results.  */
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
-block|{
-name|basic_block
-name|block
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB_REVERSE
 argument_list|(
-name|bb
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|changed
 operator|+=
 name|coalesce_regs_in_copies
 argument_list|(
-name|block
+name|bb
 argument_list|,
 name|p
 argument_list|,
@@ -6894,7 +6924,7 @@ name|changed
 operator|+=
 name|coalesce_regs_in_successor_phi_nodes
 argument_list|(
-name|block
+name|bb
 argument_list|,
 name|p
 argument_list|,
@@ -7581,30 +7611,14 @@ name|partition
 name|reg_partition
 decl_stmt|;
 block|{
-name|int
-name|bb
-decl_stmt|;
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
-block|{
 name|basic_block
 name|b
-init|=
-name|BASIC_BLOCK
-argument_list|(
-name|bb
-argument_list|)
 decl_stmt|;
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|b
+argument_list|)
+block|{
 name|rtx
 name|next
 init|=
@@ -7780,7 +7794,9 @@ name|void
 name|convert_from_ssa
 parameter_list|()
 block|{
-name|int
+name|basic_block
+name|b
+decl_stmt|,
 name|bb
 decl_stmt|;
 name|partition
@@ -7792,7 +7808,7 @@ init|=
 name|get_insns
 argument_list|()
 decl_stmt|;
-comment|/* Need global_live_at_{start,end} up to date.  There should not be      any significant dead code at this point, except perhaps dead      stores.  So do not take the time to perform dead code elimination.        Register coalescing needs death notes, so generate them.  */
+comment|/* Need global_live_at_{start,end} up to date.  There should not be      any significant dead code at this point, except perhaps dead      stores.  So do not take the time to perform dead code elimination.       Register coalescing needs death notes, so generate them.  */
 name|life_analysis
 argument_list|(
 name|insns
@@ -7836,27 +7852,11 @@ name|reg_partition
 argument_list|)
 expr_stmt|;
 comment|/* Eliminate the PHI nodes.  */
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
-block|{
-name|basic_block
-name|b
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB_REVERSE
 argument_list|(
-name|bb
+argument|b
 argument_list|)
-decl_stmt|;
+block|{
 name|edge
 name|e
 decl_stmt|;
@@ -7898,26 +7898,17 @@ name|reg_partition
 argument_list|)
 expr_stmt|;
 comment|/* Actually delete the PHI nodes.  */
-for|for
-control|(
-name|bb
-operator|=
-name|n_basic_blocks
-init|;
-operator|--
-name|bb
-operator|>=
-literal|0
-condition|;
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|rtx
 name|insn
 init|=
-name|BLOCK_HEAD
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|head
 decl_stmt|;
 while|while
 condition|(
@@ -7937,15 +7928,13 @@ if|if
 condition|(
 name|insn
 operator|==
-name|BLOCK_END
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|end
 condition|)
-name|BLOCK_END
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|end
 operator|=
 name|PREV_INSN
 argument_list|(
@@ -7976,10 +7965,9 @@ if|if
 condition|(
 name|insn
 operator|==
-name|BLOCK_END
-argument_list|(
 name|bb
-argument_list|)
+operator|->
+name|end
 condition|)
 break|break;
 else|else
@@ -8008,10 +7996,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Deallocate the data structures.  */
-name|VARRAY_FREE
-argument_list|(
 name|ssa_definition
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|ssa_rename_from_free
 argument_list|()
@@ -8020,7 +8007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Scan phi nodes in successors to BB.  For each such phi node that    has a phi alternative value corresponding to BB, invoke FN.  FN    is passed the entire phi node insn, the regno of the set    destination, the regno of the phi argument corresponding to BB,    and DATA.     If FN ever returns non-zero, stops immediately and returns this    value.  Otherwise, returns zero.  */
+comment|/* Scan phi nodes in successors to BB.  For each such phi node that    has a phi alternative value corresponding to BB, invoke FN.  FN    is passed the entire phi node insn, the regno of the set    destination, the regno of the phi argument corresponding to BB,    and DATA.     If FN ever returns nonzero, stops immediately and returns this    value.  Otherwise, returns zero.  */
 end_comment
 
 begin_function

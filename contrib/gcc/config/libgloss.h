@@ -8,7 +8,7 @@ comment|/* This file should not be used for ELF targets, as this definition of  
 end_comment
 
 begin_comment
-comment|/* The libgloss standard for crt0.s has the name based on the command line    option. */
+comment|/* The libgloss standard for crt0.s has the name based on the command line    option.  */
 end_comment
 
 begin_undef

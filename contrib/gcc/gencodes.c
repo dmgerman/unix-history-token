@@ -40,9 +40,7 @@ name|gen_insn
 name|PARAMS
 argument_list|(
 operator|(
-specifier|const
-name|char
-operator|*
+name|rtx
 operator|,
 name|int
 operator|)
@@ -55,19 +53,42 @@ specifier|static
 name|void
 name|gen_insn
 parameter_list|(
-name|name
+name|insn
 parameter_list|,
 name|code
 parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|name
+name|rtx
+name|insn
 decl_stmt|;
 name|int
 name|code
 decl_stmt|;
 block|{
+specifier|const
+name|char
+modifier|*
+name|name
+init|=
+name|XSTR
+argument_list|(
+name|insn
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|int
+name|truth
+init|=
+name|maybe_eval_c_test
+argument_list|(
+name|XSTR
+argument_list|(
+name|insn
+argument_list|,
+literal|2
+argument_list|)
+argument_list|)
+decl_stmt|;
 comment|/* Don't mention instructions whose names are the null string      or begin with '*'.  They are in the machine description just      to be recognized.  */
 if|if
 condition|(
@@ -85,6 +106,21 @@ index|]
 operator|!=
 literal|'*'
 condition|)
+block|{
+if|if
+condition|(
+name|truth
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"#define CODE_FOR_%s CODE_FOR_nothing\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"  CODE_FOR_%s = %d,\n"
@@ -94,6 +130,7 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -137,6 +174,11 @@ decl_stmt|;
 name|progname
 operator|=
 literal|"gencodes"
+expr_stmt|;
+comment|/* We need to see all the possibilities.  Elided insns may have      direct references to CODE_FOR_xxx in C code.  */
+name|insn_elision
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -218,12 +260,7 @@ name|DEFINE_EXPAND
 condition|)
 name|gen_insn
 argument_list|(
-name|XSTR
-argument_list|(
 name|desc
-argument_list|,
-literal|0
-argument_list|)
 argument_list|,
 name|insn_code_number
 argument_list|)
@@ -231,7 +268,7 @@ expr_stmt|;
 block|}
 name|puts
 argument_list|(
-literal|"CODE_FOR_nothing\n\ };\n\ \n\ #endif /* GCC_INSN_CODES_H */"
+literal|"  CODE_FOR_nothing\n\ };\n\ \n\ #endif /* GCC_INSN_CODES_H */"
 argument_list|)
 expr_stmt|;
 if|if

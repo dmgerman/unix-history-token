@@ -484,12 +484,18 @@ directive|include
 file|"timevar.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"toplev.h"
+end_include
+
 begin_comment
 comment|/* See timevar.h for an explanation of timing variables.  */
 end_comment
 
 begin_comment
-comment|/* This macro evaluates to non-zero if timing variables are enabled.  */
+comment|/* This macro evaluates to nonzero if timing variables are enabled.  */
 end_comment
 
 begin_define
@@ -655,7 +661,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Fill the current times into TIME.  The definition of this function    also defines any or all of the HAVE_USER_TIME, HAVE_SYS_TIME, and    HAVA_WALL_TIME macros.  */
+comment|/* Fill the current times into TIME.  The definition of this function    also defines any or all of the HAVE_USER_TIME, HAVE_SYS_TIME, and    HAVE_WALL_TIME macros.  */
 end_comment
 
 begin_function
@@ -949,7 +955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Push TIMEVAR onto the timing stack.  No further elapsed time is    attributed to the previous topmost timing variable on the stack;    subsequent elapsed time is attributed to TIMEVAR, until it is    popped or another element is pushed on top.      TIMEVAR cannot be running as a standalone timer.  */
+comment|/* Push TIMEVAR onto the timing stack.  No further elapsed time is    attributed to the previous topmost timing variable on the stack;    subsequent elapsed time is attributed to TIMEVAR, until it is    popped or another element is pushed on top.     TIMEVAR cannot be running as a standalone timer.  */
 end_comment
 
 begin_function
@@ -1137,9 +1143,29 @@ name|stack
 operator|->
 name|timevar
 condition|)
+block|{
+name|sorry
+argument_list|(
+literal|"cannot timevar_pop '%s' when top of timevars stack is '%s'"
+argument_list|,
+name|timevars
+index|[
+name|timevar
+index|]
+operator|.
+name|name
+argument_list|,
+name|stack
+operator|->
+name|timevar
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|abort
 argument_list|()
 expr_stmt|;
+block|}
 comment|/* What time is it?  */
 name|get_time
 argument_list|(
@@ -1836,7 +1862,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* defined (HAVE_USER_TIME) || defined (HAVE_SYS_TIME)  	  || defined (HAVE_WALL_TIME) */
+comment|/* defined (HAVE_USER_TIME) || defined (HAVE_SYS_TIME) 	  || defined (HAVE_WALL_TIME) */
 block|}
 end_function
 

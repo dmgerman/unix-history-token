@@ -140,7 +140,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0 if we should not perform inlining.    1 if we should expand functions calls inline at the tree level.      2 if we should consider *all* functions to be inline     candidates.  */
+comment|/* 0 if we should not perform inlining.    1 if we should expand functions calls inline at the tree level.    2 if we should consider *all* functions to be inline    candidates.  */
 end_comment
 
 begin_decl_stmt

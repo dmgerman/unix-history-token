@@ -26,6 +26,7 @@ comment|/* The do-nothing debug hooks.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|gcc_debug_hooks
 name|do_nothing_debug_hooks
@@ -58,10 +59,10 @@ comment|/* source_line */
 name|debug_nothing_int_charstar
 block|,
 comment|/* begin_prologue */
-name|debug_nothing_int
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_prologue */
-name|debug_nothing_void
+name|debug_nothing_int_charstar
 block|,
 comment|/* end_epilogue */
 name|debug_nothing_tree

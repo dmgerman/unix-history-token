@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|SUBTARGET_EXTRA_ASM_SPEC
-value|"%{!mcpu=*:-mxscale}"
+value|"%{!mcpu=*:-mcpu=xscale}"
 end_define
 
 begin_undef

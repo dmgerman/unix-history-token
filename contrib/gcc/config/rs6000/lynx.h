@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for Rs6000 running LynxOS.    Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.    Contributed by David Henkel-Wallace, Cygnus Support (gumby@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for Rs6000 running LynxOS.    Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by David Henkel-Wallace, Cygnus Support (gumby@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -52,19 +52,25 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|READONLY_DATA_SECTION_ASM_OP
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|EXTRA_SECTION_FUNCTIONS
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|SELECT_RTX_SECTION
+name|TARGET_ASM_SELECT_RTX_SECTION
 end_undef
 
 begin_undef
 undef|#
 directive|undef
-name|SELECT_SECTION
+name|TARGET_ASM_SELECT_SECTION
 end_undef
 
 begin_undef
@@ -164,14 +170,16 @@ end_define
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Acpu=rs6000 -Amachine=rs6000 -Asystem=lynx -Asystem=unix -DLynx -D_IBMR2 -Dunix -Drs6000 -Dlynx -DLYNX"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                     \     {                                    \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \       builtin_assert ("system=lynx");    \       builtin_assert ("system=unix");    \       builtin_define_std ("Lynx");       \       builtin_define ("_IBMR2");         \       builtin_define_std ("unix");       \       builtin_define_std ("rs6000");     \       builtin_define_std ("lynx");       \       builtin_define_std ("LYNX");       \     }                                    \   while (0)
 end_define
 
 begin_undef

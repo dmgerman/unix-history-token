@@ -77,6 +77,12 @@ begin_comment
 comment|/* The man page says it returns int.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IN_LIBGCC2
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -93,6 +99,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

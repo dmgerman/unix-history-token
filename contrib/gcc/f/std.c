@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* std.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Implements the various statements and such like.     Modifications:       21-Nov-91	 JCB  2.0 	 Split out actual code generation to ffeste. */
+comment|/* std.c -- Implementation File (module.c template V1.0)    Copyright (C) 1995, 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by James Craig Burley.  This file is part of GNU Fortran.  GNU Fortran is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU Fortran is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU Fortran; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.     Related Modules:       st.c     Description:       Implements the various statements and such like.     Modifications:       21-Nov-91	 JCB  2.0 	 Split out actual code generation to ffeste. */
 end_comment
 
 begin_comment
@@ -15222,15 +15222,9 @@ expr_stmt|;
 if|if
 condition|(
 name|fi
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|ffewhere_file_kill
-argument_list|(
-name|wf
-argument_list|)
-expr_stmt|;
-else|else
 name|ffelex_set_include
 argument_list|(
 name|wf

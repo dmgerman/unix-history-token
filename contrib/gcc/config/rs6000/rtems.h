@@ -10,14 +10,16 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-DPPC -D__rtems__ -D__USE_INIT_FINI__ \    -Asystem=rtems -Acpu=powerpc -Amachine=powerpc"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                      \     {                                     \       builtin_define_std ("PPC");         \       builtin_define ("__rtems__");       \       builtin_assert ("system=rtems");    \       builtin_assert ("cpu=powerpc");     \       builtin_assert ("machine=powerpc"); \     }                                     \   while (0)
 end_define
 
 begin_undef

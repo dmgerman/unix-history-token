@@ -78,6 +78,37 @@ name|aligned_p
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Output code that will globalize a label.  */
+name|void
+argument_list|(
+argument|* globalize_label
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Emit an assembler directive to set visibility for the symbol        associated with the tree decl.  */
+name|void
+argument_list|(
+argument|* visibility
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Output the assembler code for entry to a function.  */
 name|void
 argument_list|(
@@ -175,6 +206,55 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Select and switch to a section for EXP.  It may be a DECL or a        constant for which TREE_CST_RTL is valid.  RELOC is nonzero if        runtime relocations must be applied; bit 1 will be set if the        runtime relocations require non-local name resolution.  ALIGN is        the required alignment of the data.  */
+name|void
+argument_list|(
+argument|* select_section
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Select and switch to a section for X with MODE.  ALIGN is        the desired alignment of the data.  */
+name|void
+argument_list|(
+argument|* select_rtx_section
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|,
+name|rtx
+operator|,
+name|unsigned
+name|HOST_WIDE_INT
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Select a unique section name for DECL.  RELOC is the same as        for SELECT_SECTION.  */
+name|void
+argument_list|(
+argument|* unique_section
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Output a constructor for a symbol with a given priority.  */
 name|void
 argument_list|(
@@ -200,6 +280,55 @@ operator|(
 name|rtx
 operator|,
 name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Output the assembler code for a thunk function.  THUNK_DECL is the        declaration for the thunk function itself, FUNCTION is the decl for        the target function.  DELTA is an immediate constant offset to be        added to THIS.  If VCALL_OFFSET is nonzero, the word at        *(*this + vcall_offset) should be added to THIS.  */
+name|void
+argument_list|(
+argument|* output_mi_thunk
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+name|file
+operator|,
+name|tree
+name|thunk_decl
+operator|,
+name|HOST_WIDE_INT
+name|delta
+operator|,
+name|HOST_WIDE_INT
+name|vcall_offset
+operator|,
+name|tree
+name|function_decl
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Determine whether output_mi_thunk would succeed.  */
+comment|/* ??? Ideally, this hook would not exist, and success or failure        would be returned from output_mi_thunk directly.  But there's        too much undo-able setup involved in invoking output_mi_thunk.        Could be fixed by making output_mi_thunk emit rtl instead of        text to the output file.  */
+name|bool
+argument_list|(
+argument|* can_output_mi_thunk
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+name|thunk_decl
+operator|,
+name|HOST_WIDE_INT
+name|delta
+operator|,
+name|HOST_WIDE_INT
+name|vcall_offset
+operator|,
+name|tree
+name|function_decl
 operator|)
 argument_list|)
 expr_stmt|;
@@ -354,19 +483,96 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* cycle_display is a pointer to a function which can emit        data into the assembly stream about the current cycle.        Arguments are CLOCK, the data to emit, and LAST, the last        insn in the new chain we're building.  Returns a new LAST.        The default is to do nothing.  */
+comment|/* The following member value is a pointer to a function returning        nonzero if we should use DFA based scheduling.  The default is        to use the old pipeline scheduler.  */
+name|int
+argument_list|(
+argument|* use_dfa_pipeline_interface
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* The values of all the following members are used only for the        DFA based scheduler: */
+comment|/* The values of the following four members are pointers to        functions used to simplify the automaton descriptions.        dfa_pre_cycle_insn and dfa_post_cycle_insn give functions        returning insns which are used to change the pipeline hazard        recognizer state when the new simulated processor cycle        correspondingly starts and finishes.  The function defined by        init_dfa_pre_cycle_insn and init_dfa_post_cycle_insn are used        to initialize the corresponding insns.  The default values of        the memebers result in not changing the automaton state when        the new simulated processor cycle correspondingly starts and        finishes.  */
+name|void
+argument_list|(
+argument|* init_dfa_pre_cycle_insn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
 name|rtx
 argument_list|(
-argument|* cycle_display
+argument|* dfa_pre_cycle_insn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|* init_dfa_post_cycle_insn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+name|rtx
+argument_list|(
+argument|* dfa_post_cycle_insn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* The following member value is a pointer to a function returning value        which defines how many insns in queue `ready' will we try for        multi-pass scheduling.  if the member value is nonzero and the        function returns positive value, the DFA based scheduler will make        multi-pass scheduling for the first cycle.  In other words, we will        try to choose ready insn which permits to start maximum number of        insns on the same cycle.  */
+name|int
+argument_list|(
+argument|* first_cycle_multipass_dfa_lookahead
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* The values of the following members are pointers to functions        used to improve the first cycle multipass scheduling by        inserting nop insns.  dfa_scheduler_bubble gives a function        returning a nop insn with given index.  The indexes start with        zero.  The function should return NULL if there are no more nop        insns with indexes greater than given index.  To initialize the        nop insn the function given by member        init_dfa_scheduler_bubbles is used.  The default values of the        members result in not inserting nop insns during the multipass        scheduling.  */
+name|void
+argument_list|(
+argument|* init_dfa_bubbles
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+name|rtx
+argument_list|(
+argument|* dfa_bubble
 argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
 name|int
-name|clock
-operator|,
-name|rtx
-name|last
 operator|)
 argument_list|)
 expr_stmt|;
@@ -401,7 +607,7 @@ name|tree
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Table of machine attributes and functions to handle them.  */
+comment|/* Table of machine attributes and functions to handle them.      Ignored if NULL.  */
 specifier|const
 name|struct
 name|attribute_spec
@@ -539,14 +745,6 @@ name|int
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* True if arbitrary sections are supported.  */
-name|bool
-name|have_named_sections
-decl_stmt|;
-comment|/* True if "native" constructors and destructors are supported,      false if we're using collect2 for the job.  */
-name|bool
-name|have_ctors_dtors
-decl_stmt|;
 comment|/* True if new jumps cannot be created, to replace existing ones or      not, at the current point in the compilation.  */
 name|bool
 argument_list|(
@@ -559,6 +757,94 @@ name|void
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* True if the constant X cannot be placed in the constant pool.  */
+name|bool
+argument_list|(
+argument|* cannot_force_const_mem
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|rtx
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* True if EXP should be placed in a "small data" section.  */
+name|bool
+argument_list|(
+argument|* in_small_data_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* True if EXP names an object for which name resolution must resolve      to the current module.  */
+name|bool
+argument_list|(
+argument|* binds_local_p
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Do something target-specific to record properties of the DECL into      the associated SYMBOL_REF.  */
+name|void
+argument_list|(
+argument|* encode_section_info
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Undo the effects of encode_section_info on the symbol string.  */
+specifier|const
+name|char
+operator|*
+operator|(
+operator|*
+name|strip_name_encoding
+operator|)
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Leave the boolean fields at the end.  */
+comment|/* True if arbitrary sections are supported.  */
+name|bool
+name|have_named_sections
+decl_stmt|;
+comment|/* True if "native" constructors and destructors are supported,      false if we're using collect2 for the job.  */
+name|bool
+name|have_ctors_dtors
+decl_stmt|;
+comment|/* True if thread-local storage is supported.  */
+name|bool
+name|have_tls
+decl_stmt|;
+comment|/* True if a small readonly data section is supported.  */
+name|bool
+name|have_srodata_section
+decl_stmt|;
+comment|/* True if EH frame info sections should be zero-terminated.  */
+name|bool
+name|terminate_dw2_eh_frame_info
+decl_stmt|;
 block|}
 struct|;
 end_struct

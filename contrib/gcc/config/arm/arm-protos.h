@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prototypes for exported functions defined in arm.c and pe.c    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@arm.com)    Minor hacks by Nick Clifton (nickc@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Prototypes for exported functions defined in arm.c and pe.c    Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.    Contributed by Richard Earnshaw (rearnsha@arm.com)    Minor hacks by Nick Clifton (nickc@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -121,6 +121,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|arm_get_frame_size
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Used in arm.md, but defined in output.c.  */
 end_comment
@@ -147,6 +160,24 @@ name|arm_strip_name_encoding
 name|PARAMS
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|arm_asm_output_labelref
+name|PARAMS
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|,
 specifier|const
 name|char
 operator|*
@@ -1163,6 +1194,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|rtx
+name|arm_gen_return_addr_mask
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|void
 name|arm_reload_in_hi
 name|PARAMS
@@ -1595,6 +1639,42 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|rtx
+name|arm_va_arg
+name|PARAMS
+argument_list|(
+operator|(
+name|tree
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|arm_function_arg_pass_by_reference
+name|PARAMS
+argument_list|(
+operator|(
+name|CUMULATIVE_ARGS
+operator|*
+operator|,
+expr|enum
+name|machine_mode
+operator|,
+name|tree
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1750,6 +1830,19 @@ begin_comment
 comment|/* RTX_CODE */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|arm_float_words_big_endian
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Thumb functions.  */
 end_comment
@@ -1786,6 +1879,19 @@ specifier|const
 name|char
 modifier|*
 name|thumb_unexpanded_epilogue
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|HOST_WIDE_INT
+name|thumb_get_frame_size
 name|PARAMS
 argument_list|(
 operator|(
@@ -2088,6 +2194,8 @@ name|PARAMS
 argument_list|(
 operator|(
 name|tree
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

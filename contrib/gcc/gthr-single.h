@@ -261,7 +261,7 @@ parameter_list|)
 block|{
 comment|/* No thread support available */
 comment|/* Should we really exit the program */
-comment|/* exit(&__objc_thread_exit_status); */
+comment|/* exit (&__objc_thread_exit_status); */
 return|return
 operator|-
 literal|1

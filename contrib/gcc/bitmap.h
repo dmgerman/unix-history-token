@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Functions to support general ended bitmaps.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Functions to support general ended bitmaps.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003    Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -13,6 +13,40 @@ begin_define
 define|#
 directive|define
 name|GCC_BITMAP_H
+end_define
+
+begin_comment
+comment|/* Fundamental storage type for bitmap.  */
+end_comment
+
+begin_comment
+comment|/* typedef unsigned HOST_WIDE_INT BITMAP_WORD; */
+end_comment
+
+begin_comment
+comment|/* #define nBITMAP_WORD_BITS HOST_BITS_PER_WIDE_INT */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|BITMAP_WORD
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|nBITMAP_WORD_BITS
+value|(CHAR_BIT * SIZEOF_LONG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BITMAP_WORD_BITS
+value|(unsigned) nBITMAP_WORD_BITS
 end_define
 
 begin_comment
@@ -29,7 +63,7 @@ begin_define
 define|#
 directive|define
 name|BITMAP_ELEMENT_WORDS
-value|2
+value|((128 + nBITMAP_WORD_BITS - 1) / nBITMAP_WORD_BITS)
 end_define
 
 begin_endif
@@ -46,7 +80,7 @@ define|#
 directive|define
 name|BITMAP_ELEMENT_ALL_BITS
 define|\
-value|((unsigned) (BITMAP_ELEMENT_WORDS * HOST_BITS_PER_WIDE_INT))
+value|((unsigned) (BITMAP_ELEMENT_WORDS * BITMAP_WORD_BITS))
 end_define
 
 begin_comment
@@ -55,38 +89,45 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|bitmap_element_def
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|struct
 name|bitmap_element_def
 modifier|*
 name|next
-decl_stmt|;
+block|;
 comment|/* Next element.  */
 name|struct
 name|bitmap_element_def
 modifier|*
 name|prev
-decl_stmt|;
+block|;
 comment|/* Previous element.  */
 name|unsigned
 name|int
 name|indx
-decl_stmt|;
+block|;
 comment|/* regno/BITMAP_ELEMENT_ALL_BITS.  */
-name|unsigned
-name|HOST_WIDE_INT
+name|BITMAP_WORD
 name|bits
 index|[
 name|BITMAP_ELEMENT_WORDS
 index|]
-decl_stmt|;
+block|;
 comment|/* Bits that are set.  */
 block|}
-name|bitmap_element
-typedef|;
 end_typedef
+
+begin_expr_stmt
+name|bitmap_element
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Head of bitmap linked list.  */
@@ -94,28 +135,46 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
+name|struct
 name|bitmap_head_def
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|bitmap_element
 modifier|*
 name|first
-decl_stmt|;
+block|;
 comment|/* First element in linked list.  */
 name|bitmap_element
 modifier|*
 name|current
-decl_stmt|;
+block|;
 comment|/* Last element looked at.  */
 name|unsigned
 name|int
 name|indx
-decl_stmt|;
+block|;
 comment|/* Index of last element looked at.  */
+name|int
+name|using_obstack
+block|;
+comment|/* Are we using an obstack or ggc for                                    allocation?  */
 block|}
+end_typedef
+
+begin_expr_stmt
 name|bitmap_head
-operator|,
-typedef|*
+expr_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|struct
+name|bitmap_head_def
+modifier|*
 name|bitmap
 typedef|;
 end_typedef
@@ -380,7 +439,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialize a bitmap header.  */
+comment|/* Initialize a bitmap header.  If HEAD is NULL, a new header will be    allocated.  USING_OBSTACK indicates how elements should be allocated.  */
 end_comment
 
 begin_decl_stmt
@@ -391,13 +450,17 @@ name|PARAMS
 argument_list|(
 operator|(
 name|bitmap
+name|head
+operator|,
+name|int
+name|using_obstack
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Release all memory held by bitmaps.  */
+comment|/* Release all memory used by the bitmap obstack.  */
 end_comment
 
 begin_decl_stmt
@@ -524,22 +587,20 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|bitmap_initialize ((bitmap) obstack_alloc (OBSTACK, sizeof (bitmap_head)))
+value|bitmap_initialize ((bitmap) obstack_alloc (OBSTACK, sizeof (bitmap_head)), 1)
 end_define
 
 begin_comment
-comment|/* Allocate a bitmap with alloca.  Note alloca cannot be passed as an    argument to a function, so we set a temporary variable to the value    returned by alloca and pass that variable to bitmap_initialize().    PTR is then set to the value returned from bitmap_initialize() to    avoid having it appear more than once in case it has side effects.  */
+comment|/* Allocate a bitmap with ggc_alloc.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BITMAP_ALLOCA
-parameter_list|(
-name|PTR
-parameter_list|)
+name|BITMAP_GGC_ALLOC
+parameter_list|()
 define|\
-value|do { \   bitmap temp_bitmap_ = (bitmap) alloca (sizeof (bitmap_head)); \   (PTR) = bitmap_initialize (temp_bitmap_); \ } while (0)
+value|bitmap_initialize (NULL, 0)
 end_define
 
 begin_comment
@@ -552,7 +613,7 @@ directive|define
 name|BITMAP_XMALLOC
 parameter_list|()
 define|\
-value|bitmap_initialize ((bitmap) xmalloc (sizeof (bitmap_head)))
+value|bitmap_initialize ((bitmap) xmalloc (sizeof (bitmap_head)), 1)
 end_define
 
 begin_comment
@@ -614,9 +675,9 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|do {									\   bitmap_element *ptr_ = (BITMAP)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % ((unsigned) HOST_BITS_PER_WIDE_INT);	\   unsigned word_num_ = (((MIN) / ((unsigned) HOST_BITS_PER_WIDE_INT))	\ 			% BITMAP_ELEMENT_WORDS);			\ 									\ 									\
+value|do {									\   bitmap_element *ptr_ = (BITMAP)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % BITMAP_WORD_BITS;				\   unsigned word_num_ = (MIN) / BITMAP_WORD_BITS % BITMAP_ELEMENT_WORDS;	\ 									\ 									\
 comment|/* Find the block the minimum bit is in.  */
-value|\   while (ptr_ != 0&& ptr_->indx< indx_)				\     ptr_ = ptr_->next;							\ 									\   if (ptr_ != 0&& ptr_->indx != indx_)					\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr_ != 0; ptr_ = ptr_->next)					\     {									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  unsigned HOST_WIDE_INT word_ = ptr_->bits[word_num_];		\ 									\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< HOST_BITS_PER_WIDE_INT; bit_num_++)	\ 		{							\ 		  unsigned HOST_WIDE_INT mask_				\ 		    = ((unsigned HOST_WIDE_INT) 1)<< bit_num_;		\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr_->indx * BITMAP_ELEMENT_ALL_BITS  \ 				  + word_num_ * HOST_BITS_PER_WIDE_INT  \ 				  + bit_num_);				\ 		      CODE;						\ 									\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
+value|\   while (ptr_ != 0&& ptr_->indx< indx_)				\     ptr_ = ptr_->next;							\ 									\   if (ptr_ != 0&& ptr_->indx != indx_)					\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr_ != 0; ptr_ = ptr_->next)					\     {									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = ptr_->bits[word_num_];			\ 									\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr_->indx * BITMAP_ELEMENT_ALL_BITS  \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 		      CODE;						\ 									\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -639,11 +700,11 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_element *ptr2_ = (BITMAP2)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % ((unsigned) HOST_BITS_PER_WIDE_INT);	\   unsigned word_num_ = (((MIN) / ((unsigned) HOST_BITS_PER_WIDE_INT))	\ 			% BITMAP_ELEMENT_WORDS);			\ 									\
+value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_element *ptr2_ = (BITMAP2)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % BITMAP_WORD_BITS;				\   unsigned word_num_ = (MIN) / BITMAP_WORD_BITS % BITMAP_ELEMENT_WORDS;	\ 									\
 comment|/* Find the block the minimum bit is in in the first bitmap.  */
 value|\   while (ptr1_ != 0&& ptr1_->indx< indx_)				\     ptr1_ = ptr1_->next;						\ 									\   if (ptr1_ != 0&& ptr1_->indx != indx_)				\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr1_ != 0 ; ptr1_ = ptr1_->next)				\     {									\
 comment|/* Advance BITMAP2 to the equivalent link, using an all		\ 	 zero element if an equivalent link doesn't exist.  */
-value|\       bitmap_element *tmp2_;						\ 									\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       tmp2_ = ((ptr2_ != 0&& ptr2_->indx == ptr1_->indx)		\ 	       ? ptr2_ :&bitmap_zero_bits); 				\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  unsigned HOST_WIDE_INT word_ = (ptr1_->bits[word_num_]	\& ~ tmp2_->bits[word_num_]);	\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< HOST_BITS_PER_WIDE_INT; bit_num_++)	\ 		{							\ 		  unsigned HOST_WIDE_INT mask_				\ 		    = ((unsigned HOST_WIDE_INT)1)<< bit_num_;		\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * HOST_BITS_PER_WIDE_INT  \ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
+value|\       bitmap_element *tmp2_;						\ 									\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       tmp2_ = ((ptr2_ != 0&& ptr2_->indx == ptr1_->indx)		\ 	       ? ptr2_ :&bitmap_zero_bits); 				\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = (ptr1_->bits[word_num_]			\& ~ tmp2_->bits[word_num_]);		\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
 end_define
 
 begin_comment
@@ -666,13 +727,13 @@ parameter_list|,
 name|CODE
 parameter_list|)
 define|\
-value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_element *ptr2_ = (BITMAP2)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % ((unsigned) HOST_BITS_PER_WIDE_INT);	\   unsigned word_num_ = (((MIN) / ((unsigned) HOST_BITS_PER_WIDE_INT))	\ 			% BITMAP_ELEMENT_WORDS);			\ 									\
+value|do {									\   bitmap_element *ptr1_ = (BITMAP1)->first;				\   bitmap_element *ptr2_ = (BITMAP2)->first;				\   unsigned int indx_ = (MIN) / BITMAP_ELEMENT_ALL_BITS;			\   unsigned bit_num_ = (MIN) % BITMAP_WORD_BITS;				\   unsigned word_num_ = (MIN) / BITMAP_WORD_BITS % BITMAP_ELEMENT_WORDS;	\ 									\
 comment|/* Find the block the minimum bit is in in the first bitmap.  */
 value|\   while (ptr1_ != 0&& ptr1_->indx< indx_)				\     ptr1_ = ptr1_->next;						\ 									\   if (ptr1_ != 0&& ptr1_->indx != indx_)				\     {									\       bit_num_ = 0;							\       word_num_ = 0;							\     }									\ 									\   for (; ptr1_ != 0 ; ptr1_ = ptr1_->next)				\     {									\
 comment|/* Advance BITMAP2 to the equivalent link */
 value|\       while (ptr2_ != 0&& ptr2_->indx< ptr1_->indx)			\ 	ptr2_ = ptr2_->next;						\ 									\       if (ptr2_ == 0)							\ 	{								\
 comment|/* If there are no more elements in BITMAP2, exit loop now.  */
-value|\ 	  ptr1_ = (bitmap_element *)0;					\ 	  break;							\ 	}								\       else if (ptr2_->indx> ptr1_->indx)				\ 	{								\ 	  bit_num_ = word_num_ = 0;					\ 	  continue;							\ 	}								\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  unsigned HOST_WIDE_INT word_ = (ptr1_->bits[word_num_]	\& ptr2_->bits[word_num_]);	\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< HOST_BITS_PER_WIDE_INT; bit_num_++)	\ 		{							\ 		  unsigned HOST_WIDE_INT mask_				\ 		    = ((unsigned HOST_WIDE_INT)1)<< bit_num_;		\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * HOST_BITS_PER_WIDE_INT  \ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
+value|\ 	  ptr1_ = (bitmap_element *)0;					\ 	  break;							\ 	}								\       else if (ptr2_->indx> ptr1_->indx)				\ 	{								\ 	  bit_num_ = word_num_ = 0;					\ 	  continue;							\ 	}								\ 									\       for (; word_num_< BITMAP_ELEMENT_WORDS; word_num_++)		\ 	{								\ 	  BITMAP_WORD word_ = (ptr1_->bits[word_num_]			\& ptr2_->bits[word_num_]);		\ 	  if (word_ != 0)						\ 	    {								\ 	      for (; bit_num_< BITMAP_WORD_BITS; bit_num_++)		\ 		{							\ 		  BITMAP_WORD mask_ = ((BITMAP_WORD) 1)<< bit_num_;	\ 									\ 		  if ((word_& mask_) != 0)				\ 		    {							\ 		      word_&= ~ mask_;					\ 		      (BITNUM) = (ptr1_->indx * BITMAP_ELEMENT_ALL_BITS \ 				  + word_num_ * BITMAP_WORD_BITS	\ 				  + bit_num_);				\ 									\ 		      CODE;						\ 		      if (word_ == 0)					\ 			break;						\ 		    }							\ 		}							\ 	    }								\ 									\ 	  bit_num_ = 0;							\ 	}								\ 									\       word_num_ = 0;							\     }									\ } while (0)
 end_define
 
 begin_endif

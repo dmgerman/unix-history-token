@@ -151,7 +151,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DONT_USE_BUILTIN_SETJMP
-comment|/* We don't know what sort of alignment requirements the system      jmp_buf has.  We over estimated in except.c, and now we have      to match that here just in case the system *didn't* have more       restrictive requirements.  */
+comment|/* We don't know what sort of alignment requirements the system      jmp_buf has.  We over estimated in except.c, and now we have      to match that here just in case the system *didn't* have more      restrictive requirements.  */
 name|jmp_buf
 name|jbuf
 name|__attribute__
@@ -528,6 +528,27 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Get the value of the CFA as saved in CONTEXT.  */
+end_comment
+
+begin_function
+name|_Unwind_Word
+name|_Unwind_GetCFA
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+name|context
+parameter_list|)
+block|{
+comment|/* ??? Ideally __builtin_setjmp places the CFA in the jmpbuf.  */
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|_Unwind_SetGR
@@ -656,6 +677,22 @@ literal|0
 return|;
 block|}
 end_decl_stmt
+
+begin_function
+name|void
+modifier|*
+name|_Unwind_FindEnclosingFunction
+parameter_list|(
+name|void
+modifier|*
+name|pc
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_function
 
 begin_ifndef
 ifndef|#
@@ -827,7 +864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ??? There appear to be bugs in integrate.c wrt __builtin_longjmp and    virtual-stack-vars.  An inline version of this segfaults on Sparc.  */
+comment|/* ??? There appear to be bugs in integrate.c wrt __builtin_longjmp and    virtual-stack-vars.  An inline version of this segfaults on SPARC.  */
 end_comment
 
 begin_define
@@ -889,6 +926,13 @@ define|#
 directive|define
 name|_Unwind_Resume
 value|_Unwind_SjLj_Resume
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Unwind_Resume_or_Rethrow
+value|_Unwind_SjLj_Resume_or_Rethrow
 end_define
 
 begin_include

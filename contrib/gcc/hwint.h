@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* HOST_WIDE_INT definitions for the GNU compiler.    Copyright (C) 1998 Free Software Foundation, Inc.     This file is part of GCC.     Provide definitions for macros which depend on HOST_BITS_PER_INT    and HOST_BITS_PER_LONG.  */
+comment|/* HOST_WIDE_INT definitions for the GNU compiler.    Copyright (C) 1998, 2002 Free Software Foundation, Inc.     This file is part of GCC.     Provide definitions for macros which depend on HOST_BITS_PER_INT    and HOST_BITS_PER_LONG.  */
 end_comment
 
 begin_ifndef
@@ -337,6 +337,20 @@ name|HOST_WIDE_INT_PRINT_DEC
 value|"%d"
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_C
+value|"%d"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_SPACE
+value|"% *d"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -357,6 +371,20 @@ name|HOST_WIDE_INT_PRINT_DEC
 value|"%ld"
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_C
+value|"%ldL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_SPACE
+value|"% *ld"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -367,6 +395,20 @@ define|#
 directive|define
 name|HOST_WIDE_INT_PRINT_DEC
 value|"%lld"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_C
+value|"%lldLL"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_DEC_SPACE
+value|"% *lld"
 end_define
 
 begin_endif
@@ -409,6 +451,13 @@ name|HOST_WIDE_INT_PRINT_UNSIGNED
 value|"%u"
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_UNSIGNED_SPACE
+value|"% *u"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -429,6 +478,13 @@ name|HOST_WIDE_INT_PRINT_UNSIGNED
 value|"%lu"
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_UNSIGNED_SPACE
+value|"% *lu"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -439,6 +495,13 @@ define|#
 directive|define
 name|HOST_WIDE_INT_PRINT_UNSIGNED
 value|"%llu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDE_INT_PRINT_UNSIGNED_SPACE
+value|"% *llu"
 end_define
 
 begin_endif
@@ -725,8 +788,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOST_WIDEST_INT_PRINT_DEC_SPACE
+value|"% *lld"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HOST_WIDEST_INT_PRINT_UNSIGNED
 value|"%llu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDEST_INT_PRINT_UNSIGNED_SPACE
+value|"% *llu"
 end_define
 
 begin_define
@@ -765,8 +842,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|HOST_WIDEST_INT_PRINT_DEC_SPACE
+value|"% *ld"
+end_define
+
+begin_define
+define|#
+directive|define
 name|HOST_WIDEST_INT_PRINT_UNSIGNED
 value|"%lu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOST_WIDEST_INT_PRINT_UNSIGNED_SPACE
+value|"% *lu"
 end_define
 
 begin_define

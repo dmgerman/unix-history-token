@@ -181,7 +181,7 @@ value|2
 end_define
 
 begin_comment
-comment|/* Values for the flags field of struct directive.  COND indicates a    conditional; IF_COND an opening conditional.  INCL means to treat    "..." and<...> as q-char and h-char sequences respectively.  IN_I    means this directive should be handled even if -fpreprocessed is in    effect (these are the directives with callback hooks).  */
+comment|/* Values for the flags field of struct directive.  COND indicates a    conditional; IF_COND an opening conditional.  INCL means to treat    "..." and<...> as q-char and h-char sequences respectively.  IN_I    means this directive should be handled even if -fpreprocessed is in    effect (these are the directives with callback hooks).     EXPAND is set on directives that are always macro-expanded.  */
 end_comment
 
 begin_define
@@ -210,6 +210,13 @@ define|#
 directive|define
 name|IN_I
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXPAND
+value|(1<< 4)
 end_define
 
 begin_comment
@@ -249,7 +256,7 @@ name|handler
 decl_stmt|;
 comment|/* Function to handle directive.  */
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|name
 decl_stmt|;
@@ -309,6 +316,20 @@ begin_decl_stmt
 specifier|static
 name|void
 name|start_directive
+name|PARAMS
+argument_list|(
+operator|(
+name|cpp_reader
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|prepare_directive_trad
 name|PARAMS
 argument_list|(
 operator|(
@@ -451,7 +472,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_CHAR
+name|uchar
 modifier|*
 name|dequote_string
 name|PARAMS
@@ -461,7 +482,7 @@ name|cpp_reader
 operator|*
 operator|,
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 name|unsigned
@@ -479,7 +500,7 @@ name|PARAMS
 argument_list|(
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|,
 name|unsigned
@@ -503,8 +524,7 @@ operator|(
 name|cpp_reader
 operator|*
 operator|,
-expr|enum
-name|error_type
+name|int
 operator|,
 name|int
 operator|)
@@ -809,13 +829,13 @@ name|DIRECTIVE_TABLE
 define|\
 value|D(define,	T_DEFINE = 0,	KANDR,     IN_I)
 comment|/* 270554 */
-value|\ D(include,	T_INCLUDE,	KANDR,     INCL)
+value|\ D(include,	T_INCLUDE,	KANDR,     INCL | EXPAND)
 comment|/*  52262 */
 value|\ D(endif,	T_ENDIF,	KANDR,     COND)
 comment|/*  45855 */
 value|\ D(ifdef,	T_IFDEF,	KANDR,     COND | IF_COND)
 comment|/*  22000 */
-value|\ D(if,		T_IF,		KANDR,     COND | IF_COND)
+value|\ D(if,		T_IF,		KANDR, COND | IF_COND | EXPAND)
 comment|/*  18162 */
 value|\ D(else,		T_ELSE,		KANDR,     COND)
 comment|/*   9863 */
@@ -823,9 +843,9 @@ value|\ D(ifndef,	T_IFNDEF,	KANDR,     COND | IF_COND)
 comment|/*   9675 */
 value|\ D(undef,	T_UNDEF,	KANDR,     IN_I)
 comment|/*   4837 */
-value|\ D(line,		T_LINE,		KANDR,     0)
+value|\ D(line,		T_LINE,		KANDR,     EXPAND)
 comment|/*   2465 */
-value|\ D(elif,		T_ELIF,		STDC89,    COND)
+value|\ D(elif,		T_ELIF,		STDC89,    COND | EXPAND)
 comment|/*    610 */
 value|\ D(error,	T_ERROR,	STDC89,    0)
 comment|/*    475 */
@@ -833,59 +853,22 @@ value|\ D(pragma,	T_PRAGMA,	STDC89,    IN_I)
 comment|/*    195 */
 value|\ D(warning,	T_WARNING,	EXTENSION, 0)
 comment|/*     22 */
-value|\ D(include_next,	T_INCLUDE_NEXT,	EXTENSION, INCL)
+value|\ D(include_next,	T_INCLUDE_NEXT,	EXTENSION, INCL | EXPAND)
 comment|/*     19 */
 value|\ D(ident,	T_IDENT,	EXTENSION, IN_I)
 comment|/*     11 */
-value|\ D(import,	T_IMPORT,	EXTENSION, INCL)
+value|\ D(import,	T_IMPORT,	EXTENSION, INCL | EXPAND)
 comment|/* 0 ObjC */
 value|\ D(assert,	T_ASSERT,	EXTENSION, 0)
 comment|/* 0 SVR4 */
 value|\ D(unassert,	T_UNASSERT,	EXTENSION, 0)
 comment|/* 0 SVR4 */
-value|\ SCCS_ENTRY
+value|\ D(sccs,		T_SCCS,		EXTENSION, 0)
 end_define
 
 begin_comment
 comment|/* 0 SVR4? */
 end_comment
-
-begin_comment
-comment|/* #sccs is not always recognized.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCCS_DIRECTIVE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SCCS_ENTRY
-value|D(sccs, T_SCCS, EXTENSION, 0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SCCS_ENTRY
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Use the table to generate a series of prototypes, an enum for the    directive names, and an array of directive handlers.  */
@@ -960,7 +943,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|{ CONCAT2(do_,name), (const U_CHAR *) STRINGX(name), \   sizeof STRINGX(name) - 1, origin, flags },
+value|{ CONCAT2(do_,name), (const uchar *) STRINGX(name), \   sizeof STRINGX(name) - 1, origin, flags },
 end_define
 
 begin_decl_stmt
@@ -1103,9 +1086,11 @@ name|type
 operator|!=
 name|CPP_EOF
 condition|)
-name|cpp_pedwarn
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_PEDWARN
 argument_list|,
 literal|"extra tokens at end of #%s directive"
 argument_list|,
@@ -1185,7 +1170,44 @@ name|int
 name|skip_line
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
+condition|)
+block|{
+comment|/* Revert change of prepare_directive_trad.  */
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|pfile
+operator|->
+name|directive
+operator|!=
+operator|&
+name|dtable
+index|[
+name|T_DEFINE
+index|]
+condition|)
+name|_cpp_remove_overlay
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* We don't skip for an assembler #.  */
+elseif|else
 if|if
 condition|(
 name|skip_line
@@ -1252,6 +1274,14 @@ name|pfile
 operator|->
 name|state
 operator|.
+name|in_expression
+operator|=
+literal|0
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
 name|angled_headers
 operator|=
 literal|0
@@ -1266,7 +1296,171 @@ block|}
 end_function
 
 begin_comment
-comment|/* Output diagnostics for a directive DIR.  INDENTED is non-zero if    the '#' was indented.  */
+comment|/* Prepare to handle the directive in pfile->directive.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|prepare_directive_trad
+parameter_list|(
+name|pfile
+parameter_list|)
+name|cpp_reader
+modifier|*
+name|pfile
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|pfile
+operator|->
+name|directive
+operator|!=
+operator|&
+name|dtable
+index|[
+name|T_DEFINE
+index|]
+condition|)
+block|{
+name|bool
+name|no_expand
+init|=
+operator|(
+name|pfile
+operator|->
+name|directive
+operator|&&
+operator|!
+operator|(
+name|pfile
+operator|->
+name|directive
+operator|->
+name|flags
+operator|&
+name|EXPAND
+operator|)
+operator|)
+decl_stmt|;
+name|bool
+name|was_skipping
+init|=
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
+decl_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
+operator|=
+name|false
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|in_expression
+operator|=
+operator|(
+name|pfile
+operator|->
+name|directive
+operator|==
+operator|&
+name|dtable
+index|[
+name|T_IF
+index|]
+operator|||
+name|pfile
+operator|->
+name|directive
+operator|==
+operator|&
+name|dtable
+index|[
+name|T_ELIF
+index|]
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|no_expand
+condition|)
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|++
+expr_stmt|;
+name|_cpp_read_logical_line_trad
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|no_expand
+condition|)
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|--
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|skipping
+operator|=
+name|was_skipping
+expr_stmt|;
+name|_cpp_overlay_buffer
+argument_list|(
+name|pfile
+argument_list|,
+name|pfile
+operator|->
+name|out
+operator|.
+name|base
+argument_list|,
+name|pfile
+operator|->
+name|out
+operator|.
+name|cur
+operator|-
+name|pfile
+operator|->
+name|out
+operator|.
+name|base
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Stop ISO C from expanding anything.  */
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Output diagnostics for a directive DIR.  INDENTED is nonzero if    the '#' was indented.  */
 end_comment
 
 begin_function
@@ -1314,9 +1508,11 @@ name|origin
 operator|==
 name|EXTENSION
 condition|)
-name|cpp_pedwarn
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_PEDWARN
 argument_list|,
 literal|"#%s is a GCC extension"
 argument_list|,
@@ -1344,9 +1540,11 @@ index|[
 name|T_ELIF
 index|]
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"suggest not using #elif in traditional C"
 argument_list|)
@@ -1362,9 +1560,11 @@ name|origin
 operator|==
 name|KANDR
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"traditional C ignores #%s with the # indented"
 argument_list|,
@@ -1385,9 +1585,11 @@ name|origin
 operator|!=
 name|KANDR
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"suggest hiding #%s from traditional C with an indented #"
 argument_list|,
@@ -1401,7 +1603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check if we have a known directive.  INDENTED is non-zero if the    '#' of the directive was indented.  This function is in this file    to save unnecessarily exporting dtable etc. to cpplex.c.  Returns    non-zero if the line of tokens has been handled, zero if we should    continue processing the line.  */
+comment|/* Check if we have a known directive.  INDENTED is nonzero if the    '#' of the directive was indented.  This function is in this file    to save unnecessarily exporting dtable etc. to cpplex.c.  Returns    nonzero if the line of tokens has been handled, zero if we should    continue processing the line.  */
 end_comment
 
 begin_function
@@ -1432,11 +1634,60 @@ name|cpp_token
 modifier|*
 name|dname
 decl_stmt|;
+name|bool
+name|was_parsing_args
+init|=
+name|pfile
+operator|->
+name|state
+operator|.
+name|parsing_args
+decl_stmt|;
 name|int
 name|skip
 init|=
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|was_parsing_args
+condition|)
+block|{
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|pedantic
+argument_list|)
+condition|)
+name|cpp_error
+argument_list|(
+name|pfile
+argument_list|,
+name|DL_PEDWARN
+argument_list|,
+literal|"embedding a directive within macro arguments is not portable"
+argument_list|)
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|parsing_args
+operator|=
+literal|0
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|start_directive
 argument_list|(
 name|pfile
@@ -1485,7 +1736,7 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-comment|/* We do not recognise the # followed by a number extension in      assembler code.  */
+comment|/* We do not recognize the # followed by a number extension in      assembler code.  */
 elseif|else
 if|if
 condition|(
@@ -1532,9 +1783,11 @@ name|state
 operator|.
 name|skipping
 condition|)
-name|cpp_pedwarn
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_PEDWARN
 argument_list|,
 literal|"style of line directive is a GCC extension"
 argument_list|)
@@ -1604,6 +1857,18 @@ operator|->
 name|state
 operator|.
 name|angled_headers
+operator|=
+name|dir
+operator|->
+name|flags
+operator|&
+name|INCL
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|directive_wants_padding
 operator|=
 name|dir
 operator|->
@@ -1696,6 +1961,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"invalid preprocessing directive #%s"
 argument_list|,
 name|cpp_token_as_text
@@ -1707,17 +1974,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dir
-condition|)
-block|{
 name|pfile
 operator|->
 name|directive
 operator|=
 name|dir
 expr_stmt|;
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
+condition|)
+name|prepare_directive_trad
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dir
+condition|)
 call|(
 modifier|*
 name|pfile
@@ -1730,7 +2010,6 @@ argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1752,6 +2031,37 @@ argument_list|,
 name|skip
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|was_parsing_args
+condition|)
+block|{
+comment|/* Restore state when within macro args.  */
+name|pfile
+operator|->
+name|state
+operator|.
+name|parsing_args
+operator|=
+literal|2
+expr_stmt|;
+name|pfile
+operator|->
+name|state
+operator|.
+name|prevent_expansion
+operator|=
+literal|1
+expr_stmt|;
+name|pfile
+operator|->
+name|buffer
+operator|->
+name|saved_flags
+operator||=
+name|PREV_WHITE
+expr_stmt|;
+block|}
 return|return
 name|skip
 return|;
@@ -1797,7 +2107,7 @@ name|pfile
 argument_list|,
 operator|(
 specifier|const
-name|U_CHAR
+name|uchar
 operator|*
 operator|)
 name|buf
@@ -1854,6 +2164,20 @@ name|dtable
 index|[
 name|dir_no
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
+condition|)
+name|prepare_directive_trad
+argument_list|(
+name|pfile
+argument_list|)
 expr_stmt|;
 call|(
 name|void
@@ -1916,10 +2240,6 @@ modifier|*
 name|pfile
 decl_stmt|;
 block|{
-name|cpp_hashnode
-modifier|*
-name|node
-decl_stmt|;
 specifier|const
 name|cpp_token
 modifier|*
@@ -1936,31 +2256,55 @@ condition|(
 name|token
 operator|->
 name|type
-operator|!=
+operator|==
 name|CPP_NAME
 condition|)
 block|{
-if|if
-condition|(
+name|cpp_hashnode
+modifier|*
+name|node
+init|=
 name|token
 operator|->
-name|type
+name|val
+operator|.
+name|node
+decl_stmt|;
+if|if
+condition|(
+name|node
 operator|==
-name|CPP_EOF
+name|pfile
+operator|->
+name|spec_nodes
+operator|.
+name|n_defined
 condition|)
 name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
-literal|"no macro name given in #%s directive"
+name|DL_ERROR
 argument_list|,
-name|pfile
-operator|->
-name|directive
-operator|->
-name|name
+literal|"\"defined\" cannot be used as a macro name"
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+operator|(
+name|node
+operator|->
+name|flags
+operator|&
+name|NODE_POISONED
+operator|)
+condition|)
+return|return
+name|node
+return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1974,6 +2318,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"\"%s\" cannot be used as a macro name as it is an operator in C++"
 argument_list|,
 name|NODE_NAME
@@ -1986,66 +2332,42 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|token
+operator|->
+name|type
+operator|==
+name|CPP_EOF
+condition|)
+name|cpp_error
+argument_list|(
+name|pfile
+argument_list|,
+name|DL_ERROR
+argument_list|,
+literal|"no macro name given in #%s directive"
+argument_list|,
+name|pfile
+operator|->
+name|directive
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 else|else
 name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"macro names must be identifiers"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
-return|;
-block|}
-name|node
-operator|=
-name|token
-operator|->
-name|val
-operator|.
-name|node
-expr_stmt|;
-if|if
-condition|(
-name|node
-operator|->
-name|flags
-operator|&
-name|NODE_POISONED
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-name|node
-operator|==
-name|pfile
-operator|->
-name|spec_nodes
-operator|.
-name|n_defined
-condition|)
-block|{
-name|cpp_error
-argument_list|(
-name|pfile
-argument_list|,
-literal|"\"%s\" cannot be used as a macro name"
-argument_list|,
-name|NODE_NAME
-argument_list|(
-name|node
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-return|return
-name|node
+name|NULL
 return|;
 block|}
 end_function
@@ -2080,6 +2402,21 @@ condition|(
 name|node
 condition|)
 block|{
+comment|/* If we have been requested to expand comments into macros, 	 then re-enable saving of comments.  */
+name|pfile
+operator|->
+name|state
+operator|.
+name|save_comments
+operator|=
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|discard_comments_in_macro_exp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|_cpp_create_definition
@@ -2190,9 +2527,11 @@ name|flags
 operator|&
 name|NODE_WARN
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"undefining \"%s\""
 argument_list|,
@@ -2200,6 +2539,24 @@ name|NODE_NAME
 argument_list|(
 name|node
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_unused_macros
+argument_list|)
+condition|)
+name|_cpp_warn_if_unused_macro
+argument_list|(
+name|pfile
+argument_list|,
+name|node
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_cpp_free_definition
@@ -2282,7 +2639,7 @@ control|)
 block|{
 name|token
 operator|=
-name|cpp_get_token
+name|get_token_no_padding
 argument_list|(
 name|pfile
 argument_list|)
@@ -2388,6 +2745,8 @@ condition|)
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"missing terminating> character"
 argument_list|)
@@ -2535,7 +2894,7 @@ expr_stmt|;
 comment|/* Allow macro expansion.  */
 name|header
 operator|=
-name|cpp_get_token
+name|get_token_no_padding
 argument_list|(
 name|pfile
 argument_list|)
@@ -2567,6 +2926,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"#%s expects \"FILENAME\" or<FILENAME>"
 argument_list|,
@@ -2610,6 +2971,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"empty file name in #%s"
 argument_list|,
@@ -2668,9 +3031,11 @@ operator|->
 name|prev
 condition|)
 block|{
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"#include_next in primary source file"
 argument_list|)
@@ -2704,9 +3069,11 @@ argument_list|)
 operator|=
 literal|0
 expr_stmt|;
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"#import is obsolete, use an #ifndef wrapper in the header file"
 argument_list|)
@@ -2735,9 +3102,11 @@ name|depth
 operator|>=
 name|CPP_STACK_MAX
 condition|)
-name|cpp_fatal
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"#include nested too deeply"
 argument_list|)
@@ -2982,6 +3351,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"invalid flag \"%s\" in line directive"
 argument_list|,
 name|cpp_token_as_text
@@ -3004,7 +3375,7 @@ end_comment
 
 begin_function
 specifier|static
-name|U_CHAR
+name|uchar
 modifier|*
 name|dequote_string
 parameter_list|(
@@ -3019,7 +3390,7 @@ modifier|*
 name|pfile
 decl_stmt|;
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|str
 decl_stmt|;
@@ -3028,7 +3399,7 @@ name|int
 name|len
 decl_stmt|;
 block|{
-name|U_CHAR
+name|uchar
 modifier|*
 name|result
 init|=
@@ -3041,14 +3412,14 @@ operator|+
 literal|1
 argument_list|)
 decl_stmt|;
-name|U_CHAR
+name|uchar
 modifier|*
 name|dst
 init|=
 name|result
 decl_stmt|;
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|limit
 init|=
@@ -3056,45 +3427,9 @@ name|str
 operator|+
 name|len
 decl_stmt|;
-name|unsigned
-name|int
+name|cppchar_t
 name|c
 decl_stmt|;
-name|unsigned
-name|HOST_WIDE_INT
-name|mask
-decl_stmt|;
-comment|/* We need the mask to match the host's 'unsigned char', not the      target's.  */
-if|if
-condition|(
-name|CHAR_BIT
-operator|<
-name|HOST_BITS_PER_WIDE_INT
-condition|)
-name|mask
-operator|=
-operator|(
-operator|(
-name|unsigned
-name|HOST_WIDE_INT
-operator|)
-literal|1
-operator|<<
-name|CHAR_BIT
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-else|else
-name|mask
-operator|=
-operator|~
-operator|(
-name|unsigned
-name|HOST_WIDE_INT
-operator|)
-literal|0
-expr_stmt|;
 while|while
 condition|(
 name|str
@@ -3129,18 +3464,10 @@ name|cpp_parse_escape
 argument_list|(
 name|pfile
 argument_list|,
-operator|(
-specifier|const
-name|U_CHAR
-operator|*
-operator|*
-operator|)
 operator|&
 name|str
 argument_list|,
 name|limit
-argument_list|,
-name|mask
 argument_list|,
 literal|0
 argument_list|)
@@ -3174,7 +3501,7 @@ parameter_list|,
 name|nump
 parameter_list|)
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|str
 decl_stmt|;
@@ -3194,7 +3521,7 @@ name|reg
 init|=
 literal|0
 decl_stmt|;
-name|U_CHAR
+name|uchar
 name|c
 decl_stmt|;
 while|while
@@ -3337,6 +3664,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"\"%s\" after #line is not a positive integer"
 argument_list|,
 name|cpp_token_as_text
@@ -3366,9 +3695,11 @@ operator|>
 name|cap
 operator|)
 condition|)
-name|cpp_pedwarn
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_PEDWARN
 argument_list|,
 literal|"line number out of range"
 argument_list|)
@@ -3436,6 +3767,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"\"%s\" is not a valid filename"
 argument_list|,
@@ -3579,6 +3912,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"\"%s\" after # is not a positive integer"
 argument_list|,
@@ -3751,6 +4086,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"\"%s\" is not a valid filename"
 argument_list|,
 name|cpp_token_as_text
@@ -3894,8 +4231,7 @@ name|cpp_reader
 modifier|*
 name|pfile
 decl_stmt|;
-name|enum
-name|error_type
+name|int
 name|code
 decl_stmt|;
 name|int
@@ -3910,9 +4246,25 @@ name|pfile
 argument_list|,
 name|code
 argument_list|,
-literal|0
+name|pfile
+operator|->
+name|cur_token
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|line
 argument_list|,
-literal|0
+name|pfile
+operator|->
+name|cur_token
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|col
 argument_list|)
 condition|)
 block|{
@@ -3974,7 +4326,7 @@ name|do_diagnostic
 argument_list|(
 name|pfile
 argument_list|,
-name|ERROR
+name|DL_ERROR
 argument_list|,
 literal|1
 argument_list|)
@@ -3999,7 +4351,7 @@ name|do_diagnostic
 argument_list|(
 name|pfile
 argument_list|,
-name|WARNING_SYSHDR
+name|DL_WARNING_SYSHDR
 argument_list|,
 literal|1
 argument_list|)
@@ -4044,6 +4396,8 @@ condition|)
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"invalid #ident directive"
 argument_list|)
@@ -4421,9 +4775,11 @@ name|is_nspace
 condition|)
 name|clash
 label|:
-name|cpp_ice
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ICE
 argument_list|,
 literal|"registering \"%s\" as both a pragma and a pragma namespace"
 argument_list|,
@@ -4438,9 +4794,11 @@ if|if
 condition|(
 name|space
 condition|)
-name|cpp_ice
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ICE
 argument_list|,
 literal|"#pragma %s %s is already registered"
 argument_list|,
@@ -4450,9 +4808,11 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
-name|cpp_ice
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ICE
 argument_list|,
 literal|"#pragma %s is already registered"
 argument_list|,
@@ -4491,17 +4851,6 @@ name|pfile
 decl_stmt|;
 block|{
 comment|/* Pragmas in the global namespace.  */
-name|cpp_register_pragma
-argument_list|(
-name|pfile
-argument_list|,
-literal|0
-argument_list|,
-literal|"poison"
-argument_list|,
-name|do_pragma_poison
-argument_list|)
-expr_stmt|;
 name|cpp_register_pragma
 argument_list|(
 name|pfile
@@ -4776,9 +5125,11 @@ modifier|*
 name|pfile
 decl_stmt|;
 block|{
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"#pragma once is obsolete"
 argument_list|)
@@ -4793,9 +5144,11 @@ name|prev
 operator|==
 name|NULL
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"#pragma once in main file"
 argument_list|)
@@ -4819,7 +5172,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle #pragma poison, to poison one or more identifiers so that    the lexer produces a hard error for each subsequent usage.  */
+comment|/* Handle #pragma GCC poison, to poison one or more identifiers so    that the lexer produces a hard error for each subsequent usage.  */
 end_comment
 
 begin_function
@@ -4886,6 +5239,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"invalid #pragma GCC poison directive"
 argument_list|)
 expr_stmt|;
@@ -4916,9 +5271,11 @@ name|type
 operator|==
 name|NT_MACRO
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"poisoning existing macro \"%s\""
 argument_list|,
@@ -4985,9 +5342,11 @@ name|prev
 operator|==
 literal|0
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"#pragma system_header ignored outside include file"
 argument_list|)
@@ -5069,9 +5428,11 @@ name|ordering
 operator|<
 literal|0
 condition|)
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"cannot find source %s"
 argument_list|,
@@ -5091,9 +5452,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"current file is older than %s"
 argument_list|,
@@ -5128,7 +5491,7 @@ name|do_diagnostic
 argument_list|(
 name|pfile
 argument_list|,
-name|WARNING
+name|DL_WARNING
 argument_list|,
 literal|0
 argument_list|)
@@ -5472,8 +5835,13 @@ name|cur_run
 operator|=
 name|saved_cur_run
 expr_stmt|;
+name|pfile
+operator|->
+name|line
+operator|--
+expr_stmt|;
 block|}
-comment|/* See above comment.  For the moment, we'd like       token1 _Pragma ("foo") token2       to be output as               token1              # 7 "file.c"              #pragma foo              # 7 "file.c"                             token2        Getting the line markers is a little tricky.  */
+comment|/* See above comment.  For the moment, we'd like       token1 _Pragma ("foo") token2       to be output as  		token1 		# 7 "file.c" 		#pragma foo 		# 7 "file.c" 			       token2        Getting the line markers is a little tricky.  */
 if|if
 condition|(
 name|pfile
@@ -5549,6 +5917,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"_Pragma takes a parenthesized string literal"
 argument_list|)
 expr_stmt|;
@@ -5556,14 +5926,8 @@ block|}
 end_function
 
 begin_comment
-comment|/* Just ignore #sccs, on systems where we define it at all.  */
+comment|/* Just ignore #sccs on all systems.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCCS_DIRECTIVE
-end_ifdef
 
 begin_function
 specifier|static
@@ -5579,11 +5943,6 @@ name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Handle #ifdef.  */
@@ -5630,6 +5989,7 @@ if|if
 condition|(
 name|node
 condition|)
+block|{
 name|skip
 operator|=
 name|node
@@ -5638,15 +5998,17 @@ name|type
 operator|!=
 name|NT_MACRO
 expr_stmt|;
-if|if
-condition|(
+name|_cpp_mark_macro_used
+argument_list|(
 name|node
-condition|)
+argument_list|)
+expr_stmt|;
 name|check_eol
 argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|push_conditional
 argument_list|(
@@ -5711,6 +6073,7 @@ if|if
 condition|(
 name|node
 condition|)
+block|{
 name|skip
 operator|=
 name|node
@@ -5719,15 +6082,17 @@ name|type
 operator|==
 name|NT_MACRO
 expr_stmt|;
-if|if
-condition|(
+name|_cpp_mark_macro_used
+argument_list|(
 name|node
-condition|)
+argument_list|)
+expr_stmt|;
 name|check_eol
 argument_list|(
 name|pfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|push_conditional
 argument_list|(
@@ -5780,7 +6145,7 @@ argument_list|(
 name|pfile
 argument_list|)
 operator|==
-literal|0
+name|false
 expr_stmt|;
 name|push_conditional
 argument_list|(
@@ -5841,6 +6206,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"#else without #if"
 argument_list|)
 expr_stmt|;
@@ -5859,12 +6226,16 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"#else after #else"
 argument_list|)
 expr_stmt|;
 name|cpp_error_with_line
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 name|ifs
 operator|->
@@ -5913,6 +6284,13 @@ operator|!
 name|ifs
 operator|->
 name|was_skipping
+operator|&&
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_endif_labels
+argument_list|)
 condition|)
 name|check_eol
 argument_list|(
@@ -5966,6 +6344,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"#elif without #if"
 argument_list|)
 expr_stmt|;
@@ -5984,12 +6364,16 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"#elif after #else"
 argument_list|)
 expr_stmt|;
 name|cpp_error_with_line
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 name|ifs
 operator|->
@@ -6110,6 +6494,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"#endif without #if"
 argument_list|)
 expr_stmt|;
@@ -6122,6 +6508,13 @@ operator|!
 name|ifs
 operator|->
 name|was_skipping
+operator|&&
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|warn_endif_labels
+argument_list|)
 condition|)
 name|check_eol
 argument_list|(
@@ -6436,6 +6829,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"missing '(' after predicate"
 argument_list|)
 expr_stmt|;
@@ -6492,6 +6887,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"missing ')' to complete answer"
 argument_list|)
@@ -6598,6 +6995,8 @@ block|{
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"predicate's answer is empty"
 argument_list|)
@@ -6716,6 +7115,8 @@ name|cpp_error
 argument_list|(
 name|pfile
 argument_list|,
+name|DL_ERROR
+argument_list|,
 literal|"assertion without predicate"
 argument_list|)
 expr_stmt|;
@@ -6731,6 +7132,8 @@ condition|)
 name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 literal|"predicate must be an identifier"
 argument_list|)
@@ -6965,7 +7368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Test an assertion within a preprocessor conditional.  Returns    non-zero on failure, zero on success.  On success, the result of    the test is written into VALUE.  */
+comment|/* Test an assertion within a preprocessor conditional.  Returns    nonzero on failure, zero on success.  On success, the result of    the test is written into VALUE, otherwise the value 0.  */
 end_comment
 
 begin_function
@@ -6980,6 +7383,7 @@ name|cpp_reader
 modifier|*
 name|pfile
 decl_stmt|;
+name|unsigned
 name|int
 modifier|*
 name|value
@@ -7005,6 +7409,12 @@ name|answer
 argument_list|,
 name|T_IF
 argument_list|)
+expr_stmt|;
+comment|/* For recovery, an erroneous assertion expression is handled as a      failing assertion.  */
+operator|*
+name|value
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -7036,6 +7446,28 @@ operator|!=
 literal|0
 operator|)
 operator|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pfile
+operator|->
+name|cur_token
+index|[
+operator|-
+literal|1
+index|]
+operator|.
+name|type
+operator|==
+name|CPP_EOF
+condition|)
+name|_cpp_backup_tokens
+argument_list|(
+name|pfile
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* We don't commit the memory for the answer - it's temporary only.  */
 return|return
@@ -7115,9 +7547,11 @@ name|new_answer
 argument_list|)
 condition|)
 block|{
-name|cpp_warning
+name|cpp_error
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_WARNING
 argument_list|,
 literal|"\"%s\" re-asserted"
 argument_list|,
@@ -7350,7 +7784,7 @@ decl_stmt|;
 name|size_t
 name|count
 decl_stmt|;
-comment|/* Copy the entire option so we can modify it.       Change the first "=" in the string to a space.  If there is none,      tack " 1" on the end.  */
+comment|/* Copy the entire option so we can modify it.      Change the first "=" in the string to a space.  If there is none,      tack " 1" on the end.  */
 name|count
 operator|=
 name|strlen
@@ -7865,7 +8299,7 @@ modifier|*
 name|pfile
 decl_stmt|;
 specifier|const
-name|U_CHAR
+name|uchar
 modifier|*
 name|buffer
 decl_stmt|;
@@ -7933,6 +8367,13 @@ operator|->
 name|from_stage3
 operator|=
 name|from_stage3
+operator|||
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
 expr_stmt|;
 name|new
 operator|->
@@ -7967,7 +8408,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* If called from do_line, pops a single buffer.  Otherwise pops all    buffers until a real file is reached.  Generates appropriate    call-backs.  */
+comment|/* Pops a single buffer, with a file change call-back if appropriate.    Then pushes the next -include file, if any remain.  */
 end_comment
 
 begin_function
@@ -7990,14 +8431,18 @@ operator|->
 name|buffer
 decl_stmt|;
 name|struct
+name|include_file
+modifier|*
+name|inc
+init|=
+name|buffer
+operator|->
+name|inc
+decl_stmt|;
+name|struct
 name|if_stack
 modifier|*
 name|ifs
-decl_stmt|;
-name|bool
-name|pushed
-init|=
-name|false
 decl_stmt|;
 comment|/* Walk back up the conditional stack till we reach its level at      entry to this file, issuing error messages.  */
 for|for
@@ -8019,6 +8464,8 @@ control|)
 name|cpp_error_with_line
 argument_list|(
 name|pfile
+argument_list|,
+name|DL_ERROR
 argument_list|,
 name|ifs
 operator|->
@@ -8047,7 +8494,7 @@ name|skipping
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Update the reader's buffer before _cpp_do_file_change.  */
+comment|/* _cpp_do_file_change expects pfile->buffer to be the new one.  */
 name|pfile
 operator|->
 name|buffer
@@ -8056,28 +8503,7 @@ name|buffer
 operator|->
 name|prev
 expr_stmt|;
-if|if
-condition|(
-name|buffer
-operator|->
-name|inc
-condition|)
-name|pushed
-operator|=
-name|_cpp_pop_file_buffer
-argument_list|(
-name|pfile
-argument_list|,
-name|buffer
-operator|->
-name|inc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pushed
-condition|)
+comment|/* Free the buffer object now; we may want to push a new buffer      in _cpp_push_next_include_file.  */
 name|obstack_free
 argument_list|(
 operator|&
@@ -8088,11 +8514,61 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|inc
+condition|)
+block|{
+name|_cpp_pop_file_buffer
+argument_list|(
+name|pfile
+argument_list|,
+name|inc
+argument_list|)
+expr_stmt|;
+comment|/* Don't generate a callback for popping the main file.  */
+if|if
+condition|(
+name|pfile
+operator|->
+name|buffer
+condition|)
+block|{
+name|_cpp_do_file_change
+argument_list|(
+name|pfile
+argument_list|,
+name|LC_LEAVE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* If this is the main file, there may be some -include 	     files left to push.  */
+if|if
+condition|(
+operator|!
+name|pfile
+operator|->
+name|buffer
+operator|->
+name|prev
+condition|)
+name|_cpp_maybe_push_include_file
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Enter all recognised directives in the hash table.  */
+comment|/* Enter all recognized directives in the hash table.  */
 end_comment
 
 begin_function

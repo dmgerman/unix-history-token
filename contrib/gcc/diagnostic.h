@@ -21,51 +21,37 @@ directive|include
 file|"obstack.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"location.h"
+end_include
+
 begin_comment
-comment|/*  Forward declarations.  */
+comment|/* The type of a text to be formatted according a format specification    along with a list of things.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|struct
-name|output_buffer
-name|output_buffer
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|format_spec
+decl_stmt|;
+name|va_list
+modifier|*
+name|args_ptr
+decl_stmt|;
+block|}
+name|text_info
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|diagnostic_context
-name|diagnostic_context
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|void
-argument_list|(
-argument|*diagnostic_starter_fn
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|,
-name|diagnostic_context
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|diagnostic_starter_fn
-name|diagnostic_finalizer_fn
-typedef|;
-end_typedef
+begin_comment
+comment|/* Contants used to discreminate diagnostics.  */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -89,6 +75,29 @@ name|DEFINE_DIAGNOSTIC_KIND
 name|DK_LAST_DIAGNOSTIC_KIND
 block|}
 name|diagnostic_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* A diagnostic is described by the MESSAGE to send, the FILE and LINE of    its context and its KIND (ice, error, warning, note, ...)  See complete    list in diagnostic.def.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|text_info
+name|message
+decl_stmt|;
+name|location_t
+name|location
+decl_stmt|;
+comment|/* The kind of diagnostic it is about.  */
+name|diagnostic_t
+name|kind
+decl_stmt|;
+block|}
+name|diagnostic_info
 typedef|;
 end_typedef
 
@@ -122,26 +131,6 @@ literal|0x2
 block|}
 name|diagnostic_prefixing_rule_t
 typedef|;
-end_typedef
-
-begin_comment
-comment|/* The type of front-end specific hook that formats trees into an    output_buffer.  A language specific printer returns a truth value if    everything goes well.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-argument_list|(
-argument|*printer_fn
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
 end_typedef
 
 begin_comment
@@ -182,38 +171,50 @@ comment|/* Current prefixing rule.  */
 name|diagnostic_prefixing_rule_t
 name|prefixing_rule
 decl_stmt|;
-comment|/* The current char to output.  Updated by front-end (*format_map) when      it is called to report front-end printer for a specified format.  */
-specifier|const
-name|char
-modifier|*
-name|cursor
-decl_stmt|;
-comment|/* A pointer to the variable argument-list for formatting.  */
-name|va_list
-modifier|*
-name|format_args
-decl_stmt|;
-comment|/* The number of times we have issued diagnostics.  */
-name|int
-name|diagnostic_count
-index|[
-name|DK_LAST_DIAGNOSTIC_KIND
-index|]
-decl_stmt|;
 block|}
 name|output_state
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* The output buffer datatype.  This is best seen as an abstract datatype.  */
+comment|/* The type of a hook that formats client-specific data (trees mostly) into    an output_buffer.  A client-supplied formatter returns true if everything    goes well.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|output_buffer
+name|output_buffer
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|bool
+argument_list|(
+argument|*printer_fn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|output_buffer
+operator|*
+operator|,
+name|text_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/* The output buffer datatype.  This is best seen as an abstract datatype    whose fields should not be accessed directly by clients.  */
 end_comment
 
 begin_struct
 struct|struct
 name|output_buffer
 block|{
-comment|/* Internal data.  These fields should not be accessed directly by      front-ends.  */
 comment|/* The current state of the buffer.  */
 name|output_state
 name|state
@@ -239,7 +240,7 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* If non-NULL, this function formats data in the BUFFER. When called,    output_buffer_text_cursor (BUFFER) points to a format code.    FORMAT_DECODER should call output_add_string (and related functions)    to add data to the BUFFER.  FORMAT_DECODER can read arguments from    output_buffer_format_args (BUFFER) using VA_ARG.  If the BUFFER needs    additional characters from the format string, it should advance    the output_buffer_text_cursor (BUFFER) as it goes.  When FORMAT_DECODER    returns, output_buffer_text_cursor (BUFFER) should point to the last    character processed.  */
+comment|/* If non-NULL, this function formats a TEXT into the BUFFER. When called,      TEXT->format_spec points to a format code.  FORMAT_DECODER should call      output_add_string (and related functions) to add data to the BUFFER.      FORMAT_DECODER can read arguments from *TEXT->args_pts using VA_ARG.      If the BUFFER needs additional characters from the format string, it      should advance the TEXT->format_spec as it goes.  When FORMAT_DECODER      returns, TEXT->format_spec should point to the last character processed.   */
 name|printer_fn
 name|format_decoder
 decl_stmt|;
@@ -247,18 +248,14 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Current state of the diagnostic_context' output_buffer.  This macro    accepts both `diagnostic_context *' and `output_buffer *'.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|output_buffer_state
+name|output_prefix
 parameter_list|(
 name|BUFFER
 parameter_list|)
-value|((output_buffer *)(BUFFER))->state
+value|(BUFFER)->state.prefix
 end_define
 
 begin_comment
@@ -273,35 +270,6 @@ parameter_list|(
 name|BUFFER
 parameter_list|)
 value|(BUFFER)->stream
-end_define
-
-begin_comment
-comment|/* This points to the beginning of the rest of the diagnostic message    to be formatted.  Accepts only `output_buffer *'s.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|output_buffer_text_cursor
-parameter_list|(
-name|BUFFER
-parameter_list|)
-value|(BUFFER)->state.cursor
-end_define
-
-begin_comment
-comment|/* The rest of the `variable argument list' not yet processed.    This macro works on both `output_state *' and `output_buffer *'.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|output_buffer_format_args
-parameter_list|(
-name|BUFFER
-parameter_list|)
-define|\
-value|*(((output_state *)(BUFFER))->format_args)
 end_define
 
 begin_comment
@@ -333,7 +301,7 @@ value|(BUFFER)->state.indent_skip
 end_define
 
 begin_comment
-comment|/* A pointer to the formatted diagonstic message.  */
+comment|/* A pointer to the formatted diagnostic message.  */
 end_comment
 
 begin_define
@@ -348,6 +316,115 @@ value|((const char *) obstack_base (&(BUFFER)->obstack))
 end_define
 
 begin_comment
+comment|/* Client supplied function used to decode formats.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|output_format_decoder
+parameter_list|(
+name|BUFFER
+parameter_list|)
+value|(BUFFER)->format_decoder
+end_define
+
+begin_comment
+comment|/* Prefixing rule used in formatting a diagnostic message.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|output_prefixing_rule
+parameter_list|(
+name|BUFFER
+parameter_list|)
+value|(BUFFER)->state.prefixing_rule
+end_define
+
+begin_comment
+comment|/* Maximum characters per line in automatic line wrapping mode.    Zero means don't wrap lines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|output_line_cutoff
+parameter_list|(
+name|BUFFER
+parameter_list|)
+value|(BUFFER)->state.ideal_maximum_length
+end_define
+
+begin_comment
+comment|/* True if BUFFER is in line-wrapping mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|output_is_line_wrapping
+parameter_list|(
+name|BUFFER
+parameter_list|)
+value|(output_line_cutoff (BUFFER)> 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|output_formatted_scalar
+parameter_list|(
+name|BUFFER
+parameter_list|,
+name|FORMAT
+parameter_list|,
+name|INTEGER
+parameter_list|)
+define|\
+value|do								\     {								\       sprintf ((BUFFER)->digit_buffer, FORMAT, INTEGER);	\       output_add_string (BUFFER, (BUFFER)->digit_buffer);	\     }								\   while (0)
+end_define
+
+begin_comment
+comment|/*  Forward declarations.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|struct
+name|diagnostic_context
+name|diagnostic_context
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+argument_list|(
+argument|*diagnostic_starter_fn
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|,
+name|diagnostic_info
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|diagnostic_starter_fn
+name|diagnostic_finalizer_fn
+typedef|;
+end_typedef
+
+begin_comment
 comment|/* This data structure bundles altogether any information relevant to    the context of a diagnostic message.  */
 end_comment
 
@@ -359,63 +436,53 @@ comment|/* Where most of the diagnostic formatting work is done.  In Object     
 name|output_buffer
 name|buffer
 decl_stmt|;
-comment|/* The diagnostic message to output.  */
-specifier|const
-name|char
-modifier|*
-name|message
-decl_stmt|;
-comment|/* A pointer to a variable list of the arguments necessary for the      purpose of message formatting.  */
-name|va_list
-modifier|*
-name|args_ptr
-decl_stmt|;
-comment|/* The name of the source file involved in the diiagnostic.  */
-specifier|const
-name|char
-modifier|*
-name|file
-decl_stmt|;
-comment|/* The line-location in the source file.  */
+comment|/* The number of times we have issued diagnostics.  */
 name|int
-name|line
+name|diagnostic_count
+index|[
+name|DK_LAST_DIAGNOSTIC_KIND
+index|]
 decl_stmt|;
-comment|/* Is this message a warning?  */
-name|int
-name|warn
+comment|/* True if we should display the "warnings are being tread as error"      message, usually displayed once per compiler run.  */
+name|bool
+name|warnings_are_errors_message
 decl_stmt|;
 comment|/* This function is called before any message is printed out.  It is      responsible for preparing message prefix and such.  For example, it      might say:      In file included from "/usr/local/include/curses.h:5:                       from "/home/gdr/src/nifty_printer.h:56:                       ...   */
-name|void
-argument_list|(
-argument|*begin_diagnostic
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|,
-name|diagnostic_context
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+name|diagnostic_starter_fn
+name|begin_diagnostic
+decl_stmt|;
 comment|/* This function is called after the diagnostic message is printed.  */
+name|diagnostic_finalizer_fn
+name|end_diagnostic
+decl_stmt|;
+comment|/* Client hook to report an internal error.  */
 name|void
 argument_list|(
-argument|*end_diagnostic
+argument|*internal_error
 argument_list|)
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
+specifier|const
+name|char
 operator|*
 operator|,
-name|diagnostic_context
+name|va_list
 operator|*
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Function of last diagnostic message; more generally, function such that      if next diagnostic message is in it then we don't have to mention the      function name.  */
+name|tree
+name|last_function
+decl_stmt|;
+comment|/* Used to detect when input_file_stack has changed since last described.  */
+name|int
+name|last_module
+decl_stmt|;
+name|int
+name|lock
+decl_stmt|;
 comment|/* Hook for front-end extensions.  */
 name|void
 modifier|*
@@ -424,76 +491,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/* The diagnostic message being formatted.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|diagnostic_message
-parameter_list|(
-name|DC
-parameter_list|)
-value|(DC)->message
-end_define
-
-begin_comment
-comment|/* A pointer to the variable argument list used in a call    to a diagonstic routine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|diagnostic_argument_list
-parameter_list|(
-name|DC
-parameter_list|)
-value|(DC)->args_ptr
-end_define
-
-begin_comment
-comment|/* The program file to which the diagnostic is referring to.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|diagnostic_file_location
-parameter_list|(
-name|DC
-parameter_list|)
-value|(DC)->file
-end_define
-
-begin_comment
-comment|/* The program source line referred to in the diagnostic message.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|diagnostic_line_location
-parameter_list|(
-name|DC
-parameter_list|)
-value|(DC)->line
-end_define
-
-begin_comment
-comment|/* Tell whether the diagnostic message is to be treated as a warning.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|diagnostic_is_warning
-parameter_list|(
-name|DC
-parameter_list|)
-value|(DC)->warn
-end_define
 
 begin_comment
 comment|/* Client supplied function to announce a diagnostic.  */
@@ -538,7 +535,7 @@ value|(DC)->x_data
 end_define
 
 begin_comment
-comment|/* Client supplied function used to decode formats.  Can operate on both  `output_buffer *' and `diagnostic_context *'.  */
+comment|/* Same as output_format_decoder.  Works on 'diagnostic_context *'.  */
 end_comment
 
 begin_define
@@ -548,11 +545,11 @@ name|diagnostic_format_decoder
 parameter_list|(
 name|DC
 parameter_list|)
-value|((output_buffer *)(DC))->format_decoder
+value|output_format_decoder (&(DC)->buffer)
 end_define
 
 begin_comment
-comment|/* Prefixing rule used in formatting a diagnostic message.  Accepts both    `output_buffer *' and `diagnostic_context *'.  */
+comment|/* Same as output_prefixing_rule.  Works on 'diagnostic_context *'.  */
 end_comment
 
 begin_define
@@ -562,8 +559,7 @@ name|diagnostic_prefixing_rule
 parameter_list|(
 name|DC
 parameter_list|)
-define|\
-value|((output_buffer *)(DC))->state.prefixing_rule
+value|output_prefixing_rule (&(DC)->buffer)
 end_define
 
 begin_comment
@@ -577,12 +573,71 @@ name|diagnostic_line_cutoff
 parameter_list|(
 name|DC
 parameter_list|)
-define|\
-value|((output_buffer *)(DC))->state.ideal_maximum_length
+value|output_line_cutoff (&(DC)->buffer)
 end_define
 
 begin_comment
-comment|/* This diagnostic context is used by front-ends that directly output    diagnostic messages without going through `error', `warning',    and similar functions.  */
+comment|/* True if the last function in which a diagnostic was reported is    different from the current one.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|diagnostic_last_function_changed
+parameter_list|(
+name|DC
+parameter_list|)
+define|\
+value|((DC)->last_function != current_function_decl)
+end_define
+
+begin_comment
+comment|/* Remember the current function as being the last one in which we report    a diagnostic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|diagnostic_set_last_function
+parameter_list|(
+name|DC
+parameter_list|)
+define|\
+value|(DC)->last_function = current_function_decl
+end_define
+
+begin_comment
+comment|/* True if the last module or file in which a diagnostic was reported is    different from the current one.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|diagnostic_last_module_changed
+parameter_list|(
+name|DC
+parameter_list|)
+define|\
+value|((DC)->last_module != input_file_stack_tick)
+end_define
+
+begin_comment
+comment|/* Remember the current module or file as being the last one in which we    report a diagnostic.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|diagnostic_set_last_module
+parameter_list|(
+name|DC
+parameter_list|)
+define|\
+value|(DC)->last_module = input_file_stack_tick
+end_define
+
+begin_comment
+comment|/* This diagnostic_context is used by front-ends that directly output    diagnostic messages without going through `error', `warning',    and similar functions.  */
 end_comment
 
 begin_decl_stmt
@@ -590,18 +645,6 @@ specifier|extern
 name|diagnostic_context
 modifier|*
 name|global_dc
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This will be removed shortly.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|output_buffer
-modifier|*
-name|diagnostic_buffer
 decl_stmt|;
 end_decl_stmt
 
@@ -618,12 +661,11 @@ name|DC
 parameter_list|,
 name|DK
 parameter_list|)
-define|\
-value|((output_buffer *)(DC))->state.diagnostic_count[(int) (DK)]
+value|(DC)->diagnostic_count[(int) (DK)]
 end_define
 
 begin_comment
-comment|/* The number of errors that have been issued so far.  Ideally, these    would take an output_buffer as an argument.  */
+comment|/* The number of errors that have been issued so far.  Ideally, these    would take a diagnostic_context as an argument.  */
 end_comment
 
 begin_define
@@ -656,7 +698,7 @@ value|diagnostic_kind_count (global_dc, DK_SORRY)
 end_define
 
 begin_comment
-comment|/* Returns non-zero if warnings should be emitted.  */
+comment|/* Returns nonzero if warnings should be emitted.  */
 end_comment
 
 begin_define
@@ -668,79 +710,19 @@ define|\
 value|(!inhibit_warnings					\&& !(in_system_header&& !warn_system_headers))
 end_define
 
-begin_comment
-comment|/* Prototypes */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|set_diagnostic_context
-name|PARAMS
-argument_list|(
-operator|(
-name|diagnostic_context
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|set_internal_error_function
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-argument_list|(
-argument|*
-argument_list|)
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|*
-operator|)
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
+begin_define
+define|#
+directive|define
 name|report_diagnostic
-name|PARAMS
-argument_list|(
-operator|(
-name|diagnostic_context
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|D
+parameter_list|)
+value|diagnostic_report_diagnostic (global_dc, D)
+end_define
+
+begin_comment
+comment|/* Dignostic related functions.  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -755,6 +737,129 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|diagnostic_report_current_module
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|diagnostic_report_current_function
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|diagnostic_flush_buffer
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|diagnostic_count_diagnostic
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|,
+name|diagnostic_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|diagnostic_report_diagnostic
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_context
+operator|*
+operator|,
+name|diagnostic_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|diagnostic_set_info
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|va_list
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|diagnostic_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|diagnostic_build_prefix
+name|PARAMS
+argument_list|(
+operator|(
+name|diagnostic_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Pure text formatting support functions.  */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -779,40 +884,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|flush_diagnostic_buffer
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|output_clear
 name|PARAMS
 argument_list|(
 operator|(
-name|output_buffer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|char
-modifier|*
-name|output_get_prefix
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
 name|output_buffer
 operator|*
 operator|)
@@ -1016,6 +1091,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|output_add_identifier
+name|PARAMS
+argument_list|(
+operator|(
+name|output_buffer
+operator|*
+operator|,
+name|tree
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -1067,20 +1158,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|output_is_line_wrapping
-name|PARAMS
-argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|void
 name|output_verbatim
 name|PARAMS
@@ -1096,7 +1173,6 @@ operator|,
 operator|...
 operator|)
 argument_list|)
-name|ATTRIBUTE_PRINTF_2
 decl_stmt|;
 end_decl_stmt
 
@@ -1112,27 +1188,6 @@ name|char
 operator|*
 operator|,
 operator|...
-operator|)
-argument_list|)
-name|ATTRIBUTE_PRINTF_1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|context_as_prefix
-name|PARAMS
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1156,107 +1211,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|error_module_changed
+name|void
+name|inform
 name|PARAMS
 argument_list|(
 operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|record_last_error_module
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|error_function_changed
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|record_last_error_function
-name|PARAMS
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|report_problematic_module
-name|PARAMS
-argument_list|(
-operator|(
-name|output_buffer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Called by report_error_function to print out function name.  * Default may be overridden by language front-ends.  */
-end_comment
-
-begin_extern
-extern|extern void (*print_error_function
-end_extern
-
-begin_expr_stmt
-unit|)
-name|PARAMS
-argument_list|(
-operator|(
-name|diagnostic_context
-operator|*
-operator|,
 specifier|const
 name|char
 operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|default_print_error_function
-name|PARAMS
-argument_list|(
-operator|(
-name|diagnostic_context
-operator|*
 operator|,
-specifier|const
-name|char
-operator|*
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;

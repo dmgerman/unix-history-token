@@ -16,17 +16,6 @@ name|GCC_SYSTEM_H
 end_define
 
 begin_comment
-comment|/* This is the location of the online document giving information how    to report bugs. If you change this string, also check for strings    not under control of the preprocessor.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GCCBUGURL
-value|"<URL:http://www.gnu.org/software/gcc/bugs.html>"
-end_define
-
-begin_comment
 comment|/* We must include stdarg.h/varargs.h before stdio.h.  */
 end_comment
 
@@ -1187,6 +1176,45 @@ define|#
 directive|define
 name|WSTOPSIG
 value|WEXITSTATUS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WCOREDUMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WCOREDUMP
+parameter_list|(
+name|S
+parameter_list|)
+value|((S)& WCOREFLG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WCOREFLG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WCOREFLG
+value|0200
 end_define
 
 begin_endif
@@ -2810,18 +2838,6 @@ end_ifdef
 begin_undef
 undef|#
 directive|undef
-name|malloc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|realloc
-end_undef
-
-begin_undef
-undef|#
-directive|undef
 name|calloc
 end_undef
 
@@ -2836,11 +2852,72 @@ pragma|#
 directive|pragma
 name|GCC
 name|poison
-name|malloc
-name|realloc
 name|calloc
 name|strdup
 end_pragma
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FLEX_SCANNER
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|YYBISON
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Flex and bison use malloc and realloc.  Yuk.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|malloc
+value|xmalloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|realloc
+value|xrealloc
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|malloc
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|realloc
+end_undef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|poison
+name|malloc
+name|realloc
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Old target macros that have moved to the target hooks structure.  */
@@ -2879,10 +2956,22 @@ name|ASM_OUTPUT_CONSTRUCTOR
 pragma|\
 name|ASM_OUTPUT_DESTRUCTOR
 name|SIGNED_CHAR_SPEC
+name|MAX_CHAR_TYPE_SIZE
+pragma|\
+name|WCHAR_UNSIGNED
+name|UNIQUE_SECTION
+name|SELECT_SECTION
+name|SELECT_RTX_SECTION
+pragma|\
+name|ENCODE_SECTION_INFO
+name|STRIP_NAME_ENCODING
+name|ASM_GLOBALIZE_LABEL
+pragma|\
+name|ASM_OUTPUT_MI_THUNK
 end_pragma
 
 begin_comment
-comment|/* And other obsolete target macros, or macros that used to be in target    headers and were not used, and may be obsolete or may never have    been used.  */
+comment|/* Other obsolete target macros, or macros that used to be in target    headers and were not used, and may be obsolete or may never have    been used.  */
 end_comment
 
 begin_pragma
@@ -2916,6 +3005,13 @@ name|SLOW_ZERO_EXTEND
 name|SUBREG_REGNO_OFFSET
 name|DWARF_LINE_MIN_INSTR_LENGTH
 pragma|\
+name|TRADITIONAL_RETURN_FLOAT
+name|NO_BUILTIN_SIZE_TYPE
+pragma|\
+name|NO_BUILTIN_PTRDIFF_TYPE
+name|NO_BUILTIN_WCHAR_TYPE
+name|NO_BUILTIN_WINT_TYPE
+pragma|\
 name|BLOCK_PROFILER
 name|BLOCK_PROFILER_CODE
 name|FUNCTION_BLOCK_PROFILER
@@ -2924,6 +3020,25 @@ name|FUNCTION_BLOCK_PROFILER_EXIT
 name|MACHINE_STATE_SAVE
 pragma|\
 name|MACHINE_STATE_RESTORE
+name|SCCS_DIRECTIVE
+name|SECTION_ASM_OP
+pragma|\
+name|ASM_OUTPUT_DEFINE_LABEL_DIFFERENCE_SYMBOL
+end_pragma
+
+begin_comment
+comment|/* Hooks that are no longer used.  */
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|GCC
+name|poison
+name|LANG_HOOKS_FUNCTION_MARK
+name|LANG_HOOKS_FUNCTION_FREE
+pragma|\
+name|LANG_HOOKS_MARK_TREE
 end_pragma
 
 begin_endif

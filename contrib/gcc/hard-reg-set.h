@@ -134,7 +134,7 @@ parameter_list|,
 name|BIT
 parameter_list|)
 define|\
-value|((SET)& (HARD_CONST (1)<< (BIT)))
+value|(!!((SET)& (HARD_CONST (1)<< (BIT))))
 end_define
 
 begin_define
@@ -305,7 +305,7 @@ parameter_list|,
 name|BIT
 parameter_list|)
 define|\
-value|((SET)[(BIT) / UHOST_BITS_PER_WIDE_INT]	\& (HARD_CONST (1)<< ((BIT) % UHOST_BITS_PER_WIDE_INT)))
+value|(!!((SET)[(BIT) / UHOST_BITS_PER_WIDE_INT]	\& (HARD_CONST (1)<< ((BIT) % UHOST_BITS_PER_WIDE_INT))))
 end_define
 
 begin_if
@@ -940,6 +940,25 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CALL_REALLY_USED_REGISTERS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|call_really_used_regs
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* The same info as a HARD_REG_SET.  */
 end_comment
@@ -1182,6 +1201,25 @@ name|FIRST_PSEUDO_REGISTER
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Given a hard REGN a FROM mode and a TO mode, return nonzero if    REGN cannot change modes between the specified modes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REG_CANNOT_CHANGE_MODE_P
+parameter_list|(
+name|REGN
+parameter_list|,
+name|FROM
+parameter_list|,
+name|TO
+parameter_list|)
+define|\
+value|CANNOT_CHANGE_MODE_CLASS (FROM, TO, REGNO_REG_CLASS (REGN))
+end_define
 
 begin_endif
 endif|#

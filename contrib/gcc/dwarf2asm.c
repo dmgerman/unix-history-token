@@ -412,6 +412,22 @@ argument_list|,
 name|comment
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ASM_OUTPUT_DWARF_DELTA
+name|ASM_OUTPUT_DWARF_DELTA
+argument_list|(
+name|asm_out_file
+argument_list|,
+name|size
+argument_list|,
+name|lab1
+argument_list|,
+name|lab2
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|dw2_assemble_integer
 argument_list|(
 name|size
@@ -436,6 +452,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|flag_debug_asm
@@ -1367,7 +1385,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given an encoding, return the number of bytes the format occupies.    This is only defined for fixed-size encodings, and so does not     include leb128.  */
+comment|/* Given an encoding, return the number of bytes the format occupies.    This is only defined for fixed-size encodings, and so does not    include leb128.  */
 end_comment
 
 begin_function
@@ -2308,7 +2326,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Output an signed LEB128 quantity.  */
+comment|/* Output a signed LEB128 quantity.  */
 end_comment
 
 begin_decl_stmt
@@ -3025,7 +3043,7 @@ name|data
 name|ATTRIBUTE_UNUSED
 decl_stmt|;
 block|{
-name|ggc_mark_nonnull_tree
+name|ggc_mark_tree
 argument_list|(
 operator|(
 name|tree
@@ -3138,10 +3156,15 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-name|STRIP_NAME_ENCODING
-argument_list|(
 name|str
-argument_list|,
+operator|=
+call|(
+modifier|*
+name|targetm
+operator|.
+name|strip_name_encoding
+call|)
+argument_list|(
 name|XSTR
 argument_list|(
 name|x
@@ -3611,7 +3634,7 @@ else|else
 block|{
 name|restart
 label|:
-comment|/* Allow the target first crack at emitting this.  Some of the 	 special relocations require special directives instead of  	 just ".4byte" or whatever.  */
+comment|/* Allow the target first crack at emitting this.  Some of the 	 special relocations require special directives instead of 	 just ".4byte" or whatever.  */
 ifdef|#
 directive|ifdef
 name|ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX
@@ -3725,7 +3748,7 @@ endif|#
 directive|endif
 break|break;
 default|default:
-comment|/* Other encodings should have been handled by  	     ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX.  */
+comment|/* Other encodings should have been handled by 	     ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX.  */
 name|abort
 argument_list|()
 expr_stmt|;

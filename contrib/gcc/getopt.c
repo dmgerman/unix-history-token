@@ -906,7 +906,7 @@ else|else
 block|{
 name|memset
 argument_list|(
-name|__mempcpy
+name|mempcpy
 argument_list|(
 name|new_str
 argument_list|,
@@ -1387,7 +1387,7 @@ expr_stmt|;
 else|else
 name|memset
 argument_list|(
-name|__mempcpy
+name|mempcpy
 argument_list|(
 name|__getopt_nonoption_flags
 argument_list|,

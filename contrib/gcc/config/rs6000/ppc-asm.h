@@ -7,16 +7,6 @@ begin_comment
 comment|/* Under winnt, 1) gas supports the following as names and 2) in particular    defining "toc" breaks the FUNC_START macro as ".toc" becomes ".2" */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__WINNT__
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -521,11 +511,6 @@ name|f31
 value|31
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Macros to glue together two tokens.  */
 end_comment
@@ -667,108 +652,6 @@ name|name
 parameter_list|)
 define|\
 value|GLUE(.L,name): \ 	.size GLUE(.,name),GLUE(.L,name)-GLUE(.,name)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__WINNT__
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|FUNC_NAME
-parameter_list|(
-name|name
-parameter_list|)
-value|GLUE(..,name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|JUMP_TARGET
-parameter_list|(
-name|name
-parameter_list|)
-value|FUNC_NAME(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNC_START
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|.pdata; \ 	.align 2; \ 	.ualong GLUE(..,name),GLUE(name,.e),0,0,GLUE(..,name); \ 	.reldata; \ name: \ 	.ualong GLUE(..,name),.toc; \ 	.section .text; \ 	.globl name; \ 	.globl GLUE(..,name); \ GLUE(..,name):
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNC_END
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|GLUE(name,.e): ; \ GLUE(FE_MOT_RESVD..,name):
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_CALL_NT
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|FUNC_NAME
-parameter_list|(
-name|name
-parameter_list|)
-value|GLUE(..,name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|JUMP_TARGET
-parameter_list|(
-name|name
-parameter_list|)
-value|FUNC_NAME(name)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNC_START
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|.section DESC_SECTION,"aw"; \ name: \ 	.long GLUE(..,name); \ 	.long _GLOBAL_OFFSET_TABLE_; \ 	.previous; \ 	.type GLUE(..,name),@function; \ 	.globl name; \ 	.globl GLUE(..,name); \ GLUE(..,name):
-end_define
-
-begin_define
-define|#
-directive|define
-name|FUNC_END
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|GLUE(.L,name): \ 	.size GLUE(..,name),GLUE(.L,name)-GLUE(..,name)
 end_define
 
 begin_elif

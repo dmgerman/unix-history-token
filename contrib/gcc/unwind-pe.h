@@ -648,7 +648,7 @@ operator|*
 operator|)
 name|p
 decl_stmt|;
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 name|result
 decl_stmt|;
 if|if
@@ -658,11 +658,11 @@ operator|==
 name|DW_EH_PE_aligned
 condition|)
 block|{
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 name|a
 init|=
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|)
 name|p
 decl_stmt|;
@@ -691,7 +691,7 @@ name|result
 operator|=
 operator|*
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|*
 operator|)
 name|a
@@ -730,7 +730,7 @@ case|:
 name|result
 operator|=
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|)
 name|u
 operator|->
@@ -765,7 +765,7 @@ expr_stmt|;
 name|result
 operator|=
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|)
 name|tmp
 expr_stmt|;
@@ -791,7 +791,7 @@ expr_stmt|;
 name|result
 operator|=
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|)
 name|tmp
 expr_stmt|;
@@ -905,7 +905,7 @@ operator|==
 name|DW_EH_PE_pcrel
 condition|?
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|)
 name|u
 else|:
@@ -922,7 +922,7 @@ name|result
 operator|=
 operator|*
 operator|(
-name|_Unwind_Ptr
+name|_Unwind_Internal_Ptr
 operator|*
 operator|)
 name|result

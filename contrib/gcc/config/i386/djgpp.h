@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Configuration for an i386 running MS-DOS with DJGPP.    Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Configuration for an i386 running MS-DOS with DJGPP.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"dbxcoff.h"
-end_include
 
 begin_comment
 comment|/* Support generation of DWARF2 debugging info.  */
@@ -17,6 +11,7 @@ begin_define
 define|#
 directive|define
 name|DWARF2_DEBUGGING_INFO
+value|1
 end_define
 
 begin_comment
@@ -33,6 +28,7 @@ begin_define
 define|#
 directive|define
 name|HANDLE_SYSV_PRAGMA
+value|1
 end_define
 
 begin_comment
@@ -46,11 +42,17 @@ name|HANDLE_PRAGMA_PACK_PUSH_POP
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|YES_UNDERSCORES
-end_define
+begin_include
+include|#
+directive|include
+file|"i386/unix.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/bsd.h"
+end_include
 
 begin_include
 include|#
@@ -226,17 +228,13 @@ define|\
 value|(((NAME)[0] == '/') || ((NAME)[0] == '\\') || \         (((NAME)[0]>= 'A')&& ((NAME)[0]<= 'z')&& ((NAME)[1] == ':')))
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|CPP_PREDEFINES
-end_undef
-
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__MSDOS__ -D__GO32__ -Asystem=msdos"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("MSDOS");		\ 	builtin_define_std ("GO32");		\ 	builtin_assert ("system=msdos");	\     }						\   while (0)
 end_define
 
 begin_comment
@@ -253,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|CPP_SPEC
-value|"-remap %(cpp_cpu) %{posix:-D_POSIX_SOURCE} \   %{!ansi:%{!std=c*:%{!std=i*:-DMSDOS}}} %{!ansi:%{!std=c*:%{!std=i*:-DGO32}}} \   -imacros %s../include/sys/version.h"
+value|"-remap %{posix:-D_POSIX_SOURCE} \   -imacros %s../include/sys/version.h"
 end_define
 
 begin_comment
@@ -351,7 +349,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|do {									\ 	output_file_directive (FILE, main_input_filename);		\   } while (0)
+value|do {									\ 	if (ix86_asm_dialect == ASM_INTEL)				\ 	  fputs ("\t.intel_syntax\n", FILE);				\ 	output_file_directive (FILE, main_input_filename);		\   } while (0)
 end_define
 
 begin_comment
@@ -446,19 +444,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|1
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 
@@ -549,6 +534,13 @@ name|MASK_BNU210
 value|(0x40000000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|TARGET_VERSION
+value|fprintf (stderr, " (80386, MS-DOS DJGPP)");
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -599,27 +591,6 @@ parameter_list|(
 name|DECL
 parameter_list|)
 value|(DECL_WEAK (DECL) = 1)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|UNIQUE_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-define|\
-value|do {								\   int len;							\   const char *name, *prefix;					\   char *string;							\ 								\   name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (DECL));	\
-comment|/* Strip off any encoding in fnname.  */
-value|\   STRIP_NAME_ENCODING (name, name);                             \ 								\   if (! DECL_ONE_ONLY (DECL))					\     {								\       if (TREE_CODE (DECL) == FUNCTION_DECL)			\ 	prefix = ".text.";					\       else if (DECL_READONLY_SECTION (DECL, RELOC))		\ 	prefix = ".rodata.";					\       else							\ 	prefix = ".data.";					\     }								\   else if (TREE_CODE (DECL) == FUNCTION_DECL)			\     prefix = ".gnu.linkonce.t.";				\   else if (DECL_READONLY_SECTION (DECL, RELOC))			\     prefix = ".gnu.linkonce.r.";				\   else								\     prefix = ".gnu.linkonce.d.";				\ 								\   len = strlen (name) + strlen (prefix);			\   string = alloca (len + 1);					\   sprintf (string, "%s%s", prefix, name);			\ 								\   DECL_SECTION_NAME (DECL) = build_string (len, string);	\ } while (0)
 end_define
 
 end_unit

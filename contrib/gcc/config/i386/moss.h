@@ -6,14 +6,20 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
+
+begin_comment
+comment|/* config.gcc includes i386/linux.h.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D__ELF__ -Dmoss -Asystem=posix"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do						\     {						\ 	builtin_define_std ("moss");		\ 	builtin_define ("__ELF__");		\ 	builtin_assert ("system=posix");	\ 	if (flag_pic)				\ 	  {					\ 	    builtin_define ("__PIC__");		\ 	    builtin_define ("__pic__");		\ 	  }					\     }						\   while (0)
 end_define
 
 begin_undef

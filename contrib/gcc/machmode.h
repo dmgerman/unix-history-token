@@ -220,6 +220,36 @@ value|(GET_MODE_CLASS (MODE) == MODE_VECTOR_INT	\    || GET_MODE_CLASS (MODE) ==
 end_define
 
 begin_comment
+comment|/* Nonzero if MODE is a scalar integral mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCALAR_INT_MODE_P
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(GET_MODE_CLASS (MODE) == MODE_INT		\    || GET_MODE_CLASS (MODE) == MODE_PARTIAL_INT)
+end_define
+
+begin_comment
+comment|/* Nonzero if MODE is a scalar floating point mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCALAR_FLOAT_MODE_P
+parameter_list|(
+name|MODE
+parameter_list|)
+define|\
+value|(GET_MODE_CLASS (MODE) == MODE_FLOAT)
+end_define
+
+begin_comment
 comment|/* Get the size in bytes of an object of mode MODE.  */
 end_comment
 

@@ -408,12 +408,16 @@ begin_comment
 comment|/* The wf argument of the most recent active ffelex_file_(fixed,free)    function.  */
 end_comment
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|ffewhereFile
 name|ffelex_current_wf_
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* TRUE if an INCLUDE statement can be processed (ffelex_set_include    can be called).  */
@@ -456,12 +460,16 @@ name|ffelex_include_free_form_
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
 name|ffewhereFile
 name|ffelex_include_wherefile_
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Current master line count.  */
@@ -961,14 +969,6 @@ define|#
 directive|define
 name|wide_flag
 value|0
-define|#
-directive|define
-name|warn_traditional
-value|0
-define|#
-directive|define
-name|flag_traditional
-value|0
 switch|switch
 condition|(
 name|state
@@ -1032,39 +1032,6 @@ block|{
 case|case
 literal|'x'
 case|:
-if|if
-condition|(
-name|warn_traditional
-condition|)
-block|{
-comment|/* xgettext:no-c-format */
-name|ffebad_start_msg_lex
-argument_list|(
-literal|"The meaning of `\\x' (at %0) varies with -traditional"
-argument_list|,
-name|FFEBAD_severityWARNING
-argument_list|)
-expr_stmt|;
-name|ffelex_bad_here_
-argument_list|(
-literal|0
-argument_list|,
-name|line
-argument_list|,
-name|column
-argument_list|)
-expr_stmt|;
-name|ffebad_finish
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|flag_traditional
-condition|)
-return|return
-name|c
-return|;
 name|code
 operator|=
 literal|0
@@ -1177,52 +1144,12 @@ return|;
 case|case
 literal|'a'
 case|:
-if|if
-condition|(
-name|warn_traditional
-condition|)
-block|{
-comment|/* xgettext:no-c-format */
-name|ffebad_start_msg_lex
-argument_list|(
-literal|"The meaning of `\\a' (at %0) varies with -traditional"
-argument_list|,
-name|FFEBAD_severityWARNING
-argument_list|)
-expr_stmt|;
-name|ffelex_bad_here_
-argument_list|(
-literal|0
-argument_list|,
-name|line
-argument_list|,
-name|column
-argument_list|)
-expr_stmt|;
-name|ffebad_finish
-argument_list|()
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|flag_traditional
-condition|)
-return|return
-name|c
-return|;
 return|return
 name|TARGET_BELL
 return|;
 case|case
 literal|'v'
 case|:
-if|#
-directive|if
-literal|0
-comment|/* Vertical tab is present in common usage compilers.  */
-block|if (flag_traditional) 	    return c;
-endif|#
-directive|endif
 return|return
 name|TARGET_VT
 return|;
@@ -2127,22 +2054,6 @@ block|{
 case|case
 literal|'x'
 case|:
-if|if
-condition|(
-name|warn_traditional
-condition|)
-name|warning
-argument_list|(
-literal|"the meaning of `\\x' varies with -traditional"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flag_traditional
-condition|)
-return|return
-name|c
-return|;
 name|code
 operator|=
 literal|0
@@ -2470,35 +2381,12 @@ return|;
 case|case
 literal|'a'
 case|:
-if|if
-condition|(
-name|warn_traditional
-condition|)
-name|warning
-argument_list|(
-literal|"the meaning of `\\a' varies with -traditional"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flag_traditional
-condition|)
-return|return
-name|c
-return|;
 return|return
 name|TARGET_BELL
 return|;
 case|case
 literal|'v'
 case|:
-if|#
-directive|if
-literal|0
-comment|/* Vertical tab is present in common usage compilers.  */
-block|if (flag_traditional) 	return c;
-endif|#
-directive|endif
 return|return
 name|TARGET_VT
 return|;
@@ -15705,6 +15593,12 @@ name|t
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"gt-f-lex.h"
+end_include
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Target definitions for GNU compiler for Sparc running System V.4    Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Target definitions for GNU compiler for SPARC running System V.4    Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000, 2002    Free Software Foundation, Inc.    Contributed by Ron Guilmette (rfg@monkeys.com).  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -52,7 +52,7 @@ value|(TARGET_ARCH64 ? "long int" : "int")
 end_define
 
 begin_comment
-comment|/* Undefined some symbols which are defined in "svr4.h" but which are    appropriate only for typical svr4 systems, but not for the specific    case of svr4 running on a Sparc.  */
+comment|/* Undefined some symbols which are defined in "svr4.h" but which are    appropriate only for typical svr4 systems, but not for the specific    case of svr4 running on a SPARC.  */
 end_comment
 
 begin_undef
@@ -70,7 +70,7 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|CONST_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 end_undef
 
 begin_undef
@@ -114,7 +114,7 @@ comment|/* Has no equivalent.  See ASM_OUTPUT_DEF below.  */
 end_comment
 
 begin_comment
-comment|/* Provide a set of pre-definitions and pre-assertions appropriate for    the Sparc running svr4.  __svr4__ is our extension.  */
+comment|/* Provide a set of pre-definitions and pre-assertions appropriate for    the SPARC running svr4.  __svr4__ is our extension.  */
 end_comment
 
 begin_undef
@@ -165,32 +165,7 @@ value|"%{v:-V} %{Qy:} %{!Qn:-Qy} %{n} %{T} %{Ym,*} %{Yd,*} %{Wa,*:%*} \    %{fpi
 end_define
 
 begin_comment
-comment|/* Must use data section for relocatable constants when pic.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|SELECT_RTX_SECTION
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SELECT_RTX_SECTION
-parameter_list|(
-name|MODE
-parameter_list|,
-name|RTX
-parameter_list|,
-name|ALIGN
-parameter_list|)
-define|\
-value|{						\   if (flag_pic&& symbolic_operand ((RTX), (MODE))) \     data_section ();				\   else						\     const_section ();				\ }
-end_define
-
-begin_comment
-comment|/* Define the names of various pseudo-op used by the Sparc/svr4 assembler.    Note that many of these are different from the typical pseudo-ops used    by most svr4 assemblers.  That is probably due to a (misguided?) attempt    to keep the Sparc/svr4 assembler somewhat compatible with the Sparc/SunOS    assembler.  */
+comment|/* Define the names of various pseudo-op used by the SPARC/svr4 assembler.    Note that many of these are different from the typical pseudo-ops used    by most svr4 assemblers.  That is probably due to a (misguided?) attempt    to keep the SPARC/svr4 assembler somewhat compatible with the SPARC/SunOS    assembler.  */
 end_comment
 
 begin_define
@@ -229,7 +204,7 @@ value|"\t.popsection"
 end_define
 
 begin_comment
-comment|/* This is the format used to print the second operand of a .type pseudo-op    for the Sparc/svr4 assembler.  */
+comment|/* This is the format used to print the second operand of a .type pseudo-op    for the SPARC/svr4 assembler.  */
 end_comment
 
 begin_define
@@ -240,7 +215,7 @@ value|"#%s"
 end_define
 
 begin_comment
-comment|/* This is the format used to print a .pushsection pseudo-op (and its operand)    for the Sparc/svr4 assembler.  */
+comment|/* This is the format used to print a .pushsection pseudo-op (and its operand)    for the SPARC/svr4 assembler.  */
 end_comment
 
 begin_define
@@ -293,7 +268,7 @@ value|do {	fprintf ((FILE), "\t");						\ 	assemble_name (FILE, LABEL1);					\ 	
 end_define
 
 begin_comment
-comment|/* Define how the Sparc registers should be numbered for Dwarf output.    The numbering provided here should be compatible with the native    svr4 SDB debugger in the Sparc/svr4 reference port.  The numbering    is as follows:     Assembly name	gcc internal regno	Dwarf regno    ----------------------------------------------------------    g0-g7		0-7			0-7    o0-o7		8-15			8-15    l0-l7		16-23			16-23    i0-i7		24-31			24-31    f0-f31		32-63			40-71 */
+comment|/* Define how the SPARC registers should be numbered for Dwarf output.    The numbering provided here should be compatible with the native    svr4 SDB debugger in the SPARC/svr4 reference port.  The numbering    is as follows:     Assembly name	gcc internal regno	Dwarf regno    ----------------------------------------------------------    g0-g7		0-7			0-7    o0-o7		8-15			8-15    l0-l7		16-23			16-23    i0-i7		24-31			24-31    f0-f31		32-63			40-71 */
 end_comment
 
 begin_define
@@ -334,7 +309,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONST_SECTION_ASM_OP
+name|READONLY_DATA_SECTION_ASM_OP
 value|"\t.section\t\".rodata\""
 end_define
 

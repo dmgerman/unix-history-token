@@ -177,9 +177,49 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAX_INLINE_INSNS_SINGLE
+define|\
+value|PARAM_VALUE (PARAM_MAX_INLINE_INSNS_SINGLE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAX_INLINE_INSNS
 define|\
 value|PARAM_VALUE (PARAM_MAX_INLINE_INSNS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_INLINE_SLOPE
+define|\
+value|PARAM_VALUE (PARAM_MAX_INLINE_SLOPE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN_INLINE_INSNS
+define|\
+value|PARAM_VALUE (PARAM_MIN_INLINE_INSNS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_INLINE_INSNS_AUTO
+define|\
+value|PARAM_VALUE (PARAM_MAX_INLINE_INSNS_AUTO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_INLINE_INSNS_RTL
+define|\
+value|PARAM_VALUE (PARAM_MAX_INLINE_INSNS_RTL)
 end_define
 
 begin_define
@@ -220,6 +260,14 @@ directive|define
 name|MAX_GCSE_PASSES
 define|\
 value|PARAM_VALUE (PARAM_MAX_GCSE_PASSES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_UNROLLED_INSNS
+define|\
+value|PARAM_VALUE (PARAM_MAX_UNROLLED_INSNS)
 end_define
 
 begin_endif

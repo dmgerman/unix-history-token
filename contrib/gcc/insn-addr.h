@@ -21,8 +21,12 @@ directive|include
 file|"varray.h"
 end_include
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|varray_type
 name|insn_addresses_
 decl_stmt|;
@@ -69,7 +73,7 @@ define|#
 directive|define
 name|INSN_ADDRESSES_FREE
 parameter_list|()
-value|VARRAY_FREE (insn_addresses_)
+value|(insn_addresses_ = 0)
 end_define
 
 begin_define

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Conditional constant propagation pass for the GNU compiler.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.    Original framework by Daniel Berlin<dan@cgsoftware.com>    Fleshed out and major cleanups by Jeff Law<law@redhat.com>     This file is part of GCC.     GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.     GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.     You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Conditional constant propagation pass for the GNU compiler.    Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.    Original framework by Daniel Berlin<dan@cgsoftware.com>    Fleshed out and major cleanups by Jeff Law<law@redhat.com>  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
-comment|/* Conditional constant propagation.     References:       Constant propagation with conditional branches,      Wegman and Zadeck, ACM TOPLAS 13(2):181-210.       Building an Optimizing Compiler,      Robert Morgan, Butterworth-Heinemann, 1998, Section 8.9.       Advanced Compiler Design and Implementation,      Steven Muchnick, Morgan Kaufmann, 1997, Section 12.6     The overall structure is as follows:  	1. Run a simple SSA based DCE pass to remove any dead code. 	2. Run CCP to compute what registers are known constants 	   and what edges are not executable.  Remove unexecutable 	   edges from the CFG and simplify PHI nodes. 	3. Replace registers with constants where possible. 	4. Remove unreachable blocks computed in step #2. 	5. Another simple SSA DCE pass to remove dead code exposed 	   by CCP.     When we exit, we are still in SSA form.       Potential further enhancements:      1. Handle SUBREGs, STRICT_LOW_PART, etc in destinations more        gracefully.      2. Handle insns with multiple outputs more gracefully.      3. Handle CONST_DOUBLE and symbolic constants.      4. Fold expressions after performing constant substitutions.  */
+comment|/* Conditional constant propagation.     References:       Constant propagation with conditional branches,      Wegman and Zadeck, ACM TOPLAS 13(2):181-210.       Building an Optimizing Compiler,      Robert Morgan, Butterworth-Heinemann, 1998, Section 8.9.       Advanced Compiler Design and Implementation,      Steven Muchnick, Morgan Kaufmann, 1997, Section 12.6     The overall structure is as follows:  	1. Run a simple SSA based DCE pass to remove any dead code. 	2. Run CCP to compute what registers are known constants 	   and what edges are not executable.  Remove unexecutable 	   edges from the CFG and simplify PHI nodes. 	3. Replace registers with constants where possible. 	4. Remove unreachable blocks computed in step #2. 	5. Another simple SSA DCE pass to remove dead code exposed 	   by CCP.     When we exit, we are still in SSA form.      Potential further enhancements:      1. Handle SUBREGs, STRICT_LOW_PART, etc in destinations more        gracefully.      2. Handle insns with multiple outputs more gracefully.      3. Handle CONST_DOUBLE and symbolic constants.      4. Fold expressions after performing constant substitutions.  */
 end_comment
 
 begin_include
@@ -107,7 +107,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Main structure for CCP.      Contains the lattice value and, if it's a constant, the constant    value.  */
+comment|/* Main structure for CCP.     Contains the lattice value and, if it's a constant, the constant    value.  */
 end_comment
 
 begin_typedef
@@ -231,16 +231,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|REGNO (SET_DEST (x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHI_PARMS
-parameter_list|(
-name|x
-parameter_list|)
-value|XVEC (SET_SRC (x), 0)
 end_define
 
 begin_define
@@ -1015,7 +1005,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Hard registers are not put in SSA form and thus we must consider      them varying.  All the more reason to avoid hard registers in       RTL until as late as possible in the compilation.  */
+comment|/* Hard registers are not put in SSA form and thus we must consider      them varying.  All the more reason to avoid hard registers in      RTL until as late as possible in the compilation.  */
 if|if
 condition|(
 name|GET_CODE
@@ -1745,7 +1735,7 @@ name|simplified
 init|=
 name|NULL
 decl_stmt|;
-comment|/* We've got some kind of INSN.  If it's simple, try to evaluate 	 it and record the results.   	 We already know this insn is a single_set and that it sets 	 a pseudo register.   So we just need to extract the source 	 arguments, simplify them to constants if possible, then 	 simplify the expression as a whole if possible.  */
+comment|/* We've got some kind of INSN.  If it's simple, try to evaluate 	 it and record the results.  	 We already know this insn is a single_set and that it sets 	 a pseudo register.   So we just need to extract the source 	 arguments, simplify them to constants if possible, then 	 simplify the expression as a whole if possible.  */
 switch|switch
 condition|(
 name|GET_RTX_CLASS
@@ -2937,7 +2927,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Examine each edge to see if we were able to prove any were    not executable.      If an edge is not executable, then we can remove its alternative    in PHI nodes as the destination of the edge, we can simplify the    conditional branch at the source of the edge, and we can remove    the edge from the CFG.  Note we do not delete unreachable blocks    yet as the DF analyzer can not deal with that yet.  */
+comment|/* Examine each edge to see if we were able to prove any were    not executable.     If an edge is not executable, then we can remove its alternative    in PHI nodes as the destination of the edge, we can simplify the    conditional branch at the source of the edge, and we can remove    the edge from the CFG.  Note we do not delete unreachable blocks    yet as the DF analyzer can not deal with that yet.  */
 end_comment
 
 begin_function
@@ -2960,6 +2950,9 @@ decl_stmt|;
 block|{
 name|int
 name|i
+decl_stmt|;
+name|basic_block
+name|bb
 decl_stmt|;
 for|for
 control|(
@@ -3114,28 +3107,11 @@ expr_stmt|;
 block|}
 block|}
 comment|/* We have removed all the unexecutable edges from the CFG.  Fix up      the conditional jumps at the end of any affected block.       We have three cases to deal with:         a. Both outgoing edges are not executable.  This happens if the 	  source block is not reachable.  We will deal with this by 	  deleting all the insns in the block later.         b. The fall-thru edge is not executable.  In this case we 	  change the conditional jump into an unconditional jump and 	  add a BARRIER after the unconditional jump.  Note that since 	  we are working on generic RTL we can change the jump in-place 	  instead of dealing with the headache of reemitting the jump.         c. The branch taken edge is not executable.  In this case 	  we turn the jump into (set (pc) (pc)) which is a nop-jump           and we will remove the unrecognizable insn later.       In cases B& C we are removing uses of registers, so make sure      to note those changes for the DF analyzer.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|bb
 argument_list|)
-decl_stmt|;
+block|{
 name|rtx
 name|insn
 init|=
@@ -3272,7 +3248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Perform substitution of known values for pseudo registers.     ??? Note we do not do simplifications or constant folding here, it    is unlikely that any significant simplifications can be done here    anyway.  Consider that if the simplification would result in an    expression that produces a constant value that the value would    have been discovered and recorded already.        We perform two transformations.  First, we initialize pseudos to their    known constant values at their definition point.  Second, we try to    replace uses with the known constant value.  */
+comment|/* Perform substitution of known values for pseudo registers.     ??? Note we do not do simplifications or constant folding here, it    is unlikely that any significant simplifications can be done here    anyway.  Consider that if the simplification would result in an    expression that produces a constant value that the value would    have been discovered and recorded already.     We perform two transformations.  First, we initialize pseudos to their    known constant values at their definition point.  Second, we try to    replace uses with the known constant value.  */
 end_comment
 
 begin_function
@@ -3580,38 +3556,19 @@ name|void
 name|ssa_ccp_df_delete_unreachable_insns
 parameter_list|()
 block|{
-name|int
-name|i
+name|basic_block
+name|b
 decl_stmt|;
 comment|/* Use the CFG to find all the reachable blocks.  */
 name|find_unreachable_blocks
 argument_list|()
 expr_stmt|;
 comment|/* Now we know what blocks are not reachable.  Mark all the insns      in those blocks as deleted for the DF analyzer.   We'll let the      normal flow code actually remove the unreachable blocks.  */
-for|for
-control|(
-name|i
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-operator|--
-name|i
-control|)
-block|{
-name|basic_block
-name|b
-init|=
-name|BASIC_BLOCK
+name|FOR_EACH_BB_REVERSE
 argument_list|(
-name|i
+argument|b
 argument_list|)
-decl_stmt|;
+block|{
 if|if
 condition|(
 operator|!
@@ -3817,13 +3774,6 @@ operator||
 name|DF_HARD_REGS
 argument_list|)
 expr_stmt|;
-comment|/* We need mappings from insn to its containing block.  */
-name|compute_bb_for_insn
-argument_list|(
-name|get_max_uid
-argument_list|()
-argument_list|)
-expr_stmt|;
 comment|/* Perform a quick and dirty dead code elimination pass.  This is not      as aggressive as it could be, but it's good enough to clean up a      lot of unwanted junk and it is fast.  */
 name|ssa_fast_dce
 argument_list|(
@@ -3927,7 +3877,7 @@ name|executable_blocks
 operator|=
 name|sbitmap_alloc
 argument_list|(
-name|n_basic_blocks
+name|last_basic_block
 argument_list|)
 expr_stmt|;
 name|sbitmap_zero

@@ -25,7 +25,7 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|{ rtx _symref = XEXP (DECL_RTL (DECL), 0);	\   if ((TREE_CODE (DECL) == VAR_DECL		\        || TREE_CODE (DECL) == FUNCTION_DECL)	\&& (NAME)[strlen (NAME) - 1] != ']')	\     {						\       char *_name = (char *) permalloc (strlen (XSTR (_symref, 0)) + 5); \       strcpy (_name, XSTR (_symref, 0));	\       strcat (_name, TREE_CODE (DECL) == FUNCTION_DECL ? "[DS]" : "[RW]"); \       XSTR (_symref, 0) = _name;		\     }						\   fputs ("\t.extern ", FILE);			\   assemble_name (FILE, XSTR (_symref, 0));	\   if (TREE_CODE (DECL) == FUNCTION_DECL)	\     {						\       fputs ("\n\t.extern .", FILE);		\       RS6000_OUTPUT_BASENAME (FILE, XSTR (_symref, 0));	\     }						\   putc ('\n', FILE);				\ }
+value|{ rtx _symref = XEXP (DECL_RTL (DECL), 0);				\   if ((TREE_CODE (DECL) == VAR_DECL					\        || TREE_CODE (DECL) == FUNCTION_DECL)				\&& (NAME)[strlen (NAME) - 1] != ']')				\     {									\       XSTR (_symref, 0) = concat (XSTR (_symref, 0),			\ 				  (TREE_CODE (DECL) == FUNCTION_DECL	\ 				   ? "[DS]" : "[RW]"), 			\ 				  NULL);				\     }									\   fputs ("\t.extern ", FILE);						\   assemble_name (FILE, XSTR (_symref, 0));				\   if (TREE_CODE (DECL) == FUNCTION_DECL)				\     {									\       fputs ("\n\t.extern .", FILE);					\       RS6000_OUTPUT_BASENAME (FILE, XSTR (_symref, 0));			\     }									\   putc ('\n', FILE);							\ }
 end_define
 
 begin_comment
@@ -52,14 +52,16 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-D_IBMR2 -D_AIX -Asystem=unix -Asystem=aix -Acpu=rs6000 -Amachine=rs6000"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                     \     {                                    \       builtin_define ("_IBMR2");         \       builtin_define ("_AIX");           \       builtin_assert ("system=unix");    \       builtin_assert ("system=aix");     \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \     }                                    \   while (0)
 end_define
 
 begin_comment

@@ -3,12 +3,6 @@ begin_comment
 comment|/* Definitions for Intel 386 running FreeBSD with ELF format    Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.    Contributed by Eric Youngdale.    Modified for stabs-in-ELF by H.J. Lu.    Adapted from GNU/Linux version by John Polstra.    Continued development by David O'Brien<obrien@freebsd.org>  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
-name|TARGET_VERSION
-end_undef
-
 begin_define
 define|#
 directive|define
@@ -108,20 +102,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|FUNCTION_PROFILER
+name|MCOUNT_NAME
 end_undef
 
 begin_define
 define|#
 directive|define
-name|FUNCTION_PROFILER
-parameter_list|(
-name|FILE
-parameter_list|,
-name|LABELNO
-parameter_list|)
-define|\
-value|{									\   if (flag_pic)								\       fprintf ((FILE), "\tcall *.mcount@GOT(%%ebx)\n");			\   else									\       fprintf ((FILE), "\tcall .mcount\n");				\ }
+name|MCOUNT_NAME
+value|".mcount"
 end_define
 
 begin_comment
@@ -265,6 +253,18 @@ define|#
 directive|define
 name|DEFAULT_PCC_STRUCT_RETURN
 value|0
+end_define
+
+begin_comment
+comment|/* FreeBSD sets the rounding precision of the FPU to 53 bits.  Let the    compiler get the contents of<float.h> and std::numeric_limits correct.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SUBTARGET_OVERRIDE_OPTIONS
+define|\
+value|do {							\     real_format_for_mode[XFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\     real_format_for_mode[TFmode - QFmode]		\       =&ieee_extended_intel_96_round_53_format;	\   } while (0)
 end_define
 
 end_unit

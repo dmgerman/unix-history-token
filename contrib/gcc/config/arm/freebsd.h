@@ -67,19 +67,6 @@ end_undef
 begin_undef
 undef|#
 directive|undef
-name|WCHAR_UNSIGNED
-end_undef
-
-begin_define
-define|#
-directive|define
-name|WCHAR_UNSIGNED
-value|0
-end_define
-
-begin_undef
-undef|#
-directive|undef
 name|WCHAR_TYPE_SIZE
 end_undef
 

@@ -55,6 +55,12 @@ directive|include
 file|"where.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"real.h"
+end_include
+
 begin_comment
 comment|/* Externals defined here.  */
 end_comment

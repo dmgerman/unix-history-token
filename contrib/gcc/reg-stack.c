@@ -106,6 +106,27 @@ directive|include
 file|"reload.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"ggc.h"
+end_include
+
+begin_comment
+comment|/* We use this array to cache info about insns, because otherwise we    spend too much time in stack_regs_mentioned_p.     Indexed by insn UIDs.  A value of zero is uninitialized, one indicates    the insn uses stack registers, two indicates the insn does not use    stack registers.  */
+end_comment
+
+begin_expr_stmt
+specifier|static
+name|GTY
+argument_list|(
+argument|()
+argument_list|)
+name|varray_type
+name|stack_regs_mentioned_data
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -151,7 +172,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* This is used to carry information about basic blocks.  It is     attached to the AUX field of the standard CFG block.  */
+comment|/* This is used to carry information about basic blocks.  It is    attached to the AUX field of the standard CFG block.  */
 end_comment
 
 begin_typedef
@@ -213,17 +234,6 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* We use this array to cache info about insns, because otherwise we    spend too much time in stack_regs_mentioned_p.      Indexed by insn UIDs.  A value of zero is uninitialized, one indicates    the insn uses stack registers, two indicates the insn does not use    stack registers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|varray_type
-name|stack_regs_mentioned_data
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* The block we're currently working on.  */
 end_comment
 
@@ -235,7 +245,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the register file for all register after conversion */
+comment|/* This is the register file for all register after conversion.  */
 end_comment
 
 begin_decl_stmt
@@ -734,7 +744,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Return non-zero if any stack register is mentioned somewhere within PAT.  */
+comment|/* Return nonzero if any stack register is mentioned somewhere within PAT.  */
 end_comment
 
 begin_function
@@ -1024,7 +1034,7 @@ name|rtx
 name|insn
 decl_stmt|;
 block|{
-comment|/* Search forward looking for the first use of this value.       Stop at block boundaries.  */
+comment|/* Search forward looking for the first use of this value.      Stop at block boundaries.  */
 while|while
 condition|(
 name|insn
@@ -1084,7 +1094,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Reorganise the stack into ascending numbers,    after this insn.  */
+comment|/* Reorganize the stack into ascending numbers,    after this insn.  */
 end_comment
 
 begin_function
@@ -1181,7 +1191,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pop a register from the stack */
+comment|/* Pop a register from the stack.  */
 end_comment
 
 begin_function
@@ -1221,7 +1231,7 @@ operator|->
 name|top
 operator|--
 expr_stmt|;
-comment|/* If regno was not at the top of stack then adjust stack */
+comment|/* If regno was not at the top of stack then adjust stack.  */
 if|if
 condition|(
 name|regstack
@@ -1325,6 +1335,9 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
+name|basic_block
+name|bb
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1332,30 +1345,9 @@ name|int
 name|max_uid
 decl_stmt|;
 comment|/* Clean up previous run.  */
-if|if
-condition|(
-name|stack_regs_mentioned_data
-condition|)
-block|{
-name|VARRAY_FREE
-argument_list|(
-name|stack_regs_mentioned_data
-argument_list|)
-expr_stmt|;
 name|stack_regs_mentioned_data
 operator|=
 literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|optimize
-condition|)
-name|split_all_insns
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 comment|/* See if there is something to do.  Flow analysis is quite      expensive so we might save some compilation time.  */
 for|for
@@ -1386,23 +1378,13 @@ operator|>
 name|LAST_STACK_REG
 condition|)
 return|return;
-comment|/* Ok, floating point instructions exist.  If not optimizing,       build the CFG and run life analysis.  */
+comment|/* Ok, floating point instructions exist.  If not optimizing,      build the CFG and run life analysis.  */
 if|if
 condition|(
 operator|!
 name|optimize
 condition|)
 block|{
-name|find_basic_blocks
-argument_list|(
-name|first
-argument_list|,
-name|max_reg_num
-argument_list|()
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 name|count_or_remove_death_notes
 argument_list|(
 name|NULL
@@ -1433,32 +1415,13 @@ name|block_info_def
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-operator|--
-name|i
-control|)
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|bb
+argument_list|)
 block|{
 name|edge
 name|e
-decl_stmt|;
-name|basic_block
-name|bb
-init|=
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
 decl_stmt|;
 for|for
 control|(
@@ -1599,7 +1562,7 @@ argument_list|,
 name|FLAGS_REG
 argument_list|)
 expr_stmt|;
-comment|/* A QNaN for initializing uninitialized variables.         ??? We can't load from constant memory in PIC mode, because      we're insertting these instructions before the prologue and      the PIC register hasn't been set up.  In that case, fall back      on zero, which we can get from `ldz'.  */
+comment|/* A QNaN for initializing uninitialized variables.       ??? We can't load from constant memory in PIC mode, because      we're insertting these instructions before the prologue and      the PIC register hasn't been set up.  In that case, fall back      on zero, which we can get from `ldz'.  */
 if|if
 condition|(
 name|flag_pic
@@ -1938,7 +1901,7 @@ block|{
 case|case
 name|SUBREG
 case|:
-comment|/* Eliminate FP subregister accesses in favour of the 	   actual FP register in use.  */
+comment|/* Eliminate FP subregister accesses in favor of the 	   actual FP register in use.  */
 block|{
 name|rtx
 name|subreg
@@ -2035,6 +1998,17 @@ end_function
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/* Set if we find any malformed asms in a block.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|any_malformed_asm
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* There are many rules that an asm statement for stack-like regs must    follow.  Those rules are explained at the top of this file: the rule    numbers below refer to that explanation.  */
@@ -2865,6 +2839,10 @@ name|VOIDmode
 argument_list|,
 name|const0_rtx
 argument_list|)
+expr_stmt|;
+name|any_malformed_asm
+operator|=
+name|true
 expr_stmt|;
 return|return
 literal|0
@@ -4405,7 +4383,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* The destination ought to be dead */
+comment|/* The destination ought to be dead.  */
 if|if
 condition|(
 name|get_hard_regnum
@@ -4656,7 +4634,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Load from MEM, or possibly integer REG or constant, into the 	 stack regs.  The actual target is always the top of the 	 stack. The stack mapping is changed to reflect that DEST is 	 now at top of stack.  */
-comment|/* The destination ought to be dead */
+comment|/* The destination ought to be dead.  */
 if|if
 condition|(
 name|get_hard_regnum
@@ -5001,7 +4979,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|==
-literal|9
+name|UNSPEC_FNSTSW
 condition|)
 block|{
 name|rtx
@@ -5012,7 +4990,7 @@ argument_list|(
 name|pat
 argument_list|)
 decl_stmt|;
-comment|/* Search forward looking for the first use of this value.  	 Stop at block boundaries.  */
+comment|/* Search forward looking for the first use of this value. 	 Stop at block boundaries.  */
 while|while
 condition|(
 name|insn
@@ -5094,7 +5072,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|!=
-literal|10
+name|UNSPEC_SAHF
 operator|||
 operator|!
 name|dead_or_set_p
@@ -5814,7 +5792,7 @@ name|insn
 argument_list|)
 condition|)
 block|{
-comment|/* The fix_truncdi_1 pattern wants to be able to allocate 		   it's own scratch register.  It does this by clobbering 		   an fp reg so that it is assured of an empty reg-stack 		   register.  If the register is live, kill it now.  		   Remove the DEAD/UNUSED note so we don't try to kill it 		   later too.  */
+comment|/* The fix_truncdi_1 pattern wants to be able to allocate 		   it's own scratch register.  It does this by clobbering 		   an fp reg so that it is assured of an empty reg-stack 		   register.  If the register is live, kill it now. 		   Remove the DEAD/UNUSED note so we don't try to kill it 		   later too.  */
 if|if
 condition|(
 name|note
@@ -5871,7 +5849,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* A top-level clobber with no REG_DEAD, and no hard-regnum 		   indicates an uninitialized value.  Because reload removed 		   all other clobbers, this must be due to a function  		   returning without a value.  Load up a NaN.  */
+comment|/* A top-level clobber with no REG_DEAD, and no hard-regnum 		   indicates an uninitialized value.  Because reload removed 		   all other clobbers, this must be due to a function 		   returning without a value.  Load up a NaN.  */
 if|if
 condition|(
 operator|!
@@ -6991,13 +6969,11 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|1
+name|UNSPEC_SIN
 case|:
-comment|/* sin */
 case|case
-literal|2
+name|UNSPEC_COS
 case|:
-comment|/* cos */
 comment|/* These insns only operate on the top of the stack.  */
 name|src1
 operator|=
@@ -7100,9 +7076,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|10
+name|UNSPEC_SAHF
 case|:
-comment|/* (unspec [(unspec [(compare ..)] 9)] 10) 		   Unspec 9 is fnstsw; unspec 10 is sahf.  The combination 		   matches the PPRO fcomi instruction.  */
+comment|/* (unspec [(unspec [(compare)] UNSPEC_FNSTSW)] UNSPEC_SAHF) 		   The combination matches the PPRO fcomi instruction.  */
 name|pat_src
 operator|=
 name|XVECEXP
@@ -7130,16 +7106,15 @@ argument_list|,
 literal|1
 argument_list|)
 operator|!=
-literal|9
+name|UNSPEC_FNSTSW
 condition|)
 name|abort
 argument_list|()
 expr_stmt|;
 comment|/* FALLTHRU */
 case|case
-literal|9
+name|UNSPEC_FNSTSW
 case|:
-comment|/* (unspec [(compare ..)] 9) */
 comment|/* Combined fcomp+fnstsw generated for doing well with 		   CSE.  When optimizing this would have been broken 		   up before now.  */
 name|pat_src
 operator|=
@@ -7269,7 +7244,7 @@ name|top
 index|]
 condition|)
 block|{
-comment|/* In case one of operands is the top of stack and the operands 		   dies, it is safe to make it the destination operand by reversing 		   the direction of cmove and avoid fxch.  */
+comment|/* In case one of operands is the top of stack and the operands 		   dies, it is safe to make it the destination operand by 		   reversing the direction of cmove and avoid fxch.  */
 if|if
 condition|(
 operator|(
@@ -9551,7 +9526,7 @@ condition|)
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* If the stack is not empty (new->top != -1), loop here emitting 	 swaps until the stack is correct.   	 The worst case number of swaps emitted is N + 2, where N is the 	 depth of the stack.  In some cases, the reg at the top of 	 stack may be correct, but swapped anyway in order to fix 	 other regs.  But since we never swap any other reg away from 	 its correct slot, this algorithm will converge.  */
+comment|/* If the stack is not empty (new->top != -1), loop here emitting 	 swaps until the stack is correct.  	 The worst case number of swaps emitted is N + 2, where N is the 	 depth of the stack.  In some cases, the reg at the top of 	 stack may be correct, but swapped anyway in order to fix 	 other regs.  But since we never swap any other reg away from 	 its correct slot, this algorithm will converge.  */
 if|if
 condition|(
 name|new
@@ -9882,7 +9857,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* This function was doing life analysis.  We now let the regular live    code do it's job, so we only need to check some extra invariants     that reg-stack expects.  Primary among these being that all registers    are initialized before use.     The function returns true when code was emitted to CFG edges and    commit_edge_insertions needs to be called.  */
+comment|/* This function was doing life analysis.  We now let the regular live    code do it's job, so we only need to check some extra invariants    that reg-stack expects.  Primary among these being that all registers    are initialized before use.     The function returns true when code was emitted to CFG edges and    commit_edge_insertions needs to be called.  */
 end_comment
 
 begin_function
@@ -9895,36 +9870,18 @@ name|int
 name|inserted
 init|=
 literal|0
-decl_stmt|,
-name|i
 decl_stmt|;
 name|edge
 name|e
 decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|n_basic_blocks
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-operator|--
-name|i
-control|)
-block|{
 name|basic_block
 name|block
-init|=
-name|BASIC_BLOCK
-argument_list|(
-name|i
-argument_list|)
 decl_stmt|;
+name|FOR_EACH_BB_REVERSE
+argument_list|(
+argument|block
+argument_list|)
+block|{
 name|block_info
 name|bi
 init|=
@@ -10005,7 +9962,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Load something into each stack register live at function entry.       Such live registers can be caused by uninitialized variables or      functions not returning values on all paths.  In order to keep       the push/pop code happy, and to not scrog the register stack, we      must put something in these registers.  Use a QNaN.         Note that we are insertting converted code here.  This code is      never seen by the convert_regs pass.  */
+comment|/* Load something into each stack register live at function entry.      Such live registers can be caused by uninitialized variables or      functions not returning values on all paths.  In order to keep      the push/pop code happy, and to not scrog the register stack, we      must put something in these registers.  Use a QNaN.       Note that we are insertting converted code here.  This code is      never seen by the convert_regs pass.  */
 for|for
 control|(
 name|e
@@ -10610,11 +10567,34 @@ argument_list|()
 expr_stmt|;
 name|eh1
 label|:
+comment|/* We are sure that there is st(0) live, otherwise we won't compensate. 	 For complex return values, we may have st(1) live as well.  */
 name|SET_HARD_REG_BIT
 argument_list|(
 name|tmp
 argument_list|,
 name|FIRST_STACK_REG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TEST_HARD_REG_BIT
+argument_list|(
+name|regstack
+operator|.
+name|reg_set
+argument_list|,
+name|FIRST_STACK_REG
+operator|+
+literal|1
+argument_list|)
+condition|)
+name|SET_HARD_REG_BIT
+argument_list|(
+name|tmp
+argument_list|,
+name|FIRST_STACK_REG
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|GO_IF_HARD_REG_EQUAL
@@ -10722,7 +10702,7 @@ expr_stmt|;
 name|start_sequence
 argument_list|()
 expr_stmt|;
-comment|/* ??? change_stack needs some point to emit insns after.           Also needed to keep gen_sequence from returning a           pattern as opposed to a sequence, which would lose          REG_DEAD notes.  */
+comment|/* ??? change_stack needs some point to emit insns after.  */
 name|after
 operator|=
 name|emit_note
@@ -10750,7 +10730,7 @@ argument_list|)
 expr_stmt|;
 name|seq
 operator|=
-name|gen_sequence
+name|get_insns
 argument_list|()
 expr_stmt|;
 name|end_sequence
@@ -10826,6 +10806,10 @@ decl_stmt|;
 name|inserted
 operator|=
 literal|0
+expr_stmt|;
+name|any_malformed_asm
+operator|=
+name|false
 expr_stmt|;
 comment|/* Find the edge we will copy stack from.  It should be the most frequent      one as it will get cheapest after compensation code is generated,      if multiple such exists, take one with largest count, prefer critical      one (as splitting critical edges is more expensive), or one with lowest      index, to avoid random changes with different orders of the edges.  */
 for|for
@@ -11311,7 +11295,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Something failed if the stack lives don't match.  */
+comment|/* Something failed if the stack lives don't match.  If we had malformed      asms, we zapped the instruction itself, but that didn't produce the      same pattern of register kills as before.  */
 name|GO_IF_HARD_REG_EQUAL
 argument_list|(
 name|regstack
@@ -11325,6 +11309,11 @@ argument_list|,
 name|win
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|any_malformed_asm
+condition|)
 name|abort
 argument_list|()
 expr_stmt|;
@@ -11656,8 +11645,9 @@ decl_stmt|;
 block|{
 name|int
 name|inserted
-decl_stmt|,
-name|i
+decl_stmt|;
+name|basic_block
+name|b
 decl_stmt|;
 name|edge
 name|e
@@ -11710,29 +11700,12 @@ operator|->
 name|dest
 argument_list|)
 expr_stmt|;
-comment|/* ??? Process all unreachable blocks.  Though there's no excuse       for keeping these even when not optimizing.  */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|n_basic_blocks
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|basic_block
-name|b
-init|=
-name|BASIC_BLOCK
+comment|/* ??? Process all unreachable blocks.  Though there's no excuse      for keeping these even when not optimizing.  */
+name|FOR_EACH_BB
 argument_list|(
-name|i
+argument|b
 argument_list|)
-decl_stmt|;
+block|{
 name|block_info
 name|bi
 init|=
@@ -11815,6 +11788,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|clear_aux_for_blocks
+argument_list|()
+expr_stmt|;
 name|fixup_abnormal_edges
 argument_list|()
 expr_stmt|;
@@ -11850,6 +11826,12 @@ end_endif
 begin_comment
 comment|/* STACK_REGS */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"gt-reg-stack.h"
+end_include
 
 end_unit
 

@@ -69,21 +69,14 @@ begin_comment
 comment|/* Parsing a function declarator leaves a list of parameter names    or a chain or parameter decls here.  */
 end_comment
 
+begin_extern
+extern|extern GTY((
+end_extern
+
 begin_decl_stmt
-specifier|extern
+unit|))
 name|tree
 name|last_function_parms
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* A list of objects which have constructors or destructors    which reside in the global scope.  The decl is stored in    the TREE_VALUE slot and the initializer is stored    in the TREE_PURPOSE slot.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|tree
-name|static_aggregates
 decl_stmt|;
 end_decl_stmt
 

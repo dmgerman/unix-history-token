@@ -33,23 +33,35 @@ name|ht_identifier
 typedef|;
 end_typedef
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|ht_identifier
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
-name|unsigned
-name|int
-name|len
-decl_stmt|;
 specifier|const
 name|unsigned
 name|char
 modifier|*
 name|str
 decl_stmt|;
+name|unsigned
+name|int
+name|len
+decl_stmt|;
+name|unsigned
+name|int
+name|hash_value
+decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -188,7 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialise the hashtable with 2 ^ order entries.  */
+comment|/* Initialize the hashtable with 2 ^ order entries.  */
 end_comment
 
 begin_decl_stmt

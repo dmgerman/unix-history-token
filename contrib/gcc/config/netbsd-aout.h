@@ -4,7 +4,20 @@ comment|/* Common configuration file for NetBSD a.out targets.    Copyright (C) 
 end_comment
 
 begin_comment
-comment|/* This defines which switch letters take arguments. */
+comment|/* TARGET_OS_CPP_BUILTINS() common to all NetBSD a.out targets.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETBSD_OS_CPP_BUILTINS_AOUT
+parameter_list|()
+define|\
+value|do						\     {						\       NETBSD_OS_CPP_BUILTINS_COMMON();		\     }						\   while (0)
+end_define
+
+begin_comment
+comment|/* This defines which switch letters take arguments.  */
 end_comment
 
 begin_undef
@@ -66,6 +79,24 @@ end_comment
 begin_undef
 undef|#
 directive|undef
+name|NETBSD_LINK_SPEC_AOUT
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NETBSD_LINK_SPEC_AOUT
+define|\
+value|"%{nostdlib:-nostdlib}		\    %{!shared:				\      %{!nostdlib:			\        %{!r*:				\ 	 %{!e*:-e start}}}		\      -dc -dp				\      %{static:-Bstatic}}		\    %{shared:-Bshareable}		\    %{R*}				\    %{assert*}"
+end_define
+
+begin_comment
+comment|/* Default LINK_SPEC.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
 name|LINK_SPEC
 end_undef
 
@@ -73,8 +104,7 @@ begin_define
 define|#
 directive|define
 name|LINK_SPEC
-define|\
-value|"%{nostdlib:-nostdlib}		\    %{!shared:				\      %{!nostdlib:			\        %{!r*:				\ 	 %{!e*:-e start}}}		\      -dc -dp				\      %{static:-Bstatic}}		\    %{shared:-Bshareable}		\    %{R*}				\    %{assert*}"
+value|NETBSD_LINK_SPEC_AOUT
 end_define
 
 begin_comment
@@ -216,18 +246,12 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf (FILE, "%s", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "function");			\       putc ('\n', FILE);						\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\       ASM_OUTPUT_LABEL(FILE, NAME);					\     }									\   while (0)
+value|do									\     {									\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "function");		\       ASM_DECLARE_RESULT (FILE, DECL_RESULT (DECL));			\       ASM_OUTPUT_LABEL(FILE, NAME);					\     }									\   while (0)
 end_define
 
 begin_comment
 comment|/* Write the extra assembler code needed to declare an object properly.  */
 end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ASM_DECLARE_OBJECT_NAME
-end_undef
 
 begin_define
 define|#
@@ -241,7 +265,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       fprintf (FILE, "%s", TYPE_ASM_OP);				\       assemble_name (FILE, NAME);					\       putc (',', FILE);							\       fprintf (FILE, TYPE_OPERAND_FMT, "object");			\       putc ('\n', FILE);						\       size_directive_output = 0;					\       if (!flag_inhibit_size_directive&& DECL_SIZE (DECL))		\ 	{								\ 	  size_directive_output = 1;					\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	  assemble_name (FILE, NAME);					\ 	  fprintf (FILE, ",%d\n",					\ 	           int_size_in_bytes (TREE_TYPE (DECL)));		\ 	}								\       ASM_OUTPUT_LABEL(FILE, NAME);					\     }									\   while (0)
+value|do								\     {								\       HOST_WIDE_INT size;					\ 								\       ASM_OUTPUT_TYPE_DIRECTIVE (FILE, NAME, "object");		\ 								\       size_directive_output = 0;				\       if (!flag_inhibit_size_directive				\&& (DECL)&& DECL_SIZE (DECL))			\ 	{							\ 	  size_directive_output = 1;				\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));		\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, NAME, size);		\ 	}							\ 								\       ASM_OUTPUT_LABEL (FILE, NAME);				\     }								\   while (0)
 end_define
 
 begin_comment
@@ -268,7 +292,7 @@ parameter_list|,
 name|AT_END
 parameter_list|)
 define|\
-value|do									\     {									\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\       if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output)					\ 	{								\ 	  size_directive_output = 1;					\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	  assemble_name (FILE, name);					\ 	  fprintf (FILE, ",%d\n",					\ 		   int_size_in_bytes (TREE_TYPE (DECL)));		\ 	}								\     }									\   while (0)
+value|do									\     {									\       const char *name = XSTR (XEXP (DECL_RTL (DECL), 0), 0);		\       HOST_WIDE_INT size;						\       if (!flag_inhibit_size_directive&& DECL_SIZE (DECL)		\&& ! AT_END&& TOP_LEVEL					\&& DECL_INITIAL (DECL) == error_mark_node			\&& !size_directive_output)					\ 	{								\ 	  size_directive_output = 1;					\ 	  size = int_size_in_bytes (TREE_TYPE (DECL));			\ 	  ASM_OUTPUT_SIZE_DIRECTIVE (FILE, name, size);			\ 	}								\     }									\   while (0)
 end_define
 
 begin_comment
@@ -293,7 +317,7 @@ parameter_list|,
 name|DECL
 parameter_list|)
 define|\
-value|do									\     {									\       if (!flag_inhibit_size_directive)					\ 	{								\ 	  char label[256];						\ 	  static int labelno;						\ 	  labelno++;							\ 	  ASM_GENERATE_INTERNAL_LABEL (label, "Lfe", labelno);		\ 	  ASM_OUTPUT_INTERNAL_LABEL (FILE, "Lfe", labelno);		\ 	  fprintf (FILE, "%s", SIZE_ASM_OP);				\ 	  assemble_name (FILE, (FNAME));				\ 	  fprintf (FILE, ",");						\ 	  assemble_name (FILE, label);					\ 	  fprintf (FILE, "-");						\ 	  assemble_name (FILE, (FNAME));				\ 	  putc ('\n', FILE);						\ 	}								\     }									\   while (0)
+value|do									\     {									\       if (!flag_inhibit_size_directive)					\ 	ASM_OUTPUT_MEASURED_SIZE (FILE, FNAME);				\     }									\   while (0)
 end_define
 
 end_unit

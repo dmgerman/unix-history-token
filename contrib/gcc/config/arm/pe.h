@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions of target machine for GNU compiler, for ARM with PE obj format.    Copyright (C) 1995, 1996, 1999, 2000 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions of target machine for GNU compiler, for ARM with PE obj format.    Copyright (C) 1995, 1996, 1999, 2000, 2002 Free Software Foundation, Inc.    Contributed by Doug Evans (dje@cygnus.com).     This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -219,41 +219,6 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* In addition to the stuff done in arm.h, we must mark dll symbols specially.    Definitions of dllexport'd objects install some info in the .drectve    section.  References to dllimport'd objects are fetched indirectly via    __imp_.  If both are declared, dllexport overrides.    This is also needed to implement one-only vtables: they go into their own    section and we need to set DECL_SECTION_NAME so we do that here.    Note that we can be called twice on the same decl.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|ENCODE_SECTION_INFO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ENCODE_SECTION_INFO
-parameter_list|(
-name|DECL
-parameter_list|)
-define|\
-value|arm_pe_encode_section_info (DECL)
-end_define
-
-begin_comment
-comment|/* Used to implement dllexport overriding dllimport semantics.  It's also used    to handle vtables - the first pass won't do anything because    DECL_CONTEXT (DECL) will be 0 so arm_dll{ex,im}port_p will return 0.    It's also used to handle dllimport override semantics.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|REDO_SECTION_INFO_P
-parameter_list|(
-name|DECL
-parameter_list|)
-value|1
-end_define
-
-begin_comment
 comment|/* Define this macro if in some cases global symbols from one translation    unit may not be bound to undefined symbols in another translation unit    without user intervention.  For instance, under Microsoft Windows    symbols must be explicitly imported from shared libraries (DLLs).  */
 end_comment
 
@@ -266,13 +231,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|UNIQUE_SECTION
-parameter_list|(
-name|DECL
-parameter_list|,
-name|RELOC
-parameter_list|)
-value|arm_pe_unique_section (DECL, RELOC)
+name|TARGET_ASM_UNIQUE_SECTION
+value|arm_pe_unique_section
 end_define
 
 begin_define
@@ -444,14 +404,14 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_EXTRA_SECTIONS
+name|EXTRA_SECTIONS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SUBTARGET_EXTRA_SECTIONS
-value|in_drectve,
+name|EXTRA_SECTIONS
+value|in_drectve
 end_define
 
 begin_comment
@@ -461,13 +421,13 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|SUBTARGET_EXTRA_SECTION_FUNCTIONS
+name|EXTRA_SECTION_FUNCTIONS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|SUBTARGET_EXTRA_SECTION_FUNCTIONS
+name|EXTRA_SECTION_FUNCTIONS
 define|\
 value|DRECTVE_SECTION_FUNCTION	\   SWITCH_TO_SECTION_FUNCTION
 end_define
@@ -489,7 +449,7 @@ define|#
 directive|define
 name|SWITCH_TO_SECTION_FUNCTION
 define|\
-value|static void switch_to_section PARAMS ((enum in_section, tree)); \ static void							\ switch_to_section (section, decl)				\      enum in_section section;					\      tree decl;							\ {								\   switch (section)						\     {								\       case in_text: text_section (); break;			\       case in_data: data_section (); break;			\       case in_named: named_section (decl, NULL, 0); break;	\       case in_rdata: rdata_section (); break;			\       case in_ctors: ctors_section (); break;			\       case in_dtors: dtors_section (); break;			\       case in_drectve: drectve_section (); break;		\       default: abort (); break;					\     }								\ }
+value|static void switch_to_section PARAMS ((enum in_section, tree)); \ static void							\ switch_to_section (section, decl)				\      enum in_section section;					\      tree decl;							\ {								\   switch (section)						\     {								\       case in_text: text_section (); break;			\       case in_data: data_section (); break;			\       case in_named: named_section (decl, NULL, 0); break;	\       case in_readonly_data: readonly_data_section (); break;	\       case in_ctors: ctors_section (); break;			\       case in_dtors: dtors_section (); break;			\       case in_drectve: drectve_section (); break;		\       default: abort (); break;					\     }								\ }
 end_define
 
 end_unit

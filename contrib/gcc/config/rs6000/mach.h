@@ -28,14 +28,16 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|CPP_PREDEFINES
+name|TARGET_OS_CPP_BUILTINS
 end_undef
 
 begin_define
 define|#
 directive|define
-name|CPP_PREDEFINES
-value|"-Drios -D_IBMR2 -Dunix -Asystem=unix -Asystem=mach -Acpu=rs6000 -Amachine=rs6000"
+name|TARGET_OS_CPP_BUILTINS
+parameter_list|()
+define|\
+value|do                                     \     {                                    \       builtin_define_std ("rios");       \       builtin_define ("_IBMR2");         \       builtin_define_std ("unix");       \       builtin_assert ("system=unix");    \       builtin_assert ("system=mach");    \       builtin_assert ("cpu=rs6000");     \       builtin_assert ("machine=rs6000"); \     }                                    \   while (0)
 end_define
 
 begin_comment

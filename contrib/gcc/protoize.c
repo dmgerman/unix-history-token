@@ -1006,29 +1006,6 @@ name|DEFAULT_TARGET_VERSION
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|GET_ENV_PATH_LIST
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|GET_ENV_PATH_LIST
-parameter_list|(
-name|VAR
-parameter_list|,
-name|NAME
-parameter_list|)
-value|do { (VAR) = getenv (NAME); } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -1995,7 +1972,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Error counter.  Will be non-zero if we should give up at the next convenient    stopping point.  */
+comment|/* Error counter.  Will be nonzero if we should give up at the next convenient    stopping point.  */
 end_comment
 
 begin_decl_stmt
@@ -3087,7 +3064,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Give a message indicating the proper way to invoke this program and then    exit with non-zero status.  */
+comment|/* Give a message indicating the proper way to invoke this program and then    exit with nonzero status.  */
 end_comment
 
 begin_function
@@ -3241,7 +3218,7 @@ name|DIR_SEPARATOR_2
 end_ifdef
 
 begin_endif
-unit|{       char *slash;        slash = strrchr (dir_last_slash ? dir_last_slash : dir_name,                         DIR_SEPARATOR_2);       if (slash) 	dir_last_slash = slash;     }
+unit|{       char *slash;        slash = strrchr (dir_last_slash ? dir_last_slash : dir_name, 		       DIR_SEPARATOR_2);       if (slash) 	dir_last_slash = slash;     }
 endif|#
 directive|endif
 end_endif
@@ -3264,7 +3241,7 @@ name|DIR_SEPARATOR_2
 end_ifdef
 
 begin_endif
-unit|{       char *slash;        slash = strrchr (dir_last_slash ? dir_last_slash : dir_name,                         DIR_SEPARATOR_2);       if (slash) 	dir_last_slash = slash;     }
+unit|{       char *slash;        slash = strrchr (dir_last_slash ? dir_last_slash : dir_name, 		       DIR_SEPARATOR_2);       if (slash) 	dir_last_slash = slash;     }
 endif|#
 directive|endif
 end_endif
@@ -3275,7 +3252,7 @@ comment|/* Should have been an absolutized filename.  */
 end_comment
 
 begin_endif
-unit|}    if (access (path, R_OK))     {       if (!quiet_flag)         notice ("%s: warning: no read access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (path, W_OK))     {       if (!quiet_flag)         notice ("%s: warning: no write access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (dir_name, W_OK))     {       if (!quiet_flag)         notice ("%s: warning: no write access for dir containing `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    return 1; }
+unit|}    if (access (path, R_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no read access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (path, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for file `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    if (access (dir_name, W_OK))     {       if (!quiet_flag) 	notice ("%s: warning: no write access for dir containing `%s'\n", 		pname, shortpath (NULL, path));       return 0;     }    return 1; }
 endif|#
 directive|endif
 end_endif
@@ -4384,7 +4361,7 @@ name|copy_p
 operator|+=
 name|size
 expr_stmt|;
-comment|/* Assume that there will not be another replacement required                  within the text just replaced.  */
+comment|/* Assume that there will not be another replacement required 	         within the text just replaced.  */
 name|s
 operator|+=
 name|len
@@ -4719,7 +4696,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-comment|/* A path starting with a directory separator is considered absolute  	   for dos based filesystems, but it's really not -- it's just the  	   convention used throughout GCC and it works. However, in this 	   case, we still need to prepend the drive spec from cwd_buffer.  */
+comment|/* A path starting with a directory separator is considered absolute 	   for dos based filesystems, but it's really not -- it's just the 	   convention used throughout GCC and it works. However, in this 	   case, we still need to prepend the drive spec from cwd_buffer.  */
 operator|*
 name|endp
 operator|++
@@ -4973,7 +4950,7 @@ operator|<
 name|abs_buffer
 condition|)
 block|{
-comment|/* Catch cases like /.. where we try to backup to a 			   point above the absolute root of the logical file 			   system.  */
+comment|/* Catch cases like /.. where we try to backup to a 		     point above the absolute root of the logical file 		     system.  */
 name|notice
 argument_list|(
 literal|"%s: invalid file name: %s\n"
@@ -5437,7 +5414,7 @@ name|file_info
 argument_list|)
 argument_list|)
 decl_stmt|;
-comment|/* If we cannot get status on any given source file, give a warning          and then just set its time of last modification to infinity.  */
+comment|/* If we cannot get status on any given source file, give a warning 	 and then just set its time of last modification to infinity.  */
 if|if
 condition|(
 name|do_not_stat
@@ -5671,7 +5648,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Given a line from  an aux info file, and a time at which the aux info    file it came from was created, check to see if the item described in    the line comes from a file which has been modified since the aux info    file was created.  If so, return non-zero, else return zero.  */
+comment|/* Given a line from  an aux info file, and a time at which the aux info    file it came from was created, check to see if the item described in    the line comes from a file which has been modified since the aux info    file was created.  If so, return nonzero, else return zero.  */
 end_comment
 
 begin_function
@@ -6059,7 +6036,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* Call find_file to find the file_info record associated with the file        which contained this particular def or dec item.  Note that this call        may cause a new file_info record to be created if this is the first time        that we have ever known about this particular file.           Note that we started out by forcing all of the base source file names        (i.e. the names of the aux_info files with the .X stripped off) into the        filenames hash table, and we simultaneously setup file_info records for        all of these base file names (even if they may be useless later).        The file_info records for all of these "base" file names (properly)        act as file_info records for the "original" (i.e. un-included) files        which were submitted to gcc for compilation (when the -aux-info        option was used).  */
+comment|/* Call find_file to find the file_info record associated with the file        which contained this particular def or dec item.  Note that this call        may cause a new file_info record to be created if this is the first time        that we have ever known about this particular file.         Note that we started out by forcing all of the base source file names        (i.e. the names of the aux_info files with the .X stripped off) into the        filenames hash table, and we simultaneously setup file_info records for        all of these base file names (even if they may be useless later).        The file_info records for all of these "base" file names (properly)        act as file_info records for the "original" (i.e. un-included) files        which were submitted to gcc for compilation (when the -aux-info        option was used).  */
 name|def_dec_p
 operator|->
 name|file
@@ -6601,7 +6578,7 @@ name|left_paren_p
 operator|-
 literal|2
 expr_stmt|;
-comment|/* p must now point either to another right paren, or to the last          character of the name of the function that was declared/defined.          If p points to another right paren, then this indicates that we          are dealing with multiple formals lists.  In that case, there          really should be another right paren preceding this right paren.  */
+comment|/* p must now point either to another right paren, or to the last 	 character of the name of the function that was declared/defined. 	 If p points to another right paren, then this indicates that we 	 are dealing with multiple formals lists.  In that case, there 	 really should be another right paren preceding this right paren.  */
 if|if
 condition|(
 operator|*
@@ -6935,8 +6912,8 @@ expr_stmt|;
 name|p
 operator|++
 expr_stmt|;
-comment|/* p now points to the first character of the K&R style declarations          list (if there is one) or to the star-slash combination that ends          the comment in which such lists get embedded.  */
-comment|/* Make a copy of the K&R formal decls list and set the def_dec record          to point to it.  */
+comment|/* p now points to the first character of the K&R style declarations 	 list (if there is one) or to the star-slash combination that ends 	 the comment in which such lists get embedded.  */
+comment|/* Make a copy of the K&R formal decls list and set the def_dec record 	 to point to it.  */
 if|if
 condition|(
 operator|*
@@ -7020,7 +6997,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Handle a special case.  If we have a function definition marked as          being in "old" style, and if its formal names list is empty, then          it may actually have the string "void" in its real formals list          in the original source code.  Just to make sure, we will get setup          to convert such things anyway.           This kludge only needs to be here because of an insurmountable          problem with generating .X files.  */
+comment|/* Handle a special case.  If we have a function definition marked as 	 being in "old" style, and if its formal names list is empty, then 	 it may actually have the string "void" in its real formals list 	 in the original source code.  Just to make sure, we will get setup 	 to convert such things anyway.  	 This kludge only needs to be here because of an insurmountable 	 problem with generating .X files.  */
 if|if
 condition|(
 operator|!
@@ -9387,7 +9364,7 @@ name|file
 argument_list|)
 condition|)
 continue|continue;
-comment|/* Quietly replace the definition previously found with the one                just found if the previous one was from SYSCALLS.c.X.  */
+comment|/* Quietly replace the definition previously found with the one 	       just found if the previous one was from SYSCALLS.c.X.  */
 if|if
 condition|(
 name|is_syscalls_file
@@ -9404,7 +9381,7 @@ name|dd_p
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* If we get here, then there is a conflict between two function                declarations for the same function, both of which came from the                user's own code.  */
+comment|/* If we get here, then there is a conflict between two function 	       declarations for the same function, both of which came from the 	       user's own code.  */
 if|if
 condition|(
 operator|!
@@ -9544,7 +9521,7 @@ operator|!
 name|extern_def_p
 condition|)
 block|{
-comment|/* We have no definitions for this function so do the next best thing.          Search for an extern declaration already in prototype form.  */
+comment|/* We have no definitions for this function so do the next best thing. 	 Search for an extern declaration already in prototype form.  */
 for|for
 control|(
 name|dd_p
@@ -9618,7 +9595,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Gripe about unprototyped function declarations that we found no          corresponding definition (or other source of prototype information)          for.           Gripe even if the unprototyped declaration we are worried about          exists in a file in one of the "system" include directories.  We          can gripe about these because we should have at least found a          corresponding (pseudo) definition in the SYSCALLS.c.X file.  If we 	 didn't, then that means that the SYSCALLS.c.X file is missing some          needed prototypes for this particular system.  That is worth telling          the user about!  */
+comment|/* Gripe about unprototyped function declarations that we found no 	 corresponding definition (or other source of prototype information) 	 for.  	 Gripe even if the unprototyped declaration we are worried about 	 exists in a file in one of the "system" include directories.  We 	 can gripe about these because we should have at least found a 	 corresponding (pseudo) definition in the SYSCALLS.c.X file.  If we 	 didn't, then that means that the SYSCALLS.c.X file is missing some 	 needed prototypes for this particular system.  That is worth telling 	 the user about!  */
 if|if
 condition|(
 operator|!
@@ -9765,7 +9742,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|else               notice ("%s: %d: warning: no extern definition for `%s'\n", 		      shortpath (NULL, file), user->line, 		      user->hash_entry->symbol);
+block|else 	      notice ("%s: %d: warning: no extern definition for `%s'\n", 		      shortpath (NULL, file), user->line, 		      user->hash_entry->symbol);
 endif|#
 directive|endif
 block|}
@@ -10137,7 +10114,7 @@ name|def_dec_info
 modifier|*
 name|static_def
 decl_stmt|;
-comment|/* We have now found a single static declaration for which we need to            find a matching definition.  We want to minimize the work (and the            number of warnings), so we will find an appropriate (matching)            static definition for this declaration, and then distribute it            (as the definition for) any and all other static declarations            for this function name which occur within the same file, and which            do not already have definitions.             Note that a trick is used here to prevent subsequent attempts to            call find_static_definition for a given function-name& file            if the first such call returns NULL.  Essentially, we convert            these NULL return values to -1, and put the -1 into the definition            field for each other static declaration from the same file which            does not already have an associated definition.            This makes these other static declarations look like they are            actually defined already when the outer loop here revisits them            later on.  Thus, the outer loop will skip over them.  Later, we            turn the -1's back to NULL's.  */
+comment|/* We have now found a single static declaration for which we need to 	   find a matching definition.  We want to minimize the work (and the 	   number of warnings), so we will find an appropriate (matching) 	   static definition for this declaration, and then distribute it 	   (as the definition for) any and all other static declarations 	   for this function name which occur within the same file, and which 	   do not already have definitions.  	   Note that a trick is used here to prevent subsequent attempts to 	   call find_static_definition for a given function-name& file 	   if the first such call returns NULL.  Essentially, we convert 	   these NULL return values to -1, and put the -1 into the definition 	   field for each other static declaration from the same file which 	   does not already have an associated definition. 	   This makes these other static declarations look like they are 	   actually defined already when the outer loop here revisits them 	   later on.  Thus, the outer loop will skip over them.  Later, we 	   turn the -1's back to NULL's.  */
 operator|(
 operator|(
 name|NONCONST
@@ -11061,7 +11038,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* Scan leftwards until we find some character which can be              part of an identifier.  */
+comment|/* Scan leftwards until we find some character which can be 	     part of an identifier.  */
 while|while
 condition|(
 operator|!
@@ -11081,7 +11058,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Scan backwards until we find a char that cannot be part of an              identifier.  */
+comment|/* Scan backwards until we find a char that cannot be part of an 	     identifier.  */
 while|while
 condition|(
 name|is_id_char
@@ -11100,7 +11077,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Having found an "id break", see if the following id is the one              that we are looking for.  If so, then exit from this loop.  */
+comment|/* Having found an "id break", see if the following id is the one 	     that we are looking for.  If so, then exit from this loop.  */
 if|if
 condition|(
 operator|!
@@ -11128,7 +11105,7 @@ operator|+
 name|func_name_len
 operator|)
 decl_stmt|;
-comment|/* Must also check to see that the name in the source text                  ends where it should (in order to prevent bogus matches                  on similar but longer identifiers.  */
+comment|/* Must also check to see that the name in the source text 	         ends where it should (in order to prevent bogus matches 	         on similar but longer identifiers.  */
 if|if
 condition|(
 operator|!
@@ -11141,7 +11118,7 @@ break|break;
 comment|/* exit from loop */
 block|}
 block|}
-comment|/* We have now found the first perfect match for the function name in          our backward search.  This may or may not be the actual function          name at the start of the actual function declaration (i.e. we could          have easily been mislead).  We will try to avoid getting fooled too          often by looking forward for the open paren which should follow the          identifier we just found.  We ignore whitespace while hunting.  If          the next non-whitespace byte we see is *not* an open left paren,          then we must assume that we have been fooled and we start over          again accordingly.  Note that there is no guarantee, that even if          we do see the open paren, that we are in the right place.          Programmers do the strangest things sometimes!  */
+comment|/* We have now found the first perfect match for the function name in 	 our backward search.  This may or may not be the actual function 	 name at the start of the actual function declaration (i.e. we could 	 have easily been mislead).  We will try to avoid getting fooled too 	 often by looking forward for the open paren which should follow the 	 identifier we just found.  We ignore whitespace while hunting.  If 	 the next non-whitespace byte we see is *not* an open left paren, 	 then we must assume that we have been fooled and we start over 	 again accordingly.  Note that there is no guarantee, that even if 	 we do see the open paren, that we are in the right place. 	 Programmers do the strangest things sometimes!  */
 name|end_of_fn_name
 operator|=
 name|clean_text_p
@@ -11247,8 +11224,8 @@ name|end_formals
 operator|--
 expr_stmt|;
 block|}
-comment|/* end_formals now points to the closing right paren of the formals          list whose left paren is pointed to by start_formals.  */
-comment|/* Now, if we are protoizing, we insert the new ANSI-style formals list          attached to the associated definition of this function.  If however          we are unprotoizing, then we simply delete any formals list which          may be present.  */
+comment|/* end_formals now points to the closing right paren of the formals 	 list whose left paren is pointed to by start_formals.  */
+comment|/* Now, if we are protoizing, we insert the new ANSI-style formals list 	 attached to the associated definition of this function.  If however 	 we are unprotoizing, then we simply delete any formals list which 	 may be present.  */
 name|output_up_to
 argument_list|(
 name|start_formals
@@ -11314,7 +11291,7 @@ name|end_formals
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Now see if it looks like there may be another formals list associated          with the function declaration that we are converting (following the          formals list that we just converted.  */
+comment|/* Now see if it looks like there may be another formals list associated 	 with the function declaration that we are converting (following the 	 formals list that we just converted.  */
 block|{
 specifier|const
 name|char
@@ -11391,13 +11368,13 @@ comment|/* !defined (UNPROTOIZE) */
 break|break;
 block|}
 block|}
-comment|/* There does appear to be yet another formals list, so loop around          again, and convert it also.  */
+comment|/* There does appear to be yet another formals list, so loop around 	 again, and convert it also.  */
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/* Edit a whole group of formals lists, starting with the rightmost one    from some set of formals lists.  This routine is called once (from the    outside) for each function declaration which is converted.  It is    recursive however, and it calls itself once for each remaining formal    list that lies to the left of the one it was originally called to work    on.  Thus, a whole set gets done in right-to-left order.     This routine returns non-zero if it thinks that it should not be trying    to convert this particular function definition (because the name of the    function doesn't match the one expected).  */
+comment|/* Edit a whole group of formals lists, starting with the rightmost one    from some set of formals lists.  This routine is called once (from the    outside) for each function declaration which is converted.  It is    recursive however, and it calls itself once for each remaining formal    list that lies to the left of the one it was originally called to work    on.  Thus, a whole set gets done in right-to-left order.     This routine returns nonzero if it thinks that it should not be trying    to convert this particular function definition (because the name of the    function doesn't match the one expected).  */
 end_comment
 
 begin_function
@@ -11583,7 +11560,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Check that the function name in the header we are working on is the same      as the one we would expect to find.  If not, issue a warning and return      non-zero.  */
+comment|/* Check that the function name in the header we are working on is the same      as the one we would expect to find.  If not, issue a warning and return      nonzero.  */
 if|if
 condition|(
 name|f_list_count
@@ -12049,7 +12026,7 @@ name|end_formals
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* Since it is possible that we found a right paren before the starting          '{' of the body which IS NOT the one at the end of the real K&R          formals list (say for instance, we found one embedded inside one of          the old K&R formal parameter declarations) we have to check to be          sure that this is in fact the right paren that we were looking for.           The one we were looking for *must* be followed by either a '{' or          by an alphabetic character, while others *cannot* validly be followed          by such characters.  */
+comment|/* Since it is possible that we found a right paren before the starting 	 '{' of the body which IS NOT the one at the end of the real K&R 	 formals list (say for instance, we found one embedded inside one of 	 the old K&R formal parameter declarations) we have to check to be 	 sure that this is in fact the right paren that we were looking for.  	 The one we were looking for *must* be followed by either a '{' or 	 by an alphabetic character, while others *cannot* validly be followed 	 by such characters.  */
 if|if
 condition|(
 operator|(
@@ -12068,7 +12045,7 @@ name|ch
 argument_list|)
 condition|)
 break|break;
-comment|/* At this point, we have found a right paren, but we know that it is          not the one we were looking for, so backup one character and keep          looking.  */
+comment|/* At this point, we have found a right paren, but we know that it is 	 not the one we were looking for, so backup one character and keep 	 looking.  */
 name|check_source
 argument_list|(
 operator|--
@@ -12542,7 +12519,7 @@ name|definition
 operator|->
 name|ansi_decl
 decl_stmt|;
-comment|/* If the function for which we are inserting a declaration is              actually defined later in the same file, then suppress the              leading `extern' keyword (if there is one).  */
+comment|/* If the function for which we are inserting a declaration is 	     actually defined later in the same file, then suppress the 	     leading `extern' keyword (if there is one).  */
 if|if
 condition|(
 operator|*
@@ -13903,7 +13880,7 @@ name|source_confusion_recovery
 argument_list|)
 condition|)
 continue|continue;
-comment|/* We know we have a function definition header.  Now skip                  leftwards over all of its associated formals lists.  */
+comment|/* We know we have a function definition header.  Now skip 	         leftwards over all of its associated formals lists.  */
 do|do
 block|{
 name|last_l_paren
@@ -14305,7 +14282,7 @@ name|quiet_flag
 ifdef|#
 directive|ifdef
 name|UNPROTOIZE
-comment|/* Don't even mention "system" include files unless we are              protoizing.  If we are protoizing, we mention these as a              gentle way of prodding the user to convert his "system"              include files to prototype format.  */
+comment|/* Don't even mention "system" include files unless we are 	     protoizing.  If we are protoizing, we mention these as a 	     gentle way of prodding the user to convert his "system" 	     include files to prototype format.  */
 operator|&&
 operator|!
 name|in_system_include_dir
@@ -14689,9 +14666,9 @@ directive|if
 literal|0
 block|{     int clean_file;     size_t clean_size = orig_text_limit - orig_text_base;     char *const clean_filename = (char *) alloca (strlen (convert_filename) + 6 + 1);
 comment|/* Open (and create) the clean file.  */
-block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno;         notice ("%s: can't create/open clean file `%s': %s\n", 		pname, shortpath (NULL, clean_filename), 		xstrerror (errno_val));         return;       }
+block|strcpy (clean_filename, convert_filename);     strcat (clean_filename, ".clean");     if ((clean_file = creat (clean_filename, 0666)) == -1)       { 	int errno_val = errno; 	notice ("%s: can't create/open clean file `%s': %s\n", 		pname, shortpath (NULL, clean_filename), 		xstrerror (errno_val)); 	return;       }
 comment|/* Write the clean file.  */
-block|safe_write (clean_file, new_clean_text_base, clean_size, clean_filename);        close (clean_file);   }
+block|safe_write (clean_file, new_clean_text_base, clean_size, clean_filename);      close (clean_file);   }
 endif|#
 directive|endif
 comment|/* 0 */
@@ -14751,7 +14728,7 @@ operator|->
 name|line
 argument_list|)
 decl_stmt|;
-comment|/* clean_text_p now points to the first character of the line which            contains the `terminator' for the declaration or definition that            we are about to process.  */
+comment|/* clean_text_p now points to the first character of the line which 	   contains the `terminator' for the declaration or definition that 	   we are about to process.  */
 ifndef|#
 directive|ifndef
 name|UNPROTOIZE
@@ -14780,7 +14757,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Don't edit this item if it is already in prototype format or if it            is a function declaration and we have found no corresponding            definition.  */
+comment|/* Don't edit this item if it is already in prototype format or if it 	   is a function declaration and we have found no corresponding 	   definition.  */
 if|if
 condition|(
 name|def_dec_p
@@ -14917,7 +14894,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__MSDOS__
-comment|/* MSDOS filenames are restricted to 8.3 format, so we save `foo.c'          as `foo.<save_suffix>'.  */
+comment|/* MSDOS filenames are restricted to 8.3 format, so we save `foo.c' 	 as `foo.<save_suffix>'.  */
 name|new_filename
 index|[
 operator|(
@@ -15333,7 +15310,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|GET_ENV_PATH_LIST
+name|GET_ENVIRONMENT
 argument_list|(
 name|default_syscalls_dir
 argument_list|,
