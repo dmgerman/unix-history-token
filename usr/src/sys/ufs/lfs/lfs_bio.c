@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -30,17 +30,17 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lfs/lfs.h>
+file|<ufs/lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs_extern.h>
+file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_comment
-comment|/*  * LFS version of bawrite, bdwrite, bwrite.  Set the delayed write flag and  * use reassignbuf to move the buffer from the clean list to the dirty one,  * then unlock the buffer.  */
+comment|/*  * LFS version of bawrite, bdwrite, bwrite.  Set the delayed write flag and  * use reassignbuf to move the buffer from the clean list to the dirty one,  * then unlock the buffer.  *  * XXX No accounting for the cost of the write is currently done.  * XXX This is almost certainly wrong for synchronous operations, i.e. NFS.  */
 end_comment
 
 begin_function
@@ -55,34 +55,6 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|DO_ACCOUNTING
-name|Not
-name|included
-name|as
-name|this
-name|gets
-name|called
-name|from
-name|lots
-name|of
-name|places
-name|where
-name|the
-name|current
-name|proc
-name|structure
-name|is
-name|probably
-name|wrong
-operator|.
-name|Ignore
-for|for now. 	curproc->p_stats->p_ru.ru_oublock++
-empty_stmt|;
-comment|/* XXX: no one paid yet */
-endif|#
-directive|endif
 name|bp
 operator|->
 name|b_flags
