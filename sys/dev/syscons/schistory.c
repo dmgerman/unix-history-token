@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_syscons.h"
 end_include
 
@@ -75,6 +69,17 @@ directive|include
 file|<dev/syscons/syscons.h>
 end_include
 
+begin_comment
+comment|/*  * XXX Placeholder.  * This calculations should be dynamically scaled by number of seperate sc  * devices.  A base value of 'extra_history_size' should be defined for  * each syscons unit, and added and subtracted from the dynamic  * 'extra_history_size' as units are added and removed.  This way, each time  * a new syscons unit goes online, extra_history_size is automatically bumped.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXSC
+value|1
+end_define
+
 begin_if
 if|#
 directive|if
@@ -89,7 +94,7 @@ begin_define
 define|#
 directive|define
 name|SC_MAX_HISTORY_SIZE
-value|(1000 * MAXCONS * NSC)
+value|(1000 * MAXCONS * MAXSC)
 end_define
 
 begin_endif
@@ -127,7 +132,7 @@ name|SC_HISTORY_SIZE
 operator|*
 name|MAXCONS
 operator|*
-name|NSC
+name|MAXSC
 operator|)
 operator|>
 name|SC_MAX_HISTORY_SIZE
@@ -143,7 +148,7 @@ begin_define
 define|#
 directive|define
 name|SC_MAX_HISTORY_SIZE
-value|(SC_HISTORY_SIZE * MAXCONS * NSC)
+value|(SC_HISTORY_SIZE * MAXCONS * MAXSC)
 end_define
 
 begin_endif
