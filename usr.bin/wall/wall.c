@@ -182,13 +182,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|IGNOREUSER
-value|"sleeper"
-end_define
-
 begin_struct
 struct|struct
 name|wallgroup
@@ -551,23 +544,6 @@ name|ut_name
 index|[
 literal|0
 index|]
-operator|||
-operator|!
-name|strncmp
-argument_list|(
-name|utmp
-operator|.
-name|ut_name
-argument_list|,
-name|IGNOREUSER
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|utmp
-operator|.
-name|ut_name
-argument_list|)
-argument_list|)
 condition|)
 continue|continue;
 if|if
