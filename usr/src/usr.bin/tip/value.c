@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)value.c	5.3 (Berkeley) %G%"
+literal|"@(#)value.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -331,6 +331,10 @@ name|STRING
 case|:
 if|if
 condition|(
+name|p
+operator|->
+name|v_value
+operator|&&
 name|equal
 argument_list|(
 name|p
