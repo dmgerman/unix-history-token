@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	1.2 %G%"
+literal|"@(#)optim.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -560,6 +560,8 @@ block|,
 literal|'j'
 block|,
 name|SN
+operator||
+name|BN
 block|,
 literal|"virus"
 block|,
@@ -608,6 +610,8 @@ block|,
 literal|'r'
 block|,
 name|SN
+operator||
+name|BN
 block|,
 literal|"src"
 block|,
@@ -2070,7 +2074,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Take a network name and optimize it.  This gloriously messy  * opertions takes place as follows:  the name with machine names  * in it is tokenized by mapping each machine name into a single  * character machine id (netlook).  The separator characters (network  * metacharacters) are left intact.  The last component of the network  * name is stripped off and assumed to be the destination user name --  * it does not participate in the optimization.  As an example, the  * name "research!vax135!research!ucbvax!bill" becomes, tokenized,  * "r!x!r!v!" and "bill"  A low level routine, optim1, fixes up the  * network part (eg, "r!x!r!v!"), then we convert back to network  * machine names and tack the user name on the end.  *  * The result of this is copied into the parameter "name"  */
+comment|/*  * Take a network name and optimize it.  This gloriously messy  * operation takes place as follows:  the name with machine names  * in it is tokenized by mapping each machine name into a single  * character machine id (netlook).  The separator characters (network  * metacharacters) are left intact.  The last component of the network  * name is stripped off and assumed to be the destination user name --  * it does not participate in the optimization.  As an example, the  * name "research!vax135!research!ucbvax!bill" becomes, tokenized,  * "r!x!r!v!" and "bill"  A low level routine, optim1, fixes up the  * network part (eg, "r!x!r!v!"), then we convert back to network  * machine names and tack the user name on the end.  *  * The result of this is copied into the parameter "name"  */
 end_comment
 
 begin_macro
@@ -2415,6 +2419,29 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the address ultimately points back to us, 	 * just return a null network path. 	 */
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|>
+literal|1
+operator|&&
+name|cp
+index|[
+name|strlen
+argument_list|(
+name|cp
+argument_list|)
+operator|-
+literal|2
+index|]
+operator|==
+name|LOCAL
+condition|)
+return|return;
 name|strcpy
 argument_list|(
 name|name
@@ -2941,7 +2968,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * Perform global optimization on the given network path.  * The trick here is to look ahead to see if there are any loops  * in the path and remove them.  The interpretation of loops is  * more strict here than in optimex since both the machine and net  * type must match.  */
+comment|/*  * Perform global optimization on the given network path.  * The trick here is to look ahead to see if there are any loops  * in the path and remove them.  The interpretation of loops is  * more strict here than in optimex since both the machine and net  * type must match.  */
 end_comment
 
 begin_macro
@@ -3270,6 +3297,11 @@ argument_list|(
 name|dest
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|stype
@@ -3302,39 +3334,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DELIVERMAIL
-if|if
-condition|(
-name|src
-operator|!=
-name|LOCAL
-condition|)
-endif|#
-directive|endif
-name|printf
-argument_list|(
-literal|"No way to get from \"%s\" to \"%s\"\n"
-argument_list|,
-name|netname
-argument_list|(
-name|src
-argument_list|)
-argument_list|,
-name|netname
-argument_list|(
-name|dest
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-block|}
 name|np
 operator|=
 operator|&
