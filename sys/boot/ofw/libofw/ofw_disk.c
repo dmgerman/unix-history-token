@@ -233,9 +233,6 @@ decl_stmt|;
 name|ihandle_t
 name|instance
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|ofw_devsearch_init
 argument_list|()
 expr_stmt|;
@@ -363,7 +360,6 @@ argument_list|(
 name|instance
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
