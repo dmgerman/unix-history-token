@@ -1855,6 +1855,61 @@ name|IPV6CTL_MAPPED_ADDR
 value|23
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_comment
+comment|/*__NetBSD__ - reserved, don't delete*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_BINDV6ONLY
+value|24
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_RTEXPIRE
+value|25
+end_define
+
+begin_comment
+comment|/* cloned route expiration time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_RTMINEXPIRE
+value|26
+end_define
+
+begin_comment
+comment|/* min value for expiration time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_RTMAXCACHE
+value|27
+end_define
+
+begin_comment
+comment|/* trigger level for dynamic expire */
+end_comment
+
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
 end_comment
@@ -1863,7 +1918,7 @@ begin_define
 define|#
 directive|define
 name|IPV6CTL_MAXID
-value|24
+value|28
 end_define
 
 begin_endif

@@ -737,6 +737,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_net_inet6_ip6
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -755,9 +763,9 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_ip
+name|_net_inet6_ip6
 argument_list|,
-name|IPCTL_RTEXPIRE
+name|IPV6CTL_RTEXPIRE
 argument_list|,
 name|rtexpire
 argument_list|,
@@ -789,9 +797,9 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_ip
+name|_net_inet6_ip6
 argument_list|,
-name|IPCTL_RTMINEXPIRE
+name|IPV6CTL_RTMINEXPIRE
 argument_list|,
 name|rtminexpire
 argument_list|,
@@ -823,9 +831,9 @@ end_comment
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_net_inet_ip
+name|_net_inet6_ip6
 argument_list|,
-name|IPCTL_RTMAXCACHE
+name|IPV6CTL_RTMAXCACHE
 argument_list|,
 name|rtmaxcache
 argument_list|,
