@@ -979,6 +979,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|acpi_wake_run_prep
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|ACPI_STATUS
 name|acpi_Startup

@@ -697,6 +697,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|acpi_wake_run_prep
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
