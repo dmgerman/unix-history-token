@@ -4054,9 +4054,7 @@ case|:
 block|{
 specifier|register
 name|struct
-name|arpcom
-operator|.
-name|ac_enaddr
+name|ns_addr
 modifier|*
 name|ina
 init|=
@@ -4098,7 +4096,7 @@ operator|)
 expr_stmt|;
 else|else
 block|{
-comment|/*  				 */
+comment|/*  				 * 				 */
 name|bcopy
 argument_list|(
 operator|(
