@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atq.c	5.2 (Berkeley) %G%"
+literal|"@(#)atq.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,11 +683,6 @@ name|powner
 parameter_list|()
 function_decl|;
 comment|/* print the name of the owner 						   of the job */
-name|int
-name|getid
-parameter_list|()
-function_decl|;
-comment|/* get uid of a person */
 name|char
 modifier|*
 modifier|*
@@ -1074,61 +1069,6 @@ argument_list|,
 name|owner
 argument_list|)
 expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Get the uid of a person using his/her login name. Return -1 if no  * such account name exists.  */
-end_comment
-
-begin_macro
-name|getid
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|name
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|struct
-name|passwd
-modifier|*
-name|pwdinfo
-decl_stmt|;
-comment|/* password info structure */
-if|if
-condition|(
-operator|(
-name|pwdinfo
-operator|=
-name|getpwnam
-argument_list|(
-name|name
-argument_list|)
-operator|)
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-name|pwdinfo
-operator|->
-name|pw_uid
-operator|)
-return|;
 block|}
 end_block
 
