@@ -2466,6 +2466,10 @@ name|_rl_keymap
 operator|==
 name|vi_movement_keymap
 operator|&&
+name|key
+operator|!=
+name|ANYOTHERKEY
+operator|&&
 name|_rl_vi_textmod_command
 argument_list|(
 name|key
