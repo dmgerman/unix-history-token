@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.9 (Berkeley) %G%"
+literal|"@(#)popen.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_decl_stmt
@@ -366,7 +372,7 @@ expr_stmt|;
 block|}
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
