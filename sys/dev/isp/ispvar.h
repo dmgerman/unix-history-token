@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|13
+value|14
 end_define
 
 begin_comment
@@ -1097,7 +1097,7 @@ decl_stmt|,
 range|:
 literal|4
 decl_stmt|,
-name|fabdev
+name|loggedin
 range|:
 literal|1
 decl_stmt|,
