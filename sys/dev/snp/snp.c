@@ -154,6 +154,8 @@ block|,
 operator|.
 name|d_flags
 operator|=
+name|D_PSEUDO
+operator||
 name|D_NEEDGIANT
 block|,
 operator|.
@@ -190,11 +192,6 @@ operator|.
 name|d_name
 operator|=
 literal|"snp"
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_PSEUDO
 block|, }
 decl_stmt|;
 end_decl_stmt
