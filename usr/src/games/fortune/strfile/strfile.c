@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strfile.c	5.4 (Berkeley) %G%"
+literal|"@(#)strfile.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,7 +105,7 @@ comment|/* MAXPATHLEN */
 end_comment
 
 begin_comment
-comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terinated  * by a null byte.  Usage:  *  *	% strfile [ - ] [ -cC ] [ -sv ] [ -oir ] sourcefile [ datafile ]  *  *	- - Give a usage summary useful for jogging the memory  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	v - Verbose.  Give summary of data processed.  (Default)  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case   *	r - randomize the order of the strings  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added method to indicate dividers.  A "%-" will cause the address  * to be added to the structure in one of the pointer elements.  *  *		Ken Arnold	Nov., 1984 --  *  *	Added ordering options.  */
+comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsv] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	v - Verbose.  Give summary of data processed.  (Default)  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case   *	r - randomize the order of the strings  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
 end_comment
 
 begin_define
@@ -230,34 +230,12 @@ comment|/* output file name */
 name|Delimch
 init|=
 literal|'%'
-decl_stmt|,
-comment|/* delimiting character */
-modifier|*
-name|Usage
-index|[]
-init|=
-block|{
-comment|/* usage summary */
-literal|"usage:	strfile [ - ] [ -cC ] [ -sv ] [ -oir ] inputfile [ datafile ]"
-block|,
-literal|"	- - Give this usage summary"
-block|,
-literal|"	c - Replace delimiting character with 'C'"
-block|,
-literal|"	s - Silent.  Give no summary"
-block|,
-literal|"	v - Verbose.  Give summary.  (default)"
-block|,
-literal|"	o - order strings alphabetically"
-block|,
-literal|"	i - ignore case in ordering"
-block|,
-literal|"	r - randomize the order of the strings"
-block|,
-literal|"	Default \"datafile\" is inputfile.dat"
-block|, 	}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* delimiting character */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -610,7 +588,6 @@ name|sp
 operator|==
 name|NULL
 operator|||
-operator|(
 name|sp
 index|[
 literal|0
@@ -623,8 +600,7 @@ index|[
 literal|1
 index|]
 operator|==
-name|dc
-operator|)
+literal|'\n'
 condition|)
 block|{
 name|pos
@@ -632,13 +608,6 @@ operator|=
 name|ftell
 argument_list|(
 name|inf
-argument_list|)
-expr_stmt|;
-name|add_offset
-argument_list|(
-name|outf
-argument_list|,
-name|pos
 argument_list|)
 expr_stmt|;
 name|length
@@ -655,6 +624,19 @@ expr_stmt|;
 name|last_off
 operator|=
 name|pos
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|length
+condition|)
+continue|continue;
+name|add_offset
+argument_list|(
+name|outf
+argument_list|,
+name|pos
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -689,8 +671,7 @@ operator|=
 name|Oflag
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|first
@@ -773,7 +754,6 @@ name|first
 operator|=
 name|FALSE
 expr_stmt|;
-block|}
 block|}
 block|}
 do|while
@@ -971,136 +951,74 @@ begin_comment
 comment|/*  *	This routine evaluates arguments from the command line  */
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|getargs
 argument_list|(
-name|ac
+argument|argc
 argument_list|,
-name|av
+argument|argv
 argument_list|)
-specifier|register
-name|int
-name|ac
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 modifier|*
-name|av
+name|argv
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-specifier|register
+specifier|extern
 name|char
 modifier|*
-name|sp
+name|optarg
 decl_stmt|;
-specifier|register
+specifier|extern
 name|int
-name|i
+name|optind
 decl_stmt|;
-specifier|register
 name|int
-name|bad
-decl_stmt|,
-name|j
+name|ch
 decl_stmt|;
-name|bad
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|ac
-condition|;
-name|i
-operator|++
-control|)
-if|if
+while|while
 condition|(
-operator|*
-name|av
-index|[
-name|i
-index|]
-operator|==
-literal|'-'
-operator|&&
-name|av
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
-condition|)
-block|{
-for|for
-control|(
-name|sp
+operator|(
+name|ch
 operator|=
-operator|&
-name|av
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
-init|;
-operator|*
-name|sp
-condition|;
-name|sp
-operator|++
-control|)
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"c:iors"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
 switch|switch
 condition|(
-operator|*
-name|sp
+name|ch
 condition|)
 block|{
 case|case
 literal|'c'
 case|:
 comment|/* new delimiting char */
-if|if
-condition|(
-operator|(
 name|Delimch
 operator|=
 operator|*
-operator|++
-name|sp
-operator|)
-operator|==
-literal|'\0'
-condition|)
-block|{
-operator|--
-name|sp
+name|optarg
 expr_stmt|;
-name|Delimch
-operator|=
-operator|*
-name|av
-index|[
-operator|++
-name|i
-index|]
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1117,26 +1035,14 @@ argument_list|,
 name|Delimch
 argument_list|)
 expr_stmt|;
-name|bad
-operator|++
-expr_stmt|;
 block|}
 break|break;
 case|case
-literal|'s'
+literal|'i'
 case|:
-comment|/* silent */
-name|Sflag
+comment|/* ignore case in ordering */
+name|Iflag
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'v'
-case|:
-comment|/* verbose */
-name|Sflag
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -1148,14 +1054,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'i'
-case|:
-comment|/* ignore case in ordering */
-name|Iflag
-operator|++
-expr_stmt|;
-break|break;
-case|case
 literal|'r'
 case|:
 comment|/* ignore case in ordering */
@@ -1163,66 +1061,42 @@ name|Rflag
 operator|++
 expr_stmt|;
 break|break;
-default|default:
-comment|/* unknown flag */
-name|bad
+case|case
+literal|'s'
+case|:
+comment|/* silent */
+name|Sflag
 operator|++
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"bad flag: '%c'\n"
-argument_list|,
-operator|*
-name|sp
-argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
-block|}
-elseif|else
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 operator|*
-name|av
-index|[
-name|i
-index|]
-operator|==
-literal|'-'
+name|argv
 condition|)
 block|{
-for|for
-control|(
-name|j
+name|Infile
 operator|=
-literal|0
-init|;
-name|Usage
-index|[
-name|j
-index|]
-condition|;
-name|j
-operator|++
-control|)
-name|puts
-argument_list|(
-name|Usage
-index|[
-name|j
-index|]
-argument_list|)
+operator|*
+name|argv
 expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
-name|Infile
+operator|*
+operator|++
+name|argv
 condition|)
 operator|(
 name|void
@@ -1231,33 +1105,24 @@ name|strcpy
 argument_list|(
 name|Outfile
 argument_list|,
-name|av
-index|[
-name|i
-index|]
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
-else|else
-name|Infile
-operator|=
-name|av
-index|[
-name|i
-index|]
-expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
 name|Infile
 condition|)
 block|{
-name|bad
-operator|++
-expr_stmt|;
 name|puts
 argument_list|(
 literal|"No input file name"
 argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -1266,9 +1131,6 @@ operator|*
 name|Outfile
 operator|==
 literal|'\0'
-operator|&&
-operator|!
-name|bad
 condition|)
 block|{
 operator|(
@@ -1292,23 +1154,31 @@ literal|".dat"
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bad
-condition|)
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
 block|{
-name|puts
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"use \"strfile -\" to get usage"
+name|stderr
+argument_list|,
+literal|"strfile [-iors] [-c char] sourcefile [datafile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
