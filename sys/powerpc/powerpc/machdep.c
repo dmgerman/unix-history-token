@@ -1890,16 +1890,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|enable_fpu
-argument_list|(
-name|thread0
-operator|->
-name|td_pcb
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|globalp
 operator|=
 name|pmap_steal_memory
