@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)biz22.c	5.4 (Berkeley) %G%"
+literal|"@(#)biz22.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,14 @@ name|cbuf
 index|[
 literal|40
 index|]
+decl_stmt|;
+specifier|static
+name|int
+name|cmd
+argument_list|()
+decl_stmt|,
+name|detect
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
