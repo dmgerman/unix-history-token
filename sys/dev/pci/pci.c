@@ -6390,6 +6390,10 @@ name|child
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pci_do_powerstate
+condition|)
 name|pci_cfg_save
 argument_list|(
 name|child
@@ -8945,16 +8949,12 @@ return|return;
 comment|/* 	 * Restore the device to full power mode.  We must do this 	 * before we restore the registers because moving from D3 to 	 * D0 will cause the chip's BARs and some other registers to 	 * be reset to some unknown power on reset values.  Cut down 	 * the noise on boot by doing nothing if we are already in 	 * state D0. 	 */
 if|if
 condition|(
-name|pci_do_powerstate
-operator|&&
-operator|(
 name|pci_get_powerstate
 argument_list|(
 name|dev
 argument_list|)
 operator|!=
 name|PCI_POWERSTATE_D0
-operator|)
 condition|)
 block|{
 if|if
@@ -9607,8 +9607,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_do_powerstate
-operator|&&
 name|setstate
 operator|&&
 name|cls
