@@ -658,7 +658,7 @@ argument_list|,
 name|cury
 argument_list|)
 expr_stmt|;
-comment|/* write_char(' ',fg_c,bg_c); XXX destructive(!) */
+comment|/* write_char(' ', fg_c, bg_c); XXX destructive(!) */
 return|return;
 block|}
 return|return;
@@ -899,7 +899,7 @@ name|isvisible
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)>32)&& ((c)<255))
+value|(((c)> 32)&& ((c)< 255))
 if|if
 condition|(
 operator|!
