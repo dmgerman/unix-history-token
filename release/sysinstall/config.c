@@ -1882,6 +1882,34 @@ argument_list|,
 literal|"# please make all changes to this file.\n\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"# Enable network daemons for user convenience.\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"inetd_enable=\"YES\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"portmap_enable=\"YES\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|rcSite
+argument_list|,
+literal|"sendmail_enable=\"YES\"\n\b"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Now do variable substitutions */
 for|for
