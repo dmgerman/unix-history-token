@@ -735,6 +735,14 @@ name|maxphys
 operator|=
 name|DFLTPHYS
 expr_stmt|;
+name|bp
+operator|->
+name|b_dev
+operator|->
+name|si_iosize_max
+operator|=
+name|DFLTPHYS
+expr_stmt|;
 block|}
 if|if
 condition|(

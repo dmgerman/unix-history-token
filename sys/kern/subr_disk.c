@@ -574,6 +574,13 @@ name|d_slice
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pdev
+operator|->
+name|si_iosize_max
+condition|)
 name|pdev
 operator|->
 name|si_iosize_max
