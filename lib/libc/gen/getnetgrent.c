@@ -1256,6 +1256,10 @@ name|int
 name|rot
 init|=
 literal|0
+decl_stmt|,
+name|y
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1289,9 +1293,8 @@ name|rot
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-operator|!
+name|y
+operator|=
 name|yp_match
 argument_list|(
 name|_netgr_yp_domain
@@ -1315,7 +1318,22 @@ argument_list|,
 operator|&
 name|resultlen
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|y
 condition|)
+block|{
+comment|/* 				 * If we get an error other than 'no 				 * such key in map' then something is 				 * wrong and we should stop the search. 				 */
+if|if
+condition|(
+name|y
+operator|!=
+name|YPERR_KEY
+condition|)
+break|break;
+block|}
+else|else
 block|{
 name|rv
 operator|=
@@ -1350,27 +1368,24 @@ operator|)
 return|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|CHARITABLE
-block|}
-comment|/* 	 * Couldn't match using NIS-exclusive mode -- try 	 * standard mode. 	 */
-name|setnetgrent
-argument_list|(
-name|group
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
+comment|/* 		 * Couldn't match using NIS-exclusive mode. If the error 		 * was YPERR_MAP, then the failure happened because there 		 * was no netgroup.byhost or netgroup.byuser map. The odds 		 * are we are talking to an Sun NIS+ server in YP emulation 		 * mode; if this is the case, then we have to do the check 		 * the 'old-fashioned' way by grovelling through the netgroup 		 * map and resolving memberships on the fly. 		 */
+if|if
+condition|(
+name|y
+operator|!=
+name|YPERR_MAP
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* CHARITABLE */
+name|setnetgrent
+argument_list|(
+name|group
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* YP */
@@ -1463,13 +1478,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Parse the netgroup file setting up the linked lists.  */
-end_comment
-
-begin_function
 specifier|static
 name|int
 name|parse_netgrp
@@ -2014,13 +2023,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*  * Read the netgroup file and save lines until the line for the netgroup  * is found. Return 1 if eof is encountered.  */
-end_comment
-
-begin_function
 specifier|static
 name|struct
 name|linelist
