@@ -2931,7 +2931,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static  u_int32_t ncr_info	(int unit);
+unit|static  u_int32_t ncr_info(int unit);
 endif|#
 directive|endif
 end_endif
@@ -3009,7 +3009,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static	void	ncr_min_phys	(struct buf *bp);
+unit|static	void	ncr_min_phys(struct buf *bp);
 endif|#
 directive|endif
 end_endif
@@ -3046,7 +3046,7 @@ specifier|static
 name|void
 name|ncr_script_copy_and_bind
 parameter_list|(
-name|ncb_p
+name|cb_p
 name|np
 parameter_list|,
 name|ncrcmd
