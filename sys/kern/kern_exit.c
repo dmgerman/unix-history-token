@@ -275,7 +275,7 @@ end_comment
 
 begin_function
 name|void
-name|exit
+name|sys_exit
 parameter_list|(
 name|p
 parameter_list|,
@@ -287,7 +287,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|rexit_args
+name|sys_exit_args
 comment|/* { 		int	rval; 	} */
 modifier|*
 name|uap
