@@ -1351,13 +1351,6 @@ name|consumer
 argument_list|)
 condition|)
 return|return;
-name|g_free
-argument_list|(
-name|gp
-operator|->
-name|softc
-argument_list|)
-expr_stmt|;
 name|g_wither_geom
 argument_list|(
 name|gp
