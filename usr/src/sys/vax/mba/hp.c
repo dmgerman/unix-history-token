@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.30	81/03/09	*/
+comment|/*	hp.c	4.31	81/03/11	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	check RM80 skip sector handling, esp when ECC's occur later  *	add reading of bad sector information and disk layout from sector 1  *	add bad sector forwarding code  *	check interaction with tape driver on same mba  *	check multiple drive handling  *	check offset recovery handling  *	see if DCLR and/or RELEASE set attention status  */
+comment|/*  * HP disk driver for RP0x+RM0x  *  * TODO:  *	check RM80 skip sector handling, esp when ECC's occur later  *	check offset recovery handling  *	see if DCLR and/or RELEASE set attention status  */
 end_comment
 
 begin_include
