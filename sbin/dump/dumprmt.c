@@ -113,6 +113,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/tcp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<protocols/dumprestore.h>
 end_include
 
@@ -643,17 +649,6 @@ name|pwd
 init|=
 name|NULL
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-specifier|static
-name|int
-name|on
-init|=
-literal|1
-decl_stmt|;
-endif|#
-directive|endif
 name|char
 modifier|*
 name|tuser
@@ -663,6 +658,9 @@ name|size
 decl_stmt|;
 name|int
 name|throughput
+decl_stmt|;
+name|int
+name|on
 decl_stmt|;
 if|if
 condition|(
@@ -1006,9 +1004,10 @@ argument_list|(
 literal|"IP_TOS:IPTOS_THROUGHPUT setsockopt"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
+name|on
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|setsockopt
@@ -1035,8 +1034,6 @@ argument_list|(
 literal|"TCP_NODELAY setsockopt"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
