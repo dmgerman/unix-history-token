@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user or with the express written consent of  * Sun Microsystems, Inc.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user or with the express written consent of  * Sun Microsystems, Inc.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  */
 end_comment
 
 begin_if
@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -136,13 +142,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|index
-value|strchr
-end_define
 
 begin_ifdef
 ifdef|#
@@ -229,8 +228,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -338,9 +336,8 @@ name|force
 init|=
 literal|0
 decl_stmt|;
-name|char
-modifier|*
-name|self
+name|int
+name|ch
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -351,66 +348,27 @@ name|master
 decl_stmt|;
 endif|#
 directive|endif
-name|self
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-for|for
-control|(
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-init|;
-name|argc
-operator|>
-literal|0
-operator|&&
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'-'
-condition|;
-name|argc
-operator|--
-operator|,
-name|argv
-operator|++
-control|)
-block|{
-if|if
+while|while
 condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|2
-index|]
-operator|!=
-literal|0
-condition|)
-block|{
-name|usage
+operator|(
+name|ch
+operator|=
+name|getopt
 argument_list|(
-name|self
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"f"
 argument_list|)
-expr_stmt|;
-block|}
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
 switch|switch
 condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|1
-index|]
+name|ch
 condition|)
 block|{
 case|case
@@ -423,25 +381,26 @@ expr_stmt|;
 break|break;
 default|default:
 name|usage
-argument_list|(
-name|self
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
-block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|argc
 operator|!=
 literal|0
 condition|)
-block|{
 name|usage
-argument_list|(
-name|self
-argument_list|)
+argument_list|()
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|YP
@@ -468,23 +427,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't find master of publickey database\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't find master of publickey database"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|uid
@@ -513,23 +462,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chkey: cannot convert hostname to netname\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot convert hostname to netname"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -546,23 +485,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chkey: cannot convert username to netname\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"cannot convert username to netname"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 operator|(
 name|void
@@ -618,35 +547,24 @@ block|{
 ifdef|#
 directive|ifdef
 name|YPPASSWD
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No NIS password entry found: can't change key.\n"
+literal|"no NIS password entry found: can't change key"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"No password entry found: can't change key.\n"
+literal|"no password entry found: can't change key"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -664,23 +582,13 @@ name|pw
 operator|==
 name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No password entry found: can't change key.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"no password entry found: can't change key"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 name|pass
@@ -719,23 +627,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Invalid password.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"invalid password"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|#
 directive|else
@@ -845,23 +743,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Password incorrect.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"password incorrect"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -899,16 +787,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|YP
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unable to update NIS database (%u): %s\n"
-argument_list|,
-name|self
+literal|"unable to update NIS database (%u): %s"
 argument_list|,
 name|status
 argument_list|,
@@ -920,25 +803,15 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unable to update publickey database\n"
-argument_list|,
-name|self
+literal|"unable to update publickey database"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -973,8 +846,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ROOTKEY
 argument_list|)
 expr_stmt|;
@@ -1017,25 +892,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
+literal|"%s: write"
 argument_list|,
 name|ROOTKEY
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-literal|"write"
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 if|if
@@ -1047,21 +910,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"Unable to login with new secret key.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"unable to login with new secret key"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1084,9 +939,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
-name|char
-modifier|*
-name|name
+name|void
 parameter_list|)
 block|{
 operator|(
@@ -1096,9 +949,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-f]\n"
-argument_list|,
-name|name
+literal|"usage: chkey [-f]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1296,7 +1147,7 @@ return|;
 block|}
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|val
 argument_list|,
@@ -1326,7 +1177,7 @@ literal|1
 expr_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|pw
 operator|.
