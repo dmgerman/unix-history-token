@@ -61,8 +61,11 @@ begin_struct
 struct|struct
 name|disk
 block|{
-name|int
+name|u_int
 name|d_flags
+decl_stmt|;
+name|u_int
+name|d_dsflags
 decl_stmt|;
 name|struct
 name|cdevsw
@@ -84,6 +87,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_LOCK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DISKFLAG_WANTED
+value|0x2
+end_define
 
 begin_decl_stmt
 name|dev_t
