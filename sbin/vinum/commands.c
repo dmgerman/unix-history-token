@@ -294,7 +294,8 @@ name|superdev
 argument_list|,
 name|VINUM_STARTCONFIG
 argument_list|,
-name|NULL
+operator|&
+name|force
 argument_list|)
 condition|)
 block|{
