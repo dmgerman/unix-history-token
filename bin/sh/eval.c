@@ -4626,6 +4626,10 @@ name|optreset
 operator|=
 literal|1
 expr_stmt|;
+name|opterr
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(

@@ -309,6 +309,10 @@ name|optind
 operator|=
 literal|1
 expr_stmt|;
+name|opterr
+operator|=
+literal|0
+expr_stmt|;
 comment|/* initialize getopt */
 name|phys
 operator|=
@@ -1398,6 +1402,10 @@ expr_stmt|;
 name|optind
 operator|=
 literal|1
+expr_stmt|;
+name|opterr
+operator|=
+literal|0
 expr_stmt|;
 comment|/* initialize getopt */
 name|phys

@@ -816,6 +816,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* initialize getopt */
+name|opterr
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|not_fcnumber
