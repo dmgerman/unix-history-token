@@ -1542,10 +1542,7 @@ name|vm_offset_t
 name|vm_page_startup
 parameter_list|(
 name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|,
-name|vm_offset_t
+name|vaddr
 parameter_list|)
 function_decl|;
 end_function_decl

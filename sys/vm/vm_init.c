@@ -193,10 +193,6 @@ name|virtual_avail
 operator|=
 name|vm_page_startup
 argument_list|(
-name|avail_start
-argument_list|,
-name|avail_end
-argument_list|,
 name|virtual_avail
 argument_list|)
 expr_stmt|;

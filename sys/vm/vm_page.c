@@ -247,12 +247,6 @@ name|vm_offset_t
 name|vm_page_startup
 parameter_list|(
 name|vm_offset_t
-name|starta
-parameter_list|,
-name|vm_offset_t
-name|enda
-parameter_list|,
-name|vm_offset_t
 name|vaddr
 parameter_list|)
 block|{
