@@ -7996,6 +7996,8 @@ name|off
 decl_stmt|,
 name|xfsize
 decl_stmt|,
+name|hdtr_size
+decl_stmt|,
 name|sbytes
 init|=
 literal|0
@@ -8010,6 +8012,10 @@ argument_list|(
 operator|&
 name|Giant
 argument_list|)
+expr_stmt|;
+name|hdtr_size
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * The descriptor must be a regular file and have a backing VM object. 	 */
 if|if
@@ -8227,7 +8233,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|sbytes
+name|hdtr_size
 operator|+=
 name|td
 operator|->
@@ -9176,7 +9182,7 @@ condition|)
 goto|goto
 name|done
 goto|;
-name|sbytes
+name|hdtr_size
 operator|+=
 name|td
 operator|->
@@ -9215,6 +9221,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|sbytes
+operator|+=
+name|hdtr_size
+expr_stmt|;
 name|copyout
 argument_list|(
 operator|&
