@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.6	84/07/08	*/
+comment|/*	machdep.c	6.7	84/08/03	*/
 end_comment
 
 begin_include
@@ -3269,12 +3269,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|spl1
-argument_list|()
-expr_stmt|;
 name|howto
 operator|=
 name|arghowto
@@ -3304,6 +3298,12 @@ block|{
 name|waittime
 operator|=
 literal|0
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl1
+argument_list|()
 expr_stmt|;
 name|update
 argument_list|()
