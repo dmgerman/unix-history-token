@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -2915,6 +2915,18 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|FIOCLEX
+if|if
+condition|(
+name|m
+operator|==
+name|LocalMailer
+condition|)
+name|_exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+else|else
 name|_exit
 argument_list|(
 name|EX_UNAVAILABLE

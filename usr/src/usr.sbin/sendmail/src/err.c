@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -98,6 +98,16 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|int
+name|olderrno
+init|=
+name|errno
+decl_stmt|;
 specifier|extern
 name|char
 name|Arpa_PSyserr
@@ -108,15 +118,10 @@ name|char
 name|Arpa_TSyserr
 index|[]
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 comment|/* format and output the error message */
 if|if
 condition|(
-name|errno
+name|olderrno
 operator|==
 literal|0
 condition|)
@@ -140,6 +145,8 @@ operator|)
 name|NULL
 argument_list|,
 name|p
+argument_list|,
+name|olderrno
 argument_list|,
 name|fmt
 argument_list|,
@@ -169,7 +176,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
+name|olderrno
 operator|==
 literal|0
 condition|)
@@ -287,6 +294,10 @@ name|char
 name|Arpa_Usrerr
 index|[]
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|SuprErrs
@@ -301,6 +312,8 @@ operator|->
 name|e_to
 argument_list|,
 name|Arpa_Usrerr
+argument_list|,
+name|errno
 argument_list|,
 name|fmt
 argument_list|,
@@ -393,6 +406,8 @@ name|e_to
 argument_list|,
 name|num
 argument_list|,
+literal|0
+argument_list|,
 name|msg
 argument_list|,
 name|a
@@ -476,6 +491,8 @@ operator|)
 name|NULL
 argument_list|,
 name|num
+argument_list|,
+literal|0
 argument_list|,
 name|msg
 argument_list|,
@@ -695,11 +712,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  FMTMSG -- format a message into buffer. ** **	Parameters: **		eb -- error buffer to get result. **		to -- the recipient tag for this message. **		num -- arpanet error number. **		fmt -- format of string. **		a, b, c, d, e -- arguments. ** **	Returns: **		none. ** **	Side Effects: **		none. */
+comment|/* **  FMTMSG -- format a message into buffer. ** **	Parameters: **		eb -- error buffer to get result. **		to -- the recipient tag for this message. **		num -- arpanet error number. **		en -- the error number to display. **		fmt -- format of string. **		a, b, c, d, e -- arguments. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
-comment|/*VARARGS4*/
+comment|/*VARARGS5*/
 end_comment
 
 begin_expr_stmt
@@ -711,6 +728,8 @@ argument_list|,
 name|to
 argument_list|,
 name|num
+argument_list|,
+name|eno
 argument_list|,
 name|fmt
 argument_list|,
@@ -742,6 +761,12 @@ begin_decl_stmt
 name|char
 modifier|*
 name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|en
 decl_stmt|;
 end_decl_stmt
 
