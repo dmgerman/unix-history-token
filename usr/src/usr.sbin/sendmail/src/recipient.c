@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.23 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2500,9 +2500,14 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"550 Cannot open %s"
+literal|"550 Cannot open %s: %s"
 argument_list|,
 name|fname
+argument_list|,
+name|errstring
+argument_list|(
+name|ret
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

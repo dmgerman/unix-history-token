@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.38 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4232,6 +4232,11 @@ name|statmsg
 index|[
 literal|4
 index|]
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -4242,6 +4247,11 @@ expr_stmt|;
 name|usrerr
 argument_list|(
 name|statmsg
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

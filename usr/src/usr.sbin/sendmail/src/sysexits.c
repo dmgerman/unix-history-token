@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysexits.c	6.1 (Berkeley) %G%"
+literal|"@(#)sysexits.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ comment|/* 65 DATAERR */
 literal|"501 Data format error"
 block|,
 comment|/* 66 NOINPUT */
-literal|"550 Cannot open input"
+literal|"550 Cannot open input: %s"
 block|,
 comment|/* 67 NOUSER */
 literal|"550 User unknown"
@@ -64,19 +64,19 @@ comment|/* 69 UNAVAILABLE */
 literal|"554 Service unavailable"
 block|,
 comment|/* 70 SOFTWARE */
-literal|"554 Internal error"
+literal|"554 Internal error: %s"
 block|,
 comment|/* 71 OSERR */
-literal|"451 Operating system error"
+literal|"451 Operating system error: %s"
 block|,
 comment|/* 72 OSFILE */
-literal|"554 System file missing"
+literal|"554 System file missing: %s"
 block|,
 comment|/* 73 CANTCREAT */
-literal|"550 Can't create output"
+literal|"550 Can't create output: %s"
 block|,
 comment|/* 74 IOERR */
-literal|"451 I/O error"
+literal|"451 I/O error: %s"
 block|,
 comment|/* 75 TEMPFAIL */
 literal|"250 Deferred"
@@ -85,7 +85,7 @@ comment|/* 76 PROTOCOL */
 literal|"554 Remote protocol error"
 block|,
 comment|/* 77 NOPERM */
-literal|"550 Insufficient permission"
+literal|"550 Insufficient permission: %s"
 block|,
 comment|/* 78 CONFIG */
 literal|"554 Local configuration error"
@@ -111,74 +111,6 @@ index|]
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  *  STATSTRING -- return string corresponding to an error status  *  *	Parameters:  *		stat -- the status to decode.  *  *	Returns:  *		The string corresponding to that status  *  *	Side Effects:  *		none.  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|statstring
-parameter_list|(
-name|stat
-parameter_list|)
-name|int
-name|stat
-decl_stmt|;
-block|{
-specifier|static
-name|char
-name|ebuf
-index|[
-literal|50
-index|]
-decl_stmt|;
-name|stat
-operator|-=
-name|EX__BASE
-expr_stmt|;
-if|if
-condition|(
-name|stat
-operator|<
-literal|0
-operator|||
-name|stat
-operator|>=
-name|N_SysEx
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|ebuf
-argument_list|,
-literal|"554 Unknown status %d"
-argument_list|,
-name|stat
-operator|+
-name|EX__BASE
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ebuf
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|SysExMsg
-index|[
-name|stat
-index|]
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 

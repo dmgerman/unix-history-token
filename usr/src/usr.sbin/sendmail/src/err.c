@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.6 (Berkeley) %G%"
+literal|"@(#)err.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,7 +374,7 @@ name|e_to
 argument_list|,
 literal|"501"
 argument_list|,
-name|errno
+literal|0
 argument_list|,
 name|fmt
 argument_list|,
