@@ -99,6 +99,12 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<geom/geom_int.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1148,6 +1154,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
+name|g_debugflags
+operator|&
+name|G_F_DISKIOCTL
+operator|)
+operator|&&
 operator|(
 name|dp
 operator|->

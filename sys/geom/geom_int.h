@@ -56,8 +56,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * 1	G_T_TOPOLOGY  * 2	G_T_BIO  * 4	G_T_ACCESS  * 8	enable sanity checks  * 16	Allow footshooting on rank#1 providers  */
+comment|/*  * 1	G_T_TOPOLOGY  * 2	G_T_BIO  * 4	G_T_ACCESS  * 8	Enable sanity checks  * 16	Allow footshooting on rank#1 providers  * 32	G_T_DETAILS  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|G_F_DISKIOCTL
+value|64
+end_define
 
 begin_comment
 comment|/*  * Various internal actions are tracked by tagging g_event[s] onto  * an internal eventqueue.  */
