@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.9	85/03/08	*/
+comment|/*	autoconf.c	6.10	85/04/17	*/
 end_comment
 
 begin_comment
@@ -3647,15 +3647,34 @@ condition|(
 name|dumplo
 operator|==
 literal|0
+operator|&&
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
+index|]
+operator|.
+name|d_psize
 condition|)
 name|dumplo
 operator|=
-name|swdevt
+operator|(
+operator|*
+name|bdevsw
 index|[
-literal|0
+name|major
+argument_list|(
+name|dumpdev
+argument_list|)
 index|]
 operator|.
-name|sw_nblks
+name|d_psize
+operator|)
+operator|(
+name|dumpdev
+operator|)
 operator|-
 name|MAXDUMP
 expr_stmt|;
