@@ -1548,6 +1548,8 @@ operator|(
 name|LOGIN_SETGROUP
 operator||
 name|LOGIN_SETLOGIN
+operator||
+name|LOGIN_SETMAC
 operator|)
 expr_stmt|;
 comment|/* Set the process priority */
