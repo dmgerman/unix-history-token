@@ -1211,7 +1211,7 @@ comment|/* 	 * XXX -- not sure this is right place to do this 	 * Allocate memor
 comment|/* 	 * XXX - hopefully have better way to get dma'able memory later, 	 * this code assumes that the physical memory address returned 	 * from malloc will be below 16Mb. The Lance's address registers 	 * are only 16 bits wide! 	 */
 define|#
 directive|define
-name|MAXMEM
+name|ISMAXMEM
 value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) \                  + sizeof(struct init_block) + 8)
 name|is
 operator|->
@@ -1224,7 +1224,7 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-name|MAXMEM
+name|ISMAXMEM
 argument_list|,
 name|M_TEMP
 argument_list|,
@@ -1247,7 +1247,7 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * XXX -- should take corrective action if not 	 * quadword alilgned, the 8 byte slew factor in MAXMEM 	 * allows for this. 	 */
+comment|/*  	 * XXX -- should take corrective action if not 	 * quadword alilgned, the 8 byte slew factor in ISMAXMEM 	 * allows for this. 	 */
 if|if
 condition|(
 operator|(
