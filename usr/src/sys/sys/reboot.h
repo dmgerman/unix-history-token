@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)reboot.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)reboot.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Arguments to reboot system call.  * These are passed to boot program in r11,  * and on to init.  */
+comment|/*  * Arguments to reboot system call.  These are passed to boot program  * in r11, and on to init.  */
 end_comment
 
 begin_define
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|RB_ASKNAME
-value|0x01
+value|0x001
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|RB_SINGLE
-value|0x02
+value|0x002
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|RB_NOSYNC
-value|0x04
+value|0x004
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|RB_HALT
-value|0x08
+value|0x008
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|RB_INITNAME
-value|0x10
+value|0x010
 end_define
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|RB_DFLTROOT
-value|0x20
+value|0x020
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|RB_KDB
-value|0x40
+value|0x040
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|RB_RDONLY
-value|0x80
+value|0x080
 end_define
 
 begin_comment
@@ -256,14 +256,14 @@ begin_define
 define|#
 directive|define
 name|B_MAGICMASK
-value|((u_long)0xf0000000)
+value|0xf0000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|B_DEVMAGIC
-value|((u_long)0xa0000000)
+value|0xa0000000
 end_define
 
 begin_define
