@@ -766,19 +766,29 @@ name|name
 operator|!=
 literal|'\0'
 condition|)
+block|{
 name|out1fmt
 argument_list|(
-literal|"alias %s=%s\n"
+literal|"alias %s="
 argument_list|,
 name|ap
 operator|->
 name|name
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|out1qstr
+argument_list|(
 name|ap
 operator|->
 name|val
 argument_list|)
 expr_stmt|;
+name|out1c
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -848,17 +858,27 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|out1fmt
 argument_list|(
-literal|"alias %s=%s\n"
+literal|"alias %s="
 argument_list|,
 name|n
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|out1qstr
+argument_list|(
 name|ap
 operator|->
 name|val
 argument_list|)
 expr_stmt|;
+name|out1c
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 operator|*
