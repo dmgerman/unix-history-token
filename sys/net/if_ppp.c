@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.45 1997/10/10 11:57:40 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.46 1997/10/17 00:12:38 brian Exp $ */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_define
 define|#
 directive|define
 name|PPP_COMPRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPP_FILTER
 end_define
 
 begin_include
@@ -131,13 +137,11 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
+end_ifdef
 
 begin_include
 include|#
@@ -1266,11 +1270,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PPP_COMPRESS */
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
 if|if
 condition|(
 name|sc
@@ -1351,7 +1353,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* PPP_FILTER */
 ifdef|#
 directive|ifdef
 name|VJC
@@ -1455,11 +1457,9 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
 name|struct
 name|bpf_program
 modifier|*
@@ -1481,7 +1481,7 @@ name|newcodelen
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* PPP_FILTER */
 ifdef|#
 directive|ifdef
 name|PPP_COMPRESS
@@ -2403,11 +2403,9 @@ name|s
 argument_list|)
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
 case|case
 name|PPPIOCSPASS
 case|:
@@ -3703,11 +3701,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
 comment|/* 	 * Apply the pass and active filters to the packet, 	 * but only if it is a data packet. 	 */
 operator|*
 name|mtod
@@ -3824,7 +3820,7 @@ name|tv_sec
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* PPP_FILTER */
 block|}
 if|#
 directive|if
@@ -6687,11 +6683,9 @@ operator|==
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|PPP_FILTER
 comment|/* 	 * See whether we want to pass this packet, and 	 * if it counts as link activity. 	 */
 name|adrs
 operator|=
@@ -6818,7 +6812,7 @@ name|tv_sec
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NBPFILTER */
+comment|/* PPP_FILTER */
 block|}
 if|#
 directive|if
