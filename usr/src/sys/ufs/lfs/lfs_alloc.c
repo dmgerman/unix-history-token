@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.36 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.37 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -224,7 +224,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Read the appropriate block from the ifile. */
+comment|/* 	 * Remove the inode from the free list and write the free list 	 * back. 	 */
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -249,7 +249,6 @@ argument_list|(
 literal|"lfs_ialloc: inuse inode on the free list"
 argument_list|)
 expr_stmt|;
-comment|/* Remove from the free list, set the access time, write it back. */
 name|fs
 operator|->
 name|lfs_free
@@ -266,8 +265,10 @@ name|time
 operator|.
 name|tv_sec
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
@@ -644,7 +645,7 @@ name|ip
 operator|->
 name|i_number
 expr_stmt|;
-comment|/* 	 * Read the appropriate block from the ifile.  Set the inode entry to 	 * unused, increment its version number and link it into the free chain. 	 */
+comment|/* 	 * Set the ifile's inode entry to unused, increment its version number 	 * and link it into the free chain. 	 */
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -681,8 +682,10 @@ name|lfs_free
 operator|=
 name|ino
 expr_stmt|;
-name|lfs_bwrite
+name|LFS_IWRITE
 argument_list|(
+name|fs
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
