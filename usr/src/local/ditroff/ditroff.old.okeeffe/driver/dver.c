@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dver.c	1.16	85/04/29  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
+comment|/*	dver.c	1.17	85/08/05  *  * VAX Versatec driver for the new troff  *  * Authors:	BWK(BELL)  *		VCAT(berkley)  *		Richard L. Hyde, Perdue University  *		and David Slattengren, U.C. Berkeley  */
 end_comment
 
 begin_comment
@@ -212,7 +212,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"dver.c	1.16	85/04/29"
+literal|"dver.c	1.17	85/08/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -7571,7 +7571,42 @@ end_decl_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 asm|asm("movc5 $0,(sp),$0,8(ap),*4(ap)");
+else|#
+directive|else
+specifier|register
+name|int
+name|i
+init|=
+name|nbytes
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
+init|=
+name|lp
+decl_stmt|;
+while|while
+condition|(
+name|i
+operator|--
+operator|>
+literal|0
+condition|)
+operator|*
+operator|(
+name|cp
+operator|++
+operator|)
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
