@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1988, 1989, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988, 1989, 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988, 1989, 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	8.1 (Berkeley) %G%"
+literal|"@(#)rshd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,13 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<paths.h>
 end_include
 
 begin_include
@@ -120,25 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -162,7 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<paths.h>
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -385,11 +379,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
+break|break;
 block|}
 name|argc
 operator|-=
@@ -2465,7 +2455,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|pwd
 operator|->
@@ -3070,12 +3060,10 @@ modifier|*
 name|h
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|maybe
 init|=
@@ -3151,6 +3139,11 @@ argument_list|,
 literal|"usage: rshd [-%s]"
 argument_list|,
 name|OPTIONS
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
