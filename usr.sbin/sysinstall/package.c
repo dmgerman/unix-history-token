@@ -877,7 +877,7 @@ operator|/
 name|seconds
 operator|)
 operator|/
-literal|1024.0
+literal|1000.0
 argument_list|)
 expr_stmt|;
 block|}
