@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.8 1997/05/07 02:27:04 eivind Exp $  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)clnt.h 1.31 88/02/08 SMI  *	from: @(#)clnt.h	2.1 88/07/29 4.0 RPCSRC  *	$Id: clnt.h,v 1.5 1996/12/30 13:59:38 peter Exp $  */
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_comment
@@ -515,7 +521,7 @@ value|((*(cl)->cl_ops->cl_control)(cl,rq,in))
 end_define
 
 begin_comment
-comment|/*  * control operations that apply to both udp and tcp transports  */
+comment|/*  * control operations that apply to udp, tcp and unix transports  *  * Note: options marked XXX are no-ops in this implementation of RPC.  * The are present in TI-RPC but can't be implemented here since they  * depend on the presence of STREAMS/TLI, which we don't have.  *  */
 end_comment
 
 begin_define
@@ -551,6 +557,149 @@ begin_comment
 comment|/* get server's address (sockaddr) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLGET_FD
+value|6
+end_define
+
+begin_comment
+comment|/* get connections file descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_SVC_ADDR
+value|7
+end_define
+
+begin_comment
+comment|/* get server's address (netbuf)         XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_FD_CLOSE
+value|8
+end_define
+
+begin_comment
+comment|/* close fd while clnt_destroy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_FD_NCLOSE
+value|9
+end_define
+
+begin_comment
+comment|/* Do not close fd while clnt_destroy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_XID
+value|10
+end_define
+
+begin_comment
+comment|/* Get xid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_XID
+value|11
+end_define
+
+begin_comment
+comment|/* Set xid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_VERS
+value|12
+end_define
+
+begin_comment
+comment|/* Get version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_VERS
+value|13
+end_define
+
+begin_comment
+comment|/* Set version number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_PROG
+value|14
+end_define
+
+begin_comment
+comment|/* Get program number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_PROG
+value|15
+end_define
+
+begin_comment
+comment|/* Set program number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_SVC_ADDR
+value|16
+end_define
+
+begin_comment
+comment|/* get server's address (netbuf)         XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_PUSH_TIMOD
+value|17
+end_define
+
+begin_comment
+comment|/* push timod if not already present     XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLSET_POP_TIMOD
+value|18
+end_define
+
+begin_comment
+comment|/* pop timod                             XXX */
+end_comment
+
 begin_comment
 comment|/*  * udp only control operations  */
 end_comment
@@ -575,6 +724,21 @@ end_define
 
 begin_comment
 comment|/* get retry timeout (timeval) */
+end_comment
+
+begin_comment
+comment|/*  * Operations which GSSAPI needs. (Bletch.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLGET_LOCAL_ADDR
+value|19
+end_define
+
+begin_comment
+comment|/* get local addr (sockaddr) */
 end_comment
 
 begin_comment
@@ -671,7 +835,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__END_DECLS
-comment|/*  * Generic client creation routine. Supported protocols are "udp" and "tcp"  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	char *host; 	-- hostname  *	u_long prog;	-- program number  *	u_long vers;	-- version number  *	char *prot;	-- protocol  */
+comment|/*  * Generic client creation routine. Supported protocols are "udp", "tcp"  * and "unix".  * CLIENT *  * clnt_create(host, prog, vers, prot);  *	char *host; 	-- hostname  *	u_long prog;	-- program number  *	u_long vers;	-- version number  *	char *prot;	-- protocol  */
 name|__BEGIN_DECLS
 specifier|extern
 name|CLIENT
@@ -771,6 +935,36 @@ name|u_long
 operator|,
 expr|struct
 name|timeval
+operator|,
+name|int
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__END_DECLS
+comment|/*  * AF_UNIX based rpc  * CLIENT *  * clntunix_create(raddr, prog, vers, sockp, sendsz, recvsz)  *	struct sockaddr_un *raddr;  *	u_long prog;  *	u_long version;  *	register int *sockp;  *	u_int sendsz;  *	u_int recvsz;  */
+name|__BEGIN_DECLS
+specifier|extern
+name|CLIENT
+modifier|*
+name|clntunix_create
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_un
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
 operator|,
 name|int
 operator|*
