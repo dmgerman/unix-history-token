@@ -1827,11 +1827,11 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
-name|fputc
+name|fprintf
 argument_list|(
-literal|'\n'
-argument_list|,
 name|out
+argument_list|,
+literal|"\n\\ No newline at end of file\n"
 argument_list|)
 expr_stmt|;
 block|}
