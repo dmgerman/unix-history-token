@@ -6025,7 +6025,7 @@ argument_list|)
 argument_list|,
 name|sysctl_machdep_i8254_freq
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
@@ -6140,7 +6140,7 @@ argument_list|)
 argument_list|,
 name|sysctl_machdep_tsc_freq
 argument_list|,
-literal|"I"
+literal|"IU"
 argument_list|,
 literal|""
 argument_list|)
