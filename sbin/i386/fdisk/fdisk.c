@@ -644,7 +644,7 @@ block|,
 block|{
 literal|0x07
 block|,
-literal|"OS/2 HPFS, NTFS, QNX or Advanced UNIX"
+literal|"OS/2 HPFS, NTFS, QNX-2 (16 bit) or Advanced UNIX"
 block|}
 block|,
 block|{
@@ -699,6 +699,24 @@ block|{
 literal|0x40
 block|,
 literal|"VENIX 286"
+block|}
+block|,
+block|{
+literal|0x4D
+block|,
+literal|"QNX 4.2 Primary"
+block|}
+block|,
+block|{
+literal|0x4E
+block|,
+literal|"QNX 4.2 Secondary"
+block|}
+block|,
+block|{
+literal|0x4F
+block|,
+literal|"QNX 4.2 Tertiary"
 block|}
 block|,
 block|{
