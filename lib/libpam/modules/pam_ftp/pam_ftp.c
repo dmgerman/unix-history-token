@@ -6,26 +6,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PLEASE_ENTER_PASSWORD
-value|"Password required for %s."
+name|PROMPT
+value|"OINK Password required for %s."
 end_define
 
 begin_define
 define|#
 directive|define
-name|GUEST_LOGIN_PROMPT
-value|"Guest login ok, send your e-mail address as password."
-end_define
-
-begin_comment
-comment|/* the following is a password that "can't be correct" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLOCK_PASSWORD
-value|"\177BAD PASSWPRD\177"
+name|GUEST_PROMPT
+value|"TWEET Guest login ok, send your e-mail address as password."
 end_define
 
 begin_include
@@ -70,10 +59,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_comment
-comment|/* here, we make a definition for the externally accessible function in this  * file (this definition is required for static a module but strongly  * encouraged generally) it is used to instruct the modules include file to  * define the function prototypes. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -97,6 +82,47 @@ include|#
 directive|include
 file|<security/_pam_macros.h>
 end_include
+
+begin_enum
+enum|enum
+block|{
+name|PAM_OPT_NO_ANON
+init|=
+name|PAM_OPT_STD_MAX
+block|,
+name|PAM_OPT_IGNORE
+block|}
+enum|;
+end_enum
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|opttab
+name|other_options
+index|[]
+init|=
+block|{
+block|{
+literal|"no_anon"
+block|,
+name|PAM_OPT_NO_ANON
+block|}
+block|,
+block|{
+literal|"ignore"
+block|,
+name|PAM_OPT_IGNORE
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -365,10 +391,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* --- authentication management functions (only) --- */
-end_comment
-
-begin_comment
 comment|/* Check if the user name is 'ftp' or 'anonymous'.  * If this is the case, set the PAM_RUSER to the entered email address  * and succeed, otherwise fail.  */
 end_comment
 
@@ -395,6 +417,10 @@ name|argv
 parameter_list|)
 block|{
 name|struct
+name|options
+name|options
+decl_stmt|;
+name|struct
 name|pam_message
 name|msg
 index|[
@@ -416,18 +442,6 @@ name|int
 name|retval
 decl_stmt|,
 name|anon
-decl_stmt|,
-name|options
-decl_stmt|,
-name|i
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|user
-decl_stmt|,
-modifier|*
-name|token
 decl_stmt|;
 name|char
 modifier|*
@@ -439,38 +453,35 @@ decl_stmt|,
 modifier|*
 name|prompt
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|user
+decl_stmt|,
+modifier|*
+name|token
+decl_stmt|;
 name|users
 operator|=
 name|prompt
 operator|=
 name|NULL
 expr_stmt|;
-name|options
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|argc
-condition|;
-name|i
-operator|++
-control|)
 name|pam_std_option
 argument_list|(
 operator|&
 name|options
 argument_list|,
+name|other_options
+argument_list|,
+name|argc
+argument_list|,
 name|argv
-index|[
-name|i
-index|]
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Options processed"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -495,9 +506,11 @@ name|user
 operator|==
 name|NULL
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|PAM_USER_UNKNOWN
-return|;
+argument_list|)
+expr_stmt|;
 name|anon
 operator|=
 literal|0
@@ -505,11 +518,15 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-operator|(
-name|options
+name|pam_test_option
+argument_list|(
 operator|&
+name|options
+argument_list|,
 name|PAM_OPT_NO_ANON
-operator|)
+argument_list|,
+name|NULL
+argument_list|)
 condition|)
 name|anon
 operator|=
@@ -554,10 +571,19 @@ name|user
 operator|==
 name|NULL
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|PAM_USER_UNKNOWN
-return|;
+argument_list|)
+expr_stmt|;
 block|}
+name|PAM_LOG
+argument_list|(
+literal|"Got user: %s"
+argument_list|,
+name|user
+argument_list|)
+expr_stmt|;
 comment|/* Require an email address for user's password. */
 if|if
 condition|(
@@ -571,7 +597,7 @@ name|malloc
 argument_list|(
 name|strlen
 argument_list|(
-name|PLEASE_ENTER_PASSWORD
+name|PROMPT
 argument_list|)
 operator|+
 name|strlen
@@ -586,16 +612,18 @@ name|prompt
 operator|==
 name|NULL
 condition|)
-return|return
+name|PAM_RETURN
+argument_list|(
 name|PAM_BUF_ERR
-return|;
+argument_list|)
+expr_stmt|;
 else|else
 block|{
 name|sprintf
 argument_list|(
 name|prompt
 argument_list|,
-name|PLEASE_ENTER_PASSWORD
+name|PROMPT
 argument_list|,
 name|user
 argument_list|)
@@ -619,7 +647,7 @@ index|]
 operator|.
 name|msg
 operator|=
-name|GUEST_LOGIN_PROMPT
+name|GUEST_PROMPT
 expr_stmt|;
 name|msg
 index|[
@@ -640,6 +668,11 @@ name|msg
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Sent prompt"
+argument_list|)
 expr_stmt|;
 name|resp
 operator|=
@@ -675,6 +708,11 @@ name|prompt
 argument_list|)
 expr_stmt|;
 block|}
+name|PAM_LOG
+argument_list|(
+literal|"Done conversation 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -695,7 +733,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
+name|PAM_RETURN
+argument_list|(
 name|retval
 operator|==
 name|PAM_CONV_AGAIN
@@ -703,8 +742,14 @@ condition|?
 name|PAM_INCOMPLETE
 else|:
 name|PAM_AUTHINFO_UNAVAIL
-return|;
+argument_list|)
+expr_stmt|;
 block|}
+name|PAM_LOG
+argument_list|(
+literal|"Done conversation 2"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|anon
@@ -713,11 +758,15 @@ block|{
 if|if
 condition|(
 operator|!
-operator|(
-name|options
+name|pam_test_option
+argument_list|(
 operator|&
+name|options
+argument_list|,
 name|PAM_OPT_IGNORE
-operator|)
+argument_list|,
+name|NULL
+argument_list|)
 condition|)
 block|{
 name|token
@@ -783,6 +832,11 @@ name|retval
 operator|=
 name|PAM_SUCCESS
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done anonymous"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -801,6 +855,11 @@ name|retval
 operator|=
 name|PAM_AUTH_ERR
 expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Done non-anonymous"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -810,12 +869,14 @@ name|_pam_drop_reply
 argument_list|(
 name|resp
 argument_list|,
-name|i
+literal|1
 argument_list|)
 expr_stmt|;
-return|return
+name|PAM_RETURN
+argument_list|(
 name|retval
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -846,10 +907,6 @@ name|PAM_IGNORE
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of module definition */
-end_comment
 
 begin_expr_stmt
 name|PAM_MODULE_ENTRY
