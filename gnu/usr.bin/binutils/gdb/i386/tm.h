@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|NUM_REGS
-value|14
+value|16
 end_define
 
 begin_decl_stmt

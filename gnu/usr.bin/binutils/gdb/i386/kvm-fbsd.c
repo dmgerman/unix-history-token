@@ -3877,12 +3877,12 @@ literal|9
 init|;
 name|i
 operator|<
-literal|16
+literal|14
 condition|;
 operator|++
 name|i
 control|)
-comment|/* eflags, cs, ss, ds, es, fs, gs */
+comment|/* eflags, cs, ss, ds, es */
 name|supply_register
 argument_list|(
 name|i
@@ -3893,6 +3893,34 @@ operator|*
 operator|)
 operator|&
 name|noreg
+argument_list|)
+expr_stmt|;
+name|supply_register
+argument_list|(
+literal|15
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pcb
+operator|.
+name|pcb_fs
+argument_list|)
+expr_stmt|;
+name|supply_register
+argument_list|(
+literal|16
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pcb
+operator|.
+name|pcb_gs
 argument_list|)
 expr_stmt|;
 comment|/* XXX 80387 registers? */
