@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	8.3 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1363,7 +1363,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* USE_TERMIO */
-name|memcpy
+name|memmove
 argument_list|(
 name|new_tc
 operator|.
@@ -2657,6 +2657,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SOLARIS
 operator|(
 name|void
 operator|)
@@ -2679,6 +2682,20 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|SOLARIS
+operator|(
+name|void
+operator|)
+name|sigrelse
+argument_list|(
+name|SIGTSTP
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|SOLARIS
 endif|#
 directive|endif
 comment|/* SIGTSTP */
@@ -4504,7 +4521,7 @@ name|i
 operator|==
 name|c
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|netiring
 operator|.
