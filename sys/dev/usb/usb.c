@@ -2367,9 +2367,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|events
 operator|&
 name|mask
+operator|)
 operator|&&
 name|usb_nevents
 operator|>
@@ -2387,10 +2389,23 @@ name|revents
 operator|==
 literal|0
 operator|&&
+operator|(
 name|events
 operator|&
 name|mask
+operator|)
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usb: sleeping on %p\n"
+operator|,
+operator|&
+name|usb_selevent
+operator|)
+argument_list|)
+expr_stmt|;
 name|selrecord
 argument_list|(
 name|p
@@ -2399,6 +2414,7 @@ operator|&
 name|usb_selevent
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -2450,9 +2466,11 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|events
 operator|&
 name|mask
+operator|)
 operator|&&
 name|sc
 operator|->
@@ -2472,9 +2490,11 @@ name|revents
 operator|==
 literal|0
 operator|&&
+operator|(
 name|events
 operator|&
 name|mask
+operator|)
 condition|)
 name|selrecord
 argument_list|(
@@ -2804,11 +2824,8 @@ name|USB_MAX_EVENTS
 condition|)
 block|{
 comment|/* Too many queued events, drop an old one. */
-name|DPRINTFN
+name|DPRINTF
 argument_list|(
-operator|-
-literal|1
-argument_list|,
 operator|(
 literal|"usb: event dropped\n"
 operator|)
