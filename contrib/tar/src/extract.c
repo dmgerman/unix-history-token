@@ -263,12 +263,12 @@ name|same_permissions_option
 operator|+=
 name|we_are_root
 expr_stmt|;
+endif|#
+directive|endif
 name|same_owner_option
 operator|+=
 name|we_are_root
 expr_stmt|;
-endif|#
-directive|endif
 name|xalloc_fail_func
 operator|=
 name|extract_finish
