@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.27 (Berkeley) 83/05/24"
+literal|"@(#)login.c	4.28 (Berkeley) 83/05/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|QUOTA
-end_define
 
 begin_include
 include|#
