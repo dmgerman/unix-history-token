@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.8 %G%"
+literal|"@(#)object.c 1.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1055,7 +1055,7 @@ name|maketype
 argument_list|(
 literal|"$real"
 argument_list|,
-literal|4L
+literal|8L
 argument_list|,
 literal|0L
 argument_list|)
