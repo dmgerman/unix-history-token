@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.279 1998/09/23 09:59:00 yokota Exp $  */
+comment|/*-  * Copyright (c) 1992-1998 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: syscons.c,v 1.280 1998/09/26 03:34:08 yokota Exp $  */
 end_comment
 
 begin_include
@@ -758,6 +758,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|crtc_vga
 init|=
@@ -769,8 +770,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|adp_flags
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,8 +1040,6 @@ specifier|static
 name|u_char
 modifier|*
 name|cut_buffer
-init|=
-name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,8 +1047,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|cut_buffer_size
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1059,8 +1054,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|mouse_level
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1418,7 +1411,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|((scp->history) + ((((pointer) - (scp->history)) + (scp->history_size)\     + (offset)) % (scp->history_size)))
+value|((scp)->history + ((((pointer) - (scp)->history) + (scp)->history_size \     + (offset)) % (scp)->history_size))
 end_define
 
 begin_define
@@ -2307,10 +2300,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * These functions need to be before calls to them so they can be inlined.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -3125,7 +3114,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-comment|/* discard anything left after UserConfig */
+comment|/* flush any noise in the buffer */
 name|empty_both_buffers
 argument_list|(
 name|sc_kbdc
@@ -5314,10 +5303,13 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|u_int
+name|delta_ehs
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|u_int
+name|int
 name|i
 decl_stmt|;
 name|struct
@@ -5762,7 +5754,7 @@ operator|->
 name|ysize
 argument_list|)
 condition|)
-name|i
+name|delta_ehs
 operator|=
 name|lines0
 operator|-
@@ -5776,7 +5768,7 @@ name|ysize
 argument_list|)
 expr_stmt|;
 else|else
-name|i
+name|delta_ehs
 operator|=
 literal|0
 expr_stmt|;
@@ -5809,7 +5801,7 @@ argument_list|)
 operator|>
 name|extra_history_size
 operator|+
-name|i
+name|delta_ehs
 condition|)
 return|return
 name|EINVAL
@@ -5831,7 +5823,7 @@ name|scp
 argument_list|,
 name|lines
 argument_list|,
-name|i
+name|delta_ehs
 argument_list|,
 name|TRUE
 argument_list|)
@@ -5854,11 +5846,12 @@ case|:
 block|{
 comment|/* MOUSE_BUTTON?DOWN -> MOUSE_MSC_BUTTON?UP */
 specifier|static
+name|int
 name|butmap
 index|[
 literal|8
 index|]
-operator|=
+init|=
 block|{
 name|MOUSE_MSC_BUTTON1UP
 operator||
@@ -5886,7 +5879,7 @@ name|MOUSE_MSC_BUTTON1UP
 block|,
 literal|0
 block|, 	}
-expr_stmt|;
+decl_stmt|;
 name|mouse_info_t
 modifier|*
 name|mouse
@@ -5925,8 +5918,7 @@ name|OLD_CONS_MOUSECTL
 condition|)
 block|{
 specifier|static
-name|unsigned
-name|char
+name|u_char
 name|swapb
 index|[]
 init|=
@@ -17159,6 +17151,8 @@ condition|(
 name|scp
 operator|->
 name|history
+operator|!=
+name|NULL
 condition|)
 block|{
 name|bcopy
