@@ -918,7 +918,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TEXT_SET
+name|EXEC_SET
 argument_list|(
 name|execsw_set
 argument_list|,
