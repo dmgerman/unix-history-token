@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -1140,9 +1146,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ke
+name|p
 operator|->
-name|ke_uticks
+name|p_uticks
 operator|++
 expr_stmt|;
 if|if
@@ -1189,9 +1195,9 @@ operator|>=
 literal|2
 condition|)
 block|{
-name|ke
+name|p
 operator|->
-name|ke_iticks
+name|p_iticks
 operator|++
 expr_stmt|;
 name|cp_time
@@ -1218,9 +1224,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|ke
+name|td
 operator|->
-name|ke_sticks
+name|td_sticks
+operator|++
+expr_stmt|;
+name|p
+operator|->
+name|p_sticks
 operator|++
 expr_stmt|;
 if|if

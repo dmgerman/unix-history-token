@@ -635,6 +635,10 @@ modifier|*
 name|td_standin
 decl_stmt|;
 comment|/* (?) Use this for an upcall */
+name|u_int64_t
+name|td_sticks
+decl_stmt|;
+comment|/* (j) Statclock hits in system mode. */
 name|u_int
 name|td_usticks
 decl_stmt|;
@@ -1437,30 +1441,6 @@ name|fixpt_t
 name|ke_pctcpu
 decl_stmt|;
 comment|/* (j) %cpu during p_swtime. */
-name|u_int64_t
-name|ke_uu
-decl_stmt|;
-comment|/* (j) Previous user time in usec. */
-name|u_int64_t
-name|ke_su
-decl_stmt|;
-comment|/* (j) Previous system time in usec. */
-name|u_int64_t
-name|ke_iu
-decl_stmt|;
-comment|/* (j) Previous intr time in usec. */
-name|u_int64_t
-name|ke_uticks
-decl_stmt|;
-comment|/* (j) Statclock hits in user mode. */
-name|u_int64_t
-name|ke_sticks
-decl_stmt|;
-comment|/* (j) Statclock hits in system mode. */
-name|u_int64_t
-name|ke_iticks
-decl_stmt|;
-comment|/* (j) Statclock hits in intr. */
 name|u_int
 name|ke_uuticks
 decl_stmt|;
@@ -1961,6 +1941,30 @@ name|bintime
 name|p_runtime
 decl_stmt|;
 comment|/* (j) Real time. */
+name|u_int64_t
+name|p_uu
+decl_stmt|;
+comment|/* (j) Previous user time in usec. */
+name|u_int64_t
+name|p_su
+decl_stmt|;
+comment|/* (j) Previous system time in usec. */
+name|u_int64_t
+name|p_iu
+decl_stmt|;
+comment|/* (j) Previous intr time in usec. */
+name|u_int64_t
+name|p_uticks
+decl_stmt|;
+comment|/* (j) Statclock hits in user mode. */
+name|u_int64_t
+name|p_sticks
+decl_stmt|;
+comment|/* (j) Statclock hits in system mode. */
+name|u_int64_t
+name|p_iticks
+decl_stmt|;
+comment|/* (j) Statclock hits in intr. */
 name|int
 name|p_profthreads
 decl_stmt|;

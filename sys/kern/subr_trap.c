@@ -332,9 +332,9 @@ argument_list|)
 expr_stmt|;
 name|ticks
 operator|=
-name|ke
+name|td
 operator|->
-name|ke_sticks
+name|td_sticks
 operator|-
 name|oticks
 expr_stmt|;
@@ -534,9 +534,9 @@ name|td_kse
 expr_stmt|;
 name|sticks
 operator|=
-name|ke
+name|td
 operator|->
-name|ke_sticks
+name|td_sticks
 expr_stmt|;
 name|flags
 operator|=
