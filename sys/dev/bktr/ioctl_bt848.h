@@ -52,6 +52,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CHNLSET_XUSSR
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
 name|CHNLSET_MIN
 value|CHNLSET_NABCST
 end_define
@@ -60,7 +67,7 @@ begin_define
 define|#
 directive|define
 name|CHNLSET_MAX
-value|CHNLSET_JPNCABLE
+value|CHNLSET_XUSSR
 end_define
 
 begin_comment
