@@ -80,9 +80,12 @@ begin_comment
 comment|/* Define if you have a working `mmap' system call.  */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_MMAP */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_MMAP
+value|1
+end_define
 
 begin_comment
 comment|/* Define if your struct stat has st_blksize.  */
