@@ -123,6 +123,32 @@ value|16
 end_define
 
 begin_comment
+comment|/* Sanity checks on IDT vectors. */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|APIC_IO_INTS
+operator|+
+name|APIC_NUM_IOINTS
+operator|<=
+name|APIC_LOCAL_INTS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|IPI_STOP
+operator|<
+name|APIC_SPURIOUS_INT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Support for local APICs.  Local APICs manage interrupts on each  * individual processor as opposed to I/O APICs which receive interrupts  * from I/O devices and then forward them on to the local APICs.  *  * Local APICs can also send interrupts to each other thus providing the  * mechanism for IPIs.  */
 end_comment
 
@@ -361,10 +387,17 @@ name|apic_isr5
 argument_list|)
 block|,
 comment|/* 160 - 191 */
-name|NULL
+name|IDTVEC
+argument_list|(
+name|apic_isr6
+argument_list|)
 block|,
 comment|/* 192 - 223 */
-name|NULL
+name|IDTVEC
+argument_list|(
+name|apic_isr7
+argument_list|)
+block|,
 comment|/* 224 - 255 */
 block|}
 decl_stmt|;
@@ -2120,7 +2153,7 @@ name|vector
 operator|=
 name|irq
 operator|+
-name|IDT_IO_INTS
+name|APIC_IO_INTS
 expr_stmt|;
 if|if
 condition|(
@@ -2151,7 +2184,7 @@ name|KASSERT
 argument_list|(
 name|vector
 operator|>=
-name|IDT_IO_INTS
+name|APIC_IO_INTS
 operator|&&
 name|vector
 operator|!=
@@ -2159,7 +2192,7 @@ name|IDT_SYSCALL
 operator|&&
 name|vector
 operator|<=
-name|IDT_IO_INTS
+name|APIC_IO_INTS
 operator|+
 name|NUM_IO_INTS
 argument_list|,
@@ -2183,7 +2216,7 @@ return|return
 operator|(
 name|vector
 operator|-
-name|IDT_IO_INTS
+name|APIC_IO_INTS
 operator|)
 return|;
 block|}

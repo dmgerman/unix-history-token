@@ -22,14 +22,14 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
-comment|/* With I/O APIC's we can have up to 159 interrupts. */
+comment|/* With I/O APIC's we can have up to 191 interrupts. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NUM_IO_INTS
-value|159
+value|191
 end_define
 
 begin_define

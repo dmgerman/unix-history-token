@@ -20,7 +20,7 @@ comment|/*  * Local&& I/O APIC variable definitions.  */
 end_comment
 
 begin_comment
-comment|/*  * Layout of local APIC interrupt vectors:  *  *	0xff (255)  +-------------+  *                  |             | 15 (Spurious Vector)  *	0xf0 (240)  +-------------+  *                  |             | 14 (Interprocessor Interrupts)  *	0xe0 (224)  +-------------+  *                  |             | 13 (Local Interrupt (LINT[01]))  *	0xd0 (208)  +-------------+  *                  |             | 12 (Local Timer and Error Interrupts)  *	0xc0 (192)  +-------------+  *                  |             | 11 (I/O Interrupts)  *	0xb0 (176)  +-------------+  *                  |             | 10 (I/O Interrupts)  *	0xa0 (160)  +-------------+  *                  |             | 9 (I/O Interrupts)  *	0x90 (144)  +-------------+  *                  |             | 8 (I/O Interrupts / System Calls)  *	0x80 (128)  +-------------+  *                  |             | 7 (I/O Interrupts)  *	0x70 (112)  +-------------+  *                  |             | 6 (I/O Interrupts)  *	0x60 (96)   +-------------+  *                  |             | 5 (I/O Interrupts)  *	0x50 (80)   +-------------+  *                  |             | 4 (I/O Interrupts)  *	0x40 (64)   +-------------+  *                  |             | 3 (I/O Interrupts)  *	0x30 (48)   +-------------+  *                  |             | 2 (I/O Interrupts)  *	0x20 (32)   +-------------+  *                  |             | 1 (Exceptions, traps, faults, etc.)  *	0x10 (16)   +-------------+  *                  |             | 0 (Exceptions, traps, faults, etc.)  *	0x00 (0)    +-------------+  *  * Note: 0x80 needs to be handled specially and not allocated to an  * I/O device!  */
+comment|/*  * Layout of local APIC interrupt vectors:  *  *	0xff (255)  +-------------+  *                  |             | 15 (Spurious / IPIs / Local Interrupts )  *	0xf0 (240)  +-------------+  *                  |             | 14 (I/O Interrupts)  *	0xe0 (224)  +-------------+  *                  |             | 13 (I/O Interrupts)  *	0xd0 (208)  +-------------+  *                  |             | 12 (I/O Interrupts)  *	0xc0 (192)  +-------------+  *                  |             | 11 (I/O Interrupts)  *	0xb0 (176)  +-------------+  *                  |             | 10 (I/O Interrupts)  *	0xa0 (160)  +-------------+  *                  |             | 9 (I/O Interrupts)  *	0x90 (144)  +-------------+  *                  |             | 8 (I/O Interrupts / System Calls)  *	0x80 (128)  +-------------+  *                  |             | 7 (I/O Interrupts)  *	0x70 (112)  +-------------+  *                  |             | 6 (I/O Interrupts)  *	0x60 (96)   +-------------+  *                  |             | 5 (I/O Interrupts)  *	0x50 (80)   +-------------+  *                  |             | 4 (I/O Interrupts)  *	0x40 (64)   +-------------+  *                  |             | 3 (I/O Interrupts)  *	0x30 (48)   +-------------+  *                  |             | 2 (ATPIC Interrupts)  *	0x20 (32)   +-------------+  *                  |             | 1 (Exceptions, traps, faults, etc.)  *	0x10 (16)   +-------------+  *                  |             | 0 (Exceptions, traps, faults, etc.)  *	0x00 (0)    +-------------+  *  * Note: 0x80 needs to be handled specially and not allocated to an  * I/O device!  */
 end_comment
 
 begin_define
@@ -33,15 +33,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|APIC_IO_INTS
+value|(IDT_IO_INTS + 16)
+end_define
+
+begin_define
+define|#
+directive|define
 name|APIC_NUM_IOINTS
-value|160
+value|192
 end_define
 
 begin_define
 define|#
 directive|define
 name|APIC_LOCAL_INTS
-value|(IDT_IO_INTS + APIC_NUM_IOINTS)
+value|240
 end_define
 
 begin_define
@@ -69,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|APIC_IPI_INTS
-value|(APIC_LOCAL_INTS + 32)
+value|(APIC_LOCAL_INTS + 3)
 end_define
 
 begin_define
@@ -111,6 +118,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|IPI_LAZYPMAP
+value|(APIC_IPI_INTS + 4)
+end_define
+
+begin_comment
+comment|/* Lazy pmap release. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IPI_HARDCLOCK
 value|(APIC_IPI_INTS + 8)
 end_define
@@ -140,19 +158,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPI_LAZYPMAP
-value|(APIC_IPI_INTS + 11)
-end_define
-
-begin_comment
-comment|/* Lazy pmap release. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IPI_STOP
-value|(APIC_IPI_INTS + 12)
+value|(APIC_IPI_INTS + 11)
 end_define
 
 begin_comment
@@ -326,6 +333,16 @@ decl_stmt|,
 name|IDTVEC
 argument_list|(
 name|apic_isr5
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|apic_isr6
+argument_list|)
+decl_stmt|,
+name|IDTVEC
+argument_list|(
+name|apic_isr7
 argument_list|)
 decl_stmt|,
 name|IDTVEC
