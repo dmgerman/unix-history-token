@@ -131,11 +131,11 @@ parameter_list|(
 name|FRAME
 parameter_list|)
 define|\
-value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signal_handler_caller \     ? sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    ))
+value|(kernel_debugging ? fbsd_kern_frame_saved_pc(FRAME) : \   (((FRAME)->signal_handler_caller \     ? fbsd_sigtramp_saved_pc (FRAME) \     : read_memory_integer ((FRAME)->frame + 4, 4)) \    ))
 end_define
 
 begin_comment
-comment|/* On FreeBSD, sigtramp has size 0x18 and is immediately below the    ps_strings struct which has size 0x10 and is at the top of the    user stack.  */
+comment|/* On FreeBSD, sigtramp has size 0x48 and is immediately below the    ps_strings struct which has size 0x10 and is at the top of the    user stack.  */
 end_comment
 
 begin_undef
@@ -157,7 +157,7 @@ name|SIGTRAMP_START
 parameter_list|(
 name|pc
 parameter_list|)
-value|0xbfbfdfd8
+value|0xbfbfffa8
 end_define
 
 begin_define
@@ -167,7 +167,34 @@ name|SIGTRAMP_END
 parameter_list|(
 name|pc
 parameter_list|)
-value|0xbfbfdff0
+value|0xbfbffff0
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|SIGCONTEXT_PC_OFFSET
+end_undef
+
+begin_define
+define|#
+directive|define
+name|OSIGCONTEXT_PC_OFFSET
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|NSIGCONTEXT_PC_OFFSET
+value|76
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSIGCODE_MAGIC_OFFSET
+value|20
 end_define
 
 begin_struct_decl
