@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -312,6 +318,42 @@ begin_expr_stmt
 name|DOMAIN_SET
 argument_list|(
 name|atm
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net
+argument_list|,
+name|PF_ATM
+argument_list|,
+name|harp
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"HARP/ATM family"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_net_harp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|atm
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATM layer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
