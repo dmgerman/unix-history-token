@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	8.3 (Berkeley) %G%"
+literal|"@(#)replace.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,9 +297,19 @@ name|chdr
 operator|.
 name|date
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|sfd
+argument_list|)
+expr_stmt|;
 goto|goto
 name|useold
 goto|;
+block|}
 if|if
 condition|(
 name|options
