@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tip.c	4.17 (Berkeley) %G%"
+literal|"@(#)tip.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -743,7 +743,7 @@ argument_list|,
 name|timeout
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Everything's set up now: 	 *	connection established (hardwired or diaulup) 	 *	line conditioned (baud rate, mode, etc.) 	 *	internal data structures (variables) 	 * so, fork one process for local side and one for remote. 	 */
+comment|/* 	 * Everything's set up now: 	 *	connection established (hardwired or dialup) 	 *	line conditioned (baud rate, mode, etc.) 	 *	internal data structures (variables) 	 * so, fork one process for local side and one for remote. 	 */
 name|printf
 argument_list|(
 name|cumode
