@@ -2017,7 +2017,7 @@ argument|switch (dc->type) { 	case TYPE_FW:
 define|#
 directive|define
 name|MAXDEV
-value|4
+value|10
 argument|for (i =
 literal|0
 argument|; i< MAXDEV; i ++) { 			snprintf(devname, sizeof(devname),
