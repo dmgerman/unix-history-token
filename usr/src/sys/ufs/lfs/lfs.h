@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -257,7 +257,7 @@ name|lfs_minfree
 decl_stmt|;
 comment|/* minimum percentage of free blocks */
 comment|/* These fields can be computed from the others. */
-name|u_quad_t
+name|u_int64_t
 name|lfs_maxfilesize
 decl_stmt|;
 comment|/* maximum representable file size */
