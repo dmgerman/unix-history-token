@@ -35,6 +35,11 @@ modifier|*
 name|m_nextpkt
 decl_stmt|;
 comment|/* link to next packet */
+name|unsigned
+name|long
+name|priv
+decl_stmt|;
+comment|/* private data - holds HDLC escape count */
 comment|/* buffer space is malloc()d directly after the header */
 block|}
 struct|;

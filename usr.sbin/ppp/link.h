@@ -201,6 +201,24 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|link_PendingLowPriorityData
+parameter_list|(
+name|struct
+name|link
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|mbuf
 modifier|*

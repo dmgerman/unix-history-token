@@ -356,7 +356,7 @@ name|hdlc
 operator|.
 name|lqm
 operator|.
-name|SaveInErrors
+name|ifInErrors
 operator|++
 expr_stmt|;
 name|p
@@ -405,7 +405,7 @@ name|hdlc
 operator|.
 name|lqm
 operator|.
-name|SaveInErrors
+name|ifInErrors
 operator|++
 expr_stmt|;
 name|p

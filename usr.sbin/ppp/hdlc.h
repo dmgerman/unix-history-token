@@ -207,39 +207,53 @@ name|method
 decl_stmt|;
 comment|/* bit-mask for LQM_* from lqr.h */
 name|u_int32_t
-name|OutPackets
+name|ifOutUniPackets
 decl_stmt|;
 comment|/* Packets sent by me */
 name|u_int32_t
-name|OutOctets
+name|ifOutOctets
 decl_stmt|;
 comment|/* Octets sent by me */
 name|u_int32_t
-name|SaveInPackets
+name|ifInUniPackets
 decl_stmt|;
 comment|/* Packets received from peer */
 name|u_int32_t
-name|SaveInDiscards
+name|ifInDiscards
 decl_stmt|;
 comment|/* Discards */
 name|u_int32_t
-name|SaveInErrors
+name|ifInErrors
 decl_stmt|;
 comment|/* Errors */
 name|u_int32_t
-name|SaveInOctets
+name|ifInOctets
 decl_stmt|;
-comment|/* Octets received from peer */
+comment|/* Octets received from peer (unused) */
 struct|struct
 block|{
+name|u_int32_t
+name|InGoodOctets
+decl_stmt|;
+comment|/* Good octets received from peer */
 name|u_int32_t
 name|OutLQRs
 decl_stmt|;
 comment|/* LQRs sent by me */
 name|u_int32_t
-name|SaveInLQRs
+name|InLQRs
 decl_stmt|;
 comment|/* LQRs received from peer */
+name|struct
+name|lqrsavedata
+name|Save
+decl_stmt|;
+comment|/* Our last LQR */
+name|struct
+name|lqrsavedata
+name|prevSave
+decl_stmt|;
+comment|/* Our last-but-one LQR (analysis) */
 name|struct
 name|lqrdata
 name|peer
