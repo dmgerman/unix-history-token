@@ -550,17 +550,6 @@ comment|/* The most children we can run at once */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|int
-name|maxLocal
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The most local ones we can have */
-end_comment
-
-begin_decl_stmt
 name|STATIC
 name|int
 name|nJobs
@@ -569,17 +558,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* The number of children currently running */
-end_comment
-
-begin_decl_stmt
-name|STATIC
-name|int
-name|nLocal
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* The number of local children */
 end_comment
 
 begin_decl_stmt
@@ -601,7 +579,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Flag to tell when the job table is full. It 				 * is set TRUE when (1) the total number of 				 * running jobs equals the maximum allowed or 				 * (2) a job can only be run locally, but 				 * nLocal equals maxLocal */
+comment|/* Flag to tell when the job table is full. It 				 * is set TRUE when (1) the total number of 				 * running jobs equals the maximum allowed */
 end_comment
 
 begin_ifdef
@@ -2798,10 +2776,6 @@ name|pid
 operator|)
 argument_list|)
 expr_stmt|;
-name|nLocal
-operator|+=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|nJobs
@@ -4169,10 +4143,6 @@ endif|#
 directive|endif
 comment|/* USE_KQUEUE */
 block|}
-name|nLocal
-operator|+=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|job
@@ -4521,9 +4491,9 @@ if|if
 condition|(
 operator|(
 operator|(
-name|nLocal
+name|nJobs
 operator|>=
-name|maxLocal
+name|maxJobs
 operator|)
 operator|&&
 operator|!
@@ -4619,9 +4589,9 @@ if|if
 condition|(
 operator|(
 operator|(
-name|nLocal
+name|nJobs
 operator|<
-name|maxLocal
+name|maxJobs
 operator|)
 operator|||
 operator|(
@@ -4634,7 +4604,7 @@ name|JOB_SPECIAL
 operator|)
 operator|&&
 operator|(
-name|maxLocal
+name|maxJobs
 operator|==
 literal|0
 operator|)
@@ -4648,7 +4618,7 @@ name|maxJobs
 operator|)
 condition|)
 block|{
-comment|/* 	     * If we haven't reached the concurrency limit already (or the 	     * job must be run and maxLocal is 0), it's ok to resume it. 	     */
+comment|/* 	     * If we haven't reached the concurrency limit already (or the 	     * job must be run and maxJobs is 0), it's ok to resume it. 	     */
 name|Boolean
 name|error
 decl_stmt|;
@@ -5666,9 +5636,9 @@ block|}
 if|if
 condition|(
 operator|(
-name|nLocal
+name|nJobs
 operator|>=
-name|maxLocal
+name|maxJobs
 operator|)
 operator|&&
 operator|!
@@ -5681,13 +5651,13 @@ name|JOB_SPECIAL
 operator|)
 operator|&&
 operator|(
-name|maxLocal
+name|maxJobs
 operator|!=
 literal|0
 operator|)
 condition|)
 block|{
-comment|/* 	 * We've hit the limit of concurrency, so put the job on hold until 	 * some other job finishes. Note that the special jobs (.BEGIN, 	 * .INTERRUPT and .END) may be run even when the limit has been reached 	 * (e.g. when maxLocal == 0). 	 */
+comment|/* 	 * We've hit the limit of concurrency, so put the job on hold until 	 * some other job finishes. Note that the special jobs (.BEGIN, 	 * .INTERRUPT and .END) may be run even when the limit has been reached 	 * (e.g. when maxJobs == 0). 	 */
 name|jobFull
 operator|=
 name|TRUE
@@ -5726,9 +5696,9 @@ else|else
 block|{
 if|if
 condition|(
-name|nLocal
+name|nJobs
 operator|>=
-name|maxLocal
+name|maxJobs
 condition|)
 block|{
 comment|/* 	     * If we're running this job locally as a special case (see above), 	     * at least say the table is full. 	     */
@@ -6630,7 +6600,7 @@ comment|/* Exit/termination status */
 comment|/*      * Don't even bother if we know there's no one around.      */
 if|if
 condition|(
-name|nLocal
+name|nJobs
 operator|==
 literal|0
 condition|)
@@ -6824,10 +6794,6 @@ expr_stmt|;
 name|jobFull
 operator|=
 name|FALSE
-expr_stmt|;
-name|nLocal
-operator|-=
-literal|1
 expr_stmt|;
 block|}
 name|JobFinish
@@ -7224,7 +7190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module, given a maximum number of jobs, and  *	a maximum number of local jobs.  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * Job_Init --  *	Initialize the process module, given a maximum number of jobs.  *  * Results:  *	none  *  * Side Effects:  *	lists and counters are initialized  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -7233,9 +7199,6 @@ name|Job_Init
 parameter_list|(
 name|int
 name|maxproc
-parameter_list|,
-name|int
-name|maxlocal
 parameter_list|)
 block|{
 name|GNode
@@ -7261,15 +7224,7 @@ name|maxJobs
 operator|=
 name|maxproc
 expr_stmt|;
-name|maxLocal
-operator|=
-name|maxlocal
-expr_stmt|;
 name|nJobs
-operator|=
-literal|0
-expr_stmt|;
-name|nLocal
 operator|=
 literal|0
 expr_stmt|;

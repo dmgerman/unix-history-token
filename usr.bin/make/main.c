@@ -3235,8 +3235,6 @@ block|{
 name|Job_Init
 argument_list|(
 name|maxJobs
-argument_list|,
-name|maxJobs
 argument_list|)
 expr_stmt|;
 name|jobsRunning
