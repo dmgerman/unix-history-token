@@ -1422,24 +1422,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|width
-operator|+
-literal|2
-argument_list|,
-literal|"0"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|indent
-operator|+
-literal|2
-argument_list|,
-literal|"0"
-argument_list|)
-expr_stmt|;
+comment|/*  * XXX  * I don't know why these are here.  They screw up the printcap  * initializations already done by init() -- EWS  *  	strcpy(width+2, "0"); 	strcpy(indent+2, "0");  */
 comment|/* 	 *      read the control file for work to do 	 * 	 *      file format -- first character in the line is a command 	 *      rest of the line is the argument. 	 *      valid commands are: 	 * 	 *		S -- "stat info" for symbolic link protection 	 *		J -- "job name" on banner page 	 *		C -- "class name" on banner page 	 *              L -- "literal" user's name to print on banner 	 *		T -- "title" for pr 	 *		H -- "host name" of machine where lpr was done 	 *              P -- "person" user's login name 	 *              I -- "indent" amount to indent output 	 *              f -- "file name" name of text file to print 	 *		l -- "file name" text file with control chars 	 *		p -- "file name" text file to print with pr(1) 	 *		t -- "file name" troff(1) file to print 	 *		n -- "file name" ditroff(1) file to print 	 *		d -- "file name" dvi file to print 	 *		g -- "file name" plot(1G) file to print 	 *		v -- "file name" plain raster file to print 	 *		c -- "file name" cifplot file to print 	 *		1 -- "R font file" for troff 	 *		2 -- "I font file" for troff 	 *		3 -- "B font file" for troff 	 *		4 -- "S font file" for troff 	 *		N -- "name" of file (used by lpq) 	 *              U -- "unlink" name of file to remove 	 *                    (after we print it. (Pass 2 only)). 	 *		M -- "mail" to user when done printing 	 * 	 *      getline reads a line and expands tabs to blanks 	 */
 comment|/* pass 1 */
 while|while
@@ -2356,11 +2339,19 @@ index|[
 literal|3
 index|]
 operator|=
+literal|"-f"
+expr_stmt|;
+comment|/* XXX use form feeds */
+name|av
+index|[
+literal|4
+index|]
+operator|=
 literal|"-h"
 expr_stmt|;
 name|av
 index|[
-literal|4
+literal|5
 index|]
 operator|=
 operator|*
@@ -2372,7 +2363,7 @@ literal|" "
 expr_stmt|;
 name|av
 index|[
-literal|5
+literal|6
 index|]
 operator|=
 literal|0
@@ -2454,6 +2445,8 @@ argument_list|,
 name|width
 argument_list|,
 name|length
+argument_list|,
+literal|"-f"
 argument_list|,
 literal|"-h"
 argument_list|,
