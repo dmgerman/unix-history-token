@@ -362,8 +362,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_CRITICAL
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Critical sections */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x0bffffff
+value|0x1fffffff
 end_define
 
 begin_comment
