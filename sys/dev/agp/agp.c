@@ -276,11 +276,6 @@ operator|.
 name|d_maj
 operator|=
 name|CDEV_MAJOR
-block|,
-operator|.
-name|d_flags
-operator|=
-name|D_TTY
 block|, }
 decl_stmt|;
 end_decl_stmt
