@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_backspace[] = "@(#)backspace.c	1.2";  *  * Backspace records  */
+comment|/* char id_backspace[] = "@(#)backspace.c	1.3";  *  * Backspace records  */
 end_comment
 
 begin_include
@@ -200,14 +200,23 @@ condition|(
 name|b
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|(
+name|n
+operator|=
 name|t_runc
 argument_list|(
 name|b
 argument_list|,
 name|errflag
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+return|return
+operator|(
+name|n
+operator|)
+return|;
 if|if
 condition|(
 name|b
