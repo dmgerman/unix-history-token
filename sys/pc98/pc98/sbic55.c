@@ -360,13 +360,6 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|dma_init_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|short
 name|dmapageport
 index|[]
@@ -4565,88 +4558,6 @@ asm|asm("wbinvd");
 comment|/* wbinvd (WB cache flush) */
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|dma_init_flag
-condition|)
-block|{
-name|dma_init_flag
-operator|=
-literal|1
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x439
-argument_list|,
-operator|(
-name|inb
-argument_list|(
-literal|0x439
-argument_list|)
-operator|&
-literal|0xfb
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* DMA Accsess Control over 1MB */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|0
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|3
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x11
-argument_list|,
-literal|0x50
-argument_list|)
-expr_stmt|;
-comment|/* PC98 must be 0x40 */
-block|}
 comment|/* mask channel */
 name|mskport
 operator|=

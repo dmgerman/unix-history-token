@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.142 1996/05/02 09:34:40 phk Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
 end_comment
 
 begin_include
@@ -241,17 +241,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/icu.h>
+file|<pc98/pc98/pc98.h>
 end_include
-
-begin_comment
-comment|/* XXX just to get at `imen' */
-end_comment
 
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
+file|<pc98/pc98/icu.h>
 end_include
 
 begin_include
@@ -282,16 +278,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_comment
-comment|/* XXX just to get at `imen' */
-end_comment
 
 begin_include
 include|#
@@ -1002,9 +988,16 @@ decl_stmt|;
 name|bool_t
 name|do_timestamp
 decl_stmt|;
+name|bool_t
+name|do_dcd_timestamp
+decl_stmt|;
 name|struct
 name|timeval
 name|timestamp
+decl_stmt|;
+name|struct
+name|timeval
+name|dcd_timestamp
 decl_stmt|;
 name|u_long
 name|bytes_in
@@ -1097,14 +1090,8 @@ comment|/*  * XXX public functions in drivers should be declared in headers prod
 end_comment
 
 begin_comment
-comment|/* Interrupt handling entry points. */
+comment|/* Interrupt handling entry point. */
 end_comment
-
-begin_decl_stmt
-name|inthand2_t
-name|siointrts
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -1573,14 +1560,6 @@ name|unit
 parameter_list|)
 value|(p_com_addr[unit])
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|timeval
-name|intr_timestamp
-decl_stmt|;
-end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -3974,24 +3953,6 @@ argument|bzero(failures, sizeof failures); 	iobase = dev->id_iobase;
 comment|/* 	 * We don't want to get actual interrupts, just masked ones. 	 * Interrupts from this line should already be masked in the ICU, 	 * but mask them in the processor as well in case there are some 	 * (misconfigured) shared interrupts. 	 */
 argument|disable_intr();
 comment|/* EXTRA DELAY? */
-comment|/* 	 * XXX DELAY() reenables CPU interrupts.  This is a problem for 	 * shared interrupts after the first device using one has been 	 * successfully probed - config_isadev() has enabled the interrupt 	 * in the ICU. 	 */
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(IO_ICU1 +
-literal|2
-argument|,
-literal|0xff
-argument|);
-else|#
-directive|else
-argument|outb(IO_ICU1 +
-literal|1
-argument|,
-literal|0xff
-argument|);
-endif|#
-directive|endif
 comment|/* 	 * Initialize the speed and the word size and wait long enough to 	 * drain the maximum of 16 bytes of junk in device output queues. 	 * The speed is undefined after a master reset and must be set 	 * before relying on anything related to output.  There may be 	 * junk after a (very fast) soft reboot and (apparently) after 	 * master reset. 	 * XXX what about the UART bug avoided by waiting in comparam()? 	 * We don't want to to wait long enough to drain at 2 bps. 	 */
 argument|outb(iobase + com_cfcr, CFCR_DLAB); 	outb(iobase + com_dlbl, COMBRD(
 literal|9600
@@ -4048,9 +4009,9 @@ literal|1
 argument|] = inb(iobase + com_ier) - IER_ETXRDY; 	failures[
 literal|2
 argument|] = inb(iobase + com_mcr) - mcr_image; 	DELAY(
-literal|1000
+literal|10000
 argument|);
-comment|/* XXX */
+comment|/* Some internal modems need this time */
 argument|if (idev->id_irq !=
 literal|0
 argument|)
@@ -4147,23 +4108,7 @@ endif|#
 directive|endif
 argument|failures[
 literal|9
-argument|] = (inb(iobase + com_iir)& IIR_IMASK) - IIR_NOPEND;
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(IO_ICU1 +
-literal|2
-argument|, imen);
-comment|/* XXX */
-else|#
-directive|else
-argument|outb(IO_ICU1 +
-literal|1
-argument|, imen);
-comment|/* XXX */
-endif|#
-directive|endif
-argument|enable_intr();  	result = IO_COMSIZE; 	for (fn =
+argument|] = (inb(iobase + com_iir)& IIR_IMASK) - IIR_NOPEND;  	enable_intr();  	result = IO_COMSIZE; 	for (fn =
 literal|0
 argument|; fn< sizeof failures; ++fn) 		if (failures[fn]) { 			outb(iobase + com_mcr,
 literal|0
@@ -4700,46 +4645,7 @@ argument|); 	} 	com->active_out = FALSE; 	wakeup(&com->active_out); 	wakeup(TSA_
 comment|/* restart any wopeners */
 argument|if (!(com->state& CS_DTR_OFF)&& unit != comconsole) 		kdc_sio[unit].kdc_state = DC_IDLE; 	splx(s); }  static int sioread(dev, uio, flag) 	dev_t		dev; 	struct uio	*uio; 	int		flag; { 	int		mynor; 	int		unit; 	struct tty	*tp;  	mynor = minor(dev); 	if (mynor& CONTROL_MASK) 		return (ENODEV); 	unit = MINOR_TO_UNIT(mynor); 	if (com_addr(unit)->gone) 		return (ENODEV); 	tp = com_addr(unit)->tp; 	return ((*linesw[tp->t_line].l_read)(tp, uio, flag)); }  static int siowrite(dev, uio, flag) 	dev_t		dev; 	struct uio	*uio; 	int		flag; { 	int		mynor; 	struct tty	*tp; 	int		unit;  	mynor = minor(dev); 	if (mynor& CONTROL_MASK) 		return (ENODEV);  	unit = MINOR_TO_UNIT(mynor); 	if (com_addr(unit)->gone) 		return (ENODEV); 	tp = com_addr(unit)->tp;
 comment|/* 	 * (XXX) We disallow virtual consoles if the physical console is 	 * a serial port.  This is in case there is a display attached that 	 * is not the console.  In that situation we don't need/want the X 	 * server taking over the console. 	 */
-argument|if (constty != NULL&& unit == comconsole) 		constty = NULL; 	return ((*linesw[tp->t_line].l_write)(tp, uio, flag)); }  static void siodtrwakeup(chan) 	void	*chan; { 	struct com_s	*com;  	com = (struct com_s *)chan; 	com->state&= ~CS_DTR_OFF; 	if (com->unit != comconsole) 		kdc_sio[com->unit].kdc_state = DC_IDLE; 	wakeup(&com->dtr_wait); }
-comment|/* Interrupt routine for timekeeping purposes */
-argument|void siointrts(unit) 	int	unit; {
-comment|/* 	 * XXX microtime() reenables CPU interrupts.  We can't afford to 	 * be interrupted and don't want to slow down microtime(), so lock 	 * out interrupts in another way. 	 */
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(IO_ICU1 +
-literal|2
-argument|,
-literal|0xff
-argument|);
-else|#
-directive|else
-comment|/* IBM-PC */
-argument|outb(IO_ICU1 +
-literal|1
-argument|,
-literal|0xff
-argument|);
-endif|#
-directive|endif
-comment|/* PC98 */
-argument|microtime(&intr_timestamp); 	disable_intr();
-ifdef|#
-directive|ifdef
-name|PC98
-argument|outb(IO_ICU1 +
-literal|2
-argument|, imen);
-else|#
-directive|else
-comment|/* IBM_PC */
-argument|outb(IO_ICU1 +
-literal|1
-argument|, imen);
-endif|#
-directive|endif
-comment|/* PC98 */
-argument|siointr(unit); }  void siointr(unit) 	int	unit; {
+argument|if (constty != NULL&& unit == comconsole) 		constty = NULL; 	return ((*linesw[tp->t_line].l_write)(tp, uio, flag)); }  static void siodtrwakeup(chan) 	void	*chan; { 	struct com_s	*com;  	com = (struct com_s *)chan; 	com->state&= ~CS_DTR_OFF; 	if (com->unit != comconsole) 		kdc_sio[com->unit].kdc_state = DC_IDLE; 	wakeup(&com->dtr_wait); }  void siointr(unit) 	int	unit; {
 ifndef|#
 directive|ifndef
 name|COM_MULTIPORT
@@ -4775,9 +4681,7 @@ argument|;
 endif|#
 directive|endif
 comment|/* PC98 */
-argument|if (com->do_timestamp)
-comment|/* XXX a little bloat here... */
-argument|com->timestamp = intr_timestamp; 	while (TRUE) {
+argument|while (TRUE) {
 ifdef|#
 directive|ifdef
 name|PC98
@@ -4830,7 +4734,7 @@ argument|if (   com->tp == NULL 				    || !(com->tp->t_state& TS_ISOPEN) 				  
 literal|0
 argument|; 			}  			++com->bytes_in; 			if (com->hotchar !=
 literal|0
-argument|&& recv_data == com->hotchar) 				setsofttty(); 			ioptr = com->iptr; 			if (ioptr>= com->ibufend) 				CE_RECORD(com, CE_INTERRUPT_BUF_OVERFLOW); 			else { 				++com_events; 				schedsofttty();
+argument|&& recv_data == com->hotchar) 				setsofttty(); 			ioptr = com->iptr; 			if (ioptr>= com->ibufend) 				CE_RECORD(com, CE_INTERRUPT_BUF_OVERFLOW); 			else { 				if (com->do_timestamp) 					microtime(&com->timestamp); 				++com_events; 				schedsofttty();
 if|#
 directive|if
 literal|0
@@ -4865,7 +4769,7 @@ name|PC98
 argument|if(!IS_8251(com->pc98_if_type)){
 endif|#
 directive|endif
-argument|modem_status = inb(com->modem_status_port); 		if (modem_status != com->last_modem_status) {
+argument|modem_status = inb(com->modem_status_port); 		if (modem_status != com->last_modem_status) { 			if (com->do_dcd_timestamp&& !(com->last_modem_status& MSR_DCD)&& modem_status& MSR_DCD) 				microtime(&com->dcd_timestamp);
 comment|/* 			 * Schedule high level to handle DCD changes.  Note 			 * that we don't use the delta bits anywhere.  Some 			 * UARTs mess them up, and it's easy to remember the 			 * previous bits and calculate the delta. 			 */
 argument|com->last_modem_status = modem_status; 			if (!(com->state& CS_CHECKMSR)) { 				com_events += LOTS_OF_EVENTS; 				com->state |= CS_CHECKMSR; 				setsofttty(); 			}
 comment|/* handle CTS change immediately for crisp flow ctl */
@@ -4888,16 +4792,19 @@ name|PC98
 argument|if(IS_8251(com->pc98_if_type)) 				if ( !(pc98_check_i8251_interrupt(com)& IEN_TxFLAG) ) 					com_int_Tx_enable(com);
 endif|#
 directive|endif
-argument|com->obufq.l_head = ioptr; 			if (ioptr>= com->obufq.l_tail) { 				struct lbq	*qp;
-ifdef|#
-directive|ifdef
+argument|com->obufq.l_head = ioptr; 			if (ioptr>= com->obufq.l_tail) { 				struct lbq	*qp;  				qp = com->obufq.l_next; 				qp->l_queued = FALSE; 				qp = qp->l_next; 				if (qp != NULL) { 					com->obufq.l_head = qp->l_head; 					com->obufq.l_tail = qp->l_tail; 					com->obufq.l_next = qp; 				} else {
+comment|/* output just completed */
+argument|com->state&= ~CS_BUSY;
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PC98
-argument|if(IS_8251(com->pc98_if_type)) 					if ( pc98_check_i8251_interrupt(com)& IEN_TxFLAG ) 						com_int_Tx_disable(com);
+argument_list|)
+argument|if(IS_8251(com->pc98_if_type)) 						if ( pc98_check_i8251_interrupt(com)& IEN_TxFLAG ) 							com_int_Tx_disable(com);
 endif|#
 directive|endif
-argument|qp = com->obufq.l_next; 				qp->l_queued = FALSE; 				qp = qp->l_next; 				if (qp != NULL) { 					com->obufq.l_head = qp->l_head; 					com->obufq.l_tail = qp->l_tail; 					com->obufq.l_next = qp; 				} else {
-comment|/* output just completed */
-argument|com->state&= ~CS_BUSY; 				} 				if (!(com->state& CS_ODONE)) { 					com_events += LOTS_OF_EVENTS; 					com->state |= CS_ODONE; 					setsofttty();
+argument|} 				if (!(com->state& CS_ODONE)) { 					com_events += LOTS_OF_EVENTS; 					com->state |= CS_ODONE; 					setsofttty();
 comment|/* handle at high level ASAP */
 argument|} 			} 		}
 ifdef|#
@@ -5001,7 +4908,7 @@ argument|) { 			splx(s); 			return (error); 		} 		com->dtr_wait = *(int *)data *
 literal|100
 argument|; 		break; 	case TIOCMGDTRWAIT: 		*(int *)data = com->dtr_wait *
 literal|100
-argument|/ hz; 		break; 	case TIOCTIMESTAMP: 		com->do_timestamp = TRUE; 		*(struct timeval *)data = com->timestamp; 		break; 	default: 		splx(s); 		return (ENOTTY); 	} 	} else {
+argument|/ hz; 		break; 	case TIOCTIMESTAMP: 		com->do_timestamp = TRUE; 		*(struct timeval *)data = com->timestamp; 		break; 	case TIOCDCDTIMESTAMP: 		com->do_dcd_timestamp = TRUE; 		*(struct timeval *)data = com->dcd_timestamp; 		break; 	default: 		splx(s); 		return (ENOTTY); 	} 	} else {
 endif|#
 directive|endif
 argument|switch (cmd) { 	case TIOCSBRK: 		outb(iobase + com_cfcr, com->cfcr_image |= CFCR_SBREAK); 		break; 	case TIOCCBRK: 		outb(iobase + com_cfcr, com->cfcr_image&= ~CFCR_SBREAK); 		break; 	case TIOCSDTR: 		(void)commctl(com, TIOCM_DTR, DMBIS); 		break; 	case TIOCCDTR: 		(void)commctl(com, TIOCM_DTR, DMBIC); 		break; 	case TIOCMSET: 		(void)commctl(com, *(int *)data, DMSET); 		break; 	case TIOCMBIS: 		(void)commctl(com, *(int *)data, DMBIS); 		break; 	case TIOCMBIC: 		(void)commctl(com, *(int *)data, DMBIC); 		break; 	case TIOCMGET: 		*(int *)data = commctl(com,
@@ -5425,12 +5332,6 @@ include|#
 directive|include
 file|<machine/cons.h>
 argument|struct siocnstate { 	u_char	dlbl; 	u_char	dlbh; 	u_char	ier; 	u_char	cfcr; 	u_char	mcr; };  static	Port_t	siocniobase;  static void siocnclose	__P((struct siocnstate *sp)); static void siocnopen	__P((struct siocnstate *sp)); static void siocntxwait	__P((void));  static void siocntxwait() { 	int	timo;
-ifdef|#
-directive|ifdef
-name|PC98
-argument|int	tmp;
-endif|#
-directive|endif
 comment|/* 	 * Wait for any pending transmission to finish.  Required to avoid 	 * the UART lockup bug when the speed is changed, and for normal 	 * transmits. 	 */
 argument|timo =
 literal|100000
@@ -5710,7 +5611,7 @@ argument|;  	s=spltty(); 	com->pc98_prev_modem_status |= ( msr& (TIOCM_LE|TIOCM_
 literal|0
 argument|; 	return( tmp ); }
 comment|/* convert to TIOCM_?? ( ioctl.h ) */
-argument|static int pc98_get_modem_status(struct com_s *com) { 	int	stat, stat2; 	register int	msr;  	int	ret;  	stat  = inb(com->sts_port); 	stat2 = inb(com->in_modem_port); 	msr = com->pc98_prev_modem_status& ~(TIOCM_CAR|TIOCM_RI|TIOCM_DSR|TIOCM_CTS); 	if ( !(stat2& CICSCD_CD) ) msr |= TIOCM_CAR; 	if ( !(stat2& CICSCD_CI) ) msr |= TIOCM_RI; 	if (   stat& STS8251_DSR ) msr |= TIOCM_DSR; 	if ( !(stat2& CICSCD_CS) ) msr |= TIOCM_CTS;
+argument|static int pc98_get_modem_status(struct com_s *com) { 	int	stat, stat2; 	register int	msr;  	stat  = inb(com->sts_port); 	stat2 = inb(com->in_modem_port); 	msr = com->pc98_prev_modem_status& ~(TIOCM_CAR|TIOCM_RI|TIOCM_DSR|TIOCM_CTS); 	if ( !(stat2& CICSCD_CD) ) msr |= TIOCM_CAR; 	if ( !(stat2& CICSCD_CI) ) msr |= TIOCM_RI; 	if (   stat& STS8251_DSR ) msr |= TIOCM_DSR; 	if ( !(stat2& CICSCD_CS) ) msr |= TIOCM_CTS;
 if|#
 directive|if
 name|COM_CARRIER_DETECT_EMULATE
@@ -5773,7 +5674,7 @@ argument|sysclock =
 literal|5
 argument|; 	} }  static void com_cflag_and_speed_set( struct com_s *com, int cflag, int speed) { 	int	cfcr=
 literal|0
-argument|, count; 	int	s, previnterrupt;  	count = pc98_ttspeedtab( com, speed ); 	if ( count<
+argument|, count; 	int	previnterrupt;  	count = pc98_ttspeedtab( com, speed ); 	if ( count<
 literal|0
 argument|) return;  	previnterrupt = pc98_check_i8251_interrupt(com); 	pc98_disable_i8251_interrupt( com, IEN_Tx|IEN_TxEMP|IEN_Rx );  	switch ( cflag&CSIZE ) { 	  case CS5: 		cfcr = MOD8251_5BITS; break; 	  case CS6: 		cfcr = MOD8251_6BITS; break; 	  case CS7: 		cfcr = MOD8251_7BITS; break; 	  case CS8: 		cfcr = MOD8251_8BITS; break; 	} 	if ( cflag&PARENB ) { 	    if ( cflag&PARODD ) 		cfcr |= MOD8251_PODD; 	    else 		cfcr |= MOD8251_PEVEN; 	} else 		cfcr |= MOD8251_PDISAB;  	if ( cflag&CSTOPB ) 		cfcr |= MOD8251_STOP2; 	else 		cfcr |= MOD8251_STOP1;  	if ( count&
 literal|0x10000

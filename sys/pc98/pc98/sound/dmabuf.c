@@ -3061,10 +3061,15 @@ index|]
 operator|->
 name|dmap
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|linux
 name|unsigned
 name|long
 name|flags
 decl_stmt|;
+endif|#
+directive|endif
 comment|/*    * This function is not as portable as it should be.    */
 comment|/*    * The count must be one less than the actual size. This is handled by    * set_dma_addr()    */
 if|if

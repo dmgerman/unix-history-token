@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1994 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.27 1996/03/28 14:28:47 scrappy Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
 end_comment
 
 begin_include
@@ -836,6 +836,17 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
+name|int
+name|x
+operator|=
+name|splhigh
+argument_list|()
+block|;
+name|int
+name|rv
+operator|=
+literal|0
+block|;
 comment|/* use the first buffer */
 name|pca_status
 operator|.
@@ -911,7 +922,6 @@ operator||
 name|TIMER_ONESHOT
 argument_list|)
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -923,14 +933,14 @@ operator||
 name|TIMER_ONESHOT
 argument_list|)
 condition|)
-block|{
 endif|#
 directive|endif
-return|return
+name|rv
+operator|=
 operator|-
 literal|1
-return|;
-block|}
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|acquire_timer0
@@ -954,21 +964,31 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-return|return
+name|rv
+operator|=
 operator|-
 literal|1
-return|;
+expr_stmt|;
 block|}
+else|else
 name|pca_status
 operator|.
 name|timer_on
 operator|=
 literal|1
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+block|;
 return|return
-literal|0
+name|rv
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 specifier|static
 name|void
 name|pca_stop
@@ -976,6 +996,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 comment|/* release the timers */
 name|release_timer0
 argument_list|()
@@ -1047,10 +1073,26 @@ name|timer_on
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
-function|static void pca_pause
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pca_pause
 parameter_list|()
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 name|release_timer0
 argument_list|()
 expr_stmt|;
@@ -1073,10 +1115,26 @@ name|timer_on
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
-function|static void pca_continue
+end_function
+
+begin_function
+specifier|static
+name|void
+name|pca_continue
 parameter_list|()
 block|{
+name|int
+name|x
+init|=
+name|splhigh
+argument_list|()
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1134,15 +1192,37 @@ name|timer_on
 operator|=
 literal|1
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 block|}
-function|static int pca_wait
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pca_wait
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|int
 name|error
+decl_stmt|,
+name|x
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|pca_status
+operator|.
+name|timer_on
+condition|)
+return|return
+literal|0
+return|;
 while|while
 condition|(
 name|pca_status
@@ -1160,6 +1240,11 @@ literal|1
 index|]
 condition|)
 block|{
+name|x
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|pca_sleep
 operator|=
 literal|1
@@ -1184,6 +1269,11 @@ name|pca_sleep
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1207,11 +1297,15 @@ return|return
 literal|0
 return|;
 block|}
-function|static int
+end_function
+
+begin_function
+specifier|static
+name|int
 ifdef|#
 directive|ifdef
 name|PC98
-function|pcaprobe
+name|pcaprobe
 parameter_list|(
 name|struct
 name|pc98_device
@@ -1237,6 +1331,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|kern_devconf
@@ -1244,23 +1341,23 @@ name|kdc_pca
 index|[
 name|NPCA
 index|]
-decl_stmt|=
+init|=
 block|{
 block|{
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 comment|/* filled in by dev_attach */
 ifdef|#
 directive|ifdef
 name|PC98
 literal|"pca"
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 block|{
 name|MDDT_PC98
 block|,
@@ -1268,25 +1365,25 @@ literal|0
 block|,
 literal|"tty"
 block|}
-operator|,
+block|,
 name|pc98_generic_externalize
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 name|PC98_EXTERNALLEN
-operator|,
+block|,
 operator|&
 name|kdc_nec0
-operator|,
+block|,
 comment|/* parent */
 else|#
 directive|else
 literal|"pca"
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 block|{
 name|MDDT_ISA
 block|,
@@ -1294,30 +1391,34 @@ literal|0
 block|,
 literal|"tty"
 block|}
-operator|,
+block|,
 name|isa_generic_externalize
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 literal|0
-operator|,
+block|,
 name|ISA_EXTERNALLEN
-operator|,
+block|,
 operator|&
 name|kdc_isa0
-operator|,
+block|,
 comment|/* parent */
 endif|#
 directive|endif
 literal|0
-operator|,
+block|,
 comment|/* parentdata */
 name|DC_UNKNOWN
-operator|,
+block|,
 comment|/* not supported */
 literal|"PC speaker audio driver"
 block|}
-decl_stmt|};
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
 specifier|static
 specifier|inline
 name|void
@@ -1325,15 +1426,21 @@ ifdef|#
 directive|ifdef
 name|PC98
 name|pca_registerdev
-argument_list|(
-argument|struct pc98_device *id
-argument_list|)
+parameter_list|(
+name|struct
+name|pc98_device
+modifier|*
+name|id
+parameter_list|)
 else|#
 directive|else
-name|pca_registerdev
-argument_list|(
-argument|struct isa_device *id
-argument_list|)
+function|pca_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|)
 endif|#
 directive|endif
 block|{
@@ -1367,7 +1474,7 @@ operator|=
 name|id
 operator|->
 name|id_unit
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1381,7 +1488,7 @@ operator|.
 name|kdc_pc98
 operator|=
 name|id
-block|;
+expr_stmt|;
 else|#
 directive|else
 name|kdc_pca
@@ -1394,7 +1501,7 @@ operator|.
 name|kdc_isa
 operator|=
 name|id
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 name|dev_attach
@@ -1407,22 +1514,32 @@ operator|->
 name|id_unit
 index|]
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 ifdef|#
 directive|ifdef
 name|PC98
 name|pcaattach
-argument_list|(
-argument|struct pc98_device *dvp
-argument_list|)
+parameter_list|(
+name|struct
+name|pc98_device
+modifier|*
+name|dvp
+parameter_list|)
 else|#
 directive|else
-name|pcaattach
-argument_list|(
-argument|struct isa_device *dvp
-argument_list|)
+function|pcaattach
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|dvp
+parameter_list|)
 endif|#
 directive|endif
 block|{
@@ -1434,15 +1551,15 @@ name|dvp
 operator|->
 name|id_unit
 argument_list|)
-block|;
+expr_stmt|;
 name|pca_init
 argument_list|()
-block|;
+expr_stmt|;
 name|pca_registerdev
 argument_list|(
 name|dvp
 argument_list|)
-block|;
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -1465,7 +1582,7 @@ literal|0600
 argument_list|,
 literal|"pcaudio"
 argument_list|)
-block|;
+expr_stmt|;
 name|pcac_devfs_token
 operator|=
 name|devfs_add_devswf
@@ -1485,7 +1602,7 @@ literal|0600
 argument_list|,
 literal|"pcaudioctl"
 argument_list|)
-block|;
+expr_stmt|;
 endif|#
 directive|endif
 comment|/*DEVFS*/
@@ -1493,7 +1610,7 @@ return|return
 literal|1
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 specifier|static
@@ -1710,6 +1827,8 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|which
+decl_stmt|,
+name|x
 decl_stmt|;
 comment|/* only audio device can be written */
 if|if
@@ -1759,6 +1878,11 @@ literal|1
 index|]
 condition|)
 block|{
+name|x
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 name|pca_sleep
 operator|=
 literal|1
@@ -1782,6 +1906,11 @@ expr_stmt|;
 name|pca_sleep
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2232,12 +2361,18 @@ return|;
 case|case
 name|AUDIO_DRAIN
 case|:
+case|case
+name|AUDIO_COMPAT_DRAIN
+case|:
 return|return
 name|pca_wait
 argument_list|()
 return|;
 case|case
 name|AUDIO_FLUSH
+case|:
+case|case
+name|AUDIO_COMPAT_FLUSH
 case|:
 name|pca_stop
 argument_list|()
@@ -2300,7 +2435,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current ^= 1; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) { 			wakeup(&pca_sleep); 			pca_sleep = 0; 		} 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" ((long)volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current ^= 1; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   int pcaselect(dev_t dev, int rw, struct proc *p) {  	int s = spltty();  	struct proc *p1;   	switch (rw) {  	case FWRITE:  		if (!pca_status.in_use[0] || !pca_status.in_use[1]) {  			splx(s);  			return(1);  		}  		if (pca_status.wsel.si_pid&& (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait)  			pca_status.wsel.si_flags = SI_COLL;  		else  			pca_status.wsel.si_pid = p->p_pid;  		splx(s);  		return 0; 	default:  		splx(s);  		return(0); 	} }  static pca_devsw_installed = 0;  static void 	pca_drvinit(void *unused) { 	dev_t dev;  	if( ! pca_devsw_installed ) { 		dev = makedev(CDEV_MAJOR, 0); 		cdevsw_add(&dev,&pca_cdevsw, NULL); 		pca_devsw_installed = 1;     	} }  SYSINIT(pcadev,SI_SUB_DRIVERS,SI_ORDER_MIDDLE+CDEV_MAJOR,pca_drvinit,NULL)
 end_function
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.43 1996/06/04 17:50:28 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.1.1.1 1996/06/14 10:04:36 asami Exp $  */
 end_comment
 
 begin_include
@@ -112,12 +112,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"pc98/pc98/pc98.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pc98/pc98/pc98_device.h"
 end_include
 
@@ -125,12 +119,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/isa.h"
-end_include
 
 begin_include
 include|#
@@ -2853,6 +2841,7 @@ name|APM_DSVALUE_BUG
 name|caddr_t
 name|apm_bios_work
 decl_stmt|;
+comment|/* 	 * XXX - Malloc enough space for the APM DS, and then copy the 	 * current DS into the new space since the DS setup by the 	 * APM bios is going to get wiped out. 	 */
 name|apm_bios_work
 operator|=
 operator|(
@@ -2909,7 +2898,7 @@ operator|->
 name|cs16_base
 operator|=
 operator|(
-name|apm_cs32_base
+name|apm_cs16_base
 operator|<<
 literal|4
 operator|)
@@ -2921,7 +2910,7 @@ operator|->
 name|cs32_base
 operator|=
 operator|(
-name|apm_cs16_base
+name|apm_cs32_base
 operator|<<
 literal|4
 operator|)
@@ -2961,6 +2950,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|APM_DSVALUE_BUG
+comment|/* Set the DS base to point to the newly made copy of the APM DS */
 name|sc
 operator|->
 name|ds_base
@@ -3076,7 +3066,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"apm: CS_limit=%x, DS_limit=%x\n"
+literal|"apm: CS_limit=0x%x, DS_limit=0x%x\n"
 argument_list|,
 name|sc
 operator|->
@@ -3092,7 +3082,7 @@ directive|endif
 comment|/* APM_DEBUG */
 ifdef|#
 directive|ifdef
-name|APM_DEBUG
+name|0
 comment|/* Workaround for some buggy APM BIOS implementations */
 name|sc
 operator|->

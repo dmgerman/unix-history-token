@@ -50,19 +50,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/pc98/pc98_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/icu.h>
 end_include
 
 begin_include
@@ -79,19 +67,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<i386/isa/isa.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
 end_include
 
 begin_include

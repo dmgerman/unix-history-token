@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.21 1996/06/08 09:18:23 bde Exp $ */
+comment|/* $Id: scd.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $ */
 end_comment
 
 begin_comment
@@ -170,12 +170,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<pc98/pc98/pc98.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pc98/pc98/pc98_device.h>
 end_include
 
@@ -183,12 +177,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
-end_include
 
 begin_include
 include|#
@@ -6171,7 +6159,7 @@ name|unit
 argument_list|,
 name|CMD_SPIN_UP
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 literal|0
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * Hardware specification of various 8696x based Ethernet cards.  * C
 end_comment
 
 begin_comment
-comment|/* $Id: if_fereg.h,v 1.3 1996/03/17 08:36:38 jkh Exp $ */
+comment|/* $Id: if_fereg.h,v 1.1.1.1 1996/06/14 10:04:44 asami Exp $ */
 end_comment
 
 begin_comment
@@ -537,35 +537,12 @@ begin_comment
 comment|/* IRQ configuration.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_IRQCONF
-value|0x1000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|FE_RE1000_IRQCONF
 value|0x10
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -584,59 +561,6 @@ end_define
 begin_comment
 comment|/* MAC (station) address.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC0
-value|0x1001
-end_define
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC1
-value|0x1201
-end_define
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC2
-value|0x1401
-end_define
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC3
-value|0x1601
-end_define
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC4
-value|0x1801
-end_define
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MAC5
-value|0x1a01
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -680,36 +604,9 @@ name|FE_RE1000_MAC5
 value|0x1B
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* "Check sum" -- an xor of MAC0 through MAC5 */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FE_RE1000_MACCHK
-value|0x1c01
-end_define
-
-begin_comment
-comment|/* xor data MAC0 through MAC5 */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -717,11 +614,6 @@ directive|define
 name|FE_RE1000_MACCHK
 value|0x1D
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.24 1996/03/27 19:07:33 bde Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.1.1.1 1996/06/14 10:04:46 asami Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.2 1994/03/14 09:53:38 kakefuda Exp $  */
+comment|/*  * modified for PC98  *    $Id: spkr.c,v 1.1.1.1 1996/06/14 10:04:46 asami Exp $  */
 end_comment
 
 begin_include
@@ -508,6 +508,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* emit tone of frequency thz for given number of ticks */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -517,7 +521,6 @@ name|thz
 parameter_list|,
 name|ticks
 parameter_list|)
-comment|/* emit tone of frequency thz for given number of ticks */
 name|unsigned
 name|int
 name|thz
@@ -601,7 +604,7 @@ comment|/* DEBUG */
 comment|/* set timer to generate clicks at given frequency in Hertz */
 name|sps
 operator|=
-name|spltty
+name|splclock
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -628,8 +631,21 @@ block|{
 endif|#
 directive|endif
 comment|/* enter list of waiting procs ??? */
+name|splx
+argument_list|(
+name|sps
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
+name|splx
+argument_list|(
+name|sps
+argument_list|)
+expr_stmt|;
+name|disable_intr
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -685,10 +701,8 @@ expr_stmt|;
 comment|/* send hi byte */
 endif|#
 directive|endif
-name|splx
-argument_list|(
-name|sps
-argument_list|)
+name|enable_intr
+argument_list|()
 expr_stmt|;
 comment|/* turn the speaker on */
 ifdef|#
@@ -762,8 +776,18 @@ operator||
 name|PPI_SPKR
 argument_list|)
 expr_stmt|;
+name|sps
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 name|release_timer1
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|sps
+argument_list|)
 expr_stmt|;
 else|#
 directive|else
@@ -780,19 +804,29 @@ operator|~
 name|PPI_SPKR
 argument_list|)
 expr_stmt|;
+name|sps
+operator|=
+name|splclock
+argument_list|()
+expr_stmt|;
 name|release_timer2
 argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|sps
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* rest for given number of ticks */
 specifier|static
 name|void
 name|rest
 parameter_list|(
 name|ticks
 parameter_list|)
-comment|/* rest for given number of ticks */
 name|int
 name|ticks
 decl_stmt|;
@@ -1225,6 +1259,7 @@ name|TRUE
 expr_stmt|;
 comment|/* act as though there was an initial O(n) */
 block|}
+comment|/* play tone of proper duration for current rhythm signature */
 specifier|static
 name|void
 name|playtone
@@ -1235,7 +1270,6 @@ name|value
 parameter_list|,
 name|sustain
 parameter_list|)
-comment|/* play tone of proper duration for current rhythm signature */
 name|int
 name|pitch
 decl_stmt|,
@@ -1433,6 +1467,7 @@ name|n
 operator|)
 return|;
 block|}
+comment|/* interpret and play an item from a notation string */
 specifier|static
 name|void
 name|playstring
@@ -1441,7 +1476,6 @@ name|cp
 parameter_list|,
 name|slen
 parameter_list|)
-comment|/* interpret and play an item from a notation string */
 name|char
 modifier|*
 name|cp

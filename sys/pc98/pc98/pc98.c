@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.70 1996/05/02 10:43:09 phk Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: pc98.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * code to manage AT bus  *  * 92/08/18  Frank P. MacLachlan (fpm@cra
 end_comment
 
 begin_comment
-comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.3 1994/03/17 23:24:40 kakefuda Exp $  */
+comment|/*  * modified for PC9801 by A.Kojima F.Ukai M.Ishii   *			Kyoto University Microcomputer Club (KMC)  *	$Id: pc98.c,v 1.1.1.1 1996/06/14 10:04:45 asami Exp $  */
 end_comment
 
 begin_include
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -326,6 +332,50 @@ name|ICU_LEN
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|ddb_inb
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+name|addr
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ddb_outb
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+name|addr
+operator|,
+name|unsigned
+name|char
+name|dt
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -3740,14 +3790,6 @@ begin_comment
 comment|/*  * pc98_dmastart(): program 8237 DMA controller channel, avoid page alignment  * problems by using a bounce buffer.  */
 end_comment
 
-begin_decl_stmt
-name|int
-name|dma_init_flag
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|pc98_dmastart
@@ -3985,88 +4027,6 @@ asm|asm("wbinvd");
 comment|/* wbinvd (WB cache flush) */
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|dma_init_flag
-condition|)
-block|{
-name|dma_init_flag
-operator|=
-literal|1
-expr_stmt|;
-name|outb
-argument_list|(
-literal|0x439
-argument_list|,
-operator|(
-name|inb
-argument_list|(
-literal|0x439
-argument_list|)
-operator|&
-literal|0xfb
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* DMA Accsess Control over 1MB */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|0
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x29
-argument_list|,
-operator|(
-literal|0x0c
-operator||
-literal|3
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Bank Mode Reg. 16M mode */
-name|outb
-argument_list|(
-literal|0x11
-argument_list|,
-literal|0x50
-argument_list|)
-expr_stmt|;
-comment|/* PC98 must be 0x40 */
-block|}
 comment|/* mask channel */
 name|mskport
 operator|=
