@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.26 (Berkeley) %G%"
+literal|"@(#)df.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -950,7 +950,7 @@ name|f_blocks
 operator|*
 name|sfsp
 operator|->
-name|f_fsize
+name|f_bsize
 operator|/
 operator|(
 name|kflag
@@ -964,7 +964,7 @@ name|used
 operator|*
 name|sfsp
 operator|->
-name|f_fsize
+name|f_bsize
 operator|/
 operator|(
 name|kflag
@@ -980,7 +980,7 @@ name|f_bavail
 operator|*
 name|sfsp
 operator|->
-name|f_fsize
+name|f_bsize
 operator|/
 operator|(
 name|kflag
@@ -1265,7 +1265,7 @@ literal|0
 expr_stmt|;
 name|sfsp
 operator|->
-name|f_fsize
+name|f_bsize
 operator|=
 name|sblock
 operator|.
@@ -1273,7 +1273,7 @@ name|fs_fsize
 expr_stmt|;
 name|sfsp
 operator|->
-name|f_bsize
+name|f_iosize
 operator|=
 name|sblock
 operator|.
