@@ -412,11 +412,15 @@ name|UVISOR_GET_PALM_INFORMATION_LEN
 value|0x14
 end_define
 
+begin_comment
+comment|/*  * Crank down UVISORBUFSIZE from 1024 to 64 to avoid a problem where  * the Palm device and the USB host controller deadlock. The USB host  * controller is expecting an early-end-of-transmission packet with 0  * data, and the Palm doesn't send one because it's already  * communicated the amount of data it's going to send in a header  * (which ucom/uvisor are oblivious to). This is the problem that has  * been known on the pilot-link lists as the "[Free]BSD USB problem",  * but not understood.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UVISORIBUFSIZE
-value|1024
+value|64
 end_define
 
 begin_define
