@@ -1444,25 +1444,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|const
-name|char
-modifier|*
-name|version_of
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|version_cmp
 parameter_list|(
