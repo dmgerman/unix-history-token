@@ -2190,8 +2190,6 @@ name|fp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|s
 decl_stmt|;
 name|int
 name|interrupted
