@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reset.c	4.3 (Berkeley) %G%"
+literal|"@(#)reset.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * reset - restore tty to sensible state after crapping out in raw mode.  */
@@ -18,16 +29,6 @@ include|#
 directive|include
 file|<sgtty.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|CTRL
-parameter_list|(
-name|x
-parameter_list|)
-value|('x'&037)
-end_define
 
 begin_function
 name|main
@@ -45,9 +46,11 @@ name|struct
 name|ltchars
 name|ltbuf
 decl_stmt|;
-name|gtty
+name|ioctl
 argument_list|(
 literal|2
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|buf
@@ -107,10 +110,7 @@ name|buf
 operator|.
 name|sg_erase
 argument_list|,
-name|CTRL
-argument_list|(
-name|h
-argument_list|)
+name|CERASE
 argument_list|)
 expr_stmt|;
 name|reset
@@ -120,7 +120,7 @@ name|buf
 operator|.
 name|sg_kill
 argument_list|,
-literal|'@'
+name|CKILL
 argument_list|)
 expr_stmt|;
 name|reset
@@ -130,7 +130,7 @@ name|tbuf
 operator|.
 name|t_intrc
 argument_list|,
-literal|0177
+name|CINTR
 argument_list|)
 expr_stmt|;
 name|reset
@@ -140,13 +140,7 @@ name|tbuf
 operator|.
 name|t_quitc
 argument_list|,
-name|CTRL
-argument_list|(
-operator|\
-operator|\
-operator|\
-operator|\
-argument_list|)
+name|CQUIT
 argument_list|)
 expr_stmt|;
 name|reset
@@ -156,10 +150,7 @@ name|tbuf
 operator|.
 name|t_startc
 argument_list|,
-name|CTRL
-argument_list|(
-name|q
-argument_list|)
+name|CSTART
 argument_list|)
 expr_stmt|;
 name|reset
@@ -169,10 +160,7 @@ name|tbuf
 operator|.
 name|t_stopc
 argument_list|,
-name|CTRL
-argument_list|(
-name|s
-argument_list|)
+name|CSTOP
 argument_list|)
 expr_stmt|;
 name|reset
@@ -182,10 +170,7 @@ name|tbuf
 operator|.
 name|t_eofc
 argument_list|,
-name|CTRL
-argument_list|(
-name|d
-argument_list|)
+name|CEOF
 argument_list|)
 expr_stmt|;
 name|reset
@@ -195,10 +180,7 @@ name|ltbuf
 operator|.
 name|t_suspc
 argument_list|,
-name|CTRL
-argument_list|(
-name|z
-argument_list|)
+name|CSUSP
 argument_list|)
 expr_stmt|;
 name|reset
@@ -208,10 +190,7 @@ name|ltbuf
 operator|.
 name|t_dsuspc
 argument_list|,
-name|CTRL
-argument_list|(
-name|y
-argument_list|)
+name|CDSUSP
 argument_list|)
 expr_stmt|;
 name|reset
@@ -221,10 +200,7 @@ name|ltbuf
 operator|.
 name|t_rprntc
 argument_list|,
-name|CTRL
-argument_list|(
-name|r
-argument_list|)
+name|CRPRNT
 argument_list|)
 expr_stmt|;
 name|reset
@@ -234,10 +210,7 @@ name|ltbuf
 operator|.
 name|t_flushc
 argument_list|,
-name|CTRL
-argument_list|(
-name|o
-argument_list|)
+name|CFLUSH
 argument_list|)
 expr_stmt|;
 name|reset
@@ -247,10 +220,7 @@ name|ltbuf
 operator|.
 name|t_lnextc
 argument_list|,
-name|CTRL
-argument_list|(
-name|v
-argument_list|)
+name|CLNEXT
 argument_list|)
 expr_stmt|;
 name|reset
@@ -260,10 +230,7 @@ name|ltbuf
 operator|.
 name|t_werasc
 argument_list|,
-name|CTRL
-argument_list|(
-name|w
-argument_list|)
+name|CWERASE
 argument_list|)
 expr_stmt|;
 comment|/* brkc is left alone */
