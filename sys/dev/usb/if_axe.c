@@ -210,6 +210,12 @@ name|USB_PRODUCT_LINKSYS_USB200M
 block|}
 block|,
 block|{
+name|USB_VENDOR_MELCO
+block|,
+name|USB_PRODUCT_MELCO_LUAU2KTX
+block|}
+block|,
+block|{
 name|USB_VENDOR_NETGEAR
 block|,
 name|USB_PRODUCT_NETGEAR_FA120
