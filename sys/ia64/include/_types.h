@@ -97,32 +97,10 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__int32_t
-name|__clockid_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* clock_gettime()... */
-end_comment
-
-begin_typedef
-typedef|typedef
 name|__int64_t
 name|__critical_t
 typedef|;
 end_typedef
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|__fflags_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* file flags */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -142,13 +120,6 @@ begin_typedef
 typedef|typedef
 name|__int64_t
 name|__intptr_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__uint32_t
-name|__intrmask_t
 typedef|;
 end_typedef
 
@@ -211,28 +182,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|__int64_t
-name|__off_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* file offset */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__pid_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* process [group] */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__int64_t
 name|__ptrdiff_t
 typedef|;
 end_typedef
@@ -272,13 +221,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
-name|__socklen_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|__int64_t
 name|__ssize_t
 typedef|;
@@ -297,17 +239,6 @@ end_typedef
 
 begin_comment
 comment|/* time()... */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__timer_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* timer_gettime()... */
 end_comment
 
 begin_typedef
@@ -425,61 +356,6 @@ end_typedef
 begin_comment
 comment|/*  * Unusual type definitions.  */
 end_comment
-
-begin_comment
-comment|/*  * The rune type above is declared to be an ``int'' instead of the more natural  * ``unsigned long'' or ``long''.  Two things are happening here.  It is not  * unsigned so that EOF (-1) can be naturally assigned to it and used.  Also,  * it looks like 10646 will be a 31 bit standard.  This means that if your  * ints cannot hold 32 bits, you will be in trouble.  The reason an int was  * chosen over a long is that the is*() and to*() routines take ints (says  * ANSI C), but they use __ct_rune_t instead of int.  By changing it here, you  * lose a bit of ANSI conformance, but your programs will still work.  *  * NOTE: rune_t is not covered by ANSI nor other standards, and should not  * be instantiated outside of lib/libc/locale.  Use wchar_t.  wchar_t and  * rune_t must be the same type.  Also wint_t must be no narrower than  * wchar_t, and should also be able to hold all members of the largest  * character set plus one extra value (WEOF). wint_t must be at least 16 bits.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__ct_rune_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__rune_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__wchar_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|__int32_t
-name|__wint_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * mbstate_t is an opaque object to keep conversion state, during multibyte  * stream conversions.  The content must not be referenced by user programs.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|char
-name|__mbstate8
-index|[
-literal|128
-index|]
-decl_stmt|;
-name|__int64_t
-name|_mbstateL
-decl_stmt|;
-comment|/* for alignment */
-block|}
-name|__mbstate_t
-typedef|;
-end_typedef
 
 begin_ifdef
 ifdef|#
