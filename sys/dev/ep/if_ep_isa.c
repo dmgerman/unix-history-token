@@ -113,7 +113,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|int
+name|u_int16_t
 name|get_eeprom_data
 parameter_list|(
 name|int
