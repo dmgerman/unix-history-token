@@ -4641,6 +4641,10 @@ literal|0
 operator|)
 operator|||
 operator|(
+name|pid
+operator|>
+literal|0
+operator|&&
 name|WIFSTOPPED
 argument_list|(
 name|status
