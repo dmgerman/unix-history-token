@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.21 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.22 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.21 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.22 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3419,6 +3419,9 @@ ifdef|#
 directive|ifdef
 name|MAYBENEXTRELEASE
 comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
+ifdef|#
+directive|ifdef
+name|NETUNIX
 case|case
 name|AF_UNIX
 case|:
@@ -3459,6 +3462,8 @@ expr_stmt|;
 return|return
 name|buf
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
