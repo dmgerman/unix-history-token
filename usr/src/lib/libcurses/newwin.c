@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newwin.c	8.1 (Berkeley) %G%"
+literal|"@(#)newwin.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,6 +199,12 @@ name|ch_off
 operator|=
 literal|0
 expr_stmt|;
+name|win
+operator|->
+name|orig
+operator|=
+name|NULL
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -215,15 +221,6 @@ endif|#
 directive|endif
 for|for
 control|(
-name|lp
-operator|=
-name|win
-operator|->
-name|lines
-index|[
-literal|0
-index|]
-operator|,
 name|i
 operator|=
 literal|0
@@ -234,7 +231,8 @@ name|nl
 condition|;
 name|i
 operator|++
-operator|,
+control|)
+block|{
 name|lp
 operator|=
 name|win
@@ -243,8 +241,7 @@ name|lines
 index|[
 name|i
 index|]
-control|)
-block|{
+expr_stmt|;
 name|lp
 operator|->
 name|flags
