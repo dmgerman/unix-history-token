@@ -4,7 +4,7 @@ comment|/*  * alias_pptp.c  *  * Copyright (c) 2000 Whistle Communications, Inc.
 end_comment
 
 begin_comment
-comment|/*    Alias_pptp.c performs special processing for PPTP sessions under TCP.    Specifically, watch PPTP control messages and alias the Call ID or the    Peer's Call ID in the appropriate messages.  Note, PPTP requires    "de-aliasing" of incoming packets, this is different than any other    TCP applications that are currently (ie. FTP, IRC and RTSP) aliased.     For Call IDs encountered for the first time, a GRE alias link is created.    The GRE alias link uses the Call ID in place of the original port number.    An alias Call ID is created.     For this routine to work, the PPTP control messages must fit entirely    into a single TCP packet.  This is typically the case, but is not    required by the spec.     Unlike some of the other TCP applications that are aliased (ie. FTP,    IRC and RTSP), the PPTP control messages that need to be aliased are    guaranteed to remain the same length.  The aliased Call ID is a fixed    length field.     Reference: RFC 2637     Initial version:  May, 2000 (eds)  */
+comment|/*    Alias_pptp.c performs special processing for PPTP sessions under TCP.    Specifically, watch PPTP control messages and alias the Call ID or the    Peer's Call ID in the appropriate messages.  Note, PPTP requires    "de-aliasing" of incoming packets, this is different than any other    TCP applications that are currently (ie. FTP, IRC and RTSP) aliased.     For Call IDs encountered for the first time, a PPTP alias link is created.    The PPTP alias link uses the Call ID in place of the original port number.    An alias Call ID is created.     For this routine to work, the PPTP control messages must fit entirely    into a single TCP packet.  This is typically the case, but is not    required by the spec.     Unlike some of the other TCP applications that are aliased (ie. FTP,    IRC and RTSP), the PPTP control messages that need to be aliased are    guaranteed to remain the same length.  The aliased Call ID is a fixed    length field.     Reference: RFC 2637     Initial version:  May, 2000 (eds)  */
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ name|PPTP_EchoRequest
 init|=
 literal|5
 block|,
-name|PPTP_statoReply
+name|PPTP_EchoReply
 init|=
 literal|6
 block|,
@@ -495,7 +495,7 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|gre_link
+name|pptp_link
 decl_stmt|;
 name|PptpCallId
 name|cptr
@@ -528,23 +528,31 @@ name|NULL
 condition|)
 return|return;
 comment|/* Modify certain PPTP messages */
-if|if
+switch|switch
 condition|(
-operator|(
 name|ctl_type
-operator|>=
-name|PPTP_OutCallRequest
-operator|)
-operator|&&
-operator|(
-name|ctl_type
-operator|<=
-name|PPTP_CallDiscNotify
-operator|)
 condition|)
 block|{
-comment|/* Establish GRE link for address and Call ID found in PPTP Control Msg */
-name|gre_link
+case|case
+name|PPTP_OutCallRequest
+case|:
+case|case
+name|PPTP_OutCallReply
+case|:
+case|case
+name|PPTP_InCallRequest
+case|:
+case|case
+name|PPTP_InCallReply
+case|:
+case|case
+name|PPTP_CallClearRequest
+case|:
+case|case
+name|PPTP_CallDiscNotify
+case|:
+comment|/* Establish PPTP link for address and Call ID found in PPTP Control Msg */
+name|pptp_link
 operator|=
 name|FindPptpOut
 argument_list|(
@@ -565,7 +573,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gre_link
+name|pptp_link
 operator|!=
 name|NULL
 condition|)
@@ -584,7 +592,7 @@ name|cid1
 operator|=
 name|GetAliasPort
 argument_list|(
-name|gre_link
+name|pptp_link
 argument_list|)
 expr_stmt|;
 comment|/* Compute TCP checksum for revised packet */
@@ -627,6 +635,9 @@ name|th_sum
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
+return|return;
 block|}
 block|}
 end_function
@@ -651,7 +662,7 @@ block|{
 name|struct
 name|alias_link
 modifier|*
-name|gre_link
+name|pptp_link
 decl_stmt|;
 name|PptpCallId
 name|cptr
@@ -726,10 +737,9 @@ expr_stmt|;
 break|break;
 default|default:
 return|return;
-break|break;
 block|}
-comment|/* Find GRE link for address and Call ID found in PPTP Control Msg */
-name|gre_link
+comment|/* Find PPTP link for address and Call ID found in PPTP Control Msg */
+name|pptp_link
 operator|=
 name|FindPptpIn
 argument_list|(
@@ -749,7 +759,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gre_link
+name|pptp_link
 operator|!=
 name|NULL
 condition|)
@@ -766,7 +776,7 @@ name|pcall_id
 operator|=
 name|GetOriginalPort
 argument_list|(
-name|gre_link
+name|pptp_link
 argument_list|)
 expr_stmt|;
 comment|/* Compute TCP checksum for modified packet */
