@@ -828,6 +828,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|labeloffset
+init|=
+name|LABELOFFSET
 decl_stmt|;
 end_decl_stmt
 
@@ -835,6 +837,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|bbsize
+init|=
+name|BBSIZE
 decl_stmt|;
 end_decl_stmt
 
@@ -842,8 +846,31 @@ begin_decl_stmt
 specifier|static
 name|int
 name|alphacksum
+init|=
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_enum
 enum|enum
@@ -1090,6 +1117,10 @@ expr_stmt|;
 name|bbsize
 operator|=
 literal|8192
+expr_stmt|;
+name|alphacksum
+operator|=
+literal|0
 expr_stmt|;
 block|}
 elseif|else
