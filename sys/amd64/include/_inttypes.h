@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|PRIdMAX
-value|"lld"
+value|"jd"
 end_define
 
 begin_comment
@@ -313,7 +313,7 @@ begin_define
 define|#
 directive|define
 name|PRIiMAX
-value|"lli"
+value|"ji"
 end_define
 
 begin_comment
@@ -471,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|PRIoMAX
-value|"llo"
+value|"jo"
 end_define
 
 begin_comment
@@ -625,7 +625,7 @@ begin_define
 define|#
 directive|define
 name|PRIuMAX
-value|"llu"
+value|"ju"
 end_define
 
 begin_comment
@@ -779,7 +779,7 @@ begin_define
 define|#
 directive|define
 name|PRIxMAX
-value|"llx"
+value|"jx"
 end_define
 
 begin_comment
@@ -933,7 +933,7 @@ begin_define
 define|#
 directive|define
 name|PRIXMAX
-value|"llX"
+value|"jX"
 end_define
 
 begin_comment
@@ -1091,7 +1091,7 @@ begin_define
 define|#
 directive|define
 name|SCNdMAX
-value|"lld"
+value|"jd"
 end_define
 
 begin_comment
@@ -1245,7 +1245,7 @@ begin_define
 define|#
 directive|define
 name|SCNiMAX
-value|"lli"
+value|"ji"
 end_define
 
 begin_comment
@@ -1403,7 +1403,7 @@ begin_define
 define|#
 directive|define
 name|SCNoMAX
-value|"llo"
+value|"jo"
 end_define
 
 begin_comment
@@ -1557,7 +1557,7 @@ begin_define
 define|#
 directive|define
 name|SCNuMAX
-value|"llu"
+value|"ju"
 end_define
 
 begin_comment
@@ -1711,7 +1711,7 @@ begin_define
 define|#
 directive|define
 name|SCNxMAX
-value|"llx"
+value|"jx"
 end_define
 
 begin_comment
